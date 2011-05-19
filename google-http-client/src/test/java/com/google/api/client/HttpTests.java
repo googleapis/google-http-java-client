@@ -21,10 +21,10 @@ import junit.framework.TestSuite;
  *
  * @author Yaniv Inbar
  */
-public class AllTests extends TestSuite {
+public class HttpTests extends TestSuite {
 
   public static TestSuite suite() {
-    TestSuite result = new TestSuite(AllTests.class.getName());
+    TestSuite result = new TestSuite(HttpTests.class.getName());
     result.addTest(com.google.api.client.http.AllTests.suite());
     result.addTest(com.google.api.client.json.gson.AllTests.suite());
     result.addTest(com.google.api.client.json.jackson.AllTests.suite());
