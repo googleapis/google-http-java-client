@@ -16,16 +16,15 @@ package com.google.api.client.extensions;
 
 import junit.framework.TestSuite;
 
-
 /**
- * All tests for {@code google-api-client-extensions}.
+ * All tests for {@code google-http-client-extensions}.
  *
  * @author Yaniv Inbar
  */
-public class AllTests extends TestSuite {
+public class HttpExtensionsTests extends TestSuite {
 
   public static TestSuite suite() {
-    TestSuite result = new TestSuite(AllTests.class.getName());
+    TestSuite result = new TestSuite(HttpExtensionsTests.class.getName());
     result.addTest(com.google.api.client.extensions.appengine.http.urlfetch.AllTests.suite());
     return result;
   }
