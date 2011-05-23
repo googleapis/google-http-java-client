@@ -14,8 +14,6 @@
 
 package com.google.api.client.extensions.appengine.http.urlfetch;
 
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
 
@@ -34,12 +32,6 @@ import java.net.HttpURLConnection;
  * currently a serious bug in how HTTP headers are processed in the App Engine implementation of
  * {@link HttpURLConnection}, which we are able to avoid using this implementation. Therefore, this
  * is the recommended transport to use on App Engine.
- * </p>
- *
- * <p>
- * Upgrade warning: prior version 1.3 had a {@code deadline} field. Instead now use
- * {@link HttpRequest#connectTimeout} and {@link HttpRequest#readTimeout} in an
- * {@link HttpRequestInitializer} (which are simply added to determine the deadline).
  * </p>
  *
  * @since 1.2

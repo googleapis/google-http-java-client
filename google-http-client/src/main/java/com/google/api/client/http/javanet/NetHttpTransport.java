@@ -14,20 +14,12 @@
 
 package com.google.api.client.http.javanet;
 
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 
 import java.io.IOException;
 
 /**
  * Thread-safe HTTP low-level transport based on the {@code java.net} package.
- *
- * <p>
- * Upgrade warning: prior version 1.3 had {@code connectTimeout} and {@code readTimeout} fields.
- * Instead now use {@link HttpRequest#connectTimeout} and {@link HttpRequest#readTimeout} in an
- * {@link HttpRequestInitializer}.
- * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar

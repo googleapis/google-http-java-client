@@ -30,8 +30,6 @@ import java.util.Arrays;
  *
  * @author Yaniv Inbar
  */
-// using HttpTransport.defaultHeaders for backwards compatibility
-@SuppressWarnings("deprecation")
 public class HttpResponseTest extends TestCase {
 
   public HttpResponseTest() {
@@ -81,8 +79,8 @@ public class HttpResponseTest extends TestCase {
         };
       }
     };
-    transport.defaultHeaders = new MyHeaders();
     HttpRequest request = transport.createRequestFactory().buildGetRequest(new GenericUrl());
+    request.responseHeaders = new MyHeaders();
     HttpResponse response = request.execute();
     assertEquals("value", response.headers.accept);
     assertEquals("bar", ((MyHeaders) response.headers).foo);

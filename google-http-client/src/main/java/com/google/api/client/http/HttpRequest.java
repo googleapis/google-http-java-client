@@ -21,6 +21,7 @@ import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.logging.Level;
@@ -49,14 +50,8 @@ public final class HttpRequest {
    */
   public HttpExecuteInterceptor interceptor;
 
-  /**
-   * HTTP request headers.
-   * <p>
-   * For backwards compatibility, its value is initialized by calling {@code clone()} on the
-   * {@link HttpTransport#defaultHeaders}, which by default is an instance of {@link HttpHeaders}.
-   * </p>
-   */
-  public HttpHeaders headers;
+  /** HTTP request headers. */
+  public HttpHeaders headers = new HttpHeaders();
 
   /**
    * HTTP response headers.
@@ -73,14 +68,10 @@ public final class HttpRequest {
     return responseHeaders.someCustomHeader;
   }
    * </pre>
-   * <p>
-   * For backwards compatibility, its value is initialized by calling {@code clone()} on the
-   * {@link HttpTransport#defaultHeaders}, which by default is an instance of {@link HttpHeaders}.
-   * </p>
    *
    * @since 1.4
    */
-  public HttpHeaders responseHeaders;
+  public HttpHeaders responseHeaders = new HttpHeaders();
 
   /**
    * Set the number of retries that will be allowed to execute as the result of an
@@ -151,16 +142,10 @@ public final class HttpRequest {
    *
    * @since 1.4
    */
-  private final Map<String, HttpParser> contentTypeToParserMap;
+  private final Map<String, HttpParser> contentTypeToParserMap = new HashMap<String, HttpParser>();
 
   /**
    * Whether to enable gzip compression of HTTP content ({@code false} by default).
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.3, gzip compression was enabled whenever the content length
-   * was >= 256 bytes, the content type was text-based ("text/*" or "application/*"), and there was
-   * no encoding defined. With version 1.4, the decision is entirely based on this field.
-   * </p>
    *
    * @since 1.4
    */
@@ -170,24 +155,9 @@ public final class HttpRequest {
    * @param transport HTTP transport
    * @param method HTTP request method (may be {@code null}
    */
-  // using HttpTransport.defaultHeaders for backwards compatibility
-  @SuppressWarnings("deprecation")
   HttpRequest(HttpTransport transport, HttpMethod method) {
     this.transport = transport;
-    headers = transport.defaultHeaders.clone();
-    responseHeaders = transport.defaultHeaders.clone();
-    contentTypeToParserMap = transport.contentTypeToParserMap.clone();
     this.method = method;
-  }
-
-  /**
-   * Sets the {@link #url} based on the given encoded URL string.
-   *
-   * @deprecated (scheduled to be removed in 1.5) Use {@link GenericUrl#GenericUrl(String)}
-   */
-  @Deprecated
-  public void setUrl(String encodedUrl) {
-    url = new GenericUrl(encodedUrl);
   }
 
   /**
@@ -231,7 +201,6 @@ public final class HttpRequest {
    * @throws HttpResponseException for an HTTP error code
    * @see HttpResponse#isSuccessStatusCode
    */
-  @SuppressWarnings("deprecation")
   public HttpResponse execute() throws IOException {
     boolean requiresRetry = false;
     boolean retrySupported = false;
@@ -250,10 +219,6 @@ public final class HttpRequest {
       // run the interceptor
       if (interceptor != null) {
         interceptor.intercept(this);
-      }
-      // first run the execute intercepters
-      for (HttpExecuteIntercepter intercepter : transport.intercepters) {
-        intercepter.intercept(this);
       }
       // build low-level HTTP request
       String urlString = url.build();

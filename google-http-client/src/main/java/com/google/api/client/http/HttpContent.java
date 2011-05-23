@@ -40,8 +40,7 @@ public interface HttpContent {
   void writeTo(OutputStream out) throws IOException;
 
   /**
-   * Returns whether or not retry is supported on this content type. This is a backward incompatible
-   * change that affects versions prior to 1.4.
+   * Returns whether or not retry is supported on this content type.
    *
    * @since 1.4
    */

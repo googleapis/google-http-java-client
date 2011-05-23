@@ -14,11 +14,7 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.ArrayMap;
-
 import junit.framework.TestCase;
-
-import java.util.Collections;
 
 /**
  * Tests {@link HttpHeaders}.
@@ -32,19 +28,6 @@ public class HttpHeadersTest extends TestCase {
 
   public HttpHeadersTest(String name) {
     super(name);
-  }
-
-  @Deprecated
-  public void testCanonicalMap_http() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.acceptEncoding = null;
-    assertTrue(headers.canonicalMap().isEmpty());
-    headers.userAgent = "foo";
-    assertEquals(ArrayMap.of("user-agent", Collections.singleton("foo")), headers.canonicalMap());
-    headers.set("a", "b");
-    assertEquals(
-        ArrayMap.of("a", Collections.singleton("b"), "user-agent", Collections.singleton("foo")),
-        headers.canonicalMap());
   }
 
   public void testBasicAuthentication() {

@@ -20,10 +20,7 @@ import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Strings;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Stores HTTP headers used in an HTTP request or response, as defined in <a
@@ -143,35 +140,6 @@ public class HttpHeaders extends GenericData {
     String encoded =
         Strings.fromBytesUtf8(Base64.encode(Strings.toBytesUtf8(username + ":" + password)));
     authorization = "Basic " + encoded;
-  }
-
-  /**
-   * Computes a canonical map from lower-case header name to its values.
-   *
-   * @return canonical map from lower-case header name to its values
-   * @deprecated (scheduled to be removed in 1.5)
-   */
-  @Deprecated
-  public Map<String, Collection<Object>> canonicalMap() {
-    Map<String, Collection<Object>> result = new HashMap<String, Collection<Object>>();
-    for (Map.Entry<String, Object> entry : entrySet()) {
-      String canonicalName = entry.getKey().toLowerCase();
-      if (result.containsKey(canonicalName)) {
-        throw new IllegalArgumentException(
-            "multiple headers of the same name (headers are case insensitive): " + canonicalName);
-      }
-      Object value = entry.getValue();
-      if (value != null) {
-        if (value instanceof Collection<?>) {
-          @SuppressWarnings("unchecked")
-          Collection<Object> collectionValue = (Collection<Object>) value;
-          result.put(canonicalName, Collections.unmodifiableCollection(collectionValue));
-        } else {
-          result.put(canonicalName, Collections.singleton(value));
-        }
-      }
-    }
-    return result;
   }
 
   /**

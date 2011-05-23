@@ -71,8 +71,6 @@ public final class HttpRequestFactory {
    */
   public HttpRequest buildRequest(HttpMethod method, GenericUrl url, HttpContent content)
       throws IOException {
-    // TODO(yanivi): remove deprecation suppression notice for 1.5 release
-    @SuppressWarnings("deprecation")
     HttpRequest request = transport.buildRequest();
     if (initializer != null) {
       initializer.initialize(request);
