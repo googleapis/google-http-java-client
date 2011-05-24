@@ -40,7 +40,7 @@ public final class HttpRequest {
    *
    * @since 1.4
    */
-  public static final String USER_AGENT_SUFFIX = "Google-API-Java-Client/" + Strings.VERSION;
+  public static final String USER_AGENT_SUFFIX = "Google-HTTP-Java-Client/" + Strings.VERSION;
 
   /**
    * HTTP request execute interceptor to intercept the start of {@link #execute()} (before executing
