@@ -29,7 +29,8 @@ public class Strings {
    *
    * @since 1.3
    */
-  public static final String VERSION = "1.5.0-beta-SNAPSHOT";
+  public static final String VERSION
+      = "1.5.0-beta-SNAPSHOT Google-API-Java-Client/1.5.0-beta-SNAPSHOT";
 
   /**
    * Line separator to use for this OS, i.e. {@code "\n"} or {@code "\r\n"}.
