@@ -31,10 +31,10 @@ import java.io.InputStream;
  *
  * <pre>
  * <code>
-  static void setParser(HttpTransport transport) {
+  static void setParser(HttpRequest request) {
     JsonHttpParser parser = new JsonHttpParser();
     parser.jsonFactory = new JacksonFactory();
-    transport.addParser(parser);
+    request.addParser(parser);
   }
  * </code>
  * </pre>

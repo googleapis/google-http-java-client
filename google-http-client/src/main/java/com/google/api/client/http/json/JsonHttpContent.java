@@ -39,6 +39,10 @@ import java.io.OutputStream;
  * </code>
  * </pre>
  *
+ * <p>
+ * Currently {@link #getLength()} always returns -1, but this may change in the future.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -59,7 +63,8 @@ public class JsonHttpContent implements HttpContent {
   public JsonFactory jsonFactory;
 
   public long getLength() {
-    // TODO
+    // TODO(yanivi): calculate length? consider performance impact since computing it may be slow,
+    // and avoid loading the whole serialized content into memory
     return -1;
   }
 

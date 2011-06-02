@@ -132,6 +132,11 @@
         <version>2.5</version>
       </dependency>
       <dependency>
+    	  <groupId>com.google.protobuf</groupId>
+      	<artifactId>protobuf-java</artifactId>
+      	<version>2.2.0</version>
+      </dependency>
+      <dependency>
         <groupId>com.google.http.client</groupId>
         <artifactId>google-http-client</artifactId>
         <version>${project.version}</version>
@@ -158,6 +163,10 @@
     <!-- This is the parent, so only define pluginManagement, not plugins. -->
     <pluginManagement>
       <plugins>
+        <plugin>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>1.5</version>
+        </plugin>
         <plugin>
           <artifactId>maven-antrun-plugin</artifactId>
           <version>1.6</version>
