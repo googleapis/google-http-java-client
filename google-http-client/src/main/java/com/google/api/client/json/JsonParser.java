@@ -105,8 +105,8 @@ public abstract class JsonParser {
   public abstract BigDecimal getDecimalValue() throws IOException;
 
   /**
-   * Parse a JSON Object from the given JSON parser (which is closed after parsing completes) into
-   * the given destination class, optionally using the given parser customizer.
+   * Parse a JSON object, array, or value into a new instance of the given destination class using
+   * {@link JsonParser#parse(Class, CustomizeJsonParser)}, and then closes the parser.
    *
    * @param <T> destination class type
    * @param destinationClass destination class that has a public default constructor to use to
@@ -116,9 +116,11 @@ public abstract class JsonParser {
    */
   public final <T> T parseAndClose(Class<T> destinationClass, CustomizeJsonParser customizeParser)
       throws IOException {
-    T newInstance = Types.newInstance(destinationClass);
-    parseAndClose(newInstance, customizeParser);
-    return newInstance;
+    try {
+      return parse(destinationClass, customizeParser);
+    } finally {
+      close();
+    }
   }
 
   /**
@@ -133,7 +135,7 @@ public abstract class JsonParser {
    * @param keyToFind key to find
    */
   public final void skipToKey(String keyToFind) throws IOException {
-    JsonToken curToken = startParsingObject();
+    JsonToken curToken = startParsingObjectOrArray();
     while (curToken == JsonToken.FIELD_NAME) {
       String key = getText();
       nextToken();
@@ -145,21 +147,41 @@ public abstract class JsonParser {
     }
   }
 
+  /** Starts parsing that handles start of input by calling {@link #nextToken()}. */
+  private JsonToken startParsing() throws IOException {
+    JsonToken currentToken = getCurrentToken();
+    // token is null at start, so get next token
+    if (currentToken == null) {
+      currentToken = nextToken();
+    }
+    Preconditions.checkArgument(currentToken != null, "no JSON input found");
+    return currentToken;
+  }
+
   /**
-   * Starts parsing an object by making sure the parser points to a field name or end of object.
+   * Starts parsing an object or array by making sure the parser points to an object field name,
+   * first array value or end of object or array.
    * <p>
-   * Before this method is called, the parser must either point to the start or end of a JSON object
-   * or to a field name. After the method is called, the current token must be either
+   * If the parser is at the start of input, {@link #nextToken()} is called. The current token must
+   * then be {@link JsonToken#START_OBJECT}, {@link JsonToken#END_OBJECT},
+   * {@link JsonToken#START_ARRAY}, {@link JsonToken#END_ARRAY}, or {@link JsonToken#FIELD_NAME}.
+   * For an object only, after the method is called, the current token must be either
    * {@link JsonToken#FIELD_NAME} or {@link JsonToken#END_OBJECT}.
    * </p>
    */
-  private JsonToken startParsingObject() throws IOException {
-    JsonToken currentToken = getCurrentToken();
-    if (currentToken == JsonToken.START_OBJECT) {
-      currentToken = nextToken();
+  private JsonToken startParsingObjectOrArray() throws IOException {
+    JsonToken currentToken = startParsing();
+    switch (currentToken) {
+      case START_OBJECT:
+        currentToken = nextToken();
+        Preconditions.checkArgument(
+            currentToken == JsonToken.FIELD_NAME || currentToken == JsonToken.END_OBJECT,
+            currentToken);
+        break;
+      case START_ARRAY:
+        currentToken = nextToken();
+        break;
     }
-    Preconditions.checkArgument(
-        currentToken == JsonToken.FIELD_NAME || currentToken == JsonToken.END_OBJECT, currentToken);
     return currentToken;
   }
 
@@ -184,12 +206,12 @@ public abstract class JsonParser {
   }
 
   /**
-   * Parse a JSON Object from the given JSON parser into the given destination class, optionally
-   * using the given parser customizer.
+   * Parse a JSON object, array, or value into a new instance of the given destination class,
+   * optionally using the given parser customizer.
    * <p>
-   * Before this method is called, the parser must either point to the start or end of a JSON object
-   * or to a field name. After this method ends, the current token will be the
-   * {@link JsonToken#END_OBJECT} of the current object.
+   * If it parses an object, after this method ends, the current token will be the object's ending
+   * {@link JsonToken#END_OBJECT}. If it parses an array, after this method ends, the current token
+   * will be the array's ending {@link JsonToken#END_ARRAY}.
    * </p>
    *
    * @param <T> destination class type
@@ -200,13 +222,14 @@ public abstract class JsonParser {
    */
   public final <T> T parse(Class<T> destinationClass, CustomizeJsonParser customizeParser)
       throws IOException {
-    T newInstance = Types.newInstance(destinationClass);
-    parse(newInstance, customizeParser);
-    return newInstance;
+    startParsing();
+    @SuppressWarnings("unchecked")
+    T result = (T) parseValue(null, destinationClass, new ArrayList<Type>(), null, customizeParser);
+    return result;
   }
 
   /**
-   * Parse a JSON Object from the given JSON parser into the given destination object, optionally
+   * Parse a JSON object from the given JSON parser into the given destination object, optionally
    * using the given parser customizer.
    * <p>
    * Before this method is called, the parser must either point to the start or end of a JSON object
@@ -230,7 +253,7 @@ public abstract class JsonParser {
     if (destination instanceof GenericJson) {
       ((GenericJson) destination).jsonFactory = getFactory();
     }
-    JsonToken curToken = startParsingObject();
+    JsonToken curToken = startParsingObjectOrArray();
     Class<?> destinationClass = destination.getClass();
     ClassInfo classInfo = ClassInfo.of(destinationClass);
     boolean isGenericData = GenericData.class.isAssignableFrom(destinationClass);
@@ -243,7 +266,7 @@ public abstract class JsonParser {
     }
     while (curToken == JsonToken.FIELD_NAME) {
       String key = getText();
-      curToken = nextToken();
+      nextToken();
       // stop at items for feeds
       if (customizeParser != null && customizeParser.stopAt(destination, key)) {
         return;
@@ -258,18 +281,14 @@ public abstract class JsonParser {
         Field field = fieldInfo.getField();
         int contextSize = context.size();
         context.add(field.getGenericType());
-        Object fieldValue = parseValue(curToken,
-            field,
-            fieldInfo.getGenericType(),
-            context,
-            destination,
-            customizeParser);
+        Object fieldValue =
+            parseValue(field, fieldInfo.getGenericType(), context, destination, customizeParser);
         context.remove(contextSize);
         fieldInfo.setValue(destination, fieldValue);
       } else if (isGenericData) {
         // store unknown field in generic JSON
         GenericData object = (GenericData) destination;
-        object.set(key, parseValue(curToken, null, null, context, destination, customizeParser));
+        object.set(key, parseValue(null, null, context, destination, customizeParser));
       } else {
         // unrecognized field, skip value
         if (customizeParser != null) {
@@ -361,31 +380,27 @@ public abstract class JsonParser {
    */
   private <T> void parseArray(Collection<T> destinationCollection, Type destinationItemType,
       ArrayList<Type> context, CustomizeJsonParser customizeParser) throws IOException {
-    JsonToken listToken;
-    while ((listToken = nextToken()) != JsonToken.END_ARRAY) {
+    JsonToken curToken = startParsingObjectOrArray();
+    while (curToken != JsonToken.END_ARRAY) {
       @SuppressWarnings("unchecked")
-      T parsedValue = (T) parseValue(listToken,
-          null,
-          destinationItemType,
-          context,
-          destinationCollection,
-          customizeParser);
+      T parsedValue = (T) parseValue(
+          null, destinationItemType, context, destinationCollection, customizeParser);
       destinationCollection.add(parsedValue);
+      curToken = nextToken();
     }
   }
 
   private void parseMap(Map<String, Object> destinationMap, Type valueType, ArrayList<Type> context,
       CustomizeJsonParser customizeParser) throws IOException {
-    JsonToken curToken = startParsingObject();
+    JsonToken curToken = startParsingObjectOrArray();
     while (curToken == JsonToken.FIELD_NAME) {
       String key = getText();
-      curToken = nextToken();
+      nextToken();
       // stop at items for feeds
       if (customizeParser != null && customizeParser.stopAt(destinationMap, key)) {
         return;
       }
-      Object value =
-          parseValue(curToken, null, valueType, context, destinationMap, customizeParser);
+      Object value = parseValue(null, valueType, context, destinationMap, customizeParser);
       destinationMap.put(key, value);
       curToken = nextToken();
     }
@@ -394,19 +409,16 @@ public abstract class JsonParser {
   /**
    * Parse a value.
    *
-   * @param token JSON token
-   * @param field field or {@code null} for none (e.g. into a map)
-   * @param valueType value type or {@code null} if not known (e.g. into a map)
-   * @param destination destination object instance
+   * @param field field or {@code null} for none (for example into a map)
+   * @param valueType value type or {@code null} if not known (for example into a map)
+   * @param context destination context stack (possibly empty)
+   * @param destination destination object instance or {@code null} for none (for example empty
+   *        context stack)
    * @param customizeParser customize parser or {@code null} for none
    * @return parsed value
    */
-  private final Object parseValue(JsonToken token,
-      Field field,
-      Type valueType,
-      ArrayList<Type> context,
-      Object destination,
-      CustomizeJsonParser customizeParser) throws IOException {
+  private final Object parseValue(Field field, Type valueType, ArrayList<Type> context,
+      Object destination, CustomizeJsonParser customizeParser) throws IOException {
     valueType = Data.resolveWildcardTypeOrTypeVariable(context, valueType);
     // resolve a parameterized type to a class
     Class<?> valueClass = valueType instanceof Class<?> ? (Class<?>) valueType : null;
@@ -414,8 +426,10 @@ public abstract class JsonParser {
       valueClass = Types.getRawClass((ParameterizedType) valueType);
     }
     // value type is now null, class, parameterized type, or generic array type
+    JsonToken token = getCurrentToken();
     switch (token) {
       case START_ARRAY:
+      case END_ARRAY:
         boolean isArray = Types.isArray(valueType);
         Preconditions.checkArgument(valueType == null || isArray || valueClass != null
             && Types.isAssignableToOrFrom(valueClass, Collection.class),
@@ -440,7 +454,9 @@ public abstract class JsonParser {
           return Types.toArray(collectionValue, Types.getRawArrayComponentType(context, subType));
         }
         return collectionValue;
+      case FIELD_NAME:
       case START_OBJECT:
+      case END_OBJECT:
         Preconditions.checkArgument(!Types.isArray(valueType),
             "%s: expected object or map type but got %s for field %s", getCurrentName(), valueType,
             field);

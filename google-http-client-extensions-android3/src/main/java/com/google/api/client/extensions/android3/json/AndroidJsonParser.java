@@ -21,6 +21,7 @@ import com.google.common.base.Preconditions;
 
 import android.util.JsonReader;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -44,6 +45,8 @@ public class AndroidJsonParser extends JsonParser {
   AndroidJsonParser(AndroidJsonFactory factory, JsonReader reader) {
     this.factory = factory;
     this.reader = reader;
+    // lenient to allow top-level values of any type
+    reader.setLenient(true);
   }
 
   @Override
@@ -139,7 +142,15 @@ public class AndroidJsonParser extends JsonParser {
           break;
       }
     }
-    switch (reader.peek()) {
+    // work around bug in GSON parser that it throws an EOFException for an empty document
+    // see http://code.google.com/p/google-gson/issues/detail?id=330
+    android.util.JsonToken peek;
+    try {
+      peek = reader.peek();
+    } catch (EOFException e) {
+      peek = android.util.JsonToken.END_DOCUMENT;
+    }
+    switch (peek) {
       case BEGIN_ARRAY:
         currentText = "[";
         currentToken = JsonToken.START_ARRAY;

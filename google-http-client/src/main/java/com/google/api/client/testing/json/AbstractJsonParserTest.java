@@ -56,8 +56,23 @@ public abstract class AbstractJsonParserTest extends TestCase {
 
   protected abstract JsonFactory newFactory();
 
+  private static final String EMPTY = "";
+
+  public void testParse_empty() throws IOException {
+    JsonParser parser = newFactory().createJsonParser(EMPTY);
+    parser.nextToken();
+    try {
+      parser.parseAndClose(HashMap.class, null);
+      fail("expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+  }
+
+  private static final String EMPTY_OBJECT = "{}";
+
   public void testParse_emptyMap() throws IOException {
-    JsonParser parser = newFactory().createJsonParser("{}");
+    JsonParser parser = newFactory().createJsonParser(EMPTY_OBJECT);
     parser.nextToken();
     @SuppressWarnings("unchecked")
     HashMap<String, Object> map = parser.parseAndClose(HashMap.class, null);
@@ -65,10 +80,24 @@ public abstract class AbstractJsonParserTest extends TestCase {
   }
 
   public void testParse_emptyGenericJson() throws IOException {
-    JsonParser parser = newFactory().createJsonParser("{}");
+    JsonParser parser = newFactory().createJsonParser(EMPTY_OBJECT);
     parser.nextToken();
     GenericJson json = parser.parseAndClose(GenericJson.class, null);
     assertTrue(json.isEmpty());
+  }
+
+  public void testParser_partialEmpty() throws IOException {
+    JsonFactory factory = newFactory();
+    JsonParser parser;
+    parser = factory.createJsonParser(EMPTY_OBJECT);
+    parser.nextToken();
+    parser.nextToken();
+    // current token is now end_object
+    @SuppressWarnings("unchecked")
+    HashMap<String, Object> result = parser.parseAndClose(HashMap.class, null);
+    assertEquals(EMPTY_OBJECT, factory.toString(result));
+    // check types and values
+    assertTrue(result.isEmpty());
   }
 
   private static final String JSON_ENTRY = "{\"title\":\"foo\"}";
@@ -77,10 +106,21 @@ public abstract class AbstractJsonParserTest extends TestCase {
       "{\"entries\":[" + "{\"title\":\"foo\"}," + "{\"title\":\"bar\"}]}";
 
   public void testParseEntry() throws Exception {
-    JsonParser parser = newFactory().createJsonParser(JSON_ENTRY);
-    parser.nextToken();
-    Entry entry = parser.parseAndClose(Entry.class, null);
+    Entry entry = newFactory().createJsonParser(JSON_ENTRY).parseAndClose(Entry.class, null);
     assertEquals("foo", entry.title);
+  }
+
+  public void testParser_partialEntry() throws IOException {
+    JsonFactory factory = newFactory();
+    JsonParser parser;
+    parser = factory.createJsonParser(JSON_ENTRY);
+    parser.nextToken();
+    parser.nextToken();
+    // current token is now field_name
+    Entry result = parser.parseAndClose(Entry.class, null);
+    assertEquals(JSON_ENTRY, factory.toString(result));
+    // check types and values
+    assertEquals("foo", result.title);
   }
 
   public void testParseFeed() throws Exception {
@@ -103,7 +143,7 @@ public abstract class AbstractJsonParserTest extends TestCase {
   }
 
   public void testSkipToKey_missingEmpty() throws IOException {
-    JsonParser parser = newFactory().createJsonParser("{}");
+    JsonParser parser = newFactory().createJsonParser(EMPTY_OBJECT);
     parser.nextToken();
     parser.skipToKey("missing");
     assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());
@@ -877,5 +917,94 @@ public abstract class AbstractJsonParserTest extends TestCase {
     // check parsed result
     LinkedList<String> f = result.y.z.f;
     assertEquals("abc", f.get(0));
+  }
+
+  static final String STRING_ARRAY = "[\"a\",\"b\",\"c\"]";
+
+  public void testParser_stringArray() throws IOException {
+    JsonFactory factory = newFactory();
+    JsonParser parser;
+    parser = factory.createJsonParser(STRING_ARRAY);
+    parser.nextToken();
+    String[] result = parser.parse(String[].class, null);
+    assertEquals(STRING_ARRAY, factory.toString(result));
+    // check types and values
+    assertTrue(Arrays.equals(new String[] {"a", "b", "c"}, result));
+  }
+
+  static final String INT_ARRAY = "[1,2,3]";
+
+  public void testParser_intArray() throws IOException {
+    JsonFactory factory = newFactory();
+    JsonParser parser;
+    parser = factory.createJsonParser(INT_ARRAY);
+    parser.nextToken();
+    int[] result = parser.parse(int[].class, null);
+    assertEquals(INT_ARRAY, factory.toString(result));
+    // check types and values
+    assertTrue(Arrays.equals(new int[] {1, 2, 3}, result));
+  }
+
+  private static final String EMPTY_ARRAY = "[]";
+
+  public void testParser_emptyArray() throws IOException {
+    JsonFactory factory = newFactory();
+    String[] result = factory.createJsonParser(EMPTY_ARRAY).parse(String[].class, null);
+    assertEquals(EMPTY_ARRAY, factory.toString(result));
+    // check types and values
+    assertEquals(0, result.length);
+  }
+
+  public void testParser_partialEmptyArray() throws IOException {
+    JsonFactory factory = newFactory();
+    JsonParser parser;
+    parser = factory.createJsonParser(EMPTY_ARRAY);
+    parser.nextToken();
+    parser.nextToken();
+    // token is now end_array
+    String[] result = parser.parse(String[].class, null);
+    assertEquals(EMPTY_ARRAY, factory.toString(result));
+    // check types and values
+    assertEquals(0, result.length);
+  }
+
+  private static final String NUMBER_TOP_VALUE = "1";
+
+  public void testParser_num() throws IOException {
+    JsonFactory factory = newFactory();
+    int result = factory.createJsonParser(NUMBER_TOP_VALUE).parse(int.class, null);
+    assertEquals(NUMBER_TOP_VALUE, factory.toString(result));
+    // check types and values
+    assertEquals(1, result);
+  }
+
+  private static final String STRING_TOP_VALUE = "\"a\"";
+
+  public void testParser_string() throws IOException {
+    JsonFactory factory = newFactory();
+    String result = factory.createJsonParser(STRING_TOP_VALUE).parse(String.class, null);
+    assertEquals(STRING_TOP_VALUE, factory.toString(result));
+    // check types and values
+    assertEquals("a", result);
+  }
+
+  private static final String NULL_TOP_VALUE = "null";
+
+  public void testParser_null() throws IOException {
+    JsonFactory factory = newFactory();
+    String result = factory.createJsonParser(NULL_TOP_VALUE).parse(String.class, null);
+    assertEquals(NULL_TOP_VALUE, factory.toString(result));
+    // check types and values
+    assertTrue(Data.isNull(result));
+  }
+
+  private static final String BOOL_TOP_VALUE = "true";
+
+  public void testParser_bool() throws IOException {
+    JsonFactory factory = newFactory();
+    boolean result = factory.createJsonParser(BOOL_TOP_VALUE).parse(boolean.class, null);
+    assertEquals(BOOL_TOP_VALUE, factory.toString(result));
+    // check types and values
+    assertTrue(result);
   }
 }

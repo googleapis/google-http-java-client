@@ -96,18 +96,16 @@ public abstract class JsonFactory {
   }
 
   /**
-   * Parses a JSON string value into a JSON object of the given destination class using
-   * {@link JsonParser#parse(Class, CustomizeJsonParser)}.
+   * Parses a string value as a JSON object, array, or value into a new instance of the given
+   * destination class using {@link JsonParser#parse(Class, CustomizeJsonParser)}.
    *
    * @param value JSON string value
-   * @param destinationClass destination class that has an accessibleS default constructor to use to
-   *        create a new JSON object instance
+   * @param destinationClass destination class that has an accessible default constructor to use to
+   *        create a new instance
    * @return new instance of the parsed destination class
    * @since 1.4
    */
   public final <T> T fromString(String value, Class<T> destinationClass) throws IOException {
-    JsonParser parser = createJsonParser(value);
-    parser.nextToken();
-    return parser.parse(destinationClass, null);
+    return createJsonParser(value).parse(destinationClass, null);
   }
 }

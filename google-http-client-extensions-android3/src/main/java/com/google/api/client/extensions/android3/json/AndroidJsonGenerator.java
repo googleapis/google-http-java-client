@@ -36,6 +36,8 @@ public class AndroidJsonGenerator extends JsonGenerator {
   AndroidJsonGenerator(AndroidJsonFactory factory, JsonWriter writer) {
     this.factory = factory;
     this.writer = writer;
+    // lenient to allow top-level values of any type
+    writer.setLenient(true);
   }
 
   @Override

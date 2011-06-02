@@ -35,6 +35,8 @@ public class GsonGenerator extends JsonGenerator {
   GsonGenerator(GsonFactory factory, JsonWriter writer) {
     this.factory = factory;
     this.writer = writer;
+    // lenient to allow top-level values of any type
+    writer.setLenient(true);
   }
 
   @Override

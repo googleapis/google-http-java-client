@@ -20,6 +20,7 @@ import com.google.api.client.json.JsonToken;
 import com.google.common.base.Preconditions;
 import com.google.gson.stream.JsonReader;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -43,6 +44,8 @@ public class GsonParser extends JsonParser {
   GsonParser(GsonFactory factory, JsonReader reader) {
     this.factory = factory;
     this.reader = reader;
+    // lenient to allow top-level values of any type
+    reader.setLenient(true);
   }
 
   @Override
@@ -138,7 +141,15 @@ public class GsonParser extends JsonParser {
           break;
       }
     }
-    switch (reader.peek()) {
+    // work around bug in GSON parser that it throws an EOFException for an empty document
+    // see http://code.google.com/p/google-gson/issues/detail?id=330
+    com.google.gson.stream.JsonToken peek;
+    try {
+      peek = reader.peek();
+    } catch (EOFException e) {
+      peek = com.google.gson.stream.JsonToken.END_DOCUMENT;
+    }
+    switch (peek) {
       case BEGIN_ARRAY:
         currentText = "[";
         currentToken = JsonToken.START_ARRAY;
