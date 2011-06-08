@@ -38,9 +38,15 @@ public final class HttpRequest {
   /**
    * User agent suffix for all requests.
    *
+   * <p>
+   * Includes a {@code "(gzip)"} suffix in case the server -- as Google's servers may do -- checks
+   * the {@code User-Agent} header to try to detect if the client accepts gzip-encoded responses.
+   * </p>
+   *
    * @since 1.4
    */
-  public static final String USER_AGENT_SUFFIX = "Google-HTTP-Java-Client/" + Strings.VERSION;
+  public static final String USER_AGENT_SUFFIX =
+      "Google-HTTP-Java-Client/" + Strings.VERSION + " (gzip)";
 
   /**
    * HTTP request execute interceptor to intercept the start of {@link #execute()} (before executing

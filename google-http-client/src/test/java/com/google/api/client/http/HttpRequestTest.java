@@ -242,4 +242,9 @@ public class HttpRequestTest extends TestCase {
     transport.expectGZip = true;
     request.execute();
   }
+
+  public void testUserAgent() {
+    assertTrue(HttpRequest.USER_AGENT_SUFFIX.contains("Google-HTTP-Java-Client"));
+    assertTrue(HttpRequest.USER_AGENT_SUFFIX.contains("gzip"));
+  }
 }
