@@ -25,9 +25,15 @@ import java.math.BigInteger;
 /**
  * Low-level JSON serializer implementation based on GSON.
  *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
+ *
  * @since 1.3
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be made package-private in 1.6)
  */
+@Deprecated
 public class GsonGenerator extends JsonGenerator {
   private final JsonWriter writer;
   private final GsonFactory factory;

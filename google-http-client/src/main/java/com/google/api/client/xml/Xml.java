@@ -147,6 +147,11 @@ public class Xml {
   /**
    * Customizes the behavior of XML parsing. Subclasses may override any methods they need to
    * customize behavior.
+   *
+   * <p>
+   * Implementation has no fields and therefore thread-safe, but sub-classes are not necessarily
+   * thread-safe.
+   * </p>
    */
   public static class CustomizeParser {
     /**

@@ -24,6 +24,11 @@ import java.io.Writer;
 /**
  * Abstract low-level JSON factory.
  *
+ * <p>
+ * Implementation is thread-safe, and sub-classes must be thread-safe. For maximum efficiency,
+ * applications should use a single globally-shared instance of the JSON factory.
+ * </p>
+ *
  * @since 1.3
  * @author Yaniv Inbar
  */

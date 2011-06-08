@@ -46,13 +46,17 @@ public class DateTimeTest extends TestCase {
         "Check not equal with Date.", new DateTime(1234567890L).equals(new Date(9876543210L)));
   }
 
+  // TODO(yanivi): remove @SuppressWarnings("deprecation") for 1.6
+  @SuppressWarnings("deprecation")
   public void testParseDateTime() {
     expectExceptionForParseRfc3339("");
     expectExceptionForParseRfc3339("abc");
     DateTime value = DateTime.parseRfc3339("2007-06-01");
     assertTrue(value.dateOnly);
+    assertTrue(value.isDateOnly());
     value = DateTime.parseRfc3339("2007-06-01T10:11:30.057");
     assertFalse(value.dateOnly);
+    assertFalse(value.isDateOnly());
   }
 
   private void expectExceptionForParseRfc3339(String input) {

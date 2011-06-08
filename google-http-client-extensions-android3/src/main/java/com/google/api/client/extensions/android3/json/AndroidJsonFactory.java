@@ -34,6 +34,11 @@ import java.io.Writer;
 /**
  * Low-level JSON library implementation based on GSON.
  *
+ * <p>
+ * Implementation is thread-safe, and sub-classes must be thread-safe. For maximum efficiency,
+ * applications should use a single globally-shared instance of the JSON factory.
+ * </p>
+ *
  * @since 1.4
  * @author Yaniv Inbar
  */
@@ -51,6 +56,8 @@ public class AndroidJsonFactory extends JsonFactory {
     return createJsonParser(new StringReader(value));
   }
 
+  // TODO(yanivi): remove @SuppressWarnings("deprecation") in 1.6
+  @SuppressWarnings("deprecation")
   @Override
   public JsonParser createJsonParser(Reader reader) {
     return new AndroidJsonParser(this, new JsonReader(reader));
@@ -61,6 +68,8 @@ public class AndroidJsonFactory extends JsonFactory {
     return createJsonGenerator(new OutputStreamWriter(out, Charsets.UTF_8));
   }
 
+  // TODO(yanivi): remove @SuppressWarnings("deprecation") in 1.6
+  @SuppressWarnings("deprecation")
   @Override
   public JsonGenerator createJsonGenerator(Writer writer) {
     return new AndroidJsonGenerator(this, new JsonWriter(writer));

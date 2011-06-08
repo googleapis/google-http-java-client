@@ -30,6 +30,10 @@ import java.util.WeakHashMap;
 /**
  * Parses class information to determine data key name/value pairs associated with the class.
  *
+ * <p>
+ * Implementation is thread-safe.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */

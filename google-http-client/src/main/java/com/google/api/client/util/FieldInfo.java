@@ -25,6 +25,10 @@ import java.util.WeakHashMap;
 /**
  * Parses field information to determine data key name/value pair associated with the field.
  *
+ * <p>
+ * Implementation is thread-safe.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */

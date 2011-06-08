@@ -24,6 +24,10 @@ import java.util.TimeZone;
  * Immutable representation of a date with an optional time and an optional time zone based on RFC
  * 3339.
  *
+ * <p>
+ * Implementation is immutable and therefore thread-safe.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -38,16 +42,27 @@ public class DateTime implements Serializable {
    *
    *  If the time zone is specified, this value is normalized to UTC, so to format this date/time
    * value, the time zone shift has to be applied.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getValue()}
    */
+  @Deprecated
   public final long value;
 
-  /** Specifies whether this is a date-only value. */
+  /**
+   * Specifies whether this is a date-only value.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #isDateOnly()}
+   */
+  @Deprecated
   public final boolean dateOnly;
 
   /**
    * Time zone shift from UTC in minutes. If {@code null}, no time zone is set, and the time is
    * always interpreted as local time.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getTimeZoneShift()}
    */
+  @Deprecated
   public final Integer tzShift;
 
   public DateTime(Date date, TimeZone zone) {
@@ -73,6 +88,38 @@ public class DateTime implements Serializable {
     this.dateOnly = dateOnly;
     this.value = value;
     this.tzShift = tzShift;
+  }
+
+  /**
+   * Returns the date/time value expressed as the number of milliseconds since the Unix epoch.
+   *
+   * <p>
+   * If the time zone is specified, this value is normalized to UTC, so to format this date/time
+   * value, the time zone shift has to be applied.
+   * </p>
+   *
+   * @since 1.5
+   */
+  public long getValue() {
+    return value;
+  }
+
+  /**
+   * Returns whether this is a date-only value.
+   *
+   * @since 1.5
+   */
+  public boolean isDateOnly() {
+    return dateOnly;
+  }
+
+  /**
+   * Returns the time zone shift from UTC in minutes or {@code null} for local time zone.
+   *
+   * @since 1.5
+   */
+  public Integer getTimeZoneShift() {
+    return tzShift;
   }
 
   /** Formats the value as an RFC 3339 date/time string. */

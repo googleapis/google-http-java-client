@@ -20,32 +20,120 @@ import com.google.api.client.util.Key;
 /**
  * JSON-RPC 2.0 request object.
  *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public class JsonRpcRequest extends GenericData {
 
   /**
-   * A String specifying the version of the JSON-RPC protocol. MUST be exactly "2.0".
+   * Version of the JSON-RPC protocol which is {@code "2.0"}.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getVersion()}
    */
+  @Deprecated
   @Key
   public final String jsonrpc = "2.0";
 
   /**
-   * An identifier established by the Client that MUST contain a String or a Number. If it is not
-   * included it is assumed to be a notification, and will not receive a response.
+   * Identifier established by the client that must be a string or a number or {@code null} for a
+   * notification and therefore not expect to receive a response.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getId()} or
+   *             {@link #setId(Object)}
    */
+  @Deprecated
   @Key
   public Object id;
 
-  /** A String containing the name of the method to be invoked. */
+  /**
+   * Name of the method to be invoked.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getMethod()} or
+   *             {@link #setMethod(String)}
+   */
+  @Deprecated
   @Key
   public String method;
 
   /**
-   * A Structured value that holds the parameter values to be used during the invocation of the
-   * method. This member MAY be omitted.
+   * Structured value that holds the parameter values to be used during the invocation of the method
+   * or {@code null} for none.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getParameters()} or
+   *             {@link #setParameters(Object)}
    */
+  @Deprecated
   @Key
   public Object params;
+
+  /**
+   * Returns the version of the JSON-RPC protocol which is {@code "2.0"}.
+   *
+   * @since 1.5
+   */
+  public String getVersion() {
+    return jsonrpc;
+  }
+
+  /**
+   * Returns the identifier established by the client that must be a string or a number or {@code
+   * null} for a notification and therefore not expect to receive a response.
+   *
+   * @since 1.5
+   */
+  public Object getId() {
+    return id;
+  }
+
+  /**
+   * Sets the identifier established by the client that must be a string or a number or {@code null}
+   * for a notification and therefore not expect to receive a response.
+   *
+   * @since 1.5
+   */
+  public void setId(Object id) {
+    this.id = id;
+  }
+
+  /**
+   * Returns the name of the method to be invoked.
+   *
+   * @since 1.5
+   */
+  public String getMethod() {
+    return method;
+  }
+
+  /**
+   * Sets the name of the method to be invoked.
+   *
+   * @since 1.5
+   */
+  public void setMethod(String method) {
+    this.method = method;
+  }
+
+  /**
+   * Returns the structured value that holds the parameter values to be used during the invocation
+   * of the method or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public Object getParameters() {
+    return params;
+  }
+
+  /**
+   * Sets the structured value that holds the parameter values to be used during the invocation of
+   * the method or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public void setParameters(Object parameters) {
+    this.params = parameters;
+  }
 }

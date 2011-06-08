@@ -24,7 +24,10 @@ import java.math.BigInteger;
 /**
  * Low-level JSON serializer implementation based on Jackson.
  *
- * @since 1.3
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
+ *
  * @author Yaniv Inbar
  */
 final class JacksonParser extends JsonParser {

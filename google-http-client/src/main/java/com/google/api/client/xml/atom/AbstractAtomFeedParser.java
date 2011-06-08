@@ -27,6 +27,10 @@ import java.io.InputStream;
 /**
  * Abstract base class for an Atom feed parser when the feed type is known in advance.
  *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
+ *
  * @param <T> feed type
  * @since 1.0
  * @author Yaniv Inbar

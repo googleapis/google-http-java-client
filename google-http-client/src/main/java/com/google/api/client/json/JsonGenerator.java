@@ -29,6 +29,11 @@ import java.util.Map;
 /**
  * Abstract low-level JSON serializer.
  *
+ * <p>
+ * Implementation has no fields and therefore thread-safe, but sub-classes are not necessarily
+ * thread-safe.
+ * </p>
+ *
  * @since 1.3
  * @author Yaniv Inbar
  */

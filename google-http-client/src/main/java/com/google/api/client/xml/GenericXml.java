@@ -17,6 +17,8 @@ package com.google.api.client.xml;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
 
+import java.util.concurrent.ConcurrentMap;
+
 /**
  * Generic XML data that stores all unknown key name/value pairs.
  *
@@ -26,6 +28,11 @@ import com.google.api.client.util.Key;
  * content using the {@link Key} annotation. Each field can be of any visibility (private, package
  * private, protected, or public) and must not be static. {@code null} unknown data key names are
  * not allowed, but {@code null} data values are allowed.
+ * </p>
+ *
+ * <p>
+ * Implementation is not thread-safe. For a thread-safe choice instead use an implementation of
+ * {@link ConcurrentMap}.
  * </p>
  *
  * @since 1.0

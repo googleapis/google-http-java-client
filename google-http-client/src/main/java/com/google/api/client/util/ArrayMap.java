@@ -22,15 +22,22 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Memory-efficient map of keys to values with list-style random-access semantics.
+ *
  * <p>
  * Supports null keys and values. Conceptually, the keys and values are stored in a simpler array in
  * order to minimize memory use and provide for fast access to a key/value at a certain index (for
  * example {@link #getKey(int)}). However, traditional mapping operations like {@link #get(Object)}
  * and {@link #put(Object, Object)} are slower because they need to look up all key/value pairs in
  * the worst case.
+ * </p>
+ *
+ * <p>
+ * Implementation is not thread-safe. For a thread-safe choice instead use an implementation of
+ * {@link ConcurrentMap}.
  * </p>
  *
  * @since 1.0

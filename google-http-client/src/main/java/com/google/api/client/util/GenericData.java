@@ -19,16 +19,25 @@ import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Generic data that stores all unknown data key name/value pairs.
+ *
  * <p>
  * Subclasses can declare fields for known data keys using the {@link Key} annotation. Each field
  * can be of any visibility (private, package private, protected, or public) and must not be static.
  * {@code null} unknown data key names are not allowed, but {@code null} data values are allowed.
+ * </p>
+ *
  * <p>
  * Iteration order of the data keys is based on the sorted (ascending) key names of the declared
  * fields, followed by the iteration order of all of the unknown data key name/value pairs.
+ * </p>
+ *
+ * <p>
+ * Implementation is not thread-safe. For a thread-safe choice instead use an implementation of
+ * {@link ConcurrentMap}.
  * </p>
  *
  * @since 1.0
@@ -36,7 +45,12 @@ import java.util.Set;
  */
 public class GenericData extends AbstractMap<String, Object> implements Cloneable {
 
-  /** Map of unknown fields. */
+  /**
+   * Map of unknown fields.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getUnknownKeys()}
+   */
+  @Deprecated
   public ArrayMap<String, Object> unknownFields = ArrayMap.create();
 
   // TODO(yanivi): implement more methods for faster implementation
@@ -121,6 +135,25 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
     } catch (CloneNotSupportedException e) {
       throw new IllegalStateException(e);
     }
+  }
+
+  /**
+   * Returns the map of unknown data key name to value.
+   *
+   * @since 1.5
+   */
+  public final Map<String, Object> getUnknownKeys() {
+    return unknownFields;
+  }
+
+  /**
+   * Sets the map of unknown data key name to value.
+   *
+   * @since 1.5
+   */
+  public final void setUnknownKeys(ArrayMap<String, Object> unknownKeys) {
+    // TODO(yanivi): for 1.6, change unknownKeys parameter to Map<String, Object>
+    this.unknownFields = unknownKeys;
   }
 
   /** Set of object data key/value map entries. */

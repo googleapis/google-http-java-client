@@ -18,6 +18,7 @@ import com.google.common.base.Preconditions;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Collects the array values of a key/value data object, writing the fields or map values only after
@@ -34,6 +35,11 @@ import java.util.Map;
  * whose values accept an array of objects. Use {@link #put(Field, Class, Object)} when setting the
  * value of a field using reflection, assuming its type accepts an array of objects. One can
  * potentially use both {@code put} methods for example on an instance of {@link GenericData}.
+ * </p>
+ *
+ * <p>
+ * Implementation is not thread-safe. For a thread-safe choice instead use an implementation of
+ * {@link ConcurrentMap}.
  * </p>
  *
  * @since 1.4

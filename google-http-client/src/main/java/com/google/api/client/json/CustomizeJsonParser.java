@@ -19,9 +19,16 @@ import java.util.Collection;
 
 /**
  * Customizes the behavior of a JSON parser.
+ *
  * <p>
  * All methods have a default trivial implementation, so subclasses need only implement the methods
  * whose behavior needs customization.
+ * </p>
+ *
+ * <p>
+ * Implementation has no fields and therefore thread-safe, but sub-classes are not necessarily
+ * thread-safe.
+ * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar

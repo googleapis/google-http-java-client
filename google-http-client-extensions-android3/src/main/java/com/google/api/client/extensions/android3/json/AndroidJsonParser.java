@@ -31,9 +31,15 @@ import java.util.List;
 /**
  * Low-level JSON serializer implementation based on GSON.
  *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
+ *
  * @since 1.4
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be made package-private in 1.6)
  */
+@Deprecated
 public class AndroidJsonParser extends JsonParser {
   private final JsonReader reader;
   private final AndroidJsonFactory factory;
