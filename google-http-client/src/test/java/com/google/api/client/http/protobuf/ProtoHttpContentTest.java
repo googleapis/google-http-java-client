@@ -16,6 +16,7 @@ package com.google.api.client.http.protobuf;
 
 import com.google.api.client.http.protobuf.ProtoHttpContent.Builder;
 import com.google.api.client.protobuf.ProtocolBuffers;
+import com.google.api.client.protobuf.SimpleProto;
 
 import junit.framework.TestCase;
 

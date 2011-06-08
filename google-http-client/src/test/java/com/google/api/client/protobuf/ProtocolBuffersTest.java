@@ -14,7 +14,6 @@
 
 package com.google.api.client.protobuf;
 
-import com.google.api.client.http.protobuf.SimpleProto;
 import junit.framework.TestCase;
 
 import java.io.ByteArrayInputStream;
