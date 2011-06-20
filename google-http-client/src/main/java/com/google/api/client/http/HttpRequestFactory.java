@@ -39,7 +39,12 @@ import java.io.IOException;
  */
 public final class HttpRequestFactory {
 
-  /** HTTP transport. */
+  /**
+   * HTTP transport.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getTransport()}
+   */
+  @Deprecated
   public final HttpTransport transport;
 
   /**
@@ -49,7 +54,10 @@ public final class HttpRequestFactory {
    * This initializer is invoked before setting its {@link HttpRequest#method},
    * {@link HttpRequest#url}, or {@link HttpRequest#content}.
    * </p>
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getInitializer()}
    */
+  @Deprecated
   public final HttpRequestInitializer initializer;
 
   /**
@@ -59,6 +67,28 @@ public final class HttpRequestFactory {
   HttpRequestFactory(HttpTransport transport, HttpRequestInitializer initializer) {
     this.transport = transport;
     this.initializer = initializer;
+  }
+
+  /**
+   * Returns the HTTP transport.
+   *
+   * @since 1.5
+   */
+  public HttpTransport getTransport() {
+    return transport;
+  }
+
+  /**
+   * Returns the HTTP request initializer or {@code null} for none.
+   *
+   * <p>
+   * This initializer is invoked before setting its method, URL, or content.
+   * </p>
+   *
+   * @since 1.5
+   */
+  public HttpRequestInitializer getInitializer() {
+    return initializer;
   }
 
   /**
@@ -75,9 +105,13 @@ public final class HttpRequestFactory {
     if (initializer != null) {
       initializer.initialize(request);
     }
-    request.method = method;
-    request.url = url;
-    request.content = content;
+    request.setMethod(method);
+    if (url != null) {
+      request.setUrl(url);
+    }
+    if (content != null) {
+      request.setContent(content);
+    }
     return request;
   }
 

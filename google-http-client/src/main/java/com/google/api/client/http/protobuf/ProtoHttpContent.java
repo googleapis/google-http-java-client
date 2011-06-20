@@ -26,20 +26,21 @@ import java.io.OutputStream;
  * Serializes of a protocol buffer message to HTTP content.
  *
  * <p>
- * Implementation is immutable and therefore thread-safe, as long as the message itself is not
- * modified.
- * </p>
- * <p>
  * Sample usage:
+ * </p>
  *
  * <pre>
  * <code>
   static HttpRequest buildPostRequest(
       HttpRequestFactory requestFactory, GenericUrl url, MessageLite message) throws IOException {
-    return requestFactory.buildPostRequest(url, ProtoHttpContent.builder(message).build());
+    return requestFactory.buildPostRequest(url, new ProtoHttpContent(message));
   }
  * </code>
  * </pre>
+ *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
  *
  * @since 1.5
  * @author Yaniv Inbar
@@ -50,15 +51,13 @@ public class ProtoHttpContent implements HttpContent {
   private final MessageLite message;
 
   /** Content type or {@code null} for none. */
-  private final String type;
+  private String type = ProtocolBuffers.CONTENT_TYPE;
 
   /**
    * @param message message to serialize
-   * @param type content type or {@code null} for none
    */
-  protected ProtoHttpContent(MessageLite message, String type) {
+  public ProtoHttpContent(MessageLite message) {
     this.message = Preconditions.checkNotNull(message);
-    this.type = type;
   }
 
   public String getEncoding() {
@@ -69,7 +68,7 @@ public class ProtoHttpContent implements HttpContent {
     return message.getSerializedSize();
   }
 
-  public final String getType() {
+  public String getType() {
     return type;
   }
 
@@ -81,66 +80,20 @@ public class ProtoHttpContent implements HttpContent {
     message.writeTo(out);
   }
 
+  /**
+   * Sets the content type or {@code null} for none.
+   *
+   * <p>
+   * Default value is {@link ProtocolBuffers#CONTENT_TYPE}.
+   * </p>
+   */
+  public ProtoHttpContent setType(String type) {
+    this.type = type;
+    return this;
+  }
+
   /** Returns the message to serialize. */
   public final MessageLite getMessage() {
     return message;
-  }
-
-  /**
-   * Returns an instance of a new builder.
-   *
-   * @param message message to serialize
-   */
-  public static Builder builder(MessageLite message) {
-    return new Builder(message);
-  }
-
-  /**
-   * Builder for {@link ProtoHttpContent}.
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
-   */
-  public static class Builder {
-
-    /** Content type or {@code null} for none. */
-    private String contentType = ProtocolBuffers.CONTENT_TYPE;
-
-    /** Message to serialize. */
-    private final MessageLite message;
-
-    /**
-     * @param message message to serialize
-     */
-    protected Builder(MessageLite message) {
-      this.message = Preconditions.checkNotNull(message);
-    }
-
-    /** Builds a new instance of {@link ProtoHttpContent}. */
-    public ProtoHttpContent build() {
-      return new ProtoHttpContent(message, contentType);
-    }
-
-    /** Returns the content type or {@code null} for none. */
-    public final String getContentType() {
-      return contentType;
-    }
-
-    /**
-     * Sets the content type or {@code null} for none.
-     *
-     * <p>
-     * Default value is {@link ProtocolBuffers#CONTENT_TYPE}.
-     * </p>
-     */
-    public final Builder setContentType(String contentType) {
-      this.contentType = contentType;
-      return this;
-    }
-
-    /** Returns the message to serialize. */
-    public final MessageLite getMessage() {
-      return message;
-    }
   }
 }

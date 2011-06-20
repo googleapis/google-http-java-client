@@ -22,7 +22,6 @@ import com.google.api.client.util.Key;
 import junit.framework.TestCase;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -80,13 +79,13 @@ public class HttpResponseTest extends TestCase {
       }
     };
     HttpRequest request = transport.createRequestFactory().buildGetRequest(new GenericUrl());
-    request.responseHeaders = new MyHeaders();
+    request.setResponseHeaders(new MyHeaders());
     HttpResponse response = request.execute();
-    assertEquals("value", response.headers.accept);
-    assertEquals("bar", ((MyHeaders) response.headers).foo);
-    assertEquals(new ArrayList<String>(Arrays.asList("o")), ((MyHeaders) response.headers).obj);
-    assertEquals(Arrays.asList("a1", "a2"), Arrays.asList(((MyHeaders) response.headers).r));
-    assertEquals(Arrays.asList("car"), response.headers.get("goo"));
-    assertEquals(Arrays.asList("dar", "far"), response.headers.get("hoo"));
+    assertEquals("value", response.getHeaders().getAccept());
+    assertEquals("bar", ((MyHeaders) response.getHeaders()).foo);
+    assertEquals(Arrays.asList("o"), ((MyHeaders) response.getHeaders()).obj);
+    assertEquals(Arrays.asList("a1", "a2"), Arrays.asList(((MyHeaders) response.getHeaders()).r));
+    assertEquals(Arrays.asList("car"), response.getHeaders().get("goo"));
+    assertEquals(Arrays.asList("dar", "far"), response.getHeaders().get("hoo"));
   }
 }

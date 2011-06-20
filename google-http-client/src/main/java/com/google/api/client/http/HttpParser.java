@@ -19,6 +19,10 @@ import java.io.IOException;
 /**
  * Parses HTTP response content into an data class of key/value pairs.
  *
+ * <p>
+ * Implementations should normally be thread-safe.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -32,8 +36,9 @@ public interface HttpParser {
    * pairs.
    * <p>
    * How the parsing is performed is not restricted by this interface, and is instead defined by the
-   * concrete implementation. Implementations should check {@link HttpResponse#isSuccessStatusCode}
-   * to know whether they are parsing a success or error response.
+   * concrete implementation. Implementations should check
+   * {@link HttpResponse#isSuccessStatusCode()} to know whether they are parsing a success or error
+   * response.
    */
   <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException;
 }

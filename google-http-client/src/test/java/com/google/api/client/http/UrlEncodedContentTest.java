@@ -46,8 +46,7 @@ public class UrlEncodedContentTest extends TestCase {
   }
 
   static String toString(Object data) throws IOException {
-    UrlEncodedContent content = new UrlEncodedContent();
-    content.data = data;
+    UrlEncodedContent content = new UrlEncodedContent(data);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     content.writeTo(out);
     return out.toString();

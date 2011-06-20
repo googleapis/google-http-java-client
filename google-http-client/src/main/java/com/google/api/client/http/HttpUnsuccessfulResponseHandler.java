@@ -71,6 +71,10 @@ import java.io.IOException;
   }
  * </pre>
  *
+ * <p>
+ * Implementations should normally be thread-safe.
+ * </p>
+ *
  * @author moshenko@google.com (Jacob Moshenko)
  * @since 1.4
  */

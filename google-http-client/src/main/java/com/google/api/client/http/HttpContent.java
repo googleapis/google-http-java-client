@@ -20,6 +20,10 @@ import java.io.OutputStream;
 /**
  * Serializes HTTP request content into an output stream.
  *
+ * <p>
+ * Implementations don't need to be thread-safe.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */

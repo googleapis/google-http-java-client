@@ -38,6 +38,10 @@ import java.util.zip.GZIPInputStream;
 /**
  * HTTP response.
  *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -46,16 +50,26 @@ public final class HttpResponse {
   /** HTTP response content or {@code null} before {@link #getContent()}. */
   private InputStream content;
 
-  /** Content encoding or {@code null}. */
+  /**
+   * Content encoding or {@code null}.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContentEncoding}
+   */
+  @Deprecated
   public final String contentEncoding;
 
   /**
-   * Content length or less than zero if not known. May be reset by {@link #getContent()} if
-   * response had GZip compression.
+   * Content length or less than zero if not known. May be reset by {@link #getContent} if response
+   * had GZip compression.
    */
   private long contentLength;
 
-  /** Content type or {@code null} for none. */
+  /**
+   * Content type or {@code null} for none.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContentType}
+   */
+  @Deprecated
   public final String contentType;
 
   /**
@@ -65,29 +79,54 @@ public final class HttpResponse {
    * initialized to {@link HttpRequest#responseHeaders} before being parsed from the actual HTTP
    * response headers.
    * <p>
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getHeaders}
    */
+  @Deprecated
   public final HttpHeaders headers;
 
-  /** Whether received a successful status code {@code >= 200 && < 300}. */
+  /**
+   * Whether received a successful status code {@code >= 200 && < 300}.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #isSuccessStatusCode()}
+   */
+  @Deprecated
   public final boolean isSuccessStatusCode;
 
   /** Low-level HTTP response. */
   private LowLevelHttpResponse response;
 
-  /** Status code. */
+  /**
+   * Status code.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getStatusCode}
+   */
+  @Deprecated
   public final int statusCode;
 
-  /** Status message or {@code null}. */
+  /**
+   * Status message or {@code null}.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getStatusMessage}
+   */
+  @Deprecated
   public final String statusMessage;
 
-  /** HTTP transport. */
+  /**
+   * HTTP transport.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getTransport}
+   */
+  @Deprecated
   public final HttpTransport transport;
 
   /**
    * HTTP request.
    *
    * @since 1.4
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getRequest}
    */
+  @Deprecated
   public final HttpRequest request;
 
   /**
@@ -96,13 +135,17 @@ public final class HttpResponse {
    * <p>
    * Useful for example if content has sensitive data such as an authentication token. Defaults to
    * {@code false}.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getDisableContentLogging} or
+   *             {@link #setDisableContentLogging}
    */
+  @Deprecated
   public boolean disableContentLogging;
 
   HttpResponse(HttpRequest request, LowLevelHttpResponse response) {
     this.request = request;
-    transport = request.transport;
-    headers = request.responseHeaders;
+    transport = request.getTransport();
+    headers = request.getResponseHeaders();
     this.response = response;
     contentLength = response.getContentLength();
     contentType = response.getContentType();
@@ -188,6 +231,105 @@ public final class HttpResponse {
     if (loggable) {
       logger.config(logbuf.toString());
     }
+  }
+
+  /**
+   * Sets whether to disable response content logging during {@link #getContent()} (unless
+   * {@link Level#ALL} is loggable which forces all logging).
+   *
+   * @since 1.5
+   */
+  public boolean getDisableContentLogging() {
+    return disableContentLogging;
+  }
+
+  /**
+   * Sets whether to disable response content logging during {@link #getContent()} (unless
+   * {@link Level#ALL} is loggable which forces all logging).
+   *
+   * <p>
+   * Useful for example if content has sensitive data such as an authentication token. Defaults to
+   * {@code false}.
+   * </p>
+   *
+   * @since 1.5
+   */
+  public HttpResponse setDisableContentLogging(boolean disableContentLogging) {
+    this.disableContentLogging = disableContentLogging;
+    return this;
+  }
+
+  /**
+   * Returns the content encoding or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public String getContentEncoding() {
+    return contentEncoding;
+  }
+
+  /**
+   * Returns the content type or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public String getContentType() {
+    return contentType;
+  }
+
+  /**
+   * Returns the HTTP response headers.
+   *
+   * @since 1.5
+   */
+  public HttpHeaders getHeaders() {
+    return headers;
+  }
+
+  /**
+   * Returns whether received a successful HTTP status code {@code >= 200 && < 300} (see
+   * {@link #getStatusCode()}).
+   *
+   * @since 1.5
+   */
+  public boolean isSuccessStatusCode() {
+    return isSuccessStatusCode;
+  }
+
+  /**
+   * Returns the HTTP status code.
+   *
+   * @since 1.5
+   */
+  public int getStatusCode() {
+    return statusCode;
+  }
+
+  /**
+   * Returns the HTTP status message or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public String getStatusMessage() {
+    return statusMessage;
+  }
+
+  /**
+   * Returns the HTTP transport.
+   *
+   * @since 1.5
+   */
+  public HttpTransport getTransport() {
+    return transport;
+  }
+
+  /**
+   * Returns the HTTP request.
+   *
+   * @since 1.5
+   */
+  public HttpRequest getRequest() {
+    return request;
   }
 
   private static Object parseValue(Type valueType, List<Type> context, String value) {

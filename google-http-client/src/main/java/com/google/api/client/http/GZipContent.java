@@ -21,6 +21,10 @@ import java.util.zip.GZIPOutputStream;
 /**
  * Serializes another source of HTTP content using GZip compression.
  *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
+ *
  * @author Yaniv Inbar
  */
 final class GZipContent implements HttpContent {

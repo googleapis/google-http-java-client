@@ -71,7 +71,7 @@ public final class AtomFeedParser<T, E> extends AbstractAtomFeedParser<T> {
       throws IOException, XmlPullParserException {
     InputStream content = response.getContent();
     try {
-      Atom.checkContentType(response.contentType);
+      Atom.checkContentType(response.getContentType());
       XmlPullParser parser = Xml.createParser();
       parser.setInput(content, null);
       AtomFeedParser<T, E> result = new AtomFeedParser<T, E>();

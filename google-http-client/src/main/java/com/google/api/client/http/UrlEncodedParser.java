@@ -21,6 +21,7 @@ import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
+import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -36,9 +37,16 @@ import java.util.logging.Level;
  * application/x-www-form-urlencoded} as specified in the <a href=
  * "http://www.w3.org/TR/1998/REC-html40-19980424/interact/forms.html#h-17.13.4.1" >HTML 4.0
  * Specification</a>.
+ *
+ * <p>
+ * Implementation is thread-safe as long as the fields are not set directly (which is deprecated
+ * usage).
+ * </p>
+ *
  * <p>
  * The data is parsed using {@link #parse(String, Object)}.
  * </p>
+ *
  * <p>
  * Sample usage:
  *
@@ -50,12 +58,10 @@ import java.util.logging.Level;
  * </code>
  * </pre>
  *
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */
-public final class UrlEncodedParser implements HttpParser {
+public class UrlEncodedParser implements HttpParser {
 
   /** {@code "application/x-www-form-urlencoded"} content type. */
   public static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
@@ -66,23 +72,62 @@ public final class UrlEncodedParser implements HttpParser {
    * <p>
    * Useful for example if content has sensitive data such as an authentication token. Defaults to
    * {@code false}.
+   *
+   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getDisableContentLogging}
+   *             or {@link Builder#setDisableContentLogging}
    */
+  @Deprecated
   public boolean disableContentLogging;
 
-  /** Content type. Default value is {@link #CONTENT_TYPE}. */
+  /**
+   * Content type. Default value is {@link #CONTENT_TYPE}.
+   *
+   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getContentType} or
+   *             {@link Builder#setContentType}
+   */
+  @Deprecated
   public String contentType = CONTENT_TYPE;
 
-  public String getContentType() {
+  public final String getContentType() {
     return contentType;
+  }
+
+  public UrlEncodedParser() {
+  }
+
+  /**
+   * @param contentType content type
+   * @param disableContentLogging whether to disable response content logging (unless
+   *        {@link Level#ALL} is loggable which forces all logging)
+   * @since 1.5
+   */
+  protected UrlEncodedParser(String contentType, boolean disableContentLogging) {
+    this.contentType = contentType;
+    this.disableContentLogging = disableContentLogging;
   }
 
   public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
     if (disableContentLogging) {
-      response.disableContentLogging = true;
+      response.setDisableContentLogging(true);
     }
     T newInstance = Types.newInstance(dataClass);
     parse(response.parseAsString(), newInstance);
     return newInstance;
+  }
+
+  /**
+   * Returns whether to disable response content logging (unless {@link Level#ALL} is loggable which
+   * forces all logging).
+   *
+   * <p>
+   * Useful for example if content has sensitive data such as an authentication token. Defaults to
+   * {@code false}.
+   * </p>
+   *
+   * @since 1.5
+   */
+  public final boolean getDisableContentLogging() {
+    return disableContentLogging;
   }
 
   /**
@@ -186,5 +231,92 @@ public final class UrlEncodedParser implements HttpParser {
   private static Object parseValue(Type valueType, List<Type> context, String value) {
     Type resolved = Data.resolveWildcardTypeOrTypeVariable(context, valueType);
     return Data.parsePrimitiveValue(resolved, value);
+  }
+
+  /**
+   * Returns an instance of a new builder.
+   *
+   * @since 1.5
+   */
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  /**
+   * Builder for {@link UrlEncodedParser}.
+   *
+   * <p>
+   * Implementation is not thread-safe.
+   * </p>
+   *
+   * @since 1.5
+   */
+  public static class Builder {
+
+    /**
+     * Whether to disable response content logging (unless {@link Level#ALL} is loggable which
+     * forces all logging).
+     *
+     * <p>
+     * Useful for example if content has sensitive data such as an authentication token. Defaults to
+     * {@code false}.
+     * </p>
+     */
+    private boolean disableContentLogging;
+
+    /** Content type or {@code null} for none. */
+    private String contentType = CONTENT_TYPE;
+
+    protected Builder() {
+    }
+
+    /** Builds a new instance of {@link UrlEncodedParser}. */
+    public UrlEncodedParser build() {
+      return new UrlEncodedParser(contentType, disableContentLogging);
+    }
+
+    /** Returns the content type or {@code null} for none. */
+    public final String getContentType() {
+      return contentType;
+    }
+
+    /**
+     * Sets the content type.
+     *
+     * <p>
+     * Default value is {@link #CONTENT_TYPE}.
+     * </p>
+     */
+    public Builder setContentType(String contentType) {
+      this.contentType = Preconditions.checkNotNull(contentType);
+      return this;
+    }
+
+    /**
+     * Returns whether to disable response content logging (unless {@link Level#ALL} is loggable
+     * which forces all logging).
+     *
+     * <p>
+     * Useful for example if content has sensitive data such as an authentication token. Defaults to
+     * {@code false}.
+     * </p>
+     */
+    public final boolean getDisableContentLogging() {
+      return disableContentLogging;
+    }
+
+    /**
+     * Sets whether to disable response content logging (unless {@link Level#ALL} is loggable which
+     * forces all logging).
+     *
+     * <p>
+     * Useful for example if content has sensitive data such as an authentication token. Defaults to
+     * {@code false}.
+     * </p>
+     */
+    public Builder setDisableContentLogging(boolean disableContentLogging) {
+      this.disableContentLogging = disableContentLogging;
+      return this;
+    }
   }
 }

@@ -25,6 +25,11 @@ import java.util.logging.Level;
  *
  * <p>
  * Content is only logged if {@link Level#CONFIG} is loggable.
+ * </p>
+ *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
  *
  * @author Yaniv Inbar
  */

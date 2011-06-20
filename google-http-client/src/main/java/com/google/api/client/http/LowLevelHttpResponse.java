@@ -19,9 +19,16 @@ import java.io.InputStream;
 
 /**
  * Low-level HTTP response.
+ *
  * <p>
  * This allows providing a different implementation of the HTTP response that is more compatible
  * with the Java environment used.
+ * </p>
+ *
+ * <p>
+ * Implementation has no fields and therefore thread-safe, but sub-classes are not necessarily
+ * thread-safe.
+ * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar

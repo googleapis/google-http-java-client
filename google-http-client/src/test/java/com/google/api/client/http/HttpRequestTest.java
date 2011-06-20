@@ -21,6 +21,7 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Value;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
 
 import junit.framework.Assert;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Tests {@link HttpRequest}.
@@ -52,18 +54,25 @@ public class HttpRequestTest extends TestCase {
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(new GenericUrl("http://www.google.com"));
     for (HttpMethod method : BASIC_METHODS) {
-      request.method = method;
+      request.setMethod(method);
       request.execute();
     }
     for (HttpMethod method : OTHER_METHODS) {
-      transport.supportedOptionalMethods.remove(method);
-      request.method = method;
+      transport = MockHttpTransport
+          .builder().setSupportedOptionalMethods(ImmutableSet.<HttpMethod>of()).build();
+      request =
+          transport.createRequestFactory().buildGetRequest(new GenericUrl("http://www.google.com"));
+      request.setMethod(method);
       try {
         request.execute();
         fail("expected IllegalArgumentException");
       } catch (IllegalArgumentException e) {
       }
-      transport.supportedOptionalMethods.add(method);
+      transport =
+          MockHttpTransport.builder().setSupportedOptionalMethods(ImmutableSet.of(method)).build();
+      request =
+          transport.createRequestFactory().buildGetRequest(new GenericUrl("http://www.google.com"));
+      request.setMethod(method);
       request.execute();
     }
   }
@@ -82,13 +91,13 @@ public class HttpRequestTest extends TestCase {
           // Return failure on the first call
           MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
           response.setContent("INVALID TOKEN");
-          response.statusCode = 401;
+          response.setStatusCode(401);
           return response;
         }
         // Return success on the second
         MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
         response.setContent("{\"data\":{\"foo\":{\"v1\":{}}}}");
-        response.statusCode = 200;
+        response.setStatusCode(200);
         return response;
       }
     };
@@ -123,10 +132,10 @@ public class HttpRequestTest extends TestCase {
 
     HttpRequest req =
         fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
-    req.unsuccessfulResponseHandler = handler;
+    req.setUnsuccessfulResponseHandler(handler);
     HttpResponse resp = req.execute();
 
-    Assert.assertEquals(200, resp.statusCode);
+    Assert.assertEquals(200, resp.getStatusCode());
     Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
     Assert.assertTrue(handler.isCalled);
   }
@@ -171,8 +180,8 @@ public class HttpRequestTest extends TestCase {
     myHeaders.list = ImmutableList.of("a", "b", "c");
     myHeaders.objList = ImmutableList.of("a2", "b2", "c2");
     myHeaders.r = new String[] {"a1", "a2"};
-    myHeaders.acceptEncoding = null;
-    myHeaders.userAgent = "foo";
+    myHeaders.setAcceptEncoding(null);
+    myHeaders.setUserAgent("foo");
     myHeaders.set("a", "b");
     myHeaders.value = E.VALUE;
     myHeaders.otherValue = E.OTHER_VALUE;
@@ -185,10 +194,24 @@ public class HttpRequestTest extends TestCase {
       }
     };
     HttpRequest request = transport.createRequestFactory().buildGetRequest(new GenericUrl());
-    request.headers = myHeaders;
+    request.setHeaders(myHeaders);
     request.execute();
+    // check old headers
+    // TODO(yanivi): remove @SuppressWarnings("deprecation") for 1.6
+    @SuppressWarnings("deprecation")
+    ListMultimap<String, String> oldHeaders = lowLevelRequest.headers;
+    assertEquals(ImmutableList.of("bar"), oldHeaders.get("foo"));
+    assertEquals(ImmutableList.of("a", "b", "c"), oldHeaders.get("list"));
+    assertEquals(ImmutableList.of("a2", "b2", "c2"), oldHeaders.get("objList"));
+    assertEquals(ImmutableList.of("a1", "a2"), oldHeaders.get("r"));
+    assertFalse(oldHeaders.containsKey("acceptEncoding"));
+    assertEquals(
+        ImmutableList.of("foo " + HttpRequest.USER_AGENT_SUFFIX), oldHeaders.get("User-Agent"));
+    assertEquals(ImmutableList.of("b"), oldHeaders.get("a"));
+    assertEquals(ImmutableList.of("VALUE"), oldHeaders.get("value"));
+    assertEquals(ImmutableList.of("other"), oldHeaders.get("otherValue"));
     // check headers
-    ListMultimap<String, String> headers = lowLevelRequest.headers;
+    Map<String, List<String>> headers = lowLevelRequest.getHeaders();
     assertEquals(ImmutableList.of("bar"), headers.get("foo"));
     assertEquals(ImmutableList.of("a", "b", "c"), headers.get("list"));
     assertEquals(ImmutableList.of("a2", "b2", "c2"), headers.get("objList"));
@@ -233,12 +256,12 @@ public class HttpRequestTest extends TestCase {
     byte[] content = new byte[300];
     Arrays.fill(content, (byte) ' ');
     HttpRequest request = transport.createRequestFactory().buildPostRequest(
-        new GenericUrl(), new ByteArrayContent(content));
-    assertFalse(request.enableGZipContent);
+        new GenericUrl(), new ByteArrayContent(null, content));
+    assertFalse(request.getEnableGZipContent());
     request.execute();
-    assertFalse(request.enableGZipContent);
+    assertFalse(request.getEnableGZipContent());
     request.execute();
-    request.enableGZipContent = true;
+    request.setEnableGZipContent(true);
     transport.expectGZip = true;
     request.execute();
   }

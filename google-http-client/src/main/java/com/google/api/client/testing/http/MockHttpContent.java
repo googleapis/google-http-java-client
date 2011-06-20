@@ -15,6 +15,7 @@
 package com.google.api.client.testing.http;
 
 import com.google.api.client.http.HttpContent;
+import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -22,21 +23,47 @@ import java.io.OutputStream;
 /**
  * Mock for {@link HttpContent}.
  *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
+ *
  * @author Yaniv Inbar
  * @since 1.3
  */
 public class MockHttpContent implements HttpContent {
 
-  /** HTTP content encoding or {@code null} by default. */
+  /**
+   * HTTP content encoding or {@code null} by default.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getEncoding} or
+   *             {@link #setEncoding}
+   */
+  @Deprecated
   public String encoding;
 
-  /** HTTP content length or {@code -1} by default. */
+  /**
+   * HTTP content length or {@code -1} by default.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getLength} or {@link #setLength}
+   */
+  @Deprecated
   public long length = -1;
 
-  /** HTTP content type or {@code null} by default. */
+  /**
+   * HTTP content type or {@code null} by default.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getType} or {@link #setType}
+   */
+  @Deprecated
   public String type;
 
-  /** HTTP content or an empty byte array by default. */
+  /**
+   * HTTP content or an empty byte array by default.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContent} or
+   *             {@link #setContent}
+   */
+  @Deprecated
   public byte[] content = new byte[0];
 
   public String getEncoding() {
@@ -54,8 +81,66 @@ public class MockHttpContent implements HttpContent {
   public void writeTo(OutputStream out) throws IOException {
     out.write(content);
   }
-  
+
   public boolean retrySupported() {
     return true;
+  }
+
+  /**
+   * Returns the HTTP content.
+   *
+   * @since 1.5
+   */
+  public final byte[] getContent() {
+    return content;
+  }
+
+  /**
+   * Sets the HTTP content.
+   *
+   * <p>
+   * Default value is an empty byte array.
+   * </p>
+   *
+   * @since 1.5
+   */
+  public MockHttpContent setContent(byte[] content) {
+    this.content = Preconditions.checkNotNull(content);
+    return this;
+  }
+
+  /**
+   * Sets the HTTP content encoding or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public MockHttpContent setEncoding(String encoding) {
+    this.encoding = encoding;
+    return this;
+  }
+
+  /**
+   * Returns the HTTP content length or {@code -1} for unknown.
+   *
+   * <p>
+   * Default value is {@code -1}.
+   * </p>
+   *
+   * @since 1.5
+   */
+  public MockHttpContent setLength(long length) {
+    Preconditions.checkArgument(length >= -1);
+    this.length = length;
+    return this;
+  }
+
+  /**
+   * Sets the HTTP content type or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public MockHttpContent setType(String type) {
+    this.type = type;
+    return this;
   }
 }

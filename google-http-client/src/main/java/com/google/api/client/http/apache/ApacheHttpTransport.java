@@ -40,9 +40,17 @@ import org.apache.http.params.HttpProtocolParams;
 
 /**
  * Thread-safe HTTP transport based on the Apache HTTP Client library.
+ *
+ * <p>
+ * Implementation is thread-safe, as long as any parameter modification to the
+ * {@link #getHttpClient() Apache HTTP Client} is only done at initialization time. For maximum
+ * efficiency, applications should use a single globally-shared instance of the HTTP transport.
+ * </p>
+ *
  * <p>
  * Default settings:
  * </p>
+ *
  * <ul>
  * <li>The client connection manager is set to {@link ThreadSafeClientConnManager}.</li>
  * <li>Timeout is set to 20 seconds using {@link ConnManagerParams#setTimeout},
@@ -51,6 +59,7 @@ import org.apache.http.params.HttpProtocolParams;
  * <li>The socket buffer size is set to 8192 using {@link HttpConnectionParams#setSocketBufferSize}.
  * </li>
  * </ul>
+ *
  * <p>
  * These parameters may be overridden by setting the values on the {@link #httpClient}.
  * {@link HttpClient#getParams() getParams()}. Please read the <a
@@ -68,7 +77,9 @@ public final class ApacheHttpTransport extends HttpTransport {
    * Apache HTTP client.
    *
    * @since 1.1
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getHttpClient}
    */
+  @Deprecated
   public final HttpClient httpClient;
 
   /**
@@ -141,5 +152,14 @@ public final class ApacheHttpTransport extends HttpTransport {
   @Override
   public void shutdown() {
     httpClient.getConnectionManager().shutdown();
+  }
+
+  /**
+   * Returns the Apache HTTP client.
+   *
+   * @since 1.5
+   */
+  public HttpClient getHttpClient() {
+    return httpClient;
   }
 }

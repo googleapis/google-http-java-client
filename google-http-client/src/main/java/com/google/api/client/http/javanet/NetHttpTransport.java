@@ -21,6 +21,11 @@ import java.io.IOException;
 /**
  * Thread-safe HTTP low-level transport based on the {@code java.net} package.
  *
+ * <p>
+ * Implementation is thread-safe. For maximum efficiency, applications should use a single
+ * globally-shared instance of the HTTP transport.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */

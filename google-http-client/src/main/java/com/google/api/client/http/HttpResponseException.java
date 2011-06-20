@@ -39,8 +39,8 @@ public final class HttpResponseException extends IOException {
 
   /** Returns an exception message to use for the given HTTP response. */
   public static String computeMessage(HttpResponse response) {
-    String statusMessage = response.statusMessage;
-    int statusCode = response.statusCode;
+    String statusMessage = response.getStatusMessage();
+    int statusCode = response.getStatusCode();
     if (statusMessage == null) {
       return String.valueOf(statusCode);
     }

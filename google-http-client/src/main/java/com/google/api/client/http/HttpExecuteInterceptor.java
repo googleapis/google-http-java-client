@@ -66,6 +66,10 @@ import java.io.IOException;
   }
  * </pre>
  *
+ * <p>
+ * Implementations should normally be thread-safe.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */

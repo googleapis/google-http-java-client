@@ -35,15 +35,13 @@ import java.net.URL;
  */
 final class UrlFetchRequest extends LowLevelHttpRequest {
 
+  private static final FetchOptions OPTIONS =
+      FetchOptions.Builder.doNotFollowRedirects().disallowTruncate().validateCertificate();
   private HttpContent content;
-  private final HTTPMethod method;
   private final HTTPRequest request;
 
-  UrlFetchRequest(String requestMethod, String url) throws IOException {
-    method = HTTPMethod.valueOf(requestMethod);
-    FetchOptions options =
-        FetchOptions.Builder.doNotFollowRedirects().disallowTruncate().validateCertificate();
-    request = new HTTPRequest(new URL(url), method, options);
+  UrlFetchRequest(HTTPMethod method, String url) throws IOException {
+    request = new HTTPRequest(new URL(url), method, OPTIONS);
   }
 
   @Override

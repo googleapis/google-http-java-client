@@ -42,32 +42,32 @@ public class GenericUrlTest extends TestCase {
 
   public void testBuild_minimal() {
     GenericUrl url = new GenericUrl();
-    url.scheme = "foo";
-    url.host = "bar";
+    url.setScheme("foo");
+    url.setHost("bar");
     assertEquals(MINIMAL, url.build());
   }
 
   public void testParse_minimal() {
     GenericUrl url = new GenericUrl(MINIMAL);
-    assertEquals("foo", url.scheme);
+    assertEquals("foo", url.getScheme());
   }
 
   private static String NO_PATH = "foo://bar?a=b";
 
   public void testBuild_noPath() {
     GenericUrl url = new GenericUrl();
-    url.scheme = "foo";
-    url.host = "bar";
+    url.setScheme("foo");
+    url.setHost("bar");
     url.set("a", "b");
     assertEquals(NO_PATH, url.build());
   }
 
   public void testParse_noPath() {
     GenericUrl url = new GenericUrl(NO_PATH);
-    assertEquals("foo", url.scheme);
-    assertEquals("bar", url.host);
+    assertEquals("foo", url.getScheme());
+    assertEquals("bar", url.getHost());
     assertEquals("b", url.getFirst("a"));
-    assertNull(url.pathParts);
+    assertNull(url.getPathParts());
   }
 
   private static String SHORT_PATH = "foo://bar/path?a=b";
@@ -76,18 +76,18 @@ public class GenericUrlTest extends TestCase {
 
   public void testBuild_shortPath() {
     GenericUrl url = new GenericUrl();
-    url.scheme = "foo";
-    url.host = "bar";
-    url.pathParts = SHORT_PATH_PARTS;
+    url.setScheme("foo");
+    url.setHost("bar");
+    url.setPathParts(SHORT_PATH_PARTS);
     url.set("a", "b");
     assertEquals(SHORT_PATH, url.build());
   }
 
   public void testParse_shortPath() {
     GenericUrl url = new GenericUrl(SHORT_PATH);
-    assertEquals("foo", url.scheme);
-    assertEquals("bar", url.host);
-    assertEquals(SHORT_PATH_PARTS, url.pathParts);
+    assertEquals("foo", url.getScheme());
+    assertEquals("bar", url.getHost());
+    assertEquals(SHORT_PATH_PARTS, url.getPathParts());
     assertEquals("b", url.getFirst("a"));
   }
 
@@ -97,18 +97,18 @@ public class GenericUrlTest extends TestCase {
 
   public void testBuild_longPath() {
     GenericUrl url = new GenericUrl();
-    url.scheme = "foo";
-    url.host = "bar";
-    url.pathParts = LONG_PATH_PARTS;
+    url.setScheme("foo");
+    url.setHost("bar");
+    url.setPathParts(LONG_PATH_PARTS);
     url.set("a", "b");
     assertEquals(LONG_PATH, url.build());
   }
 
   public void testParse_longPath() {
     GenericUrl url = new GenericUrl(LONG_PATH);
-    assertEquals("foo", url.scheme);
-    assertEquals("bar", url.host);
-    assertEquals(LONG_PATH_PARTS, url.pathParts);
+    assertEquals("foo", url.getScheme());
+    assertEquals("bar", url.getHost());
+    assertEquals(LONG_PATH_PARTS, url.getPathParts());
     assertEquals("b", url.getFirst("a"));
   }
 
@@ -136,10 +136,10 @@ public class GenericUrlTest extends TestCase {
 
   public void testBuild_full() {
     TestUrl url = new TestUrl();
-    url.scheme = "https";
-    url.host = "www.google.com";
-    url.port = 223;
-    url.pathParts = FULL_PARTS;
+    url.setScheme("https");
+    url.setHost("www.google.com");
+    url.setPort(223);
+    url.setPathParts(FULL_PARTS);
     url.set("alt", "json");
     url.set("max-results", 3);
     url.set("prettyprint", true);
@@ -151,10 +151,10 @@ public class GenericUrlTest extends TestCase {
 
   public void testParse_full() {
     TestUrl url = new TestUrl(FULL);
-    assertEquals("https", url.scheme);
-    assertEquals("www.google.com", url.host);
-    assertEquals(223, url.port);
-    assertEquals(FULL_PARTS, url.pathParts);
+    assertEquals("https", url.getScheme());
+    assertEquals("www.google.com", url.getHost());
+    assertEquals(223, url.getPort());
+    assertEquals(FULL_PARTS, url.getPathParts());
     assertEquals("json", url.getFirst("alt"));
     assertEquals("3", url.getFirst("max-results"));
     assertEquals("true", url.getFirst("prettyprint"));
@@ -202,8 +202,8 @@ public class GenericUrlTest extends TestCase {
 
   public void testBuild_fieldTypes() {
     FieldTypesUrl url = new FieldTypesUrl();
-    url.scheme = "foo";
-    url.host = "bar";
+    url.setScheme("foo");
+    url.setHost("bar");
     url.set("a", "b");
     url.B = true;
     url.D = -3.14;
@@ -218,8 +218,8 @@ public class GenericUrlTest extends TestCase {
 
   public void testParse_fieldTypes() {
     FieldTypesUrl url = new FieldTypesUrl(FIELD_TYPES);
-    assertEquals("foo", url.scheme);
-    assertEquals("bar", url.host);
+    assertEquals("foo", url.getScheme());
+    assertEquals("bar", url.getHost());
     assertEquals("b", url.getFirst("a"));
     assertNull(url.hidden);
     assertEquals(true, url.b);
@@ -235,40 +235,40 @@ public class GenericUrlTest extends TestCase {
 
   public void testBuild_fragment1() {
     GenericUrl url = new GenericUrl();
-    url.scheme = "foo";
-    url.host = "bar";
-    url.pathParts = LONG_PATH_PARTS;
-    url.fragment = "fragme=#/%& ?<o>nt";
+    url.setScheme("foo");
+    url.setHost("bar");
+    url.setPathParts(LONG_PATH_PARTS);
+    url.setFragment("fragme=#/%& ?<o>nt");
     assertEquals(FRAGMENT1, url.build());
   }
 
   public void testParse_fragment1() {
     GenericUrl url = new GenericUrl(FRAGMENT1);
-    assertEquals("foo", url.scheme);
-    assertEquals("bar", url.host);
-    assertEquals(LONG_PATH_PARTS, url.pathParts);
-    assertEquals("fragme=#/%& ?<o>nt", url.fragment);
+    assertEquals("foo", url.getScheme());
+    assertEquals("bar", url.getHost());
+    assertEquals(LONG_PATH_PARTS, url.getPathParts());
+    assertEquals("fragme=#/%& ?<o>nt", url.getFragment());
   }
 
   private static String FRAGMENT2 = "foo://bar/path/to/resource?a=b#fragment";
 
   public void testBuild_fragment2() {
     GenericUrl url = new GenericUrl();
-    url.scheme = "foo";
-    url.host = "bar";
-    url.pathParts = LONG_PATH_PARTS;
+    url.setScheme("foo");
+    url.setHost("bar");
+    url.setPathParts(LONG_PATH_PARTS);
     url.set("a", "b");
-    url.fragment = "fragment";
+    url.setFragment("fragment");
     assertEquals(FRAGMENT2, url.build());
   }
 
   public void testParse_fragment2() {
     GenericUrl url = new GenericUrl(FRAGMENT2);
-    assertEquals("foo", url.scheme);
-    assertEquals("bar", url.host);
-    assertEquals(LONG_PATH_PARTS, url.pathParts);
+    assertEquals("foo", url.getScheme());
+    assertEquals("bar", url.getHost());
+    assertEquals(LONG_PATH_PARTS, url.getPathParts());
     assertEquals("b", url.getFirst("a"));
-    assertEquals("fragment", url.fragment);
+    assertEquals("fragment", url.getFragment());
   }
 
   private static final String PATH_WITH_SLASH =
@@ -279,17 +279,17 @@ public class GenericUrlTest extends TestCase {
 
   public void testBuild_pathWithSlash() {
     GenericUrl url = new GenericUrl();
-    url.scheme = "http";
-    url.host = "www.google.com";
-    url.pathParts = PATH_WITH_SLASH_PARTS;
+    url.setScheme("http");
+    url.setHost("www.google.com");
+    url.setPathParts(PATH_WITH_SLASH_PARTS);
     assertEquals(PATH_WITH_SLASH, url.build());
   }
 
   public void testParse_pathWithSlash() {
     GenericUrl url = new GenericUrl(PATH_WITH_SLASH);
-    assertEquals("http", url.scheme);
-    assertEquals("www.google.com", url.host);
-    assertEquals(PATH_WITH_SLASH_PARTS, url.pathParts);
+    assertEquals("http", url.getScheme());
+    assertEquals("www.google.com", url.getHost());
+    assertEquals(PATH_WITH_SLASH_PARTS, url.getPathParts());
   }
 
   public void testToPathParts() {
@@ -316,25 +316,25 @@ public class GenericUrlTest extends TestCase {
 
   public void testAppendPath() {
     GenericUrl url = new GenericUrl("http://google.com");
-    assertNull(url.pathParts);
+    assertNull(url.getPathParts());
     url.appendRawPath(null);
-    assertNull(url.pathParts);
+    assertNull(url.getPathParts());
     url.appendRawPath("");
-    assertNull(url.pathParts);
+    assertNull(url.getPathParts());
     url.appendRawPath("/");
-    assertEquals(Arrays.asList("", ""), url.pathParts);
+    assertEquals(Arrays.asList("", ""), url.getPathParts());
     url.appendRawPath("/");
-    assertEquals(Arrays.asList("", "", ""), url.pathParts);
+    assertEquals(Arrays.asList("", "", ""), url.getPathParts());
     url.appendRawPath("/a");
-    assertEquals(Arrays.asList("", "", "", "a"), url.pathParts);
+    assertEquals(Arrays.asList("", "", "", "a"), url.getPathParts());
     url.appendRawPath("b");
-    assertEquals(Arrays.asList("", "", "", "ab"), url.pathParts);
+    assertEquals(Arrays.asList("", "", "", "ab"), url.getPathParts());
     url.appendRawPath("c/d");
-    assertEquals(Arrays.asList("", "", "", "abc", "d"), url.pathParts);
+    assertEquals(Arrays.asList("", "", "", "abc", "d"), url.getPathParts());
     url.appendRawPath("/e");
-    assertEquals(Arrays.asList("", "", "", "abc", "d", "e"), url.pathParts);
+    assertEquals(Arrays.asList("", "", "", "abc", "d", "e"), url.getPathParts());
     url.appendRawPath("/");
-    assertEquals(Arrays.asList("", "", "", "abc", "d", "e", ""), url.pathParts);
+    assertEquals(Arrays.asList("", "", "", "abc", "d", "e", ""), url.getPathParts());
   }
 
   private static final String PREFIX = "https://www.googleapis.com";
@@ -348,9 +348,9 @@ public class GenericUrlTest extends TestCase {
 
   public void testRepeatedParam_build() {
     GenericUrl url = new GenericUrl();
-    url.scheme = "https";
-    url.host = "www.googleapis.com";
-    url.pathParts = REPEATED_PARAM_PATH_PARTS;
+    url.setScheme("https");
+    url.setHost("www.googleapis.com");
+    url.setPathParts(REPEATED_PARAM_PATH_PARTS);
     url.set("q", Arrays.asList("c", "a", "b"));
     url.set("s", "e");
     assertEquals(REPEATED_PARAM, url.build());
@@ -358,9 +358,9 @@ public class GenericUrlTest extends TestCase {
 
   public void testRepeatedParam_parse() {
     GenericUrl url = new GenericUrl(REPEATED_PARAM);
-    assertEquals("https", url.scheme);
-    assertEquals("www.googleapis.com", url.host);
-    assertEquals(REPEATED_PARAM_PATH_PARTS, url.pathParts);
+    assertEquals("https", url.getScheme());
+    assertEquals("www.googleapis.com", url.getHost());
+    assertEquals(REPEATED_PARAM_PATH_PARTS, url.getPathParts());
     assertEquals("c", url.getFirst("q"));
     assertEquals("e", url.getFirst("s"));
     assertEquals(Arrays.asList("e"), url.get("s"));
@@ -375,8 +375,8 @@ public class GenericUrlTest extends TestCase {
 
   public void testBuild_noValue() {
     GenericUrl url = new GenericUrl();
-    url.scheme = "https";
-    url.host = "www.googleapis.com";
+    url.setScheme("https");
+    url.setHost("www.googleapis.com");
     url.setRawPath(REPEATED_PARAM_PATH);
     url.set("noval", "");
     assertEquals(PREFIX + REPEATED_PARAM_PATH + "?noval", url.build());

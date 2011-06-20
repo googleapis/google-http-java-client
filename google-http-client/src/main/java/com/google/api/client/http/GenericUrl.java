@@ -19,6 +19,7 @@ import com.google.api.client.util.Key;
 import com.google.api.client.util.escape.CharEscapers;
 import com.google.api.client.util.escape.Escaper;
 import com.google.api.client.util.escape.PercentEscaper;
+import com.google.common.base.Preconditions;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,14 +34,20 @@ import java.util.Map;
  * URL builder in which the query parameters are specified as generic data key/value pairs, based on
  * the specification <a href="http://tools.ietf.org/html/rfc3986">RFC 3986: Uniform Resource
  * Identifier (URI)</a>.
+ *
  * <p>
  * The query parameters are specified with the data key name as the parameter name, and the data
  * value as the parameter value. Subclasses can declare fields for known query parameters using the
  * {@link Key} annotation. {@code null} parameter names are not allowed, but {@code null} query
  * values are allowed.
  * </p>
+ *
  * <p>
  * Query parameter values are parsed using {@link UrlEncodedParser#parse(String, Object)}.
+ * </p>
+ *
+ * <p>
+ * Implementation is not thread-safe.
  * </p>
  *
  * @since 1.0
@@ -51,13 +58,28 @@ public class GenericUrl extends GenericData {
   private static final Escaper URI_FRAGMENT_ESCAPER =
       new PercentEscaper("=&-_.!~*'()@:$,;/?:", false);
 
-  /** Scheme (lowercase), for example {@code "https"}. */
+  /**
+   * Scheme (lowercase), for example {@code "https"}.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getScheme} or {@link #setScheme}
+   */
+  @Deprecated
   public String scheme;
 
-  /** Host, for example {@code "www.google.com"}. */
+  /**
+   * Host, for example {@code "www.google.com"}.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getHost} or {@link #setHost}
+   */
+  @Deprecated
   public String host;
 
-  /** Port number or {@code -1} if undefined, for example {@code 443}. */
+  /**
+   * Port number or {@code -1} if undefined, for example {@code 443}.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getPort} or {@link #setPort}
+   */
+  @Deprecated
   public int port = -1;
 
   /**
@@ -68,10 +90,20 @@ public class GenericUrl extends GenericData {
    * Use {@link #appendRawPath(String)} to append to the path, which ensures that no extra slash is
    * added.
    * </p>
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getPathParts} or
+   *             {@link #setPathParts}
    */
+  @Deprecated
   public List<String> pathParts;
 
-  /** Fragment component or {@code null} for none. */
+  /**
+   * Fragment component or {@code null} for none.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getFragment} or
+   *             {@link #setFragment}
+   */
+  @Deprecated
   public String fragment;
 
   public GenericUrl() {
@@ -135,6 +167,110 @@ public class GenericUrl extends GenericData {
       result.pathParts = new ArrayList<String>(pathParts);
     }
     return result;
+  }
+
+
+  /**
+   * Returns the scheme (lowercase), for example {@code "https"}.
+   *
+   * @since 1.5
+   */
+  public final String getScheme() {
+    return scheme;
+  }
+
+  /**
+   * Sets the scheme (lowercase), for example {@code "https"}.
+   *
+   * @since 1.5
+   */
+  public final void setScheme(String scheme) {
+    this.scheme = Preconditions.checkNotNull(scheme);
+  }
+
+  /**
+   * Returns the host, for example {@code "www.google.com"}.
+   *
+   * @since 1.5
+   */
+  public String getHost() {
+    return host;
+  }
+
+  /**
+   * Sets the host, for example {@code "www.google.com"}.
+   *
+   * @since 1.5
+   */
+  public final void setHost(String host) {
+    this.host = Preconditions.checkNotNull(host);
+  }
+
+  /**
+   * Returns the port number or {@code -1} if undefined, for example {@code 443}.
+   *
+   * @since 1.5
+   */
+  public int getPort() {
+    return port;
+  }
+
+  /**
+   * Returns the port number or {@code -1} if undefined, for example {@code 443}.
+   *
+   * @since 1.5
+   */
+  public final void setPort(int port) {
+    Preconditions.checkArgument(port >= -1, "expected port >= -1");
+    this.port = port;
+  }
+
+  /**
+   * Sets the decoded path component by parts with each part separated by a {@code '/'} or {@code
+   * null} for none.
+   *
+   * @since 1.5
+   */
+  public List<String> getPathParts() {
+    return pathParts;
+  }
+
+  /**
+   * Sets the decoded path component by parts with each part separated by a {@code '/'} or {@code
+   * null} for none.
+   *
+   * <p>
+   * For example {@code "/m8/feeds/contacts/default/full"} is represented by {@code "", "m8",
+   * "feeds", "contacts", "default", "full"}.
+   * </p>
+   *
+   * <p>
+   * Use {@link #appendRawPath(String)} to append to the path, which ensures that no extra slash is
+   * added.
+   * </p>
+   *
+   * @since 1.5
+   */
+  public void setPathParts(List<String> pathParts) {
+    this.pathParts = pathParts;
+  }
+
+  /**
+   * Returns the fragment component or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public String getFragment() {
+    return fragment;
+  }
+
+  /**
+   * Sets the fragment component or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public final void setFragment(String fragment) {
+    this.fragment = fragment;
   }
 
   /**

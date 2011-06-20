@@ -24,9 +24,11 @@ import java.io.IOException;
 
 /**
  * Parses protocol buffer HTTP response content into a protocol buffer message.
+ *
  * <p>
  * Implementation is immutable and therefore thread-safe.
  * </p>
+ *
  * <p>
  * Sample usage:
  * </p>
@@ -34,7 +36,7 @@ import java.io.IOException;
  * <pre>
  * <code>
   static void setParser(HttpRequest request) {
-    request.addParser(ProtoHttpParser.builder().build());
+    request.addParser(new ProtoHttpParser());
   }
  * </code>
  * </pre>
@@ -45,7 +47,11 @@ import java.io.IOException;
 public class ProtoHttpParser implements HttpParser {
 
   /** Content type. */
-  private volatile String contentType = ProtocolBuffers.CONTENT_TYPE;
+  private final String contentType;
+
+  public ProtoHttpParser() {
+    contentType = ProtocolBuffers.CONTENT_TYPE;
+  }
 
   /**
    * @param contentType content type
@@ -95,11 +101,12 @@ public class ProtoHttpParser implements HttpParser {
 
     /**
      * Sets the content type.
+     *
      * <p>
      * Default value is {@link ProtocolBuffers#CONTENT_TYPE}.
      * </p>
      */
-    public final Builder setContentType(String contentType) {
+    public Builder setContentType(String contentType) {
       this.contentType = Preconditions.checkNotNull(contentType);
       return this;
     }

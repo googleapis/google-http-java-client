@@ -21,9 +21,17 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Mock for {@link LowLevelHttpRequest}.
+ *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
  *
  * @author Yaniv Inbar
  * @since 1.3
@@ -34,22 +42,32 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
    * Request URL or {@code null} for none.
    *
    * @since 1.4
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getUrl} or {@link #setUrl}
    */
+  @Deprecated
   public String url;
 
   /**
    * Headers added in {@link #addHeader(String, String)}.
    *
    * @since 1.4
+   * @deprecated (scheduled to be removed in 1.6) Use {@link #getHeaders} or {@link #getHeaders}
    */
+  @Deprecated
   public final ListMultimap<String, String> headers = ArrayListMultimap.create();
 
   /**
    * HTTP content or {@code null} for none.
    *
    * @since 1.4
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContent} or
+   *             {@link #setContent}
    */
+  @Deprecated
   public HttpContent content;
+
+  /** Map of header name to values. */
+  private final Map<String, List<String>> headersMap = new HashMap<String, List<String>>();
 
   public MockLowLevelHttpRequest() {
   }
@@ -65,6 +83,12 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
   @Override
   public void addHeader(String name, String value) {
     headers.put(name, value);
+    List<String> values = headersMap.get(name);
+    if (values == null) {
+      values = new ArrayList<String>();
+      headersMap.put(name, values);
+    }
+    values.add(value);
   }
 
   @Override
@@ -75,5 +99,42 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
   @Override
   public void setContent(HttpContent content) throws IOException {
     this.content = content;
+  }
+
+  /**
+   * Returns the request URL or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public String getUrl() {
+    return url;
+  }
+
+  /**
+   * Returns the map of header name to values.
+   *
+   * @since 1.5
+   */
+  public Map<String, List<String>> getHeaders() {
+    return headersMap;
+  }
+
+  /**
+   * Sets the request URL or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public MockLowLevelHttpRequest setUrl(String url) {
+    this.url = url;
+    return this;
+  }
+
+  /**
+   * Returns the HTTP content or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public HttpContent getContent() {
+    return content;
   }
 }

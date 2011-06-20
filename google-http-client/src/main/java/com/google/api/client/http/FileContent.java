@@ -24,20 +24,22 @@ import java.io.InputStream;
 /**
  * Concrete implementation of {@link AbstractInputStreamContent} that generates repeatable input
  * streams based on the contents of a file.
- * <p>
- * The {@link #type} fields is required.
+ *
  * <p>
  * Sample use:
+ * </p>
  *
  * <pre>
  * <code>
   private static void setRequestJpegContent(HttpRequest request, File jpegFile) {
-    FileContent content = new FileContent(jpegFile);
-    content.type = "image/jpeg";
-    request.content = content;
+    request.setContent(new FileContent("image/jpeg", jpegFile));
   }
  * </code>
  * </pre>
+ *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
  *
  * @since 1.4
  * @author moshenko@google.com (Jacob Moshenko)
@@ -47,11 +49,22 @@ public final class FileContent extends AbstractInputStreamContent {
   private final File file;
 
   /**
-   * @param file File handle which will be used to create input streams.
+   * @param file file
+   * @deprecated (scheduled to be removed in 1.6) Use {@link #FileContent(String, File)}
    */
+  @Deprecated
   public FileContent(File file) {
-    Preconditions.checkNotNull(file);
-    this.file = file;
+    this(null, file);
+  }
+
+  /**
+   * @param type Content type or {@code null} for none
+   * @param file file
+   * @since 1.5
+   */
+  public FileContent(String type, File file) {
+    super(type);
+    this.file = Preconditions.checkNotNull(file);
   }
 
   public long getLength() {
@@ -65,5 +78,24 @@ public final class FileContent extends AbstractInputStreamContent {
   @Override
   protected InputStream getInputStream() throws FileNotFoundException {
     return new FileInputStream(file);
+  }
+
+  /**
+   * Returns the file.
+   *
+   * @since 1.5
+   */
+  public File getFile() {
+    return file;
+  }
+
+  @Override
+  public FileContent setEncoding(String encoding) {
+    return (FileContent) super.setEncoding(encoding);
+  }
+
+  @Override
+  public FileContent setType(String type) {
+    return (FileContent) super.setType(type);
   }
 }

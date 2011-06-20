@@ -19,22 +19,22 @@ import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonEncoding;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
+import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
  * Serializes JSON HTTP content based on the data key/value mapping object for an item.
+ *
  * <p>
  * Sample usage:
+ * </p>
  *
  * <pre>
  * <code>
   static void setContent(HttpRequest request, Object data) {
-    JsonHttpContent content = new JsonHttpContent();
-    content.jsonFactory = new JacksonFactory();
-    content.data = data;
-    request.content = content;
+    request.setContent(new JsonHttpContent(new JacksonFactory(), data));
   }
  * </code>
  * </pre>
@@ -43,24 +43,57 @@ import java.io.OutputStream;
  * Currently {@link #getLength()} always returns -1, but this may change in the future.
  * </p>
  *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
 public class JsonHttpContent implements HttpContent {
   // TODO(yanivi): ability to annotate fields as only needed for POST?
 
-  /** Content type. Default value is {@link Json#CONTENT_TYPE}. */
+  /**
+   * Content type. Default value is {@link Json#CONTENT_TYPE}.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getType} or {@link #setType}
+   */
+  @Deprecated
   public String contentType = Json.CONTENT_TYPE;
 
-  /** Key/value pair data. */
+  /**
+   * JSON key name/value data.
+   *
+   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getData}
+   */
+  @Deprecated
   public Object data;
 
   /**
-   * (Required) JSON factory to use.
+   * JSON factory.
    *
    * @since 1.3
+   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getJsonFactory}
    */
+  @Deprecated
   public JsonFactory jsonFactory;
+
+  /**
+   * @deprecated (scheduled to be removed in 1.6) Use {@link #JsonHttpContent(JsonFactory, Object)}
+   */
+  @Deprecated
+  public JsonHttpContent() {
+  }
+
+  /**
+   * @param jsonFactory JSON factory to use
+   * @param data JSON key name/value data
+   * @since 1.5
+   */
+  public JsonHttpContent(JsonFactory jsonFactory, Object data) {
+    this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
+    this.data = Preconditions.checkNotNull(data);
+  }
 
   public long getLength() {
     // TODO(yanivi): calculate length? consider performance impact since computing it may be slow,
@@ -68,12 +101,12 @@ public class JsonHttpContent implements HttpContent {
     return -1;
   }
 
-  public final String getEncoding() {
+  public String getEncoding() {
     return null;
   }
 
   public String getType() {
-    return Json.CONTENT_TYPE;
+    return contentType;
   }
 
   public void writeTo(OutputStream out) throws IOException {
@@ -84,5 +117,37 @@ public class JsonHttpContent implements HttpContent {
 
   public boolean retrySupported() {
     return true;
+  }
+
+  /**
+   * Sets the content type or {@code null} for none.
+   *
+   * <p>
+   * Defaults to {@link Json#CONTENT_TYPE}.
+   * </p>
+   *
+   * @since 1.5
+   */
+  public JsonHttpContent setType(String type) {
+    contentType = type;
+    return this;
+  }
+
+  /**
+   * Returns the JSON key name/value data.
+   *
+   * @since 1.5
+   */
+  public final Object getData() {
+    return data;
+  }
+
+  /**
+   * Returns the JSON factory.
+   *
+   * @since 1.5
+   */
+  public final JsonFactory getJsonFactory() {
+    return jsonFactory;
   }
 }

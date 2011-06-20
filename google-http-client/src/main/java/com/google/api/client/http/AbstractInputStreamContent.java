@@ -20,10 +20,15 @@ import java.io.OutputStream;
 
 /**
  * Serializes HTTP request content from an input stream into an output stream.
+ *
  * <p>
  * The {@link #type} field is required. Subclasses should implement the {@link #getLength()},
  * {@link #getInputStream()}, and {@link #retrySupported()} for their specific type of input stream.
  * <p>
+ *
+ * <p>
+ * Implementations don't need to be thread-safe.
+ * </p>
  *
  * @since 1.4
  * @author moshenko@google.com (Jacob Moshenko)
@@ -32,13 +37,37 @@ public abstract class AbstractInputStreamContent implements HttpContent {
 
   private final static int BUFFER_SIZE = 2048;
 
-  /** Required content type. */
+  /**
+   * Content type or {@code null} for none.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getType} or {@link #setType}
+   */
+  @Deprecated
   public String type;
 
   /**
    * Content encoding (for example {@code "gzip"}) or {@code null} for none.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getEncoding} or
+   *             {@link #setEncoding}
    */
+  @Deprecated
   public String encoding;
+
+  /**
+   * @deprecated (scheduled to be removed in 1.6) Use {@link #AbstractInputStreamContent(String)}
+   */
+  @Deprecated
+  public AbstractInputStreamContent() {
+  }
+
+  /**
+   * @param type Content type or {@code null} for none
+   * @since 1.5
+   */
+  public AbstractInputStreamContent(String type) {
+    setType(type);
+  }
 
   /**
    * Return an input stream for the specific implementation type of
@@ -81,6 +110,26 @@ public abstract class AbstractInputStreamContent implements HttpContent {
   }
 
   /**
+   * Sets the content encoding (for example {@code "gzip"}) or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public AbstractInputStreamContent setEncoding(String encoding) {
+    this.encoding = encoding;
+    return this;
+  }
+
+  /**
+   * Sets the content type or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public AbstractInputStreamContent setType(String type) {
+    this.type = type;
+    return this;
+  }
+
+  /**
    * Writes the content provided by the given source input stream into the given destination output
    * stream.
    * <p>
@@ -104,7 +153,6 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    *
    * @param inputStream source input stream
    * @param outputStream destination output stream
-   * @throws IOException I/O exception
    */
   public static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
     try {

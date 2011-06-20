@@ -16,6 +16,7 @@ package com.google.api.client.extensions.appengine.http.urlfetch;
 
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
+import com.google.appengine.api.urlfetch.HTTPMethod;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -23,6 +24,12 @@ import java.net.HttpURLConnection;
 /**
  * Thread-safe HTTP transport for Google App Engine based on <a
  * href="http://code.google.com/appengine/docs/java/urlfetch/">URL Fetch</a>.
+ *
+ * <p>
+ * Implementation is thread-safe. For maximum efficiency, applications should use a single
+ * globally-shared instance of the HTTP transport.
+ * </p>
+ *
  * <p>
  * URL Fetch is only available on Google App Engine (not on any other Java environment), and is the
  * underlying HTTP transport used for App Engine. Their implementation of {@link HttpURLConnection}
@@ -46,26 +53,26 @@ public final class UrlFetchTransport extends HttpTransport {
 
   @Override
   public LowLevelHttpRequest buildDeleteRequest(String url) throws IOException {
-    return new UrlFetchRequest("DELETE", url);
+    return new UrlFetchRequest(HTTPMethod.DELETE, url);
   }
 
   @Override
   public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
-    return new UrlFetchRequest("GET", url);
+    return new UrlFetchRequest(HTTPMethod.GET, url);
   }
 
   @Override
   public LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
-    return new UrlFetchRequest("HEAD", url);
+    return new UrlFetchRequest(HTTPMethod.HEAD, url);
   }
 
   @Override
   public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
-    return new UrlFetchRequest("POST", url);
+    return new UrlFetchRequest(HTTPMethod.POST, url);
   }
 
   @Override
   public LowLevelHttpRequest buildPutRequest(String url) throws IOException {
-    return new UrlFetchRequest("PUT", url);
+    return new UrlFetchRequest(HTTPMethod.PUT, url);
   }
 }

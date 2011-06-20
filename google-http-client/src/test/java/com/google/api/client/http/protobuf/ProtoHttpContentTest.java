@@ -14,7 +14,6 @@
 
 package com.google.api.client.http.protobuf;
 
-import com.google.api.client.http.protobuf.ProtoHttpContent.Builder;
 import com.google.api.client.protobuf.ProtocolBuffers;
 import com.google.api.client.protobuf.SimpleProto;
 
@@ -29,20 +28,16 @@ public class ProtoHttpContentTest extends TestCase {
 
   private static final String FAKE_TYPE = "abc";
 
-  public void testBuilder() {
+  public void test() {
     SimpleProto.TestMessage message = SimpleProto.TestMessage
         .newBuilder()
         .setStatus(SimpleProto.TestStatus.SUCCESS)
         .setName("This is a test!")
         .setValue(123454321)
         .build();
-    Builder builder = ProtoHttpContent.builder(message);
-    assertEquals(message, builder.getMessage());
-    assertEquals(ProtocolBuffers.CONTENT_TYPE, builder.getContentType());
-    builder.setContentType(FAKE_TYPE);
-    assertEquals(FAKE_TYPE, builder.getContentType());
-    ProtoHttpContent content = builder.build();
-    assertEquals(FAKE_TYPE, content.getType());
+    final ProtoHttpContent content = new ProtoHttpContent(message);
     assertEquals(message, content.getMessage());
+    assertEquals(ProtocolBuffers.CONTENT_TYPE, content.getType());
+    assertEquals(FAKE_TYPE, content.setType(FAKE_TYPE).getType());
   }
 }

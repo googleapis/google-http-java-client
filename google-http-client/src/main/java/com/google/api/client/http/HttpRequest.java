@@ -30,6 +30,10 @@ import java.util.logging.Logger;
 /**
  * HTTP request.
  *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -53,10 +57,19 @@ public final class HttpRequest {
    * the HTTP request) or {@code null} for none.
    *
    * @since 1.4
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getInterceptor} or
+   *             {@link #setInterceptor}
    */
+  @Deprecated
   public HttpExecuteInterceptor interceptor;
 
-  /** HTTP request headers. */
+  /**
+   * HTTP request headers.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getHeaders} or
+   *             {@link #setHeaders}
+   */
+  @Deprecated
   public HttpHeaders headers = new HttpHeaders();
 
   /**
@@ -76,7 +89,10 @@ public final class HttpRequest {
    * </pre>
    *
    * @since 1.4
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getResponseHeaders} or
+   *             {@link #setResponseHeaders}
    */
+  @Deprecated
   public HttpHeaders responseHeaders = new HttpHeaders();
 
   /**
@@ -85,7 +101,10 @@ public final class HttpRequest {
    * requests. The default value is {@code 10}.
    *
    * @since 1.4
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getNumberOfRetries} or
+   *             {@link #setNumberOfRetries}
    */
+  @Deprecated
   public int numRetries = 10;
 
   /**
@@ -94,25 +113,45 @@ public final class HttpRequest {
    * <p>
    * Useful for example if content has sensitive data such as an authentication information.
    * Defaults to {@code false}.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getDisableContentLogging} or
+   *             {@link #setDisableContentLogging}
    */
+  @Deprecated
   public boolean disableContentLogging;
 
-  /** HTTP request content or {@code null} for none. */
+  /**
+   * HTTP request content or {@code null} for none.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContent} or
+   *             {@link #setContent}
+   */
+  @Deprecated
   public HttpContent content;
 
-  /** HTTP transport. */
+  /**
+   * HTTP transport.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getTransport}
+   */
+  @Deprecated
   public final HttpTransport transport;
 
   /**
    * HTTP request method.
    *
    * @since 1.3
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getMethod} or {@link #setMethod}
    */
+  @Deprecated
   public HttpMethod method;
 
-  // TODO(yanivi): support more HTTP methods?
-
-  /** HTTP request URL. */
+  /**
+   * HTTP request URL.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getUrl} or {@link #setUrl}
+   */
+  @Deprecated
   public GenericUrl url;
 
   /**
@@ -122,7 +161,10 @@ public final class HttpRequest {
    * </p>
    *
    * @since 1.4
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getConnectTimeout} or
+   *             {@link #setConnectTimeout}
    */
+  @Deprecated
   public int connectTimeout = 20 * 1000;
 
   /**
@@ -133,28 +175,33 @@ public final class HttpRequest {
    * </p>
    *
    * @since 1.4
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getReadTimeout} or
+   *             {@link #setReadTimeout}
    */
+  @Deprecated
   public int readTimeout = 20 * 1000;
 
   /**
-   * HTTP unsuccessful (non-2XX) response handler.
+   * HTTP unsuccessful (non-2XX) response handler or {@code null} for none.
    *
    * @since 1.4
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getUnsuccessfulResponseHandler}
+   *             or {@link #setUnsuccessfulResponseHandler}
    */
+  @Deprecated
   public HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler;
 
-  /**
-   * Map from normalized content type to HTTP parser.
-   *
-   * @since 1.4
-   */
+  /** Map from normalized content type to HTTP parser. */
   private final Map<String, HttpParser> contentTypeToParserMap = new HashMap<String, HttpParser>();
 
   /**
    * Whether to enable gzip compression of HTTP content ({@code false} by default).
    *
    * @since 1.4
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getEnableGZipContent} or
+   *             {@link #setEnableGZipContent}
    */
+  @Deprecated
   public boolean enableGZipContent;
 
   /**
@@ -164,6 +211,302 @@ public final class HttpRequest {
   HttpRequest(HttpTransport transport, HttpMethod method) {
     this.transport = transport;
     this.method = method;
+  }
+
+  /**
+   * Returns the HTTP transport.
+   *
+   * @since 1.5
+   */
+  public HttpTransport getTransport() {
+    return transport;
+  }
+
+  /**
+   * Returns the HTTP request method.
+   *
+   * @since 1.5
+   */
+  public HttpMethod getMethod() {
+    return method;
+  }
+
+  /**
+   * Sets the HTTP request method.
+   *
+   * @since 1.5
+   */
+  public HttpRequest setMethod(HttpMethod method) {
+    this.method = Preconditions.checkNotNull(method);
+    return this;
+  }
+
+  /**
+   * Returns the HTTP request URL.
+   *
+   * @since 1.5
+   */
+  public GenericUrl getUrl() {
+    return url;
+  }
+
+  /**
+   * Sets the HTTP request URL.
+   *
+   * @since 1.5
+   */
+  public HttpRequest setUrl(GenericUrl url) {
+    this.url = Preconditions.checkNotNull(url);
+    return this;
+  }
+
+  /**
+   * Returns the HTTP request content or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public HttpContent getContent() {
+    return content;
+  }
+
+  /**
+   * Sets the HTTP request content or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public HttpRequest setContent(HttpContent content) {
+    this.content = content;
+    return this;
+  }
+
+  /**
+   * Returns whether to enable gzip compression of HTTP content.
+   *
+   * @since 1.5
+   */
+  public boolean getEnableGZipContent() {
+    return enableGZipContent;
+  }
+
+  /**
+   * Returns whether to enable gzip compression of HTTP content.
+   *
+   * <p>
+   * By default it is {@code false}.
+   * </p>
+   *
+   * @since 1.5
+   */
+  public HttpRequest setEnableGZipContent(boolean enableGZipContent) {
+    this.enableGZipContent = enableGZipContent;
+    return this;
+  }
+
+  /**
+   * Returns whether to disable request content logging during {@link #execute()} (unless
+   * {@link Level#ALL} is loggable which forces all logging).
+   *
+   * @since 1.5
+   */
+  public boolean getDisableContentLogging() {
+    return disableContentLogging;
+  }
+
+  /**
+   * Returns whether to disable request content logging during {@link #execute()} (unless
+   * {@link Level#ALL} is loggable which forces all logging).
+   *
+   * <p>
+   * Useful for example if content has sensitive data such as an authentication information.
+   * Defaults to {@code false}.
+   * </p>
+   *
+   * @since 1.5
+   */
+  public HttpRequest setDisableContentLogging(boolean disableContentLogging) {
+    this.disableContentLogging = disableContentLogging;
+    return this;
+  }
+
+  /**
+   * Returns the timeout in milliseconds to establish a connection or {@code 0} for an infinite
+   * timeout.
+   *
+   * @since 1.5
+   */
+  public int getConnectTimeout() {
+    return connectTimeout;
+  }
+
+  /**
+   * Sets the timeout in milliseconds to establish a connection or {@code 0} for an infinite
+   * timeout.
+   *
+   * <p>
+   * By default it is 20000 (20 seconds).
+   * </p>
+   *
+   * @since 1.5
+   */
+  public HttpRequest setConnectTimeout(int connectTimeout) {
+    Preconditions.checkArgument(connectTimeout >= 0);
+    this.connectTimeout = connectTimeout;
+    return this;
+  }
+
+  /**
+   * Returns the timeout in milliseconds to read data from an established connection or {@code 0}
+   * for an infinite timeout.
+   *
+   * <p>
+   * By default it is 20000 (20 seconds).
+   * </p>
+   *
+   * @since 1.5
+   */
+  public int getReadTimeout() {
+    return readTimeout;
+  }
+
+  /**
+   * Sets the timeout in milliseconds to read data from an established connection or {@code 0} for
+   * an infinite timeout.
+   *
+   * @since 1.5
+   */
+  public HttpRequest setReadTimeout(int readTimeout) {
+    Preconditions.checkArgument(readTimeout >= 0);
+    this.readTimeout = readTimeout;
+    return this;
+  }
+
+  /**
+   * Returns the HTTP request headers.
+   *
+   * @since 1.5
+   */
+  public HttpHeaders getHeaders() {
+    return headers;
+  }
+
+  /**
+   * Sets the HTTP request headers.
+   *
+   * <p>
+   * By default, this is a new unmodified instance of {@link HttpHeaders}.
+   * </p>
+   *
+   * @since 1.5
+   */
+  public HttpRequest setHeaders(HttpHeaders headers) {
+    this.headers = Preconditions.checkNotNull(headers);
+    return this;
+  }
+
+  /**
+   * Returns the HTTP response headers.
+   *
+   * @since 1.5
+   */
+  public HttpHeaders getResponseHeaders() {
+    return responseHeaders;
+  }
+
+  /**
+   * Sets the HTTP response headers.
+   *
+   * <p>
+   * By default, this is a new unmodified instance of {@link HttpHeaders}.
+   * </p>
+   *
+   * <p>
+   * For example, this can be used if you want to use a subclass of {@link HttpHeaders} called
+   * MyHeaders to process the response:
+   * </p>
+   *
+   * <pre>
+  static String executeAndGetValueOfSomeCustomHeader(HttpRequest request) {
+    MyHeaders responseHeaders = new MyHeaders();
+    request.responseHeaders = responseHeaders;
+    HttpResponse response = request.execute();
+    return responseHeaders.someCustomHeader;
+  }
+   * </pre>
+   *
+   * @since 1.5
+   */
+  public HttpRequest setResponseHeaders(HttpHeaders responseHeaders) {
+    this.responseHeaders = Preconditions.checkNotNull(responseHeaders);
+    return this;
+  }
+
+  /**
+   * Returns the HTTP request execute interceptor to intercept the start of {@link #execute()}
+   * (before executing the HTTP request) or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public HttpExecuteInterceptor getInterceptor() {
+    return interceptor;
+  }
+
+  /**
+   * Sets the HTTP request execute interceptor to intercept the start of {@link #execute()} (before
+   * executing the HTTP request) or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public HttpRequest setInterceptor(HttpExecuteInterceptor interceptor) {
+    this.interceptor = interceptor;
+    return this;
+  }
+
+  /**
+   * Returns the HTTP unsuccessful (non-2XX) response handler or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public HttpUnsuccessfulResponseHandler getUnsuccessfulResponseHandler() {
+    return unsuccessfulResponseHandler;
+  }
+
+  /**
+   * Returns the HTTP unsuccessful (non-2XX) response handler or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public HttpRequest setUnsuccessfulResponseHandler(
+      HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler) {
+    this.unsuccessfulResponseHandler = unsuccessfulResponseHandler;
+    return this;
+  }
+
+  /**
+   * Returns the number of retries that will be allowed to execute as the result of an
+   * {@link HttpUnsuccessfulResponseHandler} before being terminated or {@code 0} to not retry
+   * requests.
+   *
+   * @since 1.5
+   */
+  public int getNumberOfRetries() {
+    return numRetries;
+  }
+
+  /**
+   * Returns the number of retries that will be allowed to execute as the result of an
+   * {@link HttpUnsuccessfulResponseHandler} before being terminated or {@code 0} to not retry
+   * requests.
+   *
+   * <p>
+   * The default value is {@code 10}.
+   * </p>
+   *
+   * @since 1.5
+   */
+  public HttpRequest setNumberOfRetries(int numRetries) {
+    Preconditions.checkArgument(numRetries >= 0);
+    this.numRetries = numRetries;
+    return this;
   }
 
   /**
@@ -205,7 +548,7 @@ public final class HttpRequest {
    *
    * @return HTTP response for an HTTP success code
    * @throws HttpResponseException for an HTTP error code
-   * @see HttpResponse#isSuccessStatusCode
+   * @see HttpResponse#isSuccessStatusCode()
    */
   public HttpResponse execute() throws IOException {
     boolean requiresRetry = false;
@@ -263,10 +606,10 @@ public final class HttpRequest {
         logbuf.append(method).append(' ').append(urlString).append(Strings.LINE_SEPARATOR);
       }
       // add to user agent
-      if (headers.userAgent == null) {
-        headers.userAgent = USER_AGENT_SUFFIX;
+      if (headers.getUserAgent() == null) {
+        headers.setUserAgent(USER_AGENT_SUFFIX);
       } else {
-        headers.userAgent += " " + USER_AGENT_SUFFIX;
+        headers.setUserAgent(headers.getUserAgent() + " " + USER_AGENT_SUFFIX);
       }
       // headers
       HashSet<String> headerNames = new HashSet<String>();
@@ -339,7 +682,7 @@ public final class HttpRequest {
       // Even if we don't have the potential to retry, we might want to run the
       // handler to fix conditions (like expired tokens) that might cause us
       // trouble on our next request
-      if (!response.isSuccessStatusCode && unsuccessfulResponseHandler != null) {
+      if (!response.isSuccessStatusCode() && unsuccessfulResponseHandler != null) {
         requiresRetry = unsuccessfulResponseHandler.handleResponse(this, response, retrySupported);
       }
 
@@ -347,7 +690,7 @@ public final class HttpRequest {
       retriesRemaining--;
     } while (requiresRetry && retrySupported);
 
-    if (!response.isSuccessStatusCode) {
+    if (!response.isSuccessStatusCode()) {
       throw new HttpResponseException(response);
     }
     return response;

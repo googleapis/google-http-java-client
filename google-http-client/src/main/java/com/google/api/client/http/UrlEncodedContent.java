@@ -28,31 +28,60 @@ import java.util.Map;
  * Implements support for HTTP form content encoding serialization of type {@code
  * application/x-www-form-urlencoded} as specified in the <a href=
  * "http://www.w3.org/TR/REC-html40/interact/forms.html#h-17.13.4.1">HTML 4.0 Specification</a>.
+ *
  * <p>
  * Sample usage:
+ * </p>
  *
  * <pre>
  * <code>
   static void setContent(HttpRequest request, Object item) {
-    UrlEncodedContent content = new UrlEncodedContent();
-    content.data = item;
-    request.content = content;
+    request.setContent(new UrlEncodedContent(item));
   }
  * </code>
  * </pre>
  *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
-public final class UrlEncodedContent implements HttpContent {
+public class UrlEncodedContent implements HttpContent {
 
-  /** Content type. Default value is {@link UrlEncodedParser#CONTENT_TYPE}. */
+  /**
+   * Content type. Default value is {@link UrlEncodedParser#CONTENT_TYPE}.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getType} or {@link #setType}
+   */
+  @Deprecated
   public String contentType = UrlEncodedParser.CONTENT_TYPE;
 
-  /** Key/value data or {@code null} for none. */
+  /**
+   * Key name/value data or {@code null} for none.
+   *
+   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getData} or
+   *             {@link #setData}
+   */
+  @Deprecated
   public Object data;
 
   private byte[] content;
+
+  /**
+   * @deprecated (scheduled to be removed in 1.6) Use {@link #UrlEncodedContent(Object)}
+   */
+  @Deprecated
+  public UrlEncodedContent() {
+  }
+
+  /**
+   * @param data key name/value data or {@code null} for none
+   */
+  public UrlEncodedContent(Object data) {
+    this.data = data;
+  }
 
   public String getEncoding() {
     return null;
@@ -68,6 +97,39 @@ public final class UrlEncodedContent implements HttpContent {
 
   public void writeTo(OutputStream out) throws IOException {
     out.write(computeContent());
+  }
+
+  /**
+   * Sets the content type or {@code null} for none.
+   *
+   * <p>
+   * Defaults to {@link UrlEncodedParser#CONTENT_TYPE}.
+   * </p>
+   *
+   * @since 1.5
+   */
+  public UrlEncodedContent setType(String type) {
+    contentType = type;
+    return this;
+  }
+
+  /**
+   * Returns the key name/value data or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public Object getData() {
+    return data;
+  }
+
+  /**
+   * Sets the key name/value data or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public UrlEncodedContent setData(Object data) {
+    this.data = data;
+    return this;
   }
 
   private byte[] computeContent() {

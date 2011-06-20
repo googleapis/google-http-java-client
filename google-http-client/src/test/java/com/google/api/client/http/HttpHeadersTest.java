@@ -33,6 +33,6 @@ public class HttpHeadersTest extends TestCase {
   public void testBasicAuthentication() {
     HttpHeaders headers = new HttpHeaders();
     headers.setBasicAuthentication("Aladdin", "open sesame");
-    assertEquals("Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==", headers.authorization);
+    assertEquals("Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==", headers.getAuthorization());
   }
 }

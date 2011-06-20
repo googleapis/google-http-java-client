@@ -21,6 +21,11 @@ import java.util.logging.Logger;
  * Thread-safe abstract HTTP transport.
  *
  * <p>
+ * Implementation is thread-safe, and sub-classes must be thread-safe. For maximum efficiency,
+ * applications should use a single globally-shared instance of the HTTP transport.
+ * </p>
+ *
+ * <p>
  * The recommended concrete implementation HTTP transport library to use depends on what environment
  * you are running in:
  * </p>
