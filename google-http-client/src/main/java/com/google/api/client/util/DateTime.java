@@ -28,10 +28,15 @@ import java.util.TimeZone;
  * Implementation is immutable and therefore thread-safe.
  * </p>
  *
+ * <p>
+ * Upgrade warning: in prior version 1.4 this class was not final, but now it is final to ensure its
+ * immutability.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
-public class DateTime implements Serializable {
+public final class DateTime implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
