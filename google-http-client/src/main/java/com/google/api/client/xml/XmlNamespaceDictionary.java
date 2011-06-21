@@ -36,12 +36,18 @@ import java.util.TreeSet;
  * Thread-safe XML namespace dictionary that provides a one-to-one map of namespace alias to URI.
  *
  * <p>
+ * Implementation is thread-safe. For maximum efficiency, applications should use a single
+ * globally-shared instance of the XML namespace dictionary.
+ * </p>
+ *
+ * <p>
  * A namespace alias is uniquely mapped to a single namespace URI, and a namespace URI is uniquely
  * mapped to a single namespace alias. In other words, it is not possible to have duplicates.
  * </p>
  *
  * <p>
  * Sample usage:
+ * </p>
  *
  * <pre>{@code
   static final XmlNamespaceDictionary DICTIONARY = new XmlNamespaceDictionary()

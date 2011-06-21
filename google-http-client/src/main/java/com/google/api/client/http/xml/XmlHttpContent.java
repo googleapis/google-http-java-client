@@ -14,27 +14,32 @@
 
 package com.google.api.client.http.xml;
 
+import com.google.api.client.xml.XmlNamespaceDictionary;
+import com.google.common.base.Preconditions;
+
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.IOException;
 
 /**
  * Serializes XML HTTP content based on the data key/value mapping object for an item.
+ *
  * <p>
  * Sample usage:
+ * </p>
  *
  * <pre>
  * <code>
   static void setContent(HttpRequest request, XmlNamespaceDictionary namespaceDictionary,
       String elementName, Object data) {
-    XmlHttpContent content = new XmlHttpContent();
-    content.namespaceDictionary = namespaceDictionary;
-    content.elementName = elementName;
-    content.data = data;
-    request.content = content;
+    request.setContent(new XmlHttpContent(namespaceDictionary, elementName, data));
   }
  * </code>
  * </pre>
+ *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -42,16 +47,72 @@ import java.io.IOException;
 public class XmlHttpContent extends AbstractXmlHttpContent {
 
   /**
+   * @deprecated (scheduled to be removed in 1.6) Use
+   *             {@link #XmlHttpContent(XmlNamespaceDictionary, String, Object)}
+   */
+  @Deprecated
+  public XmlHttpContent() {
+  }
+
+  /**
+   * XML namespace dictionary.
+   *
+   * @param namespaceDictionary XML namespace dictionary
+   * @param elementName XML element local name, optionally prefixed by its namespace alias, for
+   *        example {@code "atom:entry"}
+   * @param data Key/value pair data
+   * @since 1.5
+   */
+  public XmlHttpContent(
+      XmlNamespaceDictionary namespaceDictionary, String elementName, Object data) {
+    super(namespaceDictionary);
+    this.elementName = Preconditions.checkNotNull(elementName);
+    this.data = Preconditions.checkNotNull(data);
+  }
+
+  /**
    * XML element local name, optionally prefixed by its namespace alias, for example {@code
    * "atom:entry"}.
+   *
+   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getElementName}
    */
+  @Deprecated
   public String elementName;
 
-  /** Key/value pair data. */
+  /**
+   * Key/value pair data.
+   *
+   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getData}
+   */
+  @Deprecated
   public Object data;
 
   @Override
+  public XmlHttpContent setType(String type) {
+    return (XmlHttpContent) super.setType(type);
+  }
+
+  @Override
   public final void writeTo(XmlSerializer serializer) throws IOException {
-    namespaceDictionary.serialize(serializer, elementName, data);
+    getNamespaceDictionary().serialize(serializer, elementName, data);
+  }
+
+  /**
+   * Returns the XML element local name, optionally prefixed by its namespace alias, for example
+   * {@code "atom:entry"}.
+   *
+   * @since 1.5
+   */
+  public final String getElementName() {
+    return elementName;
+  }
+
+  /**
+   * Returns the key/value pair data.
+   *
+   * @since 1.5
+   */
+  public final Object getData() {
+    return data;
   }
 }

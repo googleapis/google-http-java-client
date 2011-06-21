@@ -20,6 +20,7 @@ import com.google.api.client.xml.Xml;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.atom.AbstractAtomFeedParser;
 import com.google.api.client.xml.atom.Atom;
+import com.google.common.base.Preconditions;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -30,15 +31,47 @@ import java.io.InputStream;
 /**
  * Atom feed pull parser when the Atom entry class is known in advance.
  *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
+ *
  * @param <T> feed type
  * @param <E> entry type
  * @since 1.4
  * @author Yaniv Inbar
  */
+// TODO(yanivi): remove @SuppressWarnings("deprecation") for 1.6
+@SuppressWarnings("deprecation")
 public final class AtomFeedParser<T, E> extends AbstractAtomFeedParser<T> {
 
-  /** Atom entry class to parse. */
+  /**
+   * Atom entry class to parse.
+   *
+   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getEntryClass}
+   */
+  @Deprecated
   public Class<E> entryClass;
+
+  /**
+   * @deprecated (scheduled to be removed in 1.6) Use {@link #AtomFeedParser(XmlNamespaceDictionary,
+   *             XmlPullParser, InputStream, Class, Class)}
+   */
+  @Deprecated
+  public AtomFeedParser() {
+  }
+
+  /**
+   * @param namespaceDictionary XML namespace dictionary
+   * @param parser XML pull parser to use
+   * @param inputStream input stream to read
+   * @param feedClass feed class to parse
+   * @since 1.5
+   */
+  public AtomFeedParser(XmlNamespaceDictionary namespaceDictionary, XmlPullParser parser,
+      InputStream inputStream, Class<T> feedClass, Class<E> entryClass) {
+    super(namespaceDictionary, parser, inputStream, feedClass);
+    this.entryClass = Preconditions.checkNotNull(entryClass);
+  }
 
   @SuppressWarnings("unchecked")
   @Override
@@ -48,9 +81,18 @@ public final class AtomFeedParser<T, E> extends AbstractAtomFeedParser<T> {
 
   @Override
   protected Object parseEntryInternal() throws IOException, XmlPullParserException {
-    E result = Types.newInstance(this.entryClass);
-    Xml.parseElement(parser, result, namespaceDictionary, null);
+    E result = Types.newInstance(entryClass);
+    Xml.parseElement(getParser(), result, getNamespaceDictionary(), null);
     return result;
+  }
+
+  /**
+   * Returns the Atom entry class to parse.
+   *
+   * @since 1.5
+   */
+  public final Class<E> getEntryClass() {
+    return entryClass;
   }
 
   /**
@@ -74,12 +116,8 @@ public final class AtomFeedParser<T, E> extends AbstractAtomFeedParser<T> {
       Atom.checkContentType(response.getContentType());
       XmlPullParser parser = Xml.createParser();
       parser.setInput(content, null);
-      AtomFeedParser<T, E> result = new AtomFeedParser<T, E>();
-      result.parser = parser;
-      result.inputStream = content;
-      result.feedClass = feedClass;
-      result.entryClass = entryClass;
-      result.namespaceDictionary = namespaceDictionary;
+      AtomFeedParser<T, E> result =
+          new AtomFeedParser<T, E>(namespaceDictionary, parser, content, feedClass, entryClass);
       content = null;
       return result;
     } finally {

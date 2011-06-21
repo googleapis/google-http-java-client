@@ -42,7 +42,9 @@ import java.io.IOException;
  *
  * @since 1.4
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.6) Use {@link AtomContent#forFeed}
  */
+@Deprecated
 public class AtomFeedContent extends AbstractXmlHttpContent {
 
   /** Key/value pair data for the Atom feed. */

@@ -89,7 +89,7 @@ public class JsonHttpParser implements HttpParser {
    * @since 1.5
    */
   protected JsonHttpParser(JsonFactory jsonFactory, String contentType) {
-    this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
+    this(jsonFactory);
     this.contentType = contentType;
   }
 

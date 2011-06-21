@@ -15,21 +15,29 @@
 package com.google.api.client.http.xml.atom;
 
 import com.google.api.client.http.xml.XmlHttpParser;
+import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.atom.Atom;
 
 /**
  * Atom XML HTTP parser into an data class of key/value pairs.
+ *
  * <p>
- * It overrides the {@link #contentType} to {@link Atom#CONTENT_TYPE}.
+ * It overrides the {@link #getContentType} to {@link Atom#CONTENT_TYPE}.
+ * </p>
+ *
+ * <p>
+ * Implementation is thread-safe as long as the fields are not set directly (which is deprecated
+ * usage).
+ * </p>
+ *
  * <p>
  * Sample usage:
+ * </p>
  *
  * <pre>
  * <code>
-  static void setParser(HttpTransport transport) {
-    AtomParser parser = new AtomParser();
-    parser.namespaceDictionary = NAMESPACE_DICTIONARY;
-    transport.addParser(parser);
+  static void setParser(HttpRequest request, XmlNamespaceDictionary namespaceDictionary) {
+    request.addParser(new AtomParser(namespaceDictionary));
   }
  * </code>
  * </pre>
@@ -39,7 +47,19 @@ import com.google.api.client.xml.atom.Atom;
  */
 public final class AtomParser extends XmlHttpParser {
 
+  /**
+   * @deprecated (scheduled to be removed in 1.6) Use {@link #AtomParser(XmlNamespaceDictionary)}
+   */
+  @Deprecated
   public AtomParser() {
     contentType = Atom.CONTENT_TYPE;
+  }
+
+  /**
+   * @param namespaceDictionary XML namespace dictionary
+   * @since 1.5
+   */
+  public AtomParser(XmlNamespaceDictionary namespaceDictionary) {
+    super(namespaceDictionary, Atom.CONTENT_TYPE);
   }
 }
