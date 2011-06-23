@@ -43,7 +43,7 @@ public class ProtocolBuffers {
 
   /**
    * Parses protocol buffer content from an input stream (closing the input stream) into a protocol
-   * buffer message
+   * buffer message.
    *
    * @param <T> destination message type
    * @param messageClass destination message class that has a {@code parseFrom(InputStream)} public

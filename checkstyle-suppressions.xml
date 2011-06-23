@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+     "-//Puppy Crawl//DTD Suppressions 1.0//EN"
+     "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
+
+<suppressions>
+
+  <!-- Don't check Base64.java because it was copied from anther proejct. -->
+  <suppress checks="." files="Base64.java"/>
+  
+  <!-- Don't check JavaDoc on tests in com.google.api.testing.json. -->
+  <suppress checks="JavadocType" files="com/google/api/client/testing/json/.*Test.java"/>
+
+</suppressions>

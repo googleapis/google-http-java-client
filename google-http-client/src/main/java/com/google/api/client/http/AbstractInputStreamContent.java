@@ -35,7 +35,7 @@ import java.io.OutputStream;
  */
 public abstract class AbstractInputStreamContent implements HttpContent {
 
-  private final static int BUFFER_SIZE = 2048;
+  private static final int BUFFER_SIZE = 2048;
 
   /**
    * Content type or {@code null} for none.
@@ -75,7 +75,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    * {@link #retrySupported()} this should be a factory function which will create a new
    * {@link InputStream} from the source data whenever invoked.
    */
-  abstract protected InputStream getInputStream() throws IOException;
+  protected abstract InputStream getInputStream() throws IOException;
 
   public void writeTo(OutputStream out) throws IOException {
     InputStream inputStream = getInputStream();

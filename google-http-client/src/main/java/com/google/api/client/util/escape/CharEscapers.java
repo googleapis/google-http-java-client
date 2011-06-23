@@ -48,7 +48,7 @@ public final class CharEscapers {
    * <li>All other characters are converted into one or more bytes using UTF-8 encoding and each
    * byte is then represented by the 3-character string "%XY", where "XY" is the two-digit,
    * uppercase, hexadecimal representation of the byte value.
-   * <ul>
+   * </ul>
    *
    * <p>
    * <b>Note</b>: Unlike other escapers, URI escapers produce uppercase hexadecimal sequences. From

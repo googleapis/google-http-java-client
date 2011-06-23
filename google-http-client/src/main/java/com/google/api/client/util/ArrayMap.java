@@ -40,6 +40,9 @@ import java.util.concurrent.ConcurrentMap;
  * {@link ConcurrentMap}.
  * </p>
  *
+ * @param <K> the type of keys maintained by this map
+ * @param <V> the type of mapped values
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */

@@ -58,8 +58,6 @@ package com.google.api.client.util.escape;
 public class PercentEscaper extends UnicodeEscaper {
   /**
    * A string of safe characters that mimics the behavior of {@link java.net.URLEncoder}.
-   *
-   * TODO: Fix escapers to be compliant with RFC 3986
    */
   public static final String SAFECHARS_URLENCODER = "-_.*";
 

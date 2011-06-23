@@ -82,22 +82,22 @@ public class Data {
   public static final DateTime NULL_DATE_TIME = new DateTime(0);
 
   /** Cache of the magic null object for the given Java class. */
-  private static final ConcurrentHashMap<Class<?>, Object> nullCache =
+  private static final ConcurrentHashMap<Class<?>, Object> NULL_CACHE =
       new ConcurrentHashMap<Class<?>, Object>();
   static {
     // special cases for some primitives
-    nullCache.put(Boolean.class, NULL_BOOLEAN);
-    nullCache.put(String.class, NULL_STRING);
-    nullCache.put(Character.class, NULL_CHARACTER);
-    nullCache.put(Byte.class, NULL_BYTE);
-    nullCache.put(Short.class, NULL_SHORT);
-    nullCache.put(Integer.class, NULL_INTEGER);
-    nullCache.put(Float.class, NULL_FLOAT);
-    nullCache.put(Long.class, NULL_LONG);
-    nullCache.put(Double.class, NULL_DOUBLE);
-    nullCache.put(BigInteger.class, NULL_BIG_INTEGER);
-    nullCache.put(BigDecimal.class, NULL_BIG_DECIMAL);
-    nullCache.put(DateTime.class, NULL_DATE_TIME);
+    NULL_CACHE.put(Boolean.class, NULL_BOOLEAN);
+    NULL_CACHE.put(String.class, NULL_STRING);
+    NULL_CACHE.put(Character.class, NULL_CHARACTER);
+    NULL_CACHE.put(Byte.class, NULL_BYTE);
+    NULL_CACHE.put(Short.class, NULL_SHORT);
+    NULL_CACHE.put(Integer.class, NULL_INTEGER);
+    NULL_CACHE.put(Float.class, NULL_FLOAT);
+    NULL_CACHE.put(Long.class, NULL_LONG);
+    NULL_CACHE.put(Double.class, NULL_DOUBLE);
+    NULL_CACHE.put(BigInteger.class, NULL_BIG_INTEGER);
+    NULL_CACHE.put(BigDecimal.class, NULL_BIG_DECIMAL);
+    NULL_CACHE.put(DateTime.class, NULL_DATE_TIME);
   }
 
   /**
@@ -109,10 +109,10 @@ public class Data {
    * @throws IllegalArgumentException if unable to create a new instance
    */
   public static <T> T nullOf(Class<?> objClass) {
-    Object result = nullCache.get(objClass);
+    Object result = NULL_CACHE.get(objClass);
     if (result == null) {
-      synchronized (nullCache) {
-        result = nullCache.get(objClass);
+      synchronized (NULL_CACHE) {
+        result = NULL_CACHE.get(objClass);
         if (result == null) {
           if (objClass.isArray()) {
             // arrays are special because we need to compute both the dimension and component type
@@ -135,7 +135,7 @@ public class Data {
             // other classes are simpler
             result = Types.newInstance(objClass);
           }
-          nullCache.put(objClass, result);
+          NULL_CACHE.put(objClass, result);
         }
       }
     }
@@ -153,7 +153,7 @@ public class Data {
    */
   public static boolean isNull(Object object) {
     // don't call nullOf because will throw IllegalArgumentException if cannot create instance
-    return object != null && object == nullCache.get(object.getClass());
+    return object != null && object == NULL_CACHE.get(object.getClass());
   }
 
   /**

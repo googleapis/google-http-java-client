@@ -92,7 +92,7 @@ public class Types {
   }
 
   /**
-   * Returns whether a class is either assignable to or from another class
+   * Returns whether a class is either assignable to or from another class.
    *
    * @param classToCheck class to check
    * @param anotherClass another class
