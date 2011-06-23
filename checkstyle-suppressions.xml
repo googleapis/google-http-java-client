@@ -5,7 +5,7 @@
 
 <suppressions>
 
-  <!-- Don't check Base64.java because it was copied from anther proejct. -->
+  <!-- Don't check Base64.java because it was copied from anther project. -->
   <suppress checks="." files="Base64.java"/>
   
   <!-- Don't check JavaDoc on tests in com.google.api.testing.json. -->
