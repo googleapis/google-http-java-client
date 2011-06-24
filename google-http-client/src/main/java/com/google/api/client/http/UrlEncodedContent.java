@@ -16,12 +16,15 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
-import com.google.api.client.util.Strings;
 import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
+import com.google.common.base.Charsets;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.Map;
 
 /**
@@ -48,7 +51,7 @@ import java.util.Map;
  * @since 1.0
  * @author Yaniv Inbar
  */
-public class UrlEncodedContent implements HttpContent {
+public class UrlEncodedContent extends AbstractHttpContent {
 
   /**
    * Content type. Default value is {@link UrlEncodedParser#CONTENT_TYPE}.
@@ -67,8 +70,6 @@ public class UrlEncodedContent implements HttpContent {
   @Deprecated
   public Object data;
 
-  private byte[] content;
-
   /**
    * @deprecated (scheduled to be removed in 1.6) Use {@link #UrlEncodedContent(Object)}
    */
@@ -83,20 +84,28 @@ public class UrlEncodedContent implements HttpContent {
     this.data = data;
   }
 
-  public String getEncoding() {
-    return null;
-  }
-
-  public long getLength() {
-    return computeContent().length;
-  }
-
   public String getType() {
     return contentType;
   }
 
   public void writeTo(OutputStream out) throws IOException {
-    out.write(computeContent());
+    Writer writer = new BufferedWriter(new OutputStreamWriter(out, Charsets.UTF_8));
+    boolean first = true;
+    for (Map.Entry<String, Object> nameValueEntry : Data.mapOf(data).entrySet()) {
+      Object value = nameValueEntry.getValue();
+      if (value != null) {
+        String name = CharEscapers.escapeUri(nameValueEntry.getKey());
+        Class<? extends Object> valueClass = value.getClass();
+        if (value instanceof Iterable<?> || valueClass.isArray()) {
+          for (Object repeatedValue : Types.iterableOf(value)) {
+            first = appendParam(first, writer, name, repeatedValue);
+          }
+        } else {
+          first = appendParam(first, writer, name, value);
+        }
+      }
+    }
+    writer.flush();
   }
 
   /**
@@ -132,30 +141,8 @@ public class UrlEncodedContent implements HttpContent {
     return this;
   }
 
-  private byte[] computeContent() {
-    if (content == null) {
-      StringBuilder buf = new StringBuilder();
-      boolean first = true;
-      for (Map.Entry<String, Object> nameValueEntry : Data.mapOf(data).entrySet()) {
-        Object value = nameValueEntry.getValue();
-        if (value != null) {
-          String name = CharEscapers.escapeUri(nameValueEntry.getKey());
-          Class<? extends Object> valueClass = value.getClass();
-          if (value instanceof Iterable<?> || valueClass.isArray()) {
-            for (Object repeatedValue : Types.iterableOf(value)) {
-              first = appendParam(first, buf, name, repeatedValue);
-            }
-          } else {
-            first = appendParam(first, buf, name, value);
-          }
-        }
-      }
-      content = Strings.toBytesUtf8(buf.toString());
-    }
-    return content;
-  }
-
-  private static boolean appendParam(boolean first, StringBuilder buf, String name, Object value) {
+  private static boolean appendParam(boolean first, Writer writer, String name, Object value)
+      throws IOException {
     // ignore nulls
     if (value == null || Data.isNull(value)) {
       return first;
@@ -164,18 +151,15 @@ public class UrlEncodedContent implements HttpContent {
     if (first) {
       first = false;
     } else {
-      buf.append('&');
+      writer.write("&");
     }
-    buf.append(name);
+    writer.write(name);
     String stringValue = CharEscapers.escapeUri(
         value instanceof Enum<?> ? FieldInfo.of((Enum<?>) value).getName() : value.toString());
     if (stringValue.length() != 0) {
-      buf.append('=').append(stringValue);
+      writer.write("=");
+      writer.write(stringValue);
     }
     return first;
-  }
-
-  public boolean retrySupported() {
-    return true;
   }
 }

@@ -14,7 +14,7 @@
 
 package com.google.api.client.http.json;
 
-import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.AbstractHttpContent;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonEncoding;
 import com.google.api.client.json.JsonFactory;
@@ -40,17 +40,13 @@ import java.io.OutputStream;
  * </pre>
  *
  * <p>
- * Currently {@link #getLength()} always returns -1, but this may change in the future.
- * </p>
- *
- * <p>
  * Implementation is not thread-safe.
  * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
  */
-public class JsonHttpContent implements HttpContent {
+public class JsonHttpContent extends AbstractHttpContent {
   // TODO(yanivi): ability to annotate fields as only needed for POST?
 
   /**
@@ -95,16 +91,6 @@ public class JsonHttpContent implements HttpContent {
     this.data = Preconditions.checkNotNull(data);
   }
 
-  public long getLength() {
-    // TODO(yanivi): calculate length? consider performance impact since computing it may be slow,
-    // and avoid loading the whole serialized content into memory
-    return -1;
-  }
-
-  public String getEncoding() {
-    return null;
-  }
-
   public String getType() {
     return contentType;
   }
@@ -113,10 +99,6 @@ public class JsonHttpContent implements HttpContent {
     JsonGenerator generator = jsonFactory.createJsonGenerator(out, JsonEncoding.UTF8);
     generator.serialize(data);
     generator.flush();
-  }
-
-  public boolean retrySupported() {
-    return true;
   }
 
   /**

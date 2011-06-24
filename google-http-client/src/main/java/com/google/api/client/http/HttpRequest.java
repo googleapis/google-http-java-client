@@ -295,6 +295,21 @@ public final class HttpRequest {
    * By default it is {@code false}.
    * </p>
    *
+   * <p>
+   * To avoid the overhead of GZip compression for small content, one may want to set this to {@code
+   * true} only for {@link HttpContent#getLength()} above a certain limit. For example:
+   * </p>
+   *
+   * <pre>
+  public static class MyInterceptor implements HttpExecuteInterceptor {
+    public void intercept(HttpRequest request) throws IOException {
+      if (request.getContent() != null && request.getContent().getLength() >= 256) {
+        request.setEnableGZipContent(true);
+      }
+    }
+  }
+   * </pre>
+   *
    * @since 1.5
    */
   public HttpRequest setEnableGZipContent(boolean enableGZipContent) {
@@ -644,7 +659,6 @@ public final class HttpRequest {
             && (loggable && !disableContentLogging || logger.isLoggable(Level.ALL))) {
           content = new LogContent(content, contentType, contentEncoding, contentLength);
         }
-        // TODO(yanivi): only gzip for small content? cost of computing getLength() for JSON or XML?
         // gzip
         if (enableGZipContent) {
           content = new GZipContent(content, contentType);

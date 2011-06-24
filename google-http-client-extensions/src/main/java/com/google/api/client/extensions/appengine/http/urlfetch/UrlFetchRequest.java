@@ -68,11 +68,11 @@ final class UrlFetchRequest extends LowLevelHttpRequest {
       if (contentEncoding != null) {
         addHeader("Content-Encoding", contentEncoding);
       }
-      long contentLength = content.getLength();
-      if (contentLength != 0) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        content.writeTo(out);
-        request.setPayload(out.toByteArray());
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      content.writeTo(out);
+      byte[] payload = out.toByteArray();
+      if (payload.length != 0) {
+        request.setPayload(payload);
       }
     }
     // connect

@@ -14,7 +14,7 @@
 
 package com.google.api.client.http.xml;
 
-import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.AbstractHttpContent;
 import com.google.api.client.xml.Xml;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.common.base.Preconditions;
@@ -34,7 +34,7 @@ import java.io.OutputStream;
  * @since 1.0
  * @author Yaniv Inbar
  */
-public abstract class AbstractXmlHttpContent implements HttpContent {
+public abstract class AbstractXmlHttpContent extends AbstractHttpContent {
 
   /**
    * @deprecated (scheduled to be removed in 1.6) Use
@@ -69,16 +69,6 @@ public abstract class AbstractXmlHttpContent implements HttpContent {
   @Deprecated
   public XmlNamespaceDictionary namespaceDictionary;
 
-  /** Default implementation returns {@code null}, but subclasses may override. */
-  public String getEncoding() {
-    return null;
-  }
-
-  /** Default implementation returns {@code -1}, but subclasses may override. */
-  public long getLength() {
-    return -1;
-  }
-
   public final String getType() {
     return contentType;
   }
@@ -87,10 +77,6 @@ public abstract class AbstractXmlHttpContent implements HttpContent {
     XmlSerializer serializer = Xml.createSerializer();
     serializer.setOutput(out, "UTF-8");
     writeTo(serializer);
-  }
-
-  public boolean retrySupported() {
-    return true;
   }
 
   /**

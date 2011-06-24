@@ -14,7 +14,7 @@
 
 package com.google.api.client.http.protobuf;
 
-import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.AbstractHttpContent;
 import com.google.api.client.protobuf.ProtocolBuffers;
 import com.google.common.base.Preconditions;
 import com.google.protobuf.MessageLite;
@@ -45,7 +45,7 @@ import java.io.OutputStream;
  * @since 1.5
  * @author Yaniv Inbar
  */
-public class ProtoHttpContent implements HttpContent {
+public class ProtoHttpContent extends AbstractHttpContent {
 
   /** Message to serialize. */
   private final MessageLite message;
@@ -60,20 +60,13 @@ public class ProtoHttpContent implements HttpContent {
     this.message = Preconditions.checkNotNull(message);
   }
 
-  public String getEncoding() {
-    return null;
-  }
-
+  @Override
   public long getLength() throws IOException {
     return message.getSerializedSize();
   }
 
   public String getType() {
     return type;
-  }
-
-  public boolean retrySupported() {
-    return true;
   }
 
   public void writeTo(OutputStream out) throws IOException {

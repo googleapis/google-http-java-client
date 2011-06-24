@@ -27,7 +27,7 @@ import java.util.zip.GZIPOutputStream;
  *
  * @author Yaniv Inbar
  */
-final class GZipContent implements HttpContent {
+final class GZipContent extends AbstractHttpContent {
 
   private final HttpContent httpContent;
 
@@ -47,18 +47,16 @@ final class GZipContent implements HttpContent {
     zipper.finish();
   }
 
+  @Override
   public String getEncoding() {
     return "gzip";
-  }
-
-  public long getLength() {
-    return -1;
   }
 
   public String getType() {
     return contentType;
   }
 
+  @Override
   public boolean retrySupported() {
     return httpContent.retrySupported();
   }

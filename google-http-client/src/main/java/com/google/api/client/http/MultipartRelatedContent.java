@@ -21,6 +21,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Serializes MIME Multipart/Related content as specified by <a
@@ -35,7 +37,7 @@ import java.util.Collection;
  * </ul>
  * </p>
  * <p>
- * Use {@link #forRequest(HttpRequest, HttpContent...)} to construct. For example:
+ * Use {@link #forRequest(HttpRequest)} to construct. For example:
  *
  * <pre><code>
   static void setMediaWithMetadataContent(
@@ -51,7 +53,7 @@ import java.util.Collection;
  * @since 1.1
  * @author Yaniv Inbar
  */
-public final class MultipartRelatedContent implements HttpContent {
+public final class MultipartRelatedContent extends AbstractHttpContent {
 
   /**
    * Boundary string to use. By default, it is {@code "END_OF_PART"}.
@@ -64,14 +66,15 @@ public final class MultipartRelatedContent implements HttpContent {
 
   /**
    * Collection of HTTP content parts.
+   *
    * <p>
    * By default, it is an empty list.
    * </p>
    *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getParts} or {@link #setParts}
+   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getParts}
    */
   @Deprecated
-  public Collection<HttpContent> parts = new ArrayList<HttpContent>();
+  public Collection<HttpContent> parts;
 
   private static final byte[] CR_LF = "\r\n".getBytes();
   private static final byte[] CONTENT_TYPE = "Content-Type: ".getBytes();
@@ -81,10 +84,36 @@ public final class MultipartRelatedContent implements HttpContent {
 
   /**
    * @deprecated (scheduled to be made private in 1.6) Use
-   *             {@link #forRequest(HttpRequest, HttpContent...)}
+   *             {@link #MultipartRelatedContent(HttpContent, HttpContent...)} and
+   *             {@link #forRequest(HttpRequest)}
    */
   @Deprecated
   public MultipartRelatedContent() {
+    parts = new ArrayList<HttpContent>();
+  }
+
+  /**
+   * @param firstPart first HTTP content part
+   * @param otherParts other HTTP content parts
+   * @since 1.5
+   */
+  public MultipartRelatedContent(HttpContent firstPart, HttpContent... otherParts) {
+    List<HttpContent> parts = new ArrayList<HttpContent>(otherParts.length + 1);
+    parts.add(firstPart);
+    parts.addAll(Arrays.asList(otherParts));
+    this.parts = parts;
+  }
+
+  /**
+   * Sets this multi-part content as the content for the given HTTP request, and set the
+   * {@link HttpHeaders#setMimeVersion(String) MIME version header} to {@code "1.0"}.
+   *
+   * @param request HTTP request
+   * @since 1.5
+   */
+  public void forRequest(HttpRequest request) {
+    request.setContent(this);
+    request.getHeaders().setMimeVersion("1.0");
   }
 
   /**
@@ -98,7 +127,11 @@ public final class MultipartRelatedContent implements HttpContent {
    * @param request HTTP request
    * @param parts HTTP content parts
    * @return new multi-part content serializer
+   * @deprecated (scheduled to be made private in 1.6) Use
+   *             {@link #MultipartRelatedContent(HttpContent, HttpContent...)} and
+   *             {@link #forRequest(HttpRequest)}
    */
+  @Deprecated
   public static MultipartRelatedContent forRequest(HttpRequest request, HttpContent... parts) {
     MultipartRelatedContent result = new MultipartRelatedContent();
     request.getHeaders().setMimeVersion("1.0");
@@ -108,15 +141,17 @@ public final class MultipartRelatedContent implements HttpContent {
   }
 
   public void writeTo(OutputStream out) throws IOException {
-    byte[] boundayBytes = boundary.getBytes();
+    byte[] boundaryBytes = boundary.getBytes();
     out.write(TWO_DASHES);
-    out.write(boundayBytes);
+    out.write(boundaryBytes);
     for (HttpContent part : parts) {
       String contentType = part.getType();
-      byte[] typeBytes = contentType.getBytes();
-      out.write(CR_LF);
-      out.write(CONTENT_TYPE);
-      out.write(typeBytes);
+      if (contentType != null) {
+        byte[] typeBytes = contentType.getBytes();
+        out.write(CR_LF);
+        out.write(CONTENT_TYPE);
+        out.write(typeBytes);
+      }
       out.write(CR_LF);
       if (!LogContent.isTextBasedContentType(contentType)) {
         out.write(CONTENT_TRANSFER_ENCODING);
@@ -126,25 +161,40 @@ public final class MultipartRelatedContent implements HttpContent {
       part.writeTo(out);
       out.write(CR_LF);
       out.write(TWO_DASHES);
-      out.write(boundayBytes);
+      out.write(boundaryBytes);
     }
     out.write(TWO_DASHES);
     out.flush();
   }
 
-  public String getEncoding() {
-    return null;
+  @Override
+  public long computeLength() throws IOException {
+    byte[] boundaryBytes = boundary.getBytes();
+    long result = TWO_DASHES.length * 2 + boundaryBytes.length;
+    for (HttpContent part : parts) {
+      long length = part.getLength();
+      if (length < 0) {
+        return -1;
+      }
+      String contentType = part.getType();
+      if (contentType != null) {
+        byte[] typeBytes = contentType.getBytes();
+        result += CR_LF.length + CONTENT_TYPE.length + typeBytes.length;
+      }
+      if (!LogContent.isTextBasedContentType(contentType)) {
+        result += CONTENT_TRANSFER_ENCODING.length + CR_LF.length;
+      }
+      result += CR_LF.length * 3 + length + TWO_DASHES.length + boundaryBytes.length;
+    }
+    return result;
   }
 
-  public long getLength() {
-    // TODO(yanivi): compute this?
-    return -1;
-  }
 
   public String getType() {
     return "multipart/related; boundary=\"" + getBoundary() + "\"";
   }
 
+  @Override
   public boolean retrySupported() {
     for (HttpContent onePart : parts) {
       if (!onePart.retrySupported()) {
@@ -183,20 +233,6 @@ public final class MultipartRelatedContent implements HttpContent {
    * @since 1.5
    */
   public Collection<HttpContent> getParts() {
-    return parts;
-  }
-
-  /**
-   * Sets the HTTP content parts.
-   *
-   * <p>
-   * By default, it is an empty list.
-   * </p>
-   *
-   * @since 1.5
-   */
-  public MultipartRelatedContent setParts(Collection<HttpContent> parts) {
-    this.parts = Preconditions.checkNotNull(parts);
-    return this;
+    return Collections.unmodifiableCollection(parts);
   }
 }
