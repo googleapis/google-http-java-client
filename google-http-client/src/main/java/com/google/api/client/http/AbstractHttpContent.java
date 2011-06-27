@@ -14,9 +14,6 @@
 
 package com.google.api.client.http;
 
-import com.google.common.io.CountingOutputStream;
-import com.google.common.io.NullOutputStream;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -56,17 +53,18 @@ public abstract class AbstractHttpContent implements HttpContent {
    *
    * <p>
    * Subclasses may override, but by default this computes the length by calling
-   * {@link #writeTo(OutputStream)} with a {@link CountingOutputStream}. If
-   * {@link #retrySupported()} is {@code false}, it will instead return {@code -1}.
+   * {@link #writeTo(OutputStream)} with an output stream that does not process the bytes written,
+   * but only retains the count of bytes. If {@link #retrySupported()} is {@code false}, it will
+   * instead return {@code -1}.
    * </p>
    */
   protected long computeLength() throws IOException {
     if (!retrySupported()) {
       return -1;
     }
-    CountingOutputStream countingStream = new CountingOutputStream(new NullOutputStream());
+    ByteCountingOutputStream countingStream = new ByteCountingOutputStream();
     writeTo(countingStream);
-    return countingStream.getCount();
+    return countingStream.count;
   }
 
   /** Default implementation returns {@code true}, but subclasses may override. */
