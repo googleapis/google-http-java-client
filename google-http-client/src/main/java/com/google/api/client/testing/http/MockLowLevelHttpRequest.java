@@ -17,8 +17,6 @@ package com.google.api.client.testing.http;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,15 +46,6 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
   public String url;
 
   /**
-   * Headers added in {@link #addHeader(String, String)}.
-   *
-   * @since 1.4
-   * @deprecated (scheduled to be removed in 1.6) Use {@link #getHeaders} or {@link #getHeaders}
-   */
-  @Deprecated
-  public final ListMultimap<String, String> headers = ArrayListMultimap.create();
-
-  /**
    * HTTP content or {@code null} for none.
    *
    * @since 1.4
@@ -82,7 +71,6 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
 
   @Override
   public void addHeader(String name, String value) {
-    headers.put(name, value);
     List<String> values = headersMap.get(name);
     if (values == null) {
       values = new ArrayList<String>();

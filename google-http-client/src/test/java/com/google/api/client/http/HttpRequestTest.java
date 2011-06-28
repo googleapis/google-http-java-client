@@ -22,7 +22,6 @@ import com.google.api.client.util.Key;
 import com.google.api.client.util.Value;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ListMultimap;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -196,20 +195,6 @@ public class HttpRequestTest extends TestCase {
     HttpRequest request = transport.createRequestFactory().buildGetRequest(new GenericUrl());
     request.setHeaders(myHeaders);
     request.execute();
-    // check old headers
-    // TODO(yanivi): remove @SuppressWarnings("deprecation") for 1.6
-    @SuppressWarnings("deprecation")
-    ListMultimap<String, String> oldHeaders = lowLevelRequest.headers;
-    assertEquals(ImmutableList.of("bar"), oldHeaders.get("foo"));
-    assertEquals(ImmutableList.of("a", "b", "c"), oldHeaders.get("list"));
-    assertEquals(ImmutableList.of("a2", "b2", "c2"), oldHeaders.get("objList"));
-    assertEquals(ImmutableList.of("a1", "a2"), oldHeaders.get("r"));
-    assertFalse(oldHeaders.containsKey("acceptEncoding"));
-    assertEquals(
-        ImmutableList.of("foo " + HttpRequest.USER_AGENT_SUFFIX), oldHeaders.get("User-Agent"));
-    assertEquals(ImmutableList.of("b"), oldHeaders.get("a"));
-    assertEquals(ImmutableList.of("VALUE"), oldHeaders.get("value"));
-    assertEquals(ImmutableList.of("other"), oldHeaders.get("otherValue"));
     // check headers
     Map<String, List<String>> headers = lowLevelRequest.getHeaders();
     assertEquals(ImmutableList.of("bar"), headers.get("foo"));
