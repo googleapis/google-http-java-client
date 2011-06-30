@@ -53,29 +53,11 @@ import java.util.Map;
  */
 public class UrlEncodedContent extends AbstractHttpContent {
 
-  /**
-   * Content type. Default value is {@link UrlEncodedParser#CONTENT_TYPE}.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getType} or {@link #setType}
-   */
-  @Deprecated
-  public String contentType = UrlEncodedParser.CONTENT_TYPE;
+  /** Content type. Default value is {@link UrlEncodedParser#CONTENT_TYPE}. */
+  private String contentType = UrlEncodedParser.CONTENT_TYPE;
 
-  /**
-   * Key name/value data or {@code null} for none.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getData} or
-   *             {@link #setData}
-   */
-  @Deprecated
-  public Object data;
-
-  /**
-   * @deprecated (scheduled to be removed in 1.6) Use {@link #UrlEncodedContent(Object)}
-   */
-  @Deprecated
-  public UrlEncodedContent() {
-  }
+  /** Key name/value data or {@code null} for none. */
+  private Object data;
 
   /**
    * @param data key name/value data or {@code null} for none

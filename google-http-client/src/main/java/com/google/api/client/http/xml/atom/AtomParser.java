@@ -26,8 +26,7 @@ import com.google.api.client.xml.atom.Atom;
  * </p>
  *
  * <p>
- * Implementation is thread-safe as long as the fields are not set directly (which is deprecated
- * usage).
+ * Implementation is thread-safe.
  * </p>
  *
  * <p>
@@ -35,25 +34,15 @@ import com.google.api.client.xml.atom.Atom;
  * </p>
  *
  * <pre>
- * <code>
   static void setParser(HttpRequest request, XmlNamespaceDictionary namespaceDictionary) {
     request.addParser(new AtomParser(namespaceDictionary));
   }
- * </code>
  * </pre>
  *
  * @since 1.4
  * @author Yaniv Inbar
  */
 public final class AtomParser extends XmlHttpParser {
-
-  /**
-   * @deprecated (scheduled to be removed in 1.6) Use {@link #AtomParser(XmlNamespaceDictionary)}
-   */
-  @Deprecated
-  public AtomParser() {
-    contentType = Atom.CONTENT_TYPE;
-  }
 
   /**
    * @param namespaceDictionary XML namespace dictionary

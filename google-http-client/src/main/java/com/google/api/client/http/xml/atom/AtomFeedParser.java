@@ -40,25 +40,10 @@ import java.io.InputStream;
  * @since 1.4
  * @author Yaniv Inbar
  */
-// TODO(yanivi): remove @SuppressWarnings("deprecation") for 1.6
-@SuppressWarnings("deprecation")
 public final class AtomFeedParser<T, E> extends AbstractAtomFeedParser<T> {
 
-  /**
-   * Atom entry class to parse.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getEntryClass}
-   */
-  @Deprecated
-  public Class<E> entryClass;
-
-  /**
-   * @deprecated (scheduled to be removed in 1.6) Use {@link #AtomFeedParser(XmlNamespaceDictionary,
-   *             XmlPullParser, InputStream, Class, Class)}
-   */
-  @Deprecated
-  public AtomFeedParser() {
-  }
+  /** Atom entry class to parse. */
+  private final Class<E> entryClass;
 
   /**
    * @param namespaceDictionary XML namespace dictionary

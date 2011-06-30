@@ -37,14 +37,6 @@ import java.io.OutputStream;
 public abstract class AbstractXmlHttpContent extends AbstractHttpContent {
 
   /**
-   * @deprecated (scheduled to be removed in 1.6) Use
-   *             {@link #AbstractXmlHttpContent(XmlNamespaceDictionary)}
-   */
-  @Deprecated
-  public AbstractXmlHttpContent() {
-  }
-
-  /**
    * @param namespaceDictionary XML namespace dictionary
    * @since 1.5
    */
@@ -55,19 +47,11 @@ public abstract class AbstractXmlHttpContent extends AbstractHttpContent {
   /**
    * Content type. Default value is {@link XmlHttpParser#CONTENT_TYPE}, though subclasses may define
    * a different default value.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getType} or {@link #setType}
    */
-  @Deprecated
-  public String contentType = XmlHttpParser.CONTENT_TYPE;
+  private String contentType = XmlHttpParser.CONTENT_TYPE;
 
-  /**
-   * XML namespace dictionary.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getNamespaceDictionary}
-   */
-  @Deprecated
-  public XmlNamespaceDictionary namespaceDictionary;
+  /** XML namespace dictionary. */
+  private final XmlNamespaceDictionary namespaceDictionary;
 
   public final String getType() {
     return contentType;

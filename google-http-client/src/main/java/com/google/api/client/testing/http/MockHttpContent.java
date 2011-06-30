@@ -32,39 +32,17 @@ import java.io.OutputStream;
  */
 public class MockHttpContent implements HttpContent {
 
-  /**
-   * HTTP content encoding or {@code null} by default.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getEncoding} or
-   *             {@link #setEncoding}
-   */
-  @Deprecated
-  public String encoding;
+  /** HTTP content encoding or {@code null} by default. */
+  private String encoding;
 
-  /**
-   * HTTP content length or {@code -1} by default.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getLength} or {@link #setLength}
-   */
-  @Deprecated
-  public long length = -1;
+  /** HTTP content length or {@code -1} by default. */
+  private long length = -1;
 
-  /**
-   * HTTP content type or {@code null} by default.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getType} or {@link #setType}
-   */
-  @Deprecated
-  public String type;
+  /** HTTP content type or {@code null} by default. */
+  private String type;
 
-  /**
-   * HTTP content or an empty byte array by default.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContent} or
-   *             {@link #setContent}
-   */
-  @Deprecated
-  public byte[] content = new byte[0];
+  /** HTTP content or an empty byte array by default. */
+  private byte[] content = new byte[0];
 
   public String getEncoding() {
     return encoding;

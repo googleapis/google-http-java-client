@@ -49,37 +49,14 @@ import java.io.OutputStream;
 public class JsonHttpContent extends AbstractHttpContent {
   // TODO(yanivi): ability to annotate fields as only needed for POST?
 
-  /**
-   * Content type. Default value is {@link Json#CONTENT_TYPE}.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getType} or {@link #setType}
-   */
-  @Deprecated
-  public String contentType = Json.CONTENT_TYPE;
+  /** Content type. Default value is {@link Json#CONTENT_TYPE}. */
+  private String contentType = Json.CONTENT_TYPE;
 
-  /**
-   * JSON key name/value data.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getData}
-   */
-  @Deprecated
-  public Object data;
+  /** JSON key name/value data. */
+  private final Object data;
 
-  /**
-   * JSON factory.
-   *
-   * @since 1.3
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getJsonFactory}
-   */
-  @Deprecated
-  public JsonFactory jsonFactory;
-
-  /**
-   * @deprecated (scheduled to be removed in 1.6) Use {@link #JsonHttpContent(JsonFactory, Object)}
-   */
-  @Deprecated
-  public JsonHttpContent() {
-  }
+  /** JSON factory. */
+  private final JsonFactory jsonFactory;
 
   /**
    * @param jsonFactory JSON factory to use

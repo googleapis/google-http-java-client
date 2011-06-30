@@ -60,24 +60,8 @@ public class AtomContent extends AbstractXmlHttpContent {
   /** {@code true} for an Atom entry or {@code false} for an Atom feed. */
   private final boolean isEntry;
 
-  /**
-   * Key/value pair data for the Atom entry.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getData}
-   */
-  @Deprecated
-  public Object entry;
-
-  /**
-   * @deprecated (scheduled to be removed in 1.6) Use
-   *             {@link #forEntry(XmlNamespaceDictionary, Object)} or
-   *             {@link #AtomContent(XmlNamespaceDictionary, Object, boolean)}
-   */
-  @Deprecated
-  public AtomContent() {
-    setType(Atom.CONTENT_TYPE);
-    isEntry = true;
-  }
+  /** Key/value pair data for the Atom entry. */
+  private final Object entry;
 
   /**
    * @param namespaceDictionary XML namespace dictionary

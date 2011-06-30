@@ -39,26 +39,11 @@ import java.io.IOException;
  */
 public final class HttpRequestFactory {
 
-  /**
-   * HTTP transport.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getTransport()}
-   */
-  @Deprecated
-  public final HttpTransport transport;
+  /** HTTP transport. */
+  private final HttpTransport transport;
 
-  /**
-   * HTTP request initializer or {@code null} for none.
-   *
-   * <p>
-   * This initializer is invoked before setting its {@link HttpRequest#method},
-   * {@link HttpRequest#url}, or {@link HttpRequest#content}.
-   * </p>
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getInitializer()}
-   */
-  @Deprecated
-  public final HttpRequestInitializer initializer;
+  /** HTTP request initializer or {@code null} for none. */
+  private final HttpRequestInitializer initializer;
 
   /**
    * @param transport HTTP transport

@@ -30,12 +30,9 @@ import java.math.BigInteger;
  * Implementation is not thread-safe.
  * </p>
  *
- * @since 1.4
  * @author Yaniv Inbar
- * @deprecated (scheduled to be made package-private in 1.6)
  */
-@Deprecated
-public class AndroidJsonGenerator extends JsonGenerator {
+class AndroidJsonGenerator extends JsonGenerator {
   private final JsonWriter writer;
   private final AndroidJsonFactory factory;
 

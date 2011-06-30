@@ -37,29 +37,11 @@ public abstract class AbstractInputStreamContent implements HttpContent {
 
   private static final int BUFFER_SIZE = 2048;
 
-  /**
-   * Content type or {@code null} for none.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getType} or {@link #setType}
-   */
-  @Deprecated
-  public String type;
+  /** Content type or {@code null} for none. */
+  private String type;
 
-  /**
-   * Content encoding (for example {@code "gzip"}) or {@code null} for none.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getEncoding} or
-   *             {@link #setEncoding}
-   */
-  @Deprecated
-  public String encoding;
-
-  /**
-   * @deprecated (scheduled to be removed in 1.6) Use {@link #AbstractInputStreamContent(String)}
-   */
-  @Deprecated
-  public AbstractInputStreamContent() {
-  }
+  /** Content encoding (for example {@code "gzip"}) or {@code null} for none. */
+  private String encoding;
 
   /**
    * @param type Content type or {@code null} for none

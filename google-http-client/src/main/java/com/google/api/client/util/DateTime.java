@@ -28,11 +28,6 @@ import java.util.TimeZone;
  * Implementation is immutable and therefore thread-safe.
  * </p>
  *
- * <p>
- * Upgrade warning: in prior version 1.4 this class was not final, but now it is final to ensure its
- * immutability.
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -45,30 +40,21 @@ public final class DateTime implements Serializable {
   /**
    * Date/time value expressed as the number of ms since the Unix epoch.
    *
-   *  If the time zone is specified, this value is normalized to UTC, so to format this date/time
+   * <p>
+   * If the time zone is specified, this value is normalized to UTC, so to format this date/time
    * value, the time zone shift has to be applied.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getValue()}
+   * </p>
    */
-  @Deprecated
-  public final long value;
+  private final long value;
 
-  /**
-   * Specifies whether this is a date-only value.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #isDateOnly()}
-   */
-  @Deprecated
-  public final boolean dateOnly;
+  /** Specifies whether this is a date-only value. */
+  private final boolean dateOnly;
 
   /**
    * Time zone shift from UTC in minutes. If {@code null}, no time zone is set, and the time is
    * always interpreted as local time.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getTimeZoneShift()}
    */
-  @Deprecated
-  public final Integer tzShift;
+  private final Integer tzShift;
 
   public DateTime(Date date, TimeZone zone) {
     long value = date.getTime();

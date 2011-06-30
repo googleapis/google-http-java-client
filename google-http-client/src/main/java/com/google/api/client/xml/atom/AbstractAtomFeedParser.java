@@ -36,52 +36,22 @@ import java.io.InputStream;
  * @since 1.0
  * @author Yaniv Inbar
  */
-// TODO(yanivi): remove @SuppressWarnings("deprecation") for 1.6
-@SuppressWarnings("deprecation")
 public abstract class AbstractAtomFeedParser<T> {
 
   /** Whether the feed has been parsed. */
   private boolean feedParsed;
 
-  /**
-   * XML pull parser to use.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getParser}
-   */
-  @Deprecated
-  public XmlPullParser parser;
+  /** XML pull parser to use. */
+  private final XmlPullParser parser;
 
-  /**
-   * Input stream to read.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getInputStream}
-   */
-  @Deprecated
-  public InputStream inputStream;
+  /** Input stream to read. */
+  private final InputStream inputStream;
 
-  /**
-   * Feed class to parse.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getFeedClass}
-   */
-  @Deprecated
-  public Class<T> feedClass;
+  /** Feed class to parse. */
+  private final Class<T> feedClass;
 
-  /**
-   * XML namespace dictionary.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getNamespaceDictionary}
-   */
-  @Deprecated
-  public XmlNamespaceDictionary namespaceDictionary;
-
-  /**
-   * @deprecated (scheduled to be removed in 1.6) Use {@link
-   *             #AbstractAtomFeedParser(XmlNamespaceDictionary, XmlPullParser, InputStream, Class)}
-   */
-  @Deprecated
-  public AbstractAtomFeedParser() {
-  }
+  /** XML namespace dictionary. */
+  private final XmlNamespaceDictionary namespaceDictionary;
 
   /**
    * @param namespaceDictionary XML namespace dictionary

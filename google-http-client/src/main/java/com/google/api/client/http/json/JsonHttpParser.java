@@ -29,8 +29,7 @@ import java.io.InputStream;
  * Parses HTTP JSON response content into an data class of key/value pairs.
  *
  * <p>
- * Implementation is thread-safe as long as the fields are not set directly (which is deprecated
- * usage).
+ * Implementation is thread-safe.
  * </p>
  *
  * <p>
@@ -50,37 +49,18 @@ import java.io.InputStream;
  */
 public class JsonHttpParser implements HttpParser {
 
-  /**
-   * Content type. Default value is {@link Json#CONTENT_TYPE}.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getContentType} or
-   *             {@link Builder#setContentType}
-   */
-  @Deprecated
-  public String contentType = Json.CONTENT_TYPE;
+  /** Content type. */
+  private final String contentType;
 
-  /**
-   * JSON factory.
-   *
-   * @since 1.3
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getJsonFactory}
-   */
-  @Deprecated
-  public JsonFactory jsonFactory;
-
-  /**
-   * @deprecated (scheduled to be removed in 1.6) Use {@link #JsonHttpParser(JsonFactory)}
-   */
-  @Deprecated
-  public JsonHttpParser() {
-  }
+  /** JSON factory. */
+  private final JsonFactory jsonFactory;
 
   /**
    * @param jsonFactory JSON factory
    * @since 1.5
    */
   public JsonHttpParser(JsonFactory jsonFactory) {
-    this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
+    this(jsonFactory, Json.CONTENT_TYPE);
   }
 
   /**
@@ -89,7 +69,7 @@ public class JsonHttpParser implements HttpParser {
    * @since 1.5
    */
   protected JsonHttpParser(JsonFactory jsonFactory, String contentType) {
-    this(jsonFactory);
+    this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
     this.contentType = contentType;
   }
 

@@ -49,15 +49,6 @@ public final class FileContent extends AbstractInputStreamContent {
   private final File file;
 
   /**
-   * @param file file
-   * @deprecated (scheduled to be removed in 1.6) Use {@link #FileContent(String, File)}
-   */
-  @Deprecated
-  public FileContent(File file) {
-    this(null, file);
-  }
-
-  /**
    * @param type Content type or {@code null} for none
    * @param file file
    * @since 1.5

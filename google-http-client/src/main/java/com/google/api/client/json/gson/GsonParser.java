@@ -34,12 +34,9 @@ import java.util.List;
  * Implementation is not thread-safe.
  * </p>
  *
- * @since 1.3
  * @author Yaniv Inbar
- * @deprecated (scheduled to be made package-private in 1.6)
  */
-@Deprecated
-public class GsonParser extends JsonParser {
+class GsonParser extends JsonParser {
   private final JsonReader reader;
   private final GsonFactory factory;
 

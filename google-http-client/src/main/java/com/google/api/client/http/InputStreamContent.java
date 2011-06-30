@@ -49,29 +49,11 @@ import java.io.OutputStream;
  */
 public final class InputStreamContent extends AbstractInputStreamContent {
 
-  /**
-   * Content length or less than zero if not known. Defaults to {@code -1}.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getLength} or {@link #setLength}
-   */
-  @Deprecated
-  public long length = -1;
+  /** Content length or less than zero if not known. Defaults to {@code -1}. */
+  private long length = -1;
 
-  /**
-   * Input stream to read from.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getInputStream}
-   */
-  @Deprecated
-  public InputStream inputStream;
-
-  /**
-   * @deprecated (scheduled to be removed in 1.6) Use
-   *             {@link #InputStreamContent(String, InputStream)}
-   */
-  @Deprecated
-  public InputStreamContent() {
-  }
+  /** Input stream to read from. */
+  private final InputStream inputStream;
 
   /**
    * @param type Content type or {@code null} for none

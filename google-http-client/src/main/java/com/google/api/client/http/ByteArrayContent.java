@@ -47,41 +47,6 @@ public final class ByteArrayContent extends AbstractInputStreamContent {
 
   private final byte[] byteArray;
 
-  @Deprecated
-  private static final byte[] EMPTY_ARRAY = new byte[] {};
-
-  /**
-   * @param array Data source for creating input streams.
-   * @deprecated (scheduled to be removed in 1.6) Use {@link #ByteArrayContent(String, byte[])}
-   */
-  @Deprecated
-  public ByteArrayContent(byte[] array) {
-    this(null, array);
-  }
-
-  /**
-   * Create an instance from the byte contents of the string. This assumes that the string is
-   * encoded in UTF-8 and uses {@code Strings.toBytesUtf8()} to perform the conversion.
-   *
-   * @param contentString String to use as the source data for creating input streams
-   * @deprecated (scheduled to be removed in 1.6) Use {@link #fromString(String, String)}
-   */
-  @Deprecated
-  public ByteArrayContent(String contentString) {
-    this(Strings.toBytesUtf8(contentString));
-  }
-
-  /**
-   * Create an instance with no data.
-   *
-   * @deprecated (scheduled to be removed in 1.6) Use {@code new ByteArrayContent(null, new
-   *             byte[]{})}
-   */
-  @Deprecated
-  public ByteArrayContent() {
-    this(EMPTY_ARRAY);
-  }
-
   /**
    * @param type content type or {@code null} for none
    * @param array byte array content

@@ -29,46 +29,27 @@ import com.google.api.client.util.Key;
  */
 public class JsonRpcRequest extends GenericData {
 
-  /**
-   * Version of the JSON-RPC protocol which is {@code "2.0"}.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getVersion()}
-   */
-  @Deprecated
+  /** Version of the JSON-RPC protocol which is {@code "2.0"}. */
   @Key
-  public final String jsonrpc = "2.0";
+  private final String jsonrpc = "2.0";
 
   /**
    * Identifier established by the client that must be a string or a number or {@code null} for a
    * notification and therefore not expect to receive a response.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getId()} or
-   *             {@link #setId(Object)}
    */
-  @Deprecated
   @Key
-  public Object id;
+  private Object id;
 
-  /**
-   * Name of the method to be invoked.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getMethod()} or
-   *             {@link #setMethod(String)}
-   */
-  @Deprecated
+  /** Name of the method to be invoked. */
   @Key
-  public String method;
+  private String method;
 
   /**
    * Structured value that holds the parameter values to be used during the invocation of the method
    * or {@code null} for none.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getParameters()} or
-   *             {@link #setParameters(Object)}
    */
-  @Deprecated
   @Key
-  public Object params;
+  private Object params;
 
   /**
    * Returns the version of the JSON-RPC protocol which is {@code "2.0"}.

@@ -39,231 +39,97 @@ import java.util.HashMap;
  */
 public class HttpHeaders extends GenericData {
 
-  /**
-   * {@code "Accept"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getAccept} or {@link #setAccept}
-   */
-  @Deprecated
+  /** {@code "Accept"} header. */
   @Key("Accept")
-  public String accept;
+  private String accept;
 
-  /**
-   * {@code "Accept-Encoding"} header. By default, this is {@code "gzip"}.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getAcceptEncoding} or
-   *             {@link #setAcceptEncoding}
-   */
-  @Deprecated
+  /** {@code "Accept-Encoding"} header. */
   @Key("Accept-Encoding")
-  public String acceptEncoding = "gzip";
+  private String acceptEncoding = "gzip";
 
-  /**
-   * {@code "Authorization"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getAuthorization} or
-   *             {@link #setAuthorization}
-   */
-  @Deprecated
+  /** {@code "Authorization"} header. */
   @Key("Authorization")
-  public String authorization;
+  private String authorization;
 
-  /**
-   * {@code "Cache-Control"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getCacheControl} or
-   *             {@link #setCacheControl}
-   */
-  @Deprecated
+  /** {@code "Cache-Control"} header. */
   @Key("Cache-Control")
-  public String cacheControl;
+  private String cacheControl;
 
-  /**
-   * {@code "Content-Encoding"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContentEncoding} or
-   *             {@link #setContentEncoding}
-   */
-  @Deprecated
+  /** {@code "Content-Encoding"} header. */
   @Key("Content-Encoding")
-  public String contentEncoding;
+  private String contentEncoding;
 
-  /**
-   * {@code "Content-Length"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContentLength} or
-   *             {@link #setContentLength}
-   */
-  @Deprecated
+  /** {@code "Content-Length"} header. */
   @Key("Content-Length")
-  public String contentLength;
+  private String contentLength;
 
-  /**
-   * {@code "Content-MD5"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContentMD5} or
-   *             {@link #setContentMD5}
-   */
-  @Deprecated
+  /** {@code "Content-MD5"} header. */
   @Key("Content-MD5")
-  public String contentMD5;
+  private String contentMD5;
 
-  /**
-   * {@code "Content-Range"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContentRange} or
-   *             {@link #setContentRange}
-   */
-  @Deprecated
+  /** {@code "Content-Range"} header. */
   @Key("Content-Range")
-  public String contentRange;
+  private String contentRange;
 
-  /**
-   * {@code "Content-Type"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContentType} or
-   *             {@link #setContentType}
-   */
-  @Deprecated
+  /** {@code "Content-Type"} header. */
   @Key("Content-Type")
-  public String contentType;
+  private String contentType;
 
-  /**
-   * {@code "Date"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getDate} or {@link #setDate}
-   */
-  @Deprecated
+  /** {@code "Date"} header. */
   @Key("Date")
-  public String date;
+  private String date;
 
-  /**
-   * {@code "ETag"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getETag} or {@link #setETag}
-   */
-  @Deprecated
+  /** {@code "ETag"} header. */
   @Key("ETag")
-  public String etag;
+  private String etag;
 
-  /**
-   * {@code "Expires"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getExpires} or
-   *             {@link #setExpires}
-   */
-  @Deprecated
+  /** {@code "Expires"} header. */
   @Key("Expires")
-  public String expires;
+  private String expires;
 
-  /**
-   * {@code "If-Modified-Since"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getIfModifiedSince} or
-   *             {@link #setIfModifiedSince}
-   */
-  @Deprecated
+  /** {@code "If-Modified-Since"} header. */
   @Key("If-Modified-Since")
-  public String ifModifiedSince;
+  private String ifModifiedSince;
 
-  /**
-   * {@code "If-Match"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getIfMatch} or
-   *             {@link #setIfMatch}
-   */
-  @Deprecated
+  /** {@code "If-Match"} header. */
   @Key("If-Match")
-  public String ifMatch;
+  private String ifMatch;
 
-  /**
-   * {@code "If-None-Match"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getIfNoneMatch} or
-   *             {@link #setIfNoneMatch}
-   */
-  @Deprecated
+  /** {@code "If-None-Match"} header. */
   @Key("If-None-Match")
-  public String ifNoneMatch;
+  private String ifNoneMatch;
 
-  /**
-   * {@code "If-Unmodified-Since"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getIfUnmodifiedSince} or
-   *             {@link #setIfUnmodifiedSince}
-   */
-  @Deprecated
+  /** {@code "If-Unmodified-Since"} header. */
   @Key("If-Unmodified-Since")
-  public String ifUnmodifiedSince;
+  private String ifUnmodifiedSince;
 
-  /**
-   * {@code "Last-Modified"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getLastModified} or
-   *             {@link #setLastModified}
-   */
-  @Deprecated
+  /** {@code "Last-Modified"} header. */
   @Key("Last-Modified")
-  public String lastModified;
+  private String lastModified;
 
-  /**
-   * {@code "Location"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getLocation} or
-   *             {@link #setLocation}
-   */
-  @Deprecated
+  /** {@code "Location"} header. */
   @Key("Location")
-  public String location;
+  private String location;
 
-  /**
-   * {@code "MIME-Version"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getMimeVersion} or
-   *             {@link #setMimeVersion}
-   */
-  @Deprecated
+  /** {@code "MIME-Version"} header. */
   @Key("MIME-Version")
-  public String mimeVersion;
+  private String mimeVersion;
 
-  /**
-   * {@code "Range"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getRange} or {@link #setRange}
-   */
-  @Deprecated
+  /** {@code "Range"} header. */
   @Key("Range")
-  public String range;
+  private String range;
 
-  /**
-   * {@code "Retry-After"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getRetryAfter} or
-   *             {@link #setRetryAfter}
-   */
-  @Deprecated
+  /** {@code "Retry-After"} header. */
   @Key("Retry-After")
-  public String retryAfter;
+  private String retryAfter;
 
-  /**
-   * {@code "User-Agent"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getUserAgent} or
-   *             {@link #setUserAgent}
-   */
-  @Deprecated
+  /** {@code "User-Agent"} header. */
   @Key("User-Agent")
-  public String userAgent;
+  private String userAgent;
 
-  /**
-   * {@code "WWW-Authenticate"} header.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getAuthenticate} or
-   *             {@link #setAuthenticate}
-   */
-  @Deprecated
+  /** {@code "WWW-Authenticate"} header. */
   @Key("WWW-Authenticate")
-  public String authenticate;
+  private String authenticate;
 
   @Override
   public HttpHeaders clone() {

@@ -36,24 +36,11 @@ import java.util.Map;
  */
 public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
 
-  /**
-   * Request URL or {@code null} for none.
-   *
-   * @since 1.4
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getUrl} or {@link #setUrl}
-   */
-  @Deprecated
-  public String url;
+  /** Request URL or {@code null} for none. */
+  private String url;
 
-  /**
-   * HTTP content or {@code null} for none.
-   *
-   * @since 1.4
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContent} or
-   *             {@link #setContent}
-   */
-  @Deprecated
-  public HttpContent content;
+  /** HTTP content or {@code null} for none. */
+  private HttpContent content;
 
   /** Map of header name to values. */
   private final Map<String, List<String>> headersMap = new HashMap<String, List<String>>();

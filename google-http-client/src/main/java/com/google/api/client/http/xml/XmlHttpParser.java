@@ -31,8 +31,7 @@ import java.io.InputStream;
  * XML HTTP parser into an data class of key/value pairs.
  *
  * <p>
- * Implementation is thread-safe as long as the fields are not set directly (which is deprecated
- * usage).
+ * Implementation is thread-safe.
  * </p>
  *
  * <p>
@@ -40,11 +39,9 @@ import java.io.InputStream;
  * </p>
  *
  * <pre>
- * <code>
   static void setParser(HttpRequest request, XmlNamespaceDictionary namespaceDictionary) {
     request.addParser(new XmlHttpParser(namespaceDictionary));
   }
- * </code>
  * </pre>
  *
  * @since 1.0
@@ -55,37 +52,18 @@ public class XmlHttpParser implements HttpParser {
   /** {@code "application/xml"} content type. */
   public static final String CONTENT_TYPE = "application/xml";
 
-  /**
-   * Content type. Default value is {@link #CONTENT_TYPE}.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getContentType} or
-   *             {@link Builder#setContentType}
-   */
-  @Deprecated
-  public String contentType = CONTENT_TYPE;
+  /** Content type. Default value is {@link #CONTENT_TYPE}. */
+  private final String contentType;
 
-  /**
-   * XML namespace dictionary.
-   *
-   * @since 1.3
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getNamespaceDictionary}
-   */
-  @Deprecated
-  public XmlNamespaceDictionary namespaceDictionary;
-
-  /**
-   * @deprecated (scheduled to be removed in 1.6) Use {@link #XmlHttpParser(XmlNamespaceDictionary)}
-   */
-  @Deprecated
-  public XmlHttpParser() {
-  }
+  /** XML namespace dictionary. */
+  private final XmlNamespaceDictionary namespaceDictionary;
 
   /**
    * @param namespaceDictionary XML namespace dictionary
    * @since 1.5
    */
   public XmlHttpParser(XmlNamespaceDictionary namespaceDictionary) {
-    this.namespaceDictionary = Preconditions.checkNotNull(namespaceDictionary);
+    this(namespaceDictionary, CONTENT_TYPE);
   }
 
   /**
@@ -94,7 +72,7 @@ public class XmlHttpParser implements HttpParser {
    * @since 1.5
    */
   protected XmlHttpParser(XmlNamespaceDictionary namespaceDictionary, String contentType) {
-    this(namespaceDictionary);
+    this.namespaceDictionary = Preconditions.checkNotNull(namespaceDictionary);
     this.contentType = contentType;
   }
 

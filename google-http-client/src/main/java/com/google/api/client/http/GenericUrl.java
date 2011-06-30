@@ -58,29 +58,14 @@ public class GenericUrl extends GenericData {
   private static final Escaper URI_FRAGMENT_ESCAPER =
       new PercentEscaper("=&-_.!~*'()@:$,;/?:", false);
 
-  /**
-   * Scheme (lowercase), for example {@code "https"}.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getScheme} or {@link #setScheme}
-   */
-  @Deprecated
-  public String scheme;
+  /** Scheme (lowercase), for example {@code "https"}. */
+  private String scheme;
 
-  /**
-   * Host, for example {@code "www.google.com"}.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getHost} or {@link #setHost}
-   */
-  @Deprecated
-  public String host;
+  /** Host, for example {@code "www.google.com"}. */
+  private String host;
 
-  /**
-   * Port number or {@code -1} if undefined, for example {@code 443}.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getPort} or {@link #setPort}
-   */
-  @Deprecated
-  public int port = -1;
+  /** Port number or {@code -1} if undefined, for example {@code 443}. */
+  private int port = -1;
 
   /**
    * Decoded path component by parts with each part separated by a {@code '/'} or {@code null} for
@@ -90,21 +75,11 @@ public class GenericUrl extends GenericData {
    * Use {@link #appendRawPath(String)} to append to the path, which ensures that no extra slash is
    * added.
    * </p>
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getPathParts} or
-   *             {@link #setPathParts}
    */
-  @Deprecated
-  public List<String> pathParts;
+  private List<String> pathParts;
 
-  /**
-   * Fragment component or {@code null} for none.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getFragment} or
-   *             {@link #setFragment}
-   */
-  @Deprecated
-  public String fragment;
+  /** Fragment component or {@code null} for none. */
+  private String fragment;
 
   public GenericUrl() {
   }

@@ -55,14 +55,8 @@ import java.util.List;
  */
 public final class MultipartRelatedContent extends AbstractHttpContent {
 
-  /**
-   * Boundary string to use. By default, it is {@code "END_OF_PART"}.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getBoundary} or
-   *             {@link #setBoundary}
-   */
-  @Deprecated
-  public String boundary = "END_OF_PART";
+  /** Boundary string to use. By default, it is {@code "END_OF_PART"}. */
+  private String boundary = "END_OF_PART";
 
   /**
    * Collection of HTTP content parts.
@@ -70,27 +64,14 @@ public final class MultipartRelatedContent extends AbstractHttpContent {
    * <p>
    * By default, it is an empty list.
    * </p>
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getParts}
    */
-  @Deprecated
-  public Collection<HttpContent> parts;
+  private final Collection<HttpContent> parts;
 
   private static final byte[] CR_LF = "\r\n".getBytes();
   private static final byte[] CONTENT_TYPE = "Content-Type: ".getBytes();
   private static final byte[] CONTENT_TRANSFER_ENCODING =
       "Content-Transfer-Encoding: binary".getBytes();
   private static final byte[] TWO_DASHES = "--".getBytes();
-
-  /**
-   * @deprecated (scheduled to be made private in 1.6) Use
-   *             {@link #MultipartRelatedContent(HttpContent, HttpContent...)} and
-   *             {@link #forRequest(HttpRequest)}
-   */
-  @Deprecated
-  public MultipartRelatedContent() {
-    parts = new ArrayList<HttpContent>();
-  }
 
   /**
    * @param firstPart first HTTP content part
@@ -114,30 +95,6 @@ public final class MultipartRelatedContent extends AbstractHttpContent {
   public void forRequest(HttpRequest request) {
     request.setContent(this);
     request.getHeaders().setMimeVersion("1.0");
-  }
-
-  /**
-   * Returns a new multi-part content serializer as the content for the given HTTP request.
-   *
-   * <p>
-   * It also sets the {@link HttpHeaders#getMimeVersion MIME version} of
-   * {@link HttpRequest#getHeaders() headers} to {@code "1.0"}.
-   * </p>
-   *
-   * @param request HTTP request
-   * @param parts HTTP content parts
-   * @return new multi-part content serializer
-   * @deprecated (scheduled to be made private in 1.6) Use
-   *             {@link #MultipartRelatedContent(HttpContent, HttpContent...)} and
-   *             {@link #forRequest(HttpRequest)}
-   */
-  @Deprecated
-  public static MultipartRelatedContent forRequest(HttpRequest request, HttpContent... parts) {
-    MultipartRelatedContent result = new MultipartRelatedContent();
-    request.getHeaders().setMimeVersion("1.0");
-    request.setContent(result);
-    result.getParts().addAll(Arrays.asList(parts));
-    return result;
   }
 
   public void writeTo(OutputStream out) throws IOException {

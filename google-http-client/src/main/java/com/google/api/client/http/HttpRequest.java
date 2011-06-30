@@ -55,25 +55,15 @@ public final class HttpRequest {
   /**
    * HTTP request execute interceptor to intercept the start of {@link #execute()} (before executing
    * the HTTP request) or {@code null} for none.
-   *
-   * @since 1.4
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getInterceptor} or
-   *             {@link #setInterceptor}
    */
-  @Deprecated
-  public HttpExecuteInterceptor interceptor;
+  private HttpExecuteInterceptor interceptor;
 
-  /**
-   * HTTP request headers.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getHeaders} or
-   *             {@link #setHeaders}
-   */
-  @Deprecated
-  public HttpHeaders headers = new HttpHeaders();
+  /** HTTP request headers. */
+  private HttpHeaders headers = new HttpHeaders();
 
   /**
    * HTTP response headers.
+   *
    * <p>
    * For example, this can be used if you want to use a subclass of {@link HttpHeaders} called
    * MyHeaders to process the response:
@@ -87,122 +77,56 @@ public final class HttpRequest {
     return responseHeaders.someCustomHeader;
   }
    * </pre>
-   *
-   * @since 1.4
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getResponseHeaders} or
-   *             {@link #setResponseHeaders}
    */
-  @Deprecated
-  public HttpHeaders responseHeaders = new HttpHeaders();
+  private HttpHeaders responseHeaders = new HttpHeaders();
 
   /**
    * Set the number of retries that will be allowed to execute as the result of an
    * {@link HttpUnsuccessfulResponseHandler} before being terminated or {@code 0} to not retry
    * requests. The default value is {@code 10}.
-   *
-   * @since 1.4
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getNumberOfRetries} or
-   *             {@link #setNumberOfRetries}
    */
-  @Deprecated
-  public int numRetries = 10;
+  private int numRetries = 10;
 
   /**
    * Whether to disable request content logging during {@link #execute()} (unless {@link Level#ALL}
    * is loggable which forces all logging).
+   *
    * <p>
    * Useful for example if content has sensitive data such as an authentication information.
    * Defaults to {@code false}.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getDisableContentLogging} or
-   *             {@link #setDisableContentLogging}
-   */
-  @Deprecated
-  public boolean disableContentLogging;
-
-  /**
-   * HTTP request content or {@code null} for none.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContent} or
-   *             {@link #setContent}
-   */
-  @Deprecated
-  public HttpContent content;
-
-  /**
-   * HTTP transport.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getTransport}
-   */
-  @Deprecated
-  public final HttpTransport transport;
-
-  /**
-   * HTTP request method.
-   *
-   * @since 1.3
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getMethod} or {@link #setMethod}
-   */
-  @Deprecated
-  public HttpMethod method;
-
-  /**
-   * HTTP request URL.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getUrl} or {@link #setUrl}
-   */
-  @Deprecated
-  public GenericUrl url;
-
-  /**
-   * Timeout in milliseconds to establish a connection or {@code 0} for an infinite timeout.
-   * <p>
-   * By default it is 20 seconds.
    * </p>
-   *
-   * @since 1.4
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getConnectTimeout} or
-   *             {@link #setConnectTimeout}
    */
-  @Deprecated
-  public int connectTimeout = 20 * 1000;
+  private boolean disableContentLogging;
+
+  /** HTTP request content or {@code null} for none. */
+  private HttpContent content;
+
+  /** HTTP transport. */
+  private final HttpTransport transport;
+
+  /** HTTP request method. */
+  private HttpMethod method;
+
+  /** HTTP request URL. */
+  private GenericUrl url;
+
+  /** Timeout in milliseconds to establish a connection or {@code 0} for an infinite timeout. */
+  private int connectTimeout = 20 * 1000;
 
   /**
    * Timeout in milliseconds to read data from an established connection or {@code 0} for an
    * infinite timeout.
-   * <p>
-   * By default it is 20 seconds.
-   * </p>
-   *
-   * @since 1.4
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getReadTimeout} or
-   *             {@link #setReadTimeout}
    */
-  @Deprecated
-  public int readTimeout = 20 * 1000;
+  private int readTimeout = 20 * 1000;
 
-  /**
-   * HTTP unsuccessful (non-2XX) response handler or {@code null} for none.
-   *
-   * @since 1.4
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getUnsuccessfulResponseHandler}
-   *             or {@link #setUnsuccessfulResponseHandler}
-   */
-  @Deprecated
-  public HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler;
+  /** HTTP unsuccessful (non-2XX) response handler or {@code null} for none. */
+  private HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler;
 
   /** Map from normalized content type to HTTP parser. */
   private final Map<String, HttpParser> contentTypeToParserMap = new HashMap<String, HttpParser>();
 
-  /**
-   * Whether to enable gzip compression of HTTP content ({@code false} by default).
-   *
-   * @since 1.4
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getEnableGZipContent} or
-   *             {@link #setEnableGZipContent}
-   */
-  @Deprecated
-  public boolean enableGZipContent;
+  /** Whether to enable gzip compression of HTTP content ({@code false} by default). */
+  private boolean enableGZipContent;
 
   /**
    * @param transport HTTP transport

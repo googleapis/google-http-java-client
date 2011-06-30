@@ -56,8 +56,6 @@ public class AndroidJsonFactory extends JsonFactory {
     return createJsonParser(new StringReader(value));
   }
 
-  // TODO(yanivi): remove @SuppressWarnings("deprecation") in 1.6
-  @SuppressWarnings("deprecation")
   @Override
   public JsonParser createJsonParser(Reader reader) {
     return new AndroidJsonParser(this, new JsonReader(reader));
@@ -68,8 +66,6 @@ public class AndroidJsonFactory extends JsonFactory {
     return createJsonGenerator(new OutputStreamWriter(out, Charsets.UTF_8));
   }
 
-  // TODO(yanivi): remove @SuppressWarnings("deprecation") in 1.6
-  @SuppressWarnings("deprecation")
   @Override
   public JsonGenerator createJsonGenerator(Writer writer) {
     return new AndroidJsonGenerator(this, new JsonWriter(writer));

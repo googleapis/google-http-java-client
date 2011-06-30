@@ -36,50 +36,20 @@ import java.util.List;
  */
 public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
 
-  /**
-   * Input stream content of HTTP response or {@code null} by default.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContent} or
-   *             {@link #setContent}
-   */
-  @Deprecated
-  public InputStream content;
+  /** Input stream content of HTTP response or {@code null} by default. */
+  private InputStream content;
 
-  /**
-   * Content type of HTTP response or {@code null} by default.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContentType} or
-   *             {@link #setContentType}
-   */
-  @Deprecated
-  public String contentType;
+  /** Content type of HTTP response or {@code null} by default. */
+  private String contentType;
 
-  /**
-   * Status code of HTTP response or {@code 200} by default.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getStatusCode} or
-   *             {@link #setStatusCode}
-   */
-  @Deprecated
-  public int statusCode = 200;
+  /** Status code of HTTP response or {@code 200} by default. */
+  private int statusCode = 200;
 
-  /**
-   * List of header names of HTTP response (empty array list by default).
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getHeaderNames} or
-   *             {@link #setHeaderNames}
-   */
-  @Deprecated
-  public ArrayList<String> headerNames = new ArrayList<String>();
+  /** List of header names of HTTP response (empty array list by default). */
+  private ArrayList<String> headerNames = new ArrayList<String>();
 
-  /**
-   * List of header values of HTTP response (empty array list by default).
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getHeaderValues} or
-   *             {@link #setHeaderValues}
-   */
-  @Deprecated
-  public ArrayList<String> headerValues = new ArrayList<String>();
+  /** List of header values of HTTP response (empty array list by default). */
+  private ArrayList<String> headerValues = new ArrayList<String>();
 
   /** Content encoding or {@code null} for none. */
   private String contentEncoding;

@@ -47,14 +47,6 @@ import java.io.IOException;
 public class XmlHttpContent extends AbstractXmlHttpContent {
 
   /**
-   * @deprecated (scheduled to be removed in 1.6) Use
-   *             {@link #XmlHttpContent(XmlNamespaceDictionary, String, Object)}
-   */
-  @Deprecated
-  public XmlHttpContent() {
-  }
-
-  /**
    * XML namespace dictionary.
    *
    * @param namespaceDictionary XML namespace dictionary
@@ -73,19 +65,11 @@ public class XmlHttpContent extends AbstractXmlHttpContent {
   /**
    * XML element local name, optionally prefixed by its namespace alias, for example {@code
    * "atom:entry"}.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getElementName}
    */
-  @Deprecated
-  public String elementName;
+  private final String elementName;
 
-  /**
-   * Key/value pair data.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getData}
-   */
-  @Deprecated
-  public Object data;
+  /** Key/value pair data. */
+  private final Object data;
 
   @Override
   public XmlHttpContent setType(String type) {

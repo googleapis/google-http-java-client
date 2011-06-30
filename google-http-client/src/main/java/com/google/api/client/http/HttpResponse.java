@@ -50,13 +50,8 @@ public final class HttpResponse {
   /** HTTP response content or {@code null} before {@link #getContent()}. */
   private InputStream content;
 
-  /**
-   * Content encoding or {@code null}.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContentEncoding}
-   */
-  @Deprecated
-  public final String contentEncoding;
+  /** Content encoding or {@code null}. */
+  private final String contentEncoding;
 
   /**
    * Content length or less than zero if not known. May be reset by {@link #getContent} if response
@@ -64,83 +59,40 @@ public final class HttpResponse {
    */
   private long contentLength;
 
-  /**
-   * Content type or {@code null} for none.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getContentType}
-   */
-  @Deprecated
-  public final String contentType;
+  /** Content type or {@code null} for none. */
+  private final String contentType;
 
-  /**
-   * HTTP headers.
-   * <p>
-   * If a header name is used for multiple headers, only the last one is retained. The value is
-   * initialized to {@link HttpRequest#responseHeaders} before being parsed from the actual HTTP
-   * response headers.
-   * <p>
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getHeaders}
-   */
-  @Deprecated
-  public final HttpHeaders headers;
+  /** HTTP headers. */
+  private final HttpHeaders headers;
 
-  /**
-   * Whether received a successful status code {@code >= 200 && < 300}.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #isSuccessStatusCode()}
-   */
-  @Deprecated
-  public final boolean isSuccessStatusCode;
+  /** Whether received a successful status code {@code >= 200 && < 300}. */
+  private final boolean isSuccessStatusCode;
 
   /** Low-level HTTP response. */
   private LowLevelHttpResponse response;
 
-  /**
-   * Status code.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getStatusCode}
-   */
-  @Deprecated
-  public final int statusCode;
+  /** Status code. */
+  private final int statusCode;
 
-  /**
-   * Status message or {@code null}.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getStatusMessage}
-   */
-  @Deprecated
-  public final String statusMessage;
+  /** Status message or {@code null}. */
+  private final String statusMessage;
 
-  /**
-   * HTTP transport.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getTransport}
-   */
-  @Deprecated
-  public final HttpTransport transport;
+  /** HTTP transport. */
+  private final HttpTransport transport;
 
-  /**
-   * HTTP request.
-   *
-   * @since 1.4
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getRequest}
-   */
-  @Deprecated
-  public final HttpRequest request;
+  /** HTTP request. */
+  private final HttpRequest request;
 
   /**
    * Whether to disable response content logging during {@link #getContent()} (unless
    * {@link Level#ALL} is loggable which forces all logging).
+   *
    * <p>
    * Useful for example if content has sensitive data such as an authentication token. Defaults to
    * {@code false}.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getDisableContentLogging} or
-   *             {@link #setDisableContentLogging}
+   * </p>
    */
-  @Deprecated
-  public boolean disableContentLogging;
+  private boolean disableContentLogging;
 
   HttpResponse(HttpRequest request, LowLevelHttpResponse response) {
     this.request = request;

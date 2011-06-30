@@ -53,8 +53,6 @@ public class GsonFactory extends JsonFactory {
     return createJsonParser(new StringReader(value));
   }
 
-  // TODO(yanivi): remove @SuppressWarnings("deprecation") in 1.6
-  @SuppressWarnings("deprecation")
   @Override
   public JsonParser createJsonParser(Reader reader) {
     return new GsonParser(this, new JsonReader(reader));
@@ -65,8 +63,6 @@ public class GsonFactory extends JsonFactory {
     return createJsonGenerator(new OutputStreamWriter(out, Charsets.UTF_8));
   }
 
-  // TODO(yanivi): remove @SuppressWarnings("deprecation") in 1.6
-  @SuppressWarnings("deprecation")
   @Override
   public JsonGenerator createJsonGenerator(Writer writer) {
     return new GsonGenerator(this, new JsonWriter(writer));

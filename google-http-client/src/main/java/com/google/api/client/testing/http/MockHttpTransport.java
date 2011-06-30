@@ -29,8 +29,7 @@ import java.util.Set;
  * Mock for {@link HttpTransport}.
  *
  * <p>
- * Implementation is thread-safe, as long as {@link #supportedOptionalMethods} is not modified
- * directly (which is deprecated usage). For maximum efficiency, applications should use a single
+ * Implementation is thread-safe. For maximum efficiency, applications should use a single
  * globally-shared instance of the HTTP transport.
  * </p>
  *
@@ -51,12 +50,8 @@ public class MockHttpTransport extends HttpTransport {
   /**
    * Set of supported optional methods or {@link HttpMethod#HEAD} and {@link HttpMethod#PATCH} by
    * default.
-   *
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getSupportedOptionalMethods} or
-   *             {@link Builder#setSupportedOptionalMethods}
    */
-  @Deprecated
-  public EnumSet<HttpMethod> supportedOptionalMethods =
+  private EnumSet<HttpMethod> supportedOptionalMethods =
       EnumSet.of(HttpMethod.HEAD, HttpMethod.PATCH);
 
   public MockHttpTransport() {

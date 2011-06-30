@@ -73,14 +73,8 @@ import org.apache.http.params.HttpProtocolParams;
  */
 public final class ApacheHttpTransport extends HttpTransport {
 
-  /**
-   * Apache HTTP client.
-   *
-   * @since 1.1
-   * @deprecated (scheduled to be made private in 1.6) Use {@link #getHttpClient}
-   */
-  @Deprecated
-  public final HttpClient httpClient;
+  /** Apache HTTP client. */
+  private final HttpClient httpClient;
 
   /**
    * @since 1.3

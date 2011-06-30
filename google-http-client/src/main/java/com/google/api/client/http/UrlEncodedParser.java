@@ -39,8 +39,7 @@ import java.util.logging.Level;
  * Specification</a>.
  *
  * <p>
- * Implementation is thread-safe as long as the fields are not set directly (which is deprecated
- * usage).
+ * Implementation is thread-safe.
  * </p>
  *
  * <p>
@@ -69,30 +68,23 @@ public class UrlEncodedParser implements HttpParser {
   /**
    * Whether to disable response content logging (unless {@link Level#ALL} is loggable which forces
    * all logging).
+   *
    * <p>
    * Useful for example if content has sensitive data such as an authentication token. Defaults to
    * {@code false}.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getDisableContentLogging}
-   *             or {@link Builder#setDisableContentLogging}
+   * </p>
    */
-  @Deprecated
-  public boolean disableContentLogging;
+  private final boolean disableContentLogging;
 
-  /**
-   * Content type. Default value is {@link #CONTENT_TYPE}.
-   *
-   * @deprecated (scheduled to be made private final in 1.6) Use {@link #getContentType} or
-   *             {@link Builder#setContentType}
-   */
-  @Deprecated
-  public String contentType = CONTENT_TYPE;
+  /** Content type. */
+  private final String contentType;
 
   public final String getContentType() {
     return contentType;
   }
 
   public UrlEncodedParser() {
+    this(CONTENT_TYPE, false);
   }
 
   /**

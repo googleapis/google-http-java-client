@@ -29,12 +29,9 @@ import java.math.BigInteger;
  * Implementation is not thread-safe.
  * </p>
  *
- * @since 1.3
  * @author Yaniv Inbar
- * @deprecated (scheduled to be made package-private in 1.6)
  */
-@Deprecated
-public class GsonGenerator extends JsonGenerator {
+class GsonGenerator extends JsonGenerator {
   private final JsonWriter writer;
   private final GsonFactory factory;
 
