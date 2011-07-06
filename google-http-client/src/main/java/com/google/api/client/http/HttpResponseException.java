@@ -27,7 +27,16 @@ public final class HttpResponseException extends IOException {
   static final long serialVersionUID = 1;
 
   /** HTTP response. */
-  public final HttpResponse response;
+  private final HttpResponse response;
+
+  /**
+   * Returns the HTTP response.
+   *
+   * @since 1.5
+   */
+  public HttpResponse getResponse() {
+    return response;
+  }
 
   /**
    * @param response HTTP response
