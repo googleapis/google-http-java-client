@@ -26,8 +26,22 @@ public final class HttpResponseException extends IOException {
 
   static final long serialVersionUID = 1;
 
-  /** HTTP response. */
+  /**
+   * HTTP response.
+   *
+   * @deprecated (scheduled to be made private in 1.6) Use {@link #getResponse}
+   */
+  @Deprecated
   public final HttpResponse response;
+
+  /**
+   * Returns the HTTP response.
+   *
+   * @since 1.5
+   */
+  public HttpResponse getResponse() {
+    return response;
+  }
 
   /**
    * @param response HTTP response

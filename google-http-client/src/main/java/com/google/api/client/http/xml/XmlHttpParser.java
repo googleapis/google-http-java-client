@@ -133,6 +133,16 @@ public class XmlHttpParser implements HttpParser {
   }
 
   /**
+   * Returns an instance of a new builder.
+   *
+   * @param namespaceDictionary XML namespace dictionary
+   * @since 1.5
+   */
+  public static Builder builder(XmlNamespaceDictionary namespaceDictionary) {
+    return new Builder(namespaceDictionary);
+  }
+
+  /**
    * Builder for {@link XmlHttpParser}.
    *
    * <p>
