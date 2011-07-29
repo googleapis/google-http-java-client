@@ -94,16 +94,9 @@ cd 1.5
     <li>Prepare:<pre>
 mvn clean deploy
 mvn release:clean
+mvn release:prepare -DautoVersionSubmodules=true -Dtag=1.5.1-beta --batch-mode
+mvn release:perform -Darguments=-Dgpg.passphrase=<i>[YOUR GPG PASSPHRASE]</i>
 </pre></li>
-    <li><code>mvn release:prepare -DautoVersionSubmodules=true</code>
-    <ul>
-      <li>Accept default for 'What is the release version for "Parent for the Google HTTP Client Library for Java"?'</li>
-      <li>Type <code>1.5.1-beta</code> for 'What is SCM release tag or label for "Parent for the Google HTTP Client Library for Java"?'</li>
-      <li>Accept default for 'What is the new development version for "Parent for the Google HTTP Client Library for Java"?'</li>
-    </ul>
-    </li>
-    <li><code>mvn release:perform -Darguments=-Dgpg.passphrase=<i>[YOUR
-    GPG PASSPHRASE]</i></code></li>
     <li>Release on oss.sonatype.org
     <ul>
       <li>Log in to <a href="https://oss.sonatype.org">https://oss.sonatype.org</a></li>
@@ -123,8 +116,8 @@ mvn release:clean
   </li>
   <li>Start development of next bug fix version
   <ul>
-    <li><code>hg update</code></li>
-    <li>For the following files, replace <code>1.5.1-beta</code> with the next bug fix version:
+    <li>For the following files, replace <code>1.5.1-beta</code> with the
+    next bug fix version:
     <ul>
       <li><code>jdiff.xml</code></li>
       <li><code>release.html</code></li>
@@ -139,12 +132,12 @@ hg push
   </li>
   <li>Prepare the released library zip file and javadoc
   <ul>
-    <li>Overview: JDiff is a tool for showing the difference between the JavaDoc of
-    one version of the library vs. the JavaDoc of an old version of the library.
-    Hence, we will check out the last minor version of the library into a
-    temporary directory and compare against the JavaDoc of the just released
-    version of the library, and then hg commit that diff into the javadoc Hg
-    repository.</li>
+    <li>Overview: JDiff is a tool for showing the difference between the
+    JavaDoc of one version of the library vs. the JavaDoc of an old version of
+    the library. Hence, we will check out the last minor version of the library
+    into a temporary directory and compare against the JavaDoc of the just
+    released version of the library, and then hg commit that diff into the
+    javadoc Hg repository.</li>
     <li><pre>
 cd /tmp/google-http-java-client
 hg clone --insecure https://javadoc.google-http-java-client.googlecode.com/hg/ javadoc
