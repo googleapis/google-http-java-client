@@ -27,8 +27,8 @@ import java.io.IOException;
  * <pre>
   public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
     return transport.createRequestFactory(new HttpRequestInitializer() {
-      public void handle(HttpRequest request) {
-        request.headers.authorization = "...";
+      public void initialize(HttpRequest request) throws IOException {
+        request.getHeaders().setAuthorization("...");
       }
     });
   }
