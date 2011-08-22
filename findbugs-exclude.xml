@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FindBugsFilter>
+  <LastVersion value="-1" relOp="NEQ"/>
+  <!-- The following have not yet been investigated -->
+  <!-- TODO(yanivi): investigate them -->
+  <And>
+    <Bug pattern="NP_NULL_PARAM_DEREF_NONVIRTUAL"/>
+    <Class name="com.google.api.client.xml.atom.AbstractAtomFeedParser"/>
+  </And>
+  <And>
+    <Bug pattern="NP_NULL_ON_SOME_PATH"/>
+    <Class name="com.google.api.client.util.Data"/>
+  </And>
+  <And>
+    <Bug pattern="JLM_JSR166_UTILCONCURRENT_MONITORENTER"/>
+    <Class name="com.google.api.client.util.Data"/>
+  </And>
+  <And>
+    <Bug pattern="ES_COMPARING_PARAMETER_STRING_WITH_EQ"/>
+    <Class name="com.google.api.client.util.ClassInfo$1"/>
+  </And>
+  <And>
+    <Bug pattern="HE_EQUALS_USE_HASHCODE"/>
+    <Class name="com.google.api.client.util.DateTime"/>
+  </And>
+  <And>
+    <Bug pattern="SE_BAD_FIELD"/>
+    <Class name="com.google.api.client.http.HttpResponseException"/>
+  </And>
+  <And>
+    <Bug pattern="ES_COMPARING_PARAMETER_STRING_WITH_EQ"/>
+    <Class name="com.google.api.client.xml.Xml"/>
+  </And>
+  <And>
+    <Bug pattern="NP_LOAD_OF_KNOWN_NULL_VALUE"/>
+    <Class name="com.google.api.client.http.HttpRequest"/>
+  </And>
+  <And>
+    <Bug pattern="ICAST_INTEGER_MULTIPLY_CAST_TO_LONG"/>
+    <Class name="com.google.api.client.util.DateTime"/>
+  </And>
+  <And>
+    <Bug pattern="IM_BAD_CHECK_FOR_ODD"/>
+    <Class name="com.google.api.client.util.ArrayMap"/>
+  </And>
+  <And>
+    <Bug pattern="EI_EXPOSE_REP"/>
+    <Class name="com.google.api.client.testing.http.MockHttpContent"/>
+  </And>
+  <And>
+    <Bug pattern="DM_BOOLEAN_CTOR"/>
+    <Class name="com.google.api.client.util.Data"/>
+  </And>
+  <And>
+    <Bug pattern="DM_STRING_VOID_CTOR"/>
+    <Class name="com.google.api.client.util.Data"/>
+  </And>
+  <And>
+    <Bug pattern="DM_NUMBER_CTOR"/>
+    <Class name="com.google.api.client.util.Data"/>
+  </And>
+  <And>
+    <Bug pattern="SS_SHOULD_BE_STATIC"/>
+    <Class name="com.google.api.client.json.rpc2.JsonRpcRequest"/>
+  </And>
+  <!-- The following are known to be bugs and should be fixed -->
+  <!-- The following are known to not be bugs and should not be fixed -->
+</FindBugsFilter>

@@ -258,6 +258,11 @@
           <artifactId>maven-checkstyle-plugin</artifactId>
           <version>2.6</version>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>findbugs-maven-plugin</artifactId>
+          <version>2.3.2</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -271,6 +276,7 @@
             </goals>
             <phase>site</phase>
             <configuration>
+              <doctitle>Google HTTP Client Library for Java ${project.version}</doctitle>
               <groups>
                 <group>
                   <title>google-http-client</title>
@@ -289,6 +295,7 @@
                   <packages>com.google.api.client.extensions.android3*</packages>
                 </group>
               </groups>
+              <windowtitle>google-http-java-client ${project.version}</windowtitle>
             </configuration>
           </execution>
         </executions>
@@ -300,6 +307,27 @@
           <consoleOutput>true</consoleOutput>
           <suppressionsLocation>${basedir}/../checkstyle-suppressions.xml</suppressionsLocation>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <configuration>
+          <excludeFilterFile>${basedir}/../findbugs-exclude.xml</excludeFilterFile>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
