@@ -207,7 +207,8 @@ public final class XmlNamespaceDictionary {
 
   private void serialize(XmlSerializer serializer, String elementNamespaceUri,
       String elementLocalName, Object element, boolean errorOnUnknown) throws IOException {
-    startDoc(serializer, element, errorOnUnknown, elementNamespaceUri).serialize(
+    String elementAlias = elementNamespaceUri == null ? null : getAliasForUri(elementNamespaceUri);
+    startDoc(serializer, element, errorOnUnknown, elementAlias).serialize(
         serializer, elementNamespaceUri, elementLocalName);
     serializer.endDocument();
   }
@@ -215,31 +216,29 @@ public final class XmlNamespaceDictionary {
   private void serialize(
       XmlSerializer serializer, String elementName, Object element, boolean errorOnUnknown)
       throws IOException {
-    startDoc(serializer, element, errorOnUnknown, null).serialize(serializer, elementName);
+    String elementAlias = "";
+    if (elementName != null) {
+      int colon = elementName.indexOf(':');
+      if (colon != -1) {
+        elementAlias = elementName.substring(0, colon);
+      }
+    }
+    startDoc(serializer, element, errorOnUnknown, elementAlias).serialize(serializer, elementName);
     serializer.endDocument();
   }
 
   private ElementSerializer startDoc(
-      XmlSerializer serializer, Object element, boolean errorOnUnknown, String extraNamespace)
+      XmlSerializer serializer, Object element, boolean errorOnUnknown, String elementAlias)
       throws IOException {
     serializer.startDocument(null, null);
     SortedSet<String> aliases = new TreeSet<String>();
     computeAliases(element, aliases);
-    boolean foundExtra = extraNamespace == null;
+    if (elementAlias != null) {
+      aliases.add(elementAlias);
+    }
     for (String alias : aliases) {
       String uri = getNamespaceUriForAliasHandlingUnknown(errorOnUnknown, alias);
       serializer.setPrefix(alias, uri);
-      if (!foundExtra && uri.equals(extraNamespace)) {
-        foundExtra = true;
-      }
-    }
-    if (!foundExtra) {
-      for (Map.Entry<String, String> entry : getAliasToUriMap().entrySet()) {
-        if (extraNamespace.equals(entry.getValue())) {
-          serializer.setPrefix(entry.getKey(), extraNamespace);
-          break;
-        }
-      }
     }
     return new ElementSerializer(element, errorOnUnknown);
   }
@@ -295,6 +294,22 @@ public final class XmlNamespaceDictionary {
           !errorOnUnknown, "unrecognized alias: %s", alias.length() == 0 ? "(default)" : alias);
       return "http://unknown/" + alias;
     }
+    return result;
+  }
+
+  /**
+   * Returns the namespace alias to use for a given namespace URI, throwing an exception if the
+   * namespace URI can be found in this dictionary.
+   *
+   * @param namespaceUri namespace URI
+   * @throws IllegalArgumentException if the namespace URI is not found in this dictionary
+   */
+  String getNamespaceAliasForUriErrorOnUnknown(String namespaceUri) {
+    String result = getAliasForUri(namespaceUri);
+    Preconditions.checkArgument(result != null,
+        "invalid XML: no alias declared for namesapce <%s>; "
+            + "work-around by setting XML namepace directly by calling the set method of %s",
+        namespaceUri, XmlNamespaceDictionary.class.getName());
     return result;
   }
 
