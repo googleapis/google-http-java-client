@@ -17,10 +17,9 @@ package com.google.api.client.xml;
 import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.Key;
 
+import junit.framework.TestCase;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
-
-import junit.framework.TestCase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
@@ -106,5 +105,30 @@ public class XmlTest extends TestCase {
     serializer.setOutput(out, "UTF-8");
     namespaceDictionary.serialize(serializer, "any", xml);
     assertEquals(ARRAY_TYPE, out.toString());
+  }
+
+  private static final String NESTED_NS =
+      "<?xml version=\"1.0\"?><any xmlns=\"http://www.w3.org/2005/Atom\">"
+          + "<app:edited xmlns:app='http://www.w3.org/2007/app'>2011-08-09T04:38:14.017Z"
+          + "</app:edited></any>";
+
+  private static final String NESTED_NS_SERIALIZED =
+      "<?xml version=\"1.0\"?><any xmlns=\"http://www.w3.org/2005/Atom\" "
+          + "xmlns:app=\"http://www.w3.org/2007/app\">" + "<app:edited>2011-08-09T04:38:14.017Z"
+          + "</app:edited></any>";
+
+  public void testParse_nestedNs() throws Exception {
+    XmlPullParser parser = Xml.createParser();
+    parser.setInput(new StringReader(NESTED_NS));
+    XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
+    GenericXml xml = new GenericXml();
+    Xml.parseElement(parser, xml, namespaceDictionary, null);
+    // GenericXml anyValue = (GenericXml) xml.get("any");
+    // serialize
+    XmlSerializer serializer = Xml.createSerializer();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    serializer.setOutput(out, "UTF-8");
+    namespaceDictionary.serialize(serializer, "any", xml);
+    assertEquals(NESTED_NS_SERIALIZED, out.toString());
   }
 }

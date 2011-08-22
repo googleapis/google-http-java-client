@@ -19,6 +19,7 @@ import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Types;
+import com.google.common.base.Preconditions;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -222,40 +223,16 @@ public class Xml {
         genericXml == null && destination instanceof Map<?, ?> ? Map.class.cast(destination) : null;
     ClassInfo classInfo =
         destinationMap != null || destination == null ? null : ClassInfo.of(destination.getClass());
-    int eventType = parser.getEventType();
     if (parser.getEventType() == XmlPullParser.START_DOCUMENT) {
-      eventType = parser.next();
+      parser.next();
     }
-    if (eventType != XmlPullParser.START_TAG) {
-      throw new IllegalArgumentException(
-          "expected start of XML element, but got something else (event type " + eventType + ")");
-    }
-    // read namespaces declared on this XML element
-    int depth = parser.getDepth();
-    int nsStart = parser.getNamespaceCount(depth - 1);
-    int nsEnd = parser.getNamespaceCount(depth);
-    for (int i = nsStart; i < nsEnd; i++) {
-      String namespace = parser.getNamespaceUri(i);
-      // if namespace isn't already in our dictionary, add it now
-      if (namespaceDictionary.getAliasForUri(namespace) == null) {
-        String prefix = parser.getNamespacePrefix(i);
-        String originalAlias = prefix == null ? "" : prefix;
-        // find an available alias
-        String alias = originalAlias;
-        int suffix = 1;
-        while (namespaceDictionary.getUriForAlias(alias) != null) {
-          suffix++;
-          alias = originalAlias + suffix;
-        }
-        namespaceDictionary.set(alias, namespace);
-      }
-    }
+    parseNamespacesForElement(parser, namespaceDictionary);
     // generic XML
     if (genericXml != null) {
       genericXml.namespaceDictionary = namespaceDictionary;
       String name = parser.getName();
       String namespace = parser.getNamespace();
-      String alias = namespaceDictionary.getAliasForUri(namespace);
+      String alias = namespaceDictionary.getNamespaceAliasForUriErrorOnUnknown(namespace);
       genericXml.name = alias.length() == 0 ? name : alias + ":" + name;
     }
     // attributes
@@ -265,9 +242,8 @@ public class Xml {
         // TODO(yanivi): can have repeating attribute values, e.g. "@a=value1 @a=value2"?
         String attributeName = parser.getAttributeName(i);
         String attributeNamespace = parser.getAttributeNamespace(i);
-        String attributeAlias =
-            attributeNamespace.length() == 0 ? "" : namespaceDictionary.getAliasForUri(
-                attributeNamespace);
+        String attributeAlias = attributeNamespace.length() == 0
+            ? "" : namespaceDictionary.getNamespaceAliasForUriErrorOnUnknown(attributeNamespace);
         String fieldName = getFieldName(true, attributeAlias, attributeNamespace, attributeName);
         Field field = classInfo == null ? null : classInfo.getField(fieldName);
         parseAttributeOrTextContent(parser.getAttributeValue(i),
@@ -317,8 +293,9 @@ public class Xml {
             parseTextContentForElement(parser, context, true, null);
           } else {
             // element
+            parseNamespacesForElement(parser, namespaceDictionary);
             String namespace = parser.getNamespace();
-            String alias = namespaceDictionary.getAliasForUri(namespace);
+            String alias = namespaceDictionary.getNamespaceAliasForUriErrorOnUnknown(namespace);
             String fieldName = getFieldName(false, alias, namespace, parser.getName());
             field = classInfo == null ? null : classInfo.getField(fieldName);
             Type fieldType = field == null ? valueType : field.getGenericType();
@@ -573,6 +550,39 @@ public class Xml {
       }
     }
     return Data.parsePrimitiveValue(valueType, value);
+  }
+
+  /**
+   * Parses the namespaces declared on the current element into the namespace dictionary.
+   *
+   * @param parser XML pull parser
+   * @param namespaceDictionary namespace dictionary
+   */
+  private static void parseNamespacesForElement(
+      XmlPullParser parser, XmlNamespaceDictionary namespaceDictionary)
+      throws XmlPullParserException {
+    int eventType = parser.getEventType();
+    Preconditions.checkState(eventType == XmlPullParser.START_TAG,
+        "expected start of XML element, but got something else (event type %s)", eventType);
+    int depth = parser.getDepth();
+    int nsStart = parser.getNamespaceCount(depth - 1);
+    int nsEnd = parser.getNamespaceCount(depth);
+    for (int i = nsStart; i < nsEnd; i++) {
+      String namespace = parser.getNamespaceUri(i);
+      // if namespace isn't already in our dictionary, add it now
+      if (namespaceDictionary.getAliasForUri(namespace) == null) {
+        String prefix = parser.getNamespacePrefix(i);
+        String originalAlias = prefix == null ? "" : prefix;
+        // find an available alias
+        String alias = originalAlias;
+        int suffix = 1;
+        while (namespaceDictionary.getUriForAlias(alias) != null) {
+          suffix++;
+          alias = originalAlias + suffix;
+        }
+        namespaceDictionary.set(alias, namespace);
+      }
+    }
   }
 
   private Xml() {
