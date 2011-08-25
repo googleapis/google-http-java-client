@@ -54,22 +54,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.datanucleus</groupId>
-        <artifactId>maven-datanucleus-plugin</artifactId>
-        <version>2.2.1</version>
-        <configuration>
-          <verbose>true</verbose>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>enhance</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
   <dependencies>
@@ -86,14 +70,6 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.jdo</groupId>
-      <artifactId>jdo2-api</artifactId>
     </dependency>
   </dependencies>
 </project>
