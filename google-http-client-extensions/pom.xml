@@ -20,7 +20,7 @@
             <link>http://code.google.com/appengine/docs/java/javadoc</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
-          <windowtitle>${project.name} ${project.version}</windowtitle>
+          <windowtitle>${project.artifactId} ${project.version}</windowtitle>
         </configuration>
       </plugin>
       <plugin>

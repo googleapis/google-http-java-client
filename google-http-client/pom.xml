@@ -25,7 +25,7 @@
             <link>http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
-          <windowtitle>${project.name} ${project.version}</windowtitle>
+          <windowtitle>${project.artifactId} ${project.version}</windowtitle>
         </configuration>
       </plugin>
       <plugin>
