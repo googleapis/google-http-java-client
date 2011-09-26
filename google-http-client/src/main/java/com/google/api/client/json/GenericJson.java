@@ -38,15 +38,39 @@ import java.util.concurrent.ConcurrentMap;
 public class GenericJson extends GenericData implements Cloneable {
 
   /**
-   * JSON factory to use for {@link #toString()}.
+   * JSON factory or {@code null} for none.
    *
    * @since 1.3
+   * @deprecated (scheduled to be made private in 1.7) Use {@link #getFactory} or
+   *             {@link #setFactory}
    */
+  @Deprecated
   public JsonFactory jsonFactory;
+
+  /**
+   * Returns the JSON factory or {@code null} for none.
+   *
+   * @since 1.6
+   */
+  public final JsonFactory getFactory() {
+    return jsonFactory;
+  }
+
+  /**
+   * Sets the JSON factory or {@code null} for none.
+   *
+   * @since 1.6
+   */
+  public final void setFactory(JsonFactory factory) {
+    this.jsonFactory = factory;
+  }
 
   @Override
   public String toString() {
-    return jsonFactory.toString(this);
+    if (jsonFactory != null) {
+      return jsonFactory.toString(this);
+    }
+    return super.toString();
   }
 
   @Override

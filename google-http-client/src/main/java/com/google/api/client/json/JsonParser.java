@@ -256,7 +256,7 @@ public abstract class JsonParser {
       ArrayList<Type> context, Object destination, CustomizeJsonParser customizeParser)
       throws IOException {
     if (destination instanceof GenericJson) {
-      ((GenericJson) destination).jsonFactory = getFactory();
+      ((GenericJson) destination).setFactory(getFactory());
     }
     JsonToken curToken = startParsingObjectOrArray();
     Class<?> destinationClass = destination.getClass();
