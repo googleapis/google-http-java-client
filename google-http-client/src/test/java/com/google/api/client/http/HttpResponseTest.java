@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
@@ -40,7 +41,8 @@ public class HttpResponseTest extends TestCase {
 
   public void testParseAsString_none() throws IOException {
     HttpTransport transport = new MockHttpTransport();
-    HttpRequest request = transport.createRequestFactory().buildGetRequest(new GenericUrl());
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
     assertEquals("", response.parseAsString());
   }
@@ -78,7 +80,8 @@ public class HttpResponseTest extends TestCase {
         };
       }
     };
-    HttpRequest request = transport.createRequestFactory().buildGetRequest(new GenericUrl());
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setResponseHeaders(new MyHeaders());
     HttpResponse response = request.execute();
     assertEquals("value", response.getHeaders().getAccept());
@@ -87,5 +90,43 @@ public class HttpResponseTest extends TestCase {
     assertEquals(Arrays.asList("a1", "a2"), Arrays.asList(((MyHeaders) response.getHeaders()).r));
     assertEquals(Arrays.asList("car"), response.getHeaders().get("goo"));
     assertEquals(Arrays.asList("dar", "far"), response.getHeaders().get("hoo"));
+  }
+
+  public void testParseAs_noParser() throws IOException {
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildGetRequest(final String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+            if (!url.equals(HttpTesting.SIMPLE_URL)) {
+              result.setContentType(url.substring(HttpTesting.SIMPLE_URL.length()));
+            }
+            return result;
+          }
+        };
+      }
+    };
+    try {
+      transport
+          .createRequestFactory()
+          .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL)
+          .execute()
+          .parseAs(Object.class);
+      fail("expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      assertEquals(e.getMessage(), "Missing Content-Type header in response");
+    }
+    try {
+      transport
+          .createRequestFactory()
+          .buildGetRequest(new GenericUrl(HttpTesting.SIMPLE_URL + "something"))
+          .execute()
+          .parseAs(Object.class);
+      fail("expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      assertEquals(e.getMessage(), "No parser defined for Content-Type: something");
+    }
   }
 }

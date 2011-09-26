@@ -255,7 +255,9 @@ public class GenericUrl extends GenericData {
   public final String build() {
     // scheme, host, port, and path
     StringBuilder buf = new StringBuilder();
-    buf.append(scheme).append("://").append(host);
+    buf.append(Preconditions.checkNotNull(scheme));
+    buf.append("://");
+    buf.append(Preconditions.checkNotNull(host));
     int port = this.port;
     if (port != -1) {
       buf.append(':').append(port);

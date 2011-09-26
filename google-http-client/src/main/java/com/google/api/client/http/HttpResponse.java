@@ -20,6 +20,7 @@ import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Strings;
 import com.google.api.client.util.Types;
+import com.google.common.base.Preconditions;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -379,14 +380,7 @@ public final class HttpResponse {
   public <T> T parseAs(Class<T> dataClass) throws IOException {
     HttpParser parser = getParser();
     if (parser == null) {
-      InputStream content = getContent();
-      if (contentType == null) {
-        if (content != null) {
-          throw new IllegalArgumentException(
-              "Missing Content-Type header in response: " + parseAsString());
-        }
-        return null;
-      }
+      Preconditions.checkArgument(contentType != null, "Missing Content-Type header in response");
       throw new IllegalArgumentException("No parser defined for Content-Type: " + contentType);
     }
     return parser.parse(this, dataClass);

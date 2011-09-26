@@ -62,6 +62,27 @@ public class GenericUrlTest extends TestCase {
     assertEquals(NO_PATH, url.build());
   }
 
+  public void testBuild_noScheme() {
+    GenericUrl url = new GenericUrl();
+    try {
+      url.build();
+      fail("expected " + NullPointerException.class);
+    } catch (NullPointerException e) {
+      // expected
+    }
+  }
+
+  public void testBuild_noHost() {
+    GenericUrl url = new GenericUrl();
+    try {
+      url.setScheme("foo");
+      url.build();
+      fail("expected " + NullPointerException.class);
+    } catch (NullPointerException e) {
+      // expected
+    }
+  }
+
   public void testParse_noPath() {
     GenericUrl url = new GenericUrl(NO_PATH);
     assertEquals("foo", url.getScheme());

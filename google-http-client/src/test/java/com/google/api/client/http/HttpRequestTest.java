@@ -15,6 +15,7 @@
 package com.google.api.client.http;
 
 import com.google.api.client.json.Json;
+import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
@@ -192,7 +193,8 @@ public class HttpRequestTest extends TestCase {
         return lowLevelRequest;
       }
     };
-    HttpRequest request = transport.createRequestFactory().buildGetRequest(new GenericUrl());
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setHeaders(myHeaders);
     request.execute();
     // check headers
@@ -241,7 +243,7 @@ public class HttpRequestTest extends TestCase {
     byte[] content = new byte[300];
     Arrays.fill(content, (byte) ' ');
     HttpRequest request = transport.createRequestFactory().buildPostRequest(
-        new GenericUrl(), new ByteArrayContent(null, content));
+        HttpTesting.SIMPLE_GENERIC_URL, new ByteArrayContent(null, content));
     assertFalse(request.getEnableGZipContent());
     request.execute();
     assertFalse(request.getEnableGZipContent());
