@@ -128,6 +128,9 @@ public final class HttpRequest {
   /** Whether to enable gzip compression of HTTP content ({@code false} by default). */
   private boolean enableGZipContent;
 
+  /** Whether to automatically follow redirects ({@code true} by default). */
+  private boolean followRedirects = true;
+
   /**
    * @param transport HTTP transport
    * @param method HTTP request method (may be {@code null}
@@ -220,8 +223,8 @@ public final class HttpRequest {
    * </p>
    *
    * <p>
-   * To avoid the overhead of GZip compression for small content, one may want to set this to {@code
-   * true} only for {@link HttpContent#getLength()} above a certain limit. For example:
+   * To avoid the overhead of GZip compression for small content, one may want to set this to
+   * {@code true} only for {@link HttpContent#getLength()} above a certain limit. For example:
    * </p>
    *
    * <pre>
@@ -476,6 +479,29 @@ public final class HttpRequest {
   }
 
   /**
+   * Returns whether to follow redirects automatically.
+   *
+   * @since 1.6
+   */
+  public boolean getFollowRedirects() {
+    return followRedirects;
+  }
+
+  /**
+   * Sets whether to follow redirects automatically.
+   *
+   * <p>
+   * The default value is {@code true}.
+   * </p>
+   *
+   * @since 1.6
+   */
+  public HttpRequest setFollowRedirects(boolean followRedirects) {
+    this.followRedirects = followRedirects;
+    return this;
+  }
+
+  /**
    * Execute the HTTP request and returns the HTTP response.
    * <p>
    * Note that regardless of the returned status code, the HTTP response content has not been parsed
@@ -617,21 +643,63 @@ public final class HttpRequest {
       retrySupported = retriesRemaining > 0 && (content == null || content.retrySupported());
       requiresRetry = false;
 
-      // Even if we don't have the potential to retry, we might want to run the
-      // handler to fix conditions (like expired tokens) that might cause us
-      // trouble on our next request
-      if (!response.isSuccessStatusCode() && unsuccessfulResponseHandler != null) {
-        requiresRetry = unsuccessfulResponseHandler.handleResponse(this, response, retrySupported);
+      if (!response.isSuccessStatusCode()) {
+        boolean errorHandled = false;
+        boolean redirectRequest = false;
+        if (unsuccessfulResponseHandler != null) {
+          // Even if we don't have the potential to retry, we might want to run the
+          // handler to fix conditions (like expired tokens) that might cause us
+          // trouble on our next request
+          errorHandled = unsuccessfulResponseHandler.handleResponse(this, response, retrySupported);
+        }
+        if (!errorHandled && getFollowRedirects() && isRedirected(response)) {
+          // The unsuccessful request's error could not be handled and it is a redirect request.
+          handleRedirect(response);
+          redirectRequest = true;
+        }
+        // A retry is required if the error was successfully handled or if it is a redirect request.
+        requiresRetry = errorHandled || redirectRequest;
+        // Once there are no more retries remaining, this will be -1
+        // Count redirects as retries, we want a finite limit of redirects.
+        retriesRemaining--;
       }
-
-      // Once there are no more retries remaining, this will be -1
-      retriesRemaining--;
     } while (requiresRetry && retrySupported);
 
     if (!response.isSuccessStatusCode()) {
       throw new HttpResponseException(response);
     }
     return response;
+  }
+
+  /**
+   * Sets up this request object to handle the necessary redirect.
+   */
+  private void handleRedirect(HttpResponse response) {
+    String redirectLocation = response.getHeaders().getLocation();
+    setUrl(new GenericUrl(redirectLocation));
+
+    // As per the RFC2616 specification for 303. The response to the request can be found
+    // under a different URI and should be retrieved using a GET method on that resource.
+    if (response.getStatusCode() == HttpStatusCodes.STATUS_CODE_SEE_OTHER) {
+      setMethod(HttpMethod.GET);
+    }
+  }
+
+  /**
+   * Returns whether it is a redirect request.
+   */
+  private boolean isRedirected(HttpResponse response) {
+    int statusCode = response.getStatusCode();
+    switch (statusCode) {
+      case HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY: // 301
+      case HttpStatusCodes.STATUS_CODE_FOUND: // 302
+      case HttpStatusCodes.STATUS_CODE_SEE_OTHER: // 303
+      case HttpStatusCodes.STATUS_CODE_TEMPORARY_REDIRECT: // 307
+        // Redirect requests must have a location header specified.
+        return response.getHeaders().getLocation() != null;
+      default:
+        return false;
+    }
   }
 
   private static void addHeader(Logger logger, StringBuilder logbuf,
@@ -661,8 +729,8 @@ public final class HttpRequest {
    * Returns the normalized media type without parameters of the form {@code type "/" subtype"} as
    * specified in <a href="http://tools.ietf.org/html/rfc2616#section-3.7">Media Types</a>.
    *
-   * @param mediaType unnormalized media type with possible parameters or {@code null} for {@code
-   *        null} result
+   * @param mediaType unnormalized media type with possible parameters or {@code null} for
+   *        {@code null} result
    * @return normalized media type without parameters or {@code null} for {@code null} input
    * @since 1.4
    */

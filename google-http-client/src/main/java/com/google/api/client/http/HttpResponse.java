@@ -105,7 +105,7 @@ public final class HttpResponse {
     contentEncoding = response.getContentEncoding();
     int code = response.getStatusCode();
     statusCode = code;
-    isSuccessStatusCode = isSuccessStatusCode(code);
+    isSuccessStatusCode = HttpStatusCodes.isSuccess(code);
     String message = response.getReasonPhrase();
     statusMessage = message;
     Logger logger = HttpTransport.LOGGER;
@@ -425,8 +425,11 @@ public final class HttpResponse {
 
   /**
    * Returns whether the given HTTP response status code is a success code {@code >= 200 and < 300}.
+   *
+   * @deprecated (scheduled to be removed in 1.7) Use {@link HttpStatusCodes#isSuccess}
    */
+  @Deprecated
   public static boolean isSuccessStatusCode(int statusCode) {
-    return statusCode >= 200 && statusCode < 300;
+    return HttpStatusCodes.isSuccess(statusCode);
   }
 }

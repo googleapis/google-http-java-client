@@ -17,6 +17,7 @@ package com.google.api.client.http;
 import com.google.api.client.json.Json;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
+import com.google.api.client.testing.http.MockHttpUnsuccessfulResponseHandler;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Key;
@@ -52,16 +53,17 @@ public class HttpRequestTest extends TestCase {
   public void testNotSupportedByDefault() throws IOException {
     MockHttpTransport transport = new MockHttpTransport();
     HttpRequest request =
-        transport.createRequestFactory().buildGetRequest(new GenericUrl("http://www.google.com"));
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     for (HttpMethod method : BASIC_METHODS) {
       request.setMethod(method);
       request.execute();
     }
     for (HttpMethod method : OTHER_METHODS) {
-      transport = MockHttpTransport
-          .builder().setSupportedOptionalMethods(ImmutableSet.<HttpMethod>of()).build();
+      transport =
+          MockHttpTransport.builder().setSupportedOptionalMethods(ImmutableSet.<HttpMethod>of())
+              .build();
       request =
-          transport.createRequestFactory().buildGetRequest(new GenericUrl("http://www.google.com"));
+          transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
       request.setMethod(method);
       try {
         request.execute();
@@ -71,15 +73,165 @@ public class HttpRequestTest extends TestCase {
       transport =
           MockHttpTransport.builder().setSupportedOptionalMethods(ImmutableSet.of(method)).build();
       request =
-          transport.createRequestFactory().buildGetRequest(new GenericUrl("http://www.google.com"));
+          transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
       request.setMethod(method);
       request.execute();
     }
   }
 
+  /**
+   * Transport used for testing the redirection logic in HttpRequest.
+   */
+  static private class RedirectTransport extends MockHttpTransport {
+
+    int lowLevelExecCalls;
+
+    final boolean removeLocation;
+    final boolean infiniteRedirection;
+    final int redirectStatusCode;
+
+    LowLevelHttpRequest retryableGetRequest = new MockLowLevelHttpRequest() {
+
+      @Override
+      public LowLevelHttpResponse execute() {
+        lowLevelExecCalls++;
+
+        if (infiniteRedirection || lowLevelExecCalls == 1) {
+          // Return redirect on only the first call.
+          // If infiniteRedirection is true then always return the redirect status code.
+          MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+          response.setStatusCode(redirectStatusCode);
+          if (!removeLocation) {
+            response.addHeader("Location", HttpTesting.SIMPLE_URL);
+          }
+          return response;
+        }
+        // Return success on the second if infiniteRedirection is False.
+        MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+        response.setContent("{\"data\":{\"foo\":{\"v1\":{}}}}");
+        return response;
+      }
+    };
+
+    protected RedirectTransport(boolean removeLocation, boolean infiniteRedirection,
+        int redirectStatusCode) {
+      this.removeLocation = removeLocation;
+      this.infiniteRedirection = infiniteRedirection;
+      this.redirectStatusCode = redirectStatusCode;
+    }
+
+    @Override
+    public LowLevelHttpRequest buildGetRequest(String url) {
+      return retryableGetRequest;
+    }
+
+    @Override
+    public LowLevelHttpRequest buildPostRequest(String url) {
+      return retryableGetRequest;
+    }
+  }
+
+  public void test301Redirect() throws IOException {
+    // Set up RedirectTransport to redirect on the first request and then return success.
+    RedirectTransport fakeTransport =
+        new RedirectTransport(false, false, HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY);
+    HttpRequest request =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://gmail.com"));
+    HttpResponse resp = request.execute();
+
+    Assert.assertEquals(200, resp.getStatusCode());
+    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void test301RedirectWithUnsuccessfulResponseHandled() throws IOException {
+    MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(true);
+    // Set up RedirectTransport to redirect on the first request and then return success.
+    RedirectTransport fakeTransport =
+        new RedirectTransport(false, false, HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY);
+    HttpRequest request =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://gmail.com"));
+    request.setUnsuccessfulResponseHandler(handler);
+    HttpResponse resp = request.execute();
+
+    Assert.assertEquals(200, resp.getStatusCode());
+    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+    // Assert that the redirect logic was not invoked because the response handler could handle the
+    // request. The request url should be the original http://gmail.com
+    Assert.assertEquals("http://gmail.com", request.getUrl().toString());
+    Assert.assertTrue(handler.isCalled());
+  }
+
+  public void test301RedirectWithUnsuccessfulResponseNotHandled() throws IOException {
+    // Create an Unsuccessful response handler that always returns false.
+    MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
+    // Set up RedirectTransport to redirect on the first request and then return success.
+    RedirectTransport fakeTransport =
+        new RedirectTransport(false, false, HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY);
+    HttpRequest request =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://gmail.com"));
+    request.setUnsuccessfulResponseHandler(handler);
+    HttpResponse resp = request.execute();
+
+    Assert.assertEquals(200, resp.getStatusCode());
+    // Assert that the redirect logic was invoked because the response handler could not handle the
+    // request. The request url should have changed from http://gmail.com to http://google.com
+    Assert.assertEquals(HttpTesting.SIMPLE_URL, request.getUrl().toString());
+    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void test303Redirect() throws IOException {
+    // Set up RedirectTransport to redirect on the first request and then return success.
+    RedirectTransport fakeTransport =
+        new RedirectTransport(false, false, HttpStatusCodes.STATUS_CODE_SEE_OTHER);
+    byte[] content = new byte[300];
+    Arrays.fill(content, (byte) ' ');
+    HttpRequest request =
+        fakeTransport.createRequestFactory().buildPostRequest(new GenericUrl("http://gmail.com"),
+            new ByteArrayContent(null, content));
+    request.setMethod(HttpMethod.POST);
+    HttpResponse resp = request.execute();
+
+    Assert.assertEquals(200, resp.getStatusCode());
+    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+    // Assert that the method in the request was changed to a GET due to the 303.
+    Assert.assertEquals(HttpMethod.GET, request.getMethod());
+  }
+
+  public void testInfiniteRedirects() throws IOException {
+    // Set up RedirectTransport to cause infinite redirections.
+    RedirectTransport fakeTransport =
+        new RedirectTransport(false, true, HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY);
+    HttpRequest request =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://gmail.com"));
+    try {
+      request.execute();
+      fail("expected HttpResponseException");
+    } catch (HttpResponseException e) {
+    }
+
+    // Should be called 1 more than the number of retries allowed (because the first request is not
+    // counted as a retry).
+    Assert.assertEquals(request.getNumberOfRetries() + 1, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void testMissingLocationRedirect() throws IOException {
+    // Set up RedirectTransport to set responses with missing location headers.
+    RedirectTransport fakeTransport =
+        new RedirectTransport(true, false, HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY);
+    HttpRequest request =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://gmail.com"));
+    try {
+      request.execute();
+      fail("expected HttpResponseException");
+    } catch (HttpResponseException e) {
+    }
+
+    Assert.assertEquals(1, fakeTransport.lowLevelExecCalls);
+  }
+
   static private class FailThenSuccessTransport extends MockHttpTransport {
 
-    public int lowLevelExecCalls = 0;
+    public int lowLevelExecCalls;
 
     public LowLevelHttpRequest retryableGetRequest = new MockLowLevelHttpRequest() {
 
@@ -111,24 +263,10 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
-  static private class TrackInvocationHandler implements HttpUnsuccessfulResponseHandler {
-    public boolean isCalled = false;
-
-    public TrackInvocationHandler() {
-    }
-
-    @SuppressWarnings("unused")
-    public boolean handleResponse(
-        HttpRequest request, HttpResponse response, boolean retrySupported) throws IOException {
-      isCalled = true;
-      return true;
-    }
-  }
-
   public void testAbnormalResponseHandler() throws IOException {
 
     FailThenSuccessTransport fakeTransport = new FailThenSuccessTransport();
-    TrackInvocationHandler handler = new TrackInvocationHandler();
+    MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(true);
 
     HttpRequest req =
         fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
@@ -137,7 +275,7 @@ public class HttpRequestTest extends TestCase {
 
     Assert.assertEquals(200, resp.getStatusCode());
     Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
-    Assert.assertTrue(handler.isCalled);
+    Assert.assertTrue(handler.isCalled());
   }
 
   public enum E {
