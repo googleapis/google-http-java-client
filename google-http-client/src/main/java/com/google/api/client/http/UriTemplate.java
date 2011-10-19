@@ -229,8 +229,8 @@ public class UriTemplate {
     while (cur < length) {
       int next = pathUri.indexOf('{', cur);
       if (next == -1) {
-        if (cur == 0) {
-          // No expansions exist.
+        if (cur == 0 && !addUnusedParamsAsQueryParams) {
+          // No expansions exist and we do not need to add any query parameters.
           return pathUri;
         }
         pathBuf.append(pathUri.substring(cur));

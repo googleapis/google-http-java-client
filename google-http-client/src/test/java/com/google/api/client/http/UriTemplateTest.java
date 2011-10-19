@@ -48,11 +48,19 @@ public class UriTemplateTest extends TestCase {
     assertTrue(requestMap.containsKey("unused"));
   }
 
-  public void testExpandTemplates_noExpansions() {
+  public void testExpandTemplates_noExpansionsWithQueryParams() {
     Map<String, Object> requestMap = Maps.newHashMap();
     requestMap.put("abc", "xyz");
     requestMap.put("def", "123");
-    assertEquals("foo/xyz/bar/123", UriTemplate.expand("foo/xyz/bar/123", requestMap, true));
+    assertEquals("foo/xyz/bar/123?abc=xyz&def=123",
+        UriTemplate.expand("foo/xyz/bar/123", requestMap, true));
+  }
+
+  public void testExpandTemplates_noExpansionsWithoutQueryParams() {
+    Map<String, Object> requestMap = Maps.newHashMap();
+    requestMap.put("abc", "xyz");
+    requestMap.put("def", "123");
+    assertEquals("foo/xyz/bar/123", UriTemplate.expand("foo/xyz/bar/123", requestMap, false));
   }
 
   public void testExpandTemplates_missingParameter() {
