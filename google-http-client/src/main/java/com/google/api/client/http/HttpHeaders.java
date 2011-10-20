@@ -75,6 +75,10 @@ public class HttpHeaders extends GenericData {
   @Key("Content-Type")
   private String contentType;
 
+  /** {@code "Cookie"} header. */
+  @Key("Cookie")
+  private String cookie;
+
   /** {@code "Date"} header. */
   @Key("Date")
   private String date;
@@ -300,6 +304,24 @@ public class HttpHeaders extends GenericData {
    */
   public final void setContentType(String contentType) {
     this.contentType = contentType;
+  }
+
+  /**
+   * Returns the {@code "Cookie"} header or {@code null} for none.
+   * <a href='http://tools.ietf.org/html/rfc6265'>See Cookie Specification.</a>
+   * @since 1.6
+   */
+  public final String getCookie() {
+    return cookie;
+  }
+
+  /**
+   * Sets the {@code "Cookie"} header or {@code null} for none.
+   *
+   * @since 1.6
+   */
+  public final void setCookie(String cookie) {
+    this.cookie = cookie;
   }
 
   /**
