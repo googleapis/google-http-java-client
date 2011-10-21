@@ -73,7 +73,7 @@ javadoc-google-http-java-client.password = <i>[password from <a
   </li>
 </ul>
 
-<h3>Release version 1.5.3-beta</h3>
+<h3>Release version 1.5.4-beta</h3>
 <ul>
   <li>Prepare the project
   <ul>
@@ -88,9 +88,9 @@ cd 1.5
   </ul>
   </li>
   <li>Remove the "-SNAPSHOT" suffix from Strings.VERSION:<pre>
-sed s/-SNAPSHOT// &lt;google-http-client/src/main/java/com/google/api/client/util/Strings.java &gt;/tmp/Strings.java
+sed s/-SNAPSHOT//g &lt;google-http-client/src/main/java/com/google/api/client/util/Strings.java &gt;/tmp/Strings.java
 cp /tmp/Strings.java google-http-client/src/main/java/com/google/api/client/util
-hg commit -m "prepare 1.5.3-beta for release"
+hg commit -m "prepare 1.5.4-beta for release"
 hg push
 </pre></li>
   <li>Push to central Maven repository (based on instructions from <a
@@ -100,7 +100,7 @@ hg push
     <li>Prepare:<pre>
 mvn clean deploy
 mvn release:clean
-mvn release:prepare -DautoVersionSubmodules=true -Dtag=1.5.3-beta --batch-mode
+mvn release:prepare -DautoVersionSubmodules=true -Dtag=1.5.4-beta --batch-mode
 mvn release:perform -Darguments=-Dgpg.passphrase=<i>[YOUR GPG PASSPHRASE]</i>
 </pre></li>
     <li>Release on oss.sonatype.org
@@ -109,22 +109,22 @@ mvn release:perform -Darguments=-Dgpg.passphrase=<i>[YOUR GPG PASSPHRASE]</i>
       <li>Click on "Staging Repositories" and look for the "com.google"
       Repository with your username</li>
       <li>check box next to uploaded release</li>
-      <li>click Close button; type <code>1.5.3-beta</code> and click Close</li>
+      <li>click Close button; type <code>1.5.4-beta</code> and click Close</li>
       <li>check box next to uploaded release</li>
-      <li>click Release button; type <code>1.5.3-beta</code> and click
+      <li>click Release button; type <code>1.5.4-beta</code> and click
       Release</li>
     </ul>
     </li>
     <li>Central Maven repository is synced hourly. Once uploaded onto
     repo2.maven.org, it will be found at: <a
-      href="http://repo2.maven.org/maven2/com/google/http-client/google-http-client/1.5.3-beta/">repo2.maven.org</a></li>
+      href="http://repo2.maven.org/maven2/com/google/http-client/google-http-client/1.5.4-beta/">repo2.maven.org</a></li>
   </ul>
   </li>
-  <li>Start development of next bug fix version, by replacing <code>1.5.3-beta</code> with the next bug fix version:<pre>
+  <li>Start development of next bug fix version, by replacing <code>1.5.4-beta</code> with the next bug fix version:<pre>
 NEXT_VERSION=<i>(next bug fix version 1.5.X-beta)</i>
-sed s/1.5.3-beta/$NEXT_VERSION/ &lt;jdiff.xml &gt;/tmp/jdiff.xml
-sed s/1.5.3-beta/$NEXT_VERSION/ &lt;release.html &gt;/tmp/release.html
-sed s/1.5.3-beta/$NEXT_VERSION-SNAPSHOT/ &lt;google-http-client/src/main/java/com/google/api/client/util/Strings.java &gt;/tmp/Strings.java
+sed s/1.5.4-beta/$NEXT_VERSION/g &lt;jdiff.xml &gt;/tmp/jdiff.xml
+sed s/1.5.4-beta/$NEXT_VERSION/g &lt;release.html &gt;/tmp/release.html
+sed s/1.5.4-beta/$NEXT_VERSION-SNAPSHOT/g &lt;google-http-client/src/main/java/com/google/api/client/util/Strings.java &gt;/tmp/Strings.java
 cp /tmp/jdiff.xml /tmp/release.html .
 cp /tmp/Strings.java google-http-client/src/main/java/com/google/api/client/util
 hg commit -m "start $NEXT_VERSION"
@@ -142,10 +142,10 @@ hg push
 cd /tmp/google-http-java-client
 hg clone --insecure https://javadoc.google-http-java-client.googlecode.com/hg/ javadoc
 hg clone -r 1.4.1-beta https://google-api-java-client.googlecode.com/hg/ 1.4.1-beta
-hg clone -r 1.5.3-beta https://google-http-java-client.googlecode.com/hg/ 1.5.2-beta
-cd 1.5.3-beta
+hg clone -r 1.5.4-beta https://google-http-java-client.googlecode.com/hg/ 1.5.4-beta
+cd 1.5.4-beta
 mvn javadoc:jar install site
-cp -R target/site/apidocs ../javadoc/1.5.3-beta
+cp -R target/site/apidocs ../javadoc/1.5.4-beta
 </pre></li>
     <li>change these constants from jdiff.xml for your environment:
     JDIFF_HOME, MAVEN_REPOSITORY_HOME</li>
@@ -153,22 +153,22 @@ cp -R target/site/apidocs ../javadoc/1.5.3-beta
 ant -f jdiff.xml
 cd ../javadoc
 hg add
-hg commit -m "1.5.3-beta"
+hg commit -m "1.5.4-beta"
 hg push --insecure
 </pre></li>
   </ul>
   </li>
   <li><b>WAIT!</b> Don't do the following instructions until after the
   library has been uploaded to repo2.maven.org at: <a
-    href="http://repo2.maven.org/maven2/com/google/http-client/google-http-client/1.5.3-beta/">repo2.maven.org</a></li>
+    href="http://repo2.maven.org/maven2/com/google/http-client/google-http-client/1.5.4-beta/">repo2.maven.org</a></li>
   <li>Update to new version on <a
     href="http://code.google.com/p/google-http-java-client">http://code.google.com/p/google-http-java-client</a>
   <ul>
     <li>Upload to <a
       href="http://code.google.com/p/google-http-java-client/downloads/entry">http://code.google.com/p/google-http-java-client/downloads/entry</a>
     <ul>
-      <li>Summary: Google HTTP Client Library for Java, version 1.5.3-beta</li>
-      <li>File: <code>/tmp/google-http-java-client/1.5.3-beta/google-http-client-assembly/target/google-http-client-1.5.2-beta-java.zip</code></li>
+      <li>Summary: Google HTTP Client Library for Java, version 1.5.4-beta</li>
+      <li>File: <code>/tmp/google-http-java-client/1.5.4-beta/google-http-client-assembly/target/google-http-client-1.5.4-beta-java.zip</code></li>
       <li>Labels: <code>Type-Archive</code>, <code>OpSys-All</code>, and <code>Featured</code></li>
       <li>click Submit file</li>
     </ul>
