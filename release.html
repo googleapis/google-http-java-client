@@ -85,7 +85,7 @@ hg push
 hg update default
 </pre></li>
   <li>For the following files, replace <code>1.6.0-beta</code> with the
-  next minor version: <pre>
+  next minor version: <b>(TODO: update this section to use sed)</b><pre>
 pom.xml
 */pom.xml
 jdiff.xml (first change "1.6" to next minor version, then change "1.5" to "1.6")
@@ -102,61 +102,48 @@ hg push
 This process is followed for the official launch. We are releasing the code from
 the 1.6 Mercurial branch.
 <ul>
-  <li>Prepare the project
-  <ul>
-    <li><pre>
+  <li>Checkout the source, update the version constant, and push to central Maven repository (based on instructions from <a
+    href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Sonatype
+  OSS Maven Repository Usage Guide</a>):<pre>
 cd /tmp
 rm -rf google-http-java-client
 mkdir google-http-java-client
 cd google-http-java-client
 hg clone -b 1.6 https://google-http-java-client.googlecode.com/hg/ 1.6
 cd 1.6
-</pre></li>
-  </ul>
-  </li>
-  <li>Push to central Maven repository (based on instructions from <a
-    href="https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide">Sonatype
-  OSS Maven Repository Usage Guide</a>):
-  <ul>
-    <li>Prepare:<pre>
+
+sed s/-SNAPSHOT//g &lt;google-http-client/src/main/java/com/google/api/client/util/Strings.java &gt;/tmp/Strings.java
+cp /tmp/Strings.java google-http-client/src/main/java/com/google/api/client/util
+hg commit -m "prepare 1.6.0-beta for release"
+hg push
+
 mvn clean deploy
 mvn release:clean
 mvn release:prepare -DautoVersionSubmodules=true -Dtag=1.6.0-beta --batch-mode
 mvn release:perform -Darguments=-Dgpg.passphrase=<i>[YOUR GPG PASSPHRASE]</i>
 </pre></li>
-    <li>Release on oss.sonatype.org
-    <ul>
-      <li>Log in to <a href="https://oss.sonatype.org">https://oss.sonatype.org</a></li>
-      <li>Click on "Staging Repositories" and look for the "com.google"
-      Repository with your username</li>
-      <li>check box next to uploaded release</li>
-      <li>click Close button; type <code>1.6.0-beta</code> and click Close</li>
-      <li>check box next to uploaded release</li>
-      <li>click Release button; type <code>1.6.0-beta</code> and click
-      Release</li>
-    </ul>
-    </li>
-    <li>Central Maven repository is synced hourly. Once uploaded onto
-    repo2.maven.org, it will be found at: <a
-      href="http://repo2.maven.org/maven2/com/google/http-client/google-http-client/1.6.0-beta/">repo2.maven.org</a></li>
-  </ul>
-  </li>
-  <li>Start development of next bug fix version
+  <li>Release on oss.sonatype.org
   <ul>
-    <li>For the following files, replace <code>1.6.0-beta</code> with the
-    next bug fix version:
-    <ul>
-      <li><code>jdiff.xml</code></li>
-      <li><code>release.html</code></li>
-      <li><code>google-http-client/src/main/java/com/google/api/client/util/Strings.java</code></li>
-    </ul>
-    </li>
-    <li><pre>
-hg commit -m "start next bug fix version"
+    <li>Log in to <a href="https://oss.sonatype.org">https://oss.sonatype.org</a></li>
+    <li>Click on "Staging Repositories" and look for the "com.google"
+    Repository with your username</li>
+    <li>check box next to uploaded release; click Close; click Close</li>
+    <li>check box next to uploaded release; click Release; click Release</li>
+  </ul>
+    Central Maven repository is synced hourly. Once uploaded onto
+    repo2.maven.org, it will be found at: <a
+      href="http://repo2.maven.org/maven2/com/google/http-client/google-http-client/1.6.0-beta/">repo2.maven.org</a>
+  </li>
+  <li>Start development of next bug fix version, by replacing <code>1.6.0-beta</code> with the next bug fix version:<pre>
+NEXT_VERSION=<i>(next bug fix version 1.6.X-beta)</i>
+sed s/1.6.0-beta/$NEXT_VERSION/g &lt;jdiff.xml &gt;/tmp/jdiff.xml
+sed s/1.6.0-beta/$NEXT_VERSION/g &lt;release.html &gt;/tmp/release.html
+sed s/1.6.0-beta/$NEXT_VERSION-SNAPSHOT/g &lt;google-http-client/src/main/java/com/google/api/client/util/Strings.java &gt;/tmp/Strings.java
+cp /tmp/jdiff.xml /tmp/release.html .
+cp /tmp/Strings.java google-http-client/src/main/java/com/google/api/client/util
+hg commit -m "start $NEXT_VERSION"
 hg push
 </pre></li>
-  </ul>
-  </li>
   <li>Prepare the released library zip file and javadoc
   <ul>
     <li>Overview: JDiff is a tool for showing the difference between the
@@ -167,7 +154,7 @@ hg push
     javadoc Hg repository.</li>
     <li><pre>
 cd /tmp/google-http-java-client
-hg clone --insecure https://javadoc.google-http-java-client.googlecode.com/hg/ javadoc
+hg clone https://code.google.com/p/google-http-java-client.javadoc/ javadoc
 hg clone -r 1.5.1-beta https://google-http-java-client.googlecode.com/hg/ 1.5.1-beta
 hg clone -r 1.6.0-beta https://google-http-java-client.googlecode.com/hg/ 1.6.0-beta
 cd 1.6.0-beta
@@ -181,7 +168,7 @@ ant -f jdiff.xml
 cd ../javadoc
 hg add
 hg commit -m "1.6.0-beta"
-hg push --insecure
+hg push
 </pre></li>
   </ul>
   </li>
