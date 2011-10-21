@@ -140,7 +140,7 @@ hg push
     javadoc Hg repository.</li>
     <li><pre>
 cd /tmp/google-http-java-client
-hg clone --insecure https://javadoc.google-http-java-client.googlecode.com/hg/ javadoc
+hg clone https://code.google.com/p/google-http-java-client.javadoc/ javadoc
 hg clone -r 1.4.1-beta https://google-api-java-client.googlecode.com/hg/ 1.4.1-beta
 hg clone -r 1.5.4-beta https://google-http-java-client.googlecode.com/hg/ 1.5.4-beta
 cd 1.5.4-beta
@@ -154,7 +154,7 @@ ant -f jdiff.xml
 cd ../javadoc
 hg add
 hg commit -m "1.5.4-beta"
-hg push --insecure
+hg push
 </pre></li>
   </ul>
   </li>
