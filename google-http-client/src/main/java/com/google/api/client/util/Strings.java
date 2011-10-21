@@ -29,7 +29,7 @@ public class Strings {
    *
    * @since 1.3
    */
-  public static final String VERSION = "1.5.3-beta-SNAPSHOT";
+  public static final String VERSION = "1.5.3-beta";
 
   /**
    * Line separator to use for this OS, i.e. {@code "\n"} or {@code "\r\n"}.
