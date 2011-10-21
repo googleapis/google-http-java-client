@@ -15,10 +15,16 @@
 package com.google.api.client.http.json;
 
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.LowLevelHttpRequest;
+import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.testing.http.MockHttpTransport;
+import com.google.api.client.testing.http.MockLowLevelHttpRequest;
+import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 
 import java.io.IOException;
 
@@ -54,7 +60,7 @@ public class JsonHttpClientTest extends TestCase {
   public void testJsonHttpClientBuilder() {
     HttpTransport transport = new NetHttpTransport();
     JsonFactory jsonFactory = new JacksonFactory();
-    GenericUrl baseUrl = new GenericUrl("http://www.testgoogleapis.com/test/path/v1");
+    GenericUrl baseUrl = new GenericUrl("http://www.testgoogleapis.com/test/path/v1/");
     RemoteRequestInitializer remoteRequestInitializer = new TestRemoteRequestInitializer();
     String applicationName = "Test Application";
 
@@ -73,10 +79,33 @@ public class JsonHttpClientTest extends TestCase {
     TestRemoteRequestInitializer remoteRequestInitializer = new TestRemoteRequestInitializer();
     JsonHttpClient client =
       JsonHttpClient.builder(
-          new NetHttpTransport(), new JacksonFactory(), new GenericUrl("http://www.test.com"))
+          new NetHttpTransport(), new JacksonFactory(), new GenericUrl("http://www.test.com/"))
               .setRemoteRequestInitializer(remoteRequestInitializer)
               .setApplicationName("Test Application").build();
     client.initialize(null);
     Assert.assertTrue(remoteRequestInitializer.isCalled);
+  }
+
+  public void testExecute() throws IOException {
+    final String testBaseUrl = "http://www.test.com/";
+    final String testUriTemplate = "uri/template";
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildGetRequest(final String url) {
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() {
+            MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+            // Assert the requested URL is the expected one.
+            Assert.assertEquals(testBaseUrl + testUriTemplate, url);
+            return response;
+          }
+        };
+      }
+    };
+    JsonHttpClient client =
+      JsonHttpClient.builder(
+          transport, new JacksonFactory(), new GenericUrl(testBaseUrl)).build();
+    client.execute(HttpMethod.GET, testUriTemplate, null, null);
   }
 }
