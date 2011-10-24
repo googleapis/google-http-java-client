@@ -38,6 +38,7 @@ public class GenericJsonTest extends TestCase {
     assertEquals("{\"a\":\"b\"}", data.toString());
   }
 
+  @SuppressWarnings("deprecation")
   public void testFactory() {
     JacksonFactory factory = new JacksonFactory();
     GenericJson data = new GenericJson();

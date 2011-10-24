@@ -14,7 +14,7 @@
 
 package com.google.api.client.http.javanet;
 
-import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.http.LowLevelHttpResponse;
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ final class NetHttpResponse extends LowLevelHttpResponse {
   @Override
   public InputStream getContent() throws IOException {
     HttpURLConnection connection = this.connection;
-    return HttpResponse.isSuccessStatusCode(responseCode)
+    return HttpStatusCodes.isSuccess(responseCode)
         ? connection.getInputStream() : connection.getErrorStream();
   }
 
