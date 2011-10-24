@@ -40,8 +40,8 @@ public class JsonHttpClient {
   /** The request factory for connections to the server. */
   private final HttpRequestFactory requestFactory;
 
-  /** The initializer to use when creating an {@link RemoteRequest} or {@code null} for none. */
-  private final RemoteRequestInitializer remoteRequestInitializer;
+  /** The initializer to use when creating an {@link JsonHttpRequest} or {@code null} for none. */
+  private final JsonHttpRequestInitializer jsonHttpRequestInitializer;
 
   /**
    * The base URL of the service, for example {@code "https://www.googleapis.com/tasks/v1/"}. Must
@@ -92,9 +92,9 @@ public class JsonHttpClient {
     return requestFactory;
   }
 
-  /** Returns the Remote request initializer or {@code null} for none. */
-  public final RemoteRequestInitializer getRemoteRequestInitializer() {
-    return remoteRequestInitializer;
+  /** Returns the JSON HTTP request initializer or {@code null} for none. */
+  public final JsonHttpRequestInitializer getJsonHttpRequestInitializer() {
+    return jsonHttpRequestInitializer;
   }
 
   /**
@@ -127,12 +127,16 @@ public class JsonHttpClient {
   }
 
   /**
-   * Initializes a {@link RemoteRequest} using a {@link RemoteRequestInitializer}. Subclasses may
-   * override if specific behavior is required.
-   * Must be called before the remote request is executed, preferably right after the remote request
-   * is instantiated. Sample usage:
+   * Initializes a {@link JsonHttpRequest} using a {@link JsonHttpRequestInitializer}. Subclasses
+   * may override if specific behavior is required.
+   *
+   * <p>
+   * Must be called before the JSON HTTP request is executed, preferably right after the request is
+   * instantiated. Sample usage:
+   * </p>
+   *
    * <pre>
-    public class Get extends RemoteRequest {
+    public class Get extends JsonHttpRequest {
       ...
     }
 
@@ -143,11 +147,11 @@ public class JsonHttpClient {
     }
    * </pre>
    *
-   * @param remoteRequest Remote Request type
+   * @param jsonHttpRequest JSON HTTP Request type
    */
-  protected void initialize(RemoteRequest remoteRequest) throws IOException {
-    if (remoteRequestInitializer != null) {
-      remoteRequestInitializer.initialize(remoteRequest);
+  protected void initialize(JsonHttpRequest jsonHttpRequest) throws IOException {
+    if (jsonHttpRequestInitializer != null) {
+      jsonHttpRequestInitializer.initialize(jsonHttpRequest);
     }
   }
 
@@ -155,8 +159,8 @@ public class JsonHttpClient {
    * Construct the {@link JsonHttpClient}.
    *
    * @param transport The transport to use for requests
-   * @param remoteRequestInitializer The initializer to use when creating an {@link RemoteRequest}
-   *        or {@code null} for none
+   * @param jsonHttpRequestInitializer The initializer to use when creating an
+   *        {@link JsonHttpRequest} or {@code null} for none
    * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
    *        {@code null} for none
    * @param jsonFactory A factory for creating JSON parsers and serializers
@@ -166,12 +170,12 @@ public class JsonHttpClient {
    */
   protected JsonHttpClient(
       HttpTransport transport,
-      RemoteRequestInitializer remoteRequestInitializer,
+      JsonHttpRequestInitializer jsonHttpRequestInitializer,
       HttpRequestInitializer httpRequestInitializer,
       JsonFactory jsonFactory,
       String baseUrl,
       String applicationName) {
-    this.remoteRequestInitializer = remoteRequestInitializer;
+    this.jsonHttpRequestInitializer = jsonHttpRequestInitializer;
     this.baseUrl = Preconditions.checkNotNull(baseUrl);
     this.applicationName = applicationName;
     this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
@@ -187,13 +191,13 @@ public class JsonHttpClient {
    * @param method HTTP Method type
    * @param uriTemplate URI template for the path relative to the base URL. Must not start with
    *        a "/"
-   * @param remoteRequest Remote Request type
+   * @param jsonHttpRequest JSON HTTP Request type
    * @return newly created {@link HttpRequest}
    */
   protected HttpRequest buildHttpRequest(
-      HttpMethod method, String uriTemplate, RemoteRequest remoteRequest) throws IOException {
+      HttpMethod method, String uriTemplate, JsonHttpRequest jsonHttpRequest) throws IOException {
     GenericUrl url = new GenericUrl(
-        UriTemplate.expand(baseUrl + uriTemplate, remoteRequest, true));
+        UriTemplate.expand(baseUrl + uriTemplate, jsonHttpRequest, true));
     HttpRequest httpRequest = requestFactory.buildRequest(method, url, null);
     httpRequest.addParser(getJsonHttpParser());
     if (applicationName != null) {
@@ -210,13 +214,13 @@ public class JsonHttpClient {
    * @param uriTemplate URI template for the path relative to the base URL. Must not start with
    *        a "/"
    * @param body A POJO that can be serialized into JSON or {@code null} for none
-   * @param remoteRequest Remote Request type
+   * @param jsonHttpRequest JSON HTTP Request type
    * @return {@link HttpRequest} type
    * @throws IOException if the request fails
    */
   protected HttpResponse execute(HttpMethod method, String uriTemplate, Object body,
-      RemoteRequest remoteRequest) throws IOException {
-    HttpRequest request = buildHttpRequest(method, uriTemplate, remoteRequest);
+      JsonHttpRequest jsonHttpRequest) throws IOException {
+    HttpRequest request = buildHttpRequest(method, uriTemplate, jsonHttpRequest);
     if (body != null) {
       request.setContent(createSerializer(body));
       request.setEnableGZipContent(true);
@@ -254,8 +258,8 @@ public class JsonHttpClient {
     /** The transport to use for requests. */
     private final HttpTransport transport;
 
-    /** The initializer to use when creating an {@link RemoteRequest} or {@code null} for none. */
-    private RemoteRequestInitializer remoteRequestInitializer;
+    /** The initializer to use when creating an {@link JsonHttpRequest} or {@code null} for none. */
+    private JsonHttpRequestInitializer jsonHttpRequestInitializer;
 
     /** The initializer to use when creating an {@link HttpRequest} or {@code null} for none. */
     private HttpRequestInitializer httpRequestInitializer;
@@ -293,7 +297,7 @@ public class JsonHttpClient {
     public JsonHttpClient build() {
       return new JsonHttpClient(
           transport,
-          remoteRequestInitializer,
+          jsonHttpRequestInitializer,
           httpRequestInitializer,
           jsonFactory,
           baseUrl.build(),
@@ -315,15 +319,16 @@ public class JsonHttpClient {
       return baseUrl;
     }
 
-    /** Sets the Remote request initializer. Subclasses should override by calling super. */
-    public Builder setRemoteRequestInitializer(RemoteRequestInitializer remoteRequestInitializer) {
-      this.remoteRequestInitializer = remoteRequestInitializer;
+    /** Sets the JSON HTTP request initializer. Subclasses should override by calling super. */
+    public Builder setJsonHttpRequestInitializer(
+        JsonHttpRequestInitializer jsonHttpRequestInitializer) {
+      this.jsonHttpRequestInitializer = jsonHttpRequestInitializer;
       return this;
     }
 
-    /** Returns the Remote request initializer or {@code null} for none. */
-    public RemoteRequestInitializer getRemoteRequestInitializer() {
-      return remoteRequestInitializer;
+    /** Returns the JSON HTTP request initializer or {@code null} for none. */
+    public JsonHttpRequestInitializer getJsonHttpRequestInitializer() {
+      return jsonHttpRequestInitializer;
     }
 
     /** Sets the HTTP request initializer. Subclasses should override by calling super. */

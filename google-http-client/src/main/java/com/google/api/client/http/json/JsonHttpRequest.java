@@ -22,12 +22,12 @@ import com.google.common.base.Preconditions;
 import java.io.IOException;
 
 /**
- * Remote request to {@link JsonHttpClient}.
+ * JSON HTTP request to {@link JsonHttpClient}.
  *
  * @since 1.6
  * @author Ravi Mistry
  */
-public class RemoteRequest extends GenericData {
+public class JsonHttpRequest extends GenericData {
 
   private final JsonHttpClient client;
   private final HttpMethod method;
@@ -35,14 +35,14 @@ public class RemoteRequest extends GenericData {
   private final Object content;
 
   /**
-   * Builds an instance of {@link RemoteRequest}.
+   * Builds an instance of {@link JsonHttpRequest}.
    *
    * @param client The JSON HTTP client which handles this request
    * @param method HTTP Method type
    * @param uriTemplate URI template
    * @param content A POJO that can be serialized into JSON or {@code null} for none
    */
-  public RemoteRequest(
+  public JsonHttpRequest(
       JsonHttpClient client, HttpMethod method, String uriTemplate, Object content) {
     this.client = Preconditions.checkNotNull(client);
     this.method = Preconditions.checkNotNull(method);

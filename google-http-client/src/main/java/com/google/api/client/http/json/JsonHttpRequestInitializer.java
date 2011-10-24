@@ -17,15 +17,15 @@ package com.google.api.client.http.json;
 import java.io.IOException;
 
 /**
- * Remote API request initializer.
+ * JSON HTTP request initializer.
  *
  * <p>
  * For example, this might be used to set prettyPrint and api key:
  * </p>
  *
  * <pre>
-   public class BooksRequestInitializer implements RemoteRequestInitializer {
-     public void initialize(RemoteRequest request) {
+   public class BooksRequestInitializer implements JsonHttpRequestInitializer {
+     public void initialize(JsonHttpRequest request) {
        BooksRequest booksRequest = (BooksRequest)request;
        booksRequest.setPrettyPrint(true);
        booksRequest.setKey(API_KEY);
@@ -40,12 +40,12 @@ import java.io.IOException;
  * @since 1.6
  * @author Ravi Mistry
  */
-public interface RemoteRequestInitializer {
+public interface JsonHttpRequestInitializer {
 
   /**
-   * Initializes a {@link RemoteRequest}.
+   * Initializes a {@link JsonHttpRequest}.
    *
    * @param request Remote request.
    */
-  void initialize(RemoteRequest request) throws IOException;
+  void initialize(JsonHttpRequest request) throws IOException;
 }

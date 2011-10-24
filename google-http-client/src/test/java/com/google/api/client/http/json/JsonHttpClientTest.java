@@ -45,14 +45,14 @@ public class JsonHttpClientTest extends TestCase {
     super(name);
   }
 
-  static private class TestRemoteRequestInitializer implements RemoteRequestInitializer {
+  static private class TestRemoteRequestInitializer implements JsonHttpRequestInitializer {
 
     boolean isCalled;
 
     TestRemoteRequestInitializer() {
     }
 
-    public void initialize(RemoteRequest request) {
+    public void initialize(JsonHttpRequest request) {
       isCalled = true;
     }
   }
@@ -61,18 +61,18 @@ public class JsonHttpClientTest extends TestCase {
     HttpTransport transport = new NetHttpTransport();
     JsonFactory jsonFactory = new JacksonFactory();
     GenericUrl baseUrl = new GenericUrl("http://www.testgoogleapis.com/test/path/v1/");
-    RemoteRequestInitializer remoteRequestInitializer = new TestRemoteRequestInitializer();
+    JsonHttpRequestInitializer jsonHttpRequestInitializer = new TestRemoteRequestInitializer();
     String applicationName = "Test Application";
 
     JsonHttpClient client =
         JsonHttpClient.builder(transport, jsonFactory, baseUrl)
-            .setRemoteRequestInitializer(remoteRequestInitializer)
+            .setJsonHttpRequestInitializer(jsonHttpRequestInitializer)
             .setApplicationName(applicationName).build();
 
     Assert.assertEquals(baseUrl.build(), client.getBaseUrl());
     Assert.assertEquals(applicationName, client.getApplicationName());
     Assert.assertEquals(jsonFactory, client.getJsonFactory());
-    Assert.assertEquals(remoteRequestInitializer, client.getRemoteRequestInitializer());
+    Assert.assertEquals(jsonHttpRequestInitializer, client.getJsonHttpRequestInitializer());
   }
 
   public void testInitialize() throws IOException {
@@ -80,7 +80,7 @@ public class JsonHttpClientTest extends TestCase {
     JsonHttpClient client =
       JsonHttpClient.builder(
           new NetHttpTransport(), new JacksonFactory(), new GenericUrl("http://www.test.com/"))
-              .setRemoteRequestInitializer(remoteRequestInitializer)
+              .setJsonHttpRequestInitializer(remoteRequestInitializer)
               .setApplicationName("Test Application").build();
     client.initialize(null);
     Assert.assertTrue(remoteRequestInitializer.isCalled);
