@@ -35,6 +35,11 @@ javadoc-google-http-java-client.prefix = https://javadoc.google-http-java-client
 javadoc-google-http-java-client.username = <i>[username from <a
       href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i>
 javadoc-google-http-java-client.password = <i>[password from <a
+      href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i>
+wiki-google-http-java-client.prefix = https://wiki.google-http-java-client.googlecode.com/hg/
+wiki-google-http-java-client.username = <i>[username from <a
+      href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i>
+wiki-google-http-java-client.password = <i>[password from <a
       href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a>]</i></code></pre></li>
     <li>Add these lines to your <code>~/.m2/settings.xml</code> (create
     this file if it does not already exist): <pre><code>&lt;settings&gt;
@@ -139,8 +144,8 @@ NEXT_VERSION=<i>(next bug fix version 1.6.X-beta)</i>
 sed s/1.6.0-beta/$NEXT_VERSION/g &lt;jdiff.xml &gt;/tmp/jdiff.xml
 sed s/1.6.0-beta/$NEXT_VERSION/g &lt;release.html &gt;/tmp/release.html
 sed s/1.6.0-beta/$NEXT_VERSION-SNAPSHOT/g &lt;google-http-client/src/main/java/com/google/api/client/util/Strings.java &gt;/tmp/Strings.java
-cp /tmp/jdiff.xml /tmp/release.html .
-cp /tmp/Strings.java google-http-client/src/main/java/com/google/api/client/util
+mv /tmp/jdiff.xml /tmp/release.html .
+mv /tmp/Strings.java google-http-client/src/main/java/com/google/api/client/util
 hg commit -m "start $NEXT_VERSION"
 hg push
 </pre></li>
@@ -152,26 +157,33 @@ hg push
     into a temporary directory and compare against the JavaDoc of the just
     released version of the library, and then hg commit that diff into the
     javadoc Hg repository.</li>
-    <li><pre>
+  </ul><pre>
 cd /tmp/google-http-java-client
 hg clone https://code.google.com/p/google-http-java-client.javadoc/ javadoc
-hg clone -r 1.5.1-beta https://google-http-java-client.googlecode.com/hg/ 1.5.1-beta
+hg clone https://code.google.com/p/google-http-java-client.wiki/ wiki
+hg clone -r 1.5.3-beta https://google-http-java-client.googlecode.com/hg/ 1.5.3-beta
 hg clone -r 1.6.0-beta https://google-http-java-client.googlecode.com/hg/ 1.6.0-beta
+
 cd 1.6.0-beta
 mvn javadoc:jar install site
 cp -R target/site/apidocs ../javadoc/1.6.0-beta
-</pre></li>
-    <li>change these constants from jdiff.xml for your environment:
-    JDIFF_HOME, MAVEN_REPOSITORY_HOME</li>
-    <li><pre>
+<i>change these constants from jdiff.xml for your environment: JDIFF_HOME, MAVEN_REPOSITORY_HOME</i>
 ant -f jdiff.xml
+
 cd ../javadoc
 hg add
+PREV_VERSION=<i>(previous bug fix version 1.5.X-beta)</i>
+sed s/$PREV_VERSION/1.6.0-beta/g <index.html >/tmp/index.html && mv /tmp/index.html index.html
+hg commit -m "1.6.0-beta"
+hg push
+
+cd ../wiki
+for s in *; do sed s/$PREV_VERSION/1.6.0-beta/g <$s >/tmp/$s && mv /tmp/$s .; done
+hg revert --no-backup ReleaseNotes.wiki
+<i>edit ReleaseNotes.wiki to add release notes for 1.6.0-beta</i>
 hg commit -m "1.6.0-beta"
 hg push
 </pre></li>
-  </ul>
-  </li>
   <li><b>WAIT!</b> Don't do the following instructions until after the
   library has been uploaded to repo2.maven.org at: <a
     href="http://repo2.maven.org/maven2/com/google/http-client/google-http-client/1.6.0-beta/">repo2.maven.org</a></li>
