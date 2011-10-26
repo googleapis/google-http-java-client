@@ -64,7 +64,8 @@ final class UrlFetchResponse extends LowLevelHttpResponse {
 
   @Override
   public InputStream getContent() {
-    return new ByteArrayInputStream(fetchResponse.getContent());
+    byte[] content = fetchResponse.getContent();
+    return content == null ? null : new ByteArrayInputStream(content);
   }
 
   @Override
