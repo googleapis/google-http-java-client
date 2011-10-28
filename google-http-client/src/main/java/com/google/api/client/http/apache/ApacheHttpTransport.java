@@ -14,6 +14,7 @@
 
 package com.google.api.client.http.apache;
 
+import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 
 import org.apache.http.HttpVersion;
@@ -48,21 +49,10 @@ import org.apache.http.params.HttpProtocolParams;
  * </p>
  *
  * <p>
- * Default settings:
- * </p>
- *
- * <ul>
- * <li>The client connection manager is set to {@link ThreadSafeClientConnManager}.</li>
- * <li>Timeout is set to 20 seconds using {@link ConnManagerParams#setTimeout},
- * {@link HttpConnectionParams#setConnectionTimeout}, and {@link HttpConnectionParams#setSoTimeout}.
- * </li>
- * <li>The socket buffer size is set to 8192 using {@link HttpConnectionParams#setSocketBufferSize}.
- * </li>
- * </ul>
- *
- * <p>
- * These parameters may be overridden by setting the values on the {@link #httpClient}.
- * {@link HttpClient#getParams() getParams()}. Please read the <a
+ * Default settings are specified in {@link #newDefaultHttpClient()}. Use the
+ * {@link #ApacheHttpTransport(HttpClient)} constructor to override the Apache HTTP Client used.
+ * Alternatively, use {@link #ApacheHttpTransport()} and change the {@link #getHttpClient()}. Please
+ * read the <a
  * href="http://hc.apache.org/httpcomponents-client-ga/tutorial/html/connmgmt.html">Apache HTTP
  * Client connection management tutorial</a> for more complex configuration questions, such as how
  * to set up an HTTP proxy.
@@ -77,9 +67,58 @@ public final class ApacheHttpTransport extends HttpTransport {
   private final HttpClient httpClient;
 
   /**
+   * Constructor that uses {@link #newDefaultHttpClient()} for the Apache HTTP client.
+   *
    * @since 1.3
    */
   public ApacheHttpTransport() {
+    this(newDefaultHttpClient());
+  }
+
+  /**
+   * Constructor that allows an alternative Apache HTTP client to be used.
+   *
+   * <p>
+   * Note that a few settings are overridden:
+   * </p>
+   * <ul>
+   * <li>HTTP version is set to 1.1 using {@link HttpProtocolParams#setVersion} with
+   * {@link HttpVersion#HTTP_1_1}.</li>
+   * <li>Redirects are disabled using {@link ClientPNames#HANDLE_REDIRECTS}.</li>
+   * <li>{@link ConnManagerParams#setTimeout} and {@link HttpConnectionParams#setConnectionTimeout}
+   * are set on each request based on {@link HttpRequest#getConnectTimeout()}.</li>
+   * <li>{@link HttpConnectionParams#setSoTimeout} is set on each request based on
+   * {@link HttpRequest#getReadTimeout()}.</li>
+   * </ul>
+   *
+   * @param httpClient Apache HTTP client to use
+   *
+   * @since 1.6
+   */
+  public ApacheHttpTransport(HttpClient httpClient) {
+    this.httpClient = httpClient;
+    HttpParams params = httpClient.getParams();
+    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+    params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
+  }
+
+  /**
+   * Creates a new instance of the Apache HTTP client that is used by the
+   * {@link #ApacheHttpTransport()} constructor.
+   *
+   * <p>
+   * Use this constructor if you want to customize the default Apache HTTP client. Settings:
+   * </p>
+   * <ul>
+   * <li>The client connection manager is set to {@link ThreadSafeClientConnManager}.</li>
+   * <li>The socket buffer size is set to 8192 using
+   * {@link HttpConnectionParams#setSocketBufferSize}.</li>
+   * </ul>
+   *
+   * @return new instance of the Apache HTTP client
+   * @since 1.6
+   */
+  public static DefaultHttpClient newDefaultHttpClient() {
     // Turn off stale checking. Our connections break all the time anyway,
     // and it's not worth it to pay the penalty of checking every time.
     HttpParams params = new BasicHttpParams();
@@ -87,14 +126,12 @@ public final class ApacheHttpTransport extends HttpTransport {
     HttpConnectionParams.setSocketBufferSize(params, 8192);
     ConnManagerParams.setMaxTotalConnections(params, 200);
     ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(20));
-    params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
-    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
     // See http://hc.apache.org/httpcomponents-client-ga/tutorial/html/connmgmt.html
     SchemeRegistry registry = new SchemeRegistry();
     registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
     registry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
     ClientConnectionManager connectionManager = new ThreadSafeClientConnManager(params, registry);
-    httpClient = new DefaultHttpClient(connectionManager, params);
+    return new DefaultHttpClient(connectionManager, params);
   }
 
   @Override
