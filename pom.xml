@@ -74,6 +74,11 @@
     </repository>
   </repositories>
 
+  <!--
+    If you change the version of a dependency, make sure to update the javadoc
+    links if required, and any javadoc links of your dependency in the oauth and
+    api projects as well.
+  -->
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -84,12 +89,12 @@
       <dependency>
         <groupId>org.codehaus.jackson</groupId>
         <artifactId>jackson-core-asl</artifactId>
-        <version>1.6.7</version>
+        <version>1.9.1</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
-        <version>1.6</version>
+        <version>1.7.1</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
@@ -122,9 +127,9 @@
         <version>1.3.9</version>
       </dependency>
       <dependency>
-    	  <groupId>com.google.protobuf</groupId>
-      	<artifactId>protobuf-java</artifactId>
-      	<version>2.2.0</version>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>2.2.0</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
@@ -269,7 +274,7 @@
               <links>
                 <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
                 <link>http://code.google.com/appengine/docs/java/javadoc</link>
-                <link>http://jackson.codehaus.org/1.6.6/javadoc</link>
+                <link>http://jackson.codehaus.org/1.9.0/javadoc</link>
                 <link>http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs</link>
               </links>
               <doctitle>Google HTTP Client Library for Java ${project.version}</doctitle>
