@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 /**
@@ -97,7 +98,12 @@ public abstract class JsonFactory {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    return byteStream.toString();
+    try {
+      return byteStream.toString("UTF-8");
+    } catch (UnsupportedEncodingException exception) {
+      // UTF-8 encoding guaranteed to be supported by JVM
+      throw new RuntimeException(exception);
+    }
   }
 
   /**

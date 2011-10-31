@@ -333,7 +333,7 @@ public final class HttpResponse {
         // print content using a buffered input stream that can be re-read
         String contentType = this.contentType;
         if (debugContentByteArray.length != 0 && LogContent.isTextBasedContentType(contentType)) {
-          logger.config(new String(debugContentByteArray));
+          logger.config(Strings.fromBytesUtf8(debugContentByteArray));
         }
       }
       this.content = content;

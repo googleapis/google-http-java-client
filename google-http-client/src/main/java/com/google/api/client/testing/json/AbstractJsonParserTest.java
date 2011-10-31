@@ -406,6 +406,16 @@ public abstract class AbstractJsonParserTest extends TestCase {
     assertEquals(NUMBER_TYPES, factory.toString(result));
   }
 
+  private static final String UTF8_VALUE = "123\u05D9\u05e0\u05D9\u05D1";
+  private static final String UTF8_JSON = "{\"value\":\"" + UTF8_VALUE + "\"}";
+
+  public void testToFromString_UTF8() throws IOException {
+    JsonFactory factory = newFactory();
+    GenericJson result = factory.fromString(UTF8_JSON, GenericJson.class);
+    assertEquals(UTF8_VALUE, result.get("value"));
+    assertEquals(UTF8_JSON, factory.toString(result));
+  }
+
   public static class AnyType {
     @Key
     public Object arr;
