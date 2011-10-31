@@ -47,6 +47,29 @@ public class HttpResponseTest extends TestCase {
     assertEquals("", response.parseAsString());
   }
 
+  private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
+
+  public void testParseAsString_utf8() throws IOException {
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+            result.setContentType("application/json; charset=UTF-8");
+            result.setContent(SAMPLE);
+            return result;
+          }
+        };
+      }
+    };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    HttpResponse response = request.execute();
+    assertEquals(SAMPLE, response.parseAsString());
+  }
+
   public static class MyHeaders extends HttpHeaders {
 
     @Key

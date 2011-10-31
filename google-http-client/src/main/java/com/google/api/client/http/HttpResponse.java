@@ -417,7 +417,7 @@ public final class HttpResponse {
         System.arraycopy(tmp, 0, buffer, length, bytesRead);
         length += bytesRead;
       }
-      return new String(buffer, 0, length);
+      return new String(buffer, 0, length, "UTF-8");
     } finally {
       content.close();
     }
