@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * URL builder in which the query parameters are specified as generic data key/value pairs, based on
@@ -265,22 +266,7 @@ public class GenericUrl extends GenericData {
     if (pathParts != null) {
       appendRawPathFromParts(buf);
     }
-    // query parameters (similar to UrlEncodedContent)
-    boolean first = true;
-    for (Map.Entry<String, Object> nameValueEntry : entrySet()) {
-      Object value = nameValueEntry.getValue();
-      if (value != null) {
-        String name = CharEscapers.escapeUriQuery(nameValueEntry.getKey());
-        if (value instanceof Collection<?>) {
-          Collection<?> collectionValue = (Collection<?>) value;
-          for (Object repeatedValue : collectionValue) {
-            first = appendParam(first, buf, name, repeatedValue);
-          }
-        } else {
-          first = appendParam(first, buf, name, value);
-        }
-      }
-    }
+    addQueryParams(entrySet(), buf);
     // URL fragment
     String fragment = this.fragment;
     if (fragment != null) {
@@ -413,6 +399,28 @@ public class GenericUrl extends GenericData {
       }
       if (pathPart.length() != 0) {
         buf.append(CharEscapers.escapeUriPath(pathPart));
+      }
+    }
+  }
+
+  /**
+   * Adds query parameters from the provided entrySet into the buffer.
+   */
+  static void addQueryParams(Set<Entry<String, Object>> entrySet, StringBuilder buf) {
+    // (similar to UrlEncodedContent)
+    boolean first = true;
+    for (Map.Entry<String, Object> nameValueEntry : entrySet) {
+      Object value = nameValueEntry.getValue();
+      if (value != null) {
+        String name = CharEscapers.escapeUriQuery(nameValueEntry.getKey());
+        if (value instanceof Collection<?>) {
+          Collection<?> collectionValue = (Collection<?>) value;
+          for (Object repeatedValue : collectionValue) {
+            first = appendParam(first, buf, name, repeatedValue);
+          }
+        } else {
+          first = appendParam(first, buf, name, value);
+        }
       }
     }
   }

@@ -18,6 +18,7 @@ import com.google.api.client.util.Data;
 import com.google.api.client.util.escape.CharEscapers;
 import com.google.common.base.Preconditions;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -262,7 +263,7 @@ public class UriTemplate {
         // If the value is not a primitive type or an Iterator assume it is a Map.
         // Get the map property value.
         Map<String, Object> map = getMap(value);
-        value = getMapPropertyValue(varName, map, containsExplodeModifier, compositeOutput, false);
+        value = getMapPropertyValue(varName, map, containsExplodeModifier, compositeOutput);
       } else if (value != null) {
         // For everything else...
         value = CharEscapers.escapeUriPath(value.toString());
@@ -275,11 +276,7 @@ public class UriTemplate {
     }
     if (addUnusedParamsAsQueryParams) {
       // Add the parameters remaining in the variableMap as query parameters.
-      String queryParams = getMapPropertyValue(
-          null, variableMap, true, CompositeOutput.QUERY, true);
-      if (queryParams != null) {
-        pathBuf.append(queryParams);
-      }
+      GenericUrl.addQueryParams(variableMap.entrySet(), pathBuf);
     }
     return pathBuf.toString();
   }
@@ -333,14 +330,11 @@ public class UriTemplate {
    * @param containsExplodeModifier Set to true if the template contains the explode modifier "*"
    * @param compositeOutput An instance of CompositeOutput. Contains information on how the
    *     expansion should be done
-   * @param useQueryEncoding Set to true if the key should not be encoded and the value should be
-   *     encoded using {@code CharEscapers.escapeUriQuery}. If false then the encoding specified by
-   *     {@code CompositeOutput} is used.
    * @return The expanded map template
    * @throws IllegalArgumentException if the required list path parameter is map
    */
   private static String getMapPropertyValue(String varName, Map<String, Object> map,
-      boolean containsExplodeModifier, CompositeOutput compositeOutput, boolean useQueryEncoding) {
+      boolean containsExplodeModifier, CompositeOutput compositeOutput) {
     if (map.isEmpty()) {
       return null;
     }
@@ -362,11 +356,8 @@ public class UriTemplate {
     for (Iterator<Map.Entry<String, Object>> mapIterator = map.entrySet().iterator();
         mapIterator.hasNext();) {
       Map.Entry<String, Object> entry = mapIterator.next();
-      String encodedKey =
-          useQueryEncoding ? entry.getKey() : compositeOutput.getEncodedValue(entry.getKey());
-      String encodedValue =
-          useQueryEncoding ? CharEscapers.escapeUriQuery(entry.getValue().toString())
-              : compositeOutput.getEncodedValue(entry.getValue().toString());
+      String encodedKey = compositeOutput.getEncodedValue(entry.getKey());
+      String encodedValue = compositeOutput.getEncodedValue(entry.getValue().toString());
       retBuf.append(encodedKey);
       retBuf.append(mapElementsJoiner);
       retBuf.append(encodedValue);
