@@ -183,6 +183,19 @@ public class UriTemplateTest extends TestCase {
         UriTemplate.expand("", requestMap, true));
   }
 
+  public void testExpandTemplates_unusedListQueryParameters() {
+    Map<String, Object> requestMap = Maps.newLinkedHashMap();
+    // Add unused params.
+    List<String> params = Lists.newArrayList();
+    params.add("value1");
+    params.add("value2");
+    requestMap.put("unused1", params);
+    requestMap.put("unused2", "56$7 8");
+    requestMap.put("unused3", "9=&/:@.");
+    assertEquals("?unused1=value1&unused1=value2&unused2=56$7%208&unused3=9%3D%26/:@.",
+        UriTemplate.expand("", requestMap, true));
+  }
+
   public void testExpandTemplates_mixedBagParameters() {
     Map<String, Object> requestMap = Maps.newLinkedHashMap();
     // Add list params.

@@ -69,16 +69,26 @@ public class JsonHttpClient {
    * Returns the base URL of the service, for example
    * {@code "https://www.googleapis.com/tasks/v1/"}. Must be URL-encoded and must end with a "/".
    * This is determined when the library is generated and normally should not be changed.
+   *
+   * <p>
+   * Overriding this method is not supported, except for the Google generated libraries for
+   * backwards-compatiblity reasons. This method will be made final in the 1.7 release.
+   * </p>
    */
-  public final String getBaseUrl() {
+  public String getBaseUrl() {
     return baseUrl;
   }
 
   /**
    * Returns the application name to be sent in the User-Agent header of each request or
    * {@code null} for none.
+   *
+   * <p>
+   * Overriding this method is not supported, except for the Google generated libraries for
+   * backwards-compatiblity reasons. This method will be made final in the 1.7 release.
+   * </p>
    */
-  public final String getApplicationName() {
+  public String getApplicationName() {
     return applicationName;
   }
 
@@ -150,8 +160,8 @@ public class JsonHttpClient {
    * @param jsonHttpRequest JSON HTTP Request type
    */
   protected void initialize(JsonHttpRequest jsonHttpRequest) throws IOException {
-    if (jsonHttpRequestInitializer != null) {
-      jsonHttpRequestInitializer.initialize(jsonHttpRequest);
+    if (getJsonHttpRequestInitializer() != null) {
+      getJsonHttpRequestInitializer().initialize(jsonHttpRequest);
     }
   }
 
@@ -197,11 +207,11 @@ public class JsonHttpClient {
   protected HttpRequest buildHttpRequest(
       HttpMethod method, String uriTemplate, JsonHttpRequest jsonHttpRequest) throws IOException {
     GenericUrl url = new GenericUrl(
-        UriTemplate.expand(baseUrl + uriTemplate, jsonHttpRequest, true));
+        UriTemplate.expand(getBaseUrl() + uriTemplate, jsonHttpRequest, true));
     HttpRequest httpRequest = requestFactory.buildRequest(method, url, null);
     httpRequest.addParser(getJsonHttpParser());
-    if (applicationName != null) {
-      httpRequest.getHeaders().setUserAgent(applicationName);
+    if (getApplicationName() != null) {
+      httpRequest.getHeaders().setUserAgent(getApplicationName());
     }
     return httpRequest;
   }
