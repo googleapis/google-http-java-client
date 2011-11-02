@@ -59,11 +59,9 @@ public class HttpRequestTest extends TestCase {
       request.execute();
     }
     for (HttpMethod method : OTHER_METHODS) {
-      transport =
-          MockHttpTransport.builder().setSupportedOptionalMethods(ImmutableSet.<HttpMethod>of())
-              .build();
-      request =
-          transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+      transport = MockHttpTransport
+          .builder().setSupportedOptionalMethods(ImmutableSet.<HttpMethod>of()).build();
+      request = transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
       request.setMethod(method);
       try {
         request.execute();
@@ -72,8 +70,7 @@ public class HttpRequestTest extends TestCase {
       }
       transport =
           MockHttpTransport.builder().setSupportedOptionalMethods(ImmutableSet.of(method)).build();
-      request =
-          transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+      request = transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
       request.setMethod(method);
       request.execute();
     }
@@ -113,8 +110,8 @@ public class HttpRequestTest extends TestCase {
       }
     };
 
-    protected RedirectTransport(boolean removeLocation, boolean infiniteRedirection,
-        int redirectStatusCode) {
+    protected RedirectTransport(
+        boolean removeLocation, boolean infiniteRedirection, int redirectStatusCode) {
       this.removeLocation = removeLocation;
       this.infiniteRedirection = infiniteRedirection;
       this.redirectStatusCode = redirectStatusCode;
@@ -185,9 +182,8 @@ public class HttpRequestTest extends TestCase {
         new RedirectTransport(false, false, HttpStatusCodes.STATUS_CODE_SEE_OTHER);
     byte[] content = new byte[300];
     Arrays.fill(content, (byte) ' ');
-    HttpRequest request =
-        fakeTransport.createRequestFactory().buildPostRequest(new GenericUrl("http://gmail.com"),
-            new ByteArrayContent(null, content));
+    HttpRequest request = fakeTransport.createRequestFactory().buildPostRequest(
+        new GenericUrl("http://gmail.com"), new ByteArrayContent(null, content));
     request.setMethod(HttpMethod.POST);
     HttpResponse resp = request.execute();
 
@@ -243,7 +239,7 @@ public class HttpRequestTest extends TestCase {
           // Return failure on the first call
           MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
           response.setContent("INVALID TOKEN");
-          response.setStatusCode(401);
+          response.setStatusCode(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED);
           return response;
         }
         // Return success on the second

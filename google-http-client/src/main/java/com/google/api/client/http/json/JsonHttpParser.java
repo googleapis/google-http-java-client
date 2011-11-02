@@ -56,6 +56,12 @@ public class JsonHttpParser implements HttpParser {
   private final JsonFactory jsonFactory;
 
   /**
+   * Constructor with required parameters.
+   *
+   * <p>
+   * Use {@link #builder} if you need to specify any of the optional parameters.
+   * </p>
+   *
    * @param jsonFactory JSON factory
    * @since 1.5
    */

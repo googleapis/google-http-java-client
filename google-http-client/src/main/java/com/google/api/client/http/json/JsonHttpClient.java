@@ -66,13 +66,13 @@ public class JsonHttpClient {
   private JsonHttpParser jsonHttpParser;
 
   /**
-   * Returns the base URL of the service, for example
-   * {@code "https://www.googleapis.com/tasks/v1/"}. Must be URL-encoded and must end with a "/".
-   * This is determined when the library is generated and normally should not be changed.
+   * Returns the base URL of the service, for example {@code "https://www.googleapis.com/tasks/v1/"}
+   * . Must be URL-encoded and must end with a "/". This is determined when the library is generated
+   * and normally should not be changed.
    *
    * <p>
    * Overriding this method is not supported, except for the Google generated libraries for
-   * backwards-compatiblity reasons. This method will be made final in the 1.7 release.
+   * backwards-compatibility reasons. This method will be made final in the 1.7 release.
    * </p>
    */
   public String getBaseUrl() {
@@ -80,12 +80,12 @@ public class JsonHttpClient {
   }
 
   /**
-   * Returns the application name to be sent in the User-Agent header of each request or
-   * {@code null} for none.
+   * Returns the application name to be sent in the User-Agent header of each request or {@code
+   * null} for none.
    *
    * <p>
    * Overriding this method is not supported, except for the Google generated libraries for
-   * backwards-compatiblity reasons. This method will be made final in the 1.7 release.
+   * backwards-compatibility reasons. This method will be made final in the 1.7 release.
    * </p>
    */
   public String getApplicationName() {
@@ -166,6 +166,21 @@ public class JsonHttpClient {
   }
 
   /**
+   * Constructor with required parameters.
+   *
+   * <p>
+   * Use {@link #builder} if you need to specify any of the optional parameters.
+   * </p>
+   *
+   * @param transport The transport to use for requests
+   * @param jsonFactory A factory for creating JSON parsers and serializers
+   * @param baseUrl The base URL of the service. Must end with a "/"
+   */
+  public JsonHttpClient(HttpTransport transport, JsonFactory jsonFactory, String baseUrl) {
+    this(transport, null, null, jsonFactory, baseUrl, null);
+  }
+
+  /**
    * Construct the {@link JsonHttpClient}.
    *
    * @param transport The transport to use for requests
@@ -178,8 +193,7 @@ public class JsonHttpClient {
    * @param applicationName The application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
    */
-  protected JsonHttpClient(
-      HttpTransport transport,
+  protected JsonHttpClient(HttpTransport transport,
       JsonHttpRequestInitializer jsonHttpRequestInitializer,
       HttpRequestInitializer httpRequestInitializer,
       JsonFactory jsonFactory,
@@ -195,19 +209,19 @@ public class JsonHttpClient {
   }
 
   /**
-   * Create an {@link HttpRequest} suitable for use against this service. Subclasses may
-   * override if specific behavior is required.
+   * Create an {@link HttpRequest} suitable for use against this service. Subclasses may override if
+   * specific behavior is required.
    *
    * @param method HTTP Method type
-   * @param uriTemplate URI template for the path relative to the base URL. Must not start with
-   *        a "/"
+   * @param uriTemplate URI template for the path relative to the base URL. Must not start with a
+   *        "/"
    * @param jsonHttpRequest JSON HTTP Request type
    * @return newly created {@link HttpRequest}
    */
   protected HttpRequest buildHttpRequest(
       HttpMethod method, String uriTemplate, JsonHttpRequest jsonHttpRequest) throws IOException {
-    GenericUrl url = new GenericUrl(
-        UriTemplate.expand(getBaseUrl() + uriTemplate, jsonHttpRequest, true));
+    GenericUrl url =
+        new GenericUrl(UriTemplate.expand(getBaseUrl() + uriTemplate, jsonHttpRequest, true));
     HttpRequest httpRequest = requestFactory.buildRequest(method, url, null);
     httpRequest.addParser(getJsonHttpParser());
     if (getApplicationName() != null) {
@@ -221,21 +235,22 @@ public class JsonHttpClient {
    * required.
    *
    * @param method HTTP Method type
-   * @param uriTemplate URI template for the path relative to the base URL. Must not start with
-   *        a "/"
+   * @param uriTemplate URI template for the path relative to the base URL. Must not start with a
+   *        "/"
    * @param body A POJO that can be serialized into JSON or {@code null} for none
    * @param jsonHttpRequest JSON HTTP Request type
    * @return {@link HttpRequest} type
    * @throws IOException if the request fails
    */
-  protected HttpResponse execute(HttpMethod method, String uriTemplate, Object body,
-      JsonHttpRequest jsonHttpRequest) throws IOException {
+  protected HttpResponse execute(
+      HttpMethod method, String uriTemplate, Object body, JsonHttpRequest jsonHttpRequest)
+      throws IOException {
     HttpRequest request = buildHttpRequest(method, uriTemplate, jsonHttpRequest);
     if (body != null) {
       request.setContent(createSerializer(body));
       request.setEnableGZipContent(true);
-    } else if (
-        method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.PATCH) {
+    } else if (method == HttpMethod.POST || method == HttpMethod.PUT
+        || method == HttpMethod.PATCH) {
       // Some servers will fail to process a POST/PUT/PATCH unless the Content-Length header >= 1.
       request.setContent(ByteArrayContent.fromString(Json.CONTENT_TYPE, " "));
     }
@@ -278,9 +293,9 @@ public class JsonHttpClient {
     private final JsonFactory jsonFactory;
 
     /**
-     * The base URL of the service, for example {@code "https://www.googleapis.com/tasks/v1/"}.
-     * Must be URL-encoded and must end with a "/". This is determined when the library is
-     * generated and normally should not be changed.
+     * The base URL of the service, for example {@code "https://www.googleapis.com/tasks/v1/"}. Must
+     * be URL-encoded and must end with a "/". This is determined when the library is generated and
+     * normally should not be changed.
      */
     private final GenericUrl baseUrl;
 
@@ -305,8 +320,7 @@ public class JsonHttpClient {
 
     /** Builds a new instance of {@link JsonHttpClient}. */
     public JsonHttpClient build() {
-      return new JsonHttpClient(
-          transport,
+      return new JsonHttpClient(transport,
           jsonHttpRequestInitializer,
           httpRequestInitializer,
           jsonFactory,
@@ -359,11 +373,11 @@ public class JsonHttpClient {
     public Builder setApplicationName(String applicationName) {
       this.applicationName = applicationName;
       return this;
-   }
+    }
 
     /**
-     * Returns the application name to be used in the UserAgent header of each request or
-     * {@code null} for none.
+     * Returns the application name to be used in the UserAgent header of each request or {@code
+     * null} for none.
      */
     public final String getApplicationName() {
       return applicationName;

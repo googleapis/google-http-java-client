@@ -27,7 +27,7 @@ import java.io.IOException;
   public static class RefreshTokenHandler implements HttpUnsuccessfulResponseHandler {
     public boolean handleResponse(
         HttpRequest request, HttpResponse response, boolean retrySupported) throws IOException {
-      if (response.statusCode == 401) {
+      if (response.statusCode == HttpStatusCodes.STATUS_CODE_UNAUTHORIZED) {
         refreshToken();
       }
       return false;

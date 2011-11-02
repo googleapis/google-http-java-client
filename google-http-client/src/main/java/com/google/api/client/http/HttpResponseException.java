@@ -22,7 +22,7 @@ import java.io.IOException;
  * @since 1.0
  * @author Yaniv Inbar
  */
-public final class HttpResponseException extends IOException {
+public class HttpResponseException extends IOException {
 
   static final long serialVersionUID = 1;
 
@@ -34,15 +34,28 @@ public final class HttpResponseException extends IOException {
    *
    * @since 1.5
    */
-  public HttpResponse getResponse() {
+  public final HttpResponse getResponse() {
     return response;
   }
 
   /**
+   * Constructor that uses {@link #computeMessage(HttpResponse)} for the detail message.
+   *
    * @param response HTTP response
    */
   public HttpResponseException(HttpResponse response) {
-    super(computeMessage(response));
+    this(response, computeMessage(response));
+  }
+
+  /**
+   * Constructor that allows an alternative detail message to be used.
+   *
+   * @param response HTTP response
+   * @param message detail message to use or {@code null} for none
+   * @since 1.6
+   */
+  public HttpResponseException(HttpResponse response, String message) {
+    super(message);
     this.response = response;
   }
 

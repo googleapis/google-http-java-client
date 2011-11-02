@@ -45,6 +45,9 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   /** Status code of HTTP response or {@code 200} by default. */
   private int statusCode = 200;
 
+  /** HTTP reason phrase or {@code null} for none. */
+  private String reasonPhrase;
+
   /** List of header names of HTTP response (empty array list by default). */
   private ArrayList<String> headerNames = new ArrayList<String>();
 
@@ -115,7 +118,7 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
 
   @Override
   public String getReasonPhrase() {
-    return null;
+    return reasonPhrase;
   }
 
   @Override
@@ -125,7 +128,11 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
 
   @Override
   public String getStatusLine() {
-    return null;
+    StringBuilder buf = new StringBuilder(statusCode);
+    if (reasonPhrase != null) {
+      buf.append(reasonPhrase);
+    }
+    return buf.toString();
   }
 
   /**
@@ -227,6 +234,16 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
    */
   public MockLowLevelHttpResponse setStatusCode(int statusCode) {
     this.statusCode = statusCode;
+    return this;
+  }
+
+  /**
+   * Sets the HTTP reason phrase or {@code null} for none.
+   *
+   * @since 1.6
+   */
+  public MockLowLevelHttpResponse setReasonPhrase(String reasonPhrase) {
+    this.reasonPhrase = reasonPhrase;
     return this;
   }
 }
