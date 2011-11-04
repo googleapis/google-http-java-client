@@ -90,9 +90,35 @@ public abstract class JsonFactory {
    * @return serialized JSON string representation
    */
   public final String toString(Object item) {
+    return toString(item, false);
+  }
+
+  /**
+   * Returns a pretty-printed serialized JSON string representation for the given item using
+   * {@link JsonGenerator#serialize(Object)} with {@link JsonGenerator#enablePrettyPrint()}.
+   *
+   * @param item data key/value pairs
+   * @return serialized JSON string representation
+   * @since 1.6
+   */
+  public final String toPrettyString(Object item) {
+    return toString(item, true);
+  }
+
+  /**
+   * Returns a serialized JSON string representation for the given item using
+   * {@link JsonGenerator#serialize(Object)}.
+   *
+   * @param item data key/value pairs
+   * @return serialized JSON string representation
+   */
+  private String toString(Object item, boolean pretty) {
     ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
     try {
       JsonGenerator generator = createJsonGenerator(byteStream, JsonEncoding.UTF8);
+      if (pretty) {
+        generator.enablePrettyPrint();
+      }
       generator.serialize(item);
       generator.flush();
     } catch (IOException e) {

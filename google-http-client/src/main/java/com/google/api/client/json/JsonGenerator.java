@@ -42,131 +42,61 @@ public abstract class JsonGenerator {
   /** Returns the JSON factory from which this generator was created. */
   public abstract JsonFactory getFactory();
 
-  /**
-   * Flushes any buffered content to the underlying output stream or writer.
-   *
-   * @throws IOException if failed
-   */
+  /** Flushes any buffered content to the underlying output stream or writer. */
   public abstract void flush() throws IOException;
 
   /**
    * Closes the serializer and the underlying output stream or writer, and releases any memory
    * associated with it.
-   *
-   * @throws IOException if failed
    */
   public abstract void close() throws IOException;
 
-  /**
-   * Writes a JSON start array character '['.
-   *
-   * @throws IOException if failed
-   */
+  /** Writes a JSON start array character '['. */
   public abstract void writeStartArray() throws IOException;
 
-  /**
-   * Writes a JSON end array character ']'.
-   *
-   * @throws IOException if failed
-   */
+  /** Writes a JSON end array character ']'. */
   public abstract void writeEndArray() throws IOException;
 
-  /**
-   * Writes a JSON start object character '{'.
-   *
-   * @throws IOException if failed
-   */
+  /** Writes a JSON start object character '{'. */
   public abstract void writeStartObject() throws IOException;
 
-  /**
-   * Writes a JSON end object character '}'.
-   *
-   * @throws IOException if failed
-   */
+  /** Writes a JSON end object character '}'. */
   public abstract void writeEndObject() throws IOException;
 
-  /**
-   * Writes a JSON quoted field name.
-   *
-   * @throws IOException if failed
-   */
+  /** Writes a JSON quoted field name. */
   public abstract void writeFieldName(String name) throws IOException;
 
-  /**
-   * Writes a literal JSON null value.
-   *
-   * @throws IOException if failed
-   */
+  /** Writes a literal JSON null value. */
   public abstract void writeNull() throws IOException;
 
-  /**
-   * Writes a JSON quoted string value.
-   *
-   * @throws IOException if failed
-   */
+  /** Writes a JSON quoted string value. */
   public abstract void writeString(String value) throws IOException;
 
-  /**
-   * Writes a literal JSON boolean value ('true' or 'false').
-   *
-   * @throws IOException if failed
-   */
+  /** Writes a literal JSON boolean value ('true' or 'false'). */
   public abstract void writeBoolean(boolean state) throws IOException;
 
-  /**
-   * Writes a JSON int value.
-   *
-   * @throws IOException if failed
-   */
+  /** Writes a JSON int value. */
   public abstract void writeNumber(int v) throws IOException;
 
-  /**
-   * Writes a JSON long value.
-   *
-   * @throws IOException if failed
-   */
+  /** Writes a JSON long value. */
   public abstract void writeNumber(long v) throws IOException;
 
-  /**
-   * Writes a JSON big integer value.
-   *
-   * @throws IOException if failed
-   */
+  /** Writes a JSON big integer value. */
   public abstract void writeNumber(BigInteger v) throws IOException;
 
-  /**
-   * Writes a JSON float value.
-   *
-   * @throws IOException if failed
-   */
+  /** Writes a JSON float value. */
   public abstract void writeNumber(float v) throws IOException;
 
-  /**
-   * Writes a JSON double value.
-   *
-   * @throws IOException if failed
-   */
+  /** Writes a JSON double value. */
   public abstract void writeNumber(double v) throws IOException;
 
-  /**
-   * Writes a JSON big decimal value.
-   *
-   * @throws IOException if failed
-   */
+  /** Writes a JSON big decimal value. */
   public abstract void writeNumber(BigDecimal v) throws IOException;
 
-  /**
-   * Writes a JSON numeric value that has already been encoded properly.
-   *
-   * @throws IOException if failed
-   */
+  /** Writes a JSON numeric value that has already been encoded properly. */
   public abstract void writeNumber(String encodedValue) throws IOException;
 
-  /**
-   * Serializes the given JSON value object.
-   *
-   * @param value JSON value object or {@code null} to ignore
-   */
+  /** Serializes the given JSON value object. */
   public final void serialize(Object value) throws IOException {
     if (value == null) {
       return;
@@ -226,5 +156,20 @@ public abstract class JsonGenerator {
       }
       writeEndObject();
     }
+  }
+
+  /**
+   * Requests that the output be pretty printed (by default it is not).
+   *
+   * <p>
+   * Default implementation does nothing, but implementations may override to provide actual pretty
+   * printing.
+   * </p>
+   *
+   * @throws IOException possible I/O exception (unused in default implementation)
+   *
+   * @since 1.6
+   */
+  public void enablePrettyPrint() throws IOException {
   }
 }

@@ -172,4 +172,9 @@ class AndroidJsonGenerator extends JsonGenerator {
   public void writeString(String value) throws IOException {
     writer.value(value);
   }
+
+  @Override
+  public void enablePrettyPrint() throws IOException {
+    writer.setIndent("  ");
+  }
 }

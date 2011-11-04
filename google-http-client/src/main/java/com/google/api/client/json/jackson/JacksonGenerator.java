@@ -127,4 +127,9 @@ final class JacksonGenerator extends JsonGenerator {
   public void writeString(String value) throws IOException {
     generator.writeString(value);
   }
+
+  @Override
+  public void enablePrettyPrint() throws IOException {
+    generator.useDefaultPrettyPrinter();
+  }
 }

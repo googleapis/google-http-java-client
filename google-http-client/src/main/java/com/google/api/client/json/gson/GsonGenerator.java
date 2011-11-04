@@ -32,6 +32,7 @@ import java.math.BigInteger;
  * @author Yaniv Inbar
  */
 class GsonGenerator extends JsonGenerator {
+
   private final JsonWriter writer;
   private final GsonFactory factory;
 
@@ -170,5 +171,10 @@ class GsonGenerator extends JsonGenerator {
   @Override
   public void writeString(String value) throws IOException {
     writer.value(value);
+  }
+
+  @Override
+  public void enablePrettyPrint() throws IOException {
+    writer.setIndent("  ");
   }
 }

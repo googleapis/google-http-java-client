@@ -15,8 +15,8 @@
 package com.google.api.client.http;
 
 /**
- * Constants enumerating the HTTP status codes. Includes status codes specified in
- * <a href="http://tools.ietf.org/html/rfc2616#section-10.3">RFC2616</a> (HTTP/1.1).
+ * Constants enumerating the HTTP status codes. Includes status codes specified in <a
+ * href="http://tools.ietf.org/html/rfc2616#section-10.3">RFC2616</a> (HTTP/1.1).
  *
  * @since 1.6
  * @author Ravi Mistry
@@ -40,6 +40,15 @@ public class HttpStatusCodes {
 
   /** Status code for a resource that has temporarily moved to a new URI. */
   public static final int STATUS_CODE_TEMPORARY_REDIRECT = 307;
+
+  /** Status code for a request that requires user authentication. */
+  public static final int STATUS_CODE_UNAUTHORIZED = 401;
+
+  /** Status code for a server that understood the request, but is refusing to fulfill it. */
+  public static final int STATUS_CODE_FORBIDDEN = 403;
+
+  /** Status code for a server that has not found anything matching the Request-URI. */
+  public static final int STATUS_CODE_NOT_FOUND = 404;
 
   /**
    * Returns whether the given HTTP response status code is a success code {@code >= 200 and < 300}.
