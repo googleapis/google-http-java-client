@@ -355,7 +355,7 @@ public class Types {
       return (Iterable<T>) value;
     }
     Class<?> valueClass = value.getClass();
-    Preconditions.checkArgument(valueClass.isArray(), "not an array or Iterable: " + valueClass);
+    Preconditions.checkArgument(valueClass.isArray(), "not an array or Iterable: %s", valueClass);
     Class<?> subClass = valueClass.getComponentType();
     if (!subClass.isPrimitive()) {
       return Arrays.<T>asList((T[]) value);
