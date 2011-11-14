@@ -28,7 +28,6 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 /**
@@ -69,10 +68,48 @@ public class JsonHttpClientTest extends TestCase {
             .setJsonHttpRequestInitializer(jsonHttpRequestInitializer)
             .setApplicationName(applicationName).build();
 
-    Assert.assertEquals(baseUrl.build(), client.getBaseUrl());
-    Assert.assertEquals(applicationName, client.getApplicationName());
-    Assert.assertEquals(jsonFactory, client.getJsonFactory());
-    Assert.assertEquals(jsonHttpRequestInitializer, client.getJsonHttpRequestInitializer());
+    assertEquals(baseUrl.build(), client.getBaseUrl());
+    assertEquals(applicationName, client.getApplicationName());
+    assertEquals(jsonFactory, client.getJsonFactory());
+    assertEquals(jsonHttpRequestInitializer, client.getJsonHttpRequestInitializer());
+  }
+
+  public void testBaseServerAndBasePathBuilder() {
+    JsonHttpClient client =
+        JsonHttpClient
+            .builder(new NetHttpTransport(), new JacksonFactory(),
+                new GenericUrl("http://www.testgoogleapis.com/test/path/v1/"))
+            .setBaseHost("www.googleapis.com")
+            .setBasePath("/test/path/v2/")
+            .build();
+
+    assertEquals("http://www.googleapis.com/test/path/v2/", client.getBaseUrl());
+  }
+
+  public void testInvalidBasePath() {
+    JsonHttpClient.Builder builder =
+        JsonHttpClient.builder(new NetHttpTransport(), new JacksonFactory(), new GenericUrl(
+            "http://www.testgoogleapis.com/test/path/v1/"));
+    try {
+      builder.setBasePath(null);
+      fail("Expected exception not thrown!");
+    } catch (NullPointerException e) {
+      // Expected because base path cannot be null.
+    }
+
+    try {
+      builder.setBasePath("test/path/v2/");
+      fail("Expected exception not thrown!");
+    } catch (IllegalArgumentException e) {
+      // Expected because base path did not start with "/".
+    }
+
+    try {
+      builder.setBasePath("/test/path/v2");
+      fail("Expected exception not thrown!");
+    } catch (IllegalArgumentException e) {
+      // Expected because base path did not end with "/".
+    }
   }
 
   public void testInitialize() throws IOException {
@@ -83,7 +120,7 @@ public class JsonHttpClientTest extends TestCase {
               .setJsonHttpRequestInitializer(remoteRequestInitializer)
               .setApplicationName("Test Application").build();
     client.initialize(null);
-    Assert.assertTrue(remoteRequestInitializer.isCalled);
+    assertTrue(remoteRequestInitializer.isCalled);
   }
 
   public void testExecute() throws IOException {
@@ -97,7 +134,7 @@ public class JsonHttpClientTest extends TestCase {
           public LowLevelHttpResponse execute() {
             MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
             // Assert the requested URL is the expected one.
-            Assert.assertEquals(testBaseUrl + testUriTemplate, url);
+            assertEquals(testBaseUrl + testUriTemplate, url);
             return response;
           }
         };
