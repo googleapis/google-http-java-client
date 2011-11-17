@@ -50,6 +50,12 @@ public class HttpStatusCodes {
   /** Status code for a server that has not found anything matching the Request-URI. */
   public static final int STATUS_CODE_NOT_FOUND = 404;
 
+  /** Status code for an internal server error. */
+  public static final int STATUS_CODE_SERVER_ERROR = 500;
+
+  /** Status code for a service that is unavailable on the server. */
+  public static final int STATUS_CODE_SERVICE_UNAVAILABLE = 503;
+
   /**
    * Returns whether the given HTTP response status code is a success code {@code >= 200 and < 300}.
    */

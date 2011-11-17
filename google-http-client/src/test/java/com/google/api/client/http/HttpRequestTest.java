@@ -76,6 +76,38 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
+  static private class MockBackOffPolicy implements BackOffPolicy {
+
+    int backOffCalls;
+    int resetCalls;
+    boolean returnBackOffStop;
+
+    MockBackOffPolicy() {
+    }
+
+    public boolean isBackOffRequired(int statusCode) {
+      switch (statusCode) {
+        case HttpStatusCodes.STATUS_CODE_SERVER_ERROR: // 500
+        case HttpStatusCodes.STATUS_CODE_SERVICE_UNAVAILABLE: // 503
+          return true;
+        default:
+          return false;
+      }
+    }
+
+    public void reset() {
+      resetCalls++;
+    }
+
+    public long getNextBackOffMillis() {
+      backOffCalls++;
+      if (returnBackOffStop) {
+        return BackOffPolicy.STOP;
+      }
+      return 0;
+    }
+  }
+
   /**
    * Transport used for testing the redirection logic in HttpRequest.
    */
@@ -142,12 +174,14 @@ public class HttpRequestTest extends TestCase {
 
   public void test301RedirectWithUnsuccessfulResponseHandled() throws IOException {
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(true);
+    MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
     // Set up RedirectTransport to redirect on the first request and then return success.
     RedirectTransport fakeTransport =
         new RedirectTransport(false, false, HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY);
     HttpRequest request =
         fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://gmail.com"));
     request.setUnsuccessfulResponseHandler(handler);
+    request.setBackOffPolicy(backOffPolicy);
     HttpResponse resp = request.execute();
 
     Assert.assertEquals(200, resp.getStatusCode());
@@ -155,18 +189,24 @@ public class HttpRequestTest extends TestCase {
     // Assert that the redirect logic was not invoked because the response handler could handle the
     // request. The request url should be the original http://gmail.com
     Assert.assertEquals("http://gmail.com", request.getUrl().toString());
+    // Assert that the backoff policy was not invoked because the response handler could handle the
+    // request.
+    Assert.assertEquals(1, backOffPolicy.resetCalls);
+    Assert.assertEquals(0, backOffPolicy.backOffCalls);
     Assert.assertTrue(handler.isCalled());
   }
 
   public void test301RedirectWithUnsuccessfulResponseNotHandled() throws IOException {
     // Create an Unsuccessful response handler that always returns false.
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
+    MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
     // Set up RedirectTransport to redirect on the first request and then return success.
     RedirectTransport fakeTransport =
         new RedirectTransport(false, false, HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY);
     HttpRequest request =
         fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://gmail.com"));
     request.setUnsuccessfulResponseHandler(handler);
+    request.setBackOffPolicy(backOffPolicy);
     HttpResponse resp = request.execute();
 
     Assert.assertEquals(200, resp.getStatusCode());
@@ -174,6 +214,10 @@ public class HttpRequestTest extends TestCase {
     // request. The request url should have changed from http://gmail.com to http://google.com
     Assert.assertEquals(HttpTesting.SIMPLE_URL, request.getUrl().toString());
     Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+    // Assert that the backoff policy is never invoked (except to reset) because the response
+    // handler returned false.
+    Assert.assertEquals(1, backOffPolicy.resetCalls);
+    Assert.assertEquals(0, backOffPolicy.backOffCalls);
   }
 
   public void test303Redirect() throws IOException {
@@ -228,6 +272,13 @@ public class HttpRequestTest extends TestCase {
   static private class FailThenSuccessTransport extends MockHttpTransport {
 
     public int lowLevelExecCalls;
+    int errorStatusCode;
+    int callsBeforeSuccess;
+
+    protected FailThenSuccessTransport(int errorStatusCode, int callsBeforeSuccess) {
+      this.errorStatusCode = errorStatusCode;
+      this.callsBeforeSuccess = callsBeforeSuccess;
+    }
 
     public LowLevelHttpRequest retryableGetRequest = new MockLowLevelHttpRequest() {
 
@@ -235,11 +286,11 @@ public class HttpRequestTest extends TestCase {
       public LowLevelHttpResponse execute() {
         lowLevelExecCalls++;
 
-        if (lowLevelExecCalls == 1) {
+        if (lowLevelExecCalls <= callsBeforeSuccess) {
           // Return failure on the first call
           MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
           response.setContent("INVALID TOKEN");
-          response.setStatusCode(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED);
+          response.setStatusCode(errorStatusCode);
           return response;
         }
         // Return success on the second
@@ -250,27 +301,152 @@ public class HttpRequestTest extends TestCase {
       }
     };
 
-    protected FailThenSuccessTransport() {
-    }
-
     @Override
     public LowLevelHttpRequest buildGetRequest(String url) {
       return retryableGetRequest;
     }
   }
 
-  public void testAbnormalResponseHandler() throws IOException {
-
-    FailThenSuccessTransport fakeTransport = new FailThenSuccessTransport();
+  public void testAbnormalResponseHandlerWithNoBackOff() throws IOException {
+    FailThenSuccessTransport fakeTransport =
+        new FailThenSuccessTransport(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED, 1);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(true);
 
     HttpRequest req =
         fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
     req.setUnsuccessfulResponseHandler(handler);
+    req.setBackOffPolicy(null);
     HttpResponse resp = req.execute();
 
     Assert.assertEquals(200, resp.getStatusCode());
     Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+    Assert.assertTrue(handler.isCalled());
+  }
+
+  public void testAbnormalResponseHandlerWithBackOff() throws IOException {
+    FailThenSuccessTransport fakeTransport =
+        new FailThenSuccessTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, 1);
+    MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(true);
+    MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
+
+    HttpRequest req =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
+    req.setUnsuccessfulResponseHandler(handler);
+    req.setBackOffPolicy(backOffPolicy);
+    HttpResponse resp = req.execute();
+
+    Assert.assertEquals(200, resp.getStatusCode());
+    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+    Assert.assertEquals(1, backOffPolicy.resetCalls);
+    Assert.assertEquals(0, backOffPolicy.backOffCalls);
+    Assert.assertTrue(handler.isCalled());
+  }
+
+  public void testBackOffSingleCall() throws IOException {
+    FailThenSuccessTransport fakeTransport =
+        new FailThenSuccessTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, 1);
+    MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
+    MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
+
+    HttpRequest req =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
+    req.setUnsuccessfulResponseHandler(handler);
+    req.setBackOffPolicy(backOffPolicy);
+    HttpResponse resp = req.execute();
+
+    Assert.assertEquals(200, resp.getStatusCode());
+    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+    Assert.assertEquals(1, backOffPolicy.resetCalls);
+    Assert.assertEquals(1, backOffPolicy.backOffCalls);
+    Assert.assertTrue(handler.isCalled());
+  }
+
+  public void testBackOffMultipleCalls() throws IOException {
+    int callsBeforeSuccess = 5;
+    FailThenSuccessTransport fakeTransport =
+        new FailThenSuccessTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
+    MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
+    MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
+
+    HttpRequest req =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
+    req.setUnsuccessfulResponseHandler(handler);
+    req.setBackOffPolicy(backOffPolicy);
+    HttpResponse resp = req.execute();
+
+    Assert.assertEquals(200, resp.getStatusCode());
+    Assert.assertEquals(callsBeforeSuccess + 1, fakeTransport.lowLevelExecCalls);
+    Assert.assertEquals(1, backOffPolicy.resetCalls);
+    Assert.assertEquals(callsBeforeSuccess, backOffPolicy.backOffCalls);
+    Assert.assertTrue(handler.isCalled());
+  }
+
+  public void testBackOffCallsBeyondRetryLimit() throws IOException {
+    int callsBeforeSuccess = 11;
+    FailThenSuccessTransport fakeTransport =
+        new FailThenSuccessTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
+    MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
+    MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
+
+    HttpRequest req =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
+    req.setUnsuccessfulResponseHandler(handler);
+    req.setBackOffPolicy(backOffPolicy);
+    try {
+      req.execute();
+      fail("expected HttpResponseException");
+    } catch (HttpResponseException e) {
+    }
+    Assert.assertEquals(callsBeforeSuccess, fakeTransport.lowLevelExecCalls);
+    Assert.assertEquals(1, backOffPolicy.resetCalls);
+    Assert.assertEquals(callsBeforeSuccess - 1, backOffPolicy.backOffCalls);
+    Assert.assertTrue(handler.isCalled());
+  }
+
+  public void testBackOffUnRecognizedStatusCode() throws IOException {
+    FailThenSuccessTransport fakeTransport =
+        new FailThenSuccessTransport(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED, 1);
+    MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
+    MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
+
+    HttpRequest req =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
+    req.setUnsuccessfulResponseHandler(handler);
+    req.setBackOffPolicy(backOffPolicy);
+    try {
+      req.execute();
+    } catch (HttpResponseException e) {
+    }
+
+    Assert.assertEquals(1, fakeTransport.lowLevelExecCalls);
+    Assert.assertEquals(1, backOffPolicy.resetCalls);
+    // The BackOffPolicy should not be called since it does not support 401 status codes.
+    Assert.assertEquals(0, backOffPolicy.backOffCalls);
+    Assert.assertTrue(handler.isCalled());
+  }
+
+  public void testBackOffStop() throws IOException {
+    int callsBeforeSuccess = 5;
+    FailThenSuccessTransport fakeTransport =
+        new FailThenSuccessTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
+    MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
+    MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
+    backOffPolicy.returnBackOffStop = true;
+
+    HttpRequest req =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
+    req.setUnsuccessfulResponseHandler(handler);
+    req.setBackOffPolicy(backOffPolicy);
+    try {
+      req.execute();
+    } catch (HttpResponseException e) {
+    }
+
+    Assert.assertEquals(1, fakeTransport.lowLevelExecCalls);
+    Assert.assertEquals(1, backOffPolicy.resetCalls);
+    // The BackOffPolicy should be called only once and then it should return BackOffPolicy.STOP
+    // should stop all back off retries.
+    Assert.assertEquals(1, backOffPolicy.backOffCalls);
     Assert.assertTrue(handler.isCalled());
   }
 

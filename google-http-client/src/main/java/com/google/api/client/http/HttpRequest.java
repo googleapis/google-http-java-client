@@ -128,6 +128,12 @@ public final class HttpRequest {
   /** Whether to enable gzip compression of HTTP content ({@code false} by default). */
   private boolean enableGZipContent;
 
+  /**
+   * The {@link BackOffPolicy} to use between retry attempts or {@code null} for none
+   * ({@link ExponentialBackOffPolicy} by default).
+   */
+  private BackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
+
   /** Whether to automatically follow redirects ({@code true} by default). */
   private boolean followRedirects = true;
 
@@ -241,6 +247,29 @@ public final class HttpRequest {
    */
   public HttpRequest setEnableGZipContent(boolean enableGZipContent) {
     this.enableGZipContent = enableGZipContent;
+    return this;
+  }
+
+  /**
+   * Returns the {@link BackOffPolicy} to use between retry attempts or {@code null} for none.
+   *
+   * @since 1.7
+   */
+  public BackOffPolicy getBackOffPolicy() {
+    return backOffPolicy;
+  }
+
+  /**
+   * Sets the {@link BackOffPolicy} to use between retry attempts or {@code null} for none.
+   *
+   * <p>
+   * By default it is {@link ExponentialBackOffPolicy}.
+   * </p>
+   *
+   * @since 1.7
+   */
+  public HttpRequest setBackOffPolicy(BackOffPolicy backOffPolicy) {
+    this.backOffPolicy = backOffPolicy;
     return this;
   }
 
@@ -520,6 +549,10 @@ public final class HttpRequest {
     boolean retrySupported = false;
     Preconditions.checkArgument(numRetries >= 0);
     int retriesRemaining = numRetries;
+    if (backOffPolicy != null) {
+      // Reset the BackOffPolicy at the start of each execute.
+      backOffPolicy.reset();
+    }
     HttpResponse response = null;
 
     Preconditions.checkNotNull(method);
@@ -646,19 +679,33 @@ public final class HttpRequest {
       if (!response.isSuccessStatusCode()) {
         boolean errorHandled = false;
         boolean redirectRequest = false;
+        boolean backOffRetry = false;
         if (unsuccessfulResponseHandler != null) {
           // Even if we don't have the potential to retry, we might want to run the
           // handler to fix conditions (like expired tokens) that might cause us
           // trouble on our next request
           errorHandled = unsuccessfulResponseHandler.handleResponse(this, response, retrySupported);
         }
-        if (!errorHandled && getFollowRedirects() && isRedirected(response)) {
-          // The unsuccessful request's error could not be handled and it is a redirect request.
-          handleRedirect(response);
-          redirectRequest = true;
+        if (!errorHandled) {
+          if (getFollowRedirects() && isRedirected(response)) {
+            // The unsuccessful request's error could not be handled and it is a redirect request.
+            handleRedirect(response);
+            redirectRequest = true;
+          } else if (
+              retrySupported && backOffPolicy != null
+              && backOffPolicy.isBackOffRequired(response.getStatusCode())) {
+            // The unsuccessful request's error could not be handled and should be backed off before
+            // retrying.
+            long backOffTime = backOffPolicy.getNextBackOffMillis();
+            if (backOffTime != BackOffPolicy.STOP) {
+              sleep(backOffTime);
+              backOffRetry = true;
+            }
+          }
         }
-        // A retry is required if the error was successfully handled or if it is a redirect request.
-        requiresRetry = errorHandled || redirectRequest;
+        // A retry is required if the error was successfully handled or if it is a redirect request
+        // or if the back off policy determined a retry is necessary.
+        requiresRetry = errorHandled || redirectRequest || backOffRetry;
         // Once there are no more retries remaining, this will be -1
         // Count redirects as retries, we want a finite limit of redirects.
         retriesRemaining--;
@@ -699,6 +746,21 @@ public final class HttpRequest {
         return response.getHeaders().getLocation() != null;
       default:
         return false;
+    }
+  }
+
+  /**
+   * An exception safe sleep where if the sleeping is interrupted the exception is ignored.
+   *
+   * @param millis to sleep
+   */
+  private void sleep(long millis) {
+    try {
+      // TODO(rmistry): Provide a way to mock out Thread.sleep to check that sleep gets called with
+      // expected values.
+      Thread.sleep(millis);
+    } catch (InterruptedException e) {
+      // Ignore.
     }
   }
 
