@@ -343,6 +343,39 @@ public class JsonHttpClient {
       return baseUrl;
     }
 
+    /**
+     * Convenience method for setting base host on the base URL, for example
+     * {@code "www.googleapis.com"}.
+     *
+     * <p>
+     * This method is equivalent to calling {@code getBaseUrl().setHost()}.
+     * </p>
+     *
+     * @since 1.7
+     */
+    public Builder setBaseHost(String baseHost) {
+      baseUrl.setHost(baseHost);
+      return this;
+    }
+
+    /**
+     * Convenience method for setting base path on the base URL, for example {@code "/plus/v1/"}.
+     *
+     * <p>
+     * This method is equivalent to calling {@code getBaseUrl().setRawPath()}. Must be URL-encoded
+     * and must start and end with a "/".
+     * </p>
+     *
+     * @since 1.7
+     */
+    public Builder setBasePath(String basePath) {
+      Preconditions.checkArgument(
+          basePath.startsWith("/") && basePath.endsWith("/"),
+          "base path must start and end with a '/'");
+      baseUrl.setRawPath(basePath);
+      return this;
+    }
+
     /** Sets the JSON HTTP request initializer. Subclasses should override by calling super. */
     public Builder setJsonHttpRequestInitializer(
         JsonHttpRequestInitializer jsonHttpRequestInitializer) {
