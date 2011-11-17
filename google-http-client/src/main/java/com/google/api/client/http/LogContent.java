@@ -15,6 +15,7 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Strings;
+import com.google.common.base.Preconditions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,23 +42,29 @@ final class LogContent implements HttpContent {
   private final String contentType;
   private final String contentEncoding;
   private final long contentLength;
+  private final int contentLoggingLimit;
 
   /**
    * @param httpContent another source of HTTP content
    */
-  LogContent(
-      HttpContent httpContent, String contentType, String contentEncoding, long contentLength) {
+  LogContent(HttpContent httpContent, String contentType, String contentEncoding,
+      long contentLength, int contentLoggingLimit) {
     this.httpContent = httpContent;
     this.contentType = contentType;
     this.contentLength = contentLength;
     this.contentEncoding = contentEncoding;
+    Preconditions.checkArgument(contentLoggingLimit >= 0,
+        "The content logging limit must be non-negative.");
+    this.contentLoggingLimit = contentLoggingLimit;
   }
 
   public void writeTo(OutputStream out) throws IOException {
     ByteArrayOutputStream debugStream = new ByteArrayOutputStream();
     httpContent.writeTo(debugStream);
     byte[] debugContent = debugStream.toByteArray();
-    HttpTransport.LOGGER.config(Strings.fromBytesUtf8(debugContent));
+    if (debugContent.length <= contentLoggingLimit) {
+      HttpTransport.LOGGER.config(Strings.fromBytesUtf8(debugContent));
+    }
     out.write(debugContent);
   }
 
@@ -71,6 +78,10 @@ final class LogContent implements HttpContent {
 
   public String getType() {
     return contentType;
+  }
+
+  int getContentLoggingLimit() {
+    return contentLoggingLimit;
   }
 
   /**

@@ -55,12 +55,62 @@ public class LogContentTest extends TestCase {
    */
   public void testWriteTo() throws IOException {
     LogContent logContent =
-        new LogContent(new ByteArrayContent(null, SAMPLE_UTF8), null, null, SAMPLE_UTF8.length);
+        new LogContent(new ByteArrayContent(null, SAMPLE_UTF8), null, null, SAMPLE_UTF8.length,
+            Integer.MAX_VALUE);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     HttpTransport.LOGGER.setLevel(Level.CONFIG);
     Recorder recorder = new Recorder();
     HttpTransport.LOGGER.addHandler(recorder);
     logContent.writeTo(out);
     assertEquals(SAMPLE, recorder.record.getMessage());
+  }
+
+  public void testContentLoggingLimit() throws IOException {
+    HttpTransport.LOGGER.setLevel(Level.CONFIG);
+
+    // Set the content logging limit to be equal to the length of the content.
+    Recorder recorder = new Recorder();
+    HttpTransport.LOGGER.addHandler(recorder);
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    LogContent logContent =
+        new LogContent(new ByteArrayContent(null, SAMPLE_UTF8), null, null, SAMPLE_UTF8.length,
+            SAMPLE_UTF8.length);
+    logContent.writeTo(out);
+    assertEquals(SAMPLE, recorder.record.getMessage());
+
+    // Set the content logging limit to be less than the length of the content.
+    recorder = new Recorder();
+    HttpTransport.LOGGER.addHandler(recorder);
+    logContent =
+        new LogContent(new ByteArrayContent(null, SAMPLE_UTF8), null, null, SAMPLE_UTF8.length,
+            SAMPLE_UTF8.length - 1);
+    logContent.writeTo(new ByteArrayOutputStream());
+    assertTrue(recorder.record == null);
+
+    // Set the content logging limit to 0 to disable content logging.
+    recorder = new Recorder();
+    HttpTransport.LOGGER.addHandler(recorder);
+    logContent =
+        new LogContent(new ByteArrayContent(null, SAMPLE_UTF8), null, null, SAMPLE_UTF8.length, 0);
+    logContent.writeTo(new ByteArrayOutputStream());
+    assertTrue(recorder.record == null);
+
+    // writeTo should behave as expected even if content length is specified to be -1.
+    recorder = new Recorder();
+    HttpTransport.LOGGER.addHandler(recorder);
+    logContent =
+        new LogContent(new ByteArrayContent(null, SAMPLE_UTF8), null, null, -1, SAMPLE_UTF8.length);
+    logContent.writeTo(new ByteArrayOutputStream());
+    assertEquals(SAMPLE, recorder.record.getMessage());
+
+    // Assert that an exception is thrown if content logging limit < 0.
+    try {
+      logContent =
+          new LogContent(
+              new ByteArrayContent(null, SAMPLE_UTF8), null, null, SAMPLE_UTF8.length, -1);
+      fail("Expected: " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // Expected.
+    }
   }
 }

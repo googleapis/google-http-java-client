@@ -96,7 +96,26 @@ public final class HttpRequest {
    * Defaults to {@code false}.
    * </p>
    */
+  @Deprecated
   private boolean disableContentLogging;
+
+  /**
+   * Determines the limit to the content size that will be logged during {@link #execute()}.
+   *
+   * <p>
+   * If the content size is greater than this limit then it will not be logged.
+   * </p>
+   *
+   * <p>
+   * Can be set to {@code 0} to disable content logging. This is useful for example if content has
+   * sensitive data such as authentication information.
+   * </p>
+   *
+   * <p>
+   * Defaults to {@code 100000 (100KB)}.
+   * </p>
+   */
+  private int contentLoggingLimit = 100000;
 
   /** HTTP request content or {@code null} for none. */
   private HttpContent content;
@@ -278,9 +297,33 @@ public final class HttpRequest {
    * {@link Level#ALL} is loggable which forces all logging).
    *
    * @since 1.5
+   * @deprecated (scheduled to be removed in 1.8) Use {@link #getContentLoggingLimit}
    */
+  @Deprecated
   public boolean getDisableContentLogging() {
     return disableContentLogging;
+  }
+
+  /**
+   * Returns the limit to the content size that will be logged during {@link #execute()}.
+   *
+   * <p>
+   * If the content size is greater than this limit then it will not be logged.
+   * </p>
+   *
+   * <p>
+   * Can be set to {@code 0} to disable content logging. This is useful for example if content has
+   * sensitive data such as authentication information.
+   * </p>
+   *
+   * <p>
+   * Defaults to {@code 100000 (100KB)}.
+   * </p>
+   *
+   * @since 1.7
+   */
+  public int getContentLoggingLimit() {
+    return contentLoggingLimit;
   }
 
   /**
@@ -293,9 +336,36 @@ public final class HttpRequest {
    * </p>
    *
    * @since 1.5
+   * @deprecated (scheduled to be removed in 1.8) Use {@link #setContentLoggingLimit}
    */
+  @Deprecated
   public HttpRequest setDisableContentLogging(boolean disableContentLogging) {
     this.disableContentLogging = disableContentLogging;
+    return this;
+  }
+
+  /**
+   * Set the limit to the content size that will be logged during {@link #execute()}.
+   *
+   * <p>
+   * If the content size is greater than this limit then it will not be logged.
+   * </p>
+   *
+   * <p>
+   * Can be set to {@code 0} to disable content logging. This is useful for example if content has
+   * sensitive data such as authentication information.
+   * </p>
+   *
+   * <p>
+   * Defaults to {@code 100000 (100KB)}.
+   * </p>
+   *
+   * @since 1.7
+   */
+  public HttpRequest setContentLoggingLimit(int contentLoggingLimit) {
+    Preconditions.checkArgument(contentLoggingLimit >= 0,
+        "The content logging limit must be non-negative.");
+    this.contentLoggingLimit = contentLoggingLimit;
     return this;
   }
 
@@ -640,7 +710,10 @@ public final class HttpRequest {
         if (contentLength != 0 && contentEncoding == null
             && LogContent.isTextBasedContentType(contentType)
             && (loggable && !disableContentLogging || logger.isLoggable(Level.ALL))) {
-          content = new LogContent(content, contentType, contentEncoding, contentLength);
+          if (contentLength <= contentLoggingLimit && contentLoggingLimit != 0) {
+            content = new LogContent(content, contentType, contentEncoding, contentLength,
+                contentLoggingLimit);
+          }
         }
         // gzip
         if (enableGZipContent) {

@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.http.LogContentTest.Recorder;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
@@ -24,6 +25,7 @@ import junit.framework.TestCase;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.logging.Level;
 
 /**
  * Tests {@link HttpResponse}.
@@ -150,6 +152,57 @@ public class HttpResponseTest extends TestCase {
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       assertEquals(e.getMessage(), "No parser defined for Content-Type: something");
+    }
+  }
+
+  public void testContentLoggingLimit() throws IOException {
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildGetRequest(final String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+            result.setContent("ABC");
+            result.setContentType("text/plain");
+            return result;
+          }
+        };
+      }
+    };
+    HttpTransport.LOGGER.setLevel(Level.CONFIG);
+
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    HttpResponse response = request.execute();
+
+    // Set the content logging limit to be equal to the length of the content.
+    response.setContentLoggingLimit(3);
+    Recorder recorder = new Recorder();
+    HttpTransport.LOGGER.addHandler(recorder);
+    response.getContent();
+    assertEquals("ABC", recorder.record.getMessage());
+
+    // Set the content logging limit to be less than the length of the content.
+    response.setContentLoggingLimit(2);
+    recorder = new Recorder();
+    HttpTransport.LOGGER.addHandler(recorder);
+    response.getContent();
+    assertTrue(recorder.record == null);
+
+    // Set the content logging limit to 0 to disable content logging.
+    response.setContentLoggingLimit(0);
+    recorder = new Recorder();
+    HttpTransport.LOGGER.addHandler(recorder);
+    response.getContent();
+    assertTrue(recorder.record == null);
+
+    // Assert that an exception is thrown if content logging limit < 0.
+    try {
+      response.setContentLoggingLimit(-1);
+      fail("Expected: " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // Expected.
     }
   }
 }

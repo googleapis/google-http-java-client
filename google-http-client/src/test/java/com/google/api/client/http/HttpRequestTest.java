@@ -563,6 +563,61 @@ public class HttpRequestTest extends TestCase {
     request.execute();
   }
 
+  public void testContentLoggingLimit() throws IOException {
+
+    class MyTransport extends MockHttpTransport {
+
+      boolean expectLogContent;
+
+      @Override
+      public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public void setContent(HttpContent content) throws IOException {
+            if (expectLogContent) {
+              assertEquals(LogContent.class, content.getClass());
+            } else {
+              assertEquals(ByteArrayContent.class, content.getClass());
+            }
+            super.setContent(content);
+          }
+        };
+      }
+    }
+    MyTransport transport = new MyTransport();
+    // Set the logging level.
+    HttpTransport.LOGGER.setLevel(java.util.logging.Level.CONFIG);
+    // Create content of length 300.
+    byte[] content = new byte[300];
+    Arrays.fill(content, (byte) ' ');
+    HttpRequest request =
+        transport.createRequestFactory().buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL,
+            new ByteArrayContent("text/html", content));
+
+    // Set the content logging limit to be equal to the length of the content.
+    transport.expectLogContent = true;
+    request.setContentLoggingLimit(300);
+    request.execute();
+
+    // Set the content logging limit to be less than the length of the content.
+    transport.expectLogContent = false;
+    request.setContentLoggingLimit(299);
+    request.execute();
+
+    // Set the content logging limit to 0 to disable content logging.
+    transport.expectLogContent = false;
+    request.setContentLoggingLimit(0);
+    request.execute();
+
+    // Assert that an exception is thrown if content logging limit < 0.
+    try {
+      request.setContentLoggingLimit(-1);
+      fail("Expected: " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // Expected
+    }
+  }
+
   public void testUserAgent() {
     assertTrue(HttpRequest.USER_AGENT_SUFFIX.contains("Google-HTTP-Java-Client"));
     assertTrue(HttpRequest.USER_AGENT_SUFFIX.contains("gzip"));
