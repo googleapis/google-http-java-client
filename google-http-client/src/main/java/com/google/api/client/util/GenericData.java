@@ -46,7 +46,7 @@ import java.util.concurrent.ConcurrentMap;
 public class GenericData extends AbstractMap<String, Object> implements Cloneable {
 
   /** Map of unknown fields. */
-  ArrayMap<String, Object> unknownFields = ArrayMap.create();
+  Map<String, Object> unknownFields = ArrayMap.create();
 
   // TODO(yanivi): implement more methods for faster implementation
 
@@ -146,9 +146,8 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
    *
    * @since 1.5
    */
-  public final void setUnknownKeys(ArrayMap<String, Object> unknownKeys) {
-    // TODO(yanivi): for 1.6, change unknownKeys parameter to Map<String, Object>
-    this.unknownFields = unknownKeys;
+  public final void setUnknownKeys(Map<String, Object> unknownFields) {
+    this.unknownFields = unknownFields;
   }
 
   /** Set of object data key/value map entries. */
