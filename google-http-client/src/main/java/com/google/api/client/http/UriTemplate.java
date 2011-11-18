@@ -18,7 +18,6 @@ import com.google.api.client.util.Data;
 import com.google.api.client.util.escape.CharEscapers;
 import com.google.common.base.Preconditions;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;

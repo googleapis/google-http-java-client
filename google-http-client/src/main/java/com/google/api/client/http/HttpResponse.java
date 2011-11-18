@@ -497,14 +497,4 @@ public final class HttpResponse {
       content.close();
     }
   }
-
-  /**
-   * Returns whether the given HTTP response status code is a success code {@code >= 200 and < 300}.
-   *
-   * @deprecated (scheduled to be removed in 1.7) Use {@link HttpStatusCodes#isSuccess}
-   */
-  @Deprecated
-  public static boolean isSuccessStatusCode(int statusCode) {
-    return HttpStatusCodes.isSuccess(statusCode);
-  }
 }

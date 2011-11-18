@@ -69,26 +69,16 @@ public class JsonHttpClient {
    * Returns the base URL of the service, for example {@code "https://www.googleapis.com/tasks/v1/"}
    * . Must be URL-encoded and must end with a "/". This is determined when the library is generated
    * and normally should not be changed.
-   *
-   * <p>
-   * Overriding this method is not supported, except for the Google generated libraries for
-   * backwards-compatibility reasons. This method will be made final in the 1.7 release.
-   * </p>
    */
-  public String getBaseUrl() {
+  public final String getBaseUrl() {
     return baseUrl;
   }
 
   /**
    * Returns the application name to be sent in the User-Agent header of each request or {@code
    * null} for none.
-   *
-   * <p>
-   * Overriding this method is not supported, except for the Google generated libraries for
-   * backwards-compatibility reasons. This method will be made final in the 1.7 release.
-   * </p>
    */
-  public String getApplicationName() {
+  public final String getApplicationName() {
     return applicationName;
   }
 

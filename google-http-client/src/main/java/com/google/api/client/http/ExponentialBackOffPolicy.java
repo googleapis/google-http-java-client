@@ -320,7 +320,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
    * created and is reset when {@link #reset()} is called.
    *
    * <p>
-   * The elapsed time is computed using {@link System.nanoTime()}.
+   * The elapsed time is computed using {@link System#nanoTime()}.
    * </p>
    */
   public final long getElapsedTimeMillis() {

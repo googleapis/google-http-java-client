@@ -423,7 +423,7 @@ public class Data {
         return new BigDecimal(stringValue);
       }
       if (primitiveClass.isEnum()) {
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({"unchecked", "rawtypes"})
         Enum result = ClassInfo.of(primitiveClass).getFieldInfo(stringValue).<Enum>enumValue();
         return result;
       }

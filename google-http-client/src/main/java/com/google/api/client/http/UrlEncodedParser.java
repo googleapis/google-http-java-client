@@ -74,6 +74,7 @@ public class UrlEncodedParser implements HttpParser {
    * {@code false}.
    * </p>
    */
+  @Deprecated
   private final boolean disableContentLogging;
 
   /** Content type. */
@@ -83,8 +84,15 @@ public class UrlEncodedParser implements HttpParser {
     return contentType;
   }
 
+  /**
+   * Constructor that uses {@link #CONTENT_TYPE} as the content type.
+   *
+   * <p>
+   * To override the defaults, use {@link #builder()}.
+   * </p>
+   */
   public UrlEncodedParser() {
-    this(CONTENT_TYPE, false);
+    this(CONTENT_TYPE);
   }
 
   /**
@@ -92,12 +100,24 @@ public class UrlEncodedParser implements HttpParser {
    * @param disableContentLogging whether to disable response content logging (unless
    *        {@link Level#ALL} is loggable which forces all logging)
    * @since 1.5
+   * @deprecated (scheduled to be removed in 1.8) Use {@link HttpResponse#getContentLoggingLimit}
    */
+  @Deprecated
   protected UrlEncodedParser(String contentType, boolean disableContentLogging) {
     this.contentType = contentType;
     this.disableContentLogging = disableContentLogging;
   }
 
+  /**
+   * @param contentType content type
+   * @since 1.7
+   */
+  protected UrlEncodedParser(String contentType) {
+    this.contentType = contentType;
+    this.disableContentLogging = false;
+  }
+
+  @SuppressWarnings("deprecation")
   public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
     if (disableContentLogging) {
       response.setDisableContentLogging(true);
@@ -116,8 +136,9 @@ public class UrlEncodedParser implements HttpParser {
    * {@code false}.
    * </p>
    *
-   * @since 1.5
+   * @deprecated (scheduled to be removed in 1.8) Use {@link HttpResponse#getContentLoggingLimit}
    */
+  @Deprecated
   public final boolean getDisableContentLogging() {
     return disableContentLogging;
   }
@@ -254,6 +275,7 @@ public class UrlEncodedParser implements HttpParser {
      * {@code false}.
      * </p>
      */
+    @Deprecated
     private boolean disableContentLogging;
 
     /** Content type or {@code null} for none. */
@@ -292,7 +314,10 @@ public class UrlEncodedParser implements HttpParser {
      * Useful for example if content has sensitive data such as an authentication token. Defaults to
      * {@code false}.
      * </p>
+     *
+     * @deprecated (scheduled to be removed in 1.8) Use {@link HttpResponse#getContentLoggingLimit}
      */
+    @Deprecated
     public final boolean getDisableContentLogging() {
       return disableContentLogging;
     }
@@ -305,7 +330,10 @@ public class UrlEncodedParser implements HttpParser {
      * Useful for example if content has sensitive data such as an authentication token. Defaults to
      * {@code false}.
      * </p>
+     *
+     * @deprecated (scheduled to be removed in 1.8) Use {@link HttpResponse#setContentLoggingLimit}
      */
+    @Deprecated
     public Builder setDisableContentLogging(boolean disableContentLogging) {
       this.disableContentLogging = disableContentLogging;
       return this;

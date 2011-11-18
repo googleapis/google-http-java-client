@@ -152,7 +152,7 @@ public class TypesTest extends TestCase {
   public class A<T> {
     public Iterable<String> i;
     public ArrayList<String> a;
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public ArrayList aNoType;
     public Stack<? extends Number> wild;
     public Vector<Integer[]> arr;
@@ -190,7 +190,7 @@ public class TypesTest extends TestCase {
   public class C<T> {
     public Map<String, String> i;
     public ArrayMap<String, String> a;
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public ArrayMap aNoType;
     public TreeMap<String, ? extends Number> wild;
     public HashMap<String, Integer[]> arr;

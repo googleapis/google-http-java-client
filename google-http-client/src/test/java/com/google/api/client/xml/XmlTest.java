@@ -91,11 +91,9 @@ public class XmlTest extends TestCase {
     // check type
     Map<String, String>[] rep = xml.rep;
     assertEquals(2, rep.length);
-    @SuppressWarnings("unused")
     ArrayMap<String, String> map0 = (ArrayMap<String, String>) rep[0];
     assertEquals(1, map0.size());
     assertEquals("rep1", map0.get("text()"));
-    @SuppressWarnings("unused")
     ArrayMap<String, String> map1 = (ArrayMap<String, String>) rep[1];
     assertEquals(1, map1.size());
     assertEquals("rep2", map1.get("text()"));

@@ -497,7 +497,6 @@ public abstract class AbstractJsonParserTest extends TestCase {
     assertEquals(COLLECTION_TYPE, factory.toString(result));
     // check that it is actually a linked list
     LinkedList<LinkedList<String>> arr = result.arr;
-    @SuppressWarnings("unused")
     LinkedList<String> linkedlist = arr.get(0);
     assertEquals("a", linkedlist.get(0));
   }

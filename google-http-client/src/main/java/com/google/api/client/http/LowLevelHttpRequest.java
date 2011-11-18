@@ -63,9 +63,9 @@ public abstract class LowLevelHttpRequest {
    *        infinite timeout
    * @param readTimeout Timeout in milliseconds to read data from an established connection or
    *        {@code 0} for an infinite timeout
+   * @throws IOException I/O exception
    * @since 1.4
    */
-  @SuppressWarnings("unused")
   public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
 
   }

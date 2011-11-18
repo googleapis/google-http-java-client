@@ -190,7 +190,8 @@ final class DataMap extends AbstractMap<String, Object> {
 
     /**
      * Current field value, possibly modified only by {@link #setValue(Object)}. As specified
-     * {@link Map.Entry}, behavior is undefined if the field value is modified by other means.
+     * {@link java.util.Map.Entry}, behavior is undefined if the field value is modified by other
+     * means.
      */
     private Object fieldValue;
 
