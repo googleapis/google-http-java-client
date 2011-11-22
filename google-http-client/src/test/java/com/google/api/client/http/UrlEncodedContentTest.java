@@ -14,6 +14,8 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.testing.http.HttpTesting;
+import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.util.ArrayMap;
 
 import junit.framework.TestCase;
@@ -21,6 +23,8 @@ import junit.framework.TestCase;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Tests {@link UrlEncodedContent}.
@@ -50,5 +54,23 @@ public class UrlEncodedContentTest extends TestCase {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     content.writeTo(out);
     return out.toString();
+  }
+
+  public void testGetContent() throws IOException {
+    HttpRequest request =
+        new MockHttpTransport().createRequestFactory().buildGetRequest(
+            HttpTesting.SIMPLE_GENERIC_URL);
+    UrlEncodedContent content = UrlEncodedContent.getContent(request);
+    assertNotNull(content);
+    assertTrue(content.getData() instanceof Map);
+    assertEquals(content, UrlEncodedContent.getContent(request));
+  }
+
+  public void testGetData() {
+    UrlEncodedContent content = new UrlEncodedContent(null);
+    assertTrue(content.getData() instanceof Map);
+    Map<String, Object> map = new HashMap<String, Object>();
+    content = new UrlEncodedContent(map);
+    assertEquals(map, content.getData());
   }
 }

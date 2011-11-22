@@ -14,6 +14,8 @@
 
 package com.google.api.client.http;
 
+import com.google.common.base.Preconditions;
+
 import java.io.IOException;
 
 /**
@@ -34,8 +36,8 @@ public final class BasicAuthentication implements HttpRequestInitializer {
   private final String password;
 
   public BasicAuthentication(String username, String password) {
-    this.username = username;
-    this.password = password;
+    this.username = Preconditions.checkNotNull(username);
+    this.password = Preconditions.checkNotNull(password);
   }
 
   /**

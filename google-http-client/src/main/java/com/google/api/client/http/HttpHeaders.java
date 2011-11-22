@@ -19,6 +19,7 @@ import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Strings;
+import com.google.common.base.Preconditions;
 
 import java.util.HashMap;
 
@@ -583,8 +584,9 @@ public class HttpHeaders extends GenericData {
    * @since 1.2
    */
   public final void setBasicAuthentication(String username, String password) {
-    String encoded =
-        Strings.fromBytesUtf8(Base64.encode(Strings.toBytesUtf8(username + ":" + password)));
+    String userPass =
+        Preconditions.checkNotNull(username) + ":" + Preconditions.checkNotNull(password);
+    String encoded = Strings.fromBytesUtf8(Base64.encode(Strings.toBytesUtf8(userPass)));
     authorization = "Basic " + encoded;
   }
 

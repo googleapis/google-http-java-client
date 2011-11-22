@@ -25,7 +25,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Implements support for HTTP form content encoding serialization of type {@code
@@ -53,19 +55,39 @@ import java.util.Map;
  */
 public class UrlEncodedContent extends AbstractHttpContent {
 
-  /** Content type. Default value is {@link UrlEncodedParser#CONTENT_TYPE}. */
+  private static final Logger LOGGER = Logger.getLogger(UrlEncodedContent.class.getName());
+
+  /**
+   * Content type or {@code null} for none.
+   *
+   * <p>
+   * Default value is {@link UrlEncodedParser#CONTENT_TYPE}.
+   * </p>
+   */
   private String contentType = UrlEncodedParser.CONTENT_TYPE;
 
-  /** Key name/value data or {@code null} for none. */
+  /** Key name/value data. */
   private Object data;
 
   /**
-   * @param data key name/value data or {@code null} for none
+   * <p>
+   * Upgrade warning: prior to version 1.7, the {@code data} parameter could be {@code null} but now
+   * {@code null} is not allowed and instead a new instance of an implementation of {@link Map} will
+   * be created. In version 1.8 a {@link NullPointerException} will be thrown instead.
+   * </p>
+   * 
+   * @param data key name/value data
    */
   public UrlEncodedContent(Object data) {
-    this.data = data;
+    setData(data);
   }
 
+  /**
+   * {@inheritDoc}
+   * <p>
+   * Upgrade warning: overriding this method is no longer supported, and will be made final in 1.8.
+   * </p>
+   */
   public String getType() {
     return contentType;
   }
@@ -94,7 +116,11 @@ public class UrlEncodedContent extends AbstractHttpContent {
    * Sets the content type or {@code null} for none.
    *
    * <p>
-   * Defaults to {@link UrlEncodedParser#CONTENT_TYPE}.
+   * Default value is {@link UrlEncodedParser#CONTENT_TYPE}.
+   * </p>
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
    * </p>
    *
    * @since 1.5
@@ -107,6 +133,12 @@ public class UrlEncodedContent extends AbstractHttpContent {
   /**
    * Returns the key name/value data or {@code null} for none.
    *
+   * <p>
+   * Upgrade warning: prior to version 1.7 this could return {@code null} but now it always returns
+   * a {@code non-null} value. Also overriding this method is no longer supported, and will be made
+   * final in 1.8.
+   * </p>
+   *
    * @since 1.5
    */
   public Object getData() {
@@ -114,13 +146,48 @@ public class UrlEncodedContent extends AbstractHttpContent {
   }
 
   /**
-   * Sets the key name/value data or {@code null} for none.
+   * Sets the key name/value data.
+   *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   * <p>
+   * Upgrade warning: prior to version 1.7, the {@code data} parameter could be {@code null} but now
+   * {@code null} is not allowed and instead a new instance of an implementation of {@link Map} will
+   * be created. In version 1.8 a {@link NullPointerException} will be thrown instead.
+   * </p>
    *
    * @since 1.5
    */
   public UrlEncodedContent setData(Object data) {
+    if (data == null) {
+      LOGGER.warning("UrlEncodedContent.setData(null) no longer supported");
+      data = new HashMap<String, Object>();
+    }
     this.data = data;
     return this;
+  }
+
+  /**
+   * Returns the URL-encoded content of the given HTTP request, or if none return and set as content
+   * a new instance of {@link UrlEncodedContent} (whose {@link #getData()} is an implementation of
+   * {@link Map}).
+   *
+   * @param request HTTP request
+   * @return URL-encoded content
+   * @throws ClassCastException if the HTTP request has a content defined that is not
+   *         {@link UrlEncodedContent}
+   * @since 1.7
+   */
+  public static UrlEncodedContent getContent(HttpRequest request) {
+    HttpContent content = request.getContent();
+    if (content != null) {
+      return (UrlEncodedContent) content;
+    }
+    UrlEncodedContent result = new UrlEncodedContent(new HashMap<String, Object>());
+    request.setContent(result);
+    return result;
   }
 
   private static boolean appendParam(boolean first, Writer writer, String name, Object value)
