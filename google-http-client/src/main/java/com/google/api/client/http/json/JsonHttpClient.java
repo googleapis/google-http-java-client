@@ -287,7 +287,7 @@ public class JsonHttpClient {
      * be URL-encoded and must end with a "/". This is determined when the library is generated and
      * normally should not be changed.
      */
-    private final GenericUrl baseUrl;
+    private GenericUrl baseUrl;
 
     /**
      * The application name to be sent in the User-Agent header of each request or {@code null} for
@@ -334,35 +334,12 @@ public class JsonHttpClient {
     }
 
     /**
-     * Convenience method for setting base host on the base URL, for example
-     * {@code "www.googleapis.com"}.
-     *
-     * <p>
-     * This method is equivalent to calling {@code getBaseUrl().setHost()}.
-     * </p>
+     * Sets the base URL of the service. Subclasses should override by calling super.
      *
      * @since 1.7
      */
-    public Builder setBaseHost(String baseHost) {
-      baseUrl.setHost(baseHost);
-      return this;
-    }
-
-    /**
-     * Convenience method for setting base path on the base URL, for example {@code "/plus/v1/"}.
-     *
-     * <p>
-     * This method is equivalent to calling {@code getBaseUrl().setRawPath()}. Must be URL-encoded
-     * and must start and end with a "/".
-     * </p>
-     *
-     * @since 1.7
-     */
-    public Builder setBasePath(String basePath) {
-      Preconditions.checkArgument(
-          basePath.startsWith("/") && basePath.endsWith("/"),
-          "base path must start and end with a '/'");
-      baseUrl.setRawPath(basePath);
+    public Builder setBaseUrl(GenericUrl baseUrl) {
+      this.baseUrl = baseUrl;
       return this;
     }
 

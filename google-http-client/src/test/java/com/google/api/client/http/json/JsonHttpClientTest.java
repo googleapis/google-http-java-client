@@ -79,37 +79,10 @@ public class JsonHttpClientTest extends TestCase {
         JsonHttpClient
             .builder(new NetHttpTransport(), new JacksonFactory(),
                 new GenericUrl("http://www.testgoogleapis.com/test/path/v1/"))
-            .setBaseHost("www.googleapis.com")
-            .setBasePath("/test/path/v2/")
+            .setBaseUrl(new GenericUrl("http://www.googleapis.com/test/path/v2/"))
             .build();
 
     assertEquals("http://www.googleapis.com/test/path/v2/", client.getBaseUrl());
-  }
-
-  public void testInvalidBasePath() {
-    JsonHttpClient.Builder builder =
-        JsonHttpClient.builder(new NetHttpTransport(), new JacksonFactory(), new GenericUrl(
-            "http://www.testgoogleapis.com/test/path/v1/"));
-    try {
-      builder.setBasePath(null);
-      fail("Expected exception not thrown!");
-    } catch (NullPointerException e) {
-      // Expected because base path cannot be null.
-    }
-
-    try {
-      builder.setBasePath("test/path/v2/");
-      fail("Expected exception not thrown!");
-    } catch (IllegalArgumentException e) {
-      // Expected because base path did not start with "/".
-    }
-
-    try {
-      builder.setBasePath("/test/path/v2");
-      fail("Expected exception not thrown!");
-    } catch (IllegalArgumentException e) {
-      // Expected because base path did not end with "/".
-    }
   }
 
   public void testInitialize() throws IOException {
