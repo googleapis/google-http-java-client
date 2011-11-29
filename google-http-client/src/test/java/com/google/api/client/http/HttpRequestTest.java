@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableSet;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -621,5 +622,44 @@ public class HttpRequestTest extends TestCase {
   public void testUserAgent() {
     assertTrue(HttpRequest.USER_AGENT_SUFFIX.contains("Google-HTTP-Java-Client"));
     assertTrue(HttpRequest.USER_AGENT_SUFFIX.contains("gzip"));
+  }
+
+  public void testExecute_emptyContent() throws IOException {
+    class MyTransport extends MockHttpTransport {
+      String expectedContent;
+
+      @Override
+      public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            if (expectedContent == null) {
+              assertNull(getContent());
+            } else if (getContent() == null) {
+              assertEquals(expectedContent, null);
+            } else {
+              ByteArrayOutputStream stream = new ByteArrayOutputStream();
+              getContent().writeTo(stream);
+              assertEquals(expectedContent, stream.toString());
+            }
+            return super.execute();
+          }
+        };
+      }
+    }
+    MyTransport transport = new MyTransport();
+    HttpRequestFactory requestFactory = transport.createRequestFactory();
+    for (HttpMethod method : HttpMethod.values()) {
+      boolean isOverriden =
+          method == HttpMethod.PUT || method == HttpMethod.PATCH || method == HttpMethod.POST;
+      transport.expectedContent = isOverriden ? " " : null;
+      requestFactory.buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL, null).execute();
+      transport.expectedContent = isOverriden ? " " : "";
+      requestFactory.buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL,
+          ByteArrayContent.fromString(null, "")).execute();
+      transport.expectedContent = "abc";
+      requestFactory.buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL,
+          ByteArrayContent.fromString(null, "abc")).execute();
+    }
   }
 }

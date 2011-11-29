@@ -700,6 +700,11 @@ public final class HttpRequest {
       }
       // content
       HttpContent content = this.content;
+      // Hack: some servers will fail to process a POST/PUT/PATCH unless Content-Length header >= 1
+      if ((method == HttpMethod.PUT || method == HttpMethod.POST || method == HttpMethod.PATCH)
+          && (content == null || content.getLength() == 0)) {
+        content = ByteArrayContent.fromString(null, " ");
+      }
       if (content != null) {
         // TODO(yanivi): instead of isTextBasedContentType, have an enableLogContent boolean?
         // TODO(yanivi): alternatively, HttpContent.supportsLogging()?
