@@ -45,16 +45,42 @@ import java.io.InputStream;
  */
 public final class ByteArrayContent extends AbstractInputStreamContent {
 
+  /** Byte array content. */
   private final byte[] byteArray;
 
+  /** Starting offset into the byte array. */
+  private final int offset;
+
+  /** Length of bytes to read from byte array. */
+  private final int length;
+
   /**
+   * Constructor from byte array content that has already been encoded.
+   *
    * @param type content type or {@code null} for none
    * @param array byte array content
    * @since 1.5
    */
   public ByteArrayContent(String type, byte[] array) {
+    this(type, array, 0, array.length);
+  }
+
+  /**
+   * Constructor from byte array content that has already been encoded, specifying a range of bytes
+   * to read from the input byte array.
+   *
+   * @param type content type or {@code null} for none
+   * @param array byte array content
+   * @param offset starting offset into the byte array
+   * @param length of bytes to read from byte array
+   * @since 1.7
+   */
+  public ByteArrayContent(String type, byte[] array, int offset, int length) {
     super(type);
     this.byteArray = Preconditions.checkNotNull(array);
+    Preconditions.checkArgument(offset >= 0 && length >= 0 && offset + length <= array.length);
+    this.offset = offset;
+    this.length = length;
   }
 
   /**
@@ -81,7 +107,7 @@ public final class ByteArrayContent extends AbstractInputStreamContent {
   }
 
   public long getLength() {
-    return byteArray.length;
+    return length;
   }
 
   public boolean retrySupported() {
@@ -90,7 +116,7 @@ public final class ByteArrayContent extends AbstractInputStreamContent {
 
   @Override
   protected InputStream getInputStream() {
-    return new ByteArrayInputStream(byteArray);
+    return new ByteArrayInputStream(byteArray, offset, length);
   }
 
   @Override
