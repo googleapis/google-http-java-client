@@ -147,11 +147,8 @@ public final class HttpRequest {
   /** Whether to enable gzip compression of HTTP content ({@code false} by default). */
   private boolean enableGZipContent;
 
-  /**
-   * The {@link BackOffPolicy} to use between retry attempts or {@code null} for none
-   * ({@link ExponentialBackOffPolicy} by default).
-   */
-  private BackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
+  /** The {@link BackOffPolicy} to use between retry attempts or {@code null} for none. */
+  private BackOffPolicy backOffPolicy;
 
   /** Whether to automatically follow redirects ({@code true} by default). */
   private boolean followRedirects = true;
@@ -280,10 +277,6 @@ public final class HttpRequest {
 
   /**
    * Sets the {@link BackOffPolicy} to use between retry attempts or {@code null} for none.
-   *
-   * <p>
-   * By default it is {@link ExponentialBackOffPolicy}.
-   * </p>
    *
    * @since 1.7
    */
