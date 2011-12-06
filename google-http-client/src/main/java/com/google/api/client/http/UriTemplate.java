@@ -207,9 +207,51 @@ public class UriTemplate {
   }
 
   /**
-   * Expands templates in a URI.
+   * Expands templates in a URI template that is relative to a base URL.
+   *
+   * <p>
+   * If the URI template starts with a "/" the raw path from the base URL is stripped out. If the
+   * URI template is a full URL then it is used instead of the base URL.
+   * </p>
+   *
+   * <p>
    * Supports Level 1 templates and all Level 4 composite templates as described in:
    * <a href="http://tools.ietf.org/html/draft-gregorio-uritemplate-07">URI Template</a>.
+   * </p>
+   *
+   * @param baseUrl The base URL which the URI component is relative to.
+   * @param uriTemplate URI component. It may contain one or more sequences of the form "{name}",
+   *        where "name" must be a key in variableMap.
+   * @param parameters an object with parameters designated by Key annotations. If the template has
+   *        no variable references, parameters may be {@code null}.
+   * @param addUnusedParamsAsQueryParams If true then parameters that do not match the template are
+   *        appended to the expanded template as query parameters.
+   * @return The expanded template
+   * @since 1.7
+   */
+  public static String expand(String baseUrl, String uriTemplate, Object parameters,
+      boolean addUnusedParamsAsQueryParams) {
+    String pathUri;
+    if (uriTemplate.startsWith("/")) {
+      // Remove the base path from the base URL.
+      GenericUrl url = new GenericUrl(baseUrl);
+      url.setRawPath(null);
+      pathUri = url.build() + uriTemplate;
+    } else if (uriTemplate.startsWith("http://") || uriTemplate.startsWith("https://")) {
+      pathUri = uriTemplate;
+    } else {
+      pathUri = baseUrl + uriTemplate;
+    }
+    return expand(pathUri, parameters, addUnusedParamsAsQueryParams);
+  }
+
+  /**
+   * Expands templates in a URI.
+   *
+   * <p>
+   * Supports Level 1 templates and all Level 4 composite templates as described in:
+   * <a href="http://tools.ietf.org/html/draft-gregorio-uritemplate-07">URI Template</a>.
+   * </p>
    *
    * @param pathUri URI component. It may contain one or more sequences of the form "{name}", where
    *        "name" must be a key in variableMap

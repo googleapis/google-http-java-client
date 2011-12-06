@@ -14,8 +14,11 @@
 
 package com.google.api.client.http.json;
 
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpMethod;
+import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.UriTemplate;
 import com.google.api.client.util.GenericData;
 import com.google.common.base.Preconditions;
 
@@ -39,31 +42,67 @@ public class JsonHttpRequest extends GenericData {
    *
    * @param client The JSON HTTP client which handles this request
    * @param method HTTP Method type
-   * @param uriTemplate URI template
+   * @param uriTemplate URI template for the path relative to the base URL specified in JSON HTTP
+   *        client. If it starts with a "/" the base path from the base URL will be stripped out.
+   *        The URI template can also be a full URL. URI template expansion is done using {@link
+   *        UriTemplate#expand(String, String, Object, boolean)}
    * @param content A POJO that can be serialized into JSON or {@code null} for none
    */
-  public JsonHttpRequest(
-      JsonHttpClient client, HttpMethod method, String uriTemplate, Object content) {
+  public JsonHttpRequest(JsonHttpClient client, HttpMethod method, String uriTemplate,
+      Object content) {
     this.client = Preconditions.checkNotNull(client);
     this.method = Preconditions.checkNotNull(method);
     this.uriTemplate = Preconditions.checkNotNull(uriTemplate);
     this.content = content;
   }
 
-  /**
-   * @return the {@link JsonHttpClient} which handles this request.
-   */
+  /** Returns the HTTP Method type. */
+  public final HttpMethod getMethod() {
+    return method;
+  }
+
+  /** Returns the URI template. */
+  public final String getUriTemplate() {
+    return uriTemplate;
+  }
+
+  /** Returns a POJO that can be serialized into JSON or {@code null} for none. */
+  public final Object getJsonContent() {
+    return content;
+  }
+
+  /** Returns the JSON HTTP client which handles this request. */
   public final JsonHttpClient getClient() {
     return client;
   }
 
   /**
-   * Sends the request to the server and returns the raw {@link HttpResponse}.
+   * Creates a new instance of {@link GenericUrl} suitable for use against this service.
+   *
+   * @return newly created {@link GenericUrl}
+   */
+  public final GenericUrl buildHttpRequestUrl() {
+    return new GenericUrl(UriTemplate.expand(getClient().getBaseUrl(), uriTemplate, this, true));
+  }
+
+  /**
+   * Create an {@link HttpRequest} suitable for use against this service. Subclasses may
+   * override if specific behavior is required.
+   *
+   * @return newly created {@link HttpRequest}
+   */
+  public HttpRequest buildHttpRequest() throws IOException {
+    return client.buildHttpRequest(method, buildHttpRequestUrl(), content);
+  }
+
+  /**
+   * Sends the request to the server and returns the raw {@link HttpResponse}. Subclasses may
+   * override if specific behavior is required.
    *
    * @return the {@link HttpResponse}
    * @throws IOException if the request fails
    */
-  public final HttpResponse executeUnparsed() throws IOException {
-    return client.execute(method, uriTemplate, content, this);
+  public HttpResponse executeUnparsed() throws IOException {
+    return client.executeUnparsed(method, buildHttpRequestUrl(), content);
   }
 }

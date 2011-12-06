@@ -189,6 +189,7 @@ public class JsonHttpClient {
       String applicationName) {
     this.jsonHttpRequestInitializer = jsonHttpRequestInitializer;
     this.baseUrl = Preconditions.checkNotNull(baseUrl);
+    Preconditions.checkArgument(baseUrl.endsWith("/"));
     this.applicationName = applicationName;
     this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
     Preconditions.checkNotNull(transport);
@@ -205,15 +206,44 @@ public class JsonHttpClient {
    *        "/"
    * @param jsonHttpRequest JSON HTTP Request type
    * @return newly created {@link HttpRequest}
+   *
+   * @deprecated (scheduled to be removed in 1.8) Use
+   *             {@link #buildHttpRequest(HttpMethod, GenericUrl, Object)}
    */
+  @Deprecated
   protected HttpRequest buildHttpRequest(
       HttpMethod method, String uriTemplate, JsonHttpRequest jsonHttpRequest) throws IOException {
     GenericUrl url =
         new GenericUrl(UriTemplate.expand(getBaseUrl() + uriTemplate, jsonHttpRequest, true));
+    return buildHttpRequest(method, url, null);
+  }
+
+  /**
+   * Create an {@link HttpRequest} suitable for use against this service.
+   *
+   * <p>
+   * Subclasses may override if specific behavior is required, for example if a sequence of requests
+   * need to be built instead of a single request then subclasses should throw an
+   * {@link UnsupportedOperationException}. Subclasses which override this method can make use of
+   * {@link HttpRequest#addParser}, {@link HttpRequest#setContent} and
+   * {@link HttpRequest#setEnableGZipContent}.
+   * </p>
+   *
+   * @param method HTTP Method type
+   * @param url The complete URL of the service where requests should be sent
+   * @param body A POJO that can be serialized into JSON or {@code null} for none
+   * @return newly created {@link HttpRequest}
+   * @since 1.7
+   */
+  protected HttpRequest buildHttpRequest(HttpMethod method, GenericUrl url, Object body)
+      throws IOException {
     HttpRequest httpRequest = requestFactory.buildRequest(method, url, null);
     httpRequest.addParser(getJsonHttpParser());
     if (getApplicationName() != null) {
       httpRequest.getHeaders().setUserAgent(getApplicationName());
+    }
+    if (body != null) {
+      httpRequest.setContent(createSerializer(body));
     }
     return httpRequest;
   }
@@ -229,7 +259,10 @@ public class JsonHttpClient {
    * @param jsonHttpRequest JSON HTTP Request type
    * @return {@link HttpRequest} type
    * @throws IOException if the request fails
+   *
+   * @deprecated (scheduled to be removed in 1.8) Use {@link #executeUnparsed}
    */
+  @Deprecated
   protected HttpResponse execute(
       HttpMethod method, String uriTemplate, Object body, JsonHttpRequest jsonHttpRequest)
       throws IOException {
@@ -238,6 +271,24 @@ public class JsonHttpClient {
       request.setContent(createSerializer(body));
       request.setEnableGZipContent(true);
     }
+    return request.execute();
+  }
+
+  /**
+   * Builds and executes a {@link HttpRequest}. Subclasses may override if specific behavior is
+   * required, for example if a sequence of requests need to be built instead
+   * of a single request.
+   *
+   * @param method HTTP Method type
+   * @param url The complete URL of the service where requests should be sent
+   * @param body A POJO that can be serialized into JSON or {@code null} for none
+   * @return {@link HttpRequest} type
+   * @throws IOException if the request fails
+   * @since 1.7
+   */
+  protected HttpResponse executeUnparsed(HttpMethod method, GenericUrl url, Object body)
+      throws IOException {
+    HttpRequest request = buildHttpRequest(method, url, body);
     return request.execute();
   }
 
@@ -299,7 +350,7 @@ public class JsonHttpClient {
     protected Builder(HttpTransport transport, JsonFactory jsonFactory, GenericUrl baseUrl) {
       this.transport = transport;
       this.jsonFactory = jsonFactory;
-      this.baseUrl = baseUrl;
+      setBaseUrl(baseUrl);
     }
 
     /** Builds a new instance of {@link JsonHttpClient}. */
@@ -322,22 +373,32 @@ public class JsonHttpClient {
       return transport;
     }
 
-    /** Returns the base URL of the service. */
+    /**
+     * Returns the base URL of the service, for example
+     * {@code "https://www.googleapis.com/tasks/v1/"}. Must be URL-encoded and must end with a "/".
+     * This is determined when the library is generated and normally should not be changed.
+     */
     public final GenericUrl getBaseUrl() {
       return baseUrl;
     }
 
     /**
-     * Sets the base URL of the service. Subclasses should override by calling super.
+     * Sets the base URL of the service, for example {@code "https://www.googleapis.com/tasks/v1/"}.
+     * Must be URL-encoded and must end with a "/". This is determined when the library is generated
+     * and normally should not be changed. Subclasses should override by calling super.
      *
      * @since 1.7
      */
     public Builder setBaseUrl(GenericUrl baseUrl) {
-      this.baseUrl = baseUrl;
+      this.baseUrl = Preconditions.checkNotNull(baseUrl);
+      Preconditions.checkArgument(baseUrl.build().endsWith("/"));
       return this;
     }
 
-    /** Sets the JSON HTTP request initializer. Subclasses should override by calling super. */
+    /**
+     * Sets the JSON HTTP request initializer or {@code null} for none. Subclasses should override
+     * by calling super.
+     */
     public Builder setJsonHttpRequestInitializer(
         JsonHttpRequestInitializer jsonHttpRequestInitializer) {
       this.jsonHttpRequestInitializer = jsonHttpRequestInitializer;
@@ -349,7 +410,10 @@ public class JsonHttpClient {
       return jsonHttpRequestInitializer;
     }
 
-    /** Sets the HTTP request initializer. Subclasses should override by calling super. */
+    /**
+     * Sets the HTTP request initializer or {@code null} for none. Subclasses should override by
+     * calling super.
+     */
     public Builder setHttpRequestInitializer(HttpRequestInitializer httpRequestInitializer) {
       this.httpRequestInitializer = httpRequestInitializer;
       return this;
@@ -361,8 +425,8 @@ public class JsonHttpClient {
     }
 
     /**
-     * Sets the application name to be used in the UserAgent header of each request. Subclasses
-     * should override by calling super.
+     * Sets the application name to be used in the UserAgent header of each request or {@code null}
+     * for none. Subclasses should override by calling super.
      */
     public Builder setApplicationName(String applicationName) {
       this.applicationName = applicationName;

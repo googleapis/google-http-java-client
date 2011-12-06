@@ -218,4 +218,20 @@ public class UriTemplateTest extends TestCase {
     assertTrue(requestMap.containsKey("unused1"));
     assertTrue(requestMap.containsKey("unused2"));
   }
+
+  public void testExpandTemplates_withBaseUrl() {
+    Map<String, Object> requestMap = Maps.newHashMap();
+    requestMap.put("abc", "xyz");
+    requestMap.put("def", "123");
+
+    // Expand with URI template not starting with "/".
+    assertEquals("https://test/base/path/xyz/123/bar/",
+        UriTemplate.expand("https://test/base/path/", "{abc}/{def}/bar/", requestMap, true));
+    // Expand with URI template starting with "/".
+    assertEquals("https://test/xyz/123/bar/",
+        UriTemplate.expand("https://test/base/path/", "/{abc}/{def}/bar/", requestMap, true));
+    // Expand with URI template as a full URL.
+    assertEquals("http://test3/xyz/123/bar/", UriTemplate.expand("https://test/base/path/",
+        "http://test3/{abc}/{def}/bar/", requestMap, true));
+  }
 }
