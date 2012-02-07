@@ -23,13 +23,21 @@ import java.io.IOException;
  * href="http://tools.ietf.org/html/rfc2617#section-2">Basic Authentication Scheme</a>
  *
  * <p>
- * Implementation is immutable and thread-safe.
+ * Implementation is immutable and thread-safe. It can be used as either an HTTP request initializer
+ * or an HTTP request execute interceptor. {@link #initialize(HttpRequest)} only sets itself as the
+ * interceptor. Authentication is actually done in {@link #intercept(HttpRequest)}, which is
+ * implemented using {@link HttpHeaders#setBasicAuthentication(String, String)}.
+ * </p>
+ *
+ * <p>
+ * Warning: for backwards-compatibility {@link #initialize} also calls
+ * {@link #intercept(HttpRequest)}, but this call will be removed in version 1.8.
  * </p>
  *
  * @since 1.7
  * @author Yaniv Inbar
  */
-public final class BasicAuthentication implements HttpRequestInitializer {
+public final class BasicAuthentication implements HttpRequestInitializer, HttpExecuteInterceptor {
 
   private final String username;
 
@@ -40,10 +48,12 @@ public final class BasicAuthentication implements HttpRequestInitializer {
     this.password = Preconditions.checkNotNull(password);
   }
 
-  /**
-   * Implemented using {@link HttpHeaders#setBasicAuthentication(String, String)}.
-   */
   public void initialize(HttpRequest request) throws IOException {
+    request.setInterceptor(this);
+    intercept(request);
+  }
+
+  public void intercept(HttpRequest request) throws IOException {
     request.getHeaders().setBasicAuthentication(username, password);
   }
 

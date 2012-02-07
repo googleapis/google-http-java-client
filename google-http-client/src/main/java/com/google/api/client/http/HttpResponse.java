@@ -66,9 +66,6 @@ public final class HttpResponse {
   /** HTTP headers. */
   private final HttpHeaders headers;
 
-  /** Whether received a successful status code {@code >= 200 && < 300}. */
-  private final boolean isSuccessStatusCode;
-
   /** Low-level HTTP response. */
   private LowLevelHttpResponse response;
 
@@ -124,7 +121,6 @@ public final class HttpResponse {
     contentEncoding = response.getContentEncoding();
     int code = response.getStatusCode();
     statusCode = code;
-    isSuccessStatusCode = HttpStatusCodes.isSuccess(code);
     String message = response.getReasonPhrase();
     statusMessage = message;
     Logger logger = HttpTransport.LOGGER;
@@ -316,7 +312,7 @@ public final class HttpResponse {
    * @since 1.5
    */
   public boolean isSuccessStatusCode() {
-    return isSuccessStatusCode;
+    return HttpStatusCodes.isSuccess(statusCode);
   }
 
   /**

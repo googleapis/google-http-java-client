@@ -28,7 +28,7 @@
       <new name="Google HTTP Client Library for Java 1.7.0-beta">
         <!-- This is the location of your new source files -->
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.7.0-beta/google-http-client/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.7.0-beta/google-http-client-extensions/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.7.0-beta/google-http-client-extensions-appengine/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.7.0-beta/google-http-client-extensions-android2/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.7.0-beta/google-http-client-extensions-android3/src/main/java" />
       </new>

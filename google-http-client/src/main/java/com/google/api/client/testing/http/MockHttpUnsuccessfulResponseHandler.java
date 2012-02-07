@@ -51,7 +51,7 @@ public class MockHttpUnsuccessfulResponseHandler implements HttpUnsuccessfulResp
     return isCalled;
   }
 
-  public boolean handleResponse(HttpRequest request, HttpResponse response, boolean retrySupported)
+  public boolean handleResponse(HttpRequest request, HttpResponse response, boolean supportsRetry)
       throws IOException {
     isCalled = true;
     return successfullyHandleResponse;

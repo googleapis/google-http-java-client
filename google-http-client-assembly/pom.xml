@@ -19,7 +19,7 @@
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-extensions</artifactId>
+      <artifactId>google-http-client-extensions-appengine</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>

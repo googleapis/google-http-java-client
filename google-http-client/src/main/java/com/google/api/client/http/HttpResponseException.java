@@ -14,6 +14,8 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Strings;
+
 import java.io.IOException;
 
 /**
@@ -24,16 +26,25 @@ import java.io.IOException;
  */
 public class HttpResponseException extends IOException {
 
-  static final long serialVersionUID = 1;
+  private static final long serialVersionUID = -1875819453475890043L;
+
+  /** HTTP status code. */
+  private int statusCode;
+
+  /** HTTP headers. */
+  private final transient HttpHeaders headers;
 
   /** HTTP response. */
-  private final HttpResponse response;
+  @Deprecated
+  private final transient HttpResponse response;
 
   /**
    * Returns the HTTP response.
    *
    * @since 1.5
+   * @deprecated (scheduled to be removed in 1.8)
    */
+  @Deprecated
   public final HttpResponse getResponse() {
     return response;
   }
@@ -44,7 +55,7 @@ public class HttpResponseException extends IOException {
    * @param response HTTP response
    */
   public HttpResponseException(HttpResponse response) {
-    this(response, computeMessage(response));
+    this(response, computeMessageWithContent(response));
   }
 
   /**
@@ -56,17 +67,79 @@ public class HttpResponseException extends IOException {
    */
   public HttpResponseException(HttpResponse response, String message) {
     super(message);
+    statusCode = response.getStatusCode();
+    headers = response.getHeaders();
     this.response = response;
   }
 
-  /** Returns an exception message to use for the given HTTP response. */
+  /**
+   * Returns whether received a successful HTTP status code {@code >= 200 && < 300} (see
+   * {@link #getStatusCode()}).
+   *
+   * @since 1.7
+   */
+  public boolean isSuccessStatusCode() {
+    return HttpStatusCodes.isSuccess(statusCode);
+  }
+
+  /**
+   * Returns the HTTP status code.
+   *
+   * @since 1.7
+   */
+  public int getStatusCode() {
+    return statusCode;
+  }
+
+  /**
+   * Returns the HTTP response headers.
+   *
+   * @since 1.7
+   */
+  public HttpHeaders getHeaders() {
+    return headers;
+  }
+
+  /**
+   * Returns an exception message to use for the given HTTP response.
+   *
+   * @deprecated (scheduled to be removed in 1.8) Use {@link #computeMessageBuffer(HttpResponse)}
+   */
+  @Deprecated
   public static String computeMessage(HttpResponse response) {
-    String statusMessage = response.getStatusMessage();
-    int statusCode = response.getStatusCode();
-    if (statusMessage == null) {
-      return String.valueOf(statusCode);
+    return computeMessageBuffer(response).toString();
+  }
+
+  /**
+   * Returns an exception message to use for the given HTTP response.
+   */
+  private static String computeMessageWithContent(HttpResponse response) {
+    StringBuilder builder = computeMessageBuffer(response);
+    String content = "";
+    try {
+      content = response.parseAsString();
+    } catch (IOException exception) {
+      // it would be bad to throw an exception while throwing an exception
+      exception.printStackTrace();
     }
-    StringBuilder buf = new StringBuilder(4 + statusMessage.length());
-    return buf.append(statusCode).append(' ').append(statusMessage).toString();
+    if (content.length() != 0) {
+      builder.append(Strings.LINE_SEPARATOR).append(content);
+    }
+    return builder.toString();
+  }
+
+  /**
+   * Returns an exception message string builder to use for the given HTTP response.
+   *
+   * @since 1.7
+   */
+  public static StringBuilder computeMessageBuffer(HttpResponse response) {
+    StringBuilder builder = new StringBuilder();
+    builder.append(response.getStatusCode());
+    String statusMessage = response.getStatusMessage();
+    if (statusMessage != null) {
+      builder.append(' ').append(statusMessage);
+    }
+    return builder;
   }
 }

@@ -45,7 +45,7 @@ public class BasicAuthenticationTest extends TestCase {
     HttpRequest request =
         new MockHttpTransport().createRequestFactory().buildGetRequest(
             HttpTesting.SIMPLE_GENERIC_URL);
-    auth.initialize(request);
+    auth.intercept(request);
     assertEquals(AUTH_HEADER, request.getHeaders().getAuthorization());
   }
 }
