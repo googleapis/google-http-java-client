@@ -45,6 +45,12 @@ import java.util.List;
     MultipartRelatedContent.forRequest(request, atomContent, imageContent);
   }
  * </code></pre>
+ * </p>
+ *
+ * <p>
+ * {@link #writeTo} can be called multiple times for Multipart/Related content. Parts must not
+ * close the output stream in {@link #writeTo}.
+ * </p>
  *
  * <p>
  * Implementation is not thread-safe.

@@ -75,7 +75,11 @@ final class NetHttpRequest extends LowLevelHttpRequest {
         } else {
           connection.setChunkedStreamingMode(0);
         }
-        content.writeTo(connection.getOutputStream());
+        try {
+          content.writeTo(connection.getOutputStream());
+        } finally {
+          connection.getOutputStream().close();
+        }
       }
     }
     // connect

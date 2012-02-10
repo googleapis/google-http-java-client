@@ -26,9 +26,9 @@ import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 
-import java.io.IOException;
-
 import junit.framework.TestCase;
+
+import java.io.IOException;
 
 /**
  * Tests {@link JsonHttpClient}.
@@ -96,6 +96,7 @@ public class JsonHttpClientTest extends TestCase {
     assertTrue(remoteRequestInitializer.isCalled);
   }
 
+  @SuppressWarnings("deprecation")
   public void testExecute() throws IOException {
     final String testBaseUrl = "http://www.test.com/";
     final String testUriTemplate = "uri/template";

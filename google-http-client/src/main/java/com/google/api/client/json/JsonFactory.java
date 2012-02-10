@@ -145,4 +145,33 @@ public abstract class JsonFactory {
   public final <T> T fromString(String value, Class<T> destinationClass) throws IOException {
     return createJsonParser(value).parse(destinationClass, null);
   }
+
+  /**
+   * Parse and close an input stream as a JSON object, array, or value into a new instance of the
+   * given destination class using {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}.
+   *
+   * @param inputStream JSON value in an input stream
+   * @param destinationClass destination class that has an accessible default constructor to use to
+   *        create a new instance
+   * @return new instance of the parsed destination class
+   * @since 1.7
+   */
+  public final <T> T fromInputStream(InputStream inputStream, Class<T> destinationClass)
+      throws IOException {
+    return createJsonParser(inputStream).parseAndClose(destinationClass, null);
+  }
+
+  /**
+   * Parse and close a reader as a JSON object, array, or value into a new instance of the given
+   * destination class using {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}.
+   *
+   * @param reader JSON value in a reader
+   * @param destinationClass destination class that has an accessible default constructor to use to
+   *        create a new instance
+   * @return new instance of the parsed destination class
+   * @since 1.7
+   */
+  public final <T> T fromReader(Reader reader, Class<T> destinationClass) throws IOException {
+    return createJsonParser(reader).parseAndClose(destinationClass, null);
+  }
 }

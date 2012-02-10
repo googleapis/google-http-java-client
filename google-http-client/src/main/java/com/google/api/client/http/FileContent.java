@@ -67,7 +67,7 @@ public final class FileContent extends AbstractInputStreamContent {
   }
 
   @Override
-  protected InputStream getInputStream() throws FileNotFoundException {
+  public InputStream getInputStream() throws FileNotFoundException {
     return new FileInputStream(file);
   }
 
@@ -88,5 +88,10 @@ public final class FileContent extends AbstractInputStreamContent {
   @Override
   public FileContent setType(String type) {
     return (FileContent) super.setType(type);
+  }
+
+  @Override
+  public FileContent setCloseInputStream(boolean closeInputStream) {
+    return (FileContent) super.setCloseInputStream(closeInputStream);
   }
 }

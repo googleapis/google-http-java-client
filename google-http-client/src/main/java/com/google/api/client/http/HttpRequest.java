@@ -49,8 +49,8 @@ public final class HttpRequest {
    *
    * @since 1.4
    */
-  public static final String USER_AGENT_SUFFIX =
-      "Google-HTTP-Java-Client/" + Strings.VERSION + " (gzip)";
+  public static final String USER_AGENT_SUFFIX = "Google-HTTP-Java-Client/" + Strings.VERSION
+      + " (gzip)";
 
   /**
    * HTTP request execute interceptor to intercept the start of {@link #execute()} (before executing
@@ -79,6 +79,13 @@ public final class HttpRequest {
    * </pre>
    */
   private HttpHeaders responseHeaders = new HttpHeaders();
+
+  /**
+   * Some servers will fail to process a POST/PUT/PATCH unless Content-Length header >= 1. If this
+   * value is set to {@code false} then " " is set as the content with Content-Length {@code 1} for
+   * empty contents. Defaults to {@code true}.
+   */
+  private boolean allowEmptyContent = true;
 
   /**
    * Set the number of retries that will be allowed to execute as the result of an
@@ -152,6 +159,12 @@ public final class HttpRequest {
 
   /** Whether to automatically follow redirects ({@code true} by default). */
   private boolean followRedirects = true;
+
+  /**
+   * Whether to throw an exception at the end of {@link #execute()} on an HTTP error code (non-2XX)
+   * after all retries and response handlers have been exhausted ({@code true} by default).
+   */
+  private boolean throwExceptionOnExecuteError = true;
 
   /**
    * @param transport HTTP transport
@@ -516,6 +529,29 @@ public final class HttpRequest {
   }
 
   /**
+   * Some servers will fail to process a POST/PUT/PATCH unless Content-Length header >= 1. If this
+   * value is set to {@code false} then " " is set as the content with Content-Length {@code 1} for
+   * empty contents. Defaults to {@code true}.
+   *
+   * @since 1.7
+   */
+  public HttpRequest setAllowEmptyContent(boolean allowEmptyContent) {
+    this.allowEmptyContent = allowEmptyContent;
+    return this;
+  }
+
+  /**
+   * Some servers will fail to process a POST/PUT/PATCH unless Content-Length header >= 1. If this
+   * value is set to {@code false} then " " is set as the content with Content-Length {@code 1} for
+   * empty contents. Defaults to {@code true}.
+   *
+   * @since 1.7
+   */
+  public boolean isAllowEmptyContent() {
+    return allowEmptyContent;
+  }
+
+  /**
    * Returns the number of retries that will be allowed to execute as the result of an
    * {@link HttpUnsuccessfulResponseHandler} before being terminated or {@code 0} to not retry
    * requests.
@@ -594,6 +630,31 @@ public final class HttpRequest {
   }
 
   /**
+   * Returns whether to throw an exception at the end of {@link #execute()} on an HTTP error code
+   * (non-2XX) after all retries and response handlers have been exhausted.
+   *
+   * @since 1.7
+   */
+  public boolean getThrowExceptionOnExecuteError() {
+    return throwExceptionOnExecuteError;
+  }
+
+  /**
+   * Sets whether to throw an exception at the end of {@link #execute()} on a HTTP error code
+   * (non-2XX) after all retries and response handlers have been exhausted.
+   *
+   * <p>
+   * The default value is {@code true}.
+   * </p>
+   *
+   * @since 1.7
+   */
+  public HttpRequest setThrowExceptionOnExecuteError(boolean throwExceptionOnExecuteError) {
+    this.throwExceptionOnExecuteError = throwExceptionOnExecuteError;
+    return this;
+  }
+
+  /**
    * Execute the HTTP request and returns the HTTP response.
    * <p>
    * Note that regardless of the returned status code, the HTTP response content has not been parsed
@@ -603,8 +664,10 @@ public final class HttpRequest {
    * The only exception is the value of the {@code Authorization} header which is only logged if
    * {@link Level#ALL} is loggable.
    *
-   * @return HTTP response for an HTTP success code
-   * @throws HttpResponseException for an HTTP error code
+   * @return HTTP response for an HTTP success response (or HTTP error response if
+   *         {@link #getThrowExceptionOnExecuteError()} is {@code false})
+   * @throws HttpResponseException for an HTTP error response (only if
+   *         {@link #getThrowExceptionOnExecuteError()} is {@code true})
    * @see HttpResponse#isSuccessStatusCode()
    */
   public HttpResponse execute() throws IOException {
@@ -641,13 +704,13 @@ public final class HttpRequest {
           lowLevelHttpRequest = transport.buildGetRequest(urlString);
           break;
         case HEAD:
-          Preconditions.checkArgument(
-              transport.supportsHead(), "HTTP transport doesn't support HEAD");
+          Preconditions.checkArgument(transport.supportsHead(),
+              "HTTP transport doesn't support HEAD");
           lowLevelHttpRequest = transport.buildHeadRequest(urlString);
           break;
         case PATCH:
-          Preconditions.checkArgument(
-              transport.supportsPatch(), "HTTP transport doesn't support PATCH");
+          Preconditions.checkArgument(transport.supportsPatch(),
+              "HTTP transport doesn't support PATCH");
           lowLevelHttpRequest = transport.buildPatchRequest(urlString);
           break;
         case POST:
@@ -693,8 +756,8 @@ public final class HttpRequest {
       }
       // content
       HttpContent content = this.content;
-      // Hack: some servers will fail to process a POST/PUT/PATCH unless Content-Length header >= 1
-      if ((method == HttpMethod.PUT || method == HttpMethod.POST || method == HttpMethod.PATCH)
+      if (!isAllowEmptyContent()
+          && (method == HttpMethod.PUT || method == HttpMethod.POST || method == HttpMethod.PATCH)
           && (content == null || content.getLength() == 0)) {
         content = ByteArrayContent.fromString(null, " ");
       }
@@ -709,8 +772,9 @@ public final class HttpRequest {
             && LogContent.isTextBasedContentType(contentType)
             && (loggable && !disableContentLogging || logger.isLoggable(Level.ALL))) {
           if (contentLength <= contentLoggingLimit && contentLoggingLimit != 0) {
-            content = new LogContent(content, contentType, contentEncoding, contentLength,
-                contentLoggingLimit);
+            content =
+                new LogContent(content, contentType, contentEncoding, contentLength,
+                    contentLoggingLimit);
           }
         }
         // gzip
@@ -762,8 +826,7 @@ public final class HttpRequest {
             // The unsuccessful request's error could not be handled and it is a redirect request.
             handleRedirect(response);
             redirectRequest = true;
-          } else if (
-              retrySupported && backOffPolicy != null
+          } else if (retrySupported && backOffPolicy != null
               && backOffPolicy.isBackOffRequired(response.getStatusCode())) {
             // The unsuccessful request's error could not be handled and should be backed off before
             // retrying.
@@ -780,10 +843,14 @@ public final class HttpRequest {
         // Once there are no more retries remaining, this will be -1
         // Count redirects as retries, we want a finite limit of redirects.
         retriesRemaining--;
+        // need to close the response stream before retrying a request
+        if (requiresRetry && retrySupported) {
+          response.ignore();
+        }
       }
     } while (requiresRetry && retrySupported);
 
-    if (!response.isSuccessStatusCode()) {
+    if (throwExceptionOnExecuteError && !response.isSuccessStatusCode()) {
       throw new HttpResponseException(response);
     }
     return response;

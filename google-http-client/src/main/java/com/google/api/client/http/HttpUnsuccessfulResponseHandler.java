@@ -92,12 +92,12 @@ public interface HttpUnsuccessfulResponseHandler {
    *
    * @param request Request object that can be read from for context or modified before retry
    * @param response Response to process
-   * @param retrySupported Whether there will actually be a retry if this handler return {@code
+   * @param supportsRetry Whether there will actually be a retry if this handler return {@code
    *        true}. Some handlers may want to have an effect only when there will actually be a retry
    *        after they handle their event (e.g. a handler that implements exponential backoff).
    * @return Whether or not this handler has made a change that will require the request to be
    *         re-sent.
    */
-  boolean handleResponse(HttpRequest request, HttpResponse response, boolean retrySupported)
+  boolean handleResponse(HttpRequest request, HttpResponse response, boolean supportsRetry)
       throws IOException;
 }

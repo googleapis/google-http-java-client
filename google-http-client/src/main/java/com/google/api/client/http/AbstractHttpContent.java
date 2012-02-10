@@ -63,7 +63,11 @@ public abstract class AbstractHttpContent implements HttpContent {
       return -1;
     }
     ByteCountingOutputStream countingStream = new ByteCountingOutputStream();
-    writeTo(countingStream);
+    try {
+      writeTo(countingStream);
+    } finally {
+      countingStream.close();
+    }
     return countingStream.count;
   }
 

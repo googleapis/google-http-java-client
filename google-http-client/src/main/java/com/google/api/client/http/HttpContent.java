@@ -40,7 +40,15 @@ public interface HttpContent {
   /** Returns the content type or {@code null} for none. */
   String getType();
 
-  /** Writes the content to the given output stream. */
+  /**
+   * Writes the content to the given output stream.
+   *
+   * <p>
+   * The recommendation for implementations is that they should not close the output stream. Callers
+   * should not assume whether or not the output stream has been closed. Implementations that do not
+   * close the output stream should flush it at the end of the method.
+   * </p>
+   */
   void writeTo(OutputStream out) throws IOException;
 
   /**
