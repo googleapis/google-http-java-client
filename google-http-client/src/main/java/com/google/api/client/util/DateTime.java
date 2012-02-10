@@ -216,6 +216,7 @@ public final class DateTime implements Serializable {
           dateTime.set(Calendar.MILLISECOND, milliseconds);
           tzIndex = 23;
         } else {
+          dateTime.set(Calendar.MILLISECOND, 0);
           tzIndex = 19;
         }
       }

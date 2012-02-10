@@ -53,6 +53,8 @@ public class DateTimeTest extends TestCase {
     assertTrue(value.isDateOnly());
     value = DateTime.parseRfc3339("2007-06-01T10:11:30.057");
     assertFalse(value.isDateOnly());
+    value = DateTime.parseRfc3339("2007-06-01T10:11:30Z");
+    assertEquals(0, value.getValue() % 100);
   }
 
   private void expectExceptionForParseRfc3339(String input) {
