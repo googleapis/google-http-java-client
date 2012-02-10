@@ -115,7 +115,7 @@ public final class ByteArrayContent extends AbstractInputStreamContent {
   }
 
   @Override
-  protected InputStream getInputStream() {
+  public InputStream getInputStream() {
     return new ByteArrayInputStream(byteArray, offset, length);
   }
 
@@ -127,5 +127,10 @@ public final class ByteArrayContent extends AbstractInputStreamContent {
   @Override
   public ByteArrayContent setType(String type) {
     return (ByteArrayContent) super.setType(type);
+  }
+
+  @Override
+  public ByteArrayContent setCloseInputStream(boolean closeInputStream) {
+    return (ByteArrayContent) super.setCloseInputStream(closeInputStream);
   }
 }

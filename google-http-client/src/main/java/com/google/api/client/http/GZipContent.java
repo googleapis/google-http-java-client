@@ -41,10 +41,20 @@ final class GZipContent extends AbstractHttpContent {
     this.contentType = contentType;
   }
 
+  /**
+   * Writes the content to the given output stream and closes the output stream.
+   * 
+   * <p>
+   * The output stream is closed by calling {@link GZIPOutputStream#close} to avoid a resource leak
+   * caused due to an instance of {@link java.util.zip.Deflater} being left open. See Bug <a
+   * href='http://code.google.com/p/google-http-java-client/issues/detail?id=61'>61</a> for more
+   * information.
+   * </p>
+   */
   public void writeTo(OutputStream out) throws IOException {
     GZIPOutputStream zipper = new GZIPOutputStream(out);
     httpContent.writeTo(zipper);
-    zipper.finish();
+    zipper.close();
   }
 
   @Override

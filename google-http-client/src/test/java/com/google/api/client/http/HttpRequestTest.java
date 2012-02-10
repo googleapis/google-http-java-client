@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -37,15 +37,15 @@ import java.util.Map;
 
 /**
  * Tests {@link HttpRequest}.
- *
+ * 
  * @author Yaniv Inbar
  */
 public class HttpRequestTest extends TestCase {
 
-  private static final EnumSet<HttpMethod> BASIC_METHODS =
-      EnumSet.of(HttpMethod.GET, HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE);
-  private static final EnumSet<HttpMethod> OTHER_METHODS =
-      EnumSet.of(HttpMethod.HEAD, HttpMethod.PATCH);
+  private static final EnumSet<HttpMethod> BASIC_METHODS = EnumSet.of(HttpMethod.GET,
+      HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE);
+  private static final EnumSet<HttpMethod> OTHER_METHODS = EnumSet.of(HttpMethod.HEAD,
+      HttpMethod.PATCH);
 
   public HttpRequestTest(String name) {
     super(name);
@@ -60,8 +60,9 @@ public class HttpRequestTest extends TestCase {
       request.execute();
     }
     for (HttpMethod method : OTHER_METHODS) {
-      transport = MockHttpTransport
-          .builder().setSupportedOptionalMethods(ImmutableSet.<HttpMethod>of()).build();
+      transport =
+          MockHttpTransport.builder().setSupportedOptionalMethods(ImmutableSet.<HttpMethod>of())
+              .build();
       request = transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
       request.setMethod(method);
       try {
@@ -143,8 +144,8 @@ public class HttpRequestTest extends TestCase {
       }
     };
 
-    protected RedirectTransport(
-        boolean removeLocation, boolean infiniteRedirection, int redirectStatusCode) {
+    protected RedirectTransport(boolean removeLocation, boolean infiniteRedirection,
+        int redirectStatusCode) {
       this.removeLocation = removeLocation;
       this.infiniteRedirection = infiniteRedirection;
       this.redirectStatusCode = redirectStatusCode;
@@ -227,8 +228,9 @@ public class HttpRequestTest extends TestCase {
         new RedirectTransport(false, false, HttpStatusCodes.STATUS_CODE_SEE_OTHER);
     byte[] content = new byte[300];
     Arrays.fill(content, (byte) ' ');
-    HttpRequest request = fakeTransport.createRequestFactory().buildPostRequest(
-        new GenericUrl("http://gmail.com"), new ByteArrayContent(null, content));
+    HttpRequest request =
+        fakeTransport.createRequestFactory().buildPostRequest(new GenericUrl("http://gmail.com"),
+            new ByteArrayContent(null, content));
     request.setMethod(HttpMethod.POST);
     HttpResponse resp = request.execute();
 
@@ -454,8 +456,7 @@ public class HttpRequestTest extends TestCase {
   public enum E {
 
     @Value
-    VALUE,
-    @Value("other")
+    VALUE, @Value("other")
     OTHER_VALUE,
   }
 
@@ -515,8 +516,8 @@ public class HttpRequestTest extends TestCase {
     assertEquals(ImmutableList.of("a2", "b2", "c2"), headers.get("objList"));
     assertEquals(ImmutableList.of("a1", "a2"), headers.get("r"));
     assertFalse(headers.containsKey("acceptEncoding"));
-    assertEquals(
-        ImmutableList.of("foo " + HttpRequest.USER_AGENT_SUFFIX), headers.get("User-Agent"));
+    assertEquals(ImmutableList.of("foo " + HttpRequest.USER_AGENT_SUFFIX),
+        headers.get("User-Agent"));
     assertEquals(ImmutableList.of("b"), headers.get("a"));
     assertEquals(ImmutableList.of("VALUE"), headers.get("value"));
     assertEquals(ImmutableList.of("other"), headers.get("otherValue"));
@@ -553,8 +554,9 @@ public class HttpRequestTest extends TestCase {
     MyTransport transport = new MyTransport();
     byte[] content = new byte[300];
     Arrays.fill(content, (byte) ' ');
-    HttpRequest request = transport.createRequestFactory().buildPostRequest(
-        HttpTesting.SIMPLE_GENERIC_URL, new ByteArrayContent(null, content));
+    HttpRequest request =
+        transport.createRequestFactory().buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL,
+            new ByteArrayContent(null, content));
     assertFalse(request.getEnableGZipContent());
     request.execute();
     assertFalse(request.getEnableGZipContent());
@@ -649,12 +651,27 @@ public class HttpRequestTest extends TestCase {
     }
     MyTransport transport = new MyTransport();
     HttpRequestFactory requestFactory = transport.createRequestFactory();
+    // Turn off allowEmptyContent and assert
     for (HttpMethod method : HttpMethod.values()) {
       boolean isOverriden =
           method == HttpMethod.PUT || method == HttpMethod.PATCH || method == HttpMethod.POST;
       transport.expectedContent = isOverriden ? " " : null;
-      requestFactory.buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL, null).execute();
+      requestFactory.buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL, null)
+          .setAllowEmptyContent(false).execute();
       transport.expectedContent = isOverriden ? " " : "";
+      requestFactory
+          .buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL,
+              ByteArrayContent.fromString(null, "")).setAllowEmptyContent(false).execute();
+      transport.expectedContent = "abc";
+      requestFactory.buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL,
+          ByteArrayContent.fromString(null, "abc")).execute();
+    }
+
+    // Leave allowEmptyContent turned on (default value) and assert
+    for (HttpMethod method : HttpMethod.values()) {
+      transport.expectedContent = null;
+      requestFactory.buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL, null).execute();
+      transport.expectedContent = "";
       requestFactory.buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL,
           ByteArrayContent.fromString(null, "")).execute();
       transport.expectedContent = "abc";

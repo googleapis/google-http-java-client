@@ -43,6 +43,7 @@ public final class JacksonFactory extends JsonFactory {
   private final org.codehaus.jackson.JsonFactory factory = new org.codehaus.jackson.JsonFactory();
   {
     // don't auto-close JSON content in order to ensure consistent behavior across JSON factories
+    // TODO(rmistry): Should we disable the JsonGenerator.Feature.AUTO_CLOSE_TARGET feature?
     factory.configure(org.codehaus.jackson.JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT, false);
   }
 

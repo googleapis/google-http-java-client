@@ -60,12 +60,17 @@ final class LogContent implements HttpContent {
 
   public void writeTo(OutputStream out) throws IOException {
     ByteArrayOutputStream debugStream = new ByteArrayOutputStream();
-    httpContent.writeTo(debugStream);
-    byte[] debugContent = debugStream.toByteArray();
-    if (debugContent.length <= contentLoggingLimit) {
-      HttpTransport.LOGGER.config(Strings.fromBytesUtf8(debugContent));
+    try {
+      httpContent.writeTo(debugStream);
+      byte[] debugContent = debugStream.toByteArray();
+      if (debugContent.length <= contentLoggingLimit) {
+        HttpTransport.LOGGER.config(Strings.fromBytesUtf8(debugContent));
+      }
+      out.write(debugContent);
+    } finally {
+      debugStream.close();
     }
-    out.write(debugContent);
+    out.flush();
   }
 
   public String getEncoding() {

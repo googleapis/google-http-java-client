@@ -49,8 +49,8 @@ public final class HttpRequest {
    *
    * @since 1.4
    */
-  public static final String USER_AGENT_SUFFIX =
-      "Google-HTTP-Java-Client/" + Strings.VERSION + " (gzip)";
+  public static final String USER_AGENT_SUFFIX = "Google-HTTP-Java-Client/" + Strings.VERSION
+      + " (gzip)";
 
   /**
    * HTTP request execute interceptor to intercept the start of {@link #execute()} (before executing
@@ -79,6 +79,13 @@ public final class HttpRequest {
    * </pre>
    */
   private HttpHeaders responseHeaders = new HttpHeaders();
+
+  /**
+   * Some servers will fail to process a POST/PUT/PATCH unless Content-Length header >= 1. If this
+   * value is set to {@code false} then " " is set as the content with Content-Length {@code 1} for
+   * empty contents. Defaults to {@code true}.
+   */
+  private boolean allowEmptyContent = true;
 
   /**
    * Set the number of retries that will be allowed to execute as the result of an
@@ -522,6 +529,29 @@ public final class HttpRequest {
   }
 
   /**
+   * Some servers will fail to process a POST/PUT/PATCH unless Content-Length header >= 1. If this
+   * value is set to {@code false} then " " is set as the content with Content-Length {@code 1} for
+   * empty contents. Defaults to {@code true}.
+   *
+   * @since 1.7
+   */
+  public HttpRequest setAllowEmptyContent(boolean allowEmptyContent) {
+    this.allowEmptyContent = allowEmptyContent;
+    return this;
+  }
+
+  /**
+   * Some servers will fail to process a POST/PUT/PATCH unless Content-Length header >= 1. If this
+   * value is set to {@code false} then " " is set as the content with Content-Length {@code 1} for
+   * empty contents. Defaults to {@code true}.
+   *
+   * @since 1.7
+   */
+  public boolean isAllowEmptyContent() {
+    return allowEmptyContent;
+  }
+
+  /**
    * Returns the number of retries that will be allowed to execute as the result of an
    * {@link HttpUnsuccessfulResponseHandler} before being terminated or {@code 0} to not retry
    * requests.
@@ -610,7 +640,7 @@ public final class HttpRequest {
   }
 
   /**
-   * Sets whether to throw an exception at the end of {@link #execute()} on an HTTP error code
+   * Sets whether to throw an exception at the end of {@link #execute()} on a HTTP error code
    * (non-2XX) after all retries and response handlers have been exhausted.
    *
    * <p>
@@ -674,13 +704,13 @@ public final class HttpRequest {
           lowLevelHttpRequest = transport.buildGetRequest(urlString);
           break;
         case HEAD:
-          Preconditions.checkArgument(
-              transport.supportsHead(), "HTTP transport doesn't support HEAD");
+          Preconditions.checkArgument(transport.supportsHead(),
+              "HTTP transport doesn't support HEAD");
           lowLevelHttpRequest = transport.buildHeadRequest(urlString);
           break;
         case PATCH:
-          Preconditions.checkArgument(
-              transport.supportsPatch(), "HTTP transport doesn't support PATCH");
+          Preconditions.checkArgument(transport.supportsPatch(),
+              "HTTP transport doesn't support PATCH");
           lowLevelHttpRequest = transport.buildPatchRequest(urlString);
           break;
         case POST:
@@ -726,8 +756,8 @@ public final class HttpRequest {
       }
       // content
       HttpContent content = this.content;
-      // Hack: some servers will fail to process a POST/PUT/PATCH unless Content-Length header >= 1
-      if ((method == HttpMethod.PUT || method == HttpMethod.POST || method == HttpMethod.PATCH)
+      if (!isAllowEmptyContent()
+          && (method == HttpMethod.PUT || method == HttpMethod.POST || method == HttpMethod.PATCH)
           && (content == null || content.getLength() == 0)) {
         content = ByteArrayContent.fromString(null, " ");
       }
@@ -742,8 +772,9 @@ public final class HttpRequest {
             && LogContent.isTextBasedContentType(contentType)
             && (loggable && !disableContentLogging || logger.isLoggable(Level.ALL))) {
           if (contentLength <= contentLoggingLimit && contentLoggingLimit != 0) {
-            content = new LogContent(content, contentType, contentEncoding, contentLength,
-                contentLoggingLimit);
+            content =
+                new LogContent(content, contentType, contentEncoding, contentLength,
+                    contentLoggingLimit);
           }
         }
         // gzip
@@ -795,8 +826,7 @@ public final class HttpRequest {
             // The unsuccessful request's error could not be handled and it is a redirect request.
             handleRedirect(response);
             redirectRequest = true;
-          } else if (
-              retrySupported && backOffPolicy != null
+          } else if (retrySupported && backOffPolicy != null
               && backOffPolicy.isBackOffRequired(response.getStatusCode())) {
             // The unsuccessful request's error could not be handled and should be backed off before
             // retrying.

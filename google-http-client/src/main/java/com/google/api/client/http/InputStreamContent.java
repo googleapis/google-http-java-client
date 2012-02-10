@@ -52,6 +52,9 @@ public final class InputStreamContent extends AbstractInputStreamContent {
   /** Content length or less than zero if not known. Defaults to {@code -1}. */
   private long length = -1;
 
+  /** Whether or not retry is supported. Defaults to {@code false}. */
+  private boolean retrySupported;
+
   /** Input stream to read from. */
   private final InputStream inputStream;
 
@@ -70,7 +73,22 @@ public final class InputStreamContent extends AbstractInputStreamContent {
   }
 
   public boolean retrySupported() {
-    return false;
+    return retrySupported;
+  }
+
+  /**
+   * Sets whether or not retry is supported. Defaults to {@code false}.
+   *
+   * <p>
+   * Should be set to {@code true} if {@link #getInputStream} is called to reset to the original
+   * position of the input stream.
+   * </p>
+   *
+   * @since 1.7
+   */
+  public InputStreamContent setRetrySupported(boolean retrySupported) {
+    this.retrySupported = retrySupported;
+    return this;
   }
 
   @Override
@@ -88,6 +106,11 @@ public final class InputStreamContent extends AbstractInputStreamContent {
     return (InputStreamContent) super.setType(type);
   }
 
+  @Override
+  public InputStreamContent setCloseInputStream(boolean closeInputStream) {
+    return (InputStreamContent) super.setCloseInputStream(closeInputStream);
+  }
+
   /**
    * Sets the content length or less than zero if not known.
    *
@@ -97,7 +120,8 @@ public final class InputStreamContent extends AbstractInputStreamContent {
    *
    * @since 1.5
    */
-  public void setLength(long length) {
+  public InputStreamContent setLength(long length) {
     this.length = length;
+    return this;
   }
 }

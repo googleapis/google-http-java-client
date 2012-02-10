@@ -378,8 +378,12 @@ public final class HttpResponse {
           !disableContentLogging && logger.isLoggable(Level.CONFIG) || logger.isLoggable(Level.ALL);
       if (loggable) {
         ByteArrayOutputStream debugStream = new ByteArrayOutputStream();
-        AbstractInputStreamContent.copy(content, debugStream);
-        debugContentByteArray = debugStream.toByteArray();
+        try {
+          AbstractInputStreamContent.copy(content, debugStream);
+          debugContentByteArray = debugStream.toByteArray();
+        } finally {
+          debugStream.close();
+        }
         content = new ByteArrayInputStream(debugContentByteArray);
         logger.config("Response size: " + debugContentByteArray.length + " bytes");
       }

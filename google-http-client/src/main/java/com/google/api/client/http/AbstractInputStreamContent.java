@@ -44,6 +44,12 @@ public abstract class AbstractInputStreamContent implements HttpContent {
   private String encoding;
 
   /**
+   * Whether the input stream should be closed at the end of {@link #writeTo}. Default is
+   * {@code true}.
+   */
+  private boolean closeInputStream = true;
+
+  /**
    * @param type Content type or {@code null} for none
    * @since 1.5
    */
@@ -56,14 +62,20 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    * {@link AbstractInputStreamContent}. If the specific implementation will return {@code true} for
    * {@link #retrySupported()} this should be a factory function which will create a new
    * {@link InputStream} from the source data whenever invoked.
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.6 {@link #getInputStream} was protected, it is now public.
+   * </p>
+   *
+   * @since 1.7
    */
-  protected abstract InputStream getInputStream() throws IOException;
+  public abstract InputStream getInputStream() throws IOException;
 
   public void writeTo(OutputStream out) throws IOException {
     InputStream inputStream = getInputStream();
     long contentLength = getLength();
     if (contentLength < 0) {
-      copy(inputStream, out);
+      copy(inputStream, out, closeInputStream);
     } else {
       byte[] buffer = new byte[BUFFER_SIZE];
       try {
@@ -78,9 +90,12 @@ public abstract class AbstractInputStreamContent implements HttpContent {
           remaining -= read;
         }
       } finally {
-        inputStream.close();
+        if (closeInputStream) {
+          inputStream.close();
+        }
       }
     }
+    out.flush();
   }
 
   public String getEncoding() {
@@ -92,7 +107,18 @@ public abstract class AbstractInputStreamContent implements HttpContent {
   }
 
   /**
-   * Sets the content encoding (for example {@code "gzip"}) or {@code null} for none.
+   * Returns whether the input stream should be closed at the end of {@link #writeTo}. Default is
+   * {@code true}.
+   *
+   * @since 1.7
+   */
+  public final boolean getCloseInputStream() {
+    return closeInputStream;
+  }
+
+  /**
+   * Sets the content encoding (for example {@code "gzip"}) or {@code null} for none. Subclasses
+   * should override by calling super.
    *
    * @since 1.5
    */
@@ -102,7 +128,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
   }
 
   /**
-   * Sets the content type or {@code null} for none.
+   * Sets the content type or {@code null} for none. Subclasses should override by calling super.
    *
    * @since 1.5
    */
@@ -112,11 +138,24 @@ public abstract class AbstractInputStreamContent implements HttpContent {
   }
 
   /**
+   * Sets whether the input stream should be closed at the end of {@link #writeTo}. Default is
+   * {@code true}. Subclasses should override by calling super.
+   *
+   * @since 1.7
+   */
+  public AbstractInputStreamContent setCloseInputStream(boolean closeInputStream) {
+    this.closeInputStream = closeInputStream;
+    return this;
+  }
+
+  /**
    * Writes the content provided by the given source input stream into the given destination output
    * stream.
+   *
    * <p>
-   * The input stream is guaranteed to be closed at the end of the method.
+   * The input stream is guaranteed to be closed at the end of this method.
    * </p>
+   *
    * <p>
    * Sample use:
    *
@@ -137,6 +176,36 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    * @param outputStream destination output stream
    */
   public static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
+    copy(inputStream, outputStream, true);
+  }
+
+  /**
+   * Writes the content provided by the given source input stream into the given destination output
+   * stream.
+   *
+   * <p>
+   * Sample use:
+   *
+   * <pre><code>
+  static void downloadMedia(HttpResponse response, File file)
+      throws IOException {
+    FileOutputStream out = new FileOutputStream(file);
+    try {
+      AbstractInputStreamContent.copy(response.getContent(), out, true);
+    } finally {
+      out.close();
+    }
+  }
+   * </code></pre>
+   * </p>
+   *
+   * @param inputStream source input stream
+   * @param outputStream destination output stream
+   * @param closeInputStream whether the input stream should be closed at the end of this method
+   * @since 1.7
+   */
+  public static void copy(InputStream inputStream, OutputStream outputStream,
+      boolean closeInputStream) throws IOException {
     try {
       byte[] tmp = new byte[BUFFER_SIZE];
       int bytesRead;
@@ -144,7 +213,9 @@ public abstract class AbstractInputStreamContent implements HttpContent {
         outputStream.write(tmp, 0, bytesRead);
       }
     } finally {
-      inputStream.close();
+      if (closeInputStream) {
+        inputStream.close();
+      }
     }
   }
 }
