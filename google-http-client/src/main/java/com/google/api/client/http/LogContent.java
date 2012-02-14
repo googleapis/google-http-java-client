@@ -14,8 +14,9 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Strings;
 import com.google.common.base.Preconditions;
+
+import org.apache.commons.codec.binary.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -64,7 +65,7 @@ final class LogContent implements HttpContent {
       httpContent.writeTo(debugStream);
       byte[] debugContent = debugStream.toByteArray();
       if (debugContent.length <= contentLoggingLimit) {
-        HttpTransport.LOGGER.config(Strings.fromBytesUtf8(debugContent));
+        HttpTransport.LOGGER.config(StringUtils.newStringUtf8(debugContent));
       }
       out.write(debugContent);
     } finally {

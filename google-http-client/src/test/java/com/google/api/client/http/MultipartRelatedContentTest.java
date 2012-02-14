@@ -16,9 +16,9 @@ package com.google.api.client.http;
 
 import com.google.api.client.json.Json;
 import com.google.api.client.testing.http.MockHttpTransport;
-import com.google.api.client.util.Strings;
 
 import junit.framework.TestCase;
+import org.apache.commons.codec.binary.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -64,7 +64,7 @@ public class MultipartRelatedContentTest extends TestCase {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     content.writeTo(out);
     assertEquals(expectedContent, out.toString());
-    assertEquals(Strings.toBytesUtf8(expectedContent).length, content.getLength());
+    assertEquals(StringUtils.getBytesUtf8(expectedContent).length, content.getLength());
   }
 
   public void testForRequest() throws IOException {

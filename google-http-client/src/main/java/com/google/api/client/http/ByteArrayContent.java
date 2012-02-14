@@ -14,8 +14,9 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Strings;
 import com.google.common.base.Preconditions;
+
+import org.apache.commons.codec.binary.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -103,7 +104,7 @@ public final class ByteArrayContent extends AbstractInputStreamContent {
    * @since 1.5
    */
   public static ByteArrayContent fromString(String type, String contentString) {
-    return new ByteArrayContent(type, Strings.toBytesUtf8(contentString));
+    return new ByteArrayContent(type, StringUtils.getBytesUtf8(contentString));
   }
 
   public long getLength() {

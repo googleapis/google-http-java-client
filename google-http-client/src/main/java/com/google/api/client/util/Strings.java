@@ -43,7 +43,10 @@ public class Strings {
    * @param string given string
    * @return resultant byte array
    * @since 1.2
+   * @deprecated (scheduled to be removed in 1.8) Use
+   *             {@link org.apache.commons.codec.binary.StringUtils#getBytesUtf8(String)}
    */
+  @Deprecated
   public static byte[] toBytesUtf8(String string) {
     try {
       return string.getBytes("UTF-8");
@@ -65,7 +68,10 @@ public class Strings {
    * @param bytes bytes to be decoded into characters
    * @return resultant string
    * @since 1.2
+   * @deprecated (scheduled to be removed in 1.8) Use
+   *             {@link org.apache.commons.codec.binary.StringUtils#newStringUtf8(byte[])}
    */
+  @Deprecated
   public static String fromBytesUtf8(byte[] bytes) {
     try {
       return new String(bytes, "UTF-8");

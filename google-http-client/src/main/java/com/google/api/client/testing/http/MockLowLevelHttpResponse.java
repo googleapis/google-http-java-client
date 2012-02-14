@@ -15,8 +15,9 @@
 package com.google.api.client.testing.http;
 
 import com.google.api.client.http.LowLevelHttpResponse;
-import com.google.api.client.util.Strings;
 import com.google.common.base.Preconditions;
+
+import org.apache.commons.codec.binary.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -77,7 +78,7 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
    * @param stringContent content string
    */
   public MockLowLevelHttpResponse setContent(String stringContent) {
-    content = new ByteArrayInputStream(Strings.toBytesUtf8(stringContent));
+    content = new ByteArrayInputStream(StringUtils.getBytesUtf8(stringContent));
     return this;
   }
 

@@ -134,6 +134,10 @@ package com.google.api.client.util;
  * @version 2.3.7
  */
 
+/**
+ * @deprecated (scheduled to be removed in 1.8) Use {@link org.apache.commons.codec.binary.Base64}
+ */
+@Deprecated
 public class Base64 {
 
 
@@ -560,7 +564,11 @@ public class Base64 {
    * @return The Base64-encoded data as a byte[] (of ASCII characters)
    * @throws NullPointerException if source array is null
    * @since 2.3.1
+   * @deprecated (scheduled to be removed in 1.8) Use
+   *             {@link org.apache.commons.codec.binary.Base64#encodeBase64(byte[])} or
+   *             {@link org.apache.commons.codec.binary.Base64#encodeBase64String(byte[])}
    */
+  @Deprecated
   public static byte[] encode(byte[] source) {
     return encode(source, 0, source.length);
   }
@@ -759,7 +767,11 @@ public class Base64 {
    * @param source The Base64 encoded data
    * @return decoded data
    * @since 2.3.1
+   * @deprecated (scheduled to be removed in 1.8) Use
+   *             {@link org.apache.commons.codec.binary.Base64#decodeBase64(byte[])} or
+   *             {@link org.apache.commons.codec.binary.Base64#decodeBase64(String)}
    */
+  @Deprecated
   public static byte[] decode(byte[] source) throws java.io.IOException {
     return decode(source, 0, source.length);
   }

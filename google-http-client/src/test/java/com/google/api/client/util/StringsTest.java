@@ -14,9 +14,8 @@
 
 package com.google.api.client.util;
 
-import org.junit.Assert;
-
 import junit.framework.TestCase;
+import org.junit.Assert;
 
 /**
  * Tests {@link Strings}.
@@ -37,10 +36,12 @@ public class StringsTest extends TestCase {
     assertNotNull(Strings.LINE_SEPARATOR);
   }
 
+  @Deprecated
   public void testToBytesUtf8() {
     Assert.assertArrayEquals(SAMPLE_UTF8, Strings.toBytesUtf8(SAMPLE));
   }
 
+  @Deprecated
   public void testFromBytesUtf8() {
     assertEquals(SAMPLE, Strings.fromBytesUtf8(SAMPLE_UTF8));
   }

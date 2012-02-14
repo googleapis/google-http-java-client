@@ -14,9 +14,8 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Strings;
-
 import junit.framework.TestCase;
+import org.apache.commons.codec.binary.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,7 +26,7 @@ import java.io.IOException;
  * @author Yaniv Inbar
  */
 public class ByteArrayContentTest extends TestCase {
-  private static final byte[] FOO = Strings.toBytesUtf8("foo");
+  private static final byte[] FOO = StringUtils.getBytesUtf8("foo");
 
   public void testConstructor() throws IOException {
     subtestConstructor(new ByteArrayContent("type", FOO), "foo");

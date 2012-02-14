@@ -22,6 +22,8 @@ import com.google.api.client.util.Strings;
 import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
 
+import org.apache.commons.codec.binary.StringUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -404,7 +406,7 @@ public final class HttpResponse {
         String contentType = this.contentType;
         if (debugContentByteArray.length != 0 && LogContent.isTextBasedContentType(contentType)) {
           if (debugContentByteArray.length <= contentLoggingLimit) {
-            logger.config(Strings.fromBytesUtf8(debugContentByteArray));
+            logger.config(StringUtils.newStringUtf8(debugContentByteArray));
           } else {
             logger.config("Content will not be logged because the content length " + contentLength
                 + " is greater than the content logging limit " + contentLoggingLimit);

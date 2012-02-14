@@ -14,12 +14,13 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Base64;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
-import com.google.api.client.util.Strings;
 import com.google.common.base.Preconditions;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.StringUtils;
 
 import java.util.HashMap;
 
@@ -586,7 +587,7 @@ public class HttpHeaders extends GenericData {
   public final void setBasicAuthentication(String username, String password) {
     String userPass =
         Preconditions.checkNotNull(username) + ":" + Preconditions.checkNotNull(password);
-    String encoded = Strings.fromBytesUtf8(Base64.encode(Strings.toBytesUtf8(userPass)));
+    String encoded = Base64.encodeBase64String(StringUtils.getBytesUtf8(userPass));
     authorization = "Basic " + encoded;
   }
 
