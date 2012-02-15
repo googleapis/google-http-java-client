@@ -19,6 +19,7 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -75,10 +76,11 @@ final class NetHttpRequest extends LowLevelHttpRequest {
         } else {
           connection.setChunkedStreamingMode(0);
         }
+        OutputStream out = connection.getOutputStream();
         try {
-          content.writeTo(connection.getOutputStream());
+          content.writeTo(out);
         } finally {
-          connection.getOutputStream().close();
+          out.close();
         }
       }
     }
