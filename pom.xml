@@ -56,9 +56,9 @@
   <modules>
     <module>google-http-client</module>
     <module>google-http-client-assembly</module>
-    <module>google-http-client-extensions-appengine</module>
-    <module>google-http-client-extensions-android2</module>
-    <module>google-http-client-extensions-android3</module>
+    <module>google-http-client-appengine</module>
+    <module>google-http-client-android2</module>
+    <module>google-http-client-android3</module>
   </modules>
 
   <!--
@@ -125,17 +125,17 @@
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-extensions-appengine</artifactId>
+        <artifactId>google-http-client-appengine</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-extensions-android2</artifactId>
+        <artifactId>google-http-client-android2</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-extensions-android3</artifactId>
+        <artifactId>google-http-client-android3</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
@@ -276,15 +276,15 @@
                   <packages>com.google.api.client.http*:com.google.api.client.json*:com.google.api.client.testing*:com.google.api.client.util*:com.google.api.client.xml*</packages>
                 </group>
                 <group>
-                  <title>google-http-client-extensions-appengine</title>
+                  <title>google-http-client-appengine</title>
                   <packages>com.google.api.client.extensions.appengine*</packages>
                 </group>
                 <group>
-                  <title>google-http-client-extensions-android2</title>
+                  <title>google-http-client-android2</title>
                   <packages>com.google.api.client.extensions.android2*</packages>
                 </group>
                 <group>
-                  <title>google-http-client-extensions-android3</title>
+                  <title>google-http-client-android3</title>
                   <packages>com.google.api.client.extensions.android3*</packages>
                 </group>
               </groups>

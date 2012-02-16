@@ -19,15 +19,15 @@
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-extensions-appengine</artifactId>
+      <artifactId>google-http-client-appengine</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-extensions-android2</artifactId>
+      <artifactId>google-http-client-android2</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-extensions-android3</artifactId>
+      <artifactId>google-http-client-android3</artifactId>
     </dependency>
   </dependencies>
 
