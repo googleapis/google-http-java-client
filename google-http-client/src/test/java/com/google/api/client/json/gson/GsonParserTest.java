@@ -21,7 +21,9 @@ import com.google.api.client.testing.json.AbstractJsonParserTest;
  * Tests {@link GsonParser}.
  *
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.8)
  */
+@Deprecated
 public class GsonParserTest extends AbstractJsonParserTest {
 
   public GsonParserTest(String name) {

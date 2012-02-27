@@ -21,7 +21,9 @@ import com.google.api.client.testing.json.AbstractJsonGeneratorTest;
  * Tests {@link GsonGenerator}.
  *
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.8)
  */
+@Deprecated
 public class GsonGeneratorTest extends AbstractJsonGeneratorTest {
 
   public GsonGeneratorTest(String name) {

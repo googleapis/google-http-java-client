@@ -15,7 +15,9 @@
 package com.google.api.client.testing.json;
 
 import com.google.api.client.json.GenericJson;
+import com.google.api.client.json.JsonEncoding;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonString;
 import com.google.api.client.json.JsonToken;
@@ -28,7 +30,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import junit.framework.TestCase;
+import org.apache.commons.codec.binary.StringUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -43,16 +47,14 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Abstract test case for {@link JsonParser}.
+ * Abstract test case for testing a {@link JsonFactory}.
  *
- * @since 1.4
+ * @since 1.7
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.8) Use {@link AbstractJsonFactoryTest}
  */
-@Deprecated
-public abstract class AbstractJsonParserTest extends TestCase {
+public abstract class AbstractJsonFactoryTest extends TestCase {
 
-  public AbstractJsonParserTest(String name) {
+  public AbstractJsonFactoryTest(String name) {
     super(name);
   }
 
@@ -103,7 +105,6 @@ public abstract class AbstractJsonParserTest extends TestCase {
   }
 
   private static final String JSON_ENTRY = "{\"title\":\"foo\"}";
-
   private static final String JSON_FEED =
       "{\"entries\":[" + "{\"title\":\"foo\"}," + "{\"title\":\"bar\"}]}";
 
@@ -358,16 +359,16 @@ public abstract class AbstractJsonParserTest extends TestCase {
 
   static final String NUMBER_TYPES =
       "{\"bigDecimalValue\":1.0,\"bigIntegerValue\":1,\"byteObjValue\":1,\"byteValue\":1,"
-          + "\"doubleObjValue\":1.0,\"doubleValue\":1.0,\"floatObjValue\":1.0,\"floatValue\":1.0,"
-          + "\"intObjValue\":1,\"intValue\":1,\"longObjValue\":1,\"longValue\":1,"
-          + "\"shortObjValue\":1,\"shortValue\":1,\"yetAnotherBigDecimalValue\":1}";
+      + "\"doubleObjValue\":1.0,\"doubleValue\":1.0,\"floatObjValue\":1.0,\"floatValue\":1.0,"
+      + "\"intObjValue\":1,\"intValue\":1,\"longObjValue\":1,\"longValue\":1,"
+      + "\"shortObjValue\":1,\"shortValue\":1,\"yetAnotherBigDecimalValue\":1}";
 
   static final String NUMBER_TYPES_AS_STRING =
       "{\"bigDecimalValue\":\"1.0\",\"bigIntegerValue\":\"1\",\"byteObjValue\":\"1\","
-          + "\"byteValue\":\"1\",\"doubleObjValue\":\"1.0\",\"doubleValue\":\"1.0\","
-          + "\"floatObjValue\":\"1.0\",\"floatValue\":\"1.0\",\"intObjValue\":\"1\","
-          + "\"intValue\":\"1\",\"longObjValue\":\"1\",\"longValue\":\"1\",\"shortObjValue\":\"1\","
-          + "\"shortValue\":\"1\",\"yetAnotherBigDecimalValue\":\"1\"}";
+      + "\"byteValue\":\"1\",\"doubleObjValue\":\"1.0\",\"doubleValue\":\"1.0\","
+      + "\"floatObjValue\":\"1.0\",\"floatValue\":\"1.0\",\"intObjValue\":\"1\","
+      + "\"intValue\":\"1\",\"longObjValue\":\"1\",\"longValue\":\"1\",\"shortObjValue\":\"1\","
+      + "\"shortValue\":\"1\",\"yetAnotherBigDecimalValue\":\"1\"}";
 
   public void testParser_numberTypes() throws IOException {
     JsonFactory factory = newFactory();
@@ -567,7 +568,7 @@ public abstract class AbstractJsonParserTest extends TestCase {
 
   static final String WILDCARD_TYPE =
       "{\"lower\":[[1,2,3]],\"map\":{\"v\":1},\"mapInWild\":[{\"v\":1}],"
-          + "\"mapUpper\":{\"v\":1},\"simple\":[[1,2,3]],\"upper\":[[1,2,3]]}";
+      + "\"mapUpper\":{\"v\":1},\"simple\":[[1,2,3]],\"upper\":[[1,2,3]]}";
 
   @SuppressWarnings("unchecked")
   public void testParser_wildCardType() throws IOException {
@@ -640,11 +641,11 @@ public abstract class AbstractJsonParserTest extends TestCase {
 
   static final String DOUBLE_LIST_TYPE_VARIABLE_TYPE =
       "{\"arr\":[null,[null,[1.0]]],\"list\":[null,[null,[1.0]]],"
-          + "\"nullValue\":null,\"value\":[1.0]}";
+      + "\"nullValue\":null,\"value\":[1.0]}";
 
   static final String FLOAT_MAP_TYPE_VARIABLE_TYPE =
       "{\"arr\":[null,[null,{\"a\":1.0}]],\"list\":[null,[null,{\"a\":1.0}]],"
-          + "\"nullValue\":null,\"value\":{\"a\":1.0}}";
+      + "\"nullValue\":null,\"value\":{\"a\":1.0}}";
 
   public void testParser_integerTypeVariableType() throws IOException {
     // parse
@@ -1017,5 +1018,78 @@ public abstract class AbstractJsonParserTest extends TestCase {
     assertEquals(BOOL_TOP_VALUE, factory.toString(result));
     // check types and values
     assertTrue(result);
+  }
+
+  public final void testGenerateEntry() throws Exception {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    JsonGenerator generator = newFactory().createJsonGenerator(out, JsonEncoding.UTF8);
+    Entry entry = new Entry();
+    entry.title = "foo";
+    generator.serialize(entry);
+    generator.flush();
+    assertEquals(JSON_ENTRY, new String(out.toByteArray()));
+  }
+
+  public final void testGenerateFeed() throws Exception {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    JsonGenerator generator = newFactory().createJsonGenerator(out, JsonEncoding.UTF8);
+    Feed feed = new Feed();
+    Entry entryFoo = new Entry();
+    entryFoo.title = "foo";
+    Entry entryBar = new Entry();
+    entryBar.title = "bar";
+    feed.entries = new ArrayList<Entry>();
+    feed.entries.add(entryFoo);
+    feed.entries.add(entryBar);
+    generator.serialize(feed);
+    generator.flush();
+    assertEquals(JSON_FEED, new String(out.toByteArray()));
+  }
+
+  public final void testToString_entry() throws Exception {
+    Entry entry = new Entry();
+    entry.title = "foo";
+    assertEquals(JSON_ENTRY, newFactory().toString(entry));
+  }
+
+  public final void testToString_Feed() throws Exception {
+    Feed feed = new Feed();
+    Entry entryFoo = new Entry();
+    entryFoo.title = "foo";
+    Entry entryBar = new Entry();
+    entryBar.title = "bar";
+    feed.entries = new ArrayList<Entry>();
+    feed.entries.add(entryFoo);
+    feed.entries.add(entryBar);
+    assertEquals(JSON_FEED, newFactory().toString(feed));
+  }
+
+  public final void testToByteArray_entry() throws Exception {
+    Entry entry = new Entry();
+    entry.title = "foo";
+    assertTrue(
+        Arrays.equals(StringUtils.getBytesUtf8(JSON_ENTRY), newFactory().toByteArray(entry)));
+  }
+
+  public final void testToPrettyString_entryApproximate() throws Exception {
+    Entry entry = new Entry();
+    entry.title = "foo";
+    JsonFactory factory = newFactory();
+    String prettyString = factory.toPrettyString(entry);
+    assertEquals(JSON_ENTRY, factory.toString(factory.fromString(prettyString, Entry.class)));
+  }
+
+  public final void testToPrettyString_FeedApproximate() throws Exception {
+    Feed feed = new Feed();
+    Entry entryFoo = new Entry();
+    entryFoo.title = "foo";
+    Entry entryBar = new Entry();
+    entryBar.title = "bar";
+    feed.entries = new ArrayList<Entry>();
+    feed.entries.add(entryFoo);
+    feed.entries.add(entryBar);
+    JsonFactory factory = newFactory();
+    String prettyString = factory.toPrettyString(feed);
+    assertEquals(JSON_FEED, factory.toString(factory.fromString(prettyString, Feed.class)));
   }
 }

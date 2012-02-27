@@ -21,7 +21,9 @@ import com.google.api.client.testing.json.AbstractJsonGeneratorTest;
  * Tests {@link JacksonGenerator}.
  *
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.8)
  */
+@Deprecated
 public class JacksonGeneratorTest extends AbstractJsonGeneratorTest {
 
   public JacksonGeneratorTest(String name) {

@@ -97,6 +97,12 @@ public abstract class JsonFactory {
    * Returns a pretty-printed serialized JSON string representation for the given item using
    * {@link JsonGenerator#serialize(Object)} with {@link JsonGenerator#enablePrettyPrint()}.
    *
+   * <p>
+   * The specifics of how the JSON representation is made pretty is implementation dependent, and
+   * should not be relied on. However, it is assumed to be legal, and in fact differs from
+   * {@link #toString(Object)} only by adding whitespace that does not change its meaning.
+   * </p>
+   *
    * @param item data key/value pairs
    * @return serialized JSON string representation
    * @since 1.6
@@ -106,13 +112,43 @@ public abstract class JsonFactory {
   }
 
   /**
+   * Returns a UTF-8 encoded byte array of the serialized JSON representation for the given item
+   * using {@link JsonGenerator#serialize(Object)}.
+   *
+   * @param item data key/value pairs
+   * @return byte array of the serialized JSON representation
+   * @since 1.7
+   */
+  public final byte[] toByteArray(Object item) {
+    return toByteStream(item, false).toByteArray();
+  }
+
+  /**
    * Returns a serialized JSON string representation for the given item using
    * {@link JsonGenerator#serialize(Object)}.
    *
    * @param item data key/value pairs
+   * @param pretty whether to return a pretty representation
    * @return serialized JSON string representation
    */
   private String toString(Object item, boolean pretty) {
+    try {
+      return toByteStream(item, pretty).toString("UTF-8");
+    } catch (UnsupportedEncodingException exception) {
+      // UTF-8 encoding guaranteed to be supported by JVM
+      throw new RuntimeException(exception);
+    }
+  }
+
+  /**
+   * Returns byte array output stream of the serialized JSON representation for the given item using
+   * {@link JsonGenerator#serialize(Object)}.
+   *
+   * @param item data key/value pairs
+   * @param pretty whether to return a pretty representation
+   * @return serialized JSON string representation
+   */
+  private ByteArrayOutputStream toByteStream(Object item, boolean pretty) {
     ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
     try {
       JsonGenerator generator = createJsonGenerator(byteStream, JsonEncoding.UTF8);
@@ -124,12 +160,7 @@ public abstract class JsonFactory {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    try {
-      return byteStream.toString("UTF-8");
-    } catch (UnsupportedEncodingException exception) {
-      // UTF-8 encoding guaranteed to be supported by JVM
-      throw new RuntimeException(exception);
-    }
+    return byteStream;
   }
 
   /**

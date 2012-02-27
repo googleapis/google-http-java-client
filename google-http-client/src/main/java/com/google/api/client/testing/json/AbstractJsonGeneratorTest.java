@@ -30,7 +30,9 @@ import java.util.Collection;
  *
  * @since 1.4
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.8) Use {@link AbstractJsonFactoryTest}
  */
+@Deprecated
 public abstract class AbstractJsonGeneratorTest extends TestCase {
 
   public AbstractJsonGeneratorTest(String name) {
