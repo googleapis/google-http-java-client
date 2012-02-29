@@ -22,14 +22,14 @@
     <fileSet>
       <directory>target/dependencies</directory>
       <excludes>
-        <exclude>google-*-client-*</exclude>
+        <exclude>google-http-client-*</exclude>
       </excludes>
       <outputDirectory>dependencies</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>target/dependencies</directory>
       <includes>
-        <include>google-*-client-*</include>
+        <include>google-http-client-*</include>
       </includes>
       <outputDirectory>/</outputDirectory>
     </fileSet>
