@@ -78,7 +78,7 @@ wiki-google-http-java-client.password = <i>[password from <a
   </li>
 </ul>
 
-<h3>Fork version 1.7.0-beta</h3>
+<h3>Fork version 1.7.1-beta</h3>
 This is done in preparation for release of the 1.7 branch 1-2 weeks before the
 official launch. We create a named Mercurial branch for 1.7. Development in the
 default Mercurial branch may then progress for the next minor version.
@@ -89,7 +89,7 @@ hg commit -m "create 1.7 branch in preparation for release"
 hg push
 hg update default
 </pre></li>
-  <li>For the following files, replace <code>1.7.0-beta</code> with the
+  <li>For the following files, replace <code>1.7.1-beta</code> with the
   next minor version: <b>(TODO: update this section to use sed)</b><pre>
 pom.xml
 */pom.xml
@@ -103,7 +103,7 @@ hg push
 </pre></li>
 </ul>
 
-<h3>Release version 1.7.0-beta</h3>
+<h3>Release version 1.7.1-beta</h3>
 This process is followed for the official launch. We are releasing the code from
 the 1.7 Mercurial branch.
 <ul>
@@ -125,12 +125,12 @@ cp google-http-client-appengine/target/site/dependencies.html google-http-client
 
 sed s/-SNAPSHOT//g &lt;google-http-client/src/main/java/com/google/api/client/util/Strings.java &gt;/tmp/Strings.java
 cp /tmp/Strings.java google-http-client/src/main/java/com/google/api/client/util
-hg commit -m "prepare 1.7.0-beta for release"
+hg commit -m "prepare 1.7.1-beta for release"
 hg push
 
 mvn clean deploy
 mvn release:clean
-mvn release:prepare -DautoVersionSubmodules=true -Dtag=1.7.0-beta --batch-mode
+mvn release:prepare -DautoVersionSubmodules=true -Dtag=1.7.1-beta --batch-mode
 mvn release:perform -Darguments=-Dgpg.passphrase=<i>[YOUR GPG PASSPHRASE]</i>
 </pre></li>
   <li>Release on oss.sonatype.org
@@ -143,13 +143,13 @@ mvn release:perform -Darguments=-Dgpg.passphrase=<i>[YOUR GPG PASSPHRASE]</i>
   </ul>
     Central Maven repository is synced hourly. Once uploaded onto
     repo2.maven.org, it will be found at: <a
-      href="http://repo2.maven.org/maven2/com/google/http-client/google-http-client/1.7.0-beta/">repo2.maven.org</a>
+      href="http://repo2.maven.org/maven2/com/google/http-client/google-http-client/1.7.1-beta/">repo2.maven.org</a>
   </li>
-  <li>Start development of next bug fix version, by replacing <code>1.7.0-beta</code> with the next bug fix version:<pre>
+  <li>Start development of next bug fix version, by replacing <code>1.7.1-beta</code> with the next bug fix version:<pre>
 NEXT_VERSION=<i>(next bug fix version 1.7.X-beta)</i>
-sed s/1.7.0-beta/$NEXT_VERSION/g &lt;jdiff.xml &gt;/tmp/jdiff.xml
-sed s/1.7.0-beta/$NEXT_VERSION/g &lt;release.html &gt;/tmp/release.html
-sed s/1.7.0-beta/$NEXT_VERSION-SNAPSHOT/g &lt;google-http-client/src/main/java/com/google/api/client/util/Strings.java &gt;/tmp/Strings.java
+sed s/1.7.1-beta/$NEXT_VERSION/g &lt;jdiff.xml &gt;/tmp/jdiff.xml
+sed s/1.7.1-beta/$NEXT_VERSION/g &lt;release.html &gt;/tmp/release.html
+sed s/1.7.1-beta/$NEXT_VERSION-SNAPSHOT/g &lt;google-http-client/src/main/java/com/google/api/client/util/Strings.java &gt;/tmp/Strings.java
 mv /tmp/jdiff.xml /tmp/release.html .
 mv /tmp/Strings.java google-http-client/src/main/java/com/google/api/client/util
 hg commit -m "start $NEXT_VERSION"
@@ -168,39 +168,39 @@ cd /tmp/google-http-java-client
 hg clone https://code.google.com/p/google-http-java-client.javadoc/ javadoc
 hg clone https://code.google.com/p/google-http-java-client.wiki/ wiki
 hg clone -r 1.6.0-beta https://google-http-java-client.googlecode.com/hg/ 1.6.0-beta
-hg clone -r 1.7.0-beta https://google-http-java-client.googlecode.com/hg/ 1.7.0-beta
+hg clone -r 1.7.1-beta https://google-http-java-client.googlecode.com/hg/ 1.7.1-beta
 
-cd 1.7.0-beta
+cd 1.7.1-beta
 mvn javadoc:jar install site
-cp -R target/site/apidocs ../javadoc/1.7.0-beta
+cp -R target/site/apidocs ../javadoc/1.7.1-beta
 <i>change these constants from jdiff.xml for your environment: JDIFF_HOME, MAVEN_REPOSITORY_HOME</i>
 ant -f jdiff.xml
 
 cd ../javadoc
 hg add
 PREV_VERSION=<i>(previous bug fix version 1.6.X-beta)</i>
-sed s/$PREV_VERSION/1.7.0-beta/g <index.html >/tmp/index.html && mv /tmp/index.html index.html
-hg commit -m "1.7.0-beta"
+sed s/$PREV_VERSION/1.7.1-beta/g <index.html >/tmp/index.html && mv /tmp/index.html index.html
+hg commit -m "1.7.1-beta"
 hg push
 
 cd ../wiki
-for s in *; do sed s/$PREV_VERSION/1.7.0-beta/g <$s >/tmp/$s && mv /tmp/$s .; done
+for s in *; do sed s/$PREV_VERSION/1.7.1-beta/g <$s >/tmp/$s && mv /tmp/$s .; done
 hg revert --no-backup ReleaseNotes.wiki
-<i>edit ReleaseNotes.wiki to add release notes for 1.7.0-beta</i>
-hg commit -m "1.7.0-beta"
+<i>edit ReleaseNotes.wiki to add release notes for 1.7.1-beta</i>
+hg commit -m "1.7.1-beta"
 hg push
 </pre></li>
   <li><b>WAIT!</b> Don't do the following instructions until after the
   library has been uploaded to repo2.maven.org at: <a
-    href="http://repo2.maven.org/maven2/com/google/http-client/google-http-client/1.7.0-beta/">repo2.maven.org</a></li>
+    href="http://repo2.maven.org/maven2/com/google/http-client/google-http-client/1.7.1-beta/">repo2.maven.org</a></li>
   <li>Update to new version on <a
     href="http://code.google.com/p/google-http-java-client">http://code.google.com/p/google-http-java-client</a>
   <ul>
     <li>Upload to <a
       href="http://code.google.com/p/google-http-java-client/downloads/entry">http://code.google.com/p/google-http-java-client/downloads/entry</a>
     <ul>
-      <li>Summary: Google HTTP Client Library for Java, version 1.7.0-beta</li>
-      <li>File: <code>/tmp/google-http-java-client/1.7.0-beta/google-http-client-assembly/target/google-http-client-1.7.0-beta-java.zip</code></li>
+      <li>Summary: Google HTTP Client Library for Java, version 1.7.1-beta</li>
+      <li>File: <code>/tmp/google-http-java-client/1.7.1-beta/google-http-client-assembly/target/google-http-client-1.7.1-beta-java.zip</code></li>
       <li>Labels: <code>Type-Archive</code>, <code>OpSys-All</code>, and <code>Featured</code></li>
       <li>click Submit file</li>
     </ul>
