@@ -54,6 +54,55 @@ public class HttpResponseExceptionTest extends TestCase {
     assertEquals("foo", e.getMessage());
   }
 
+  public void testConstructor_noStatusCode() throws IOException {
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+            result.setStatusCode(0);
+            return result;
+          }
+        };
+      }
+    };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    try {
+      request.execute();
+      fail();
+    } catch (HttpResponseException e) {
+      assertEquals("", e.getMessage());
+    }
+  }
+
+  public void testConstructor_messageButNoStatusCode() throws IOException {
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+            result.setStatusCode(0);
+            result.setReasonPhrase("Foo");
+            return result;
+          }
+        };
+      }
+    };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    try {
+      request.execute();
+      fail();
+    } catch (HttpResponseException e) {
+      assertEquals("Foo", e.getMessage());
+    }
+  }
+
   @SuppressWarnings("deprecation")
   public void testComputeMessage() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
@@ -97,8 +146,8 @@ public class HttpResponseExceptionTest extends TestCase {
       request.execute();
       fail();
     } catch (HttpResponseException e) {
-      assertEquals("404 Not Found" + Strings.LINE_SEPARATOR + "Unable to find resource",
-          e.getMessage());
+      assertEquals(
+          "404 Not Found" + Strings.LINE_SEPARATOR + "Unable to find resource", e.getMessage());
     }
   }
 

@@ -34,7 +34,8 @@ final class NetHttpResponse extends LowLevelHttpResponse {
 
   NetHttpResponse(HttpURLConnection connection) throws IOException {
     this.connection = connection;
-    responseCode = connection.getResponseCode();
+    int responseCode = connection.getResponseCode();
+    this.responseCode = responseCode == -1 ? 0 : responseCode;
     responseMessage = connection.getResponseMessage();
     List<String> headerNames = this.headerNames;
     List<String> headerValues = this.headerValues;

@@ -50,10 +50,10 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   private String reasonPhrase;
 
   /** List of header names of HTTP response (empty array list by default). */
-  private ArrayList<String> headerNames = new ArrayList<String>();
+  private List<String> headerNames = new ArrayList<String>();
 
   /** List of header values of HTTP response (empty array list by default). */
-  private ArrayList<String> headerValues = new ArrayList<String>();
+  private List<String> headerValues = new ArrayList<String>();
 
   /** Content encoding or {@code null} for none. */
   private String contentEncoding;
@@ -154,8 +154,7 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
    *
    * @since 1.5
    */
-  public MockLowLevelHttpResponse setHeaderNames(ArrayList<String> headerNames) {
-    // TODO(yanivi): change parameter to a List in 1.6
+  public MockLowLevelHttpResponse setHeaderNames(List<String> headerNames) {
     this.headerNames = Preconditions.checkNotNull(headerNames);
     return this;
   }
@@ -178,8 +177,7 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
    *
    * @since 1.5
    */
-  public MockLowLevelHttpResponse setHeaderValues(ArrayList<String> headerValues) {
-    // TODO(yanivi): change parameter to a List in 1.6
+  public MockLowLevelHttpResponse setHeaderValues(List<String> headerValues) {
     this.headerValues = Preconditions.checkNotNull(headerValues);
     return this;
   }

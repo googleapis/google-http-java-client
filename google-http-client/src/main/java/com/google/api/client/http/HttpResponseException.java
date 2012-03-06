@@ -83,7 +83,7 @@ public class HttpResponseException extends IOException {
   }
 
   /**
-   * Returns the HTTP status code.
+   * Returns the HTTP status code or {@code 0} for none.
    *
    * @since 1.7
    */
@@ -135,10 +135,16 @@ public class HttpResponseException extends IOException {
    */
   public static StringBuilder computeMessageBuffer(HttpResponse response) {
     StringBuilder builder = new StringBuilder();
-    builder.append(response.getStatusCode());
+    int statusCode = response.getStatusCode();
+    if (statusCode != 0) {
+      builder.append(statusCode);
+    }
     String statusMessage = response.getStatusMessage();
     if (statusMessage != null) {
-      builder.append(' ').append(statusMessage);
+      if (statusCode != 0) {
+        builder.append(' ');
+      }
+      builder.append(statusMessage);
     }
     return builder;
   }

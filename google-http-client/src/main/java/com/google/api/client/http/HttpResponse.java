@@ -318,7 +318,7 @@ public final class HttpResponse {
   }
 
   /**
-   * Returns the HTTP status code.
+   * Returns the HTTP status code or {@code 0} for none.
    *
    * @since 1.5
    */
