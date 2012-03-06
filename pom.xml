@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.google.http-client</groupId>
   <artifactId>google-http-client-parent</artifactId>
-  <version>1.7.0-beta</version>
+  <version>1.7.1-beta-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Parent for the Google HTTP Client Library for Java</name>
 
