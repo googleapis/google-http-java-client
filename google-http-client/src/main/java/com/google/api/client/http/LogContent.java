@@ -14,9 +14,8 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.StringUtils;
 import com.google.common.base.Preconditions;
-
-import org.apache.commons.codec.binary.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

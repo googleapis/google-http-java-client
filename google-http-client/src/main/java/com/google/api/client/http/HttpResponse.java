@@ -18,11 +18,9 @@ import com.google.api.client.util.ArrayValueMap;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
-import com.google.api.client.util.Strings;
+import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
-
-import org.apache.commons.codec.binary.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -130,7 +128,7 @@ public final class HttpResponse {
     StringBuilder logbuf = null;
     if (loggable) {
       logbuf = new StringBuilder();
-      logbuf.append("-------------- RESPONSE --------------").append(Strings.LINE_SEPARATOR);
+      logbuf.append("-------------- RESPONSE --------------").append(StringUtils.LINE_SEPARATOR);
       String statusLine = response.getStatusLine();
       if (statusLine != null) {
         logbuf.append(statusLine);
@@ -140,7 +138,7 @@ public final class HttpResponse {
           logbuf.append(' ').append(message);
         }
       }
-      logbuf.append(Strings.LINE_SEPARATOR);
+      logbuf.append(StringUtils.LINE_SEPARATOR);
     }
     // headers
     int size = response.getHeaderCount();
@@ -153,7 +151,7 @@ public final class HttpResponse {
       String headerName = response.getHeaderName(i);
       String headerValue = response.getHeaderValue(i);
       if (loggable) {
-        logbuf.append(headerName + ": " + headerValue).append(Strings.LINE_SEPARATOR);
+        logbuf.append(headerName + ": " + headerValue).append(StringUtils.LINE_SEPARATOR);
       }
       String fieldName = fieldNameMap.get(headerName);
       if (fieldName == null) {

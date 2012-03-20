@@ -14,7 +14,7 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Strings;
+import com.google.api.client.util.StringUtils;
 
 import java.io.IOException;
 
@@ -123,7 +123,7 @@ public class HttpResponseException extends IOException {
       exception.printStackTrace();
     }
     if (content.length() != 0) {
-      builder.append(Strings.LINE_SEPARATOR).append(content);
+      builder.append(StringUtils.LINE_SEPARATOR).append(content);
     }
     return builder.toString();
   }

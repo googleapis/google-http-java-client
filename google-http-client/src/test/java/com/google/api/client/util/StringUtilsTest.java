@@ -18,31 +18,29 @@ import junit.framework.TestCase;
 import org.junit.Assert;
 
 /**
- * Tests {@link Strings}.
+ * Tests {@link StringUtils}.
  *
  * @author Yaniv Inbar
  */
-public class StringsTest extends TestCase {
+public class StringUtilsTest extends TestCase {
 
   private static final byte[] SAMPLE_UTF8 =
       new byte[] {49, 50, 51, -41, -103, -41, -96, -41, -103, -41, -111};
   private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
 
-  public StringsTest(String testName) {
+  public StringUtilsTest(String testName) {
     super(testName);
   }
 
   public void testLineSeparator() {
-    assertNotNull(Strings.LINE_SEPARATOR);
+    assertNotNull(StringUtils.LINE_SEPARATOR);
   }
 
-  @Deprecated
   public void testToBytesUtf8() {
-    Assert.assertArrayEquals(SAMPLE_UTF8, Strings.toBytesUtf8(SAMPLE));
+    Assert.assertArrayEquals(SAMPLE_UTF8, StringUtils.getBytesUtf8(SAMPLE));
   }
 
-  @Deprecated
   public void testFromBytesUtf8() {
-    assertEquals(SAMPLE, Strings.fromBytesUtf8(SAMPLE_UTF8));
+    assertEquals(SAMPLE, StringUtils.newStringUtf8(SAMPLE_UTF8));
   }
 }

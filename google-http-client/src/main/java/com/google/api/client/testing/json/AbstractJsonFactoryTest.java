@@ -25,12 +25,12 @@ import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.NullValue;
+import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.Value;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import junit.framework.TestCase;
-import org.apache.commons.codec.binary.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

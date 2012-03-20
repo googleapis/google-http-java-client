@@ -14,9 +14,8 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.StringUtils;
 import com.google.common.base.Preconditions;
-
-import org.apache.commons.codec.binary.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -85,8 +84,8 @@ public final class ByteArrayContent extends AbstractInputStreamContent {
   }
 
   /**
-   * Returns a new instance with the UTF-8 encoding (using {@code Strings.toBytesUtf8()}) of the
-   * given content string.
+   * Returns a new instance with the UTF-8 encoding (using {@link StringUtils#getBytesUtf8(String)})
+   * of the given content string.
    * <p>
    * Sample use:
    * </p>

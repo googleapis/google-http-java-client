@@ -16,7 +16,7 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
-import com.google.api.client.util.Strings;
+import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
 
@@ -40,6 +40,14 @@ import java.util.logging.Logger;
 public final class HttpRequest {
 
   /**
+   * Current version of the Google API Client Library for Java.
+   *
+   * @since 1.8
+   */
+  @SuppressWarnings("deprecation")
+  public static final String VERSION = com.google.api.client.util.Strings.VERSION;
+
+  /**
    * User agent suffix for all requests.
    *
    * <p>
@@ -49,8 +57,7 @@ public final class HttpRequest {
    *
    * @since 1.4
    */
-  public static final String USER_AGENT_SUFFIX = "Google-HTTP-Java-Client/" + Strings.VERSION
-      + " (gzip)";
+  public static final String USER_AGENT_SUFFIX = "Google-HTTP-Java-Client/" + VERSION + " (gzip)";
 
   /**
    * HTTP request execute interceptor to intercept the start of {@link #execute()} (before executing
@@ -369,8 +376,8 @@ public final class HttpRequest {
    * @since 1.7
    */
   public HttpRequest setContentLoggingLimit(int contentLoggingLimit) {
-    Preconditions.checkArgument(contentLoggingLimit >= 0,
-        "The content logging limit must be non-negative.");
+    Preconditions.checkArgument(
+        contentLoggingLimit >= 0, "The content logging limit must be non-negative.");
     this.contentLoggingLimit = contentLoggingLimit;
     return this;
   }
@@ -704,13 +711,13 @@ public final class HttpRequest {
           lowLevelHttpRequest = transport.buildGetRequest(urlString);
           break;
         case HEAD:
-          Preconditions.checkArgument(transport.supportsHead(),
-              "HTTP transport doesn't support HEAD");
+          Preconditions.checkArgument(
+              transport.supportsHead(), "HTTP transport doesn't support HEAD");
           lowLevelHttpRequest = transport.buildHeadRequest(urlString);
           break;
         case PATCH:
-          Preconditions.checkArgument(transport.supportsPatch(),
-              "HTTP transport doesn't support PATCH");
+          Preconditions.checkArgument(
+              transport.supportsPatch(), "HTTP transport doesn't support PATCH");
           lowLevelHttpRequest = transport.buildPatchRequest(urlString);
           break;
         case POST:
@@ -726,8 +733,8 @@ public final class HttpRequest {
       // log method and URL
       if (loggable) {
         logbuf = new StringBuilder();
-        logbuf.append("-------------- REQUEST  --------------").append(Strings.LINE_SEPARATOR);
-        logbuf.append(method).append(' ').append(urlString).append(Strings.LINE_SEPARATOR);
+        logbuf.append("-------------- REQUEST  --------------").append(StringUtils.LINE_SEPARATOR);
+        logbuf.append(method).append(' ').append(urlString).append(StringUtils.LINE_SEPARATOR);
       }
       // add to user agent
       if (headers.getUserAgent() == null) {
@@ -772,9 +779,8 @@ public final class HttpRequest {
             && LogContent.isTextBasedContentType(contentType)
             && (loggable && !disableContentLogging || logger.isLoggable(Level.ALL))) {
           if (contentLength <= contentLoggingLimit && contentLoggingLimit != 0) {
-            content =
-                new LogContent(content, contentType, contentEncoding, contentLength,
-                    contentLoggingLimit);
+            content = new LogContent(
+                content, contentType, contentEncoding, contentLength, contentLoggingLimit);
           }
         }
         // gzip
@@ -786,13 +792,14 @@ public final class HttpRequest {
         // append content headers to log buffer
         if (loggable) {
           if (contentType != null) {
-            logbuf.append("Content-Type: " + contentType).append(Strings.LINE_SEPARATOR);
+            logbuf.append("Content-Type: " + contentType).append(StringUtils.LINE_SEPARATOR);
           }
           if (contentEncoding != null) {
-            logbuf.append("Content-Encoding: " + contentEncoding).append(Strings.LINE_SEPARATOR);
+            logbuf.append("Content-Encoding: " + contentEncoding)
+                .append(StringUtils.LINE_SEPARATOR);
           }
           if (contentLength >= 0) {
-            logbuf.append("Content-Length: " + contentLength).append(Strings.LINE_SEPARATOR);
+            logbuf.append("Content-Length: " + contentLength).append(StringUtils.LINE_SEPARATOR);
           }
         }
         lowLevelHttpRequest.setContent(content);
@@ -919,7 +926,7 @@ public final class HttpRequest {
       } else {
         logbuf.append(stringValue);
       }
-      logbuf.append(Strings.LINE_SEPARATOR);
+      logbuf.append(StringUtils.LINE_SEPARATOR);
     }
     // add header
     lowLevelHttpRequest.addHeader(name, stringValue);

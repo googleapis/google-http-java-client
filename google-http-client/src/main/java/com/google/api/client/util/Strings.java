@@ -14,72 +14,35 @@
 
 package com.google.api.client.util;
 
-import java.io.UnsupportedEncodingException;
+import com.google.api.client.http.HttpRequest;
+
 
 /**
  * Utilities for strings.
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in the future) See below for new usage
  */
+@Deprecated
 public class Strings {
 
   /**
    * Current version of the Google API Client Library for Java.
    *
    * @since 1.3
+   * @deprecated (scheduled to be removed in the future) Use {@link HttpRequest#VERSION}
    */
+  @Deprecated
   public static final String VERSION = "1.8.0-beta-SNAPSHOT";
 
   /**
    * Line separator to use for this OS, i.e. {@code "\n"} or {@code "\r\n"}.
-   */
-  public static final String LINE_SEPARATOR = System.getProperty("line.separator");
-
-  /**
-   * Returns a new byte array that is the result of encoding the given string into a sequence of
-   * bytes using the {@code "UTF-8"} charset.
    *
-   * @param string given string
-   * @return resultant byte array
-   * @since 1.2
-   * @deprecated (scheduled to be removed in 1.8) Use
-   *             {@link org.apache.commons.codec.binary.StringUtils#getBytesUtf8(String)}
+   * @deprecated (scheduled to be removed in the future) Use {@link StringUtils#LINE_SEPARATOR}
    */
   @Deprecated
-  public static byte[] toBytesUtf8(String string) {
-    try {
-      return string.getBytes("UTF-8");
-    } catch (UnsupportedEncodingException exception) {
-      // UTF-8 encoding guaranteed to be supported by JVM
-      throw new RuntimeException(exception);
-    }
-  }
-
-  /**
-   * Returns a new {@code String} by decoding the specified array of bytes using the {@code "UTF-8"}
-   * charset.
-   *
-   * <p>
-   * The length of the new {@code String} is a function of the charset, and hence may not be equal
-   * to the length of the byte array.
-   * </p>
-   *
-   * @param bytes bytes to be decoded into characters
-   * @return resultant string
-   * @since 1.2
-   * @deprecated (scheduled to be removed in 1.8) Use
-   *             {@link org.apache.commons.codec.binary.StringUtils#newStringUtf8(byte[])}
-   */
-  @Deprecated
-  public static String fromBytesUtf8(byte[] bytes) {
-    try {
-      return new String(bytes, "UTF-8");
-    } catch (UnsupportedEncodingException exception) {
-      // UTF-8 encoding guaranteed to be supported by JVM
-      throw new RuntimeException(exception);
-    }
-  }
+  public static final String LINE_SEPARATOR = StringUtils.LINE_SEPARATOR;
 
   private Strings() {
   }

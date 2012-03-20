@@ -18,7 +18,7 @@ import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
-import com.google.api.client.util.Strings;
+import com.google.api.client.util.StringUtils;
 
 import junit.framework.TestCase;
 
@@ -147,7 +147,7 @@ public class HttpResponseExceptionTest extends TestCase {
       fail();
     } catch (HttpResponseException e) {
       assertEquals(
-          "404 Not Found" + Strings.LINE_SEPARATOR + "Unable to find resource", e.getMessage());
+          "404 Not Found" + StringUtils.LINE_SEPARATOR + "Unable to find resource", e.getMessage());
     }
   }
 
