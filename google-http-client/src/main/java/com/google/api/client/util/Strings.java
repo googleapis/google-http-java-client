@@ -14,8 +14,6 @@
 
 package com.google.api.client.util;
 
-import com.google.api.client.http.HttpRequest;
-
 
 /**
  * Utilities for strings.
@@ -31,7 +29,8 @@ public class Strings {
    * Current version of the Google API Client Library for Java.
    *
    * @since 1.3
-   * @deprecated (scheduled to be removed in the future) Use {@link HttpRequest#VERSION}
+   * @deprecated (scheduled to be removed in the future) Use {@code
+   * com.google.api.client.http.HttpRequest.VERSION}
    */
   @Deprecated
   public static final String VERSION = "1.8.0-beta-SNAPSHOT";
