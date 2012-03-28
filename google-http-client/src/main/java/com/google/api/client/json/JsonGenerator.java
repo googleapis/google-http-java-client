@@ -96,7 +96,10 @@ public abstract class JsonGenerator {
   /** Writes a JSON numeric value that has already been encoded properly. */
   public abstract void writeNumber(String encodedValue) throws IOException;
 
-  /** Serializes the given JSON value object. */
+  /**
+   * Serializes the given JSON value object, or if {@code value} is {@code null} it does no
+   * serialization.
+   */
   public final void serialize(Object value) throws IOException {
     if (value == null) {
       return;

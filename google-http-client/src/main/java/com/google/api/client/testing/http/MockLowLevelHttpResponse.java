@@ -67,17 +67,18 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
    * @param value header value
    */
   public void addHeader(String name, String value) {
-    headerNames.add(name);
-    headerValues.add(value);
+    headerNames.add(Preconditions.checkNotNull(name));
+    headerValues.add(Preconditions.checkNotNull(value));
   }
 
   /**
    * Sets the response content to the given content string.
    *
-   * @param stringContent content string
+   * @param stringContent content string or {@code null} for none
    */
   public MockLowLevelHttpResponse setContent(String stringContent) {
-    content = new ByteArrayInputStream(StringUtils.getBytesUtf8(stringContent));
+    content = stringContent == null ? null : new ByteArrayInputStream(StringUtils.getBytesUtf8(
+        stringContent));
     return this;
   }
 
@@ -218,6 +219,7 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
    */
   public MockLowLevelHttpResponse setContentLength(long contentLength) {
     this.contentLength = contentLength;
+    Preconditions.checkArgument(contentLength >= 0);
     return this;
   }
 
@@ -232,6 +234,7 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
    */
   public MockLowLevelHttpResponse setStatusCode(int statusCode) {
     this.statusCode = statusCode;
+    Preconditions.checkArgument(statusCode >= 0);
     return this;
   }
 

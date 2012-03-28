@@ -41,6 +41,7 @@ public abstract class JsonFactory {
    * @param in input stream
    * @return new instance of a low-level JSON parser
    * @throws IOException if failed
+   * @throws NullPointerException if {@code in} is {@code null}
    */
   public abstract JsonParser createJsonParser(InputStream in) throws IOException;
 
@@ -50,6 +51,7 @@ public abstract class JsonFactory {
    * @param value string value
    * @return new instance of a low-level JSON parser
    * @throws IOException if failed
+   * @throws NullPointerException if {@code value} is {@code null}
    */
   public abstract JsonParser createJsonParser(String value) throws IOException;
 
@@ -59,6 +61,7 @@ public abstract class JsonFactory {
    * @param reader reader
    * @return new instance of a low-level JSON parser
    * @throws IOException if failed
+   * @throws NullPointerException if {@code reader} is {@code null}
    */
   public abstract JsonParser createJsonParser(Reader reader) throws IOException;
 

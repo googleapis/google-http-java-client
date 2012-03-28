@@ -45,6 +45,15 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
   /** Map of header name to values. */
   private final Map<String, List<String>> headersMap = new HashMap<String, List<String>>();
 
+  /**
+   * HTTP response to return from {@link #execute()}.
+   *
+   * <p>
+   * By default this is a new instance of {@link MockLowLevelHttpResponse}.
+   * </p>
+   */
+  private MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+
   public MockLowLevelHttpRequest() {
   }
 
@@ -68,7 +77,7 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
 
   @Override
   public LowLevelHttpResponse execute() throws IOException {
-    return new MockLowLevelHttpResponse();
+    return response;
   }
 
   @Override
@@ -111,5 +120,26 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
    */
   public HttpContent getContent() {
     return content;
+  }
+
+  /**
+   * HTTP response to return from {@link #execute()}.
+   *
+   * @since 1.8
+   */
+  public MockLowLevelHttpResponse getResponse() {
+    return response;
+  }
+
+  /**
+   * Sets the HTTP response to return from {@link #execute()}.
+   *
+   * <p>
+   * By default this is a new instance of {@link MockLowLevelHttpResponse}.
+   * </p>
+   */
+  public MockLowLevelHttpRequest setResponse(MockLowLevelHttpResponse response) {
+    this.response = response;
+    return this;
   }
 }
