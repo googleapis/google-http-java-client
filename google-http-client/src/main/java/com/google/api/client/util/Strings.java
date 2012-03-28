@@ -20,7 +20,7 @@ package com.google.api.client.util;
  *
  * @since 1.0
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in the future) See below for new usage
+ * @deprecated (scheduled to be removed in 1.9) See below for new usage
  */
 @Deprecated
 public class Strings {
@@ -29,7 +29,7 @@ public class Strings {
    * Current version of the Google API Client Library for Java.
    *
    * @since 1.3
-   * @deprecated (scheduled to be removed in the future) Use {@code
+   * @deprecated (scheduled to be removed in 1.9) Use {@code
    * com.google.api.client.http.HttpRequest.VERSION}
    */
   @Deprecated
@@ -38,7 +38,7 @@ public class Strings {
   /**
    * Line separator to use for this OS, i.e. {@code "\n"} or {@code "\r\n"}.
    *
-   * @deprecated (scheduled to be removed in the future) Use {@link StringUtils#LINE_SEPARATOR}
+   * @deprecated (scheduled to be removed in 1.9) Use {@link StringUtils#LINE_SEPARATOR}
    */
   @Deprecated
   public static final String LINE_SEPARATOR = StringUtils.LINE_SEPARATOR;

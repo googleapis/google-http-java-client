@@ -100,7 +100,7 @@ public class UrlEncodedParser implements HttpParser {
    * @param disableContentLogging whether to disable response content logging (unless
    *        {@link Level#ALL} is loggable which forces all logging)
    * @since 1.5
-   * @deprecated (scheduled to be removed in 1.8) Use {@link HttpResponse#getContentLoggingLimit}
+   * @deprecated (scheduled to be removed in 1.9) Use {@link HttpResponse#getContentLoggingLimit}
    */
   @Deprecated
   protected UrlEncodedParser(String contentType, boolean disableContentLogging) {
@@ -136,7 +136,7 @@ public class UrlEncodedParser implements HttpParser {
    * {@code false}.
    * </p>
    *
-   * @deprecated (scheduled to be removed in 1.8) Use {@link HttpResponse#getContentLoggingLimit}
+   * @deprecated (scheduled to be removed in 1.9) Use {@link HttpResponse#getContentLoggingLimit}
    */
   @Deprecated
   public final boolean getDisableContentLogging() {
@@ -315,7 +315,7 @@ public class UrlEncodedParser implements HttpParser {
      * {@code false}.
      * </p>
      *
-     * @deprecated (scheduled to be removed in 1.8) Use {@link HttpResponse#getContentLoggingLimit}
+     * @deprecated (scheduled to be removed in 1.9) Use {@link HttpResponse#getContentLoggingLimit}
      */
     @Deprecated
     public final boolean getDisableContentLogging() {
@@ -331,7 +331,7 @@ public class UrlEncodedParser implements HttpParser {
      * {@code false}.
      * </p>
      *
-     * @deprecated (scheduled to be removed in 1.8) Use {@link HttpResponse#setContentLoggingLimit}
+     * @deprecated (scheduled to be removed in 1.9) Use {@link HttpResponse#setContentLoggingLimit}
      */
     @Deprecated
     public Builder setDisableContentLogging(boolean disableContentLogging) {

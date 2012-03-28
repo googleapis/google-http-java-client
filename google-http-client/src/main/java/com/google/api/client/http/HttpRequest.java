@@ -310,7 +310,7 @@ public final class HttpRequest {
    * {@link Level#ALL} is loggable which forces all logging).
    *
    * @since 1.5
-   * @deprecated (scheduled to be removed in 1.8) Use {@link #getContentLoggingLimit}
+   * @deprecated (scheduled to be removed in 1.9) Use {@link #getContentLoggingLimit}
    */
   @Deprecated
   public boolean getDisableContentLogging() {
@@ -349,7 +349,7 @@ public final class HttpRequest {
    * </p>
    *
    * @since 1.5
-   * @deprecated (scheduled to be removed in 1.8) Use {@link #setContentLoggingLimit}
+   * @deprecated (scheduled to be removed in 1.9) Use {@link #setContentLoggingLimit}
    */
   @Deprecated
   public HttpRequest setDisableContentLogging(boolean disableContentLogging) {

@@ -42,7 +42,7 @@ public class HttpResponseException extends IOException {
    * Returns the HTTP response.
    *
    * @since 1.5
-   * @deprecated (scheduled to be removed in 1.8)
+   * @deprecated (scheduled to be removed in 1.9)
    */
   @Deprecated
   public final HttpResponse getResponse() {
@@ -103,7 +103,7 @@ public class HttpResponseException extends IOException {
   /**
    * Returns an exception message to use for the given HTTP response.
    *
-   * @deprecated (scheduled to be removed in 1.8) Use {@link #computeMessageBuffer(HttpResponse)}
+   * @deprecated (scheduled to be removed in 1.9) Use {@link #computeMessageBuffer(HttpResponse)}
    */
   @Deprecated
   public static String computeMessage(HttpResponse response) {
