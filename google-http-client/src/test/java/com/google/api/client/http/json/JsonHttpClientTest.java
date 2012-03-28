@@ -96,7 +96,6 @@ public class JsonHttpClientTest extends TestCase {
     assertTrue(remoteRequestInitializer.isCalled);
   }
 
-  @SuppressWarnings("deprecation")
   public void testExecute() throws IOException {
     final String testBaseUrl = "http://www.test.com/";
     final String testUriTemplate = "uri/template";
@@ -117,6 +116,6 @@ public class JsonHttpClientTest extends TestCase {
     JsonHttpClient client =
       JsonHttpClient.builder(
           transport, new JacksonFactory(), new GenericUrl(testBaseUrl)).build();
-    client.execute(HttpMethod.GET, testUriTemplate, null, null);
+    client.executeUnparsed(HttpMethod.GET, new GenericUrl(testBaseUrl + testUriTemplate), null);
   }
 }

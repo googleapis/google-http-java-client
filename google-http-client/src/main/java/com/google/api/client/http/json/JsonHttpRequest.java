@@ -23,6 +23,7 @@ import com.google.api.client.util.GenericData;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * JSON HTTP request to {@link JsonHttpClient}.
@@ -86,8 +87,8 @@ public class JsonHttpRequest extends GenericData {
   }
 
   /**
-   * Create an {@link HttpRequest} suitable for use against this service. Subclasses may
-   * override if specific behavior is required.
+   * Create an {@link HttpRequest} suitable for use against this service. Subclasses may override if
+   * specific behavior is required.
    *
    * @return newly created {@link HttpRequest}
    */
@@ -99,10 +100,32 @@ public class JsonHttpRequest extends GenericData {
    * Sends the request to the server and returns the raw {@link HttpResponse}. Subclasses may
    * override if specific behavior is required.
    *
+   * <p>
+   * Callers are responsible for closing the response's content input stream by calling
+   * {@link HttpResponse#ignore}.
+   * </p>
+   *
    * @return the {@link HttpResponse}
    * @throws IOException if the request fails
    */
   public HttpResponse executeUnparsed() throws IOException {
     return client.executeUnparsed(method, buildHttpRequestUrl(), content);
+  }
+
+  /**
+   * Sends the request to the server and returns the content input stream of {@link HttpResponse}.
+   * Subclasses may override if specific behavior is required.
+   *
+   * <p>
+   * Callers are responsible for closing the input stream.
+   * </p>
+   *
+   * @return input stream of the response content
+   * @throws IOException if the request fails
+   * @since 1.8
+   */
+  public InputStream executeAsInputStream() throws IOException {
+    HttpResponse response = executeUnparsed();
+    return response.getContent();
   }
 }

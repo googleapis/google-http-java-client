@@ -21,11 +21,13 @@ import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.UriTemplate;
 import com.google.api.client.json.JsonFactory;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Logger;
 
 /**
  * JSON HTTP Client.
@@ -34,6 +36,8 @@ import java.io.IOException;
  * @author Ravi Mistry
  */
 public class JsonHttpClient {
+
+  static final Logger LOGGER = Logger.getLogger(JsonHttpClient.class.getName());
 
   /** The request factory for connections to the server. */
   private final HttpRequestFactory requestFactory;
@@ -198,27 +202,6 @@ public class JsonHttpClient {
   }
 
   /**
-   * Create an {@link HttpRequest} suitable for use against this service. Subclasses may override if
-   * specific behavior is required.
-   *
-   * @param method HTTP Method type
-   * @param uriTemplate URI template for the path relative to the base URL. Must not start with a
-   *        "/"
-   * @param jsonHttpRequest JSON HTTP Request type
-   * @return newly created {@link HttpRequest}
-   *
-   * @deprecated (scheduled to be removed in 1.8) Use
-   *             {@link #buildHttpRequest(HttpMethod, GenericUrl, Object)}
-   */
-  @Deprecated
-  protected HttpRequest buildHttpRequest(
-      HttpMethod method, String uriTemplate, JsonHttpRequest jsonHttpRequest) throws IOException {
-    GenericUrl url =
-        new GenericUrl(UriTemplate.expand(getBaseUrl() + uriTemplate, jsonHttpRequest, true));
-    return buildHttpRequest(method, url, null);
-  }
-
-  /**
    * Create an {@link HttpRequest} suitable for use against this service.
    *
    * <p>
@@ -250,34 +233,12 @@ public class JsonHttpClient {
 
   /**
    * Builds and executes a {@link HttpRequest}. Subclasses may override if specific behavior is
-   * required.
+   * required, for example if a sequence of requests need to be built instead of a single request.
    *
-   * @param method HTTP Method type
-   * @param uriTemplate URI template for the path relative to the base URL. Must not start with a
-   *        "/"
-   * @param body A POJO that can be serialized into JSON or {@code null} for none
-   * @param jsonHttpRequest JSON HTTP Request type
-   * @return {@link HttpRequest} type
-   * @throws IOException if the request fails
-   *
-   * @deprecated (scheduled to be removed in 1.8) Use {@link #executeUnparsed}
-   */
-  @Deprecated
-  protected HttpResponse execute(
-      HttpMethod method, String uriTemplate, Object body, JsonHttpRequest jsonHttpRequest)
-      throws IOException {
-    HttpRequest request = buildHttpRequest(method, uriTemplate, jsonHttpRequest);
-    if (body != null) {
-      request.setContent(createSerializer(body));
-      request.setEnableGZipContent(true);
-    }
-    return request.execute();
-  }
-
-  /**
-   * Builds and executes a {@link HttpRequest}. Subclasses may override if specific behavior is
-   * required, for example if a sequence of requests need to be built instead
-   * of a single request.
+   * <p>
+   * Callers are responsible for closing the response's content input stream by calling
+   * {@link HttpResponse#ignore}.
+   * </p>
    *
    * @param method HTTP Method type
    * @param url The complete URL of the service where requests should be sent
@@ -290,6 +251,27 @@ public class JsonHttpClient {
       throws IOException {
     HttpRequest request = buildHttpRequest(method, url, body);
     return request.execute();
+  }
+
+  /**
+   * Builds and executes an {@link HttpRequest} and then returns the content input stream of
+   * {@link HttpResponse}. Subclasses may override if specific behavior is required.
+   *
+   * <p>
+   * Callers are responsible for closing the input stream.
+   * </p>
+   *
+   * @param method HTTP Method type
+   * @param url The complete URL of the service where requests should be sent
+   * @param body A POJO that can be serialized into JSON or {@code null} for none
+   * @return input stream of the response content
+   * @throws IOException if the request fails
+   * @since 1.8
+   */
+  protected InputStream executeAsInputStream(HttpMethod method, GenericUrl url, Object body)
+      throws IOException {
+    HttpResponse response = executeUnparsed(method, url, body);
+    return response.getContent();
   }
 
   /**
@@ -355,6 +337,9 @@ public class JsonHttpClient {
 
     /** Builds a new instance of {@link JsonHttpClient}. */
     public JsonHttpClient build() {
+      if (Strings.isNullOrEmpty(applicationName)) {
+        LOGGER.warning("Application name is not set. Call setApplicationName.");
+      }
       return new JsonHttpClient(transport,
           jsonHttpRequestInitializer,
           httpRequestInitializer,
