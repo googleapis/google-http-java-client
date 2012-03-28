@@ -34,6 +34,8 @@ import junit.framework.TestCase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -1091,5 +1093,32 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonFactory factory = newFactory();
     String prettyString = factory.toPrettyString(feed);
     assertEquals(JSON_FEED, factory.toString(factory.fromString(prettyString, Feed.class)));
+  }
+
+  public void testParser_nullInputStream() throws IOException {
+    try {
+      newFactory().createJsonParser((InputStream) null);
+      fail("expected " + NullPointerException.class);
+    } catch (NullPointerException e) {
+      // expected
+    }
+  }
+
+  public void testParser_nullString() throws IOException {
+    try {
+      newFactory().createJsonParser((String) null);
+      fail("expected " + NullPointerException.class);
+    } catch (NullPointerException e) {
+      // expected
+    }
+  }
+
+  public void testParser_nullReader() throws IOException {
+    try {
+      newFactory().createJsonParser((Reader) null);
+      fail("expected " + NullPointerException.class);
+    } catch (NullPointerException e) {
+      // expected
+    }
   }
 }

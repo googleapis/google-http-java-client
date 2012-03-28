@@ -19,6 +19,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
+import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,16 +61,19 @@ public final class JacksonFactory extends JsonFactory {
 
   @Override
   public JsonParser createJsonParser(Reader reader) throws IOException {
+    Preconditions.checkNotNull(reader);
     return new JacksonParser(this, factory.createJsonParser(reader));
   }
 
   @Override
   public JsonParser createJsonParser(InputStream in) throws IOException {
+    Preconditions.checkNotNull(in);
     return new JacksonParser(this, factory.createJsonParser(in));
   }
 
   @Override
   public JsonParser createJsonParser(String value) throws IOException {
+    Preconditions.checkNotNull(value);
     return new JacksonParser(this, factory.createJsonParser(value));
   }
 
