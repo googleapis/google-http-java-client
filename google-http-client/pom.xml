@@ -60,6 +60,7 @@
           </execution>
           <!-- Remove extraneous files from the jarjar'ed Apache Commons Codec
                Library. -->
+          <!--
           <execution>
             <id>scrub</id>
             <phase>install</phase>
@@ -79,6 +80,7 @@
               </target>
             </configuration>
           </execution>
+          -->
         </executions>
       </plugin>
       <plugin>
