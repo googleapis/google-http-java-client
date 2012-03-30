@@ -33,7 +33,7 @@ public class Strings {
    * com.google.api.client.http.HttpRequest.VERSION}
    */
   @Deprecated
-  public static final String VERSION = "1.8.0-beta";
+  public static final String VERSION = "1.8.1-beta";
 
   /**
    * Line separator to use for this OS, i.e. {@code "\n"} or {@code "\r\n"}.
