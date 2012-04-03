@@ -40,67 +40,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>generate-sources</id>
-            <phase>generate-sources</phase>
-            <configuration>
-              <target>
-                <mkdir dir="target/generated-test-sources" />
-                <exec failonerror="true" executable="protoc">
-                  <arg value="--java_out=target/generated-test-sources" />
-                  <arg value="src/test/protobuf/simple_proto.proto" />
-                </exec>
-              </target>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-          <!-- Remove extraneous files from the jarjar'ed Apache Commons Codec
-               Library. -->
-          <execution>
-            <id>scrub</id>
-            <phase>install</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <target>
-                <jar destfile="target/scrubbed.jar" filesetmanifest="merge">
-                  <zipfileset src="target/google-http-client-${project.version}.jar">
-                    <exclude name="**/org/apache/commons/codec/language/bm/*.txt"/>
-                    <exclude name="META-INF/*.txt"/>
-                    <exclude name="META-INF/maven/**"/>
-                  </zipfileset>
-                </jar>
-                <copy file="target/scrubbed.jar" tofile="target/google-http-client-${project.version}.jar"/>
-              </target>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.5</version>
-        <executions>
-          <execution>
-            <id>add-test-source</id>
-            <phase>generate-test-sources</phase>
-            <goals>
-              <goal>add-test-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>target/generated-test-sources</source>
-              </sources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <!-- Use jarjar to include a private copy of Apache Commons Codec library
            to avoid a runtime dependency conflict with Android which includes
            an older version of that library -->
@@ -126,6 +65,67 @@
                   <pattern>com.google.api.client.**</pattern>
                 </keep>
               </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-sources</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <target>
+                <mkdir dir="target/generated-test-sources" />
+                <exec failonerror="true" executable="protoc">
+                  <arg value="--java_out=target/generated-test-sources" />
+                  <arg value="src/test/protobuf/simple_proto.proto" />
+                </exec>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <!-- Remove extraneous files from the jarjar'ed Apache Commons Codec
+               Library. -->
+          <execution>
+            <id>scrub</id>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <jar destfile="target/scrubbed.jar" filesetmanifest="merge">
+                  <zipfileset src="target/google-http-client-${project.version}.jar">
+                    <exclude name="**/org/apache/commons/codec/language/bm/*.txt"/>
+                    <exclude name="META-INF/*.txt"/>
+                    <exclude name="META-INF/maven/**"/>
+                  </zipfileset>
+                </jar>
+                <move file="target/scrubbed.jar" tofile="target/google-http-client-${project.version}.jar"/>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>add-test-source</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>target/generated-test-sources</source>
+              </sources>
             </configuration>
           </execution>
         </executions>
