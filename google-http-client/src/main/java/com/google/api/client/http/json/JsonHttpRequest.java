@@ -24,6 +24,7 @@ import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * JSON HTTP request to {@link JsonHttpClient}.
@@ -127,5 +128,22 @@ public class JsonHttpRequest extends GenericData {
   public InputStream executeAsInputStream() throws IOException {
     HttpResponse response = executeUnparsed();
     return response.getContent();
+  }
+
+  /**
+   * Sends the request to the server and writes the content input stream of {@link HttpResponse}
+   * into the given destination output stream.
+   * 
+   * <p>
+   * This method closes the content of the HTTP response from {@link HttpResponse#getContent()}.
+   * </p>
+   * 
+   * @param outputStream destination output stream
+   * @throws IOException I/O exception
+   * @since 1.9
+   */
+  public void download(OutputStream outputStream) throws IOException {
+    HttpResponse response = executeUnparsed();
+    response.download(outputStream);
   }
 }
