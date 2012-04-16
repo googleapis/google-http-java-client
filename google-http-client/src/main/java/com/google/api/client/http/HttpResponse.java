@@ -26,6 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -417,7 +418,43 @@ public final class HttpResponse {
   }
 
   /**
-   * Closes the the content of the HTTP response from {@link #getContent()}, ignoring any content.
+   * Writes the content of the HTTP response into the given destination output stream.
+   *
+   * <p>
+   * Sample usage: <code>
+    HttpRequest request =
+        requestFactory.buildGetRequest(new GenericUrl(
+            "https://www.google.com/images/srpr/logo3w.png"));
+    OutputStream outputStream =
+        new FileOutputStream(new File ("/tmp/logo3w.png"));
+    try {
+      HttpResponse response = request.execute();
+      response.download(outputStream);
+    } finally {
+      outputStream.close();
+    }
+   * </code>
+   * </p>
+   *
+   * <p>
+   * This method closes the content of the HTTP response from {@link #getContent()}.
+   * </p>
+   *
+   * <p>
+   * This method does not close the given output stream.
+   * </p>
+   *
+   * @param outputStream destination output stream
+   * @throws IOException I/O exception
+   * @since 1.9
+   */
+  public void download(OutputStream outputStream) throws IOException {
+    InputStream inputStream = getContent();
+    AbstractInputStreamContent.copy(inputStream, outputStream);
+  }
+
+  /**
+   * Closes the content of the HTTP response from {@link #getContent()}, ignoring any content.
    */
   public void ignore() throws IOException {
     InputStream content = getContent();

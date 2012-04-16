@@ -23,7 +23,9 @@ import com.google.api.client.util.Key;
 
 import junit.framework.TestCase;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.logging.Level;
 
@@ -153,6 +155,29 @@ public class HttpResponseTest extends TestCase {
     } catch (IllegalArgumentException e) {
       assertEquals(e.getMessage(), "No parser defined for Content-Type: something");
     }
+  }
+
+  public void testDownload() throws IOException {
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+            result.setContentType("application/json; charset=UTF-8");
+            result.setContent(SAMPLE);
+            return result;
+          }
+        };
+      }
+    };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    HttpResponse response = request.execute();
+    OutputStream outputStream = new ByteArrayOutputStream();
+    response.download(outputStream);
+    assertEquals(SAMPLE, outputStream.toString());
   }
 
   public void testContentLoggingLimit() throws IOException {
