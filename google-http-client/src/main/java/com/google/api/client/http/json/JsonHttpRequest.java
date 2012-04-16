@@ -15,8 +15,10 @@
 package com.google.api.client.http.json;
 
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.UriTemplate;
 import com.google.api.client.util.GenericData;
@@ -28,6 +30,10 @@ import java.io.InputStream;
 /**
  * JSON HTTP request to {@link JsonHttpClient}.
  *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
+ *
  * @since 1.6
  * @author Ravi Mistry
  */
@@ -37,6 +43,12 @@ public class JsonHttpRequest extends GenericData {
   private final HttpMethod method;
   private final String uriTemplate;
   private final Object content;
+
+  /** The HTTP headers used for the JSON HTTP request. */
+  private HttpHeaders requestHeaders = new HttpHeaders();
+
+  /** The HTTP headers of the last response or {@code null} for none. */
+  private HttpHeaders lastResponseHeaders;
 
   /**
    * Builds an instance of {@link JsonHttpRequest}.
@@ -78,6 +90,40 @@ public class JsonHttpRequest extends GenericData {
   }
 
   /**
+   * Sets the HTTP headers used for the JSON HTTP request. Subclasses may override by calling
+   * super.
+   *
+   * <p>
+   * These headers are set on the request after {@link #buildHttpRequest} is called, this means that
+   * {@link HttpRequestInitializer#initialize} is called first.
+   * </p>
+   *
+   * @since 1.9
+   */
+  public JsonHttpRequest setRequestHeaders(HttpHeaders headers) {
+    this.requestHeaders = headers;
+    return this;
+  }
+
+  /**
+   * Gets the HTTP headers used for the JSON HTTP request.
+   *
+   * @since 1.9
+   */
+  public final HttpHeaders getRequestHeaders() {
+    return requestHeaders;
+  }
+
+  /**
+   * Gets the HTTP headers of the last response or {@code null} for none.
+   *
+   * @since 1.9
+   */
+  public final HttpHeaders getLastResponseHeaders() {
+    return lastResponseHeaders;
+  }
+
+  /**
    * Creates a new instance of {@link GenericUrl} suitable for use against this service.
    *
    * @return newly created {@link GenericUrl}
@@ -93,7 +139,10 @@ public class JsonHttpRequest extends GenericData {
    * @return newly created {@link HttpRequest}
    */
   public HttpRequest buildHttpRequest() throws IOException {
-    return client.buildHttpRequest(method, buildHttpRequestUrl(), content);
+    HttpRequest request = client.buildHttpRequest(method, buildHttpRequestUrl(), content);
+    // Add specified headers (if any) to the headers in the request.
+    request.getHeaders().putAll(getRequestHeaders());
+    return request;
   }
 
   /**
@@ -109,7 +158,10 @@ public class JsonHttpRequest extends GenericData {
    * @throws IOException if the request fails
    */
   public HttpResponse executeUnparsed() throws IOException {
-    return client.executeUnparsed(method, buildHttpRequestUrl(), content);
+    HttpRequest request = buildHttpRequest();
+    HttpResponse response = client.executeUnparsed(request);
+    lastResponseHeaders = response.getHeaders();
+    return response;
   }
 
   /**
