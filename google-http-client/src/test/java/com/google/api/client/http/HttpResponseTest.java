@@ -25,7 +25,6 @@ import junit.framework.TestCase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.logging.Level;
 
@@ -175,9 +174,9 @@ public class HttpResponseTest extends TestCase {
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
-    OutputStream outputStream = new ByteArrayOutputStream();
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     response.download(outputStream);
-    assertEquals(SAMPLE, outputStream.toString());
+    assertEquals(SAMPLE, outputStream.toString("UTF-8"));
   }
 
   public void testContentLoggingLimit() throws IOException {
