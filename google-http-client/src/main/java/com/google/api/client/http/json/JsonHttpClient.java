@@ -32,6 +32,10 @@ import java.util.logging.Logger;
 /**
  * JSON HTTP Client.
  *
+ * <p>
+ * Implementation is not thread-safe.
+ * </p>
+ *
  * @since 1.6
  * @author Ravi Mistry
  */
@@ -243,13 +247,31 @@ public class JsonHttpClient {
    * @param method HTTP Method type
    * @param url The complete URL of the service where requests should be sent
    * @param body A POJO that can be serialized into JSON or {@code null} for none
-   * @return {@link HttpRequest} type
+   * @return {@link HttpResponse} type
    * @throws IOException if the request fails
    * @since 1.7
    */
   protected HttpResponse executeUnparsed(HttpMethod method, GenericUrl url, Object body)
       throws IOException {
     HttpRequest request = buildHttpRequest(method, url, body);
+    return executeUnparsed(request);
+  }
+
+  /**
+   * Executes the specified {@link HttpRequest}. Subclasses may override if specific behavior is
+   * required, for example if a custom error is required to be thrown.
+   *
+   * <p>
+   * Callers are responsible for closing the response's content input stream by calling
+   * {@link HttpResponse#ignore}.
+   * </p>
+   *
+   * @param request HTTP Request
+   * @return {@link HttpResponse} type
+   * @throws IOException if the request fails
+   * @since 1.9
+   */
+  protected HttpResponse executeUnparsed(HttpRequest request) throws IOException {
     return request.execute();
   }
 
