@@ -14,8 +14,8 @@
 
 package com.google.api.client.json.gson;
 
+import com.google.api.client.json.AbstractJsonFactoryTest;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.testing.json.AbstractJsonFactoryTest;
 import com.google.api.client.util.StringUtils;
 
 import java.util.ArrayList;

@@ -12,15 +12,8 @@
  * the License.
  */
 
-package com.google.api.client.testing.json;
+package com.google.api.client.json;
 
-import com.google.api.client.json.GenericJson;
-import com.google.api.client.json.JsonEncoding;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.JsonGenerator;
-import com.google.api.client.json.JsonParser;
-import com.google.api.client.json.JsonString;
-import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.Key;
@@ -51,7 +44,6 @@ import java.util.TreeMap;
 /**
  * Abstract test case for testing a {@link JsonFactory}.
  *
- * @since 1.7
  * @author Yaniv Inbar
  */
 public abstract class AbstractJsonFactoryTest extends TestCase {
