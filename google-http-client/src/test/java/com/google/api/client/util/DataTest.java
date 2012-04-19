@@ -14,6 +14,9 @@
 
 package com.google.api.client.util;
 
+import com.google.common.primitives.UnsignedInteger;
+import com.google.common.primitives.UnsignedLong;
+
 import junit.framework.TestCase;
 
 import java.lang.reflect.ParameterizedType;
@@ -28,6 +31,7 @@ import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -51,6 +55,10 @@ public class DataTest extends TestCase {
     assertEquals("java.lang.Object", Data.nullOf(Object.class).getClass().getName());
     assertEquals("java.lang.String", Data.nullOf(String.class).getClass().getName());
     assertEquals("java.lang.Integer", Data.nullOf(Integer.class).getClass().getName());
+    assertEquals("com.google.common.primitives.UnsignedInteger", Data.nullOf(UnsignedInteger.class)
+        .getClass().getName());
+    assertEquals("com.google.common.primitives.UnsignedLong", Data.nullOf(UnsignedLong.class)
+        .getClass().getName());
     assertEquals("[[[[Ljava.lang.String;", Data.nullOf(String[][][][].class).getClass().getName());
     assertEquals("[[[I", Data.nullOf(int[][][].class).getClass().getName());
     assertNotNull(Data.nullOf(Object.class));
@@ -79,6 +87,8 @@ public class DataTest extends TestCase {
     assertTrue(Data.isNull(Data.NULL_FLOAT));
     assertTrue(Data.isNull(Data.NULL_DOUBLE));
     assertTrue(Data.isNull(Data.NULL_BIG_INTEGER));
+    assertTrue(Data.isNull(Data.NULL_UNSIGNED_INTEGER));
+    assertTrue(Data.isNull(Data.NULL_UNSIGNED_LONG));
     assertTrue(Data.isNull(Data.NULL_BIG_DECIMAL));
     assertTrue(Data.isNull(Data.NULL_DATE_TIME));
     assertFalse(Data.isNull(null));
@@ -93,6 +103,8 @@ public class DataTest extends TestCase {
     assertFalse(Data.isNull((double) 0));
     assertFalse(Data.isNull(BigDecimal.ZERO));
     assertFalse(Data.isNull(BigInteger.ZERO));
+    assertFalse(Data.isNull(UnsignedInteger.ZERO));
+    assertFalse(Data.isNull(UnsignedLong.ZERO));
   }
 
   public void testClone_array() {
@@ -168,6 +180,59 @@ public class DataTest extends TestCase {
     assertFalse(Data.isPrimitive(null));
     assertTrue(Data.isPrimitive(int.class));
     assertTrue(Data.isPrimitive(Integer.class));
+    assertTrue(Data.isPrimitive(UnsignedInteger.class));
+    assertTrue(Data.isPrimitive(UnsignedLong.class));
+  }
+
+  public void testParsePrimitiveValue() {
+    assertNull(Data.parsePrimitiveValue(Boolean.class, null));
+    assertEquals("abc", Data.parsePrimitiveValue(null, "abc"));
+    assertEquals("abc", Data.parsePrimitiveValue(String.class, "abc"));
+    assertEquals("abc", Data.parsePrimitiveValue(Object.class, "abc"));
+    assertEquals('a', Data.parsePrimitiveValue(Character.class, "a"));
+    assertEquals(true, Data.parsePrimitiveValue(boolean.class, "true"));
+    assertEquals(true, Data.parsePrimitiveValue(Boolean.class, "true"));
+    assertEquals(new Byte(Byte.MAX_VALUE),
+        Data.parsePrimitiveValue(Byte.class, String.valueOf(Byte.MAX_VALUE)));
+    assertEquals(new Byte(Byte.MAX_VALUE),
+        Data.parsePrimitiveValue(byte.class, String.valueOf(Byte.MAX_VALUE)));
+    assertEquals(new Short(Short.MAX_VALUE),
+        Data.parsePrimitiveValue(Short.class, String.valueOf(Short.MAX_VALUE)));
+    assertEquals(new Short(Short.MAX_VALUE),
+        Data.parsePrimitiveValue(short.class, String.valueOf(Short.MAX_VALUE)));
+    assertEquals(new Integer(Integer.MAX_VALUE),
+        Data.parsePrimitiveValue(Integer.class, String.valueOf(Integer.MAX_VALUE)));
+    assertEquals(new Integer(Integer.MAX_VALUE),
+        Data.parsePrimitiveValue(int.class, String.valueOf(Integer.MAX_VALUE)));
+    assertEquals(new Long(Long.MAX_VALUE),
+        Data.parsePrimitiveValue(Long.class, String.valueOf(Long.MAX_VALUE)));
+    assertEquals(new Long(Long.MAX_VALUE),
+        Data.parsePrimitiveValue(long.class, String.valueOf(Long.MAX_VALUE)));
+    assertEquals(new Float(Float.MAX_VALUE),
+        Data.parsePrimitiveValue(Float.class, String.valueOf(Float.MAX_VALUE)));
+    assertEquals(new Float(Float.MAX_VALUE),
+        Data.parsePrimitiveValue(float.class, String.valueOf(Float.MAX_VALUE)));
+    assertEquals(new Double(Double.MAX_VALUE),
+        Data.parsePrimitiveValue(Double.class, String.valueOf(Double.MAX_VALUE)));
+    assertEquals(new Double(Double.MAX_VALUE),
+        Data.parsePrimitiveValue(double.class, String.valueOf(Double.MAX_VALUE)));
+    BigInteger bigint = BigInteger.valueOf(Long.MAX_VALUE);
+    assertEquals(bigint, Data.parsePrimitiveValue(BigInteger.class, String.valueOf(Long.MAX_VALUE)));
+    assertEquals(UnsignedInteger.MAX_VALUE,
+        Data.parsePrimitiveValue(UnsignedInteger.class, String.valueOf(UnsignedInteger.MAX_VALUE)));
+    assertEquals(UnsignedLong.MAX_VALUE,
+        Data.parsePrimitiveValue(UnsignedLong.class, String.valueOf(UnsignedLong.MAX_VALUE)));
+    BigDecimal bigdec = BigDecimal.valueOf(Double.MAX_VALUE);
+    assertEquals(bigdec,
+        Data.parsePrimitiveValue(BigDecimal.class, String.valueOf(Double.MAX_VALUE)));
+    DateTime now = new DateTime(new Date());
+    assertEquals(now, Data.parsePrimitiveValue(DateTime.class, now.toStringRfc3339()));
+    try {
+      Data.parsePrimitiveValue(char.class, "abc");
+      fail();
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
   }
 
   static class Resolve<X, T extends Number> {

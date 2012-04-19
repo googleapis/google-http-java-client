@@ -15,6 +15,8 @@
 package com.google.api.client.json.jackson;
 
 import com.google.api.client.json.JsonGenerator;
+import com.google.common.primitives.UnsignedInteger;
+import com.google.common.primitives.UnsignedLong;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -91,6 +93,16 @@ final class JacksonGenerator extends JsonGenerator {
   @Override
   public void writeNumber(BigInteger v) throws IOException {
     generator.writeNumber(v);
+  }
+
+  @Override
+  public void writeNumber(UnsignedInteger v) throws IOException {
+    generator.writeNumber(v.longValue());
+  }
+
+  @Override
+  public void writeNumber(UnsignedLong v) throws IOException {
+    generator.writeNumber(v.bigIntegerValue());
   }
 
   @Override

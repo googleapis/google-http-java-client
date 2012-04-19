@@ -15,6 +15,8 @@
 package com.google.api.client.util;
 
 import com.google.common.base.Preconditions;
+import com.google.common.primitives.UnsignedInteger;
+import com.google.common.primitives.UnsignedLong;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
@@ -75,6 +77,12 @@ public class Data {
   /** The single instance of the magic null object for a {@link BigInteger}. */
   public static final BigInteger NULL_BIG_INTEGER = new BigInteger("0");
 
+  /** The single instance of the magic null object for a {@link UnsignedInteger}. */
+  public static final UnsignedInteger NULL_UNSIGNED_INTEGER = UnsignedInteger.asUnsigned(0);
+
+  /** The single instance of the magic null object for a {@link UnsignedLong}. */
+  public static final UnsignedLong NULL_UNSIGNED_LONG = UnsignedLong.asUnsigned(0);
+
   /** The single instance of the magic null object for a {@link BigDecimal}. */
   public static final BigDecimal NULL_BIG_DECIMAL = new BigDecimal("0");
 
@@ -96,6 +104,8 @@ public class Data {
     NULL_CACHE.put(Long.class, NULL_LONG);
     NULL_CACHE.put(Double.class, NULL_DOUBLE);
     NULL_CACHE.put(BigInteger.class, NULL_BIG_INTEGER);
+    NULL_CACHE.put(UnsignedInteger.class, NULL_UNSIGNED_INTEGER);
+    NULL_CACHE.put(UnsignedLong.class, NULL_UNSIGNED_LONG);
     NULL_CACHE.put(BigDecimal.class, NULL_BIG_DECIMAL);
     NULL_CACHE.put(DateTime.class, NULL_DATE_TIME);
   }
@@ -340,7 +350,8 @@ public class Data {
     return typeClass.isPrimitive() || typeClass == Character.class || typeClass == String.class
         || typeClass == Integer.class || typeClass == Long.class || typeClass == Short.class
         || typeClass == Byte.class || typeClass == Float.class || typeClass == Double.class
-        || typeClass == BigInteger.class || typeClass == BigDecimal.class
+        || typeClass == BigInteger.class || typeClass == UnsignedInteger.class
+        || typeClass == UnsignedLong.class || typeClass == BigDecimal.class
         || typeClass == DateTime.class || typeClass == Boolean.class;
   }
 
@@ -368,6 +379,8 @@ public class Data {
    * <li>{@code float} or {@link Float}: {@link Float#valueOf(String)}</li>
    * <li>{@code double} or {@link Double}: {@link Double#valueOf(String)}</li>
    * <li>{@link BigInteger}: {@link BigInteger#BigInteger(String) BigInteger(String)}</li>
+   * <li>{@link UnsignedInteger}: {@link UnsignedInteger#valueOf(String)}</li>
+   * <li>{@link UnsignedLong}: {@link UnsignedLong#valueOf(String)}</li>
    * <li>{@link BigDecimal}: {@link BigDecimal#BigDecimal(String) BigDecimal(String)}</li>
    * <li>{@link DateTime}: {@link DateTime#parseRfc3339(String)}</li>
    * </ul>
@@ -418,6 +431,12 @@ public class Data {
       }
       if (primitiveClass == BigInteger.class) {
         return new BigInteger(stringValue);
+      }
+      if (primitiveClass == UnsignedInteger.class) {
+        return UnsignedInteger.valueOf(stringValue);
+      }
+      if (primitiveClass == UnsignedLong.class) {
+        return UnsignedLong.valueOf(stringValue);
       }
       if (primitiveClass == BigDecimal.class) {
         return new BigDecimal(stringValue);

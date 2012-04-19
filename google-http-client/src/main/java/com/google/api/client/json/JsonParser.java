@@ -20,6 +20,8 @@ import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
+import com.google.common.primitives.UnsignedInteger;
+import com.google.common.primitives.UnsignedLong;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -38,6 +40,11 @@ import java.util.Map;
  * <p>
  * Implementation has no fields and therefore thread-safe, but sub-classes are not necessarily
  * thread-safe.
+ * </p>
+ *
+ * <p>
+ * Backwards incompatibility warning: 1.9 introduced {@link #getUnsignedIntegerValue} and {@link
+ * #getUnsignedLongValue} to this abstract class.
  * </p>
  *
  * @since 1.3
@@ -105,6 +112,20 @@ public abstract class JsonParser {
 
   /** Returns the {@link BigInteger} value of the current token. */
   public abstract BigInteger getBigIntegerValue() throws IOException;
+
+  /**
+   * Returns the {@link UnsignedInteger} value of the current token.
+   *
+   * @since 1.9
+   */
+  public abstract UnsignedInteger getUnsignedIntegerValue() throws IOException;
+
+  /**
+   * Returns the {@link UnsignedLong} value of the current token.
+   *
+   * @since 1.9
+   */
+  public abstract UnsignedLong getUnsignedLongValue() throws IOException;
 
   /** Returns the {@link BigDecimal} value of the current token. */
   public abstract BigDecimal getDecimalValue() throws IOException;
@@ -515,6 +536,12 @@ public abstract class JsonParser {
         }
         if (valueClass == BigInteger.class) {
           return getBigIntegerValue();
+        }
+        if (valueClass == UnsignedInteger.class) {
+          return getUnsignedIntegerValue();
+        }
+        if (valueClass == UnsignedLong.class) {
+          return getUnsignedLongValue();
         }
         if (valueClass == Double.class || valueClass == double.class) {
           return getDoubleValue();

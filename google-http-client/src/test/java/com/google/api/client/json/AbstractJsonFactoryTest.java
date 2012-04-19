@@ -22,6 +22,8 @@ import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.Value;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.primitives.UnsignedInteger;
+import com.google.common.primitives.UnsignedLong;
 
 import junit.framework.TestCase;
 
@@ -298,6 +300,10 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     @Key
     BigInteger bigIntegerValue;
     @Key
+    UnsignedInteger unsignedIntegerValue;
+    @Key
+    UnsignedLong unsignedLongValue;
+    @Key
     BigDecimal bigDecimalValue;
     @Key("yetAnotherBigDecimalValue")
     BigDecimal anotherBigDecimalValue;
@@ -345,6 +351,12 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     BigInteger bigIntegerValue;
     @Key
     @JsonString
+    UnsignedInteger unsignedIntegerValue;
+    @Key
+    @JsonString
+    UnsignedLong unsignedLongValue;
+    @Key
+    @JsonString
     BigDecimal bigDecimalValue;
     @Key("yetAnotherBigDecimalValue")
     @JsonString
@@ -355,14 +367,16 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
       "{\"bigDecimalValue\":1.0,\"bigIntegerValue\":1,\"byteObjValue\":1,\"byteValue\":1,"
       + "\"doubleObjValue\":1.0,\"doubleValue\":1.0,\"floatObjValue\":1.0,\"floatValue\":1.0,"
       + "\"intObjValue\":1,\"intValue\":1,\"longObjValue\":1,\"longValue\":1,"
-      + "\"shortObjValue\":1,\"shortValue\":1,\"yetAnotherBigDecimalValue\":1}";
+      + "\"shortObjValue\":1,\"shortValue\":1,\"unsignedIntegerValue\":1,\"unsignedLongValue\":1,"
+      + "\"yetAnotherBigDecimalValue\":1}";
 
   static final String NUMBER_TYPES_AS_STRING =
       "{\"bigDecimalValue\":\"1.0\",\"bigIntegerValue\":\"1\",\"byteObjValue\":\"1\","
       + "\"byteValue\":\"1\",\"doubleObjValue\":\"1.0\",\"doubleValue\":\"1.0\","
       + "\"floatObjValue\":\"1.0\",\"floatValue\":\"1.0\",\"intObjValue\":\"1\","
       + "\"intValue\":\"1\",\"longObjValue\":\"1\",\"longValue\":\"1\",\"shortObjValue\":\"1\","
-      + "\"shortValue\":\"1\",\"yetAnotherBigDecimalValue\":\"1\"}";
+      + "\"shortValue\":\"1\",\"unsignedIntegerValue\":\"1\",\"unsignedLongValue\":\"1\","
+      + "\"yetAnotherBigDecimalValue\":\"1\"}";
 
   public void testParser_numberTypes() throws IOException {
     JsonFactory factory = newFactory();
