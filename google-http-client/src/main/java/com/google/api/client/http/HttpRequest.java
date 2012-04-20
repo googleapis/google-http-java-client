@@ -174,6 +174,12 @@ public final class HttpRequest {
   private boolean throwExceptionOnExecuteError = true;
 
   /**
+   * Whether to retry the request if an {@link IOException} is encountered in
+   * {@link LowLevelHttpRequest#execute()}.
+   */
+  private boolean retryOnExecuteIOException = false;
+
+  /**
    * @param transport HTTP transport
    * @param method HTTP request method (may be {@code null}
    */
@@ -662,6 +668,31 @@ public final class HttpRequest {
   }
 
   /**
+   * Returns whether to retry the request if an {@link IOException} is encountered in
+   * {@link LowLevelHttpRequest#execute()}.
+   *
+   * @since 1.9
+   */
+  public boolean getRetryOnExecuteIOException() {
+    return retryOnExecuteIOException;
+  }
+
+  /**
+   * Sets whether to retry the request if an {@link IOException} is encountered in
+   * {@link LowLevelHttpRequest#execute()}.
+   *
+   * <p>
+   * The default value is {@code false}.
+   * </p>
+   *
+   * @since 1.9
+   */
+  public HttpRequest setRetryOnExecuteIOException(boolean retryOnExecuteIOException) {
+    this.retryOnExecuteIOException = retryOnExecuteIOException;
+    return this;
+  }
+
+  /**
    * Execute the HTTP request and returns the HTTP response.
    * <p>
    * Note that regardless of the returned status code, the HTTP response content has not been parsed
@@ -678,7 +709,6 @@ public final class HttpRequest {
    * @see HttpResponse#isSuccessStatusCode()
    */
   public HttpResponse execute() throws IOException {
-    boolean requiresRetry = false;
     boolean retrySupported = false;
     Preconditions.checkArgument(numRetries >= 0);
     int retriesRemaining = numRetries;
@@ -687,6 +717,7 @@ public final class HttpRequest {
       backOffPolicy.reset();
     }
     HttpResponse response = null;
+    IOException executeException;
 
     Preconditions.checkNotNull(method);
     Preconditions.checkNotNull(url);
@@ -696,6 +727,10 @@ public final class HttpRequest {
       if (response != null) {
         response.ignore();
       }
+
+      response = null;
+      executeException = null;
+
       // run the interceptor
       if (interceptor != null) {
         interceptor.intercept(this);
@@ -809,16 +844,24 @@ public final class HttpRequest {
         logger.config(logbuf.toString());
       }
 
-      // execute
-      lowLevelHttpRequest.setTimeout(connectTimeout, readTimeout);
-      response = new HttpResponse(this, lowLevelHttpRequest.execute());
-
       // We need to make sure our content type can support retry
       // null content is inherently able to be retried
       retrySupported = retriesRemaining > 0 && (content == null || content.retrySupported());
-      requiresRetry = false;
 
-      if (!response.isSuccessStatusCode()) {
+      // execute
+      lowLevelHttpRequest.setTimeout(connectTimeout, readTimeout);
+      try {
+        response = new HttpResponse(this, lowLevelHttpRequest.execute());
+      } catch (IOException e) {
+        if (!retryOnExecuteIOException) {
+          throw e;
+        }
+        // Save the exception in case the retries do not work and we need to re-throw it later.
+        executeException = e;
+        logger.log(Level.WARNING, e.getMessage(), e);
+      }
+
+      if (response != null && !response.isSuccessStatusCode()) {
         boolean errorHandled = false;
         boolean redirectRequest = false;
         boolean backOffRetry = false;
@@ -846,16 +889,24 @@ public final class HttpRequest {
         }
         // A retry is required if the error was successfully handled or if it is a redirect request
         // or if the back off policy determined a retry is necessary.
-        requiresRetry = errorHandled || redirectRequest || backOffRetry;
-        // Once there are no more retries remaining, this will be -1
-        // Count redirects as retries, we want a finite limit of redirects.
-        retriesRemaining--;
+        retrySupported &= (errorHandled || redirectRequest || backOffRetry);
         // need to close the response stream before retrying a request
-        if (requiresRetry && retrySupported) {
+        if (retrySupported) {
           response.ignore();
         }
+      } else {
+        // Retry is not required for a successful status code unless the response is null.
+        retrySupported &= (response == null);
       }
-    } while (requiresRetry && retrySupported);
+      // Once there are no more retries remaining, this will be -1
+      // Count redirects as retries, we want a finite limit of redirects.
+      retriesRemaining--;
+    } while (retrySupported);
+
+    if (response == null) {
+      // Retries did not help resolve the execute exception, re-throw it.
+      throw executeException;
+    }
 
     if (throwExceptionOnExecuteError && !response.isSuccessStatusCode()) {
       throw new HttpResponseException(response);

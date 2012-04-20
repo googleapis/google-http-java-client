@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2010 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under the License
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied. See the License for the specific language governing permissions and limitations under
@@ -37,7 +37,7 @@ import java.util.Map;
 
 /**
  * Tests {@link HttpRequest}.
- * 
+ *
  * @author Yaniv Inbar
  */
 public class HttpRequestTest extends TestCase {
@@ -272,13 +272,13 @@ public class HttpRequestTest extends TestCase {
     Assert.assertEquals(1, fakeTransport.lowLevelExecCalls);
   }
 
-  static private class FailThenSuccessTransport extends MockHttpTransport {
+  static private class FailThenSuccessBackoffTransport extends MockHttpTransport {
 
     public int lowLevelExecCalls;
     int errorStatusCode;
     int callsBeforeSuccess;
 
-    protected FailThenSuccessTransport(int errorStatusCode, int callsBeforeSuccess) {
+    protected FailThenSuccessBackoffTransport(int errorStatusCode, int callsBeforeSuccess) {
       this.errorStatusCode = errorStatusCode;
       this.callsBeforeSuccess = callsBeforeSuccess;
     }
@@ -310,9 +310,88 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
+  static private class FailThenSuccessConnectionErrorTransport extends MockHttpTransport {
+
+    public int lowLevelExecCalls;
+    int callsBeforeSuccess;
+
+    protected FailThenSuccessConnectionErrorTransport(int callsBeforeSuccess) {
+      this.callsBeforeSuccess = callsBeforeSuccess;
+    }
+
+    public LowLevelHttpRequest retryableGetRequest = new MockLowLevelHttpRequest() {
+
+      @Override
+      public LowLevelHttpResponse execute() throws IOException {
+        lowLevelExecCalls++;
+
+        if (lowLevelExecCalls <= callsBeforeSuccess) {
+          throw new IOException();
+        }
+        // Return success when count is more than callsBeforeSuccess
+        MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+        response.setStatusCode(200);
+        return response;
+      }
+    };
+
+    @Override
+    public LowLevelHttpRequest buildGetRequest(String url) {
+      return retryableGetRequest;
+    }
+  }
+
+  public void testExecuteErrorWithRetryEnabled() throws IOException {
+    int callsBeforeSuccess = 3;
+    FailThenSuccessConnectionErrorTransport fakeTransport =
+        new FailThenSuccessConnectionErrorTransport(callsBeforeSuccess);
+    HttpRequest req =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
+    req.setRetryOnExecuteIOException(true);
+    req.setNumberOfRetries(callsBeforeSuccess + 1);
+    HttpResponse resp = req.execute();
+
+    Assert.assertEquals(200, resp.getStatusCode());
+    Assert.assertEquals(4, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void testExecuteErrorWithRetryEnabledBeyondRetryLimit() throws IOException {
+    int callsBeforeSuccess = 11;
+    FailThenSuccessConnectionErrorTransport fakeTransport =
+        new FailThenSuccessConnectionErrorTransport(callsBeforeSuccess);
+    HttpRequest req =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
+    req.setRetryOnExecuteIOException(true);
+    req.setNumberOfRetries(callsBeforeSuccess - 1);
+    try {
+      req.execute();
+      fail("Expected: " + IOException.class);
+    } catch (IOException e) {
+      // Expected
+    }
+    Assert.assertEquals(callsBeforeSuccess, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void testExecuteErrorWithRetryDisabled() throws IOException {
+    int callsBeforeSuccess = 3;
+    FailThenSuccessConnectionErrorTransport fakeTransport =
+        new FailThenSuccessConnectionErrorTransport(callsBeforeSuccess);
+    HttpRequest req =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
+    // retryOnExecuteError is disabled by default.
+    req.setNumberOfRetries(callsBeforeSuccess + 1);
+    try {
+      req.execute();
+      fail("Expected: " + IOException.class);
+    } catch (IOException e) {
+      // Expected
+    }
+    Assert.assertEquals(1, fakeTransport.lowLevelExecCalls);
+  }
+
   public void testAbnormalResponseHandlerWithNoBackOff() throws IOException {
-    FailThenSuccessTransport fakeTransport =
-        new FailThenSuccessTransport(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED, 1);
+    FailThenSuccessBackoffTransport fakeTransport =
+        new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED, 1);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(true);
 
     HttpRequest req =
@@ -327,8 +406,8 @@ public class HttpRequestTest extends TestCase {
   }
 
   public void testAbnormalResponseHandlerWithBackOff() throws IOException {
-    FailThenSuccessTransport fakeTransport =
-        new FailThenSuccessTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, 1);
+    FailThenSuccessBackoffTransport fakeTransport =
+        new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, 1);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(true);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
 
@@ -346,8 +425,8 @@ public class HttpRequestTest extends TestCase {
   }
 
   public void testBackOffSingleCall() throws IOException {
-    FailThenSuccessTransport fakeTransport =
-        new FailThenSuccessTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, 1);
+    FailThenSuccessBackoffTransport fakeTransport =
+        new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, 1);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
 
@@ -366,8 +445,9 @@ public class HttpRequestTest extends TestCase {
 
   public void testBackOffMultipleCalls() throws IOException {
     int callsBeforeSuccess = 5;
-    FailThenSuccessTransport fakeTransport =
-        new FailThenSuccessTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
+    FailThenSuccessBackoffTransport fakeTransport =
+        new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR,
+            callsBeforeSuccess);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
 
@@ -386,13 +466,15 @@ public class HttpRequestTest extends TestCase {
 
   public void testBackOffCallsBeyondRetryLimit() throws IOException {
     int callsBeforeSuccess = 11;
-    FailThenSuccessTransport fakeTransport =
-        new FailThenSuccessTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
+    FailThenSuccessBackoffTransport fakeTransport =
+        new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR,
+            callsBeforeSuccess);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
 
     HttpRequest req =
         fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
+    req.setNumberOfRetries(callsBeforeSuccess - 1);
     req.setUnsuccessfulResponseHandler(handler);
     req.setBackOffPolicy(backOffPolicy);
     try {
@@ -407,8 +489,8 @@ public class HttpRequestTest extends TestCase {
   }
 
   public void testBackOffUnRecognizedStatusCode() throws IOException {
-    FailThenSuccessTransport fakeTransport =
-        new FailThenSuccessTransport(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED, 1);
+    FailThenSuccessBackoffTransport fakeTransport =
+        new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED, 1);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
 
@@ -430,8 +512,9 @@ public class HttpRequestTest extends TestCase {
 
   public void testBackOffStop() throws IOException {
     int callsBeforeSuccess = 5;
-    FailThenSuccessTransport fakeTransport =
-        new FailThenSuccessTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
+    FailThenSuccessBackoffTransport fakeTransport =
+        new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR,
+            callsBeforeSuccess);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
     backOffPolicy.returnBackOffStop = true;
