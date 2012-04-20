@@ -19,6 +19,7 @@ import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
@@ -51,6 +52,10 @@ public class ApacheHttpTransportTest extends TestCase {
     HttpParams params = client.getParams();
     assertTrue(client.getConnectionManager() instanceof ThreadSafeClientConnManager);
     assertEquals(8192, params.getIntParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE, -1));
+    DefaultHttpRequestRetryHandler retryHandler =
+        (DefaultHttpRequestRetryHandler) client.getHttpRequestRetryHandler();
+    assertEquals(0, retryHandler.getRetryCount());
+    assertFalse(retryHandler.isRequestSentRetryEnabled());
   }
 
   private void checkHttpClient(HttpClient client) {

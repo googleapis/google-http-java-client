@@ -33,6 +33,7 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -113,6 +114,8 @@ public final class ApacheHttpTransport extends HttpTransport {
    * <li>The client connection manager is set to {@link ThreadSafeClientConnManager}.</li>
    * <li>The socket buffer size is set to 8192 using
    * {@link HttpConnectionParams#setSocketBufferSize}.</li>
+   * <li><The retry mechanism is turned off by setting
+   * {@code new DefaultHttpRequestRetryHandler(0, false)}</li>
    * </ul>
    *
    * @return new instance of the Apache HTTP client
@@ -131,7 +134,9 @@ public final class ApacheHttpTransport extends HttpTransport {
     registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
     registry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
     ClientConnectionManager connectionManager = new ThreadSafeClientConnManager(params, registry);
-    return new DefaultHttpClient(connectionManager, params);
+    DefaultHttpClient defaultHttpClient = new DefaultHttpClient(connectionManager, params);
+    defaultHttpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(0, false));
+    return defaultHttpClient;
   }
 
   @Override
