@@ -85,6 +85,8 @@ public class HttpResponseTest extends TestCase {
     String[] r;
   }
 
+  static final String ETAG_VALUE = "\"abc\"";
+
   public void testHeaderParsing() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
       @Override
@@ -101,6 +103,7 @@ public class HttpResponseTest extends TestCase {
             result.addHeader("obj", "o");
             result.addHeader("r", "a1");
             result.addHeader("r", "a2");
+            result.addHeader("ETAG", ETAG_VALUE);
             return result;
           }
         };
@@ -116,6 +119,7 @@ public class HttpResponseTest extends TestCase {
     assertEquals(Arrays.asList("a1", "a2"), Arrays.asList(((MyHeaders) response.getHeaders()).r));
     assertEquals(Arrays.asList("car"), response.getHeaders().get("goo"));
     assertEquals(Arrays.asList("dar", "far"), response.getHeaders().get("hoo"));
+    assertEquals(ETAG_VALUE, response.getHeaders().getETag());
   }
 
   public void testParseAs_noParser() throws IOException {

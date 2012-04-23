@@ -154,7 +154,7 @@ public final class HttpResponse {
       if (loggable) {
         logbuf.append(headerName + ": " + headerValue).append(StringUtils.LINE_SEPARATOR);
       }
-      String fieldName = fieldNameMap.get(headerName);
+      String fieldName = fieldNameMap.get(headerName.toLowerCase());
       if (fieldName == null) {
         fieldName = headerName;
       }
