@@ -38,6 +38,9 @@ public class HttpStatusCodes {
   /** Status code for a resource that has moved to a new URI and should be retrieved using GET. */
   public static final int STATUS_CODE_SEE_OTHER = 303;
 
+  /** Status code for a resource that access is allowed but the document has not been modified. */
+  public static final int STATUS_CODE_NOT_MODIFIED = 304;
+
   /** Status code for a resource that has temporarily moved to a new URI. */
   public static final int STATUS_CODE_TEMPORARY_REDIRECT = 307;
 
