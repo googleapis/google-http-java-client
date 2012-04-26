@@ -54,6 +54,27 @@ public class HttpResponseExceptionTest extends TestCase {
     assertEquals("foo", e.getMessage());
   }
 
+  public void testConstructorWithStatusMessage() throws IOException {
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+            result.setReasonPhrase("OK");
+            return result;
+          }
+        };
+      }
+    };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    HttpResponse response = request.execute();
+    HttpResponseException e = new HttpResponseException(response, "foo");
+    assertEquals("OK", e.getStatusMessage());
+  }
+
   public void testConstructor_noStatusCode() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
       @Override
