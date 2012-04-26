@@ -142,7 +142,7 @@ public class HttpResponseExceptionTest extends TestCase {
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
-    assertEquals("200 Foo", HttpResponseException.computeMessage(response));
+    assertEquals("200 Foo", HttpResponseException.computeMessageBuffer(response).toString());
   }
 
   public void testThrown() throws IOException {
@@ -172,7 +172,6 @@ public class HttpResponseExceptionTest extends TestCase {
     }
   }
 
-  @SuppressWarnings("deprecation")
   public void testSerialization() throws Exception {
     HttpTransport transport = new MockHttpTransport();
     HttpRequest request =
@@ -187,7 +186,6 @@ public class HttpResponseExceptionTest extends TestCase {
     HttpResponseException e2 = (HttpResponseException) objectInput.readObject();
     assertEquals(e.getMessage(), e2.getMessage());
     assertEquals(e.getStatusCode(), e2.getStatusCode());
-    assertNull(e2.getResponse());
     assertNull(e2.getHeaders());
   }
 }

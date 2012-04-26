@@ -44,8 +44,7 @@ public final class HttpRequest {
    *
    * @since 1.8
    */
-  @SuppressWarnings("deprecation")
-  public static final String VERSION = com.google.api.client.util.Strings.VERSION;
+  public static final String VERSION = "1.9.0-beta-SNAPSHOT";
 
   /**
    * User agent suffix for all requests.
@@ -100,18 +99,6 @@ public final class HttpRequest {
    * requests. The default value is {@code 10}.
    */
   private int numRetries = 10;
-
-  /**
-   * Whether to disable request content logging during {@link #execute()} (unless {@link Level#ALL}
-   * is loggable which forces all logging).
-   *
-   * <p>
-   * Useful for example if content has sensitive data such as an authentication information.
-   * Defaults to {@code false}.
-   * </p>
-   */
-  @Deprecated
-  private boolean disableContentLogging;
 
   /**
    * Determines the limit to the content size that will be logged during {@link #execute()}.
@@ -312,18 +299,6 @@ public final class HttpRequest {
   }
 
   /**
-   * Returns whether to disable request content logging during {@link #execute()} (unless
-   * {@link Level#ALL} is loggable which forces all logging).
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.9) Use {@link #getContentLoggingLimit}
-   */
-  @Deprecated
-  public boolean getDisableContentLogging() {
-    return disableContentLogging;
-  }
-
-  /**
    * Returns the limit to the content size that will be logged during {@link #execute()}.
    *
    * <p>
@@ -343,24 +318,6 @@ public final class HttpRequest {
    */
   public int getContentLoggingLimit() {
     return contentLoggingLimit;
-  }
-
-  /**
-   * Returns whether to disable request content logging during {@link #execute()} (unless
-   * {@link Level#ALL} is loggable which forces all logging).
-   *
-   * <p>
-   * Useful for example if content has sensitive data such as an authentication information.
-   * Defaults to {@code false}.
-   * </p>
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.9) Use {@link #setContentLoggingLimit}
-   */
-  @Deprecated
-  public HttpRequest setDisableContentLogging(boolean disableContentLogging) {
-    this.disableContentLogging = disableContentLogging;
-    return this;
   }
 
   /**
@@ -812,7 +769,7 @@ public final class HttpRequest {
         // log content
         if (contentLength != 0 && contentEncoding == null
             && LogContent.isTextBasedContentType(contentType)
-            && (loggable && !disableContentLogging || logger.isLoggable(Level.ALL))) {
+            && (loggable || logger.isLoggable(Level.ALL))) {
           if (contentLength <= contentLoggingLimit && contentLoggingLimit != 0) {
             content = new LogContent(
                 content, contentType, contentEncoding, contentLength, contentLoggingLimit);

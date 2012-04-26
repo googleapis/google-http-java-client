@@ -28,11 +28,11 @@ public class NetHttpResponseTest extends TestCase {
 
   static class MockHttpURLConnection extends HttpURLConnection {
 
-    private final int responseCode;
+    private final int mockResponseCode;
 
     protected MockHttpURLConnection(int responseCode) {
       super(null);
-      this.responseCode = responseCode;
+      this.mockResponseCode = responseCode;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class NetHttpResponseTest extends TestCase {
 
     @Override
     public int getResponseCode() throws IOException {
-      return responseCode;
+      return mockResponseCode;
     }
 
   }

@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 /**
  * Implements support for HTTP form content encoding parsing of type {@code
@@ -65,18 +64,6 @@ public class UrlEncodedParser implements HttpParser {
   /** {@code "application/x-www-form-urlencoded"} content type. */
   public static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
 
-  /**
-   * Whether to disable response content logging (unless {@link Level#ALL} is loggable which forces
-   * all logging).
-   *
-   * <p>
-   * Useful for example if content has sensitive data such as an authentication token. Defaults to
-   * {@code false}.
-   * </p>
-   */
-  @Deprecated
-  private final boolean disableContentLogging;
-
   /** Content type. */
   private final String contentType;
 
@@ -97,50 +84,16 @@ public class UrlEncodedParser implements HttpParser {
 
   /**
    * @param contentType content type
-   * @param disableContentLogging whether to disable response content logging (unless
-   *        {@link Level#ALL} is loggable which forces all logging)
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.9) Use {@link HttpResponse#getContentLoggingLimit}
-   */
-  @Deprecated
-  protected UrlEncodedParser(String contentType, boolean disableContentLogging) {
-    this.contentType = contentType;
-    this.disableContentLogging = disableContentLogging;
-  }
-
-  /**
-   * @param contentType content type
    * @since 1.7
    */
   protected UrlEncodedParser(String contentType) {
     this.contentType = contentType;
-    this.disableContentLogging = false;
   }
 
-  @SuppressWarnings("deprecation")
   public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
-    if (disableContentLogging) {
-      response.setDisableContentLogging(true);
-    }
     T newInstance = Types.newInstance(dataClass);
     parse(response.parseAsString(), newInstance);
     return newInstance;
-  }
-
-  /**
-   * Returns whether to disable response content logging (unless {@link Level#ALL} is loggable which
-   * forces all logging).
-   *
-   * <p>
-   * Useful for example if content has sensitive data such as an authentication token. Defaults to
-   * {@code false}.
-   * </p>
-   *
-   * @deprecated (scheduled to be removed in 1.9) Use {@link HttpResponse#getContentLoggingLimit}
-   */
-  @Deprecated
-  public final boolean getDisableContentLogging() {
-    return disableContentLogging;
   }
 
   /**
@@ -266,18 +219,6 @@ public class UrlEncodedParser implements HttpParser {
    */
   public static class Builder {
 
-    /**
-     * Whether to disable response content logging (unless {@link Level#ALL} is loggable which
-     * forces all logging).
-     *
-     * <p>
-     * Useful for example if content has sensitive data such as an authentication token. Defaults to
-     * {@code false}.
-     * </p>
-     */
-    @Deprecated
-    private boolean disableContentLogging;
-
     /** Content type or {@code null} for none. */
     private String contentType = CONTENT_TYPE;
 
@@ -286,7 +227,7 @@ public class UrlEncodedParser implements HttpParser {
 
     /** Builds a new instance of {@link UrlEncodedParser}. */
     public UrlEncodedParser build() {
-      return new UrlEncodedParser(contentType, disableContentLogging);
+      return new UrlEncodedParser(contentType);
     }
 
     /** Returns the content type or {@code null} for none. */
@@ -303,39 +244,6 @@ public class UrlEncodedParser implements HttpParser {
      */
     public Builder setContentType(String contentType) {
       this.contentType = Preconditions.checkNotNull(contentType);
-      return this;
-    }
-
-    /**
-     * Returns whether to disable response content logging (unless {@link Level#ALL} is loggable
-     * which forces all logging).
-     *
-     * <p>
-     * Useful for example if content has sensitive data such as an authentication token. Defaults to
-     * {@code false}.
-     * </p>
-     *
-     * @deprecated (scheduled to be removed in 1.9) Use {@link HttpResponse#getContentLoggingLimit}
-     */
-    @Deprecated
-    public final boolean getDisableContentLogging() {
-      return disableContentLogging;
-    }
-
-    /**
-     * Sets whether to disable response content logging (unless {@link Level#ALL} is loggable which
-     * forces all logging).
-     *
-     * <p>
-     * Useful for example if content has sensitive data such as an authentication token. Defaults to
-     * {@code false}.
-     * </p>
-     *
-     * @deprecated (scheduled to be removed in 1.9) Use {@link HttpResponse#setContentLoggingLimit}
-     */
-    @Deprecated
-    public Builder setDisableContentLogging(boolean disableContentLogging) {
-      this.disableContentLogging = disableContentLogging;
       return this;
     }
   }

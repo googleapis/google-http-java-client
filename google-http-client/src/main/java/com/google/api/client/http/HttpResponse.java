@@ -83,18 +83,6 @@ public final class HttpResponse {
   private final HttpRequest request;
 
   /**
-   * Whether to disable response content logging during {@link #getContent()} (unless
-   * {@link Level#ALL} is loggable which forces all logging).
-   *
-   * <p>
-   * Useful for example if content has sensitive data such as an authentication token. Defaults to
-   * {@code false}.
-   * </p>
-   */
-  @Deprecated
-  private boolean disableContentLogging;
-
-  /**
    * Determines the limit to the content size that will be logged during {@link #getContent()}.
    *
    * <p>
@@ -203,18 +191,6 @@ public final class HttpResponse {
   }
 
   /**
-   * Sets whether to disable response content logging during {@link #getContent()} (unless
-   * {@link Level#ALL} is loggable which forces all logging).
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.9) Use {@link #getContentLoggingLimit}
-   */
-  @Deprecated
-  public boolean getDisableContentLogging() {
-    return disableContentLogging;
-  }
-
-  /**
    * Returns the limit to the content size that will be logged during {@link #getContent()}.
    *
    * <p>
@@ -234,24 +210,6 @@ public final class HttpResponse {
    */
   public int getContentLoggingLimit() {
     return contentLoggingLimit;
-  }
-
-  /**
-   * Sets whether to disable response content logging during {@link #getContent()} (unless
-   * {@link Level#ALL} is loggable which forces all logging).
-   *
-   * <p>
-   * Useful for example if content has sensitive data such as an authentication token. Defaults to
-   * {@code false}.
-   * </p>
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.9) Use {@link #setContentLoggingLimit}
-   */
-  @Deprecated
-  public HttpResponse setDisableContentLogging(boolean disableContentLogging) {
-    this.disableContentLogging = disableContentLogging;
-    return this;
   }
 
   /**
@@ -375,8 +333,7 @@ public final class HttpResponse {
     if (content != null) {
       byte[] debugContentByteArray = null;
       Logger logger = HttpTransport.LOGGER;
-      boolean loggable =
-          !disableContentLogging && logger.isLoggable(Level.CONFIG) || logger.isLoggable(Level.ALL);
+      boolean loggable = logger.isLoggable(Level.CONFIG);
       if (loggable) {
         ByteArrayOutputStream debugStream = new ByteArrayOutputStream();
         try {

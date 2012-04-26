@@ -37,23 +37,9 @@ public class HttpResponseException extends IOException {
   /** HTTP headers. */
   private final transient HttpHeaders headers;
 
-  /** HTTP response. */
-  @Deprecated
-  private final transient HttpResponse response;
-
   /**
-   * Returns the HTTP response.
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.9)
-   */
-  @Deprecated
-  public final HttpResponse getResponse() {
-    return response;
-  }
-
-  /**
-   * Constructor that uses {@link #computeMessage(HttpResponse)} for the detail message.
+   * Constructor that constructs a detail message from the given HTTP response that includes the
+   * status code, status message and HTTP response content.
    *
    * @param response HTTP response
    */
@@ -73,7 +59,6 @@ public class HttpResponseException extends IOException {
     statusCode = response.getStatusCode();
     statusMessage = response.getStatusMessage();
     headers = response.getHeaders();
-    this.response = response;
   }
 
   /**
@@ -122,16 +107,6 @@ public class HttpResponseException extends IOException {
    */
   public HttpHeaders getHeaders() {
     return headers;
-  }
-
-  /**
-   * Returns an exception message to use for the given HTTP response.
-   *
-   * @deprecated (scheduled to be removed in 1.9) Use {@link #computeMessageBuffer(HttpResponse)}
-   */
-  @Deprecated
-  public static String computeMessage(HttpResponse response) {
-    return computeMessageBuffer(response).toString();
   }
 
   /**
