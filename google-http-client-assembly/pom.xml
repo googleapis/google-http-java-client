@@ -45,7 +45,7 @@
             <configuration>
               <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
               <outputDirectory>${project.build.directory}/dependencies</outputDirectory>
-              <excludeArtifactIds>android,opengl-api,xmlParserAPIs,commons-codec</excludeArtifactIds>
+              <excludeArtifactIds>android,opengl-api,xmlParserAPIs,commons-codec,json</excludeArtifactIds>
             </configuration>
           </execution>
           <execution>
@@ -58,7 +58,7 @@
               <classifier>sources</classifier>
               <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
               <outputDirectory>${project.build.directory}/dependencies</outputDirectory>
-              <excludeArtifactIds>android,opengl-api,xmlParserAPIs,commons-codec</excludeArtifactIds>
+              <excludeArtifactIds>android,opengl-api,xmlParserAPIs,commons-codec,json</excludeArtifactIds>
             </configuration>
           </execution>
         </executions>
