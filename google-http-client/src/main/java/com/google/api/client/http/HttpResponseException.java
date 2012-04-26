@@ -29,7 +29,10 @@ public class HttpResponseException extends IOException {
   private static final long serialVersionUID = -1875819453475890043L;
 
   /** HTTP status code. */
-  private int statusCode;
+  private final int statusCode;
+
+  /** Status message or {@code null}. */
+  private final String statusMessage;
 
   /** HTTP headers. */
   private final transient HttpHeaders headers;
@@ -68,6 +71,7 @@ public class HttpResponseException extends IOException {
   public HttpResponseException(HttpResponse response, String message) {
     super(message);
     statusCode = response.getStatusCode();
+    statusMessage = response.getStatusMessage();
     headers = response.getHeaders();
     this.response = response;
   }
@@ -75,6 +79,12 @@ public class HttpResponseException extends IOException {
   /**
    * Returns whether received a successful HTTP status code {@code >= 200 && < 300} (see
    * {@link #getStatusCode()}).
+   *
+   * <p>
+   * Upgrade warning: Overriding this method is no longer supported, and will be made final in
+   * 1.10.
+   * </p>
+   *
    *
    * @since 1.7
    */
@@ -85,6 +95,11 @@ public class HttpResponseException extends IOException {
   /**
    * Returns the HTTP status code or {@code 0} for none.
    *
+   * <p>
+   * Upgrade warning: Overriding this method is no longer supported, and will be made final in
+   * 1.10.
+   * </p>
+   *
    * @since 1.7
    */
   public int getStatusCode() {
@@ -92,8 +107,17 @@ public class HttpResponseException extends IOException {
   }
 
   /**
-   * Returns the HTTP response headers.
+   * Returns the HTTP status message or {@code null} for none.
    *
+   * @since 1.9
+   */
+  public final String getStatusMessage() {
+    return statusMessage;
+  }
+
+  /**
+   * Returns the HTTP response headers.
+   * 
    * @since 1.7
    */
   public HttpHeaders getHeaders() {
