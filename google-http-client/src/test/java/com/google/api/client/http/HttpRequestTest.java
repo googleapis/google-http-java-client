@@ -626,7 +626,7 @@ public class HttpRequestTest extends TestCase {
               assertEquals(GZipContent.class, content.getClass());
               assertEquals("gzip", content.getEncoding());
             } else {
-              assertEquals(ByteArrayContent.class, content.getClass());
+              assertFalse(content.getClass().equals(GZipContent.class));
               assertNull(content.getEncoding());
             }
             super.setContent(content);
@@ -686,12 +686,12 @@ public class HttpRequestTest extends TestCase {
     request.execute();
 
     // Set the content logging limit to be less than the length of the content.
-    transport.expectLogContent = false;
+    transport.expectLogContent = true;
     request.setContentLoggingLimit(299);
     request.execute();
 
     // Set the content logging limit to 0 to disable content logging.
-    transport.expectLogContent = false;
+    transport.expectLogContent = true;
     request.setContentLoggingLimit(0);
     request.execute();
 

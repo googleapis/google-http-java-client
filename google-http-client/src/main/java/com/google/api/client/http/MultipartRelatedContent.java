@@ -116,7 +116,7 @@ public final class MultipartRelatedContent extends AbstractHttpContent {
         out.write(typeBytes);
       }
       out.write(CR_LF);
-      if (!LogContent.isTextBasedContentType(contentType)) {
+      if (!isTextBasedContentType(contentType)) {
         out.write(CONTENT_TRANSFER_ENCODING);
         out.write(CR_LF);
       }
@@ -144,7 +144,7 @@ public final class MultipartRelatedContent extends AbstractHttpContent {
         byte[] typeBytes = contentType.getBytes();
         result += CR_LF.length + CONTENT_TYPE.length + typeBytes.length;
       }
-      if (!LogContent.isTextBasedContentType(contentType)) {
+      if (!isTextBasedContentType(contentType)) {
         result += CONTENT_TRANSFER_ENCODING.length + CR_LF.length;
       }
       result += CR_LF.length * 3 + length + TWO_DASHES.length + boundaryBytes.length;
@@ -197,5 +197,16 @@ public final class MultipartRelatedContent extends AbstractHttpContent {
    */
   public Collection<HttpContent> getParts() {
     return Collections.unmodifiableCollection(parts);
+  }
+
+  /**
+   * Returns whether the given content type is text rather than binary data.
+   *
+   * @param contentType content type or {@code null}
+   * @return whether it is not {@code null} and text-based
+   */
+  private static boolean isTextBasedContentType(String contentType) {
+    return contentType != null
+        && (contentType.startsWith("text/") || contentType.startsWith("application/"));
   }
 }

@@ -14,10 +14,14 @@
 
 package com.google.api.client.http;
 
+import com.google.common.collect.Lists;
+
 import junit.framework.TestCase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -34,7 +38,8 @@ public class LogContentTest extends TestCase {
   private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
 
   static class Recorder extends Handler {
-    LogRecord record;
+    List<String> messages = Lists.newArrayList();
+    List<LogRecord> records = Lists.newArrayList();
 
     @Override
     public void close() throws SecurityException {
@@ -46,7 +51,22 @@ public class LogContentTest extends TestCase {
 
     @Override
     public void publish(LogRecord record) {
-      this.record = record;
+      records.add(record);
+      messages.add(record.getMessage());
+    }
+
+    void assertMessages(String... expectedMessages) {
+      int size = messages.size();
+      if (expectedMessages.length != size) {
+        assertEquals(Arrays.asList(expectedMessages), messages);
+      }
+      for (int i = 0; i < expectedMessages.length; i++) {
+        String expectedMessage = expectedMessages[i];
+        String actualMessage = messages.get(i);
+        if (!expectedMessage.equals(actualMessage)) {
+          assertEquals(expectedMessage, actualMessage);
+        }
+      }
     }
   }
 
@@ -54,15 +74,15 @@ public class LogContentTest extends TestCase {
    * Test method for {@link LogContent#writeTo(java.io.OutputStream)}.
    */
   public void testWriteTo() throws IOException {
-    LogContent logContent =
-        new LogContent(new ByteArrayContent(null, SAMPLE_UTF8), null, null, SAMPLE_UTF8.length,
-            Integer.MAX_VALUE);
+    LogContent logContent = new LogContent(
+        new ByteArrayContent(null, SAMPLE_UTF8), null, null, SAMPLE_UTF8.length, Integer.MAX_VALUE);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     HttpTransport.LOGGER.setLevel(Level.CONFIG);
     Recorder recorder = new Recorder();
     HttpTransport.LOGGER.addHandler(recorder);
     logContent.writeTo(out);
-    assertEquals(SAMPLE, recorder.record.getMessage());
+    out.close();
+    recorder.assertMessages("Total: 11 bytes", SAMPLE);
   }
 
   public void testContentLoggingLimit() throws IOException {
@@ -72,20 +92,20 @@ public class LogContentTest extends TestCase {
     Recorder recorder = new Recorder();
     HttpTransport.LOGGER.addHandler(recorder);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    LogContent logContent =
-        new LogContent(new ByteArrayContent(null, SAMPLE_UTF8), null, null, SAMPLE_UTF8.length,
-            SAMPLE_UTF8.length);
+    LogContent logContent = new LogContent(
+        new ByteArrayContent(null, SAMPLE_UTF8), null, null, SAMPLE_UTF8.length,
+        SAMPLE_UTF8.length);
     logContent.writeTo(out);
-    assertEquals(SAMPLE, recorder.record.getMessage());
+    recorder.assertMessages("Total: 11 bytes", SAMPLE);
 
     // Set the content logging limit to be less than the length of the content.
     recorder = new Recorder();
     HttpTransport.LOGGER.addHandler(recorder);
-    logContent =
-        new LogContent(new ByteArrayContent(null, SAMPLE_UTF8), null, null, SAMPLE_UTF8.length,
-            SAMPLE_UTF8.length - 1);
+    logContent = new LogContent(new ByteArrayContent(null, SAMPLE_UTF8), null, null,
+        SAMPLE_UTF8.length, SAMPLE_UTF8.length - 1);
     logContent.writeTo(new ByteArrayOutputStream());
-    assertTrue(recorder.record == null);
+    recorder.assertMessages(
+        "Total: 11 bytes (logging first 10 bytes)", "123\u05D9\u05e0\u05D9\ufffd");
 
     // Set the content logging limit to 0 to disable content logging.
     recorder = new Recorder();
@@ -93,7 +113,7 @@ public class LogContentTest extends TestCase {
     logContent =
         new LogContent(new ByteArrayContent(null, SAMPLE_UTF8), null, null, SAMPLE_UTF8.length, 0);
     logContent.writeTo(new ByteArrayOutputStream());
-    assertTrue(recorder.record == null);
+    recorder.assertMessages("Total: 11 bytes");
 
     // writeTo should behave as expected even if content length is specified to be -1.
     recorder = new Recorder();
@@ -101,13 +121,13 @@ public class LogContentTest extends TestCase {
     logContent =
         new LogContent(new ByteArrayContent(null, SAMPLE_UTF8), null, null, -1, SAMPLE_UTF8.length);
     logContent.writeTo(new ByteArrayOutputStream());
-    assertEquals(SAMPLE, recorder.record.getMessage());
+    recorder.assertMessages("Total: 11 bytes", SAMPLE);
 
     // Assert that an exception is thrown if content logging limit < 0.
     try {
-      logContent =
-          new LogContent(
-              new ByteArrayContent(null, SAMPLE_UTF8), null, null, SAMPLE_UTF8.length, -1);
+      logContent = new LogContent(
+          new ByteArrayContent(null, SAMPLE_UTF8), null, null, SAMPLE_UTF8.length, -1);
+      logContent.writeTo(new ByteArrayOutputStream());
       fail("Expected: " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // Expected.

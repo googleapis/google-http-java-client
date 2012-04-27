@@ -18,12 +18,11 @@ import com.google.api.client.util.ArrayValueMap;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
+import com.google.api.client.util.LoggingInputStream;
 import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -95,15 +94,16 @@ public final class HttpResponse {
    * </p>
    *
    * <p>
-   * Defaults to {@code 100000 (100KB)}.
+   * Defaults to {@link HttpRequest#getContentLoggingLimit()}.
    * </p>
    */
-  private int contentLoggingLimit = 100000;
+  private int contentLoggingLimit;
 
   HttpResponse(HttpRequest request, LowLevelHttpResponse response) {
     this.request = request;
     transport = request.getTransport();
     headers = request.getResponseHeaders();
+    contentLoggingLimit = request.getContentLoggingLimit();
     this.response = response;
     contentLength = response.getContentLength();
     contentType = response.getContentType();
@@ -203,7 +203,12 @@ public final class HttpResponse {
    * </p>
    *
    * <p>
-   * Defaults to {@code 100000 (100KB)}.
+   * Defaults to {@link HttpRequest#getContentLoggingLimit()}.
+   * </p>
+   *
+   * <p>
+   * Upgrade warning: prior to version 1.9, the default was {@code 100,000} bytes, but now it is
+   * {@link HttpRequest#getContentLoggingLimit()}.
    * </p>
    *
    * @since 1.7
@@ -225,14 +230,19 @@ public final class HttpResponse {
    * </p>
    *
    * <p>
-   * Defaults to {@code 100000 (100KB)}.
+   * Defaults to {@link HttpRequest#getContentLoggingLimit()}.
+   * </p>
+   *
+   * <p>
+   * Upgrade warning: prior to version 1.9, the default was {@code 100,000} bytes, but now it is
+   * {@link HttpRequest#getContentLoggingLimit()}.
    * </p>
    *
    * @since 1.7
    */
   public HttpResponse setContentLoggingLimit(int contentLoggingLimit) {
-    Preconditions.checkArgument(contentLoggingLimit >= 0,
-        "The content logging limit must be non-negative.");
+    Preconditions.checkArgument(
+        contentLoggingLimit >= 0, "The content logging limit must be non-negative.");
     this.contentLoggingLimit = contentLoggingLimit;
     return this;
   }
@@ -331,43 +341,16 @@ public final class HttpResponse {
     InputStream content = this.response.getContent();
     this.response = null;
     if (content != null) {
-      byte[] debugContentByteArray = null;
-      Logger logger = HttpTransport.LOGGER;
-      boolean loggable = logger.isLoggable(Level.CONFIG);
-      if (loggable) {
-        ByteArrayOutputStream debugStream = new ByteArrayOutputStream();
-        try {
-          AbstractInputStreamContent.copy(content, debugStream);
-          debugContentByteArray = debugStream.toByteArray();
-        } finally {
-          debugStream.close();
-        }
-        content = new ByteArrayInputStream(debugContentByteArray);
-        logger.config("Response size: " + debugContentByteArray.length + " bytes");
-      }
-      // gzip encoding
+      // gzip encoding (wrap content with GZipInputStream)
       String contentEncoding = this.contentEncoding;
       if (contentEncoding != null && contentEncoding.contains("gzip")) {
         content = new GZIPInputStream(content);
         contentLength = -1;
-        if (loggable) {
-          ByteArrayOutputStream debugStream = new ByteArrayOutputStream();
-          AbstractInputStreamContent.copy(content, debugStream);
-          debugContentByteArray = debugStream.toByteArray();
-          content = new ByteArrayInputStream(debugContentByteArray);
-        }
       }
-      if (loggable) {
-        // print content using a buffered input stream that can be re-read
-        String contentType = this.contentType;
-        if (debugContentByteArray.length != 0 && LogContent.isTextBasedContentType(contentType)) {
-          if (debugContentByteArray.length <= contentLoggingLimit) {
-            logger.config(StringUtils.newStringUtf8(debugContentByteArray));
-          } else {
-            logger.config("Content will not be logged because the content length " + contentLength
-                + " is greater than the content logging limit " + contentLoggingLimit);
-          }
-        }
+      // logging (wrap content with LoggingInputStream)
+      Logger logger = HttpTransport.LOGGER;
+      if (logger.isLoggable(Level.CONFIG)) {
+        content = new LoggingInputStream(content, logger, Level.CONFIG, contentLoggingLimit);
       }
       this.content = content;
     }

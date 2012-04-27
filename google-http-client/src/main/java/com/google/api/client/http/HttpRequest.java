@@ -113,10 +113,15 @@ public final class HttpRequest {
    * </p>
    *
    * <p>
-   * Defaults to {@code 100000 (100KB)}.
+   * Defaults to 16KB.
+   * </p>
+   *
+   * <p>
+   * Upgrade warning: prior to version 1.9, the default was {@code 100,000} bytes, but now it is
+   * 16KB.
    * </p>
    */
-  private int contentLoggingLimit = 100000;
+  private int contentLoggingLimit = 0x4000;
 
   /** HTTP request content or {@code null} for none. */
   private HttpContent content;
@@ -311,7 +316,12 @@ public final class HttpRequest {
    * </p>
    *
    * <p>
-   * Defaults to {@code 100000 (100KB)}.
+   * Defaults to 16KB.
+   * </p>
+   *
+   * <p>
+   * Upgrade warning: prior to version 1.9, the default was {@code 100,000} bytes, but now it is
+   * 16KB.
    * </p>
    *
    * @since 1.7
@@ -333,7 +343,12 @@ public final class HttpRequest {
    * </p>
    *
    * <p>
-   * Defaults to {@code 100000 (100KB)}.
+   * Defaults to 16KB.
+   * </p>
+   *
+   * <p>
+   * Upgrade warning: prior to version 1.9, the default was {@code 100,000} bytes, but now it is
+   * 16KB.
    * </p>
    *
    * @since 1.7
@@ -761,19 +776,13 @@ public final class HttpRequest {
         content = ByteArrayContent.fromString(null, " ");
       }
       if (content != null) {
-        // TODO(yanivi): instead of isTextBasedContentType, have an enableLogContent boolean?
-        // TODO(yanivi): alternatively, HttpContent.supportsLogging()?
         String contentEncoding = content.getEncoding();
         long contentLength = content.getLength();
         String contentType = content.getType();
         // log content
-        if (contentLength != 0 && contentEncoding == null
-            && LogContent.isTextBasedContentType(contentType)
-            && (loggable || logger.isLoggable(Level.ALL))) {
-          if (contentLength <= contentLoggingLimit && contentLoggingLimit != 0) {
-            content = new LogContent(
-                content, contentType, contentEncoding, contentLength, contentLoggingLimit);
-          }
+        if (loggable) {
+          content = new LogContent(
+              content, contentType, contentEncoding, contentLength, contentLoggingLimit);
         }
         // gzip
         if (enableGZipContent) {

@@ -14,10 +14,8 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.StringUtils;
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.LoggingOutputStream;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
@@ -53,22 +51,17 @@ final class LogContent implements HttpContent {
     this.contentType = contentType;
     this.contentLength = contentLength;
     this.contentEncoding = contentEncoding;
-    Preconditions.checkArgument(contentLoggingLimit >= 0,
-        "The content logging limit must be non-negative.");
     this.contentLoggingLimit = contentLoggingLimit;
   }
 
   public void writeTo(OutputStream out) throws IOException {
-    ByteArrayOutputStream debugStream = new ByteArrayOutputStream();
+    LoggingOutputStream loggableOutputStream =
+        new LoggingOutputStream(out, HttpTransport.LOGGER, Level.CONFIG, contentLoggingLimit);
     try {
-      httpContent.writeTo(debugStream);
-      byte[] debugContent = debugStream.toByteArray();
-      if (debugContent.length <= contentLoggingLimit) {
-        HttpTransport.LOGGER.config(StringUtils.newStringUtf8(debugContent));
-      }
-      out.write(debugContent);
+      httpContent.writeTo(loggableOutputStream);
     } finally {
-      debugStream.close();
+      // force the log stream to close
+      loggableOutputStream.getLogStream().close();
     }
     out.flush();
   }
@@ -87,19 +80,6 @@ final class LogContent implements HttpContent {
 
   int getContentLoggingLimit() {
     return contentLoggingLimit;
-  }
-
-  /**
-   * Returns whether the given content type is text rather than binary data.
-   *
-   * @param contentType content type or {@code null}
-   * @return whether it is not {@code null} and text-based
-   * @since 1.1
-   */
-  public static boolean isTextBasedContentType(String contentType) {
-    // TODO(yanivi): refine this further
-    return contentType != null
-        && (contentType.startsWith("text/") || contentType.startsWith("application/"));
   }
 
   public boolean retrySupported() {

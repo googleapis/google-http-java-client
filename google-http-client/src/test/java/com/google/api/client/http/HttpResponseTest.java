@@ -139,20 +139,15 @@ public class HttpResponseTest extends TestCase {
       }
     };
     try {
-      transport
-          .createRequestFactory()
-          .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL)
-          .execute()
-          .parseAs(Object.class);
+      transport.createRequestFactory()
+          .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL).execute().parseAs(Object.class);
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       assertEquals(e.getMessage(), "Missing Content-Type header in response");
     }
     try {
-      transport
-          .createRequestFactory()
-          .buildGetRequest(new GenericUrl(HttpTesting.SIMPLE_URL + "something"))
-          .execute()
+      transport.createRequestFactory()
+          .buildGetRequest(new GenericUrl(HttpTesting.SIMPLE_URL + "something")).execute()
           .parseAs(Object.class);
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
@@ -184,6 +179,29 @@ public class HttpResponseTest extends TestCase {
   }
 
   public void testContentLoggingLimit() throws IOException {
+    subtestContentLoggingLimit("ABC" + '\0' + "DEF", 20, "Total: 7 bytes", "ABC DEF");
+    subtestContentLoggingLimit("", 2);
+    subtestContentLoggingLimit("A", 2, "Total: 1 byte", "A");
+    try {
+      subtestContentLoggingLimit("ABC", -1);
+      fail("Expected: " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // Expected.
+    }
+    subtestContentLoggingLimit("ABC", 0, "Total: 3 bytes");
+    subtestContentLoggingLimit("ABC", 2, "Total: 3 bytes (logging first 2 bytes)", "AB");
+    subtestContentLoggingLimit("ABC", 3, "Total: 3 bytes", "ABC");
+    subtestContentLoggingLimit("ABC", 4, "Total: 3 bytes", "ABC");
+    char[] a = new char[18000];
+    Arrays.fill(a, 'x');
+    String big = new String(a);
+    subtestContentLoggingLimit(big, Integer.MAX_VALUE, "Total: 18,000 bytes", big);
+    subtestContentLoggingLimit(big, 4, "Total: 18,000 bytes (logging first 4 bytes)", "xxxx");
+  }
+
+  public void subtestContentLoggingLimit(
+      final String content, int contentLoggingLimit, String... expectedMessages)
+      throws IOException {
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildGetRequest(final String url) throws IOException {
@@ -191,7 +209,7 @@ public class HttpResponseTest extends TestCase {
           @Override
           public LowLevelHttpResponse execute() throws IOException {
             MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
-            result.setContent("ABC");
+            result.setContent(content);
             result.setContentType("text/plain");
             return result;
           }
@@ -204,33 +222,10 @@ public class HttpResponseTest extends TestCase {
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
 
-    // Set the content logging limit to be equal to the length of the content.
-    response.setContentLoggingLimit(3);
+    response.setContentLoggingLimit(contentLoggingLimit);
     Recorder recorder = new Recorder();
     HttpTransport.LOGGER.addHandler(recorder);
-    response.getContent();
-    assertEquals("ABC", recorder.record.getMessage());
-
-    // Set the content logging limit to be less than the length of the content.
-    response.setContentLoggingLimit(2);
-    recorder = new Recorder();
-    HttpTransport.LOGGER.addHandler(recorder);
-    response.getContent();
-    assertTrue(recorder.record == null);
-
-    // Set the content logging limit to 0 to disable content logging.
-    response.setContentLoggingLimit(0);
-    recorder = new Recorder();
-    HttpTransport.LOGGER.addHandler(recorder);
-    response.getContent();
-    assertTrue(recorder.record == null);
-
-    // Assert that an exception is thrown if content logging limit < 0.
-    try {
-      response.setContentLoggingLimit(-1);
-      fail("Expected: " + IllegalArgumentException.class);
-    } catch (IllegalArgumentException e) {
-      // Expected.
-    }
+    response.parseAsString();
+    recorder.assertMessages(expectedMessages);
   }
 }
