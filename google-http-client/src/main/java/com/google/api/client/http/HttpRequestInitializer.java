@@ -26,7 +26,8 @@ import java.io.IOException;
  * <pre>
   public class DisableTimeout implements HttpRequestInitializer {
     public void initialize(HttpRequest request) {
-      request.connectTimeout = request.readTimeout = 0;
+      request.setConnectTimeout(0);
+      request.setReadTimeout(0);
     }
   }
  * </pre>

@@ -16,6 +16,8 @@ package com.google.api.client.http;
 
 import junit.framework.TestCase;
 
+import java.io.IOException;
+
 /**
  * Tests {@link ExponentialBackOffPolicy}.
  *
@@ -93,7 +95,7 @@ public class ExponentialBackOffPolicyTest extends TestCase {
     assertEquals(testMaxElapsedTime, backOffPolicy.getMaxElapsedTimeMillis());
   }
 
-  public void testBackOff() {
+  public void testBackOff() throws IOException {
     int testInitialInterval = 500;
     double testRandomizationFactor = 0.1;
     double testMultiplier = 2.0;
@@ -130,7 +132,7 @@ public class ExponentialBackOffPolicyTest extends TestCase {
     assertEquals(3, ExponentialBackOffPolicy.getRandomValueFromInterval(0.5, 0.99, 2));
   }
 
-  public void testMaxElapsedTime() {
+  public void testMaxElapsedTime() throws IOException {
     ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
     assertTrue(backOffPolicy.getNextBackOffMillis() != BackOffPolicy.STOP);
     // Change the currentElapsedTimeMillis to be 0 ensuring that the elapsed time will be greater
@@ -139,7 +141,7 @@ public class ExponentialBackOffPolicyTest extends TestCase {
     assertEquals(BackOffPolicy.STOP, backOffPolicy.getNextBackOffMillis());
   }
 
-  public void testBackOffOverflow() {
+  public void testBackOffOverflow() throws IOException {
     int testInitialInterval = Integer.MAX_VALUE / 2;
     double testMultiplier = 2.1;
     int testMaxInterval = Integer.MAX_VALUE;
