@@ -16,12 +16,21 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.Base64;
 import com.google.api.client.util.ClassInfo;
+import com.google.api.client.util.Data;
+import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.StringUtils;
+import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Stores HTTP headers used in an HTTP request or response, as defined in <a
@@ -588,6 +597,100 @@ public class HttpHeaders extends GenericData {
         Preconditions.checkNotNull(username) + ":" + Preconditions.checkNotNull(password);
     String encoded = Base64.encodeBase64String(StringUtils.getBytesUtf8(userPass));
     authorization = "Basic " + encoded;
+  }
+
+  private static void addHeader(Logger logger,
+      StringBuilder logbuf,
+      LowLevelHttpRequest lowLevelHttpRequest,
+      String name,
+      Object value,
+      Writer writer) throws IOException {
+    // ignore nulls
+    if (value == null || Data.isNull(value)) {
+      return;
+    }
+    // compute value
+    String stringValue =
+        value instanceof Enum<?> ? FieldInfo.of((Enum<?>) value).getName() : value.toString();
+    // log header
+    if (logbuf != null) {
+      logbuf.append(name).append(": ");
+      if ("Authorization".equals(name) && !logger.isLoggable(Level.ALL)) {
+        logbuf.append("<Not Logged>");
+      } else {
+        logbuf.append(stringValue);
+      }
+      logbuf.append(StringUtils.LINE_SEPARATOR);
+    }
+    // add header to lowLevelHttpRequest
+    if (lowLevelHttpRequest != null) {
+      lowLevelHttpRequest.addHeader(name, stringValue);
+    }
+    // add header to the writer
+    if (writer != null) {
+      writer.write(name);
+      writer.write(": ");
+      writer.write(stringValue);
+      writer.write("\r\n");
+    }
+  }
+
+  /**
+   * Serializes headers to an @{link LowLevelHttpRequest}.
+   *
+   * @param headers HTTP headers
+   * @param logbuf log buffer or {@code null} for none
+   * @param logger logger or {@code null} for none. Logger must be specified if log buffer is
+   *        specified
+   * @param lowLevelHttpRequest low level HTTP request where HTTP headers will be serialized to or
+   *        {@code null} for none
+   *
+   * @since 1.9
+   */
+  public static void serializeHeaders(HttpHeaders headers, StringBuilder logbuf, Logger logger,
+      LowLevelHttpRequest lowLevelHttpRequest) throws IOException {
+    serializeHeaders(headers, logbuf, logger, lowLevelHttpRequest, null);
+  }
+
+  /**
+   * Serializes headers to an {@link Writer} for Multi-part requests.
+   *
+   * @param headers HTTP headers
+   * @param logbuf log buffer or {@code null} for none
+   * @param logger logger or {@code null} for none. Logger must be specified if log buffer is
+   *        specified
+   * @param writer Writer where HTTP headers will be serialized to or {@code null} for none
+   *
+   * @since 1.9
+   */
+  public static void serializeHeadersForMultipartRequests(
+      HttpHeaders headers, StringBuilder logbuf, Logger logger, Writer writer) throws IOException {
+    serializeHeaders(headers, logbuf, logger, null, writer);
+  }
+
+  private static void serializeHeaders(HttpHeaders headers, StringBuilder logbuf, Logger logger,
+      LowLevelHttpRequest lowLevelHttpRequest, Writer writer) throws IOException {
+    HashSet<String> headerNames = new HashSet<String>();
+    for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
+      String name = headerEntry.getKey();
+      String lowerCase = name.toLowerCase();
+      Preconditions.checkArgument(headerNames.add(lowerCase),
+          "multiple headers of the same name (headers are case insensitive): %s", lowerCase);
+      Object value = headerEntry.getValue();
+      if (value != null) {
+        Class<? extends Object> valueClass = value.getClass();
+        if (value instanceof Iterable<?> || valueClass.isArray()) {
+          for (Object repeatedValue : Types.iterableOf(value)) {
+            addHeader(logger, logbuf, lowLevelHttpRequest, name, repeatedValue, writer);
+          }
+        } else {
+          addHeader(logger, logbuf, lowLevelHttpRequest, name, value, writer);
+        }
+      }
+    }
+    if (writer != null) {
+      writer.flush();
+    }
   }
 
   /**

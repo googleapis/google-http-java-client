@@ -14,15 +14,11 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Data;
-import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.StringUtils;
-import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -750,24 +746,8 @@ public final class HttpRequest {
         headers.setUserAgent(headers.getUserAgent() + " " + USER_AGENT_SUFFIX);
       }
       // headers
-      HashSet<String> headerNames = new HashSet<String>();
-      for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
-        String name = headerEntry.getKey();
-        String lowerCase = name.toLowerCase();
-        Preconditions.checkArgument(headerNames.add(lowerCase),
-            "multiple headers of the same name (headers are case insensitive): %s", lowerCase);
-        Object value = headerEntry.getValue();
-        if (value != null) {
-          Class<? extends Object> valueClass = value.getClass();
-          if (value instanceof Iterable<?> || valueClass.isArray()) {
-            for (Object repeatedValue : Types.iterableOf(value)) {
-              addHeader(logger, logbuf, lowLevelHttpRequest, name, repeatedValue);
-            }
-          } else {
-            addHeader(logger, logbuf, lowLevelHttpRequest, name, value);
-          }
-        }
-      }
+      HttpHeaders.serializeHeaders(headers, logbuf, logger, lowLevelHttpRequest);
+
       // content
       HttpContent content = this.content;
       if (!isAllowEmptyContent()
@@ -924,29 +904,6 @@ public final class HttpRequest {
     } catch (InterruptedException e) {
       // Ignore.
     }
-  }
-
-  private static void addHeader(Logger logger, StringBuilder logbuf,
-      LowLevelHttpRequest lowLevelHttpRequest, String name, Object value) {
-    // ignore nulls
-    if (value == null || Data.isNull(value)) {
-      return;
-    }
-    // compute value
-    String stringValue =
-        value instanceof Enum<?> ? FieldInfo.of((Enum<?>) value).getName() : value.toString();
-    // log header
-    if (logbuf != null) {
-      logbuf.append(name).append(": ");
-      if ("Authorization".equals(name) && !logger.isLoggable(Level.ALL)) {
-        logbuf.append("<Not Logged>");
-      } else {
-        logbuf.append(stringValue);
-      }
-      logbuf.append(StringUtils.LINE_SEPARATOR);
-    }
-    // add header
-    lowLevelHttpRequest.addHeader(name, stringValue);
   }
 
   /**
