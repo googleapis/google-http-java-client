@@ -649,7 +649,7 @@ public class HttpRequestTest extends TestCase {
     request.execute();
   }
 
-  public void testContentLoggingLimit() throws IOException {
+  public void testContentLoggingLimitWithLoggingEnabledAndDisabled() throws IOException {
 
     class MyTransport extends MockHttpTransport {
 
@@ -680,6 +680,9 @@ public class HttpRequestTest extends TestCase {
         transport.createRequestFactory().buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL,
             new ByteArrayContent("text/html", content));
 
+    // Assert logging is enabled by default.
+    assertTrue(request.isLoggingEnabled());
+
     // Set the content logging limit to be equal to the length of the content.
     transport.expectLogContent = true;
     request.setContentLoggingLimit(300);
@@ -693,6 +696,12 @@ public class HttpRequestTest extends TestCase {
     // Set the content logging limit to 0 to disable content logging.
     transport.expectLogContent = true;
     request.setContentLoggingLimit(0);
+    request.execute();
+
+    // Set the content logging limit to be equal to the length of the content with logging disabled.
+    transport.expectLogContent = false;
+    request.setContentLoggingLimit(300);
+    request.setLoggingEnabled(false);
     request.execute();
 
     // Assert that an exception is thrown if content logging limit < 0.

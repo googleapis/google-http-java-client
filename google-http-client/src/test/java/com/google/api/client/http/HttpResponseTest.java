@@ -178,30 +178,30 @@ public class HttpResponseTest extends TestCase {
     assertEquals(SAMPLE, outputStream.toString("UTF-8"));
   }
 
-  public void testContentLoggingLimit() throws IOException {
-    subtestContentLoggingLimit("ABC" + '\0' + "DEF", 20, "Total: 7 bytes", "ABC DEF");
-    subtestContentLoggingLimit("", 2);
-    subtestContentLoggingLimit("A", 2, "Total: 1 byte", "A");
+  public void testContentLoggingLimitWithLoggingEnabledAndDisabled() throws IOException {
+    subtestContentLoggingLimit("", 2, false);
+    subtestContentLoggingLimit("A", 2, false);
+    subtestContentLoggingLimit("ABC" + '\0' + "DEF", 20, true, "Total: 7 bytes", "ABC DEF");
+    subtestContentLoggingLimit("A", 2, true, "Total: 1 byte", "A");
     try {
-      subtestContentLoggingLimit("ABC", -1);
+      subtestContentLoggingLimit("ABC", -1, true);
       fail("Expected: " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // Expected.
     }
-    subtestContentLoggingLimit("ABC", 0, "Total: 3 bytes");
-    subtestContentLoggingLimit("ABC", 2, "Total: 3 bytes (logging first 2 bytes)", "AB");
-    subtestContentLoggingLimit("ABC", 3, "Total: 3 bytes", "ABC");
-    subtestContentLoggingLimit("ABC", 4, "Total: 3 bytes", "ABC");
+    subtestContentLoggingLimit("ABC", 0, true, "Total: 3 bytes");
+    subtestContentLoggingLimit("ABC", 2, true, "Total: 3 bytes (logging first 2 bytes)", "AB");
+    subtestContentLoggingLimit("ABC", 3, true, "Total: 3 bytes", "ABC");
+    subtestContentLoggingLimit("ABC", 4, true, "Total: 3 bytes", "ABC");
     char[] a = new char[18000];
     Arrays.fill(a, 'x');
     String big = new String(a);
-    subtestContentLoggingLimit(big, Integer.MAX_VALUE, "Total: 18,000 bytes", big);
-    subtestContentLoggingLimit(big, 4, "Total: 18,000 bytes (logging first 4 bytes)", "xxxx");
+    subtestContentLoggingLimit(big, Integer.MAX_VALUE, true, "Total: 18,000 bytes", big);
+    subtestContentLoggingLimit(big, 4, true, "Total: 18,000 bytes (logging first 4 bytes)", "xxxx");
   }
 
-  public void subtestContentLoggingLimit(
-      final String content, int contentLoggingLimit, String... expectedMessages)
-      throws IOException {
+  public void subtestContentLoggingLimit(final String content, int contentLoggingLimit,
+      boolean loggingEnabled, String... expectedMessages) throws IOException {
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildGetRequest(final String url) throws IOException {
@@ -220,7 +220,9 @@ public class HttpResponseTest extends TestCase {
 
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setLoggingEnabled(loggingEnabled);
     HttpResponse response = request.execute();
+    assertEquals(loggingEnabled, response.isLoggingEnabled());
 
     response.setContentLoggingLimit(contentLoggingLimit);
     Recorder recorder = new Recorder();

@@ -100,6 +100,10 @@ public final class HttpRequest {
    * Determines the limit to the content size that will be logged during {@link #execute()}.
    *
    * <p>
+   * Content will only be logged if {@link #isLoggingEnabled} is {@code true}.
+   * </p>
+   *
+   * <p>
    * If the content size is greater than this limit then it will not be logged.
    * </p>
    *
@@ -118,6 +122,9 @@ public final class HttpRequest {
    * </p>
    */
   private int contentLoggingLimit = 0x4000;
+
+  /** Determines whether logging should be enabled for this request. Defaults to {@code true}. */
+  private boolean loggingEnabled = true;
 
   /** HTTP request content or {@code null} for none. */
   private HttpContent content;
@@ -307,6 +314,10 @@ public final class HttpRequest {
    * </p>
    *
    * <p>
+   * Content will only be logged if {@link #isLoggingEnabled} is {@code true}.
+   * </p>
+   *
+   * <p>
    * Can be set to {@code 0} to disable content logging. This is useful for example if content has
    * sensitive data such as authentication information.
    * </p>
@@ -334,6 +345,10 @@ public final class HttpRequest {
    * </p>
    *
    * <p>
+   * Content will only be logged if {@link #isLoggingEnabled} is {@code true}.
+   * </p>
+   *
+   * <p>
    * Can be set to {@code 0} to disable content logging. This is useful for example if content has
    * sensitive data such as authentication information.
    * </p>
@@ -353,6 +368,33 @@ public final class HttpRequest {
     Preconditions.checkArgument(
         contentLoggingLimit >= 0, "The content logging limit must be non-negative.");
     this.contentLoggingLimit = contentLoggingLimit;
+    return this;
+  }
+
+  /**
+   * Returns whether logging should be enabled for this request.
+   *
+   * <p>
+   * Defaults to {@code true}.
+   * </p>
+   *
+   * @since 1.9
+   */
+  public boolean isLoggingEnabled() {
+    return loggingEnabled;
+  }
+
+  /**
+   * Sets whether logging should be enabled for this request.
+   *
+   * <p>
+   * Defaults to {@code true}.
+   * </p>
+   *
+   * @since 1.9
+   */
+  public HttpRequest setLoggingEnabled(boolean loggingEnabled) {
+    this.loggingEnabled = loggingEnabled;
     return this;
   }
 
@@ -731,7 +773,7 @@ public final class HttpRequest {
           break;
       }
       Logger logger = HttpTransport.LOGGER;
-      boolean loggable = logger.isLoggable(Level.CONFIG);
+      boolean loggable = loggingEnabled && logger.isLoggable(Level.CONFIG);
       StringBuilder logbuf = null;
       // log method and URL
       if (loggable) {

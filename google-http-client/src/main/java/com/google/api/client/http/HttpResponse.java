@@ -85,6 +85,10 @@ public final class HttpResponse {
    * Determines the limit to the content size that will be logged during {@link #getContent()}.
    *
    * <p>
+   * Content will only be logged if {@link #isLoggingEnabled} is {@code true}.
+   * </p>
+   *
+   * <p>
    * If the content size is greater than this limit then it will not be logged.
    * </p>
    *
@@ -99,11 +103,21 @@ public final class HttpResponse {
    */
   private int contentLoggingLimit;
 
+  /**
+   * Determines whether logging should be enabled on this response.
+   *
+   * <p>
+   * Defaults to {@link HttpRequest#isLoggingEnabled()}.
+   * </p>
+   */
+  private boolean loggingEnabled;
+
   HttpResponse(HttpRequest request, LowLevelHttpResponse response) {
     this.request = request;
     transport = request.getTransport();
     headers = request.getResponseHeaders();
     contentLoggingLimit = request.getContentLoggingLimit();
+    loggingEnabled = request.isLoggingEnabled();
     this.response = response;
     contentLength = response.getContentLength();
     contentType = response.getContentType();
@@ -113,7 +127,7 @@ public final class HttpResponse {
     String message = response.getReasonPhrase();
     statusMessage = message;
     Logger logger = HttpTransport.LOGGER;
-    boolean loggable = logger.isLoggable(Level.CONFIG);
+    boolean loggable = loggingEnabled && logger.isLoggable(Level.CONFIG);
     StringBuilder logbuf = null;
     if (loggable) {
       logbuf = new StringBuilder();
@@ -194,6 +208,10 @@ public final class HttpResponse {
    * Returns the limit to the content size that will be logged during {@link #getContent()}.
    *
    * <p>
+   * Content will only be logged if {@link #isLoggingEnabled} is {@code true}.
+   * </p>
+   *
+   * <p>
    * If the content size is greater than this limit then it will not be logged.
    * </p>
    *
@@ -221,6 +239,10 @@ public final class HttpResponse {
    * Set the limit to the content size that will be logged during {@link #getContent()}.
    *
    * <p>
+   * Content will only be logged if {@link #isLoggingEnabled} is {@code true}.
+   * </p>
+   *
+   * <p>
    * If the content size is greater than this limit then it will not be logged.
    * </p>
    *
@@ -244,6 +266,33 @@ public final class HttpResponse {
     Preconditions.checkArgument(
         contentLoggingLimit >= 0, "The content logging limit must be non-negative.");
     this.contentLoggingLimit = contentLoggingLimit;
+    return this;
+  }
+
+  /**
+   * Returns whether logging should be enabled on this response.
+   *
+   * <p>
+   * Defaults to {@link HttpRequest#isLoggingEnabled()}.
+   * </p>
+   *
+   * @since 1.9
+   */
+  public boolean isLoggingEnabled() {
+    return loggingEnabled;
+  }
+
+  /**
+   * Sets whether logging should be enabled on this response.
+   *
+   * <p>
+   * Defaults to {@link HttpRequest#isLoggingEnabled()}.
+   * </p>
+   *
+   * @since 1.9
+   */
+  public HttpResponse setLoggingEnabled(boolean loggingEnabled) {
+    this.loggingEnabled = loggingEnabled;
     return this;
   }
 
@@ -349,7 +398,7 @@ public final class HttpResponse {
       }
       // logging (wrap content with LoggingInputStream)
       Logger logger = HttpTransport.LOGGER;
-      if (logger.isLoggable(Level.CONFIG)) {
+      if (loggingEnabled && logger.isLoggable(Level.CONFIG)) {
         content = new LoggingInputStream(content, logger, Level.CONFIG, contentLoggingLimit);
       }
       this.content = content;
