@@ -17,6 +17,7 @@ package com.google.api.client.http;
 import com.google.api.client.util.Key;
 
 import junit.framework.TestCase;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -290,6 +291,92 @@ public class GenericUrlTest extends TestCase {
     assertEquals(LONG_PATH_PARTS, url.getPathParts());
     assertEquals("b", url.getFirst("a"));
     assertEquals("fragment", url.getFragment());
+  }
+
+  public void testBuildAuthority_exception() {
+    // Test without a scheme.
+    GenericUrl url = new GenericUrl();
+    url.setHost("example.com");
+
+    try {
+      url.buildAuthority();
+      Assert.fail("no exception was thrown");
+    } catch (NullPointerException expected) {}
+
+    // Test without a host.
+    url = new GenericUrl();
+    url.setScheme("https");
+
+    try {
+      url.buildAuthority();
+      Assert.fail("no exception was thrown");
+    } catch (NullPointerException expected) {}
+  }
+
+  public void testBuildAuthority_simple() {
+    GenericUrl url = new GenericUrl();
+    url.setScheme("http");
+    url.setHost("example.com");
+    assertEquals("http://example.com", url.buildAuthority());
+  }
+
+  public void testBuildAuthority_withPort() {
+    GenericUrl url = new GenericUrl();
+    url.setScheme("http");
+    url.setHost("example.com");
+    url.setPort(1234);
+    assertEquals("http://example.com:1234", url.buildAuthority());
+  }
+
+  public void testBuildRelativeUrl_empty() {
+    GenericUrl url = new GenericUrl();
+    url.setScheme("foo");
+    url.setHost("bar");
+    url.setRawPath("");
+    assertEquals("", url.buildRelativeUrl());
+  }
+
+  public void testBuildRelativeUrl_simple() {
+    GenericUrl url = new GenericUrl();
+    url.setScheme("foo");
+    url.setHost("bar");
+    url.setRawPath("/example");
+    assertEquals("/example", url.buildRelativeUrl());
+  }
+
+  public void testBuildRelativeUrl_simpleQuery() {
+    GenericUrl url = new GenericUrl();
+    url.setScheme("foo");
+    url.setHost("bar");
+    url.setRawPath("/example");
+    url.put("key", "value");
+    assertEquals("/example?key=value", url.buildRelativeUrl());
+  }
+
+  public void testBuildRelativeUrl_fragment() {
+    GenericUrl url = new GenericUrl();
+    url.setScheme("foo");
+    url.setHost("bar");
+    url.setRawPath("/example");
+    url.setFragment("test");
+    assertEquals("/example#test", url.buildRelativeUrl());
+  }
+
+  public void testBuildRelativeUrl_onlyQuery() {
+    GenericUrl url = new GenericUrl();
+    url.setScheme("foo");
+    url.setHost("bar");
+    url.setRawPath("");
+    url.put("key", "value");
+    assertEquals("?key=value", url.buildRelativeUrl());
+  }
+
+  private static final String BASE_URL = "http://google.com";
+  private static final String FULL_PATH = "/some/path/someone%2Fis%2F@gmail.com/test/?one=1&two=2";
+
+  public void testBuildRelativeUrl_full() {
+    GenericUrl url = new GenericUrl(BASE_URL+FULL_PATH);
+    assertEquals(FULL_PATH, url.buildRelativeUrl());
   }
 
   private static final String PATH_WITH_SLASH =

@@ -71,7 +71,7 @@ public class GenericUrl extends GenericData {
   /**
    * Decoded path component by parts with each part separated by a {@code '/'} or {@code null} for
    * none, for example {@code "/m8/feeds/contacts/default/full"} is represented by {@code "", "m8",
-   * "feeds", "contacts", "default", "full"}.
+   *"feeds", "contacts", "default", "full"}.
    * <p>
    * Use {@link #appendRawPath(String)} to append to the path, which ensures that no extra slash is
    * added.
@@ -202,8 +202,8 @@ public class GenericUrl extends GenericData {
   }
 
   /**
-   * Sets the decoded path component by parts with each part separated by a {@code '/'} or {@code
-   * null} for none.
+   * Sets the decoded path component by parts with each part separated by a {@code '/'} or
+   * {@code null} for none.
    *
    * @since 1.5
    */
@@ -212,12 +212,12 @@ public class GenericUrl extends GenericData {
   }
 
   /**
-   * Sets the decoded path component by parts with each part separated by a {@code '/'} or {@code
-   * null} for none.
+   * Sets the decoded path component by parts with each part separated by a {@code '/'} or
+   * {@code null} for none.
    *
    * <p>
    * For example {@code "/m8/feeds/contacts/default/full"} is represented by {@code "", "m8",
-   * "feeds", "contacts", "default", "full"}.
+   *"feeds", "contacts", "default", "full"}.
    * </p>
    *
    * <p>
@@ -254,7 +254,22 @@ public class GenericUrl extends GenericData {
    * {@link #pathParts} and the query parameters specified by this generic URL.
    */
   public final String build() {
-    // scheme, host, port, and path
+    return buildAuthority() + buildRelativeUrl();
+  }
+
+  /**
+   * Constructs the portion of the URL containing the scheme, host and port.
+   *
+   * <p>
+   * For the URL {@code "http://example.com/something?action=add"} this method would return
+   * {@code "http://example.com"}.
+   * </p>
+   *
+   * @return scheme://host[:port]
+   * @since 1.9
+   */
+  public final String buildAuthority() {
+    // scheme, host, port
     StringBuilder buf = new StringBuilder();
     buf.append(Preconditions.checkNotNull(scheme));
     buf.append("://");
@@ -263,10 +278,27 @@ public class GenericUrl extends GenericData {
     if (port != -1) {
       buf.append(':').append(port);
     }
+    return buf.toString();
+  }
+
+  /**
+   * Constructs the portion of the URL beginning at the rooted path.
+   *
+   * <p>
+   * For the URL {@code "http://example.com/something?action=add"} this method would return
+   * {@code "/something?action=add"}.
+   * </p>
+   *
+   * @return path with with leading '/' if the path is non-empty, query parameters and fragment
+   * @since 1.9
+   */
+  public final String buildRelativeUrl() {
+    StringBuilder buf = new StringBuilder();
     if (pathParts != null) {
       appendRawPathFromParts(buf);
     }
     addQueryParams(entrySet(), buf);
+
     // URL fragment
     String fragment = this.fragment;
     if (fragment != null) {
@@ -343,6 +375,7 @@ public class GenericUrl extends GenericData {
    * The last part of the {@link #pathParts} is merged with the first part of the path parts
    * computed from the given encoded path. Thus, if the current raw encoded path is {@code "a"}, and
    * the given encoded path is {@code "b"}, then the resulting raw encoded path is {@code "ab"}.
+   * </p>
    *
    * @param encodedPath raw encoded path or {@code null} to ignore
    */
@@ -362,11 +395,11 @@ public class GenericUrl extends GenericData {
   /**
    * Returns the decoded path parts for the given encoded path.
    *
-   * @param encodedPath slash-prefixed encoded path, for example {@code
-   *        "/m8/feeds/contacts/default/full"}
+   * @param encodedPath slash-prefixed encoded path, for example
+   *        {@code "/m8/feeds/contacts/default/full"}
    * @return decoded path parts, with each part assumed to be preceded by a {@code '/'}, for example
-   *         {@code "", "m8", "feeds", "contacts", "default", "full"}, or {@code null} for {@code
-   *         null} or {@code ""} input
+   *         {@code "", "m8", "feeds", "contacts", "default", "full"}, or {@code null} for
+   *         {@code null} or {@code ""} input
    */
   public static List<String> toPathParts(String encodedPath) {
     if (encodedPath == null || encodedPath.length() == 0) {
