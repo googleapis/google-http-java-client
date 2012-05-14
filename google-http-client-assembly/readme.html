@@ -22,7 +22,7 @@
 
 <h3>Dependencies and Licenses</h3>
 The license can be found <a href='LICENSE.txt'>here</a>.<br/>
-Dependent jars can be found in the <a href='dependencies'>dependencies</a> folder.<br/><br/>
+Dependent jars can be found in the <a href='libs'>libs</a> folder and the corresponding source jars can be found in the <a href='libs-sources'>libs-sources</a> folder<br/><br/>.
 The dependency structure and licenses for the different libraries can be found here:
 <ul>
   <li>google-http-client: <a href='dependencies/dependencies.html'>dependencies.html</a></li>
@@ -31,8 +31,16 @@ The dependency structure and licenses for the different libraries can be found h
   <li>google-http-client-appengine: <a href='dependencies/appengine-dependencies.html'>appengine-dependencies.html</a></li>
 </ul>
 
+<h3>Maven Usage</h3>
+For information on how to add these libraries to your Maven project please see 
+<a href='http://code.google.com/p/google-http-java-client/wiki/Setup#Maven'>http://code.google.com/p/google-http-java-client/wiki/Setup#Maven</a>.
+
+<h3>Eclipse</h3>
+A .classpath file snippet that can be included in your project's .classpath has been provided <a href='.classpath'>here</a>.
+Please only use the classpathentry's you actually need (see below for details).
+
 <h3>Android Dependencies</h3>
-The following are the jars from the <a href='dependencies'>dependencies</a>
+The following are the jars from the <a href='libs'>libs</a>
 folder required for android applications or a newer compatible version:
 <ul>
   <li>google-http-client-${project.version}.jar</li>
@@ -47,7 +55,7 @@ folder required for android applications or a newer compatible version:
 Please see the <a href='http://code.google.com/p/google-http-java-client/wiki/Android'>Android wiki</a> for the Android Developer's Guide.
 
 <h3>Google App Engine Dependencies</h3>
-The following are the jars from the <a href='dependencies'>dependencies</a>
+The following are the jars from the <a href='libs'>libs</a>
 folder required for Google App Engine applications or a newer compatible version:
 <ul>
   <li>google-http-client-${project.version}.jar</li>
@@ -59,9 +67,10 @@ folder required for Google App Engine applications or a newer compatible version
   <li>protobuf-java-${project.protobuf-java.version}.jar</li>
   <li>xpp3-${project.xpp3.version}.jar</li>
 </ul>
+Please see the <a href='http://code.google.com/p/google-http-java-client/wiki/GoogleAppEngine'>GoogleAppEngine wiki</a> for the Google App Engine Developer's Guide.
 
 <h3>General Purpose Java 5 Environment Dependencies</h3>
-The following are the jars from the <a href='dependencies'>dependencies</a>
+The following are the jars from the <a href='libs'>libs</a>
 folder required for general purpose Java 5 applications or a newer compatible version:
 <ul>
   <li>google-http-client-${project.version}.jar</li>

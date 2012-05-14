@@ -11,6 +11,10 @@
       <source>LICENSE.txt</source>
     </file>
     <file>
+      <source>.classpath</source>
+      <filtered>true</filtered>
+    </file>
+    <file>
       <source>readme.html</source>
       <filtered>true</filtered>
     </file>
@@ -20,18 +24,12 @@
       <directory>dependencies</directory>
     </fileSet>
     <fileSet>
-      <directory>target/dependencies</directory>
-      <excludes>
-        <exclude>google-http-client-*</exclude>
-      </excludes>
-      <outputDirectory>dependencies</outputDirectory>
+      <directory>target/libs</directory>
+      <outputDirectory>libs</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>target/dependencies</directory>
-      <includes>
-        <include>google-http-client-*</include>
-      </includes>
-      <outputDirectory>/</outputDirectory>
+      <directory>target/libs-sources</directory>
+      <outputDirectory>libs-sources</outputDirectory>
     </fileSet>
   </fileSets>
 </assembly>
