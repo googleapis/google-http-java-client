@@ -123,8 +123,8 @@ cp google-http-client-android2/target/site/dependencies.html google-http-client-
 cp google-http-client-android3/target/site/dependencies.html google-http-client-assembly/dependencies/android3-dependencies.html
 cp google-http-client-appengine/target/site/dependencies.html google-http-client-assembly/dependencies/appengine-dependencies.html
 
-sed s/-SNAPSHOT//g &lt;google-http-client/src/main/java/com/google/api/client/util/Strings.java &gt;/tmp/Strings.java
-cp /tmp/Strings.java google-http-client/src/main/java/com/google/api/client/util
+sed s/-SNAPSHOT//g &lt;google-http-client/src/main/java/com/google/api/client/http/HttpRequest.java &gt;/tmp/HttpRequest.java
+cp /tmp/HttpRequest.java google-http-client/src/main/java/com/google/api/client/http
 hg commit -m "prepare 1.10.0-beta for release"
 hg push
 
