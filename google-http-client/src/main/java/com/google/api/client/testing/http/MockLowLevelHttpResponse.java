@@ -57,8 +57,8 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   /** Content encoding or {@code null} for none. */
   private String contentEncoding;
 
-  /** Content length or {@code 0} for none. */
-  private long contentLength;
+  /** Content length or {@code -1} if unknown. */
+  private long contentLength = -1;
 
   /**
    * Adds a header to the response.
@@ -77,8 +77,14 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
    * @param stringContent content string or {@code null} for none
    */
   public MockLowLevelHttpResponse setContent(String stringContent) {
-    content = stringContent == null ? null : new ByteArrayInputStream(StringUtils.getBytesUtf8(
-        stringContent));
+    if (stringContent == null) {
+      content = null;
+      setContentLength(0);
+    } else {
+      byte[] bytes = StringUtils.getBytesUtf8(stringContent);
+      content = new ByteArrayInputStream(bytes);
+      setContentLength(bytes.length);
+    }
     return this;
   }
 
@@ -213,13 +219,21 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   }
 
   /**
-   * Sets the content length or {@code 0} for none.
+   * Sets the content length or {@code -1} for unknown.
+   *
+   * <p>
+   * By default it is {@code -1}.
+   * </p>
+   *
+   * <p>
+   * Warning: in prior version {@code 0} was the default, but now the default is {@code -1}.
+   * </p>
    *
    * @since 1.5
    */
   public MockLowLevelHttpResponse setContentLength(long contentLength) {
     this.contentLength = contentLength;
-    Preconditions.checkArgument(contentLength >= 0);
+    Preconditions.checkArgument(contentLength >= -1);
     return this;
   }
 

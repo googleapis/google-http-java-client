@@ -14,6 +14,9 @@
 
 package com.google.api.client.http;
 
+import com.google.common.io.ByteStreams;
+import com.google.common.io.LimitInputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,18 +27,24 @@ import java.io.OutputStream;
  * <p>
  * The {@link #type} field is required. Subclasses should implement the {@link #getLength()},
  * {@link #getInputStream()}, and {@link #retrySupported()} for their specific type of input stream.
+ * If you need to limit the amount of content read from the input stream, you may use
+ * {@link LimitInputStream}.
  * <p>
  *
  * <p>
  * Implementations don't need to be thread-safe.
  * </p>
  *
+ * <p>
+ * Warning: in prior version 1.9 the maximum amount of content read from the input stream was
+ * limited by the {@link #getLength()}, but now instead all content is read. You may use
+ * {@link LimitInputStream} if that functionality is needed.
+ * </p>
+ *
  * @since 1.4
  * @author moshenko@google.com (Jacob Moshenko)
  */
 public abstract class AbstractInputStreamContent implements HttpContent {
-
-  private static final int BUFFER_SIZE = 2048;
 
   /** Content type or {@code null} for none. */
   private String type;
@@ -72,29 +81,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
   public abstract InputStream getInputStream() throws IOException;
 
   public void writeTo(OutputStream out) throws IOException {
-    InputStream inputStream = getInputStream();
-    long contentLength = getLength();
-    if (contentLength < 0) {
-      copy(inputStream, out, closeInputStream);
-    } else {
-      byte[] buffer = new byte[BUFFER_SIZE];
-      try {
-        // consume no more than length
-        long remaining = contentLength;
-        while (remaining > 0) {
-          int read = inputStream.read(buffer, 0, (int) Math.min(BUFFER_SIZE, remaining));
-          if (read == -1) {
-            break;
-          }
-          out.write(buffer, 0, read);
-          remaining -= read;
-        }
-      } finally {
-        if (closeInputStream) {
-          inputStream.close();
-        }
-      }
-    }
+    copy(getInputStream(), out, closeInputStream);
     out.flush();
   }
 
@@ -159,7 +146,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    * <p>
    * Sample use:
    *
-   * <pre><code>
+   * <pre>
   static void downloadMedia(HttpResponse response, File file)
       throws IOException {
     FileOutputStream out = new FileOutputStream(file);
@@ -169,7 +156,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
       out.close();
     }
   }
-   * </code></pre>
+   * </pre>
    * </p>
    *
    * @param inputStream source input stream
@@ -185,8 +172,9 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    *
    * <p>
    * Sample use:
+   * </p>
    *
-   * <pre><code>
+   * <pre>
   static void downloadMedia(HttpResponse response, File file)
       throws IOException {
     FileOutputStream out = new FileOutputStream(file);
@@ -196,8 +184,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
       out.close();
     }
   }
-   * </code></pre>
-   * </p>
+   * </pre>
    *
    * @param inputStream source input stream
    * @param outputStream destination output stream
@@ -207,11 +194,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
   public static void copy(InputStream inputStream, OutputStream outputStream,
       boolean closeInputStream) throws IOException {
     try {
-      byte[] tmp = new byte[BUFFER_SIZE];
-      int bytesRead;
-      while ((bytesRead = inputStream.read(tmp)) != -1) {
-        outputStream.write(tmp, 0, bytesRead);
-      }
+      ByteStreams.copy(inputStream, outputStream);
     } finally {
       if (closeInputStream) {
         inputStream.close();
