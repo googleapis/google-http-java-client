@@ -14,12 +14,13 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Value;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import junit.framework.TestCase;
 
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,15 @@ import java.util.Map;
  * @author Ravi Mistry
  */
 public class UriTemplateTest extends TestCase {
+
+  public void testExpandTemplates_initialization() {
+    Map<String, Object> map = Maps.newHashMap();
+    map.put("id", Arrays.asList("a", "b", "c"));
+
+    // Make sure the UriTemplate.COMPOSITE_PREFIXES map is initialized correctly.
+    assertEquals("/a/b/c", UriTemplate.expand("{/id*}", map, false));
+    assertEquals("/a/b/c", UriTemplate.expand("{/id*}", map, false));
+  }
 
   public void testExpandTemplates_basic() {
     Map<String, Object> requestMap = Maps.newHashMap();
@@ -82,12 +92,8 @@ public class UriTemplateTest extends TestCase {
     assertEquals("foo//bar/", UriTemplate.expand("foo/{abc}/bar/{def}", null, true));
   }
 
-  private Iterator<String> getListParams() {
-    List<String> params = Lists.newArrayList();
-    params.add("red");
-    params.add("green");
-    params.add("blue");
-    return params.iterator();
+  private Iterable<String> getListIterable() {
+    return Arrays.asList("red", "green", "blue");
   }
 
   // template, expected output.
@@ -110,12 +116,31 @@ public class UriTemplateTest extends TestCase {
       {"{&d*}", "&red&green&blue"},
   };
 
-  public void testExpandTemplates_explodeList() {
+  public void testExpandTemplates_explodeIterator() {
     for (String[] test : LIST_TESTS) {
       Map<String, Object> requestMap = Maps.newHashMap();
-      requestMap.put("d", getListParams());
+      requestMap.put("d", getListIterable().iterator());
       assertEquals(test[1], UriTemplate.expand(test[0], requestMap, true));
     }
+  }
+
+  public void testExpandTemplates_explodeIterable() {
+    for (String[] test : LIST_TESTS) {
+      Map<String, Object> requestMap = Maps.newHashMap();
+      requestMap.put("d", getListIterable());
+      assertEquals(test[1], UriTemplate.expand(test[0], requestMap, true));
+    }
+  }
+
+  enum testEnum {
+    @Value
+    ONE
+  }
+
+  public void testExpandTemplates_explodeEnum() {
+    Map<String, Object> requestMap = Maps.newHashMap();
+    requestMap.put("d", testEnum.ONE);
+    assertEquals(testEnum.ONE.toString(), UriTemplate.expand("{d}", requestMap, true));
   }
 
   public void testExpandTemplates_missingCompositeParameter() {
@@ -199,20 +224,25 @@ public class UriTemplateTest extends TestCase {
   public void testExpandTemplates_mixedBagParameters() {
     Map<String, Object> requestMap = Maps.newLinkedHashMap();
     // Add list params.
-    requestMap.put("list", getListParams());
+    requestMap.put("iterator", getListIterable().iterator());
+    requestMap.put("iterable", getListIterable());
     // Add map params.
     requestMap.put("map", getMapParams());
+    // Add enum param.
+    requestMap.put("enum", testEnum.ONE);
     // Add normal params.
     requestMap.put("abc", "xyz");
     // Add unused params.
     requestMap.put("unused1", "unused param");
     requestMap.put("unused2", "unused=param");
-    assertEquals("foo/xyz/red/green/blue&map=semi,%3B,dot,.,comma,%2C?unused1=unused%20param"
-        + "&unused2=unused%3Dparam",
-        UriTemplate.expand("foo/{abc}{/list*}{&map}", requestMap, true));
+    assertEquals(
+        "foo/xyz/red/green/blue&red&green&blue&map=semi,%3B,dot,.,comma,%2CONE?unused1=unused%20"
+        + "param&unused2=unused%3Dparam",
+        UriTemplate.expand("foo/{abc}{/iterator*}{&iterable*}{&map}{&enum}", requestMap, true));
     // Assert the map has not changed.
-    assertEquals(5, requestMap.size());
-    assertTrue(requestMap.containsKey("list"));
+    assertEquals(7, requestMap.size());
+    assertTrue(requestMap.containsKey("iterator"));
+    assertTrue(requestMap.containsKey("iterable"));
     assertTrue(requestMap.containsKey("map"));
     assertTrue(requestMap.containsKey("abc"));
     assertTrue(requestMap.containsKey("unused1"));

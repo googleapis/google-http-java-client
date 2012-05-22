@@ -15,6 +15,8 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Data;
+import com.google.api.client.util.FieldInfo;
+import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
 import com.google.common.base.Preconditions;
 
@@ -76,6 +78,10 @@ public class UriTemplate {
 
   static final Map<Character, CompositeOutput> COMPOSITE_PREFIXES =
       new HashMap<Character, CompositeOutput>();
+
+  static {
+    CompositeOutput.values();
+  }
 
   private static final String COMPOSITE_NON_EXPLODE_JOINER = ",";
 
@@ -192,6 +198,10 @@ public class UriTemplate {
 
   /**
    * Constructs a new {@code Map<String, Object>} from an {@code Object}.
+   *
+   * <p>
+   * There are no null values in the returned map.
+   * </p>
    */
   private static Map<String, Object> getMap(Object obj) {
     // Using a LinkedHashMap to maintain the original order of insertions. This is done to help
@@ -199,7 +209,7 @@ public class UriTemplate {
     Map<String, Object> map = new LinkedHashMap<String, Object>();
     for (Map.Entry<String, Object> entry : Data.mapOf(obj).entrySet()) {
       Object value = entry.getValue();
-      if (value != null) {
+      if (!Data.isNull(value)) {
         map.put(entry.getKey(), value);
       }
     }
@@ -296,22 +306,30 @@ public class UriTemplate {
       String varName = template.substring(varNameStartIndex, varNameEndIndex);
 
       Object value = variableMap.remove(varName);
+      if (value == null) {
+        // The value for this variable is undefined. continue with the next template.
+        continue;
+      }
       if (value instanceof Iterator<?>) {
         // Get the list property value.
         Iterator<?> iterator = (Iterator<?>) value;
         value = getListPropertyValue(varName, iterator, containsExplodeModifier, compositeOutput);
+      } else if (value instanceof Iterable<?> || value.getClass().isArray()) {
+       // Get the list property value.
+        Iterator<?> iterator = Types.iterableOf(value).iterator();
+        value = getListPropertyValue(varName, iterator, containsExplodeModifier, compositeOutput);
+      } else if (value.getClass().isEnum()) {
+        String name = FieldInfo.of((Enum<?>) value).getName();
+        if (name != null) {
+          value = CharEscapers.escapeUriPath(name);
+        }
       } else if (!Data.isValueOfPrimitiveType(value)) {
-        // If the value is not a primitive type or an Iterator assume it is a Map.
-        // Get the map property value.
+        // Parse the value as a key/value map.
         Map<String, Object> map = getMap(value);
         value = getMapPropertyValue(varName, map, containsExplodeModifier, compositeOutput);
-      } else if (value != null) {
+      } else {
         // For everything else...
         value = CharEscapers.escapeUriPath(value.toString());
-      }
-      if (value == null) {
-        // The value for this variable is undefined. continue with the next template.
-        continue;
       }
       pathBuf.append(value);
     }
@@ -338,7 +356,7 @@ public class UriTemplate {
   private static String getListPropertyValue(String varName, Iterator<?> iterator,
       boolean containsExplodeModifier, CompositeOutput compositeOutput) {
     if (!iterator.hasNext()) {
-      return null;
+      return "";
     }
     StringBuilder retBuf = new StringBuilder();
     retBuf.append(compositeOutput.getOutputPrefix());
@@ -377,7 +395,7 @@ public class UriTemplate {
   private static String getMapPropertyValue(String varName, Map<String, Object> map,
       boolean containsExplodeModifier, CompositeOutput compositeOutput) {
     if (map.isEmpty()) {
-      return null;
+      return "";
     }
     StringBuilder retBuf = new StringBuilder();
     retBuf.append(compositeOutput.getOutputPrefix());
