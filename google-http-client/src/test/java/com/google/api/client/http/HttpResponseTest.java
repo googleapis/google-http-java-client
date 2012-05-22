@@ -51,6 +51,7 @@ public class HttpResponseTest extends TestCase {
   }
 
   private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
+  private static final String SAMPLE2 = "123abc";
 
   public void testParseAsString_utf8() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
@@ -71,6 +72,34 @@ public class HttpResponseTest extends TestCase {
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
     assertEquals(SAMPLE, response.parseAsString());
+  }
+
+  public void testParseAsString_noContentType() throws IOException {
+    HttpTransport transport = new MockHttpTransport() {
+        @Override
+      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+            @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+            result.setContent(SAMPLE2);
+            return result;
+          }
+        };
+      }
+    };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    HttpResponse response = request.execute();
+    assertEquals(SAMPLE2, response.parseAsString());
+  }
+
+  public void testParseCharset() {
+    assertEquals("UTF-8", HttpResponse.parseCharset("application/json; charset=UTF-8"));
+    assertEquals(
+        "a b c", HttpResponse.parseCharset("application/json;a=a; charset=a b c ; b=b"));
+    assertEquals(
+        "a b c", HttpResponse.parseCharset("application/json;a=a; cHaRsEt=a b c ; b=b"));
   }
 
   public static class MyHeaders extends HttpHeaders {

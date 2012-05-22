@@ -23,6 +23,7 @@ import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,6 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -48,17 +51,15 @@ import java.util.zip.GZIPInputStream;
  */
 public final class HttpResponse {
 
+  /** Content-Type parameter pattern. */
+  private static final Pattern CONTENT_TYPE_PARAM_PATTERN =
+      Pattern.compile(";\\s*(\\S[^=]*)=([^;]*[^;\\p{Space}])");
+
   /** HTTP response content or {@code null} before {@link #getContent()}. */
   private InputStream content;
 
   /** Content encoding or {@code null}. */
   private final String contentEncoding;
-
-  /**
-   * Content length or less than zero if not known. May be reset by {@link #getContent} if response
-   * had GZip compression.
-   */
-  private long contentLength;
 
   /** Content type or {@code null} for none. */
   private final String contentType;
@@ -119,7 +120,6 @@ public final class HttpResponse {
     contentLoggingLimit = request.getContentLoggingLimit();
     loggingEnabled = request.isLoggingEnabled();
     this.response = response;
-    contentLength = response.getContentLength();
     contentType = response.getContentType();
     contentEncoding = response.getContentEncoding();
     int code = response.getStatusCode();
@@ -394,7 +394,6 @@ public final class HttpResponse {
       String contentEncoding = this.contentEncoding;
       if (contentEncoding != null && contentEncoding.contains("gzip")) {
         content = new GZIPInputStream(content);
-        contentLength = -1;
       }
       // logging (wrap content with LoggingInputStream)
       Logger logger = HttpTransport.LOGGER;
@@ -489,9 +488,18 @@ public final class HttpResponse {
 
   /**
    * Parses the content of the HTTP response from {@link #getContent()} and reads it into a string.
+   *
    * <p>
    * Since this method returns {@code ""} for no content, a simpler check for no content is to check
    * if {@link #getContent()} is {@code null}.
+   * </p>
+   *
+   * <p>
+   * Warning: in prior version 1.9 the maximum amount of content parsed for un-GZipped content was
+   * set by the Content-Length header, but now instead all content is read. Also, prior version
+   * assumed the charset was {@code "UTF-8"}, but now it follows the specification by parsing the
+   * "charset" parameter of the Content-Type header or {@code "ISO-8859-1"} if missing.
+   * </p>
    *
    * @return parsed string or {@code ""} for no content
    * @throws IOException I/O exception
@@ -501,26 +509,21 @@ public final class HttpResponse {
     if (content == null) {
       return "";
     }
-    try {
-      long contentLength = this.contentLength;
-      int bufferSize = contentLength == -1 ? 4096 : (int) contentLength;
-      int length = 0;
-      byte[] buffer = new byte[bufferSize];
-      byte[] tmp = new byte[4096];
-      int bytesRead;
-      while ((bytesRead = content.read(tmp)) != -1) {
-        if (length + bytesRead > bufferSize) {
-          bufferSize = Math.max(bufferSize << 1, length + bytesRead);
-          byte[] newbuffer = new byte[bufferSize];
-          System.arraycopy(buffer, 0, newbuffer, 0, length);
-          buffer = newbuffer;
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    AbstractInputStreamContent.copy(content, out);
+    return out.toString(parseCharset(getContentType()));
+  }
+
+  /** Parses the "charset" parameter from the Content-Type header. */
+  static String parseCharset(String contentType) {
+    if (contentType != null) {
+      Matcher m = CONTENT_TYPE_PARAM_PATTERN.matcher(contentType);
+      while (m.find()) {
+        if ("charset".equalsIgnoreCase(m.group(1))) {
+          return m.group(2);
         }
-        System.arraycopy(tmp, 0, buffer, length, bytesRead);
-        length += bytesRead;
       }
-      return new String(buffer, 0, length, "UTF-8");
-    } finally {
-      content.close();
     }
+    return "ISO-8859-1";
   }
 }
