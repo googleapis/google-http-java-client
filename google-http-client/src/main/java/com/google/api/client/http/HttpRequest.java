@@ -782,13 +782,16 @@ public final class HttpRequest {
         logbuf.append(method).append(' ').append(urlString).append(StringUtils.LINE_SEPARATOR);
       }
       // add to user agent
-      if (headers.getUserAgent() == null) {
+      String originalUserAgent = headers.getUserAgent();
+      if (originalUserAgent == null) {
         headers.setUserAgent(USER_AGENT_SUFFIX);
       } else {
-        headers.setUserAgent(headers.getUserAgent() + " " + USER_AGENT_SUFFIX);
+        headers.setUserAgent(originalUserAgent + " " + USER_AGENT_SUFFIX);
       }
       // headers
       HttpHeaders.serializeHeaders(headers, logbuf, logger, lowLevelHttpRequest);
+      // set the original user agent back to the headers so that retries do not keep appending to it
+      headers.setUserAgent(originalUserAgent);
 
       // content
       HttpContent content = this.content;

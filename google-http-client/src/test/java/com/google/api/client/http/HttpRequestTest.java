@@ -24,6 +24,7 @@ import com.google.api.client.util.Key;
 import com.google.api.client.util.Value;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -314,16 +315,19 @@ public class HttpRequestTest extends TestCase {
 
     public int lowLevelExecCalls;
     int callsBeforeSuccess;
+    List<String> userAgentHeader = Lists.newArrayList();
 
     protected FailThenSuccessConnectionErrorTransport(int callsBeforeSuccess) {
       this.callsBeforeSuccess = callsBeforeSuccess;
     }
 
-    public LowLevelHttpRequest retryableGetRequest = new MockLowLevelHttpRequest() {
+    public MockLowLevelHttpRequest retryableGetRequest = new MockLowLevelHttpRequest() {
 
       @Override
       public LowLevelHttpResponse execute() throws IOException {
         lowLevelExecCalls++;
+
+        userAgentHeader = getHeaders().get("User-Agent");
 
         if (lowLevelExecCalls <= callsBeforeSuccess) {
           throw new IOException();
@@ -337,6 +341,7 @@ public class HttpRequestTest extends TestCase {
 
     @Override
     public LowLevelHttpRequest buildGetRequest(String url) {
+      retryableGetRequest.getHeaders().clear();
       return retryableGetRequest;
     }
   }
@@ -387,6 +392,22 @@ public class HttpRequestTest extends TestCase {
       // Expected
     }
     Assert.assertEquals(1, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void testUserAgentWithExecuteErrorAndRetryEnabled() throws IOException {
+    int callsBeforeSuccess = 3;
+    FailThenSuccessConnectionErrorTransport fakeTransport =
+        new FailThenSuccessConnectionErrorTransport(callsBeforeSuccess);
+    HttpRequest req =
+        fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
+    req.setRetryOnExecuteIOException(true);
+    req.setNumberOfRetries(callsBeforeSuccess + 1);
+    HttpResponse resp = req.execute();
+
+    Assert.assertEquals(1, fakeTransport.userAgentHeader.size());
+    Assert.assertEquals(HttpRequest.USER_AGENT_SUFFIX, fakeTransport.userAgentHeader.get(0));
+    Assert.assertEquals(200, resp.getStatusCode());
+    Assert.assertEquals(4, fakeTransport.lowLevelExecCalls);
   }
 
   public void testAbnormalResponseHandlerWithNoBackOff() throws IOException {
