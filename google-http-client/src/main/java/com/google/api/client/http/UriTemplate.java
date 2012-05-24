@@ -209,7 +209,7 @@ public class UriTemplate {
     Map<String, Object> map = new LinkedHashMap<String, Object>();
     for (Map.Entry<String, Object> entry : Data.mapOf(obj).entrySet()) {
       Object value = entry.getValue();
-      if (!Data.isNull(value)) {
+      if (value != null && !Data.isNull(value)) {
         map.put(entry.getKey(), value);
       }
     }
