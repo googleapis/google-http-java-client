@@ -31,7 +31,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -147,8 +146,7 @@ public final class HttpResponse {
     int size = response.getHeaderCount();
     Class<? extends HttpHeaders> headersClass = headers.getClass();
     List<Type> context = Arrays.<Type>asList(headersClass);
-    ClassInfo classInfo = ClassInfo.of(headersClass);
-    HashMap<String, String> fieldNameMap = HttpHeaders.getFieldNameMap(headersClass);
+    ClassInfo classInfo = ClassInfo.of(headersClass, true);
     ArrayValueMap arrayValueMap = new ArrayValueMap(headers);
     for (int i = 0; i < size; i++) {
       String headerName = response.getHeaderName(i);
@@ -156,12 +154,8 @@ public final class HttpResponse {
       if (loggable) {
         logbuf.append(headerName + ": " + headerValue).append(StringUtils.LINE_SEPARATOR);
       }
-      String fieldName = fieldNameMap.get(headerName.toLowerCase());
-      if (fieldName == null) {
-        fieldName = headerName;
-      }
       // use field information if available
-      FieldInfo fieldInfo = classInfo.getFieldInfo(fieldName);
+      FieldInfo fieldInfo = classInfo.getFieldInfo(headerName);
       if (fieldInfo != null) {
         Type type = Data.resolveWildcardTypeOrTypeVariable(context, fieldInfo.getGenericType());
         // type is now class, parameterized type, or generic array type
@@ -189,10 +183,10 @@ public final class HttpResponse {
       } else {
         // store header values in an array list
         @SuppressWarnings("unchecked")
-        ArrayList<String> listValue = (ArrayList<String>) headers.get(fieldName);
+        ArrayList<String> listValue = (ArrayList<String>) headers.get(headerName);
         if (listValue == null) {
           listValue = new ArrayList<String>();
-          headers.set(fieldName, listValue);
+          headers.set(headerName, listValue);
         }
         listValue.add(headerValue);
       }

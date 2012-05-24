@@ -39,7 +39,7 @@ public class DataMapTest extends TestCase {
 
   public void testSizeAndIsEmpty() {
     A a = new A();
-    DataMap map = new DataMap(a);
+    DataMap map = new DataMap(a, false);
     assertEquals(0, map.size());
     assertTrue(map.isEmpty());
     a.s = "s";
@@ -56,7 +56,7 @@ public class DataMapTest extends TestCase {
   public void testIterator() {
     A a = new A();
     a.s = "value";
-    DataMap map = new DataMap(a);
+    DataMap map = new DataMap(a, false);
     Iterator<Map.Entry<String, Object>> iterator = map.entrySet().iterator();
     assertTrue(iterator.hasNext());
     Map.Entry<String, Object> entry = iterator.next();
@@ -72,7 +72,7 @@ public class DataMapTest extends TestCase {
     a.r = "r";
     a.s = "s";
     a.t = "t";
-    DataMap map = new DataMap(a);
+    DataMap map = new DataMap(a, false);
     assertEquals(ImmutableList.of("r", "s", "t"), Lists.newArrayList(map.values()));
     a.s = null;
     assertEquals(ImmutableList.of("r", "t"), Lists.newArrayList(map.values()));
@@ -87,7 +87,7 @@ public class DataMapTest extends TestCase {
     a.r = "r";
     a.s = "s";
     a.t = "t";
-    DataMap map = new DataMap(a);
+    DataMap map = new DataMap(a, false);
     assertEquals(ImmutableList.of("r", "s", "t"), Lists.newArrayList(map.keySet()));
     a.s = null;
     assertEquals(ImmutableList.of("r", "t"), Lists.newArrayList(map.keySet()));
@@ -101,7 +101,7 @@ public class DataMapTest extends TestCase {
     A a = new A();
     a.r = "r";
     a.s = "s";
-    DataMap map = new DataMap(a);
+    DataMap map = new DataMap(a, false);
     map.clear();
     assertTrue(map.isEmpty());
     map.clear();
@@ -111,7 +111,7 @@ public class DataMapTest extends TestCase {
   public void testGetKeyAndContainsKey() {
     A a = new A();
     a.r = "rv";
-    DataMap map = new DataMap(a);
+    DataMap map = new DataMap(a, false);
     assertNull(map.get("no"));
     assertFalse(map.containsKey("no"));
     assertNull(map.get("s"));
@@ -123,7 +123,7 @@ public class DataMapTest extends TestCase {
   public void testPut() {
     A a = new A();
     a.r = "rv";
-    DataMap map = new DataMap(a);
+    DataMap map = new DataMap(a, false);
     assertNull(map.put("s", "sv"));
     assertEquals("sv", a.s);
     assertEquals("rv", map.put("r", "rv2"));

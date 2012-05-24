@@ -28,7 +28,7 @@ import java.util.TreeSet;
 import java.util.WeakHashMap;
 
 /**
- * Parses class information to determine data key name/value pairs associated with the class.
+ * Computes class information to determine data key name/value pairs associated with the class.
  *
  * <p>
  * Implementation is thread-safe.
@@ -39,11 +39,18 @@ import java.util.WeakHashMap;
  */
 public final class ClassInfo {
 
-  /** Class information cache. */
+  /** Class information cache, with case-sensitive field names. */
   private static final Map<Class<?>, ClassInfo> CACHE = new WeakHashMap<Class<?>, ClassInfo>();
+
+  /** Class information cache, with case-insensitive fields names. */
+  private static final Map<Class<?>, ClassInfo> CACHE_IGNORE_CASE =
+      new WeakHashMap<Class<?>, ClassInfo>();
 
   /** Class. */
   private final Class<?> clazz;
+
+  /** Whether field names are case sensitive. */
+  private final boolean ignoreCase;
 
   /** Map from {@link FieldInfo#getName()} to the field information. */
   private final IdentityHashMap<String, FieldInfo> nameToFieldInfoMap =
@@ -62,17 +69,31 @@ public final class ClassInfo {
    * @return class information or {@code null} for {@code null} input
    */
   public static ClassInfo of(Class<?> underlyingClass) {
+    return of(underlyingClass, false);
+  }
+
+  /**
+   * Returns the class information for the given underlying class.
+   *
+   * @param underlyingClass underlying class or {@code null} for {@code null} result
+   * @param ignoreCase whether field names are case sensitive
+   * @return class information or {@code null} for {@code null} input
+   * @since 1.10
+   */
+  public static ClassInfo of(Class<?> underlyingClass, boolean ignoreCase) {
     if (underlyingClass == null) {
       return null;
     }
-    synchronized (CACHE) {
-      ClassInfo classInfo = CACHE.get(underlyingClass);
+    final Map<Class<?>, ClassInfo> cache = ignoreCase ? CACHE_IGNORE_CASE : CACHE;
+    ClassInfo classInfo;
+    synchronized (cache) {
+      classInfo = cache.get(underlyingClass);
       if (classInfo == null) {
-        classInfo = new ClassInfo(underlyingClass);
-        CACHE.put(underlyingClass, classInfo);
+        classInfo = new ClassInfo(underlyingClass, ignoreCase);
+        cache.put(underlyingClass, classInfo);
       }
-      return classInfo;
     }
+    return classInfo;
   }
 
   /**
@@ -85,13 +106,28 @@ public final class ClassInfo {
   }
 
   /**
+   * Returns whether field names are case sensitive.
+   *
+   * @since 1.10
+   */
+  public final boolean getIgnoreCase() {
+    return ignoreCase;
+  }
+
+  /**
    * Returns the information for the given {@link FieldInfo#getName()}.
    *
    * @param name {@link FieldInfo#getName()} or {@code null}
    * @return field information or {@code null} for none
    */
   public FieldInfo getFieldInfo(String name) {
-    return nameToFieldInfoMap.get(name == null ? null : name.intern());
+    if (name != null) {
+      if (ignoreCase) {
+        name = name.toLowerCase();
+      }
+      name = name.intern();
+    }
+    return nameToFieldInfoMap.get(name);
   }
 
   /**
@@ -122,8 +158,11 @@ public final class ClassInfo {
     return names;
   }
 
-  private ClassInfo(Class<?> srcClass) {
+  private ClassInfo(Class<?> srcClass, boolean ignoreCase) {
     clazz = srcClass;
+    this.ignoreCase = ignoreCase;
+    Preconditions.checkArgument(
+        !ignoreCase || !srcClass.isEnum(), "cannot ignore case on an enum: " + srcClass);
     // name set has a special comparator to keep null first
     TreeSet<String> nameSet = new TreeSet<String>(new Comparator<String>() {
       public int compare(String s0, String s1) {
@@ -133,7 +172,7 @@ public final class ClassInfo {
     // inherit from super class
     Class<?> superClass = srcClass.getSuperclass();
     if (superClass != null) {
-      ClassInfo superClassInfo = ClassInfo.of(superClass);
+      ClassInfo superClassInfo = ClassInfo.of(superClass, ignoreCase);
       nameToFieldInfoMap.putAll(superClassInfo.nameToFieldInfoMap);
       nameSet.addAll(superClassInfo.names);
     }
@@ -144,9 +183,15 @@ public final class ClassInfo {
         continue;
       }
       String fieldName = fieldInfo.getName();
+      if (ignoreCase) {
+        fieldName = fieldName.toLowerCase().intern();
+      }
       FieldInfo conflictingFieldInfo = nameToFieldInfoMap.get(fieldName);
       Preconditions.checkArgument(conflictingFieldInfo == null,
-          "two fields have the same name <%s>: %s and %s", fieldName, field,
+          "two fields have the same %sname <%s>: %s and %s",
+          ignoreCase ? "case-insensitive " : "",
+          fieldName,
+          field,
           conflictingFieldInfo == null ? null : conflictingFieldInfo.getField());
       nameToFieldInfoMap.put(fieldName, fieldInfo);
       nameSet.add(fieldName);

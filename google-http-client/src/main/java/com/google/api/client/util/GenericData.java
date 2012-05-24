@@ -16,6 +16,7 @@ package com.google.api.client.util;
 
 import java.util.AbstractMap;
 import java.util.AbstractSet;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -50,7 +51,33 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
 
   // TODO(yanivi): implement more methods for faster implementation
 
-  final ClassInfo classInfo = ClassInfo.of(getClass());
+  /** Class information. */
+  final ClassInfo classInfo;
+
+  /**
+   * Constructs with case-insensitive keys.
+   */
+  public GenericData() {
+    this(EnumSet.noneOf(Flags.class));
+  }
+
+  /**
+   * Flags that impact behavior of generic data.
+   * @since 1.10
+   */
+  public enum Flags {
+
+    /** Whether keys are case sensitive. */
+    IGNORE_CASE
+  }
+
+  /**
+   * @param flags flags that impact behavior of generic data
+   * @since 1.10
+   */
+  public GenericData(EnumSet<Flags> flags) {
+    classInfo = ClassInfo.of(getClass(), flags.contains(Flags.IGNORE_CASE));
+  }
 
   @Override
   public final Object get(Object name) {
@@ -62,18 +89,24 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
     if (fieldInfo != null) {
       return fieldInfo.getValue(this);
     }
+    if (classInfo.getIgnoreCase()) {
+      fieldName = fieldName.toLowerCase();
+    }
     return unknownFields.get(fieldName);
   }
 
   @Override
-  public final Object put(String name, Object value) {
-    FieldInfo fieldInfo = classInfo.getFieldInfo(name);
+  public final Object put(String fieldName, Object value) {
+    FieldInfo fieldInfo = classInfo.getFieldInfo(fieldName);
     if (fieldInfo != null) {
       Object oldValue = fieldInfo.getValue(this);
       fieldInfo.setValue(this, value);
       return oldValue;
     }
-    return unknownFields.put(name, value);
+    if (classInfo.getIgnoreCase()) {
+      fieldName = fieldName.toLowerCase();
+    }
+    return unknownFields.put(fieldName, value);
   }
 
   /**
@@ -81,13 +114,16 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
    * for the field will be overwritten. It may be more slightly more efficient than
    * {@link #put(String, Object)} because it avoids accessing the field's original value.
    */
-  public final void set(String name, Object value) {
-    FieldInfo fieldInfo = classInfo.getFieldInfo(name);
+  public final void set(String fieldName, Object value) {
+    FieldInfo fieldInfo = classInfo.getFieldInfo(fieldName);
     if (fieldInfo != null) {
       fieldInfo.setValue(this, value);
       return;
     }
-    unknownFields.put(name, value);
+    if (classInfo.getIgnoreCase()) {
+      fieldName = fieldName.toLowerCase();
+    }
+    unknownFields.put(fieldName, value);
   }
 
   @Override
@@ -99,15 +135,18 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
 
   @Override
   public final Object remove(Object name) {
-    if (name instanceof String) {
-      String fieldName = (String) name;
-      FieldInfo fieldInfo = classInfo.getFieldInfo(fieldName);
-      if (fieldInfo != null) {
-        throw new UnsupportedOperationException();
-      }
-      return unknownFields.remove(name);
+    if (!(name instanceof String)) {
+      return null;
     }
-    return null;
+    String fieldName = (String) name;
+    FieldInfo fieldInfo = classInfo.getFieldInfo(fieldName);
+    if (fieldInfo != null) {
+      throw new UnsupportedOperationException();
+    }
+    if (classInfo.getIgnoreCase()) {
+      fieldName = fieldName.toLowerCase();
+    }
+    return unknownFields.remove(fieldName);
   }
 
   @Override
@@ -150,13 +189,22 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
     this.unknownFields = unknownFields;
   }
 
+  /**
+   * Returns the class information.
+   *
+   * @since 1.10
+   */
+  public final ClassInfo getClassInfo() {
+    return classInfo;
+  }
+
   /** Set of object data key/value map entries. */
   final class EntrySet extends AbstractSet<Map.Entry<String, Object>> {
 
     private final DataMap.EntrySet dataEntrySet;
 
     EntrySet() {
-      dataEntrySet = new DataMap(GenericData.this).entrySet();
+      dataEntrySet = new DataMap(GenericData.this, classInfo.getIgnoreCase()).entrySet();
     }
 
     @Override

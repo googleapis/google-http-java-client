@@ -194,7 +194,7 @@ public class Data {
       Map<String, Object> result = (Map<String, Object>) data;
       return result;
     }
-    Map<String, Object> result = new DataMap(data);
+    Map<String, Object> result = new DataMap(data, false);
     return result;
   }
 
@@ -293,7 +293,8 @@ public class Data {
       // clone generic data or a non-map Object
       boolean isGenericData = GenericData.class.isAssignableFrom(srcClass);
       if (isGenericData || !Map.class.isAssignableFrom(srcClass)) {
-        ClassInfo classInfo = ClassInfo.of(srcClass);
+        ClassInfo classInfo =
+            isGenericData ? ((GenericData) src).classInfo : ClassInfo.of(srcClass);
         for (String fieldName : classInfo.names) {
           FieldInfo fieldInfo = classInfo.getFieldInfo(fieldName);
           // skip final fields

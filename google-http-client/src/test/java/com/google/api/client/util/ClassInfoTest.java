@@ -56,6 +56,9 @@ public class ClassInfoTest extends TestCase {
     @Key("oc")
     String c;
     String d;
+
+    @Key("AbC")
+    String abc;
   }
 
   public class B extends A {
@@ -63,13 +66,38 @@ public class ClassInfoTest extends TestCase {
     String e;
   }
 
+  public class C extends B {
+    @Key("aBc")
+    String abc2;
+  }
+
   public void testNames() {
-    assertEquals(ImmutableList.of("b", "oc"), ClassInfo.of(A.class).names);
-    assertEquals(ImmutableList.of("b", "e", "oc"), ClassInfo.of(B.class).names);
+    assertEquals(ImmutableList.of("AbC", "b", "oc"), ClassInfo.of(A.class).names);
+    assertEquals(ImmutableList.of("AbC", "b", "e", "oc"), ClassInfo.of(B.class).names);
+  }
+
+  public void testNames_ignoreCase() {
+    assertEquals(ImmutableList.of("abc", "b", "oc"), ClassInfo.of(A.class, true).names);
+    assertEquals(ImmutableList.of("abc", "b", "e", "oc"), ClassInfo.of(B.class, true).names);
   }
 
   public void testNames_enum() {
     ClassInfo classInfo = ClassInfo.of(E.class);
     assertEquals(Lists.newArrayList(Arrays.asList(null, "VALUE", "other")), classInfo.names);
+  }
+
+  public void testOf() {
+    try {
+      ClassInfo.of(C.class, true);
+      fail("expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
+    try {
+      ClassInfo.of(E.class, true);
+      fail("expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
   }
 }

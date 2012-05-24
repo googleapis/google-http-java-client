@@ -41,9 +41,9 @@ final class DataMap extends AbstractMap<String, Object> {
   /**
    * @param object object being reflected
    */
-  DataMap(Object object) {
+  DataMap(Object object, boolean ignoreCase) {
     this.object = object;
-    classInfo = ClassInfo.of(object.getClass());
+    classInfo = ClassInfo.of(object.getClass(), ignoreCase);
     Preconditions.checkArgument(!classInfo.isEnum());
   }
 
@@ -204,7 +204,11 @@ final class DataMap extends AbstractMap<String, Object> {
     }
 
     public String getKey() {
-      return fieldInfo.getName();
+      String result = fieldInfo.getName();
+      if (classInfo.getIgnoreCase()) {
+        result = result.toLowerCase();
+      }
+      return result;
     }
 
     public Object getValue() {

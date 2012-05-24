@@ -619,7 +619,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals(ImmutableList.of("a", "b", "c"), headers.get("list"));
     assertEquals(ImmutableList.of("a2", "b2", "c2"), headers.get("objList"));
     assertEquals(ImmutableList.of("a1", "a2"), headers.get("r"));
-    assertFalse(headers.containsKey("acceptEncoding"));
+    assertFalse(headers.containsKey("Accept-Encoding"));
     assertEquals(ImmutableList.of("foo " + HttpRequest.USER_AGENT_SUFFIX),
         headers.get("User-Agent"));
     assertEquals(ImmutableList.of("b"), headers.get("a"));
@@ -791,5 +791,14 @@ public class HttpRequestTest extends TestCase {
       requestFactory.buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL,
           ByteArrayContent.fromString(null, "abc")).execute();
     }
+  }
+
+  public void testExecute_headers() throws IOException {
+    HttpTransport transport = new MockHttpTransport();
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.getHeaders().setAccept("*/*");
+    request.getHeaders().set("accept", "text/plain");
+    request.execute();
   }
 }

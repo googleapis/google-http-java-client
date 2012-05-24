@@ -15,7 +15,6 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Base64;
-import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
@@ -26,7 +25,7 @@ import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.HashMap;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.logging.Level;
@@ -48,6 +47,10 @@ import java.util.logging.Logger;
  * @author Yaniv Inbar
  */
 public class HttpHeaders extends GenericData {
+
+  public HttpHeaders() {
+    super(EnumSet.of(Flags.IGNORE_CASE));
+  }
 
   /** {@code "Accept"} header. */
   @Key("Accept")
@@ -615,7 +618,7 @@ public class HttpHeaders extends GenericData {
     // log header
     if (logbuf != null) {
       logbuf.append(name).append(": ");
-      if ("Authorization".equals(name) && !logger.isLoggable(Level.ALL)) {
+      if ("Authorization".equalsIgnoreCase(name) && !logger.isLoggable(Level.ALL)) {
         logbuf.append("<Not Logged>");
       } else {
         logbuf.append(stringValue);
@@ -673,36 +676,29 @@ public class HttpHeaders extends GenericData {
     HashSet<String> headerNames = new HashSet<String>();
     for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
       String name = headerEntry.getKey();
-      String lowerCase = name.toLowerCase();
-      Preconditions.checkArgument(headerNames.add(lowerCase),
-          "multiple headers of the same name (headers are case insensitive): %s", lowerCase);
+      Preconditions.checkArgument(headerNames.add(name),
+          "multiple headers of the same name (headers are case insensitive): %s", name);
       Object value = headerEntry.getValue();
       if (value != null) {
+        // compute the display name from the declared field name to fix capitalization
+        String displayName = name;
+        FieldInfo fieldInfo = headers.getClassInfo().getFieldInfo(name);
+        if (fieldInfo != null) {
+          displayName = fieldInfo.getName();
+        }
         Class<? extends Object> valueClass = value.getClass();
         if (value instanceof Iterable<?> || valueClass.isArray()) {
           for (Object repeatedValue : Types.iterableOf(value)) {
-            addHeader(logger, logbuf, lowLevelHttpRequest, name, repeatedValue, writer);
+            addHeader(logger, logbuf, lowLevelHttpRequest, displayName, repeatedValue, writer);
           }
         } else {
-          addHeader(logger, logbuf, lowLevelHttpRequest, name, value, writer);
+          addHeader(logger, logbuf, lowLevelHttpRequest, displayName, value, writer);
         }
       }
     }
     if (writer != null) {
       writer.flush();
     }
-  }
-
-  /**
-   * Returns the map from lower-case field name to field name used to allow for case insensitive
-   * HTTP headers for the given HTTP headers class.
-   */
-  static HashMap<String, String> getFieldNameMap(Class<? extends HttpHeaders> headersClass) {
-    HashMap<String, String> fieldNameMap = new HashMap<String, String>();
-    for (String keyName : ClassInfo.of(headersClass).getNames()) {
-      fieldNameMap.put(keyName.toLowerCase(), keyName);
-    }
-    return fieldNameMap;
   }
 
   // TODO(yanivi): override equals and hashCode

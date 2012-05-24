@@ -99,7 +99,7 @@ public class HttpHeadersTest extends TestCase {
     assertEquals(ImmutableList.of("a", "b", "c"), headers.get("list"));
     assertEquals(ImmutableList.of("a2", "b2", "c2"), headers.get("objList"));
     assertEquals(ImmutableList.of("a1", "a2"), headers.get("r"));
-    assertFalse(headers.containsKey("acceptEncoding"));
+    assertFalse(headers.containsKey("Accept-Encoding"));
     assertEquals(ImmutableList.of("foo"), headers.get("User-Agent"));
     assertEquals(ImmutableList.of("b"), headers.get("a"));
     assertEquals(ImmutableList.of("VALUE"), headers.get("value"));
@@ -109,7 +109,6 @@ public class HttpHeadersTest extends TestCase {
 
     // check headers in the output stream
     StringBuilder expectedOutput = new StringBuilder();
-    expectedOutput.append("User-Agent: foo\r\n");
     expectedOutput.append("foo: bar\r\n");
     expectedOutput.append("list: a\r\n");
     expectedOutput.append("list: b\r\n");
@@ -121,6 +120,7 @@ public class HttpHeadersTest extends TestCase {
     expectedOutput.append("otherValue: other\r\n");
     expectedOutput.append("r: a1\r\n");
     expectedOutput.append("r: a2\r\n");
+    expectedOutput.append("User-Agent: foo\r\n");
     expectedOutput.append("value: VALUE\r\n");
     expectedOutput.append("a: b\r\n");
 
