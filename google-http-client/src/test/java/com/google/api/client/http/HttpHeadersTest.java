@@ -61,6 +61,9 @@ public class HttpHeadersTest extends TestCase {
     Object objList;
 
     @Key
+    long someLong;
+
+    @Key
     List<String> list;
 
     @Key
@@ -120,10 +123,41 @@ public class HttpHeadersTest extends TestCase {
     expectedOutput.append("otherValue: other\r\n");
     expectedOutput.append("r: a1\r\n");
     expectedOutput.append("r: a2\r\n");
+    expectedOutput.append("someLong: 0\r\n");
     expectedOutput.append("User-Agent: foo\r\n");
     expectedOutput.append("value: VALUE\r\n");
     expectedOutput.append("a: b\r\n");
 
     assertEquals(expectedOutput.toString(), outputStream.toString());
+  }
+
+  @SuppressWarnings("unchecked")
+  public void testFromHttpHeaders() {
+    HttpHeaders rawHeaders = new HttpHeaders();
+    rawHeaders.setContentType("foo/bar");
+    rawHeaders.setUserAgent("FooBar");
+    rawHeaders.set("foo", "bar");
+    rawHeaders.set("someLong", "5");
+    rawHeaders.set("list", ImmutableList.of("a", "b", "c"));
+    rawHeaders.set("objNum", "5");
+    rawHeaders.set("objList", ImmutableList.of("a2", "b2", "c2"));
+    rawHeaders.set("r", new String[] { "a1", "a2" });
+    rawHeaders.set("a", "b");
+    rawHeaders.set("value", E.VALUE);
+    rawHeaders.set("otherValue", E.OTHER_VALUE);
+
+    MyHeaders myHeaders = new MyHeaders();
+    myHeaders.fromHttpHeaders(rawHeaders);
+    assertEquals("foo/bar", myHeaders.getContentType());
+    assertEquals("FooBar", myHeaders.getUserAgent());
+    assertEquals("bar", myHeaders.foo);
+    assertEquals(5, myHeaders.someLong);
+    assertEquals(ImmutableList.of("5"), myHeaders.objNum);
+    assertEquals(ImmutableList.of("a", "b", "c"), myHeaders.list);
+    assertEquals(ImmutableList.of("a2", "b2", "c2"), myHeaders.objList);
+    assertEquals(ImmutableList.of("a1", "a2"), ImmutableList.copyOf(myHeaders.r));
+    assertEquals(ImmutableList.of("b"), myHeaders.get("a"));
+    assertEquals(E.VALUE, myHeaders.value);
+    assertEquals(E.OTHER_VALUE, myHeaders.otherValue);
   }
 }

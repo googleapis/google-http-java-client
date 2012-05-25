@@ -14,7 +14,9 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.ArrayValueMap;
 import com.google.api.client.util.Base64;
+import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
@@ -25,8 +27,13 @@ import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -699,6 +706,156 @@ public class HttpHeaders extends GenericData {
     if (writer != null) {
       writer.flush();
     }
+  }
+
+  /**
+   * Puts all headers of the {@link LowLevelHttpResponse} into this {@link HttpHeaders} object.
+   *
+   * @param response Response from which the headers are copied
+   * @param logger {@link StringBuilder} to which logging output is added or {@code null} to disable
+   *        logging
+   * @since 1.10
+   */
+  public final void fromHttpResponse(LowLevelHttpResponse response, StringBuilder logger) {
+    ParseHeaderState state = new ParseHeaderState(this, logger);
+    int headerCount = response.getHeaderCount();
+    for (int i = 0; i < headerCount; i++) {
+      parseHeader(response.getHeaderName(i), response.getHeaderValue(i), state);
+    }
+    state.finish();
+  }
+
+  /** LowLevelHttpRequest which will call the .parseHeader() method for every header added. */
+  private static class HeaderParsingFakeLevelHttpRequest extends LowLevelHttpRequest {
+    private final HttpHeaders target;
+    private final ParseHeaderState state;
+
+    HeaderParsingFakeLevelHttpRequest(HttpHeaders target, ParseHeaderState state) {
+      this.target = target;
+      this.state = state;
+    }
+
+    @Override
+    public void addHeader(String name, String value) {
+      target.parseHeader(name, value, state);
+    }
+
+    @Override
+    public void setContent(HttpContent content) throws IOException {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public LowLevelHttpResponse execute() throws IOException {
+      throw new UnsupportedOperationException();
+    }
+  }
+
+
+  /**
+   * Puts all headers of the {@link HttpHeaders} object into this {@link HttpHeaders} object.
+   *
+   * @param headers {@link HttpHeaders} from where the headers are taken
+   * @since 1.10
+   */
+  public final void fromHttpHeaders(HttpHeaders headers) {
+    try {
+      ParseHeaderState state = new ParseHeaderState(this, null);
+      serializeHeaders(headers, null, null, new HeaderParsingFakeLevelHttpRequest(this, state));
+      state.finish();
+    } catch (IOException ex) {
+      // Should never occur as we are dealing with a FakeLowLevelHttpRequest
+      throw new IllegalStateException(ex);
+    }
+  }
+
+  /** State container for {@link #parseHeader(String, String, ParseHeaderState)}. */
+  private static final class ParseHeaderState {
+    /** Target map where parsed values are stored. */
+    final ArrayValueMap arrayValueMap;
+
+    /** Logger if logging is enabled or {@code null} otherwise. */
+    final StringBuilder logger;
+
+    /** ClassInfo of the HttpHeaders. */
+    final ClassInfo classInfo;
+
+    /** List of types in the header context. */
+    final List<Type> context;
+
+    /**
+     * Initializes a new ParseHeaderState.
+     *
+     * @param headers HttpHeaders object for which the headers are being parsed
+     * @param logger Logger if logging is enabled or {@code null}
+     */
+    public ParseHeaderState(HttpHeaders headers, StringBuilder logger) {
+      Class<? extends HttpHeaders> clazz = headers.getClass();
+      this.context = Arrays.<Type>asList(clazz);
+      this.classInfo = ClassInfo.of(clazz, true);
+      this.logger = logger;
+      this.arrayValueMap = new ArrayValueMap(headers);
+    }
+
+    /**
+     * Finishes the parsing-process by setting all array-values.
+     */
+    void finish() {
+      arrayValueMap.setValues();
+    }
+  }
+
+  /** Parses the specified case-insensitive header pair into this HttpHeaders instance. */
+  void parseHeader(String headerName, String headerValue, ParseHeaderState state) {
+    List<Type> context = state.context;
+    ClassInfo classInfo = state.classInfo;
+    ArrayValueMap arrayValueMap = state.arrayValueMap;
+    StringBuilder logger = state.logger;
+
+    if (logger != null) {
+      logger.append(headerName + ": " + headerValue).append(StringUtils.LINE_SEPARATOR);
+    }
+    // use field information if available
+    FieldInfo fieldInfo = classInfo.getFieldInfo(headerName);
+    if (fieldInfo != null) {
+      Type type = Data.resolveWildcardTypeOrTypeVariable(context, fieldInfo.getGenericType());
+      // type is now class, parameterized type, or generic array type
+      if (Types.isArray(type)) {
+        // array that can handle repeating values
+        Class<?> rawArrayComponentType = Types.getRawArrayComponentType(
+            context, Types.getArrayComponentType(type));
+        arrayValueMap.put(fieldInfo.getField(), rawArrayComponentType,
+            parseValue(rawArrayComponentType, context, headerValue));
+      } else if (Types.isAssignableToOrFrom(
+          Types.getRawArrayComponentType(context, type), Iterable.class)) {
+        // iterable that can handle repeating values
+        @SuppressWarnings("unchecked")
+        Collection<Object> collection = (Collection<Object>) fieldInfo.getValue(this);
+        if (collection == null) {
+          collection = Data.newCollectionInstance(type);
+          fieldInfo.setValue(this, collection);
+        }
+        Type subFieldType = type == Object.class ? null : Types.getIterableParameter(type);
+        collection.add(parseValue(subFieldType, context, headerValue));
+      } else {
+        // parse value based on field type
+        fieldInfo.setValue(this, parseValue(type, context, headerValue));
+      }
+    } else {
+      // store header values in an array list
+      @SuppressWarnings("unchecked")
+      ArrayList<String> listValue = (ArrayList<String>) this.get(headerName);
+      if (listValue == null) {
+        listValue = new ArrayList<String>();
+        this.set(headerName, listValue);
+      }
+      listValue.add(headerValue);
+    }
+  }
+
+  private static Object parseValue(Type valueType, List<Type> context, String value) {
+    Type resolved = Data.resolveWildcardTypeOrTypeVariable(context, valueType);
+    return Data.parsePrimitiveValue(resolved, value);
   }
 
   // TODO(yanivi): override equals and hashCode

@@ -14,24 +14,14 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.ArrayValueMap;
-import com.google.api.client.util.ClassInfo;
-import com.google.api.client.util.Data;
-import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.LoggingInputStream;
 import com.google.api.client.util.StringUtils;
-import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -142,56 +132,10 @@ public final class HttpResponse {
       }
       logbuf.append(StringUtils.LINE_SEPARATOR);
     }
+
     // headers
-    int size = response.getHeaderCount();
-    Class<? extends HttpHeaders> headersClass = headers.getClass();
-    List<Type> context = Arrays.<Type>asList(headersClass);
-    ClassInfo classInfo = ClassInfo.of(headersClass, true);
-    ArrayValueMap arrayValueMap = new ArrayValueMap(headers);
-    for (int i = 0; i < size; i++) {
-      String headerName = response.getHeaderName(i);
-      String headerValue = response.getHeaderValue(i);
-      if (loggable) {
-        logbuf.append(headerName + ": " + headerValue).append(StringUtils.LINE_SEPARATOR);
-      }
-      // use field information if available
-      FieldInfo fieldInfo = classInfo.getFieldInfo(headerName);
-      if (fieldInfo != null) {
-        Type type = Data.resolveWildcardTypeOrTypeVariable(context, fieldInfo.getGenericType());
-        // type is now class, parameterized type, or generic array type
-        if (Types.isArray(type)) {
-          // array that can handle repeating values
-          Class<?> rawArrayComponentType =
-              Types.getRawArrayComponentType(context, Types.getArrayComponentType(type));
-          arrayValueMap.put(fieldInfo.getField(), rawArrayComponentType,
-              parseValue(rawArrayComponentType, context, headerValue));
-        } else if (Types.isAssignableToOrFrom(
-            Types.getRawArrayComponentType(context, type), Iterable.class)) {
-          // iterable that can handle repeating values
-          @SuppressWarnings("unchecked")
-          Collection<Object> collection = (Collection<Object>) fieldInfo.getValue(headers);
-          if (collection == null) {
-            collection = Data.newCollectionInstance(type);
-            fieldInfo.setValue(headers, collection);
-          }
-          Type subFieldType = type == Object.class ? null : Types.getIterableParameter(type);
-          collection.add(parseValue(subFieldType, context, headerValue));
-        } else {
-          // parse value based on field type
-          fieldInfo.setValue(headers, parseValue(type, context, headerValue));
-        }
-      } else {
-        // store header values in an array list
-        @SuppressWarnings("unchecked")
-        ArrayList<String> listValue = (ArrayList<String>) headers.get(headerName);
-        if (listValue == null) {
-          listValue = new ArrayList<String>();
-          headers.set(headerName, listValue);
-        }
-        listValue.add(headerValue);
-      }
-    }
-    arrayValueMap.setValues();
+    headers.fromHttpResponse(response, loggable ? logbuf : null);
+
     // log from buffer
     if (loggable) {
       logger.config(logbuf.toString());
@@ -361,11 +305,6 @@ public final class HttpResponse {
    */
   public HttpRequest getRequest() {
     return request;
-  }
-
-  private static Object parseValue(Type valueType, List<Type> context, String value) {
-    Type resolved = Data.resolveWildcardTypeOrTypeVariable(context, valueType);
-    return Data.parsePrimitiveValue(resolved, value);
   }
 
   /**
