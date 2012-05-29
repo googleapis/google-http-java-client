@@ -129,8 +129,15 @@ public class JsonHttpRequest extends GenericData {
    *
    * @return newly created {@link GenericUrl}
    */
+  @SuppressWarnings("deprecation")
   public final GenericUrl buildHttpRequestUrl() {
-    return new GenericUrl(UriTemplate.expand(getClient().getBaseUrl(), uriTemplate, this, true));
+    String baseUrl;
+    if (getClient().isBaseUrlUsed()) {
+      baseUrl = getClient().getBaseUrl();
+    } else {
+      baseUrl = getClient().getRootUrl() + getClient().getServicePath();
+    }
+    return new GenericUrl(UriTemplate.expand(baseUrl, uriTemplate, this, true));
   }
 
   /**
@@ -185,11 +192,11 @@ public class JsonHttpRequest extends GenericData {
   /**
    * Sends the request to the server and writes the content input stream of {@link HttpResponse}
    * into the given destination output stream.
-   * 
+   *
    * <p>
    * This method closes the content of the HTTP response from {@link HttpResponse#getContent()}.
    * </p>
-   * 
+   *
    * @param outputStream destination output stream
    * @throws IOException I/O exception
    * @since 1.9
