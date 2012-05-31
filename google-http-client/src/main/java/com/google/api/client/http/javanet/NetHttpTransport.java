@@ -22,6 +22,13 @@ import java.io.IOException;
  * Thread-safe HTTP low-level transport based on the {@code java.net} package.
  *
  * <p>
+ * Users should consider modifying the keep alive property on {@link NetHttpTransport} to control
+ * whether the socket should be returned to a pool of connected sockets. More information is
+ * available <a
+ * href='http://docs.oracle.com/javase/7/docs/technotes/guides/net/http-keepalive.html'>here</a>.
+ * </p>
+ *
+ * <p>
  * Implementation is thread-safe. For maximum efficiency, applications should use a single
  * globally-shared instance of the HTTP transport.
  * </p>

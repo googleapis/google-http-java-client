@@ -37,24 +37,22 @@ public class HttpResponseException extends IOException {
   /** HTTP headers. */
   private final transient HttpHeaders headers;
 
-  /** HTTP response. */
-  @Deprecated
-  private final transient HttpResponse response;
-
-  /**
-   * Returns the HTTP response.
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.10)
-   */
-  @Deprecated
-  public final HttpResponse getResponse() {
-    return response;
-  }
-
   /**
    * Constructor that constructs a detail message from the given HTTP response that includes the
    * status code, status message and HTTP response content.
+   *
+   * <p>
+   * Callers of this constructor should call {@link HttpResponse#disconnect} after
+   * {@link HttpResponseException} is instantiated. Example usage:
+   * </p>
+   *
+   * <pre>
+     try {
+       throw new HttpResponseException(response);
+     } finally {
+       response.disconnect();
+     }
+   * </pre>
    *
    * @param response HTTP response
    */
@@ -65,6 +63,19 @@ public class HttpResponseException extends IOException {
   /**
    * Constructor that allows an alternative detail message to be used.
    *
+   * <p>
+   * Callers of this constructor should call {@link HttpResponse#disconnect} after
+   * {@link HttpResponseException} is instantiated. Example usage:
+   * </p>
+   *
+   * <pre>
+     try {
+       throw new HttpResponseException(response, message);
+     } finally {
+       response.disconnect();
+     }
+   * </pre>
+   *
    * @param response HTTP response
    * @param message detail message to use or {@code null} for none
    * @since 1.6
@@ -74,7 +85,6 @@ public class HttpResponseException extends IOException {
     statusCode = response.getStatusCode();
     statusMessage = response.getStatusMessage();
     headers = response.getHeaders();
-    this.response = response;
   }
 
   /**
@@ -118,7 +128,7 @@ public class HttpResponseException extends IOException {
 
   /**
    * Returns the HTTP response headers.
-   * 
+   *
    * @since 1.7
    */
   public HttpHeaders getHeaders() {

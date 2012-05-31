@@ -32,6 +32,21 @@ import java.util.zip.GZIPInputStream;
  * HTTP response.
  *
  * <p>
+ * Callers should call {@link #disconnect} when the HTTP response object is no longer needed.
+ * However, {@link #disconnect} does not have to be called if the response stream is properly
+ * closed. Example usage:
+ * </p>
+ *
+ * <pre>
+   HttpResponse response = request.execute();
+   try {
+     // process the HTTP response object
+   } finally {
+     response.disconnect();
+   }
+ * </pre>
+ *
+ * <p>
  * Implementation is not thread-safe.
  * </p>
  *
@@ -57,7 +72,7 @@ public final class HttpResponse {
   private final HttpHeaders headers;
 
   /** Low-level HTTP response. */
-  private LowLevelHttpResponse response;
+  LowLevelHttpResponse response;
 
   /** Status code. */
   private final int statusCode;
@@ -101,6 +116,9 @@ public final class HttpResponse {
    * </p>
    */
   private boolean loggingEnabled;
+
+  /** Signals whether the content has been read from the input stream. */
+  private boolean contentRead;
 
   HttpResponse(HttpRequest request, LowLevelHttpResponse response) {
     this.request = request;
@@ -311,29 +329,52 @@ public final class HttpResponse {
    * Returns the content of the HTTP response.
    * <p>
    * The result is cached, so subsequent calls will be fast.
+   * <p>
+   * Callers should call {@link InputStream#close} after the returned {@link InputStream} is no
+   * longer needed. Example usage:
+   *
+   * <pre>
+     InputStream is = response.getContent();
+     try {
+       // Process the input stream..
+     } finally {
+       is.close();
+     }
+   * </pre>
+   * <p>
+   * {@link HttpResponse#disconnect} does not have to be called if the content is closed.
    *
    * @return input stream content of the HTTP response or {@code null} for none
    * @throws IOException I/O exception
    */
   public InputStream getContent() throws IOException {
-    LowLevelHttpResponse response = this.response;
-    if (response == null) {
-      return content;
-    }
-    InputStream content = this.response.getContent();
-    this.response = null;
-    if (content != null) {
-      // gzip encoding (wrap content with GZipInputStream)
-      String contentEncoding = this.contentEncoding;
-      if (contentEncoding != null && contentEncoding.contains("gzip")) {
-        content = new GZIPInputStream(content);
+    if (!contentRead) {
+      InputStream lowLevelResponseContent = this.response.getContent();
+      if (lowLevelResponseContent != null) {
+        // Flag used to indicate if an exception is thrown before the content is successfully
+        // processed.
+        boolean contentProcessed = false;
+        try {
+          // gzip encoding (wrap content with GZipInputStream)
+          String contentEncoding = this.contentEncoding;
+          if (contentEncoding != null && contentEncoding.contains("gzip")) {
+            lowLevelResponseContent = new GZIPInputStream(lowLevelResponseContent);
+          }
+          // logging (wrap content with LoggingInputStream)
+          Logger logger = HttpTransport.LOGGER;
+          if (loggingEnabled && logger.isLoggable(Level.CONFIG)) {
+            lowLevelResponseContent = new LoggingInputStream(
+                lowLevelResponseContent, logger, Level.CONFIG, contentLoggingLimit);
+          }
+          content = lowLevelResponseContent;
+          contentProcessed = true;
+        } finally {
+          if (!contentProcessed) {
+            lowLevelResponseContent.close();
+          }
+        }
       }
-      // logging (wrap content with LoggingInputStream)
-      Logger logger = HttpTransport.LOGGER;
-      if (loggingEnabled && logger.isLoggable(Level.CONFIG)) {
-        content = new LoggingInputStream(content, logger, Level.CONFIG, contentLoggingLimit);
-      }
-      this.content = content;
+      contentRead = true;
     }
     return content;
   }
@@ -385,11 +426,17 @@ public final class HttpResponse {
   }
 
   /**
-   * Disconnect using {@link LowLevelHttpResponse#disconnect()}.
+   * Close the HTTP response content and disconnect using {@link LowLevelHttpResponse#disconnect()}.
+   *
+   * <p>
+   * Upgrade warning: since version 1.10 {@link #disconnect} now closes the HTTP response content
+   * input stream. This was not done by this method prior to version 1.10.
+   * </p>
    *
    * @since 1.4
    */
   public void disconnect() throws IOException {
+    ignore();
     response.disconnect();
   }
 

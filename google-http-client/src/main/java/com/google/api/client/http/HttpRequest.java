@@ -711,6 +711,20 @@ public final class HttpRequest {
    * Almost all details of the request and response are logged if {@link Level#CONFIG} is loggable.
    * The only exception is the value of the {@code Authorization} header which is only logged if
    * {@link Level#ALL} is loggable.
+   * <p>
+   * Callers should call {@link HttpResponse#disconnect} when the returned HTTP response object is
+   * no longer needed. However, {@link HttpResponse#disconnect} does not have to be called if the
+   * response stream is properly closed. Example usage:
+   * </p>
+   *
+   * <pre>
+     HttpResponse response = request.execute();
+     try {
+       // process the HTTP response object
+     } finally {
+       response.disconnect();
+     }
+   * </pre>
    *
    * @return HTTP response for an HTTP success response (or HTTP error response if
    *         {@link #getThrowExceptionOnExecuteError()} is {@code false})
@@ -842,7 +856,17 @@ public final class HttpRequest {
       // execute
       lowLevelHttpRequest.setTimeout(connectTimeout, readTimeout);
       try {
-        response = new HttpResponse(this, lowLevelHttpRequest.execute());
+        LowLevelHttpResponse lowLevelHttpResponse = lowLevelHttpRequest.execute();
+        // Flag used to indicate if an exception is thrown before the response is constructed.
+        boolean responseConstructed = false;
+        try {
+          response = new HttpResponse(this, lowLevelHttpResponse);
+          responseConstructed = true;
+        } finally {
+          if (!responseConstructed) {
+            lowLevelHttpResponse.getContent().close();
+          }
+        }
       } catch (IOException e) {
         if (!retryOnExecuteIOException) {
           throw e;
@@ -852,46 +876,60 @@ public final class HttpRequest {
         logger.log(Level.WARNING, e.getMessage(), e);
       }
 
-      if (response != null && !response.isSuccessStatusCode()) {
-        boolean errorHandled = false;
-        boolean redirectRequest = false;
-        boolean backOffRetry = false;
-        if (unsuccessfulResponseHandler != null) {
-          // Even if we don't have the potential to retry, we might want to run the
-          // handler to fix conditions (like expired tokens) that might cause us
-          // trouble on our next request
-          errorHandled = unsuccessfulResponseHandler.handleResponse(this, response, retrySupported);
-        }
-        if (!errorHandled) {
-          if (getFollowRedirects() && isRedirected(response)) {
-            // The unsuccessful request's error could not be handled and it is a redirect request.
-            handleRedirect(response);
-            redirectRequest = true;
-          } else if (retrySupported && backOffPolicy != null
-              && backOffPolicy.isBackOffRequired(response.getStatusCode())) {
-            // The unsuccessful request's error could not be handled and should be backed off before
-            // retrying.
-            long backOffTime = backOffPolicy.getNextBackOffMillis();
-            if (backOffTime != BackOffPolicy.STOP) {
-              sleep(backOffTime);
-              backOffRetry = true;
+      // Flag used to indicate if an exception is thrown before the response has completed
+      // processing.
+      boolean responseProcessed = false;
+      try {
+        if (response != null && !response.isSuccessStatusCode()) {
+          boolean errorHandled = false;
+          boolean redirectRequest = false;
+          boolean backOffRetry = false;
+          if (unsuccessfulResponseHandler != null) {
+            // Even if we don't have the potential to retry, we might want to run the
+            // handler to fix conditions (like expired tokens) that might cause us
+            // trouble on our next request
+            errorHandled =
+                unsuccessfulResponseHandler.handleResponse(this, response, retrySupported);
+          }
+          if (!errorHandled) {
+            if (getFollowRedirects() && isRedirected(response)) {
+              // The unsuccessful request's error could not be handled and it is a redirect request.
+              handleRedirect(response);
+              redirectRequest = true;
+            } else if (retrySupported && backOffPolicy != null
+                && backOffPolicy.isBackOffRequired(response.getStatusCode())) {
+              // The unsuccessful request's error could not be handled and should be backed off
+              // before
+              // retrying.
+              long backOffTime = backOffPolicy.getNextBackOffMillis();
+              if (backOffTime != BackOffPolicy.STOP) {
+                sleep(backOffTime);
+                backOffRetry = true;
+              }
             }
           }
+          // A retry is required if the error was successfully handled or if it is a redirect
+          // request
+          // or if the back off policy determined a retry is necessary.
+          retrySupported &= (errorHandled || redirectRequest || backOffRetry);
+          // need to close the response stream before retrying a request
+          if (retrySupported) {
+            response.ignore();
+          }
+        } else {
+          // Retry is not required for a successful status code unless the response is null.
+          retrySupported &= (response == null);
         }
-        // A retry is required if the error was successfully handled or if it is a redirect request
-        // or if the back off policy determined a retry is necessary.
-        retrySupported &= (errorHandled || redirectRequest || backOffRetry);
-        // need to close the response stream before retrying a request
-        if (retrySupported) {
-          response.ignore();
+        // Once there are no more retries remaining, this will be -1
+        // Count redirects as retries, we want a finite limit of redirects.
+        retriesRemaining--;
+
+        responseProcessed = true;
+      } finally {
+        if (response != null && !responseProcessed) {
+          response.disconnect();
         }
-      } else {
-        // Retry is not required for a successful status code unless the response is null.
-        retrySupported &= (response == null);
       }
-      // Once there are no more retries remaining, this will be -1
-      // Count redirects as retries, we want a finite limit of redirects.
-      retriesRemaining--;
     } while (retrySupported);
 
     if (response == null) {
@@ -900,7 +938,11 @@ public final class HttpRequest {
     }
 
     if (throwExceptionOnExecuteError && !response.isSuccessStatusCode()) {
-      throw new HttpResponseException(response);
+      try {
+        throw new HttpResponseException(response);
+      } finally {
+        response.disconnect();
+      }
     }
     return response;
   }

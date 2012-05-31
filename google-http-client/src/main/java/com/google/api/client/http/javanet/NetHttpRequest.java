@@ -85,8 +85,17 @@ final class NetHttpRequest extends LowLevelHttpRequest {
       }
     }
     // connect
-    connection.connect();
-    return new NetHttpResponse(connection);
+    boolean successfulConnection = false;
+    try {
+      connection.connect();
+      NetHttpResponse response = new NetHttpResponse(connection);
+      successfulConnection = true;
+      return response;
+    } finally {
+      if (!successfulConnection) {
+        connection.disconnect();
+      }
+    }
   }
 
   @Override

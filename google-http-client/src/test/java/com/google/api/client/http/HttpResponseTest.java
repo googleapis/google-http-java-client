@@ -20,11 +20,14 @@ import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Key;
+import com.google.api.client.util.StringUtils;
 
 import junit.framework.TestCase;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.logging.Level;
 
@@ -205,6 +208,93 @@ public class HttpResponseTest extends TestCase {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     response.download(outputStream);
     assertEquals(SAMPLE, outputStream.toString("UTF-8"));
+  }
+
+  class DisconnectLowLevelHttpResponse extends MockLowLevelHttpResponse {
+    boolean disconnectCalled;
+    DisconnectByteArrayInputStream content;
+
+    @Override
+    public MockLowLevelHttpResponse setContent(String stringContent) {
+      content = stringContent == null ? null : new DisconnectByteArrayInputStream(StringUtils
+          .getBytesUtf8(stringContent));
+      return this;
+    }
+
+    @Override
+    public InputStream getContent() throws IOException {
+      return content;
+    }
+
+    @Override
+    public void disconnect() {
+      disconnectCalled = true;
+    }
+  }
+
+  class DisconnectByteArrayInputStream extends ByteArrayInputStream {
+    boolean closeCalled;
+
+    public DisconnectByteArrayInputStream(byte[] buf) {
+      super(buf);
+    }
+
+    @Override
+    public void close() throws IOException {
+      closeCalled = true;
+    }
+  }
+
+  public void testDisconnectWithContent() throws IOException {
+    final DisconnectLowLevelHttpResponse lowLevelHttpResponse =
+        new DisconnectLowLevelHttpResponse();
+
+    HttpTransport transport = new MockHttpTransport() {
+        @Override
+      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+            @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            lowLevelHttpResponse.setContentType("application/json; charset=UTF-8");
+            lowLevelHttpResponse.setContent(SAMPLE);
+            return lowLevelHttpResponse;
+          }
+        };
+      }
+    };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    HttpResponse response = request.execute();
+
+    assertFalse(lowLevelHttpResponse.disconnectCalled);
+    assertFalse(lowLevelHttpResponse.content.closeCalled);
+    response.disconnect();
+    assertTrue(lowLevelHttpResponse.disconnectCalled);
+    assertTrue(lowLevelHttpResponse.content.closeCalled);
+  }
+
+  public void testDisconnectWithNoContent() throws IOException {
+    final DisconnectLowLevelHttpResponse lowLevelHttpResponse =
+        new DisconnectLowLevelHttpResponse();
+
+    HttpTransport transport = new MockHttpTransport() {
+        @Override
+      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+            @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            return lowLevelHttpResponse;
+          }
+        };
+      }
+    };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    HttpResponse response = request.execute();
+
+    assertFalse(lowLevelHttpResponse.disconnectCalled);
+    response.disconnect();
+    assertTrue(lowLevelHttpResponse.disconnectCalled);
   }
 
   public void testContentLoggingLimitWithLoggingEnabledAndDisabled() throws IOException {

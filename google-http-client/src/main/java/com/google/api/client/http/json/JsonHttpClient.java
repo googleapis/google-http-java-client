@@ -361,9 +361,18 @@ public class JsonHttpClient {
    * required, for example if a sequence of requests need to be built instead of a single request.
    *
    * <p>
-   * Callers are responsible for closing the response's content input stream by calling
-   * {@link HttpResponse#ignore}.
+   * Callers are responsible for disconnecting the HTTP response by calling
+   * {@link HttpResponse#disconnect}. Example usage:
    * </p>
+   *
+   * <pre>
+     HttpResponse response = client.executeUnparsed(method, url, body);
+     try {
+       // process response..
+     } finally {
+       response.disconnect();
+     }
+   * </pre>
    *
    * @param method HTTP Method type
    * @param url The complete URL of the service where requests should be sent
@@ -383,9 +392,18 @@ public class JsonHttpClient {
    * required, for example if a custom error is required to be thrown.
    *
    * <p>
-   * Callers are responsible for closing the response's content input stream by calling
-   * {@link HttpResponse#ignore}.
+   * Callers are responsible for disconnecting the HTTP response by calling
+   * {@link HttpResponse#disconnect}. Example usage:
    * </p>
+   *
+   * <pre>
+     HttpResponse response = client.executeUnparsed(request);
+     try {
+       // process response..
+     } finally {
+       response.disconnect();
+     }
+   * </pre>
    *
    * @param request HTTP Request
    * @return {@link HttpResponse} type
@@ -401,8 +419,17 @@ public class JsonHttpClient {
    * {@link HttpResponse}. Subclasses may override if specific behavior is required.
    *
    * <p>
-   * Callers are responsible for closing the input stream.
+   * Callers are responsible for closing the input stream after it is processed. Example usage:
    * </p>
+   *
+   * <pre>
+     InputStream is = client.executeAsInputStream();
+     try {
+       // Process input stream..
+     } finally {
+       is.close();
+     }
+   * </pre>
    *
    * @param method HTTP Method type
    * @param url The complete URL of the service where requests should be sent

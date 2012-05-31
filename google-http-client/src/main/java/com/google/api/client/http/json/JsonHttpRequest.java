@@ -158,9 +158,18 @@ public class JsonHttpRequest extends GenericData {
    * override if specific behavior is required.
    *
    * <p>
-   * Callers are responsible for closing the response's content input stream by calling
-   * {@link HttpResponse#ignore}.
+   * Callers are responsible for disconnecting the HTTP response by calling
+   * {@link HttpResponse#disconnect}. Example usage:
    * </p>
+   *
+   * <pre>
+     HttpResponse response = jsonHttpRequest.executeUnparsed();
+     try {
+       // process response..
+     } finally {
+       response.disconnect();
+     }
+   * </pre>
    *
    * @return the {@link HttpResponse}
    * @throws IOException if the request fails
@@ -177,8 +186,17 @@ public class JsonHttpRequest extends GenericData {
    * Subclasses may override if specific behavior is required.
    *
    * <p>
-   * Callers are responsible for closing the input stream.
+   * Callers are responsible for closing the input stream after it is processed. Example sample:
    * </p>
+   *
+   * <pre>
+     InputStream is = request.executeAsInputStream();
+     try {
+       // Process input stream..
+     } finally {
+       is.close();
+     }
+   * </pre>
    *
    * @return input stream of the response content
    * @throws IOException if the request fails
