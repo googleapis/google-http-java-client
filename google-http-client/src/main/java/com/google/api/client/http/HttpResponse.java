@@ -460,6 +460,7 @@ public final class HttpResponse {
   public <T> T parseAs(Class<T> dataClass) throws IOException {
     HttpParser parser = getParser();
     if (parser == null) {
+      ignore();
       Preconditions.checkArgument(contentType != null, "Missing Content-Type header in response");
       throw new IllegalArgumentException("No parser defined for Content-Type: " + contentType);
     }

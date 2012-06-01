@@ -155,16 +155,19 @@ public class HttpResponseTest extends TestCase {
   }
 
   public void testParseAs_noParser() throws IOException {
+    final DisconnectLowLevelHttpResponse result = new DisconnectLowLevelHttpResponse();
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildGetRequest(final String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
           public LowLevelHttpResponse execute() throws IOException {
-            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
-            if (!url.equals(HttpTesting.SIMPLE_URL)) {
+            if (url.equals(HttpTesting.SIMPLE_URL)) {
+              result.setContentType(null);
+            } else {
               result.setContentType(url.substring(HttpTesting.SIMPLE_URL.length()));
             }
+            result.setContent(SAMPLE);
             return result;
           }
         };
@@ -176,7 +179,9 @@ public class HttpResponseTest extends TestCase {
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       assertEquals(e.getMessage(), "Missing Content-Type header in response");
+      assertTrue(result.content.closeCalled);
     }
+    result.clear();
     try {
       transport.createRequestFactory()
           .buildGetRequest(new GenericUrl(HttpTesting.SIMPLE_URL + "something")).execute()
@@ -184,6 +189,7 @@ public class HttpResponseTest extends TestCase {
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       assertEquals(e.getMessage(), "No parser defined for Content-Type: something");
+      assertTrue(result.content.closeCalled);
     }
   }
 
@@ -230,6 +236,11 @@ public class HttpResponseTest extends TestCase {
     public void disconnect() {
       disconnectCalled = true;
     }
+
+    void clear() {
+      disconnectCalled = false;
+      content.clear();
+    }
   }
 
   class DisconnectByteArrayInputStream extends ByteArrayInputStream {
@@ -242,6 +253,10 @@ public class HttpResponseTest extends TestCase {
     @Override
     public void close() throws IOException {
       closeCalled = true;
+    }
+
+    void clear() {
+      closeCalled = false;
     }
   }
 
