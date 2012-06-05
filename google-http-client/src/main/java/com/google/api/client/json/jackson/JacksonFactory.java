@@ -14,7 +14,6 @@
 
 package com.google.api.client.json.jackson;
 
-import com.google.api.client.json.JsonEncoding;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
@@ -26,6 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.Charset;
 
 /**
  * Low-level JSON library implementation based on Jackson.
@@ -48,8 +48,16 @@ public final class JacksonFactory extends JsonFactory {
     factory.configure(org.codehaus.jackson.JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT, false);
   }
 
+  @Deprecated
   @Override
-  public JsonGenerator createJsonGenerator(OutputStream out, JsonEncoding enc) throws IOException {
+  public JsonGenerator createJsonGenerator(
+      OutputStream out, com.google.api.client.json.JsonEncoding enc) throws IOException {
+    return new JacksonGenerator(
+        this, factory.createJsonGenerator(out, org.codehaus.jackson.JsonEncoding.UTF8));
+  }
+
+  @Override
+  public JsonGenerator createJsonGenerator(OutputStream out, Charset enc) throws IOException {
     return new JacksonGenerator(
         this, factory.createJsonGenerator(out, org.codehaus.jackson.JsonEncoding.UTF8));
   }
@@ -67,6 +75,12 @@ public final class JacksonFactory extends JsonFactory {
 
   @Override
   public JsonParser createJsonParser(InputStream in) throws IOException {
+    Preconditions.checkNotNull(in);
+    return new JacksonParser(this, factory.createJsonParser(in));
+  }
+
+  @Override
+  public JsonParser createJsonParser(InputStream in, Charset charset) throws IOException {
     Preconditions.checkNotNull(in);
     return new JacksonParser(this, factory.createJsonParser(in));
   }

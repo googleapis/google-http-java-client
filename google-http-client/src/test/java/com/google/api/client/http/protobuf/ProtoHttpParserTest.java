@@ -24,6 +24,7 @@ import junit.framework.TestCase;
  *
  * @author Yaniv Inbar
  */
+@Deprecated
 public class ProtoHttpParserTest extends TestCase {
 
   private static final String FAKE_TYPE = "abc";

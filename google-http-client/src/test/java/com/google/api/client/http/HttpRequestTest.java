@@ -627,6 +627,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals(ImmutableList.of("other"), headers.get("otherValue"));
   }
 
+  @SuppressWarnings("deprecation")
   public void testNormalizeMediaType() {
     assertEquals(Json.CONTENT_TYPE, HttpRequest.normalizeMediaType(Json.CONTENT_TYPE));
     assertEquals("text/html", HttpRequest.normalizeMediaType("text/html; charset=ISO-8859-4"));

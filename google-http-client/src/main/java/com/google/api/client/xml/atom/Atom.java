@@ -14,7 +14,9 @@
 
 package com.google.api.client.xml.atom;
 
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.xml.Xml;
+import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 
 /**
@@ -26,8 +28,25 @@ public final class Atom {
   /** Atom namespace. */
   public static final String ATOM_NAMESPACE = "http://www.w3.org/2005/Atom";
 
-  /** Atom content type. */
+  /**
+   * Atom content type.
+   *
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #MEDIA_TYPE} instead.
+   */
+  @Deprecated
   public static final String CONTENT_TYPE = "application/atom+xml";
+
+  /**
+   * {@code "application/atom+xml; charset=utf-8"} media type used as a default for Atom parsing.
+   *
+   * <p>
+   * Use {@link HttpMediaType#equalsIgnoreParameters} for comparing media types.
+   * </p>
+   *
+   * @since 1.10
+   */
+  public static final String MEDIA_TYPE =
+      new HttpMediaType("application/atom+xml").setCharsetParameter(Charsets.UTF_8).build();
 
   static final class StopAtAtomEntry extends Xml.CustomizeParser {
 
@@ -48,7 +67,8 @@ public final class Atom {
    * @throws IllegalArgumentException if content type doesn't match
    */
   public static void checkContentType(String contentType) {
-    Preconditions.checkArgument(contentType != null && contentType.startsWith(CONTENT_TYPE),
-        "Wrong content type: expected <" + CONTENT_TYPE + "> but got <%s>", contentType);
+    Preconditions.checkArgument(contentType != null); // for backwards compability
+    Preconditions.checkArgument(HttpMediaType.equalsIgnoreParameters(MEDIA_TYPE, contentType),
+        "Wrong content type: expected <" + MEDIA_TYPE + "> but got <%s>", contentType);
   }
 }

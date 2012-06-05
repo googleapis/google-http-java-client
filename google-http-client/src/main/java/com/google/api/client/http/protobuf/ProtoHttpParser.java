@@ -16,6 +16,7 @@ package com.google.api.client.http.protobuf;
 
 import com.google.api.client.http.HttpParser;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.protobuf.ProtoObjectParser;
 import com.google.api.client.protobuf.ProtocolBuffers;
 import com.google.common.base.Preconditions;
 import com.google.protobuf.MessageLite;
@@ -43,7 +44,9 @@ import java.io.IOException;
  *
  * @since 1.5
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.11) Use {@link ProtoObjectParser} instead.
  */
+@Deprecated
 public class ProtoHttpParser implements HttpParser {
 
   /** Content type. */

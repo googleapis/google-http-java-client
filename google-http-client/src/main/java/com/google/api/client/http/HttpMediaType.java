@@ -16,6 +16,7 @@ package com.google.api.client.http;
 
 import com.google.common.base.Preconditions;
 
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -185,9 +186,14 @@ public final class HttpMediaType {
    * Sets the media parameter to the specified value.
    *
    * @param name case-insensitive name of the parameter
-   * @param value value of the parameter
+   * @param value value of the parameter or {@code null} to remove
    */
   public HttpMediaType setParameter(String name, String value) {
+    if (value == null) {
+      removeParameter(name);
+      return this;
+    }
+
     Preconditions.checkArgument(
         TOKEN_REGEX.matcher(name).matches(), "Name contains reserved characters");
     cachedBuildResult = null;
@@ -264,5 +270,58 @@ public final class HttpMediaType {
     }
     cachedBuildResult = str.toString();
     return cachedBuildResult;
+  }
+
+  /**
+   * Returns {@code true} if the specified media type has both the same type and subtype, or
+   * {@code false} if they don't match or the media type is {@code null}.
+   */
+  public boolean equalsIgnoreParameters(HttpMediaType mediaType) {
+    return mediaType != null && getType().equalsIgnoreCase(mediaType.getType())
+        && getSubType().equalsIgnoreCase(mediaType.getSubType());
+  }
+
+  /**
+   * Returns {@code true} if the two specified media types have the same type and subtype, or if
+   * both types are {@code null}.
+   */
+  public static boolean equalsIgnoreParameters(String mediaTypeA, String mediaTypeB) {
+    // TODO(mlinder): Make the HttpMediaType.isSameType implementation more performant.
+    return (mediaTypeA == null && mediaTypeB == null) || mediaTypeA != null && mediaTypeB != null
+        && new HttpMediaType(mediaTypeA).equalsIgnoreParameters(new HttpMediaType(mediaTypeB));
+  }
+
+  /**
+   * Sets the charset parameter of the media type.
+   *
+   * @param charset new value for the charset parameter or {@code null} to remove
+   */
+  public HttpMediaType setCharsetParameter(Charset charset) {
+    setParameter("charset", charset == null ? null : charset.name());
+    return this;
+  }
+
+  /**
+   * Returns the specified charset or {@code null} if unset.
+   */
+  public Charset getCharsetParameter() {
+    String value = getParameter("charset");
+    return value == null ? null : Charset.forName(value);
+  }
+
+  @Override
+  public int hashCode() {
+    return build().hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof HttpMediaType)) {
+      return false;
+    }
+
+    HttpMediaType otherType = (HttpMediaType) obj;
+
+    return equalsIgnoreParameters(otherType) && parameters.equals(otherType.parameters);
   }
 }

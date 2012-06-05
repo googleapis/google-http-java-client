@@ -23,7 +23,9 @@ package com.google.api.client.json;
  * </p>
  * @since 1.3
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.11)
  */
+@Deprecated
 public enum JsonEncoding {
   UTF8;
 }

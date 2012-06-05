@@ -19,12 +19,18 @@ import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
+import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
 import com.google.common.base.Preconditions;
+import com.google.common.io.CharStreams;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,8 +38,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Implements support for HTTP form content encoding parsing of type {@code
- * application/x-www-form-urlencoded} as specified in the <a href=
+ * Implements support for HTTP form content encoding parsing of type
+ * {@code application/x-www-form-urlencoded} as specified in the <a href=
  * "http://www.w3.org/TR/1998/REC-html40-19980424/interact/forms.html#h-17.13.4.1" >HTML 4.0
  * Specification</a>.
  *
@@ -49,24 +55,25 @@ import java.util.Map;
  * Sample usage:
  *
  * <pre>
- * <code>
-  static void setParser(HttpTransport transport) {
-    transport.addParser(new UrlEncodedParser());
-  }
- * </code>
+   static void setParser(HttpTransport transport) {
+     transport.addParser(new UrlEncodedParser());
+   }
  * </pre>
  *
  * @since 1.0
  * @author Yaniv Inbar
  */
-public class UrlEncodedParser implements HttpParser {
+@SuppressWarnings("deprecation")
+public class UrlEncodedParser implements HttpParser, ObjectParser {
 
   /** {@code "application/x-www-form-urlencoded"} content type. */
   public static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
 
   /** Content type. */
+  @Deprecated
   private final String contentType;
 
+  @Deprecated
   public final String getContentType() {
     return contentType;
   }
@@ -85,11 +92,15 @@ public class UrlEncodedParser implements HttpParser {
   /**
    * @param contentType content type
    * @since 1.7
+   * @deprecated (scheduled to be removed in 1.11) {@link HttpParser} has been replaced by
+   *             {@link ObjectParser}
    */
+  @Deprecated
   protected UrlEncodedParser(String contentType) {
     this.contentType = contentType;
   }
 
+  @Deprecated
   public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
     T newInstance = Types.newInstance(dataClass);
     parse(response.parseAsString(), newInstance);
@@ -156,8 +167,8 @@ public class UrlEncodedParser implements HttpParser {
         // type is now class, parameterized type, or generic array type
         if (Types.isArray(type)) {
           // array that can handle repeating values
-          Class<?> rawArrayComponentType =
-              Types.getRawArrayComponentType(context, Types.getArrayComponentType(type));
+          Class<?> rawArrayComponentType = Types.getRawArrayComponentType(
+              context, Types.getArrayComponentType(type));
           arrayValueMap.put(fieldInfo.getField(), rawArrayComponentType,
               parseValue(rawArrayComponentType, context, stringValue));
         } else if (Types.isAssignableToOrFrom(
@@ -216,7 +227,9 @@ public class UrlEncodedParser implements HttpParser {
    * </p>
    *
    * @since 1.5
+   * @deprecated (scheduled to be removed in 1.11) Content-Type is no longer stored in the parser.
    */
+  @Deprecated
   public static class Builder {
 
     /** Content type or {@code null} for none. */
@@ -246,5 +259,32 @@ public class UrlEncodedParser implements HttpParser {
       this.contentType = Preconditions.checkNotNull(contentType);
       return this;
     }
+  }
+
+  public <T> T parseAndClose(InputStream in, Charset charset, Class<T> dataClass)
+      throws IOException {
+    InputStreamReader r = new InputStreamReader(in, charset);
+    return parseAndClose(r, dataClass);
+  }
+
+  public Object parseAndClose(InputStream in, Charset charset, Type dataType) throws IOException {
+    InputStreamReader r = new InputStreamReader(in, charset);
+    return parseAndClose(r, dataType);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> T parseAndClose(Reader reader, Class<T> dataClass)
+      throws IOException {
+    return (T) parseAndClose(reader, (Type) dataClass);
+  }
+
+  public Object parseAndClose(Reader reader, Type dataType)
+      throws IOException {
+    Preconditions.checkArgument(
+        dataType instanceof Class<?>, "dataType has to be of type Class<?>");
+
+    Object newInstance = Types.newInstance((Class<?>) dataType);
+    parse(CharStreams.toString(reader), newInstance);
+    return newInstance;
   }
 }

@@ -31,20 +31,19 @@ import java.io.IOException;
 public class MultipartRelatedContentTest extends TestCase {
 
   private static final String CRLF = "\r\n";
-  private static final String CONTENT_TYPE = Json.CONTENT_TYPE;
+  private static final String CONTENT_TYPE = Json.MEDIA_TYPE;
 
   public void testContent() throws IOException {
-    subtestContent(
-        "--END_OF_PART" + CRLF + "Content-Type: application/json" + CRLF + CRLF + "foo" + CRLF
-            + "--END_OF_PART--", null, "foo");
-    subtestContent(
-        "--END_OF_PART" + CRLF + "Content-Type: application/json" + CRLF + CRLF + "foo" + CRLF
-            + "--END_OF_PART" + CRLF + "Content-Type: application/json" + CRLF + CRLF + "bar" + CRLF
-            + "--END_OF_PART--", null, "foo", "bar");
-    subtestContent(
-        "--myboundary" + CRLF + "Content-Type: application/json" + CRLF + CRLF + "foo" + CRLF
-            + "--myboundary" + CRLF + "Content-Type: application/json" + CRLF + CRLF + "bar" + CRLF
-            + "--myboundary--", "myboundary", "foo", "bar");
+    subtestContent("--END_OF_PART" + CRLF + "Content-Type: application/json; charset=UTF-8" + CRLF
+        + CRLF + "foo" + CRLF + "--END_OF_PART--", null, "foo");
+    subtestContent("--END_OF_PART" + CRLF + "Content-Type: application/json; charset=UTF-8" + CRLF
+        + CRLF + "foo" + CRLF + "--END_OF_PART" + CRLF
+        + "Content-Type: application/json; charset=UTF-8" + CRLF + CRLF + "bar" + CRLF
+        + "--END_OF_PART--", null, "foo", "bar");
+    subtestContent("--myboundary" + CRLF + "Content-Type: application/json; charset=UTF-8" + CRLF
+        + CRLF + "foo" + CRLF + "--myboundary" + CRLF
+        + "Content-Type: application/json; charset=UTF-8" + CRLF + CRLF + "bar" + CRLF
+        + "--myboundary--", "myboundary", "foo", "bar");
   }
 
   private void subtestContent(

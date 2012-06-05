@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.StringUtils;
 import com.google.common.base.Preconditions;
 
@@ -151,7 +152,11 @@ public final class HttpRequest {
   private HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler;
 
   /** Map from normalized content type to HTTP parser. */
+  @Deprecated
   private final Map<String, HttpParser> contentTypeToParserMap = new HashMap<String, HttpParser>();
+
+  /** Parser used to parse responses. */
+  private ObjectParser objectParser;
 
   /** Whether to enable gzip compression of HTTP content ({@code false} by default). */
   private boolean enableGZipContent;
@@ -609,11 +614,31 @@ public final class HttpRequest {
    * {@link #getParser(String)} then the previous parser will be removed.
    * </p>
    *
+   * <p>
+   * Any parser set by calling {@link #setParser(ObjectParser)} will be preferred over this parser.
+   * </p>
+   *
    * @since 1.4
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #setParser(ObjectParser)} instead.
    */
+  @Deprecated
   public void addParser(HttpParser parser) {
     String contentType = normalizeMediaType(parser.getContentType());
     contentTypeToParserMap.put(contentType, parser);
+  }
+
+  /**
+   * Sets the {@link ObjectParser} used to parse the response to this request or {@code null} for
+   * none.
+   *
+   * <p>
+   * This parser will be preferred over any registered HttpParser.
+   * </p>
+   *
+   * @since 1.10
+   */
+  public void setParser(ObjectParser parser) {
+    this.objectParser = parser;
   }
 
   /**
@@ -623,10 +648,21 @@ public final class HttpRequest {
    * @param contentType content type or {@code null} for {@code null} result
    * @return HTTP response content parser or {@code null} for {@code null} input
    * @since 1.4
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #getParser()} instead.
    */
+  @Deprecated
   public final HttpParser getParser(String contentType) {
     contentType = normalizeMediaType(contentType);
     return contentTypeToParserMap.get(contentType);
+  }
+
+  /**
+   * Returns the {@link ObjectParser} used to parse the response or {@code null} for none.
+   *
+   * @since 1.10
+   */
+  public final ObjectParser getParser() {
+    return objectParser;
   }
 
   /**
@@ -1001,7 +1037,10 @@ public final class HttpRequest {
    *        {@code null} result
    * @return normalized media type without parameters or {@code null} for {@code null} input
    * @since 1.4
+   * @deprecated (scheduled to be removed in 1.11) Use
+   *             {@link HttpMediaType#equalsIgnoreParameters(HttpMediaType)} instead
    */
+  @Deprecated
   public static String normalizeMediaType(String mediaType) {
     if (mediaType == null) {
       return null;

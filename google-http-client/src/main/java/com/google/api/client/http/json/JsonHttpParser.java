@@ -18,6 +18,7 @@ import com.google.api.client.http.HttpParser;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.common.base.Preconditions;
@@ -46,7 +47,9 @@ import java.io.InputStream;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.11) Use {@link JsonObjectParser} instead.
  */
+@Deprecated
 public class JsonHttpParser implements HttpParser {
 
   /** Content type. */

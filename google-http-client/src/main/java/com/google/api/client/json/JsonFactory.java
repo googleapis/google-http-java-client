@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright (c) 2010 Google Inc.J
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,6 +14,8 @@
 
 package com.google.api.client.json;
 
+import com.google.common.base.Charsets;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +23,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.nio.charset.Charset;
 
 /**
  * Abstract low-level JSON factory.
@@ -36,14 +39,24 @@ import java.io.Writer;
 public abstract class JsonFactory {
 
   /**
-   * Returns a new instance of a low-level JSON parser for the given input stream.
+   * Returns a new instance of a low-level JSON parser for the given input stream. The parser tries
+   * to detect the charset of the input stream by itself.
    *
    * @param in input stream
    * @return new instance of a low-level JSON parser
    * @throws IOException if failed
-   * @throws NullPointerException if {@code in} is {@code null}
    */
   public abstract JsonParser createJsonParser(InputStream in) throws IOException;
+
+  /**
+   * Returns a new instance of a low-level JSON parser for the given input stream.
+   *
+   * @param in input stream
+   * @param charset non-null charset in which the input stream is encoded
+   * @return new instance of a low-level JSON parser
+   * @since 1.10
+   */
+  public abstract JsonParser createJsonParser(InputStream in, Charset charset) throws IOException;
 
   /**
    * Returns a new instance of a low-level JSON parser for the given string value.
@@ -51,7 +64,6 @@ public abstract class JsonFactory {
    * @param value string value
    * @return new instance of a low-level JSON parser
    * @throws IOException if failed
-   * @throws NullPointerException if {@code value} is {@code null}
    */
   public abstract JsonParser createJsonParser(String value) throws IOException;
 
@@ -61,7 +73,6 @@ public abstract class JsonFactory {
    * @param reader reader
    * @return new instance of a low-level JSON parser
    * @throws IOException if failed
-   * @throws NullPointerException if {@code reader} is {@code null}
    */
   public abstract JsonParser createJsonParser(Reader reader) throws IOException;
 
@@ -72,8 +83,23 @@ public abstract class JsonFactory {
    * @param enc encoding
    * @return new instance of a low-level JSON serializer
    * @throws IOException if failed
+   * @deprecated (scheduled to be removed in 1.11) Use
+   *             {@link #createJsonGenerator(OutputStream, Charset)} instead.
    */
+  @Deprecated
   public abstract JsonGenerator createJsonGenerator(OutputStream out, JsonEncoding enc)
+      throws IOException;
+
+  /**
+   * Returns a new instance of a low-level JSON serializer for the given output stream and encoding.
+   *
+   * @param out output stream
+   * @param enc encoding
+   * @return new instance of a low-level JSON serializer
+   * @throws IOException if failed
+   * @since 1.10
+   */
+  public abstract JsonGenerator createJsonGenerator(OutputStream out, Charset enc)
       throws IOException;
 
   /**
@@ -84,6 +110,15 @@ public abstract class JsonFactory {
    * @throws IOException if failed
    */
   public abstract JsonGenerator createJsonGenerator(Writer writer) throws IOException;
+
+  /**
+   * Creates an object parser which uses this factory to parse JSON data.
+   *
+   * @since 1.10
+   */
+  public final JsonObjectParser createJsonObjectParser() {
+    return new JsonObjectParser(this);
+  }
 
   /**
    * Returns a serialized JSON string representation for the given item using
@@ -144,8 +179,8 @@ public abstract class JsonFactory {
   }
 
   /**
-   * Returns byte array output stream of the serialized JSON representation for the given item using
-   * {@link JsonGenerator#serialize(Object)}.
+   * Returns a UTF-8 byte array output stream of the serialized JSON representation for the given
+   * item using {@link JsonGenerator#serialize(Object)}.
    *
    * @param item data key/value pairs
    * @param pretty whether to return a pretty representation
@@ -154,7 +189,7 @@ public abstract class JsonFactory {
   private ByteArrayOutputStream toByteStream(Object item, boolean pretty) {
     ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
     try {
-      JsonGenerator generator = createJsonGenerator(byteStream, JsonEncoding.UTF8);
+      JsonGenerator generator = createJsonGenerator(byteStream, Charsets.UTF_8);
       if (pretty) {
         generator.enablePrettyPrint();
       }
@@ -183,6 +218,7 @@ public abstract class JsonFactory {
   /**
    * Parse and close an input stream as a JSON object, array, or value into a new instance of the
    * given destination class using {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}.
+   * Tries to detect the charset of the input stream automatically.
    *
    * @param inputStream JSON value in an input stream
    * @param destinationClass destination class that has an accessible default constructor to use to
@@ -193,6 +229,22 @@ public abstract class JsonFactory {
   public final <T> T fromInputStream(InputStream inputStream, Class<T> destinationClass)
       throws IOException {
     return createJsonParser(inputStream).parseAndClose(destinationClass, null);
+  }
+
+  /**
+   * Parse and close an input stream as a JSON object, array, or value into a new instance of the
+   * given destination class using {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}.
+   *
+   * @param inputStream JSON value in an input stream
+   * @param charset Charset in which the stream is encoded
+   * @param destinationClass destination class that has an accessible default constructor to use to
+   *        create a new instance
+   * @return new instance of the parsed destination class
+   * @since 1.10
+   */
+  public final <T> T fromInputStream(
+      InputStream inputStream, Charset charset, Class<T> destinationClass) throws IOException {
+    return createJsonParser(inputStream, charset).parseAndClose(destinationClass, null);
   }
 
   /**

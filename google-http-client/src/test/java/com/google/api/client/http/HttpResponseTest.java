@@ -97,14 +97,6 @@ public class HttpResponseTest extends TestCase {
     assertEquals(SAMPLE2, response.parseAsString());
   }
 
-  public void testParseCharset() {
-    assertEquals("UTF-8", HttpResponse.parseCharset("application/json; charset=UTF-8"));
-    assertEquals(
-        "a b c", HttpResponse.parseCharset("application/json;a=a; charset=a b c ; b=b"));
-    assertEquals(
-        "a b c", HttpResponse.parseCharset("application/json;a=a; cHaRsEt=a b c ; b=b"));
-  }
-
   public static class MyHeaders extends HttpHeaders {
 
     @Key
@@ -183,12 +175,13 @@ public class HttpResponseTest extends TestCase {
     }
     result.clear();
     try {
+      // Content-Type is specified by an URL suffix in this test
       transport.createRequestFactory()
-          .buildGetRequest(new GenericUrl(HttpTesting.SIMPLE_URL + "something")).execute()
+          .buildGetRequest(new GenericUrl(HttpTesting.SIMPLE_URL + "some/thing")).execute()
           .parseAs(Object.class);
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
-      assertEquals(e.getMessage(), "No parser defined for Content-Type: something");
+      assertEquals(e.getMessage(), "No parser defined for Content-Type: some/thing");
       assertTrue(result.content.closeCalled);
     }
   }

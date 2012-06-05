@@ -15,6 +15,7 @@
 package com.google.api.client.http.xml;
 
 import com.google.api.client.http.AbstractHttpContent;
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.xml.Xml;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.common.base.Preconditions;
@@ -41,40 +42,38 @@ public abstract class AbstractXmlHttpContent extends AbstractHttpContent {
    * @since 1.5
    */
   protected AbstractXmlHttpContent(XmlNamespaceDictionary namespaceDictionary) {
+    super(new HttpMediaType(Xml.MEDIA_TYPE));
     this.namespaceDictionary = Preconditions.checkNotNull(namespaceDictionary);
   }
-
-  /**
-   * Content type. Default value is {@link XmlHttpParser#CONTENT_TYPE}, though subclasses may define
-   * a different default value.
-   */
-  private String contentType = XmlHttpParser.CONTENT_TYPE;
 
   /** XML namespace dictionary. */
   private final XmlNamespaceDictionary namespaceDictionary;
 
-  public final String getType() {
-    return contentType;
-  }
-
   public final void writeTo(OutputStream out) throws IOException {
     XmlSerializer serializer = Xml.createSerializer();
-    serializer.setOutput(out, "UTF-8");
+    serializer.setOutput(out, getCharset().name());
     writeTo(serializer);
   }
 
   /**
-   * Sets the content type or {@code null} for none.
+   * Sets the content type or {@code null} for none. Will override any pre-set media type parameter.
    *
    * <p>
-   * Defaults to {@link XmlHttpParser#CONTENT_TYPE}, though subclasses may define a different
-   * default value.
+   * Defaults to {@link Xml#MEDIA_TYPE}, though subclasses may define a different default value.
    * </p>
    *
    * @since 1.5
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #setMediaType(HttpMediaType)} instead.
    */
+  @Deprecated
   public AbstractXmlHttpContent setType(String type) {
-    contentType = type;
+    setMediaType(new HttpMediaType(type));
+    return this;
+  }
+
+  @Override
+  public AbstractXmlHttpContent setMediaType(HttpMediaType mediaType) {
+    super.setMediaType(mediaType);
     return this;
   }
 

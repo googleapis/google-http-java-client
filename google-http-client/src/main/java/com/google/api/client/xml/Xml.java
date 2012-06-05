@@ -14,11 +14,13 @@
 
 package com.google.api.client.xml;
 
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.util.ArrayValueMap;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Types;
+import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -42,6 +44,17 @@ import java.util.Map;
  * @author Yaniv Inbar
  */
 public class Xml {
+  /**
+   * {@code "application/xml; charset=utf-8"} media type used as a default for XML parsing.
+   *
+   * <p>
+   * Use {@link HttpMediaType#equalsIgnoreParameters} for comparing media types.
+   * </p>
+   *
+   * @since 1.10
+   */
+  public static final String MEDIA_TYPE =
+      new HttpMediaType("application/xml").setCharsetParameter(Charsets.UTF_8).build();
 
   /** Text content. */
   static final String TEXT_CONTENT = "text()";

@@ -14,6 +14,7 @@
 
 package com.google.api.client.http.xml.atom;
 
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.xml.AbstractXmlHttpContent;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.atom.Atom;
@@ -27,7 +28,7 @@ import java.io.IOException;
  * Serializes Atom XML HTTP content based on the data key/value mapping object for an Atom entry.
  *
  * <p>
- * Default value for {@link #getType()} is {@link Atom#CONTENT_TYPE}.
+ * Default value for {@link #getType()} is {@link Atom#MEDIA_TYPE}.
  * </p>
  *
  * <p>
@@ -71,7 +72,7 @@ public class AtomContent extends AbstractXmlHttpContent {
    */
   protected AtomContent(XmlNamespaceDictionary namespaceDictionary, Object entry, boolean isEntry) {
     super(namespaceDictionary);
-    setType(Atom.CONTENT_TYPE);
+    setMediaType(new HttpMediaType(Atom.MEDIA_TYPE));
     this.entry = Preconditions.checkNotNull(entry);
     this.isEntry = isEntry;
   }
@@ -98,9 +99,22 @@ public class AtomContent extends AbstractXmlHttpContent {
     return new AtomContent(namespaceDictionary, feed, false);
   }
 
+  /**
+   * {@inheritDoc}
+   *
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #setMediaType(HttpMediaType)} instead.
+   */
+  @Deprecated
   @Override
   public AtomContent setType(String type) {
-    return (AtomContent) super.setType(type);
+    super.setType(type);
+    return this;
+  }
+
+  @Override
+  public AtomContent setMediaType(HttpMediaType mediaType) {
+    super.setMediaType(mediaType);
+    return this;
   }
 
   @Override

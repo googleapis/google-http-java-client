@@ -33,10 +33,12 @@ public class AbstractHttpContentTest extends TestCase {
     private final int length;
 
     TestHttpContent(boolean retrySupported, int length) {
+      super("foo/bar");
       this.length = length;
       this.retrySupported = retrySupported;
     }
 
+    @Override
     public String getType() {
       return null;
     }

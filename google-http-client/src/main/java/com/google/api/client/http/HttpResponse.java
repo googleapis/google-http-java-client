@@ -15,17 +15,19 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.LoggingInputStream;
+import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.StringUtils;
+import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -55,10 +57,6 @@ import java.util.zip.GZIPInputStream;
  */
 public final class HttpResponse {
 
-  /** Content-Type parameter pattern. */
-  private static final Pattern CONTENT_TYPE_PARAM_PATTERN =
-      Pattern.compile(";\\s*(\\S[^=]*)=([^;]*[^;\\p{Space}])");
-
   /** HTTP response content or {@code null} before {@link #getContent()}. */
   private InputStream content;
 
@@ -67,6 +65,9 @@ public final class HttpResponse {
 
   /** Content type or {@code null} for none. */
   private final String contentType;
+
+  /** Parsed content-type/media type or {@code null} if content-type is null. */
+  private final HttpMediaType mediaType;
 
   /** HTTP headers. */
   private final HttpHeaders headers;
@@ -127,7 +128,6 @@ public final class HttpResponse {
     contentLoggingLimit = request.getContentLoggingLimit();
     loggingEnabled = request.isLoggingEnabled();
     this.response = response;
-    contentType = response.getContentType();
     contentEncoding = response.getContentEncoding();
     int code = response.getStatusCode();
     statusCode = code;
@@ -153,6 +153,15 @@ public final class HttpResponse {
 
     // headers
     headers.fromHttpResponse(response, loggable ? logbuf : null);
+
+    // Retrieve the content-type directly from the headers as response.getContentType() is outdated
+    // and e.g. not set by BatchUnparsedResponse.FakeLowLevelHttpResponse
+    String contentType = response.getContentType();
+    if (contentType == null) {
+      contentType = headers.getContentType();
+    }
+    this.contentType = contentType;
+    mediaType = contentType == null ? null : new HttpMediaType(contentType);
 
     // log from buffer
     if (loggable) {
@@ -271,6 +280,16 @@ public final class HttpResponse {
   }
 
   /**
+   * Returns the parsed Content-Type in form of a {@link HttpMediaType} or {@code null} if no
+   * content-type was set.
+   *
+   * @since 1.10
+   */
+  public HttpMediaType getMediaType() {
+    return mediaType;
+  }
+
+  /**
    * Returns the HTTP response headers.
    *
    * @since 1.5
@@ -383,19 +402,20 @@ public final class HttpResponse {
    * Writes the content of the HTTP response into the given destination output stream.
    *
    * <p>
-   * Sample usage: <code>
-    HttpRequest request =
-        requestFactory.buildGetRequest(new GenericUrl(
-            "https://www.google.com/images/srpr/logo3w.png"));
-    OutputStream outputStream =
-        new FileOutputStream(new File ("/tmp/logo3w.png"));
-    try {
-      HttpResponse response = request.execute();
-      response.download(outputStream);
-    } finally {
-      outputStream.close();
-    }
-   * </code>
+   * Sample usage:
+   *
+   * <pre>
+     HttpRequest request = requestFactory.buildGetRequest(
+         new GenericUrl("https://www.google.com/images/srpr/logo3w.png"));
+     OutputStream outputStream = new FileOutputStream(new File("/tmp/logo3w.png"));
+     try {
+       HttpResponse response = request.execute();
+       response.download(outputStream);
+     } finally {
+       outputStream.close();
+     }
+    </pre>
+   *
    * </p>
    *
    * <p>
@@ -443,21 +463,33 @@ public final class HttpResponse {
   /**
    * Returns the HTTP response content parser to use for the content type of this HTTP response or
    * {@code null} for none.
+   *
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #getRequest()}.
+   *             {@link HttpRequest#getParser()} instead
    */
+  @Deprecated
   public HttpParser getParser() {
     return request.getParser(contentType);
   }
 
   /**
    * Parses the content of the HTTP response from {@link #getContent()} and reads it into a data
-   * class of key/value pairs using the parser returned by {@link #getParser()} .
+   * class of key/value pairs using the parser returned by {@link #getParser()}.
    *
    * @return parsed data class or {@code null} for no content
    * @throws IOException I/O exception
    * @throws IllegalArgumentException if no parser is defined for the given content type or if there
    *         is no content type defined in the HTTP response
    */
+  @SuppressWarnings("deprecation")
   public <T> T parseAs(Class<T> dataClass) throws IOException {
+    // Check if we have an ObjectParser that we can use
+    ObjectParser objectParser = request.getParser();
+    if (objectParser != null) {
+      return objectParser.parseAndClose(getContent(), getContentCharset(), dataClass);
+    }
+
+    // Otherwise fall back to the deprecated implementation
     HttpParser parser = getParser();
     if (parser == null) {
       ignore();
@@ -465,6 +497,22 @@ public final class HttpResponse {
       throw new IllegalArgumentException("No parser defined for Content-Type: " + contentType);
     }
     return parser.parse(this, dataClass);
+  }
+
+  /**
+   * Parses the content of the HTTP response from {@link #getContent()} and reads it into a data
+   * type of key/value pairs using the parser returned by {@link #getParser()}.
+   *
+   * @return parsed data type instance or {@code null} for no content
+   * @throws IOException I/O exception
+   * @throws IllegalArgumentException if no parser is defined for this response
+   * @since 1.10
+   */
+  public Object parseAs(Type dataType) throws IOException {
+    // Check if we have an ObjectParser that we can use
+    ObjectParser objectParser = request.getParser();
+    Preconditions.checkArgument(objectParser != null, "No ObjectParser defined for response");
+    return objectParser.parseAndClose(getContent(), getContentCharset(), dataType);
   }
 
   /**
@@ -492,19 +540,17 @@ public final class HttpResponse {
     }
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     AbstractInputStreamContent.copy(content, out);
-    return out.toString(parseCharset(getContentType()));
+    return out.toString(getContentCharset().name());
   }
 
-  /** Parses the "charset" parameter from the Content-Type header. */
-  static String parseCharset(String contentType) {
-    if (contentType != null) {
-      Matcher m = CONTENT_TYPE_PARAM_PATTERN.matcher(contentType);
-      while (m.find()) {
-        if ("charset".equalsIgnoreCase(m.group(1))) {
-          return m.group(2);
-        }
-      }
-    }
-    return "ISO-8859-1";
+  /**
+   * Returns the {@link Charset} specified in the Content-Type of this response or the
+   * {@code "ISO-8859-1"} charset as a default.
+   *
+   * @since 1.10
+   * */
+  public Charset getContentCharset() {
+    return mediaType == null || mediaType.getCharsetParameter() == null
+        ? Charsets.ISO_8859_1 : mediaType.getCharsetParameter();
   }
 }

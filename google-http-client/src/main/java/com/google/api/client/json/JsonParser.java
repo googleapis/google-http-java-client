@@ -32,7 +32,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Abstract low-level JSON parser.
@@ -43,8 +45,8 @@ import java.util.Map;
  * </p>
  *
  * <p>
- * Backwards incompatibility warning: 1.9 introduced {@link #getUnsignedIntegerValue} and {@link
- * #getUnsignedLongValue} to this abstract class.
+ * Backwards incompatibility warning: 1.9 introduced {@link #getUnsignedIntegerValue} and
+ * {@link #getUnsignedLongValue} to this abstract class.
  * </p>
  *
  * @since 1.3
@@ -161,16 +163,34 @@ public abstract class JsonParser {
    * @param keyToFind key to find
    */
   public final void skipToKey(String keyToFind) throws IOException {
+    skipToKey(Collections.singleton(keyToFind));
+  }
+
+  /**
+   * Skips the values of all keys in the current object until it finds one of the given keys.
+   * <p>
+   * Before this method is called, the parser must either point to the start or end of a JSON object
+   * or to a field name. After this method ends, the current token will either be the
+   * {@link JsonToken#END_OBJECT} of the current object if no matching key is found, or the value
+   * of the key that was found.
+   * </p>
+   *
+   * @param keysToFind set of keys to look for
+   * @return name of the first matching key found or {@code null} if no match was found
+   * @since 1.10
+   */
+  public final String skipToKey(Set<String> keysToFind) throws IOException {
     JsonToken curToken = startParsingObjectOrArray();
     while (curToken == JsonToken.FIELD_NAME) {
       String key = getText();
       nextToken();
-      if (keyToFind.equals(key)) {
-        break;
+      if (keysToFind.contains(key)) {
+        return key;
       }
       skipChildren();
       curToken = nextToken();
     }
+    return null;
   }
 
   /** Starts parsing that handles start of input by calling {@link #nextToken()}. */
@@ -250,8 +270,35 @@ public abstract class JsonParser {
       throws IOException {
     startParsing();
     @SuppressWarnings("unchecked")
-    T result = (T) parseValue(null, destinationClass, new ArrayList<Type>(), null, customizeParser);
+    T result = (T) parse(destinationClass, false, customizeParser);
     return result;
+  }
+
+  /**
+   * Parse a JSON object, array, or value into a new instance of the given destination class,
+   * optionally using the given parser customizer.
+   * <p>
+   * If it parses an object, after this method ends, the current token will be the object's ending
+   * {@link JsonToken#END_OBJECT}. If it parses an array, after this method ends, the current token
+   * will be the array's ending {@link JsonToken#END_ARRAY}.
+   * </p>
+   *
+   * @param dataType Type into which the JSON should be parsed
+   * @param close {@code true} if {@link #close()} should be called after parsing
+   * @param customizeParser optional parser customizer or {@code null} for none
+   * @return new instance of the parsed dataType
+   * @since 1.10
+   */
+  public Object parse(Type dataType, boolean close, CustomizeJsonParser customizeParser)
+      throws IOException {
+    try {
+      startParsing();
+      return parseValue(null, dataType, new ArrayList<Type>(), null, customizeParser);
+    } finally {
+      if (close) {
+        close();
+      }
+    }
   }
 
   /**
@@ -520,9 +567,8 @@ public abstract class JsonParser {
         return newInstance;
       case VALUE_TRUE:
       case VALUE_FALSE:
-        Preconditions.checkArgument(
-            valueType == null || valueClass == boolean.class || valueClass != null
-                && valueClass.isAssignableFrom(Boolean.class),
+        Preconditions.checkArgument(valueType == null || valueClass == boolean.class
+            || valueClass != null && valueClass.isAssignableFrom(Boolean.class),
             "%s: expected type Boolean or boolean but got %s for field %s" + field,
             getCurrentName(), valueType, field);
         return token == JsonToken.VALUE_TRUE ? Boolean.TRUE : Boolean.FALSE;
@@ -530,7 +576,7 @@ public abstract class JsonParser {
       case VALUE_NUMBER_INT:
         Preconditions.checkArgument(field == null || field.getAnnotation(JsonString.class) == null,
             "%s: number type formatted as a JSON number cannot use @JsonString annotation on "
-                + "the field %s", getCurrentName(), field);
+            + "the field %s", getCurrentName(), field);
         if (valueClass == null || valueClass.isAssignableFrom(BigDecimal.class)) {
           return getDecimalValue();
         }
@@ -561,13 +607,11 @@ public abstract class JsonParser {
         if (valueClass == Byte.class || valueClass == byte.class) {
           return getByteValue();
         }
-        throw new IllegalArgumentException(
-            getCurrentName() + ": expected numeric type but got " + valueType + " for field "
-                + field);
+        throw new IllegalArgumentException(getCurrentName() + ": expected numeric type but got "
+            + valueType + " for field " + field);
       case VALUE_STRING:
-        Preconditions.checkArgument(
-            valueClass == null || !Number.class.isAssignableFrom(valueClass) || field != null
-                && field.getAnnotation(JsonString.class) != null,
+        Preconditions.checkArgument(valueClass == null || !Number.class.isAssignableFrom(valueClass)
+            || field != null && field.getAnnotation(JsonString.class) != null,
             "%s: number field formatted as a JSON string must use the @JsonString annotation: %s",
             getCurrentName(), field);
         // TODO(yanivi): "special" values like Double.POSITIVE_INFINITY?
@@ -590,8 +634,8 @@ public abstract class JsonParser {
         }
         return Data.nullOf(Types.getRawArrayComponentType(context, valueType));
       default:
-        throw new IllegalArgumentException(
-            getCurrentName() + ": unexpected JSON node type: " + token);
+        throw new IllegalArgumentException(getCurrentName() + ": unexpected JSON node type: "
+            + token);
     }
   }
 }

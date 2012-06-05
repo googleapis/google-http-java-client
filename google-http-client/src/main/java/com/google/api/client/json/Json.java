@@ -14,6 +14,9 @@
 
 package com.google.api.client.json;
 
+import com.google.api.client.http.HttpMediaType;
+import com.google.common.base.Charsets;
+
 /**
  * JSON utilities.
  *
@@ -21,7 +24,22 @@ package com.google.api.client.json;
  * @author Yaniv Inbar
  */
 public class Json {
-
-  /** {@code "application/json"} content type. */
+  /**
+   * {@code "application/json"} content type.
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #MEDIA_TYPE} instead.
+   */
+  @Deprecated
   public static final String CONTENT_TYPE = "application/json";
+
+  /**
+   * {@code "application/json; charset=utf-8"} media type used as a default for JSON parsing.
+   *
+   * <p>
+   * Use {@link HttpMediaType#equalsIgnoreParameters} for comparing media types.
+   * </p>
+   *
+   * @since 1.10
+   */
+  public static final String MEDIA_TYPE =
+      new HttpMediaType("application/json").setCharsetParameter(Charsets.UTF_8).build();
 }

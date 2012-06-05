@@ -60,10 +60,6 @@ import java.util.List;
  * @author Yaniv Inbar
  */
 public final class MultipartRelatedContent extends AbstractHttpContent {
-
-  /** Boundary string to use. By default, it is {@code "END_OF_PART"}. */
-  private String boundary = "END_OF_PART";
-
   /**
    * Collection of HTTP content parts.
    *
@@ -85,6 +81,7 @@ public final class MultipartRelatedContent extends AbstractHttpContent {
    * @since 1.5
    */
   public MultipartRelatedContent(HttpContent firstPart, HttpContent... otherParts) {
+    super(new HttpMediaType("multipart/related").setParameter("boundary", "END_OF_PART"));
     List<HttpContent> parts = new ArrayList<HttpContent>(otherParts.length + 1);
     parts.add(firstPart);
     parts.addAll(Arrays.asList(otherParts));
@@ -104,7 +101,7 @@ public final class MultipartRelatedContent extends AbstractHttpContent {
   }
 
   public void writeTo(OutputStream out) throws IOException {
-    byte[] boundaryBytes = boundary.getBytes();
+    byte[] boundaryBytes = getBoundary().getBytes();
     out.write(TWO_DASHES);
     out.write(boundaryBytes);
     for (HttpContent part : parts) {
@@ -132,7 +129,7 @@ public final class MultipartRelatedContent extends AbstractHttpContent {
 
   @Override
   public long computeLength() throws IOException {
-    byte[] boundaryBytes = boundary.getBytes();
+    byte[] boundaryBytes = getBoundary().getBytes();
     long result = TWO_DASHES.length * 2 + boundaryBytes.length;
     for (HttpContent part : parts) {
       long length = part.getLength();
@@ -152,11 +149,6 @@ public final class MultipartRelatedContent extends AbstractHttpContent {
     return result;
   }
 
-
-  public String getType() {
-    return "multipart/related; boundary=\"" + getBoundary() + "\"";
-  }
-
   @Override
   public boolean retrySupported() {
     for (HttpContent onePart : parts) {
@@ -167,13 +159,19 @@ public final class MultipartRelatedContent extends AbstractHttpContent {
     return true;
   }
 
+  @Override
+  public MultipartRelatedContent setMediaType(HttpMediaType mediaType) {
+    super.setMediaType(mediaType);
+    return this;
+  }
+
   /**
    * Returns the boundary string to use.
    *
    * @since 1.5
    */
   public String getBoundary() {
-    return boundary;
+    return getMediaType().getParameter("boundary");
   }
 
   /**
@@ -186,7 +184,7 @@ public final class MultipartRelatedContent extends AbstractHttpContent {
    * @since 1.5
    */
   public MultipartRelatedContent setBoundary(String boundary) {
-    this.boundary = Preconditions.checkNotNull(boundary);
+    getMediaType().setParameter("boundary", Preconditions.checkNotNull(boundary));
     return this;
   }
 
@@ -206,7 +204,10 @@ public final class MultipartRelatedContent extends AbstractHttpContent {
    * @return whether it is not {@code null} and text-based
    */
   private static boolean isTextBasedContentType(String contentType) {
-    return contentType != null
-        && (contentType.startsWith("text/") || contentType.startsWith("application/"));
+    if (contentType == null) {
+      return false;
+    }
+    HttpMediaType hmt = new HttpMediaType(contentType);
+    return hmt.getType().equals("text") || hmt.getType().equals("application");
   }
 }

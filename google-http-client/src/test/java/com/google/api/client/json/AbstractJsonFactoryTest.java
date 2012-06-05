@@ -20,6 +20,7 @@ import com.google.api.client.util.Key;
 import com.google.api.client.util.NullValue;
 import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.Value;
+import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.UnsignedInteger;
@@ -1030,7 +1031,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
 
   public final void testGenerateEntry() throws Exception {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    JsonGenerator generator = newFactory().createJsonGenerator(out, JsonEncoding.UTF8);
+    JsonGenerator generator = newFactory().createJsonGenerator(out, Charsets.UTF_8);
     Entry entry = new Entry();
     entry.title = "foo";
     generator.serialize(entry);
@@ -1040,7 +1041,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
 
   public final void testGenerateFeed() throws Exception {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    JsonGenerator generator = newFactory().createJsonGenerator(out, JsonEncoding.UTF8);
+    JsonGenerator generator = newFactory().createJsonGenerator(out, Charsets.UTF_8);
     Feed feed = new Feed();
     Entry entryFoo = new Entry();
     entryFoo.title = "foo";
@@ -1103,7 +1104,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
 
   public void testParser_nullInputStream() throws IOException {
     try {
-      newFactory().createJsonParser((InputStream) null);
+      newFactory().createJsonParser((InputStream) null, Charsets.UTF_8);
       fail("expected " + NullPointerException.class);
     } catch (NullPointerException e) {
       // expected

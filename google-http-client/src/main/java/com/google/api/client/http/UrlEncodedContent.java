@@ -57,15 +57,6 @@ public class UrlEncodedContent extends AbstractHttpContent {
 
   private static final Logger LOGGER = Logger.getLogger(UrlEncodedContent.class.getName());
 
-  /**
-   * Content type or {@code null} for none.
-   *
-   * <p>
-   * Default value is {@link UrlEncodedParser#CONTENT_TYPE}.
-   * </p>
-   */
-  private String contentType = UrlEncodedParser.CONTENT_TYPE;
-
   /** Key name/value data. */
   private Object data;
 
@@ -75,25 +66,16 @@ public class UrlEncodedContent extends AbstractHttpContent {
    * {@code null} is not allowed and instead a new instance of an implementation of {@link Map} will
    * be created. In version 1.8 a {@link NullPointerException} will be thrown instead.
    * </p>
-   * 
+   *
    * @param data key name/value data
    */
   public UrlEncodedContent(Object data) {
+    super(new HttpMediaType(UrlEncodedParser.CONTENT_TYPE).setCharsetParameter(Charsets.UTF_8));
     setData(data);
   }
 
-  /**
-   * {@inheritDoc}
-   * <p>
-   * Upgrade warning: overriding this method is no longer supported, and will be made final in 1.8.
-   * </p>
-   */
-  public String getType() {
-    return contentType;
-  }
-
   public void writeTo(OutputStream out) throws IOException {
-    Writer writer = new BufferedWriter(new OutputStreamWriter(out, Charsets.UTF_8));
+    Writer writer = new BufferedWriter(new OutputStreamWriter(out, getCharset()));
     boolean first = true;
     for (Map.Entry<String, Object> nameValueEntry : Data.mapOf(data).entrySet()) {
       Object value = nameValueEntry.getValue();
@@ -113,7 +95,7 @@ public class UrlEncodedContent extends AbstractHttpContent {
   }
 
   /**
-   * Sets the content type or {@code null} for none.
+   * Sets the content type or {@code null} for none. Will override any pre-set media type parameter.
    *
    * <p>
    * Default value is {@link UrlEncodedParser#CONTENT_TYPE}.
@@ -124,9 +106,17 @@ public class UrlEncodedContent extends AbstractHttpContent {
    * </p>
    *
    * @since 1.5
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #setMediaType(HttpMediaType)} instead.
    */
+  @Deprecated
   public UrlEncodedContent setType(String type) {
-    contentType = type;
+    setMediaType(new HttpMediaType(type));
+    return this;
+  }
+
+  @Override
+  public UrlEncodedContent setMediaType(HttpMediaType mediaType) {
+    super.setMediaType(mediaType);
     return this;
   }
 

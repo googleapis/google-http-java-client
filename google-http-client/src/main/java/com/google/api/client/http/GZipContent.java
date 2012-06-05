@@ -31,19 +31,17 @@ final class GZipContent extends AbstractHttpContent {
 
   private final HttpContent httpContent;
 
-  private final String contentType;
-
   /**
    * @param httpContent another source of HTTP content
    */
   GZipContent(HttpContent httpContent, String contentType) {
+    super(contentType);
     this.httpContent = httpContent;
-    this.contentType = contentType;
   }
 
   /**
    * Writes the content to the given output stream and closes the output stream.
-   * 
+   *
    * <p>
    * The output stream is closed by calling {@link GZIPOutputStream#close} to avoid a resource leak
    * caused due to an instance of {@link java.util.zip.Deflater} being left open. See Bug <a
@@ -62,12 +60,14 @@ final class GZipContent extends AbstractHttpContent {
     return "gzip";
   }
 
-  public String getType() {
-    return contentType;
-  }
-
   @Override
   public boolean retrySupported() {
     return httpContent.retrySupported();
+  }
+
+  @Override
+  public GZipContent setMediaType(HttpMediaType mediaType) {
+    super.setMediaType(mediaType);
+    return this;
   }
 }

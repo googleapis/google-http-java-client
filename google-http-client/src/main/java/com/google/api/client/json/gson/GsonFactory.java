@@ -14,7 +14,6 @@
 
 package com.google.api.client.json.gson;
 
-import com.google.api.client.json.JsonEncoding;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
@@ -29,6 +28,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
+import java.nio.charset.Charset;
 
 /**
  * Low-level JSON library implementation based on GSON.
@@ -42,10 +42,16 @@ import java.io.Writer;
  * @author Yaniv Inbar
  */
 public class GsonFactory extends JsonFactory {
-
   @Override
   public JsonParser createJsonParser(InputStream in) {
+    // TODO(mlinder): Parser should try to detect the charset automatically when using GSON
+    // http://code.google.com/p/google-http-java-client/issues/detail?id=6
     return createJsonParser(new InputStreamReader(in, Charsets.UTF_8));
+  }
+
+  @Override
+  public JsonParser createJsonParser(InputStream in, Charset charset) {
+    return createJsonParser(new InputStreamReader(in, charset));
   }
 
   @Override
@@ -58,9 +64,16 @@ public class GsonFactory extends JsonFactory {
     return new GsonParser(this, new JsonReader(reader));
   }
 
+  @Deprecated
   @Override
-  public JsonGenerator createJsonGenerator(OutputStream out, JsonEncoding enc) {
+  public JsonGenerator createJsonGenerator(
+      OutputStream out, com.google.api.client.json.JsonEncoding enc) {
     return createJsonGenerator(new OutputStreamWriter(out, Charsets.UTF_8));
+  }
+
+  @Override
+  public JsonGenerator createJsonGenerator(OutputStream out, Charset enc) {
+    return createJsonGenerator(new OutputStreamWriter(out, enc));
   }
 
   @Override

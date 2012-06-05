@@ -22,6 +22,7 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonObjectParser;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
@@ -77,7 +78,13 @@ public class JsonHttpClient {
    * The JSON parser to use for parsing requests or {@code null} for none if it is used before
    * initialized in {@link #getJsonHttpParser}.
    */
+  @Deprecated
   private JsonHttpParser jsonHttpParser;
+
+  /**
+   * The JSON parser to use for parsing streams.
+   */
+  private final JsonObjectParser jsonObjectParser;
 
   /**
    * Set to {@code true} if baseUrl is used instead of {@code servicePath} and {@code rootUrl}.
@@ -96,7 +103,6 @@ public class JsonHttpClient {
   protected final boolean isBaseUrlUsed() {
     return baseUrlUsed;
   }
-
 
   /**
    * Returns the base URL of the service, for example {@code "https://www.googleapis.com/tasks/v1/"}
@@ -159,7 +165,10 @@ public class JsonHttpClient {
   /**
    * Returns the JSON HTTP Parser. Initializes the parser once and then caches it for all subsequent
    * calls to this method.
+   *
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #getJsonObjectParser()} instead.
    */
+  @Deprecated
   public final JsonHttpParser getJsonHttpParser() {
     if (jsonHttpParser == null) {
       jsonHttpParser = createParser();
@@ -170,9 +179,22 @@ public class JsonHttpClient {
   /**
    * Creates a JSON parser. Subclasses may override if specific {@link JsonHttpParser}
    * implementations are required.
+   *
+   * @deprecated (scheduled to be removed in 1.11) Use
+   *             {@link Builder#setObjectParser(JsonObjectParser)} instead.
    */
+  @Deprecated
   protected JsonHttpParser createParser() {
     return new JsonHttpParser(jsonFactory);
+  }
+
+  /**
+   * Returns the JSON Object Parser.
+   *
+   * @since 1.10
+   */
+  public final JsonObjectParser getJsonObjectParser() {
+    return jsonObjectParser;
   }
 
   /**
@@ -248,7 +270,7 @@ public class JsonHttpClient {
    */
   public JsonHttpClient(
       HttpTransport transport, JsonFactory jsonFactory, String rootUrl, String servicePath) {
-    this(transport, null, null, jsonFactory, rootUrl, servicePath, null);
+    this(transport, null, null, jsonFactory, null, rootUrl, servicePath, null);
   }
 
   /**
@@ -264,8 +286,8 @@ public class JsonHttpClient {
    * @param applicationName The application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
    * @deprecated (scheduled to be removed in 1.11) Use {@link #JsonHttpClient(HttpTransport,
-   *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, String, String,
-   *             String)}.
+   *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, JsonObjectParser,
+   *             String, String, String)}.
    */
   @Deprecated
   protected JsonHttpClient(HttpTransport transport,
@@ -274,17 +296,13 @@ public class JsonHttpClient {
       JsonFactory jsonFactory,
       String baseUrl,
       String applicationName) {
-    this.jsonHttpRequestInitializer = jsonHttpRequestInitializer;
-    this.baseUrl = Preconditions.checkNotNull(baseUrl);
-    Preconditions.checkArgument(baseUrl.endsWith("/"));
-    this.applicationName = applicationName;
-    this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
-    Preconditions.checkNotNull(transport);
-    this.requestFactory = httpRequestInitializer == null
-        ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);
-    this.baseUrlUsed = true;
-    this.rootUrl = null;
-    this.servicePath = null;
+    this(transport,
+        jsonHttpRequestInitializer,
+        httpRequestInitializer,
+        jsonFactory,
+        null,
+        baseUrl,
+        applicationName);
   }
 
   /**
@@ -296,6 +314,48 @@ public class JsonHttpClient {
    * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
    *        {@code null} for none
    * @param jsonFactory A factory for creating JSON parsers and serializers
+   * @param baseUrl The base URL of the service. Must end with a "/"
+   * @param applicationName The application name to be sent in the User-Agent header of requests or
+   *        {@code null} for none
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #JsonHttpClient(HttpTransport,
+   *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, JsonObjectParser,
+   *             String, String, String)}.
+   * @since 1.10
+   */
+  @Deprecated
+  protected JsonHttpClient(HttpTransport transport,
+      JsonHttpRequestInitializer jsonHttpRequestInitializer,
+      HttpRequestInitializer httpRequestInitializer,
+      JsonFactory jsonFactory,
+      JsonObjectParser jsonObjectParser,
+      String baseUrl,
+      String applicationName) {
+    this.jsonHttpRequestInitializer = jsonHttpRequestInitializer;
+    this.baseUrl = Preconditions.checkNotNull(baseUrl);
+    Preconditions.checkArgument(baseUrl.endsWith("/"));
+    this.applicationName = applicationName;
+    this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
+    this.jsonObjectParser = jsonObjectParser;
+    Preconditions.checkNotNull(transport);
+    this.requestFactory = httpRequestInitializer == null
+        ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);
+    this.baseUrlUsed = true;
+    this.rootUrl = null;
+    this.servicePath = null;
+  }
+
+  /**
+   * Construct the {@link JsonHttpClient}.
+   *
+   *
+   * @param transport The transport to use for requests
+   * @param jsonHttpRequestInitializer The initializer to use when creating an
+   *        {@link JsonHttpRequest} or {@code null} for none
+   * @param httpRequestInitializer The initializer to use when creating an {@link HttpRequest} or
+   *        {@code null} for none
+   * @param jsonFactory A factory for creating JSON parsers and serializers
+   * @param jsonObjectParser JSON parser to use or {@code null} if unused. {@code null} won't be
+   *        accepted from 1.11 on.
    * @param rootUrl The root URL of the service. Must end with a "/"
    * @param servicePath The service path of the service. Must end with a "/" and not begin with a
    *        "/". It is allowed to be an empty string {@code ""}
@@ -307,6 +367,7 @@ public class JsonHttpClient {
       JsonHttpRequestInitializer jsonHttpRequestInitializer,
       HttpRequestInitializer httpRequestInitializer,
       JsonFactory jsonFactory,
+      JsonObjectParser jsonObjectParser,
       String rootUrl,
       String servicePath,
       String applicationName) {
@@ -320,6 +381,7 @@ public class JsonHttpClient {
     this.applicationName = applicationName;
     this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
     Preconditions.checkNotNull(transport);
+    this.jsonObjectParser = jsonObjectParser;
     this.requestFactory = httpRequestInitializer == null
         ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);
     this.baseUrl = null;
@@ -343,10 +405,17 @@ public class JsonHttpClient {
    * @return newly created {@link HttpRequest}
    * @since 1.7
    */
+  @SuppressWarnings("deprecation")
   protected HttpRequest buildHttpRequest(HttpMethod method, GenericUrl url, Object body)
       throws IOException {
     HttpRequest httpRequest = requestFactory.buildRequest(method, url, null);
-    httpRequest.addParser(getJsonHttpParser());
+    JsonObjectParser parser = getJsonObjectParser();
+
+    if (parser != null) {
+      httpRequest.setParser(parser);
+    } else {
+      httpRequest.addParser(getJsonHttpParser());
+    }
     if (getApplicationName() != null) {
       httpRequest.getHeaders().setUserAgent(getApplicationName());
     }
@@ -494,8 +563,11 @@ public class JsonHttpClient {
     /** The initializer to use when creating an {@link HttpRequest} or {@code null} for none. */
     private HttpRequestInitializer httpRequestInitializer;
 
-    /** The JSON parser to user for parsing requests. */
+    /** The JSON parser factory to user for parsing requests. */
     private final JsonFactory jsonFactory;
+
+    /** The JSON parser used to parse streams. */
+    private JsonObjectParser jsonObjectParser;
 
     /**
      * The base URL of the service, for example {@code "https://www.googleapis.com/tasks/v1/"}. Must
@@ -571,6 +643,7 @@ public class JsonHttpClient {
             jsonHttpRequestInitializer,
             httpRequestInitializer,
             jsonFactory,
+            jsonObjectParser,
             baseUrl.build(),
             applicationName);
       }
@@ -578,6 +651,7 @@ public class JsonHttpClient {
           jsonHttpRequestInitializer,
           httpRequestInitializer,
           jsonFactory,
+          jsonObjectParser,
           rootUrl.build(),
           servicePath,
           applicationName);
@@ -603,6 +677,35 @@ public class JsonHttpClient {
     /** Returns the HTTP transport. */
     public final HttpTransport getTransport() {
       return transport;
+    }
+
+    /**
+     * Returns the JSON parser used or {@code null} if not specified.
+     *
+     * <p>
+     * Warning: This method will stop returning {@code null} in 1.11, and will return
+     * {@link JsonFactory#createJsonObjectParser()} instead.
+     * </p>
+     *
+     * @since 1.10
+     */
+    public final JsonObjectParser getObjectParser() {
+      return jsonObjectParser;
+    }
+
+    /**
+     * Specifies the JSON parser to use or {@code null} if no used.
+     *
+     * <p>
+     * Warning: This method will stop accepting {@code null} in 1.11. The default will then be
+     * {@link JsonFactory#createJsonObjectParser()}.
+     * </p>
+     *
+     * @since 1.10
+     */
+    public Builder setObjectParser(JsonObjectParser parser) {
+      jsonObjectParser = parser;
+      return this;
     }
 
     /**
@@ -637,7 +740,6 @@ public class JsonHttpClient {
      *             {@link #setServicePath} instead.
      */
     @Deprecated
-
     public Builder setBaseUrl(GenericUrl baseUrl) {
       Preconditions.checkArgument(baseUrlUsed);
       this.baseUrl = Preconditions.checkNotNull(baseUrl);
@@ -761,8 +863,8 @@ public class JsonHttpClient {
     }
 
     /**
-     * Returns the application name to be used in the UserAgent header of each request or {@code
-     * null} for none.
+     * Returns the application name to be used in the UserAgent header of each request or
+     * {@code null} for none.
      */
     public final String getApplicationName() {
       return applicationName;

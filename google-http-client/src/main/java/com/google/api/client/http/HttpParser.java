@@ -14,6 +14,8 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.ObjectParser;
+
 import java.io.IOException;
 
 /**
@@ -25,7 +27,9 @@ import java.io.IOException;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.11) Use {@link ObjectParser} instead.
  */
+@Deprecated
 public interface HttpParser {
 
   /** Returns the content type. */

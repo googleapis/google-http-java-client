@@ -14,6 +14,7 @@
 
 package com.google.api.client.http.xml;
 
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.common.base.Preconditions;
 
@@ -71,14 +72,27 @@ public class XmlHttpContent extends AbstractXmlHttpContent {
   /** Key/value pair data. */
   private final Object data;
 
+  /**
+   * {@inheritDoc}
+   *
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #setMediaType(HttpMediaType)} instead.
+   */
+  @Deprecated
   @Override
   public XmlHttpContent setType(String type) {
-    return (XmlHttpContent) super.setType(type);
+    super.setType(type);
+    return this;
   }
 
   @Override
   public final void writeTo(XmlSerializer serializer) throws IOException {
     getNamespaceDictionary().serialize(serializer, elementName, data);
+  }
+
+  @Override
+  public XmlHttpContent setMediaType(HttpMediaType mediaType) {
+    super.setMediaType(mediaType);
+    return this;
   }
 
   /**

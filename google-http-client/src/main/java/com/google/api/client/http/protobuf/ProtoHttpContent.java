@@ -15,6 +15,7 @@
 package com.google.api.client.http.protobuf;
 
 import com.google.api.client.http.AbstractHttpContent;
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.protobuf.ProtocolBuffers;
 import com.google.common.base.Preconditions;
 import com.google.protobuf.MessageLite;
@@ -57,6 +58,7 @@ public class ProtoHttpContent extends AbstractHttpContent {
    * @param message message to serialize
    */
   public ProtoHttpContent(MessageLite message) {
+    super(ProtocolBuffers.CONTENT_TYPE);
     this.message = Preconditions.checkNotNull(message);
   }
 
@@ -65,6 +67,7 @@ public class ProtoHttpContent extends AbstractHttpContent {
     return message.getSerializedSize();
   }
 
+  @Override
   public String getType() {
     return type;
   }
@@ -89,5 +92,11 @@ public class ProtoHttpContent extends AbstractHttpContent {
   /** Returns the message to serialize. */
   public final MessageLite getMessage() {
     return message;
+  }
+
+  @Override
+  public ProtoHttpContent setMediaType(HttpMediaType mediaType) {
+    super.setMediaType(mediaType);
+    return this;
   }
 }

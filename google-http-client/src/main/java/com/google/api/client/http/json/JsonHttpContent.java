@@ -15,8 +15,8 @@
 package com.google.api.client.http.json;
 
 import com.google.api.client.http.AbstractHttpContent;
+import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.json.Json;
-import com.google.api.client.json.JsonEncoding;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.common.base.Preconditions;
@@ -49,9 +49,6 @@ import java.io.OutputStream;
 public class JsonHttpContent extends AbstractHttpContent {
   // TODO(yanivi): ability to annotate fields as only needed for POST?
 
-  /** Content type. Default value is {@link Json#CONTENT_TYPE}. */
-  private String contentType = Json.CONTENT_TYPE;
-
   /** JSON key name/value data. */
   private final Object data;
 
@@ -64,16 +61,13 @@ public class JsonHttpContent extends AbstractHttpContent {
    * @since 1.5
    */
   public JsonHttpContent(JsonFactory jsonFactory, Object data) {
+    super(Json.MEDIA_TYPE);
     this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
     this.data = Preconditions.checkNotNull(data);
   }
 
-  public String getType() {
-    return contentType;
-  }
-
   public void writeTo(OutputStream out) throws IOException {
-    JsonGenerator generator = jsonFactory.createJsonGenerator(out, JsonEncoding.UTF8);
+    JsonGenerator generator = jsonFactory.createJsonGenerator(out, getCharset());
     generator.serialize(data);
     generator.flush();
   }
@@ -86,9 +80,17 @@ public class JsonHttpContent extends AbstractHttpContent {
    * </p>
    *
    * @since 1.5
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #setMediaType(HttpMediaType)} instead.
    */
+  @Deprecated
   public JsonHttpContent setType(String type) {
-    contentType = type;
+    setMediaType(new HttpMediaType(type));
+    return this;
+  }
+
+  @Override
+  public JsonHttpContent setMediaType(HttpMediaType mediaType) {
+    super.setMediaType(mediaType);
     return this;
   }
 

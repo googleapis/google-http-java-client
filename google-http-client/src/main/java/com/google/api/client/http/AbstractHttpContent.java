@@ -14,8 +14,11 @@
 
 package com.google.api.client.http;
 
+import com.google.common.base.Charsets;
+
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 /**
  * Abstract implementation of an HTTP content with typical options.
@@ -29,8 +32,34 @@ import java.io.OutputStream;
  */
 public abstract class AbstractHttpContent implements HttpContent {
 
+  /** Media type used for the Content-Type header or {@code null} for none. */
+  private HttpMediaType mediaType;
+
   /** Cached value for the computed length from {@link #computeLength()}. */
   private long computedLength = -1;
+
+  /**
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #AbstractHttpContent(String)} instead.
+   */
+  @Deprecated
+  protected AbstractHttpContent() {}
+
+  /**
+   * @param mediaType Media type string (for example "type/subtype") this content represents or
+   *        {@code null} to leave out. Can also contain parameters like {@code "charset=utf-8"}
+   * @since 1.10
+   */
+  protected AbstractHttpContent(String mediaType) {
+    this(mediaType == null ? null : new HttpMediaType(mediaType));
+  }
+
+  /**
+   * @param mediaType Media type this content represents or {@code null} to leave out
+   * @since 1.10
+   */
+  protected AbstractHttpContent(HttpMediaType mediaType) {
+    this.mediaType = mediaType;
+  }
 
   /** Default implementation returns {@code null}, but subclasses may override. */
   public String getEncoding() {
@@ -46,6 +75,44 @@ public abstract class AbstractHttpContent implements HttpContent {
       computedLength = computeLength();
     }
     return computedLength;
+  }
+
+  /**
+   * Returns the media type to use for the Content-Type header, or {@code null} if unspecified.
+   *
+   * @since 1.10
+   */
+  public final HttpMediaType getMediaType() {
+    return mediaType;
+  }
+
+  /**
+   * Sets the media type to use for the Content-Type header, or {@code null} if unspecified.
+   *
+   * <p>
+   * This will also overwrite any previously set parameter of the media type (for example
+   * {@code "charset"}), and therefore might change other properties as well.
+   * </p>
+   *
+   * @since 1.10
+   */
+  public AbstractHttpContent setMediaType(HttpMediaType mediaType) {
+    this.mediaType = mediaType;
+    return this;
+  }
+
+  /**
+   * Returns the charset specified in the media type or {@code Charsets#UTF_8} if not specified.
+   *
+   * @since 1.10
+   */
+  protected final Charset getCharset() {
+    return mediaType == null || mediaType.getCharsetParameter() == null ? Charsets.UTF_8 : mediaType
+        .getCharsetParameter();
+  }
+
+  public String getType() {
+    return mediaType == null ? null : mediaType.build();
   }
 
   /**

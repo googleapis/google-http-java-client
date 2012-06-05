@@ -19,6 +19,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.util.Types;
 import com.google.api.client.xml.Xml;
 import com.google.api.client.xml.XmlNamespaceDictionary;
+import com.google.api.client.xml.XmlObjectParser;
 import com.google.common.base.Preconditions;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -46,7 +47,9 @@ import java.io.InputStream;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.11) Use {@link XmlObjectParser} instead.
  */
+@Deprecated
 public class XmlHttpParser implements HttpParser {
 
   /** {@code "application/xml"} content type. */

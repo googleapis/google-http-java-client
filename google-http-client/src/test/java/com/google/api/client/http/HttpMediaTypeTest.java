@@ -14,6 +14,8 @@
 
 package com.google.api.client.http;
 
+import com.google.common.base.Charsets;
+
 import junit.framework.TestCase;
 
 /**
@@ -137,5 +139,36 @@ public class HttpMediaTypeTest extends TestCase {
     assertEquals(true, containsInvalidChar("foo/bar"));
     assertEquals(true, containsInvalidChar("  foo"));
     assertEquals(true, containsInvalidChar("foo;bar"));
+  }
+
+  public void testCharset() {
+    HttpMediaType hmt = new HttpMediaType("foo/bar");
+    assertEquals(null, hmt.getCharsetParameter());
+    hmt.setCharsetParameter(Charsets.UTF_8);
+    assertEquals(Charsets.UTF_8.name(), hmt.getParameter("charset"));
+    assertEquals(Charsets.UTF_8, hmt.getCharsetParameter());
+  }
+
+  public void testEqualsIgnoreParameters() {
+    assertEquals(true, new HttpMediaType("foo/bar").equalsIgnoreParameters(new HttpMediaType("Foo/bar")));
+    assertEquals(true, new HttpMediaType("foo/bar").equalsIgnoreParameters(
+        new HttpMediaType("foo/bar; charset=utf-8")));
+    assertEquals(false, new HttpMediaType("foo/bar").equalsIgnoreParameters(new HttpMediaType("bar/foo")));
+    assertEquals(false, new HttpMediaType("foo/bar").equalsIgnoreParameters(null));
+  }
+
+  public void testEqualsIgnoreParameters_static() {
+    assertEquals(true, HttpMediaType.equalsIgnoreParameters(null, null));
+    assertEquals(false, HttpMediaType.equalsIgnoreParameters(null, "foo/bar"));
+    assertEquals(true, HttpMediaType.equalsIgnoreParameters("foo/bar", "foo/bar"));
+    assertEquals(true, HttpMediaType.equalsIgnoreParameters("foo/bar; a=c", "foo/bar; b=d"));
+  }
+
+  public void testEquals() {
+    assertEquals(true, new HttpMediaType("foo/bar").equals(new HttpMediaType("foo/bar")));
+    assertEquals(true, new HttpMediaType("foo/bar; a=c").equals(new HttpMediaType("foo/bar; a=c")));
+    assertEquals(false, new HttpMediaType("foo/bar; bar=bar").equals(new HttpMediaType("foo/bar")));
+    assertEquals(false, new HttpMediaType("foo/bar").equals(null));
+    assertEquals(false, new HttpMediaType("foo/bar").equals(new Integer(5)));
   }
 }
