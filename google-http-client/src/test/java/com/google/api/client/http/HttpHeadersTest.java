@@ -85,6 +85,7 @@ public class HttpHeadersTest extends TestCase {
     myHeaders.objList = ImmutableList.of("a2", "b2", "c2");
     myHeaders.r = new String[] {"a1", "a2"};
     myHeaders.setAcceptEncoding(null);
+    myHeaders.setContentLength(Long.MAX_VALUE);
     myHeaders.setUserAgent("foo");
     myHeaders.set("a", "b");
     myHeaders.value = E.VALUE;
@@ -107,11 +108,13 @@ public class HttpHeadersTest extends TestCase {
     assertEquals(ImmutableList.of("b"), headers.get("a"));
     assertEquals(ImmutableList.of("VALUE"), headers.get("value"));
     assertEquals(ImmutableList.of("other"), headers.get("otherValue"));
+    assertEquals(ImmutableList.of(String.valueOf(Long.MAX_VALUE)), headers.get("Content-Length"));
 
     HttpHeaders.serializeHeadersForMultipartRequests(myHeaders, null, null, writer);
 
     // check headers in the output stream
     StringBuilder expectedOutput = new StringBuilder();
+    expectedOutput.append("Content-Length: " + String.valueOf(Long.MAX_VALUE) + "\r\n");
     expectedOutput.append("foo: bar\r\n");
     expectedOutput.append("list: a\r\n");
     expectedOutput.append("list: b\r\n");
@@ -134,6 +137,7 @@ public class HttpHeadersTest extends TestCase {
   @SuppressWarnings("unchecked")
   public void testFromHttpHeaders() {
     HttpHeaders rawHeaders = new HttpHeaders();
+    rawHeaders.setContentLength(Long.MAX_VALUE);
     rawHeaders.setContentType("foo/bar");
     rawHeaders.setUserAgent("FooBar");
     rawHeaders.set("foo", "bar");
@@ -148,6 +152,7 @@ public class HttpHeadersTest extends TestCase {
 
     MyHeaders myHeaders = new MyHeaders();
     myHeaders.fromHttpHeaders(rawHeaders);
+    assertEquals(Long.MAX_VALUE, myHeaders.getContentLength().longValue());
     assertEquals("foo/bar", myHeaders.getContentType());
     assertEquals("FooBar", myHeaders.getUserAgent());
     assertEquals("bar", myHeaders.foo);

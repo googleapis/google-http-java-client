@@ -81,7 +81,7 @@ public class HttpHeaders extends GenericData {
 
   /** {@code "Content-Length"} header. */
   @Key("Content-Length")
-  private String contentLength;
+  private Long contentLength;
 
   /** {@code "Content-MD5"} header. */
   @Key("Content-MD5")
@@ -257,18 +257,28 @@ public class HttpHeaders extends GenericData {
   /**
    * Returns the {@code "Content-Length"} header or {@code null} for none.
    *
+   * <p>
+   * Upgrade warning: in prior version content length was represented as a String, but now it is
+   * represented as a Long.
+   * </p>
+   *
    * @since 1.5
    */
-  public final String getContentLength() {
+  public final Long getContentLength() {
     return contentLength;
   }
 
   /**
    * Sets the {@code "Content-Length"} header or {@code null} for none.
    *
+   * <p>
+   * Upgrade warning: in prior version content length was represented as a String, but now it is
+   * represented as a Long.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setContentLength(String contentLength) {
+  public final void setContentLength(Long contentLength) {
     this.contentLength = contentLength;
   }
 
