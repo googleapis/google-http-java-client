@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Google Inc.
+ * Copyright (c) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.extensions.appengine.http.urlfetch;
+package com.google.api.client.extensions.appengine.http;
 
 import junit.framework.TestCase;
 
@@ -21,7 +21,6 @@ import junit.framework.TestCase;
  *
  * @author Tony Aiuto
  */
-@Deprecated
 public class UrlFetchTransportTest extends TestCase {
 
   public void test() {

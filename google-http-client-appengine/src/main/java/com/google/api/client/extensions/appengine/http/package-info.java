@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Google Inc.
+ * Copyright (c) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,19 +12,18 @@
  * the License.
  */
 
-package com.google.api.client.extensions.appengine.http.urlfetch;
-
-import junit.framework.TestCase;
-
 /**
- * Tests {@link UrlFetchTransport}.
+ * HTTP Transport library for Google API's based on <a
+ * href="http://code.google.com/appengine/docs/java/urlfetch/">URL Fetch in Google App Engine</a>.
  *
- * @author Tony Aiuto
+ * <p>
+ * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
+ * possibly entirely removed in a future version of the library</b>
+ * </p>
+ *
+ * @since 1.10
+ * @author Yaniv Inbar
  */
-@Deprecated
-public class UrlFetchTransportTest extends TestCase {
 
-  public void test() {
-    new UrlFetchTransport();
-  }
-}
+package com.google.api.client.extensions.appengine.http;
+

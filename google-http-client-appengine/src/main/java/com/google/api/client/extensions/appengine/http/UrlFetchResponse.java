@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright (c) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.extensions.appengine.http.urlfetch;
+package com.google.api.client.extensions.appengine.http;
 
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.appengine.api.urlfetch.HTTPHeader;
@@ -22,7 +22,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-@Deprecated
 final class UrlFetchResponse extends LowLevelHttpResponse {
 
   private final ArrayList<String> headerNames = new ArrayList<String>();

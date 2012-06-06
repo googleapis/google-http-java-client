@@ -23,6 +23,8 @@
  *
  * @since 1.2
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.11) Classes have been moved to
+ *             {@link com.google.api.client.extensions.appengine.http}.
  */
 
 package com.google.api.client.extensions.appengine.http.urlfetch;
