@@ -51,6 +51,9 @@ public class JsonHttpRequest extends GenericData {
   /** The HTTP headers of the last response or {@code null} for none. */
   private HttpHeaders lastResponseHeaders;
 
+  /** Whether to enable GZip compression of HTTP content. */
+  private boolean enableGZipContent = true;
+
   /**
    * Builds an instance of {@link JsonHttpRequest}.
    *
@@ -68,6 +71,30 @@ public class JsonHttpRequest extends GenericData {
     this.method = Preconditions.checkNotNull(method);
     this.uriTemplate = Preconditions.checkNotNull(uriTemplate);
     this.content = content;
+  }
+
+  /**
+   * Sets whether to enable GZip compression of HTTP content. Subclasses should override by
+   * calling super.
+   *
+   * <p>
+   * By default it is {@code true}.
+   * </p>
+   *
+   * @since 1.10
+   */
+  public JsonHttpRequest setEnableGZipContent(boolean enableGZipContent) {
+    this.enableGZipContent = enableGZipContent;
+    return this;
+  }
+
+  /**
+   * Returns whether to enable GZip compression of HTTP content.
+   *
+   * @since 1.10
+   */
+  public final boolean getEnableGZipContent() {
+    return enableGZipContent;
   }
 
   /** Returns the HTTP Method type. */
@@ -176,6 +203,7 @@ public class JsonHttpRequest extends GenericData {
    */
   public HttpResponse executeUnparsed() throws IOException {
     HttpRequest request = buildHttpRequest();
+    request.setEnableGZipContent(enableGZipContent);
     HttpResponse response = client.executeUnparsed(request);
     lastResponseHeaders = response.getHeaders();
     return response;

@@ -37,6 +37,13 @@ import java.util.logging.Logger;
  * Implementation is not thread-safe.
  * </p>
  *
+ * <p>
+ * Upgrade warning: prior to version 1.10 there was a {@code builder} method in
+ * {@link JsonHttpClient}, this has been removed in version 1.10. The Builder can now be
+ * instantiated with
+ * {@link Builder#Builder(HttpTransport, JsonFactory, String, String, HttpRequestInitializer)}.
+ * </p>
+ *
  * @since 1.6
  * @author Ravi Mistry
  */
@@ -240,14 +247,14 @@ public class JsonHttpClient {
    * Constructor with required parameters.
    *
    * <p>
-   * Use {@link #builder} if you need to specify any of the optional parameters.
+   * Use {@link Builder} if you need to specify any of the optional parameters.
    * </p>
    *
    * @param transport The transport to use for requests
    * @param jsonFactory A factory for creating JSON parsers and serializers
    * @param baseUrl The base URL of the service. Must end with a "/"
-   * @deprecated (scheduled to be removed in 1.11) Use
-   *             {@link #JsonHttpClient(HttpTransport, JsonFactory, String, String)}.
+   * @deprecated (scheduled to be removed in 1.11) Use {@link #JsonHttpClient(HttpTransport,
+   *             JsonFactory, String, String, HttpRequestInitializer)}.
    */
   @Deprecated
   public JsonHttpClient(HttpTransport transport, JsonFactory jsonFactory, String baseUrl) {
@@ -258,7 +265,7 @@ public class JsonHttpClient {
    * Constructor with required parameters.
    *
    * <p>
-   * Use {@link #builder} if you need to specify any of the optional parameters.
+   * Use {@link Builder} if you need to specify any of the optional parameters.
    * </p>
    *
    * @param transport The transport to use for requests
@@ -266,11 +273,12 @@ public class JsonHttpClient {
    * @param rootUrl The root URL of the service. Must end with a "/"
    * @param servicePath The service path of the service. Must end with a "/" and not begin with a
    *        "/". It is allowed to be an empty string {@code ""}
+   * @param httpRequestInitializer The HTTP request initializer or {@code null} for none
    * @since 1.10
    */
-  public JsonHttpClient(
-      HttpTransport transport, JsonFactory jsonFactory, String rootUrl, String servicePath) {
-    this(transport, null, null, jsonFactory, null, rootUrl, servicePath, null);
+  public JsonHttpClient(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
+      String servicePath, HttpRequestInitializer httpRequestInitializer) {
+    this(transport, null, httpRequestInitializer, jsonFactory, null, rootUrl, servicePath, null);
   }
 
   /**
@@ -514,36 +522,6 @@ public class JsonHttpClient {
   }
 
   /**
-   * Returns an instance of a new builder.
-   *
-   * @param transport The transport to use for requests
-   * @param jsonFactory A factory for creating JSON parsers and serializers
-   * @param baseUrl The base URL of the service. Must end with a "/"
-   * @deprecated (scheduled to be removed in 1.11) Use
-   *             {@link #builder(HttpTransport, JsonFactory, GenericUrl, String)} instead.
-   */
-  @Deprecated
-  public static Builder builder(
-      HttpTransport transport, JsonFactory jsonFactory, GenericUrl baseUrl) {
-    return new Builder(transport, jsonFactory, baseUrl);
-  }
-
-  /**
-   * Returns an instance of a new builder.
-   *
-   * @param transport The transport to use for requests
-   * @param jsonFactory A factory for creating JSON parsers and serializers
-   * @param rootUrl The root URL of the service. Must end with a "/"
-   * @param servicePath The service path of the service. Must end with a "/" and not begin with a
-   *        "/". It is allowed to be an empty string {@code ""}
-   * @since 1.10
-   */
-  public static Builder builder(
-      HttpTransport transport, JsonFactory jsonFactory, GenericUrl rootUrl, String servicePath) {
-    return new Builder(transport, jsonFactory, rootUrl, servicePath);
-  }
-
-  /**
    * Builder for {@link JsonHttpClient}.
    *
    * <p>
@@ -578,7 +556,7 @@ public class JsonHttpClient {
     private GenericUrl baseUrl;
 
     /** The root URL of the service, for example {@code "https://www.googleapis.com/"}. */
-    private GenericUrl rootUrl;
+    private String rootUrl;
 
     /** The service path of the service, for example {@code "tasks/v1/"}. */
     private String servicePath;
@@ -602,8 +580,8 @@ public class JsonHttpClient {
      * @param jsonFactory A factory for creating JSON parsers and serializers
      * @param baseUrl The base URL of the service. Must end with a "/"
      *
-     * @deprecated (scheduled to be removed in 1.11) Use
-     *             {@link #Builder(HttpTransport, JsonFactory, GenericUrl, String)} instead.
+     * @deprecated (scheduled to be removed in 1.11) Use {@link #Builder(HttpTransport, JsonFactory,
+     *             String, String, HttpRequestInitializer)} instead.
      */
     @Deprecated
     protected Builder(HttpTransport transport, JsonFactory jsonFactory, GenericUrl baseUrl) {
@@ -621,14 +599,17 @@ public class JsonHttpClient {
      * @param rootUrl The root URL of the service. Must end with a "/"
      * @param servicePath The service path of the service. Must end with a "/" and not begin with a
      *        "/". It is allowed to be an empty string {@code ""}
+     * @param httpRequestInitializer The HTTP request initializer or {@code null} for none
      * @since 1.10
      */
-    protected Builder(
-        HttpTransport transport, JsonFactory jsonFactory, GenericUrl rootUrl, String servicePath) {
+    public Builder(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
+        String servicePath,
+        HttpRequestInitializer httpRequestInitializer) {
       this.transport = transport;
       this.jsonFactory = jsonFactory;
       setRootUrl(rootUrl);
       setServicePath(servicePath);
+      this.httpRequestInitializer = httpRequestInitializer;
     }
 
     /**
@@ -652,13 +633,13 @@ public class JsonHttpClient {
           httpRequestInitializer,
           jsonFactory,
           jsonObjectParser,
-          rootUrl.build(),
+          rootUrl,
           servicePath,
           applicationName);
     }
 
     /**
-     * Returns if baseUrl is used instead of {@code servicePath} and {@code rootUrl}.
+     * Returns if {@code baseUrl} is used instead of {@code rootUrl} and {@code servicePath}.
      *
      * @since 1.10
      * @deprecated (scheduled to be removed in 1.11) Use {@link #getRootUrl} and
@@ -714,7 +695,8 @@ public class JsonHttpClient {
      * This is determined when the library is generated and normally should not be changed.
      *
      * <p>
-     * Use this method only if {@link #builder(HttpTransport, JsonFactory, GenericUrl)} was used.
+     * Use this method only if {@code baseUrl} is used instead of {@code rootUrl} and
+     * {@code servicePath}.
      * </p>
      *
      * @deprecated (scheduled to be removed in 1.11) Use {@link #getRootUrl} and
@@ -732,7 +714,8 @@ public class JsonHttpClient {
      * and normally should not be changed. Subclasses should override by calling super.
      *
      * <p>
-     * Use this method only if {@link #builder(HttpTransport, JsonFactory, GenericUrl)} was used.
+     * Use this method only if {@code baseUrl} is used instead of {@code rootUrl} and
+     * {@code servicePath}.
      * </p>
      *
      * @since 1.7
@@ -752,15 +735,15 @@ public class JsonHttpClient {
      * URL-encoded and must end with a "/".
      *
      * <p>
-     * Use this method only if {@link #builder(HttpTransport, JsonFactory, GenericUrl, String)} was
-     * used.
+     * Use this method only if {@code rootUrl} and {@code servicePath} are used instead of
+     * {@code baseUrl}.
      * </p>
      *
      * @since 1.10
      */
     public final String getRootUrl() {
       Preconditions.checkArgument(!baseUrlUsed);
-      return rootUrl.build();
+      return rootUrl;
     }
 
     /**
@@ -769,16 +752,16 @@ public class JsonHttpClient {
      * normally should be changed. Subclasses should override by calling super.
      *
      * <p>
-     * Use this method only if {@link #builder(HttpTransport, JsonFactory, GenericUrl, String)} was
-     * used.
+     * Use this method only if {@code rootUrl} and {@code servicePath} are used instead of
+     * {@code baseUrl}.
      * </p>
      *
      * @since 1.10
      */
-    public Builder setRootUrl(GenericUrl rootUrl) {
+    public Builder setRootUrl(String rootUrl) {
       Preconditions.checkArgument(!baseUrlUsed);
       Preconditions.checkNotNull(rootUrl);
-      Preconditions.checkArgument(rootUrl.build().endsWith("/"));
+      Preconditions.checkArgument(rootUrl.endsWith("/"));
       this.rootUrl = rootUrl;
       return this;
     }
@@ -790,8 +773,8 @@ public class JsonHttpClient {
      * {@code ""}.
      *
      * <p>
-     * Use this method only if {@link #builder(HttpTransport, JsonFactory, GenericUrl, String)} was
-     * used.
+     * Use this method only if {@code rootUrl} and {@code servicePath} are used instead of
+     * {@code baseUrl}.
      * </p>
      *
      * @since 1.10
@@ -808,8 +791,8 @@ public class JsonHttpClient {
      * changed. Subclasses should override by calling super.
      *
      * <p>
-     * Use this method only if {@link #builder(HttpTransport, JsonFactory, GenericUrl, String)} was
-     * used.
+     * Use this method only if {@code rootUrl} and {@code servicePath} are used instead of
+     * {@code baseUrl}.
      * </p>
      *
      * @since 1.10

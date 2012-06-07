@@ -65,7 +65,7 @@ public class JsonHttpClientTest extends TestCase {
     String applicationName = "Test Application";
 
     JsonHttpClient.Builder builder =
-        JsonHttpClient.builder(transport, jsonFactory, baseUrl)
+        new JsonHttpClient.Builder(transport, jsonFactory, baseUrl)
             .setJsonHttpRequestInitializer(jsonHttpRequestInitializer)
         .setApplicationName(applicationName);
     try {
@@ -87,7 +87,7 @@ public class JsonHttpClientTest extends TestCase {
       // expected
     }
     try {
-      builder.setRootUrl(new GenericUrl("http://www.test.com/"));
+      builder.setRootUrl("http://www.test.com/");
       fail("Expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
@@ -117,13 +117,13 @@ public class JsonHttpClientTest extends TestCase {
   public void testJsonHttpClientBuilderWithRootUrlAndServicePath() {
     HttpTransport transport = new NetHttpTransport();
     JsonFactory jsonFactory = new JacksonFactory();
-    GenericUrl rootUrl = new GenericUrl("http://www.testgoogleapis.com/");
+    String rootUrl = "http://www.testgoogleapis.com/";
     String servicePath = "test/path/v1/";
     JsonHttpRequestInitializer jsonHttpRequestInitializer = new TestRemoteRequestInitializer();
     String applicationName = "Test Application";
 
-    JsonHttpClient.Builder builder = JsonHttpClient.builder(
-        transport, jsonFactory, rootUrl, servicePath)
+    JsonHttpClient.Builder builder = new JsonHttpClient.Builder(
+        transport, jsonFactory, rootUrl, servicePath, null)
         .setJsonHttpRequestInitializer(jsonHttpRequestInitializer)
         .setApplicationName(applicationName);
     try {
@@ -133,14 +133,14 @@ public class JsonHttpClientTest extends TestCase {
       // expected
     }
     try {
-      builder.setBaseUrl(rootUrl);
+      builder.setBaseUrl(new GenericUrl(rootUrl));
       fail("Expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
     }
     try {
       // With no "/" at the end.
-      builder.setRootUrl(new GenericUrl("http://www.testgoogleapis.com"));
+      builder.setRootUrl("http://www.testgoogleapis.com");
       fail("Expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       //expected
@@ -164,19 +164,19 @@ public class JsonHttpClientTest extends TestCase {
 
     JsonHttpClient client = builder.build();
 
-    assertEquals(rootUrl.build(), client.getRootUrl());
+    assertEquals(rootUrl, client.getRootUrl());
     assertEquals("", client.getServicePath());
     assertEquals(applicationName, client.getApplicationName());
     assertEquals(jsonFactory, client.getJsonFactory());
     assertEquals(jsonHttpRequestInitializer, client.getJsonHttpRequestInitializer());
-    assertEquals(rootUrl.build(), client.getBaseUrl());
+    assertEquals(rootUrl, client.getBaseUrl());
   }
 
   @SuppressWarnings("deprecation")
   public void testBaseServerAndBasePathBuilder() {
     JsonHttpClient client =
-        JsonHttpClient
-            .builder(new NetHttpTransport(), new JacksonFactory(),
+        new JsonHttpClient
+            .Builder(new NetHttpTransport(), new JacksonFactory(),
                 new GenericUrl("http://www.testgoogleapis.com/test/path/v1/"))
             .setBaseUrl(new GenericUrl("http://www.googleapis.com/test/path/v2/"))
             .build();
@@ -187,7 +187,7 @@ public class JsonHttpClientTest extends TestCase {
   @SuppressWarnings("deprecation")
   public void testInitializeWithBaseUrl() throws IOException {
     TestRemoteRequestInitializer remoteRequestInitializer = new TestRemoteRequestInitializer();
-    JsonHttpClient client = JsonHttpClient.builder(
+    JsonHttpClient client = new JsonHttpClient.Builder(
         new NetHttpTransport(), new JacksonFactory(), new GenericUrl("http://www.test.com/"))
         .setJsonHttpRequestInitializer(remoteRequestInitializer)
         .setApplicationName("Test Application").build();
@@ -197,9 +197,9 @@ public class JsonHttpClientTest extends TestCase {
 
   public void testInitializeWithRootUrl() throws IOException {
     TestRemoteRequestInitializer remoteRequestInitializer = new TestRemoteRequestInitializer();
-    JsonHttpClient client = JsonHttpClient.builder(
-        new NetHttpTransport(), new JacksonFactory(), new GenericUrl("http://www.test.com/"),
-        "test/").setJsonHttpRequestInitializer(remoteRequestInitializer)
+    JsonHttpClient client = new JsonHttpClient.Builder(
+        new NetHttpTransport(), new JacksonFactory(), "http://www.test.com/", "test/",
+        null).setJsonHttpRequestInitializer(remoteRequestInitializer)
         .setApplicationName("Test Application").build();
     client.initialize(null);
     assertTrue(remoteRequestInitializer.isCalled);
@@ -224,7 +224,7 @@ public class JsonHttpClientTest extends TestCase {
       }
     };
     JsonHttpClient client =
-      JsonHttpClient.builder(
+      new JsonHttpClient.Builder(
           transport, new JacksonFactory(), new GenericUrl(testBaseUrl)).build();
     client.executeUnparsed(HttpMethod.GET, new GenericUrl(testBaseUrl + testUriTemplate), null);
   }
@@ -247,8 +247,8 @@ public class JsonHttpClientTest extends TestCase {
         };
       }
     };
-    JsonHttpClient client = JsonHttpClient.builder(
-        transport, new JacksonFactory(), new GenericUrl(testRootUrl), testServicePath).build();
+    JsonHttpClient client = new JsonHttpClient.Builder(
+        transport, new JacksonFactory(), testRootUrl, testServicePath, null).build();
     client.executeUnparsed(
         HttpMethod.GET, new GenericUrl(testRootUrl + testServicePath + testUriTemplate), null);
   }
