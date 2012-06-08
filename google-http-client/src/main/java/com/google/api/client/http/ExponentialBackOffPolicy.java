@@ -331,7 +331,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
    * </p>
    */
   public final long getElapsedTimeMillis() {
-    return (System.nanoTime() - startTimeNanos) / 1000;
+    return (System.nanoTime() - startTimeNanos) / 1000000;
   }
 
   /**
