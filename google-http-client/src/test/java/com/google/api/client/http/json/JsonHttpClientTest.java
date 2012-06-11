@@ -161,11 +161,16 @@ public class JsonHttpClientTest extends TestCase {
     }
     // Ensure an empty string is allowed for the service path.
     builder.setServicePath("");
-
     JsonHttpClient client = builder.build();
-
     assertEquals(rootUrl, client.getRootUrl());
     assertEquals("", client.getServicePath());
+
+    // Ensure a "/" string is allowed for the service path.
+    builder.setServicePath("/");
+    client = builder.build();
+    assertEquals(rootUrl, client.getRootUrl());
+    assertEquals("", client.getServicePath());
+
     assertEquals(applicationName, client.getApplicationName());
     assertEquals(jsonFactory, client.getJsonFactory());
     assertEquals(jsonHttpRequestInitializer, client.getJsonHttpRequestInitializer());
