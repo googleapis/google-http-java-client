@@ -137,7 +137,8 @@ public class JsonHttpClient {
   /**
    * Returns the service path of the service, for example {@code "tasks/v1/"}. Must be URL-encoded
    * and must end with a "/" and not begin with a "/". It is allowed to be an empty string
-   * {@code ""}.
+   * {@code ""} or a forward slash {@code "/"}, if it is a forward slash then it is treated as an
+   * empty string
    *
    * @since 1.10
    */
@@ -272,7 +273,8 @@ public class JsonHttpClient {
    * @param jsonFactory A factory for creating JSON parsers and serializers
    * @param rootUrl The root URL of the service. Must end with a "/"
    * @param servicePath The service path of the service. Must end with a "/" and not begin with a
-   *        "/". It is allowed to be an empty string {@code ""}
+   *        "/". It is allowed to be an empty string {@code ""} or a forward slash {@code "/"}, if
+   *        it is a forward slash then it is treated as an empty string
    * @param httpRequestInitializer The HTTP request initializer or {@code null} for none
    * @since 1.10
    */
@@ -366,7 +368,8 @@ public class JsonHttpClient {
    *        accepted from 1.11 on.
    * @param rootUrl The root URL of the service. Must end with a "/"
    * @param servicePath The service path of the service. Must end with a "/" and not begin with a
-   *        "/". It is allowed to be an empty string {@code ""}
+   *        "/". It is allowed to be an empty string {@code ""} or a forward slash {@code "/"}, if
+   *        it is a forward slash then it is treated as an empty string
    * @param applicationName The application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
    * @since 1.10
@@ -382,10 +385,14 @@ public class JsonHttpClient {
     this.jsonHttpRequestInitializer = jsonHttpRequestInitializer;
     this.rootUrl = Preconditions.checkNotNull(rootUrl);
     Preconditions.checkArgument(rootUrl.endsWith("/"));
-    this.servicePath = Preconditions.checkNotNull(servicePath);
-    if (servicePath.length() > 0) {
-      Preconditions.checkArgument(rootUrl.endsWith("/") && !servicePath.startsWith("/"));
+    Preconditions.checkNotNull(servicePath);
+    if (servicePath.length() == 1) {
+      Preconditions.checkArgument("/".equals(servicePath));
+      servicePath = "";
+    } else if (servicePath.length() > 0) {
+      Preconditions.checkArgument(servicePath.endsWith("/") && !servicePath.startsWith("/"));
     }
+    this.servicePath = servicePath;
     this.applicationName = applicationName;
     this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
     Preconditions.checkNotNull(transport);
@@ -598,7 +605,8 @@ public class JsonHttpClient {
      * @param jsonFactory A factory for creating JSON parsers and serializers
      * @param rootUrl The root URL of the service. Must end with a "/"
      * @param servicePath The service path of the service. Must end with a "/" and not begin with a
-     *        "/". It is allowed to be an empty string {@code ""}
+     *        "/". It is allowed to be an empty string {@code ""} or a forward slash {@code "/"}, if
+     *        it is a forward slash then it is treated as an empty string
      * @param httpRequestInitializer The HTTP request initializer or {@code null} for none
      * @since 1.10
      */
@@ -787,7 +795,8 @@ public class JsonHttpClient {
     /**
      * Sets the service path of the service, for example {@code "tasks/v1/"}. Must be URL-encoded
      * and must end with a "/" and not begin with a "/". It is allowed to be an empty string
-     * {@code ""}. This is determined when the library is generated and normally should not be
+     * {@code ""} or a forward slash {@code "/"}, if it is a forward slash then it is treated as an
+     * empty string. This is determined when the library is generated and normally should not be
      * changed. Subclasses should override by calling super.
      *
      * <p>
@@ -800,7 +809,10 @@ public class JsonHttpClient {
     public Builder setServicePath(String servicePath) {
       Preconditions.checkArgument(!baseUrlUsed);
       servicePath = Preconditions.checkNotNull(servicePath);
-      if (servicePath.length() > 0) {
+      if (servicePath.length() == 1) {
+        Preconditions.checkArgument("/".equals(servicePath));
+        servicePath = "";
+      } else if (servicePath.length() > 0) {
         Preconditions.checkArgument(servicePath.endsWith("/") && !servicePath.startsWith("/"));
       }
       this.servicePath = servicePath;
