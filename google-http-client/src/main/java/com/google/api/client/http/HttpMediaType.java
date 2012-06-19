@@ -28,6 +28,14 @@ import java.util.regex.Pattern;
  * HTTP Media-type as specified in the HTTP RFC (
  * {@link "http://tools.ietf.org/html/rfc2616#section-3.7"}).
  *
+ *
+ * <p>
+ * <b>Upgrade warning:</b> Since version 1.11 parameter values are parsed less restrictively in
+ * order to conform with the multipart specification (
+ * {@link "http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html"}). Prior to version 1.11
+ * parameter values were parsed according to the HTTP RFC.
+ * </p>
+ *
  * <p>
  * Implementation is not thread-safe.
  * </p>
@@ -82,8 +90,10 @@ public final class HttpMediaType {
         "\\s*(" + wholeParameterSection + ")?", Pattern.DOTALL); // parameters (G3) or null
 
     // PARAMETER_REGEX: Semi-restrictive regex matching each parameter in the parameter section.
+    // We also allow multipart values here (http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html)
+    // although those do not fully conform to the HTTP spec.
     String quotedParameterValue = "\"([^\"]*)\"";
-    String unquotedParameterValue = "[^\\s;/\"=]*";
+    String unquotedParameterValue = "[^\\s;\"]*";
     String parameterValue =  quotedParameterValue + "|" + unquotedParameterValue;
     PARAMETER_REGEX = Pattern.compile("\\s*;\\s*(" + typeOrKey + ")" + // parameter key (G1)
         "=(" + parameterValue + ")"); // G2 (if quoted) and else G3

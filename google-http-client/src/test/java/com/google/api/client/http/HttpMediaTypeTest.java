@@ -43,6 +43,12 @@ public class HttpMediaTypeTest extends TestCase {
     assertEquals("main/sub; aaa=1; bbb=\";/ \"", m.build());
   }
 
+  public void testBuild_multipartSpec() {
+    HttpMediaType m = new HttpMediaType("main", "sub");
+    m.setParameter("bbb", "foo=/bar");
+    assertEquals("main/sub; bbb=\"foo=/bar\"", m.build());
+  }
+
   public void testBuild_parametersCasing() {
     HttpMediaType m = new HttpMediaType("main", "sub");
     m.setParameter("foo", "FooBar");
@@ -66,6 +72,14 @@ public class HttpMediaTypeTest extends TestCase {
       new HttpMediaType(null);
       fail("Method did not NullPointerException");
     } catch (NullPointerException expected) {}
+  }
+
+  public void testFromString_multipartSpec() {
+    // Values allowed by the spec: http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
+    String value = "f00'()+_,-./:=?bar";
+    HttpMediaType m = new HttpMediaType("text/plain; boundary="+value+"; foo=bar");
+    assertEquals(value, m.getParameter("boundary"));
+    assertEquals("bar", m.getParameter("foo"));
   }
 
   public void testFromString_full() {
