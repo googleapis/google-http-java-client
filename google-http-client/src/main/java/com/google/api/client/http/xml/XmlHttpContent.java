@@ -72,18 +72,6 @@ public class XmlHttpContent extends AbstractXmlHttpContent {
   /** Key/value pair data. */
   private final Object data;
 
-  /**
-   * {@inheritDoc}
-   *
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #setMediaType(HttpMediaType)} instead.
-   */
-  @Deprecated
-  @Override
-  public XmlHttpContent setType(String type) {
-    super.setType(type);
-    return this;
-  }
-
   @Override
   public final void writeTo(XmlSerializer serializer) throws IOException {
     getNamespaceDictionary().serialize(serializer, elementName, data);

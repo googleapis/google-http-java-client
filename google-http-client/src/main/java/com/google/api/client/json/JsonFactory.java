@@ -83,20 +83,6 @@ public abstract class JsonFactory {
    * @param enc encoding
    * @return new instance of a low-level JSON serializer
    * @throws IOException if failed
-   * @deprecated (scheduled to be removed in 1.11) Use
-   *             {@link #createJsonGenerator(OutputStream, Charset)} instead.
-   */
-  @Deprecated
-  public abstract JsonGenerator createJsonGenerator(OutputStream out, JsonEncoding enc)
-      throws IOException;
-
-  /**
-   * Returns a new instance of a low-level JSON serializer for the given output stream and encoding.
-   *
-   * @param out output stream
-   * @param enc encoding
-   * @return new instance of a low-level JSON serializer
-   * @throws IOException if failed
    * @since 1.10
    */
   public abstract JsonGenerator createJsonGenerator(OutputStream out, Charset enc)

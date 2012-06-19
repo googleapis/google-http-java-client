@@ -99,18 +99,6 @@ public class AtomContent extends AbstractXmlHttpContent {
     return new AtomContent(namespaceDictionary, feed, false);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #setMediaType(HttpMediaType)} instead.
-   */
-  @Deprecated
-  @Override
-  public AtomContent setType(String type) {
-    super.setType(type);
-    return this;
-  }
-
   @Override
   public AtomContent setMediaType(HttpMediaType mediaType) {
     super.setMediaType(mediaType);

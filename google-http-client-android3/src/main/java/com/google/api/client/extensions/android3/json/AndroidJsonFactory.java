@@ -68,13 +68,6 @@ public class AndroidJsonFactory extends JsonFactory {
     return new AndroidJsonParser(this, new JsonReader(reader));
   }
 
-  @Deprecated
-  @Override
-  public JsonGenerator createJsonGenerator(
-      OutputStream out, com.google.api.client.json.JsonEncoding enc) {
-    return createJsonGenerator(new OutputStreamWriter(out, Charsets.UTF_8));
-  }
-
   @Override
   public JsonGenerator createJsonGenerator(OutputStream out, Charset enc) {
     return createJsonGenerator(new OutputStreamWriter(out, enc));

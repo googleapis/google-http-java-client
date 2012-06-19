@@ -39,12 +39,6 @@ public abstract class AbstractHttpContent implements HttpContent {
   private long computedLength = -1;
 
   /**
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #AbstractHttpContent(String)} instead.
-   */
-  @Deprecated
-  protected AbstractHttpContent() {}
-
-  /**
    * @param mediaType Media type string (for example "type/subtype") this content represents or
    *        {@code null} to leave out. Can also contain parameters like {@code "charset=utf-8"}
    * @since 1.10

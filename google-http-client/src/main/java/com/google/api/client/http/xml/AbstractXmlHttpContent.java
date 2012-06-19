@@ -55,22 +55,6 @@ public abstract class AbstractXmlHttpContent extends AbstractHttpContent {
     writeTo(serializer);
   }
 
-  /**
-   * Sets the content type or {@code null} for none. Will override any pre-set media type parameter.
-   *
-   * <p>
-   * Defaults to {@link Xml#MEDIA_TYPE}, though subclasses may define a different default value.
-   * </p>
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #setMediaType(HttpMediaType)} instead.
-   */
-  @Deprecated
-  public AbstractXmlHttpContent setType(String type) {
-    setMediaType(new HttpMediaType(type));
-    return this;
-  }
-
   @Override
   public AbstractXmlHttpContent setMediaType(HttpMediaType mediaType) {
     super.setMediaType(mediaType);

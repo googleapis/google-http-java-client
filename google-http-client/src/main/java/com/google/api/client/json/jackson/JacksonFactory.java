@@ -48,14 +48,6 @@ public final class JacksonFactory extends JsonFactory {
     factory.configure(org.codehaus.jackson.JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT, false);
   }
 
-  @Deprecated
-  @Override
-  public JsonGenerator createJsonGenerator(
-      OutputStream out, com.google.api.client.json.JsonEncoding enc) throws IOException {
-    return new JacksonGenerator(
-        this, factory.createJsonGenerator(out, org.codehaus.jackson.JsonEncoding.UTF8));
-  }
-
   @Override
   public JsonGenerator createJsonGenerator(OutputStream out, Charset enc) throws IOException {
     return new JacksonGenerator(
