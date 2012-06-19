@@ -25,6 +25,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
+import com.google.gson.reflect.TypeToken;
 
 import junit.framework.TestCase;
 
@@ -32,6 +33,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -1127,5 +1129,23 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     } catch (NullPointerException e) {
       // expected
     }
+  }
+
+  public void testObjectParserParse_entry() throws Exception {
+    Entry entry = (Entry) newFactory().createJsonObjectParser()
+        .parseAndClose(new StringReader(JSON_ENTRY), new TypeToken<Entry>() {}.getType());
+    assertEquals("foo", entry.title);
+  }
+
+  public void testObjectParserParse_stringList() throws IOException {
+    JsonFactory factory = newFactory();
+    @SuppressWarnings("unchecked")
+    List<String> result = (List<String>) factory.createJsonObjectParser()
+        .parseAndClose(new StringReader(STRING_ARRAY), new TypeToken<List<String>>() {}.getType());
+    @SuppressWarnings("unused")
+    String string = result.get(0);
+    assertEquals(STRING_ARRAY, factory.toString(result));
+    // check types and values
+    assertTrue(ImmutableList.of("a", "b", "c").equals(result));
   }
 }
