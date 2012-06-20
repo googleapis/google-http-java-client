@@ -77,7 +77,7 @@ public class HttpMediaTypeTest extends TestCase {
   public void testFromString_multipartSpec() {
     // Values allowed by the spec: http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
     String value = "f00'()+_,-./:=?bar";
-    HttpMediaType m = new HttpMediaType("text/plain; boundary="+value+"; foo=bar");
+    HttpMediaType m = new HttpMediaType("text/plain; boundary=" + value + "; foo=bar");
     assertEquals(value, m.getParameter("boundary"));
     assertEquals("bar", m.getParameter("foo"));
   }
