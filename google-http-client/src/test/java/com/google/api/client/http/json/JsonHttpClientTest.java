@@ -73,24 +73,28 @@ public class JsonHttpClientTest extends TestCase {
       fail("Expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
+      assertEquals("service path cannot be used if base URL is used.", e.getMessage());
     }
     try {
       builder.setServicePath("test/");
       fail("Expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
+      assertEquals("service path cannot be used if base URL is used.", e.getMessage());
     }
     try {
       builder.getRootUrl();
       fail("Expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
+      assertEquals("root URL cannot be used if base URL is used.", e.getMessage());
     }
     try {
       builder.setRootUrl("http://www.test.com/");
       fail("Expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
+      assertEquals("root URL cannot be used if base URL is used.", e.getMessage());
     }
 
     JsonHttpClient client = builder.build();
@@ -104,12 +108,14 @@ public class JsonHttpClientTest extends TestCase {
       fail("Expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
+      assertEquals("service path cannot be used if base URL is used.", e.getMessage());
     }
     try {
       client.getRootUrl();
       fail("Expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
+      assertEquals("root URL cannot be used if base URL is used.", e.getMessage());
     }
   }
 
@@ -143,21 +149,34 @@ public class JsonHttpClientTest extends TestCase {
       builder.setRootUrl("http://www.testgoogleapis.com");
       fail("Expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
-      //expected
+      // expected
+      assertEquals("root URL must end with a \"/\".", e.getMessage());
     }
     try {
       // With no "/" at the end.
       builder.setServicePath("test");
       fail("Expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
-      //expected
+      // expected
+      assertEquals(
+          "service path must end with a \"/\" and not begin with a \"/\".", e.getMessage());
     }
     try {
       // With "/" at the start.
       builder.setServicePath("/test");
       fail("Expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
-      //expected
+      // expected
+      assertEquals(
+          "service path must end with a \"/\" and not begin with a \"/\".", e.getMessage());
+    }
+    try {
+      // With "?".
+      builder.setServicePath("?");
+      fail("Expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // expected
+      assertEquals("service path must equal \"/\" if it is of length 1.", e.getMessage());
     }
     // Ensure an empty string is allowed for the service path.
     builder.setServicePath("");
