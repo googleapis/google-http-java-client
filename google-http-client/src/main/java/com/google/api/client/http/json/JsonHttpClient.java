@@ -130,7 +130,7 @@ public class JsonHttpClient {
    * @since 1.10
    */
   public final String getRootUrl() {
-    Preconditions.checkArgument(!baseUrlUsed);
+    Preconditions.checkArgument(!baseUrlUsed, "root URL cannot be used if base URL is used.");
     return rootUrl;
   }
 
@@ -143,7 +143,7 @@ public class JsonHttpClient {
    * @since 1.10
    */
   public final String getServicePath() {
-    Preconditions.checkArgument(!baseUrlUsed);
+    Preconditions.checkArgument(!baseUrlUsed, "service path cannot be used if base URL is used.");
     return servicePath;
   }
 
@@ -383,14 +383,16 @@ public class JsonHttpClient {
       String servicePath,
       String applicationName) {
     this.jsonHttpRequestInitializer = jsonHttpRequestInitializer;
-    this.rootUrl = Preconditions.checkNotNull(rootUrl);
-    Preconditions.checkArgument(rootUrl.endsWith("/"));
-    Preconditions.checkNotNull(servicePath);
+    this.rootUrl = Preconditions.checkNotNull(rootUrl, "root URL cannot be null.");
+    Preconditions.checkArgument(rootUrl.endsWith("/"), "root URL must end with a \"/\".");
+    Preconditions.checkNotNull(servicePath, "service path cannot be null");
     if (servicePath.length() == 1) {
-      Preconditions.checkArgument("/".equals(servicePath));
+      Preconditions.checkArgument(
+          "/".equals(servicePath), "service path must equal \"/\" if it is of length 1.");
       servicePath = "";
     } else if (servicePath.length() > 0) {
-      Preconditions.checkArgument(servicePath.endsWith("/") && !servicePath.startsWith("/"));
+      Preconditions.checkArgument(servicePath.endsWith("/") && !servicePath.startsWith("/"),
+          "service path must end with a \"/\" and not begin with a \"/\".");
     }
     this.servicePath = servicePath;
     this.applicationName = applicationName;
@@ -750,7 +752,7 @@ public class JsonHttpClient {
      * @since 1.10
      */
     public final String getRootUrl() {
-      Preconditions.checkArgument(!baseUrlUsed);
+      Preconditions.checkArgument(!baseUrlUsed, "root URL cannot be used if base URL is used.");
       return rootUrl;
     }
 
@@ -767,9 +769,9 @@ public class JsonHttpClient {
      * @since 1.10
      */
     public Builder setRootUrl(String rootUrl) {
-      Preconditions.checkArgument(!baseUrlUsed);
-      Preconditions.checkNotNull(rootUrl);
-      Preconditions.checkArgument(rootUrl.endsWith("/"));
+      Preconditions.checkArgument(!baseUrlUsed, "root URL cannot be used if base URL is used.");
+      Preconditions.checkNotNull(rootUrl, "root URL cannot be null.");
+      Preconditions.checkArgument(rootUrl.endsWith("/"), "root URL must end with a \"/\".");
       this.rootUrl = rootUrl;
       return this;
     }
@@ -788,7 +790,7 @@ public class JsonHttpClient {
      * @since 1.10
      */
     public final String getServicePath() {
-      Preconditions.checkArgument(!baseUrlUsed);
+      Preconditions.checkArgument(!baseUrlUsed, "service path cannot be used if base URL is used.");
       return servicePath;
     }
 
@@ -807,13 +809,15 @@ public class JsonHttpClient {
      * @since 1.10
      */
     public Builder setServicePath(String servicePath) {
-      Preconditions.checkArgument(!baseUrlUsed);
-      servicePath = Preconditions.checkNotNull(servicePath);
+      Preconditions.checkArgument(!baseUrlUsed, "service path cannot be used if base URL is used.");
+      servicePath = Preconditions.checkNotNull(servicePath, "service path cannot be null.");
       if (servicePath.length() == 1) {
-        Preconditions.checkArgument("/".equals(servicePath));
+        Preconditions.checkArgument(
+            "/".equals(servicePath), "service path must equal \"/\" if it is of length 1.");
         servicePath = "";
       } else if (servicePath.length() > 0) {
-        Preconditions.checkArgument(servicePath.endsWith("/") && !servicePath.startsWith("/"));
+        Preconditions.checkArgument(servicePath.endsWith("/") && !servicePath.startsWith("/"),
+            "service path must end with a \"/\" and not begin with a \"/\".");
       }
       this.servicePath = servicePath;
       return this;
