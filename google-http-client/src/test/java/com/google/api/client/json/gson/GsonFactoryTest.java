@@ -113,4 +113,14 @@ public class GsonFactoryTest extends AbstractJsonFactoryTest {
     assertNotNull(instance);
     assertEquals(123, instance.foo);
   }
+
+  public final void testCreateJsonParser_nullCharset() throws Exception {
+    byte[] jsonData = Charsets.UTF_8.encode("{ \"foo\": 123 }").array();
+    JsonParser jp =
+        newFactory().createJsonParser(new ByteArrayInputStream(jsonData), null);
+    Type myType = TestClass.class;
+    TestClass instance = (TestClass) jp.parse(myType, true, null);
+    assertNotNull(instance);
+    assertEquals(123, instance.foo);
+  }
 }

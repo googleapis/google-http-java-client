@@ -55,6 +55,9 @@ public class AndroidJsonFactory extends JsonFactory {
 
   @Override
   public JsonParser createJsonParser(InputStream in, Charset charset) {
+    if (charset == null) {
+      return createJsonParser(in);
+    }
     return createJsonParser(new InputStreamReader(in, charset));
   }
 

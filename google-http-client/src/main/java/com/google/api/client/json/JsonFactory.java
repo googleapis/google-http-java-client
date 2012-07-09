@@ -51,8 +51,15 @@ public abstract class JsonFactory {
   /**
    * Returns a new instance of a low-level JSON parser for the given input stream.
    *
+   * <p>
+   * <b>Upgrade warning:</b> Prior to version 1.11 this method would not accept {@code null} for the
+   * charset parameter. Since 1.11 {@code null} is allowed and will force the underlying parser to
+   * pick/detect the charset for the stream.
+   * </p>
+   *
    * @param in input stream
-   * @param charset non-null charset in which the input stream is encoded
+   * @param charset charset in which the input stream is encoded or {@code null} to let the parser
+   *        detect the charset
    * @return new instance of a low-level JSON parser
    * @since 1.10
    */

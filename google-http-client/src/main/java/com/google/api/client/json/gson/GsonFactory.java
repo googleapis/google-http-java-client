@@ -42,6 +42,7 @@ import java.nio.charset.Charset;
  * @author Yaniv Inbar
  */
 public class GsonFactory extends JsonFactory {
+
   @Override
   public JsonParser createJsonParser(InputStream in) {
     // TODO(mlinder): Parser should try to detect the charset automatically when using GSON
@@ -51,6 +52,9 @@ public class GsonFactory extends JsonFactory {
 
   @Override
   public JsonParser createJsonParser(InputStream in, Charset charset) {
+    if (charset == null) {
+      return createJsonParser(in);
+    }
     return createJsonParser(new InputStreamReader(in, charset));
   }
 
