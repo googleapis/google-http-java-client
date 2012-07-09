@@ -637,8 +637,9 @@ public final class HttpRequest {
    *
    * @since 1.10
    */
-  public void setParser(ObjectParser parser) {
+  public HttpRequest setParser(ObjectParser parser) {
     this.objectParser = parser;
+    return this;
   }
 
   /**

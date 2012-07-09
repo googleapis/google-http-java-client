@@ -26,6 +26,13 @@ public class HttpStatusCodes {
   /** Status code for a successful request. */
   public static final int STATUS_CODE_OK = 200;
 
+  /**
+   * Status code for a successful request with no content information.
+   *
+   * @since 1.11
+   */
+  public static final int STATUS_CODE_NO_CONTENT = 204;
+
   /** Status code for a resource corresponding to any one of a set of representations. */
   public static final int STATUS_CODE_MULTIPLE_CHOICES = 300;
 

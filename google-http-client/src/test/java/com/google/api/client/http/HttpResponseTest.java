@@ -186,6 +186,37 @@ public class HttpResponseTest extends TestCase {
     }
   }
 
+  public void testParseAs_noContent() throws IOException {
+    final DisconnectLowLevelHttpResponse result = new DisconnectLowLevelHttpResponse();
+
+    for (final int status : new int[] {
+        HttpStatusCodes.STATUS_CODE_NO_CONTENT, HttpStatusCodes.STATUS_CODE_NOT_MODIFIED, 102}) {
+      HttpTransport transport = new MockHttpTransport() {
+          @Override
+        public LowLevelHttpRequest buildGetRequest(final String url) throws IOException {
+          return new MockLowLevelHttpRequest() {
+              @Override
+            public LowLevelHttpResponse execute() throws IOException {
+              result.setStatusCode(status);
+              result.setContentType(null);
+              result.setContent(new ByteArrayInputStream(new byte[0]));
+              return result;
+            }
+          };
+        }
+      };
+
+      // Confirm that 'null' is returned when getting the response object of a
+      // request with no message body.
+      Object parsed = transport.createRequestFactory()
+          .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL)
+          .setThrowExceptionOnExecuteError(false)
+          .execute()
+          .parseAs(Object.class);
+      assertNull(parsed);
+    }
+  }
+
   public void testDownload() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
       @Override
@@ -222,7 +253,8 @@ public class HttpResponseTest extends TestCase {
 
     @Override
     public InputStream getContent() throws IOException {
-      return content;
+      // If no String content was set, return the InputStream set by .setContent(InputStream)
+      return content != null ? content : super.getContent();
     }
 
     @Override
