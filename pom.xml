@@ -59,6 +59,7 @@
     <module>google-http-client-appengine</module>
     <module>google-http-client-android2</module>
     <module>google-http-client-android3</module>
+    <module>google-http-client-protobuf</module>
   </modules>
 
   <!--
@@ -136,6 +137,11 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-android3</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-protobuf</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -349,6 +355,10 @@
                 <group>
                   <title>google-http-client-android3</title>
                   <packages>com.google.api.client.extensions.android3*</packages>
+                </group>
+                <group>
+                  <title>google-http-client-protobuf</title>
+                  <packages>com.google.api.client.extensions.protobuf*</packages>
                 </group>
               </groups>
               <windowtitle>google-http-java-client ${project.version}</windowtitle>

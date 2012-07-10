@@ -31,6 +31,7 @@
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.11.0-beta/google-http-client-appengine/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.11.0-beta/google-http-client-android2/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.11.0-beta/google-http-client-android3/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.11.0-beta/google-http-client-protobuf/src/main/java" />
       </new>
     </jdiff>
   </target>

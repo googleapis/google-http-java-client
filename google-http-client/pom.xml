@@ -72,22 +72,6 @@
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
-          <execution>
-            <id>generate-sources</id>
-            <phase>generate-sources</phase>
-            <configuration>
-              <target>
-                <mkdir dir="target/generated-test-sources" />
-                <exec failonerror="true" executable="protoc">
-                  <arg value="--java_out=target/generated-test-sources" />
-                  <arg value="src/test/protobuf/simple_proto.proto" />
-                </exec>
-              </target>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
           <!-- Remove extraneous files from the jarjar'ed Apache Commons Codec
                Library. -->
           <execution>
@@ -107,25 +91,6 @@
                 </jar>
                 <move file="target/scrubbed.jar" tofile="target/google-http-client-${project.version}.jar"/>
               </target>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.5</version>
-        <executions>
-          <execution>
-            <id>add-test-source</id>
-            <phase>generate-test-sources</phase>
-            <goals>
-              <goal>add-test-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>target/generated-test-sources</source>
-              </sources>
             </configuration>
           </execution>
         </executions>

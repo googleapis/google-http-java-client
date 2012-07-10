@@ -29,6 +29,10 @@
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-android3</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-protobuf</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

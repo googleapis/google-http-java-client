@@ -102,6 +102,8 @@ sed -i "s@${ESC_VER_CUR}${VER_SUFFIX}@${ESC_VER_NEXT}${VER_SUFFIX}@g" google-htt
 sed -i -e "s@${ESC_VER_CUR}@${ESC_VER_NEXT}@g" -e "s@${ESC_VER_PREV}@${ESC_VER_CUR}@g" release.html
 echo -n && read -e -p "Version which comes after ${VER_NEXT}: " NV && sed -i -e "s@VER_NEXT=${ESC_VER_NEXT}@VER_NEXT=${NV}@g" release.html
 </pre></li>
+<li>For 1.11: Add -protobuf to the jdiff.xml. Remove this line from the
+release.html after that.</li>
 <li>Commit and push: <pre>
 hg commit -m "Start next minor version"
 hg push
@@ -127,6 +129,7 @@ cp google-http-client/target/site/dependencies.html google-http-client-assembly/
 cp google-http-client-android2/target/site/dependencies.html google-http-client-assembly/dependencies/android2-dependencies.html
 cp google-http-client-android3/target/site/dependencies.html google-http-client-assembly/dependencies/android3-dependencies.html
 cp google-http-client-appengine/target/site/dependencies.html google-http-client-assembly/dependencies/appengine-dependencies.html
+cp google-http-client-protobuf/target/site/dependencies.html google-http-client-assembly/dependencies/protobuf-dependencies.html
 
 sed s/-SNAPSHOT//g &lt;google-http-client/src/main/java/com/google/api/client/http/HttpRequest.java &gt;/tmp/HttpRequest.java
 cp /tmp/HttpRequest.java google-http-client/src/main/java/com/google/api/client/http

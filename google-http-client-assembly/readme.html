@@ -18,6 +18,7 @@
   <li>google-http-client-android2 is for Android SDK 2.0 & higher.</li>
   <li>google-http-client-android3 is for Android SDK 3.0 & higher.</li>
   <li>google-http-client-appengine is for Google App Engine.</li>
+  <li>google-http-client-protobuf is for Protocol Buffer support.</li>
 </ul>
 
 <h3>Dependencies and Licenses</h3>
@@ -29,10 +30,11 @@ The dependency structure and licenses for the different libraries can be found h
   <li>google-http-client-android2: <a href='dependencies/android2-dependencies.html'>android2-dependencies.html</a></li>
   <li>google-http-client-android3: <a href='dependencies/android3-dependencies.html'>android3-dependencies.html</a></li>
   <li>google-http-client-appengine: <a href='dependencies/appengine-dependencies.html'>appengine-dependencies.html</a></li>
+  <li>google-http-client-protobuf: <a href='dependencies/protobuf-dependencies.html'>protobuf-dependencies.html</a></li>
 </ul>
 
 <h3>Maven Usage</h3>
-For information on how to add these libraries to your Maven project please see 
+For information on how to add these libraries to your Maven project please see
 <a href='http://code.google.com/p/google-http-java-client/wiki/Setup#Maven'>http://code.google.com/p/google-http-java-client/wiki/Setup#Maven</a>.
 
 <h3>Eclipse</h3>
@@ -50,7 +52,12 @@ folder required for android applications or a newer compatible version:
   <li>guava-${project.guava.version}.jar</li>
   <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
   <li>jsr305-${project.jsr305.version}.jar</li>
-  <li>protobuf-java-${project.protobuf-java.version}.jar</li>
+  <li>
+    google-http-client-protobuf-${project.version}.jar (when using protobuf-java)
+    <ul>
+      <li>protobuf-java-${project.protobuf-java.version}.jar</li>
+    </ul>
+  </li>
 </ul>
 Please see the <a href='http://code.google.com/p/google-http-java-client/wiki/Android'>Android wiki</a> for the Android Developer's Guide.
 
@@ -64,7 +71,12 @@ folder required for Google App Engine applications or a newer compatible version
   <li>guava-${project.guava.version}.jar</li>
   <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
   <li>jsr305-${project.jsr305.version}.jar</li>
-  <li>protobuf-java-${project.protobuf-java.version}.jar</li>
+  <li>
+    google-http-client-protobuf-${project.version}.jar (when using protobuf-java)
+    <ul>
+      <li>protobuf-java-${project.protobuf-java.version}.jar</li>
+    </ul>
+  </li>
   <li>xpp3-${project.xpp3.version}.jar</li>
 </ul>
 Please see the <a href='http://code.google.com/p/google-http-java-client/wiki/GoogleAppEngine'>GoogleAppEngine wiki</a> for the Google App Engine Developer's Guide.
@@ -81,8 +93,13 @@ folder required for general purpose Java 5 applications or a newer compatible ve
   <li>httpcore-${project.httpcore.version}.jar</li>
   <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
   <li>jsr305-${project.jsr305.version}.jar</li>
-  <li>protobuf-java-${project.protobuf-java.version}.jar</li>
   <li>xpp3-${project.xpp3.version}.jar</li>
+  <li>
+    google-http-client-protobuf-${project.version}.jar (when using protobuf-java)
+    <ul>
+      <li>protobuf-java-${project.protobuf-java.version}.jar</li>
+    </ul>
+  </li>
 </ul>
 
 </body>
