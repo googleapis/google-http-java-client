@@ -72,7 +72,6 @@ public class ProtoHttpContent extends AbstractHttpContent {
     return type;
   }
 
-  @Override
   public void writeTo(OutputStream out) throws IOException {
     message.writeTo(out);
     out.flush();

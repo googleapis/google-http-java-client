@@ -42,14 +42,12 @@ import java.nio.charset.Charset;
  * @since 1.10
  */
 public class ProtoObjectParser implements ObjectParser {
-  @Override
   @SuppressWarnings("unchecked")
   public <T> T parseAndClose(InputStream in, Charset charset, Class<T> dataClass)
       throws IOException {
     return (T) ProtocolBuffers.parseAndClose(in, (Class<? extends MessageLite>) dataClass);
   }
 
-  @Override
   public Object parseAndClose(InputStream in, Charset charset, Type dataType)
       throws IOException {
     if (dataType instanceof Class<?>) {
@@ -58,12 +56,10 @@ public class ProtoObjectParser implements ObjectParser {
     throw new UnsupportedOperationException("dataType must be of Class<? extends MessageList>");
   }
 
-  @Override
   public <T> T parseAndClose(Reader reader, Class<T> dataClass) throws IOException {
     throw new UnsupportedOperationException("protocol buffers must be read from a binary stream");
   }
 
-  @Override
   public Object parseAndClose(Reader reader, Type dataType) throws IOException {
     throw new UnsupportedOperationException("protocol buffers must be read from a binary stream");
   }
