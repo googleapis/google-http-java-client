@@ -19,7 +19,6 @@ import com.google.common.collect.Lists;
 import junit.framework.TestCase;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Handler;
@@ -73,7 +72,7 @@ public class LogContentTest extends TestCase {
   /**
    * Test method for {@link LogContent#writeTo(java.io.OutputStream)}.
    */
-  public void testWriteTo() throws IOException {
+  public void testWriteTo() throws Exception {
     LogContent logContent = new LogContent(
         new ByteArrayContent(null, SAMPLE_UTF8), null, null, SAMPLE_UTF8.length, Integer.MAX_VALUE);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -85,7 +84,7 @@ public class LogContentTest extends TestCase {
     recorder.assertMessages("Total: 11 bytes", SAMPLE);
   }
 
-  public void testContentLoggingLimit() throws IOException {
+  public void testContentLoggingLimit() throws Exception {
     HttpTransport.LOGGER.setLevel(Level.CONFIG);
 
     // Set the content logging limit to be equal to the length of the content.

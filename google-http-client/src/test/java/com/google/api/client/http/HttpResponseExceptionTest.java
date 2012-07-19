@@ -36,7 +36,7 @@ import java.io.ObjectOutputStream;
  */
 public class HttpResponseExceptionTest extends TestCase {
 
-  public void testConstructor() throws IOException {
+  public void testConstructor() throws Exception {
     HttpTransport transport = new MockHttpTransport();
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
@@ -45,7 +45,7 @@ public class HttpResponseExceptionTest extends TestCase {
     assertEquals("200", e.getMessage());
   }
 
-  public void testConstructorWithMessage() throws IOException {
+  public void testConstructorWithMessage() throws Exception {
     HttpTransport transport = new MockHttpTransport();
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
@@ -54,7 +54,7 @@ public class HttpResponseExceptionTest extends TestCase {
     assertEquals("foo", e.getMessage());
   }
 
-  public void testConstructorWithStatusMessage() throws IOException {
+  public void testConstructorWithStatusMessage() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
@@ -75,7 +75,7 @@ public class HttpResponseExceptionTest extends TestCase {
     assertEquals("OK", e.getStatusMessage());
   }
 
-  public void testConstructor_noStatusCode() throws IOException {
+  public void testConstructor_noStatusCode() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
@@ -99,7 +99,7 @@ public class HttpResponseExceptionTest extends TestCase {
     }
   }
 
-  public void testConstructor_messageButNoStatusCode() throws IOException {
+  public void testConstructor_messageButNoStatusCode() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
@@ -125,7 +125,7 @@ public class HttpResponseExceptionTest extends TestCase {
   }
 
   @SuppressWarnings("deprecation")
-  public void testComputeMessage() throws IOException {
+  public void testComputeMessage() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
@@ -145,7 +145,7 @@ public class HttpResponseExceptionTest extends TestCase {
     assertEquals("200 Foo", HttpResponseException.computeMessageBuffer(response).toString());
   }
 
-  public void testThrown() throws IOException {
+  public void testThrown() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildGetRequest(String url) throws IOException {

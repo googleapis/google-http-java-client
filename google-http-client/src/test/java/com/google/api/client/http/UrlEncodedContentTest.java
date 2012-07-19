@@ -56,7 +56,7 @@ public class UrlEncodedContentTest extends TestCase {
     return out.toString();
   }
 
-  public void testGetContent() throws IOException {
+  public void testGetContent() throws Exception {
     HttpRequest request =
         new MockHttpTransport().createRequestFactory().buildGetRequest(
             HttpTesting.SIMPLE_GENERIC_URL);

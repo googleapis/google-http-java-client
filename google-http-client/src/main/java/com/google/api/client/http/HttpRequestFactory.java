@@ -14,7 +14,6 @@
 
 package com.google.api.client.http;
 
-import java.io.IOException;
 
 /**
  * Thread-safe light-weight HTTP request factory layer on top of the HTTP transport that has an
@@ -27,7 +26,7 @@ import java.io.IOException;
  * <pre>
   public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
     return transport.createRequestFactory(new HttpRequestInitializer() {
-      public void initialize(HttpRequest request) throws IOException {
+      public void initialize(HttpRequest request) throws Exception {
         request.getHeaders().setAuthorization("...");
       }
     });
@@ -79,13 +78,18 @@ public final class HttpRequestFactory {
   /**
    * Builds a request for the given HTTP method, URL, and content.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
+   * an {@link java.io.IOException}.
+   * </p>
+   *
    * @param method HTTP request method
    * @param url HTTP request URL or {@code null} for none
    * @param content HTTP request content or {@code null} for none
    * @return new HTTP request
    */
   public HttpRequest buildRequest(HttpMethod method, GenericUrl url, HttpContent content)
-      throws IOException {
+      throws Exception {
     HttpRequest request = transport.buildRequest();
     if (initializer != null) {
       initializer.initialize(request);
@@ -103,53 +107,78 @@ public final class HttpRequestFactory {
   /**
    * Builds a {@code DELETE} request for the given URL.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
+   * an {@link java.io.IOException}.
+   * </p>
+   *
    * @param url HTTP request URL or {@code null} for none
    * @return new HTTP request
    */
-  public HttpRequest buildDeleteRequest(GenericUrl url) throws IOException {
+  public HttpRequest buildDeleteRequest(GenericUrl url) throws Exception {
     return buildRequest(HttpMethod.DELETE, url, null);
   }
 
   /**
    * Builds a {@code GET} request for the given URL.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
+   * an {@link java.io.IOException}.
+   * </p>
+   *
    * @param url HTTP request URL or {@code null} for none
    * @return new HTTP request
    */
-  public HttpRequest buildGetRequest(GenericUrl url) throws IOException {
+  public HttpRequest buildGetRequest(GenericUrl url) throws Exception {
     return buildRequest(HttpMethod.GET, url, null);
   }
 
   /**
    * Builds a {@code POST} request for the given URL and content.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
+   * an {@link java.io.IOException}.
+   * </p>
+   *
    * @param url HTTP request URL or {@code null} for none
    * @param content HTTP request content or {@code null} for none
    * @return new HTTP request
    */
-  public HttpRequest buildPostRequest(GenericUrl url, HttpContent content) throws IOException {
+  public HttpRequest buildPostRequest(GenericUrl url, HttpContent content) throws Exception {
     return buildRequest(HttpMethod.POST, url, content);
   }
 
   /**
    * Builds a {@code PUT} request for the given URL and content.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
+   * an {@link java.io.IOException}.
+   * </p>
+   *
    * @param url HTTP request URL or {@code null} for none
    * @param content HTTP request content or {@code null} for none
    * @return new HTTP request
    */
-  public HttpRequest buildPutRequest(GenericUrl url, HttpContent content) throws IOException {
+  public HttpRequest buildPutRequest(GenericUrl url, HttpContent content) throws Exception {
     return buildRequest(HttpMethod.PUT, url, content);
   }
 
   /**
    * Builds a {@code PATCH} request for the given URL and content.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
+   * an {@link java.io.IOException}.
+   * </p>
+   *
    * @param url HTTP request URL or {@code null} for none
    * @param content HTTP request content or {@code null} for none
    * @return new HTTP request
    */
-  public HttpRequest buildPatchRequest(GenericUrl url, HttpContent content) throws IOException {
+  public HttpRequest buildPatchRequest(GenericUrl url, HttpContent content) throws Exception {
     return buildRequest(HttpMethod.PATCH, url, content);
   }
 
@@ -157,10 +186,15 @@ public final class HttpRequestFactory {
   /**
    * Builds a {@code HEAD} request for the given URL.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
+   * an {@link java.io.IOException}.
+   * </p>
+   *
    * @param url HTTP request URL or {@code null} for none
    * @return new HTTP request
    */
-  public HttpRequest buildHeadRequest(GenericUrl url) throws IOException {
+  public HttpRequest buildHeadRequest(GenericUrl url) throws Exception {
     return buildRequest(HttpMethod.HEAD, url, null);
   }
 }

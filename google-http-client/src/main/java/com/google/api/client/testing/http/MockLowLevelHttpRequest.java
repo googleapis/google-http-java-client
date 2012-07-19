@@ -76,7 +76,7 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
   }
 
   @Override
-  public LowLevelHttpResponse execute() throws IOException {
+  public LowLevelHttpResponse execute() throws Exception {
     return response;
   }
 

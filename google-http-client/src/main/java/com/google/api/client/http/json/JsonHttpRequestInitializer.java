@@ -14,7 +14,6 @@
 
 package com.google.api.client.http.json;
 
-import java.io.IOException;
 
 /**
  * JSON HTTP request initializer.
@@ -45,7 +44,12 @@ public interface JsonHttpRequestInitializer {
   /**
    * Initializes a {@link JsonHttpRequest}.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
+   * an {@link java.io.IOException}.
+   * </p>
+   *
    * @param request Remote request.
    */
-  void initialize(JsonHttpRequest request) throws IOException;
+  void initialize(JsonHttpRequest request) throws Exception;
 }
