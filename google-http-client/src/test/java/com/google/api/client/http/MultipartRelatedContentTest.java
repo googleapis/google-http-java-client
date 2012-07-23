@@ -21,6 +21,7 @@ import com.google.api.client.util.StringUtils;
 import junit.framework.TestCase;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * Tests {@link MultipartRelatedContent}.
@@ -32,7 +33,7 @@ public class MultipartRelatedContentTest extends TestCase {
   private static final String CRLF = "\r\n";
   private static final String CONTENT_TYPE = Json.MEDIA_TYPE;
 
-  public void testContent() throws Exception {
+  public void testContent() throws IOException {
     subtestContent("--END_OF_PART" + CRLF + "Content-Type: application/json; charset=UTF-8" + CRLF
         + CRLF + "foo" + CRLF + "--END_OF_PART--", null, "foo");
     subtestContent("--END_OF_PART" + CRLF + "Content-Type: application/json; charset=UTF-8" + CRLF
@@ -47,7 +48,7 @@ public class MultipartRelatedContentTest extends TestCase {
 
   private void subtestContent(
       String expectedContent, String boundaryString, String firstContent, String... otherContents)
-      throws Exception {
+      throws IOException {
     // multipart content
     HttpContent firstPart = ByteArrayContent.fromString(CONTENT_TYPE, firstContent);
     HttpContent[] otherParts = new HttpContent[otherContents.length];
@@ -65,7 +66,7 @@ public class MultipartRelatedContentTest extends TestCase {
     assertEquals(StringUtils.getBytesUtf8(expectedContent).length, content.getLength());
   }
 
-  public void testForRequest() throws Exception {
+  public void testForRequest() throws IOException {
     MultipartRelatedContent content =
         new MultipartRelatedContent(ByteArrayContent.fromString(CONTENT_TYPE, "foo"));
     HttpRequest request = new MockHttpTransport().createRequestFactory().buildGetRequest(

@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableList;
 import junit.framework.TestCase;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
@@ -76,7 +77,7 @@ public class HttpHeadersTest extends TestCase {
   }
 
   @SuppressWarnings("deprecation")
-  public void testSerializeHeaders() throws Exception {
+  public void testSerializeHeaders() throws IOException {
     // custom headers
     MyHeaders myHeaders = new MyHeaders();
     myHeaders.foo = "bar";

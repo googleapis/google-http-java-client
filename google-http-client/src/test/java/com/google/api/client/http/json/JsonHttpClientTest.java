@@ -28,6 +28,8 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 
 import junit.framework.TestCase;
 
+import java.io.IOException;
+
 /**
  * Tests {@link JsonHttpClient}.
  *
@@ -207,7 +209,7 @@ public class JsonHttpClientTest extends TestCase {
   }
 
   @SuppressWarnings("deprecation")
-  public void testInitializeWithBaseUrl() throws Exception {
+  public void testInitializeWithBaseUrl() throws IOException {
     TestRemoteRequestInitializer remoteRequestInitializer = new TestRemoteRequestInitializer();
     JsonHttpClient client = new JsonHttpClient.Builder(
         new NetHttpTransport(), new JacksonFactory(), new GenericUrl("http://www.test.com/"))
@@ -217,7 +219,7 @@ public class JsonHttpClientTest extends TestCase {
     assertTrue(remoteRequestInitializer.isCalled);
   }
 
-  public void testInitializeWithRootUrl() throws Exception {
+  public void testInitializeWithRootUrl() throws IOException {
     TestRemoteRequestInitializer remoteRequestInitializer = new TestRemoteRequestInitializer();
     JsonHttpClient client = new JsonHttpClient.Builder(
         new NetHttpTransport(), new JacksonFactory(), "http://www.test.com/", "test/",
@@ -228,7 +230,7 @@ public class JsonHttpClientTest extends TestCase {
   }
 
   @SuppressWarnings("deprecation")
-  public void testExecuteWithBaseUrl() throws Exception {
+  public void testExecuteWithBaseUrl() throws IOException {
     final String testBaseUrl = "http://www.test.com/";
     final String testUriTemplate = "uri/template";
     HttpTransport transport = new MockHttpTransport() {
@@ -251,7 +253,7 @@ public class JsonHttpClientTest extends TestCase {
     client.executeUnparsed(HttpMethod.GET, new GenericUrl(testBaseUrl + testUriTemplate), null);
   }
 
-  public void testExecuteWithRootUrl() throws Exception {
+  public void testExecuteWithRootUrl() throws IOException {
     final String testRootUrl = "http://www.test.com/";
     final String testServicePath = "test123/";
     final String testUriTemplate = "uri/template";

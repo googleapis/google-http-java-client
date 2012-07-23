@@ -16,6 +16,7 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.LoggingOutputStream;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
 
@@ -53,7 +54,7 @@ final class LogContent implements HttpContent {
     this.contentLoggingLimit = contentLoggingLimit;
   }
 
-  public void writeTo(OutputStream out) throws Exception {
+  public void writeTo(OutputStream out) throws IOException {
     LoggingOutputStream loggableOutputStream =
         new LoggingOutputStream(out, HttpTransport.LOGGER, Level.CONFIG, contentLoggingLimit);
     try {

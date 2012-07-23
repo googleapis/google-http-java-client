@@ -19,6 +19,8 @@ import com.google.api.client.testing.http.MockHttpTransport;
 
 import junit.framework.TestCase;
 
+import java.io.IOException;
+
 /**
  * Tests {@link BasicAuthentication}.
  *
@@ -38,7 +40,7 @@ public class BasicAuthenticationTest extends TestCase {
     assertEquals(PASSWORD, auth.getPassword());
   }
 
-  public void testInitialize() throws Exception {
+  public void testInitialize() throws IOException {
     BasicAuthentication auth = new BasicAuthentication(USERNAME, PASSWORD);
     HttpRequest request =
         new MockHttpTransport().createRequestFactory().buildGetRequest(

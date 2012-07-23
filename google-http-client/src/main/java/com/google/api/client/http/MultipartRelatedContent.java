@@ -16,6 +16,7 @@ package com.google.api.client.http;
 
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,7 +100,7 @@ public final class MultipartRelatedContent extends AbstractHttpContent {
     request.getHeaders().setMimeVersion("1.0");
   }
 
-  public void writeTo(OutputStream out) throws Exception {
+  public void writeTo(OutputStream out) throws IOException {
     byte[] boundaryBytes = getBoundary().getBytes();
     out.write(TWO_DASHES);
     out.write(boundaryBytes);
@@ -127,7 +128,7 @@ public final class MultipartRelatedContent extends AbstractHttpContent {
   }
 
   @Override
-  public long computeLength() throws Exception {
+  public long computeLength() throws IOException {
     byte[] boundaryBytes = getBoundary().getBytes();
     long result = TWO_DASHES.length * 2 + boundaryBytes.length;
     for (HttpContent part : parts) {

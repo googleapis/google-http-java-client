@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -47,13 +48,8 @@ final class GZipContent extends AbstractHttpContent {
    * href='http://code.google.com/p/google-http-java-client/issues/detail?id=61'>61</a> for more
    * information.
    * </p>
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
    */
-  public void writeTo(OutputStream out) throws Exception {
+  public void writeTo(OutputStream out) throws IOException {
     GZIPOutputStream zipper = new GZIPOutputStream(out);
     httpContent.writeTo(zipper);
     zipper.close();

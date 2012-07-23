@@ -98,7 +98,7 @@ public class MockHttpTransport extends HttpTransport {
   }
 
   @Override
-  public LowLevelHttpRequest buildHeadRequest(String url) throws Exception {
+  public LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
     if (!supportsHead()) {
       return super.buildHeadRequest(url);
     }
@@ -106,7 +106,7 @@ public class MockHttpTransport extends HttpTransport {
   }
 
   @Override
-  public LowLevelHttpRequest buildPatchRequest(String url) throws Exception {
+  public LowLevelHttpRequest buildPatchRequest(String url) throws IOException {
     if (!supportsPatch()) {
       return super.buildPatchRequest(url);
     }

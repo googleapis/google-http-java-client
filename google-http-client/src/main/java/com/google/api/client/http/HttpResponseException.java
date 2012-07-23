@@ -21,15 +21,10 @@ import java.io.IOException;
 /**
  * Exception thrown when an error status code is detected in an HTTP response.
  *
- * <p>
- * Upgrade warning: this interface now extends {@link Exception}.  In prior version 1.10 it extended
- * {@link IOException}.
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */
-public class HttpResponseException extends Exception {
+public class HttpResponseException extends IOException {
 
   private static final long serialVersionUID = -1875819453475890043L;
 

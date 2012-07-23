@@ -26,6 +26,7 @@ import com.google.api.client.json.JsonObjectParser;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
 
@@ -228,21 +229,16 @@ public class JsonHttpClient {
       ...
     }
 
-    public Get get(String userId) throws Exception {
+    public Get get(String userId) throws IOException {
       Get result = new Get(userId);
       initialize(result);
       return result;
     }
    * </pre>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @param jsonHttpRequest JSON HTTP Request type
    */
-  protected void initialize(JsonHttpRequest jsonHttpRequest) throws Exception {
+  protected void initialize(JsonHttpRequest jsonHttpRequest) throws IOException {
     if (getJsonHttpRequestInitializer() != null) {
       getJsonHttpRequestInitializer().initialize(jsonHttpRequest);
     }
@@ -420,11 +416,6 @@ public class JsonHttpClient {
    * {@link HttpRequest#setEnableGZipContent}.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @param method HTTP Method type
    * @param url The complete URL of the service where requests should be sent
    * @param body A POJO that can be serialized into JSON or {@code null} for none
@@ -433,7 +424,7 @@ public class JsonHttpClient {
    */
   @SuppressWarnings("deprecation")
   protected HttpRequest buildHttpRequest(HttpMethod method, GenericUrl url, Object body)
-      throws Exception {
+      throws IOException {
     HttpRequest httpRequest = requestFactory.buildRequest(method, url, null);
     JsonObjectParser parser = getJsonObjectParser();
 
@@ -469,20 +460,15 @@ public class JsonHttpClient {
      }
    * </pre>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @param method HTTP Method type
    * @param url The complete URL of the service where requests should be sent
    * @param body A POJO that can be serialized into JSON or {@code null} for none
    * @return {@link HttpResponse} type
-   * @throws Exception if the request fails
+   * @throws IOException if the request fails
    * @since 1.7
    */
   protected HttpResponse executeUnparsed(HttpMethod method, GenericUrl url, Object body)
-      throws Exception {
+      throws IOException {
     HttpRequest request = buildHttpRequest(method, url, body);
     return executeUnparsed(request);
   }
@@ -505,17 +491,12 @@ public class JsonHttpClient {
      }
    * </pre>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @param request HTTP Request
    * @return {@link HttpResponse} type
-   * @throws Exception if the request fails
+   * @throws IOException if the request fails
    * @since 1.9
    */
-  protected HttpResponse executeUnparsed(HttpRequest request) throws Exception {
+  protected HttpResponse executeUnparsed(HttpRequest request) throws IOException {
     return request.execute();
   }
 
@@ -536,20 +517,15 @@ public class JsonHttpClient {
      }
    * </pre>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @param method HTTP Method type
    * @param url The complete URL of the service where requests should be sent
    * @param body A POJO that can be serialized into JSON or {@code null} for none
    * @return input stream of the response content
-   * @throws Exception if the request fails
+   * @throws IOException if the request fails
    * @since 1.8
    */
   protected InputStream executeAsInputStream(HttpMethod method, GenericUrl url, Object body)
-      throws Exception {
+      throws IOException {
     HttpResponse response = executeUnparsed(method, url, body);
     return response.getContent();
   }

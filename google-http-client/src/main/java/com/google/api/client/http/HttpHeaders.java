@@ -624,7 +624,7 @@ public class HttpHeaders extends GenericData {
       LowLevelHttpRequest lowLevelHttpRequest,
       String name,
       Object value,
-      Writer writer) throws Exception {
+      Writer writer) throws IOException {
     // ignore nulls
     if (value == null || Data.isNull(value)) {
       return;
@@ -658,11 +658,6 @@ public class HttpHeaders extends GenericData {
   /**
    * Serializes headers to an @{link LowLevelHttpRequest}.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link IOException}.
-   * </p>
-   *
    * @param headers HTTP headers
    * @param logbuf log buffer or {@code null} for none
    * @param logger logger or {@code null} for none. Logger must be specified if log buffer is
@@ -673,17 +668,12 @@ public class HttpHeaders extends GenericData {
    * @since 1.9
    */
   public static void serializeHeaders(HttpHeaders headers, StringBuilder logbuf, Logger logger,
-      LowLevelHttpRequest lowLevelHttpRequest) throws Exception {
+      LowLevelHttpRequest lowLevelHttpRequest) throws IOException {
     serializeHeaders(headers, logbuf, logger, lowLevelHttpRequest, null);
   }
 
   /**
    * Serializes headers to an {@link Writer} for Multi-part requests.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link IOException}.
-   * </p>
    *
    * @param headers HTTP headers
    * @param logbuf log buffer or {@code null} for none
@@ -694,12 +684,12 @@ public class HttpHeaders extends GenericData {
    * @since 1.9
    */
   public static void serializeHeadersForMultipartRequests(
-      HttpHeaders headers, StringBuilder logbuf, Logger logger, Writer writer) throws Exception {
+      HttpHeaders headers, StringBuilder logbuf, Logger logger, Writer writer) throws IOException {
     serializeHeaders(headers, logbuf, logger, null, writer);
   }
 
   private static void serializeHeaders(HttpHeaders headers, StringBuilder logbuf, Logger logger,
-      LowLevelHttpRequest lowLevelHttpRequest, Writer writer) throws Exception {
+      LowLevelHttpRequest lowLevelHttpRequest, Writer writer) throws IOException {
     HashSet<String> headerNames = new HashSet<String>();
     for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
       String name = headerEntry.getKey();
@@ -775,11 +765,6 @@ public class HttpHeaders extends GenericData {
   /**
    * Puts all headers of the {@link HttpHeaders} object into this {@link HttpHeaders} object.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link IOException}.
-   * </p>
-   *
    * @param headers {@link HttpHeaders} from where the headers are taken
    * @since 1.10
    */
@@ -788,7 +773,7 @@ public class HttpHeaders extends GenericData {
       ParseHeaderState state = new ParseHeaderState(this, null);
       serializeHeaders(headers, null, null, new HeaderParsingFakeLevelHttpRequest(this, state));
       state.finish();
-    } catch (Exception ex) {
+    } catch (IOException ex) {
       // Should never occur as we are dealing with a FakeLowLevelHttpRequest
       throw new IllegalStateException(ex);
     }

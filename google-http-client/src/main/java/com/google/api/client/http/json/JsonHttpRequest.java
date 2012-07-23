@@ -24,6 +24,7 @@ import com.google.api.client.http.UriTemplate;
 import com.google.api.client.util.GenericData;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -170,14 +171,9 @@ public class JsonHttpRequest extends GenericData {
    * Create an {@link HttpRequest} suitable for use against this service. Subclasses may override if
    * specific behavior is required.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @return newly created {@link HttpRequest}
    */
-  public HttpRequest buildHttpRequest() throws Exception {
+  public HttpRequest buildHttpRequest() throws IOException {
     HttpRequest request = client.buildHttpRequest(method, buildHttpRequestUrl(), content);
     // Add specified headers (if any) to the headers in the request.
     request.getHeaders().putAll(getRequestHeaders());
@@ -202,15 +198,10 @@ public class JsonHttpRequest extends GenericData {
      }
    * </pre>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @return the {@link HttpResponse}
-   * @throws Exception if the request fails
+   * @throws IOException if the request fails
    */
-  public HttpResponse executeUnparsed() throws Exception {
+  public HttpResponse executeUnparsed() throws IOException {
     HttpRequest request = buildHttpRequest();
     request.setEnableGZipContent(enableGZipContent);
     HttpResponse response = client.executeUnparsed(request);
@@ -235,16 +226,11 @@ public class JsonHttpRequest extends GenericData {
      }
    * </pre>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @return input stream of the response content
-   * @throws Exception if the request fails
+   * @throws IOException if the request fails
    * @since 1.8
    */
-  public InputStream executeAsInputStream() throws Exception {
+  public InputStream executeAsInputStream() throws IOException {
     HttpResponse response = executeUnparsed();
     return response.getContent();
   }
@@ -257,16 +243,11 @@ public class JsonHttpRequest extends GenericData {
    * This method closes the content of the HTTP response from {@link HttpResponse#getContent()}.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @param outputStream destination output stream
-   * @throws Exception if the request fails
+   * @throws IOException I/O exception
    * @since 1.9
    */
-  public void download(OutputStream outputStream) throws Exception {
+  public void download(OutputStream outputStream) throws IOException {
     HttpResponse response = executeUnparsed();
     response.download(outputStream);
   }

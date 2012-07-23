@@ -477,17 +477,28 @@ public final class HttpResponse {
    * class of key/value pairs using the parser returned by {@link #getParser()}.
    *
    * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link IOException}.
+   * <b>Upgrade Warning:</b> Prior to version 1.11 this method would throw an
+   * {@link IllegalArgumentException} when no Content-Type is present in the response and the
+   * deprecated HttpParsers were used. Since 1.11 this method will return {@code null} as
+   * documented when the server responds with a status code indicating that there is no content,
+   * or when a HEAD request was made to the server.
+   * </p>
+   *
+   * <p>
+   * <b>Reference:</b> http://tools.ietf.org/html/rfc2616#section-4.3
    * </p>
    *
    * @return parsed data class or {@code null} for no content
-   * @throws Exception exception
-   * @throws IllegalArgumentException if no parser is defined for the given content type or if there
-   *         is no content type defined in the HTTP response
+   * @throws IOException I/O exception
+   * @throws IllegalArgumentException if no parser is defined for the given content type
    */
   @SuppressWarnings("deprecation")
-  public <T> T parseAs(Class<T> dataClass) throws Exception {
+  public <T> T parseAs(Class<T> dataClass) throws IOException {
+    // Return null if we can be sure that the response contains no content.
+    if (!hasMessageBody()) {
+      return null;
+    }
+
     // Check if we have an ObjectParser that we can use
     ObjectParser objectParser = request.getParser();
     if (objectParser != null) {
@@ -505,20 +516,36 @@ public final class HttpResponse {
   }
 
   /**
+   * Returns {@code true} if this response contains a message body. Implemented according to
+   * {@href http://tools.ietf.org/html/rfc2616#section-4.3}.
+   */
+  private boolean hasMessageBody() {
+    if (getRequest().getMethod() == HttpMethod.HEAD) {
+      return false;
+    }
+
+    int statusCode = getStatusCode();
+    if (statusCode / 100 == 1) { // 1xx
+      return false;
+    }
+    if (statusCode == HttpStatusCodes.STATUS_CODE_NO_CONTENT ||
+        statusCode == HttpStatusCodes.STATUS_CODE_NOT_MODIFIED) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
    * Parses the content of the HTTP response from {@link #getContent()} and reads it into a data
    * type of key/value pairs using the parser returned by {@link #getParser()}.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link IOException}.
-   * </p>
-   *
    * @return parsed data type instance or {@code null} for no content
-   * @throws Exception exception
+   * @throws IOException I/O exception
    * @throws IllegalArgumentException if no parser is defined for this response
    * @since 1.10
    */
-  public Object parseAs(Type dataType) throws Exception {
+  public Object parseAs(Type dataType) throws IOException {
     // Check if we have an ObjectParser that we can use
     ObjectParser objectParser = request.getParser();
     Preconditions.checkArgument(objectParser != null, "No ObjectParser defined for response");

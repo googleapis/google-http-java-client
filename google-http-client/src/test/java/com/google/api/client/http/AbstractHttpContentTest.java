@@ -67,7 +67,7 @@ public class AbstractHttpContentTest extends TestCase {
     assertTrue(content.retrySupported());
   }
 
-  public void testComputeLength() throws Exception {
+  public void testComputeLength() throws IOException {
     subtestComputeLength(true, 0, 0);
     subtestComputeLength(true, 1, 1);
     subtestComputeLength(true, 2, 2);
@@ -75,7 +75,7 @@ public class AbstractHttpContentTest extends TestCase {
   }
 
   public void subtestComputeLength(boolean retrySupported, long expectedLengthHeader, int length)
-      throws Exception {
+      throws IOException {
     AbstractHttpContent content = new TestHttpContent(retrySupported, length);
     assertEquals(expectedLengthHeader, content.computeLength());
   }

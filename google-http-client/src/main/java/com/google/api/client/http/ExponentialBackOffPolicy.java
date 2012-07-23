@@ -16,6 +16,8 @@ package com.google.api.client.http;
 
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
+
 /**
  * Implementation of {@link BackOffPolicy} that increases the back off period for each retry attempt
  * using a randomization function that grows exponentially.
@@ -232,14 +234,14 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
    * </p>
    *
    * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
+   * Upgrade warning: {@link #getNextBackOffMillis} now throws an {@link IOException}, it was not
+   * thrown prior to 1.9.
    * </p>
    *
    * @return the number of milliseconds to wait when backing off requests, or {@link #STOP} if no
    *         more retries should be made
    */
-  public long getNextBackOffMillis() throws Exception {
+  public long getNextBackOffMillis() throws IOException {
     // Make sure we have not gone over the maximum elapsed time.
     if (getElapsedTimeMillis() > maxElapsedTimeMillis) {
       return STOP;

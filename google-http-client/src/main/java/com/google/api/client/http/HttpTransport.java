@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
@@ -124,28 +125,20 @@ public abstract class HttpTransport {
   /**
    * Builds a {@code DELETE} request.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @param url URL
+   * @throws IOException I/O exception
    * @since 1.3
    */
-  protected abstract LowLevelHttpRequest buildDeleteRequest(String url) throws Exception;
+  protected abstract LowLevelHttpRequest buildDeleteRequest(String url) throws IOException;
 
   /**
    * Builds a {@code GET} request.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @param url URL
+   * @throws IOException I/O exception
    * @since 1.3
    */
-  protected abstract LowLevelHttpRequest buildGetRequest(String url) throws Exception;
+  protected abstract LowLevelHttpRequest buildGetRequest(String url) throws IOException;
 
   /**
    * Builds a {@code HEAD} request. Won't be called if {@link #supportsHead()} returns {@code false}
@@ -153,15 +146,11 @@ public abstract class HttpTransport {
    * <p>
    * Default implementation throws an {@link UnsupportedOperationException}.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @param url URL
+   * @throws IOException I/O exception
    * @since 1.3
    */
-  protected LowLevelHttpRequest buildHeadRequest(String url) throws Exception {
+  protected LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
     throw new UnsupportedOperationException();
   }
 
@@ -171,55 +160,39 @@ public abstract class HttpTransport {
    * <p>
    * Default implementation throws an {@link UnsupportedOperationException}.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @param url URL
+   * @throws IOException I/O exception
    * @since 1.3
    */
-  protected LowLevelHttpRequest buildPatchRequest(String url) throws Exception {
+  protected LowLevelHttpRequest buildPatchRequest(String url) throws IOException {
     throw new UnsupportedOperationException();
   }
 
   /**
    * Builds a {@code POST} request.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @param url URL
+   * @throws IOException I/O exception
    * @since 1.3
    */
-  protected abstract LowLevelHttpRequest buildPostRequest(String url) throws Exception;
+  protected abstract LowLevelHttpRequest buildPostRequest(String url) throws IOException;
 
   /**
    * Builds a {@code PUT} request.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
    * @param url URL
+   * @throws IOException I/O exception
    * @since 1.3
    */
-  protected abstract LowLevelHttpRequest buildPutRequest(String url) throws Exception;
+  protected abstract LowLevelHttpRequest buildPutRequest(String url) throws IOException;
 
   /**
    * Default implementation does nothing, but subclasses may override to possibly release allocated
    * system resources or close connections.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
-   *
+   * @throws IOException I/O exception
    * @since 1.4
    */
-  public void shutdown() throws Exception {
+  public void shutdown() throws IOException {
   }
 }

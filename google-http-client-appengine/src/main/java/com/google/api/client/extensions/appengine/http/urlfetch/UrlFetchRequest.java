@@ -58,7 +58,7 @@ final class UrlFetchRequest extends LowLevelHttpRequest {
   }
 
   @Override
-  public LowLevelHttpResponse execute() throws Exception {
+  public LowLevelHttpResponse execute() throws IOException {
     // write content
     if (content != null) {
       String contentType = content.getType();

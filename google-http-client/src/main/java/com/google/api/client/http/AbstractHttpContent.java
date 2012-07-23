@@ -16,6 +16,7 @@ package com.google.api.client.http;
 
 import com.google.common.base.Charsets;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
@@ -62,13 +63,8 @@ public abstract class AbstractHttpContent implements HttpContent {
   /**
    * Default implementation calls {@link #computeLength()} once and caches it for future
    * invocations, but subclasses may override.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
    */
-  public long getLength() throws Exception {
+  public long getLength() throws IOException {
     if (computedLength == -1) {
       computedLength = computeLength();
     }
@@ -122,13 +118,8 @@ public abstract class AbstractHttpContent implements HttpContent {
    * but only retains the count of bytes. If {@link #retrySupported()} is {@code false}, it will
    * instead return {@code -1}.
    * </p>
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}.  In prior version 1.10 it threw
-   * an {@link java.io.IOException}.
-   * </p>
    */
-  protected long computeLength() throws Exception {
+  protected long computeLength() throws IOException {
     if (!retrySupported()) {
       return -1;
     }
