@@ -621,6 +621,7 @@ public class HttpHeaders extends GenericData {
 
   private static void addHeader(Logger logger,
       StringBuilder logbuf,
+      StringBuilder curlbuf,
       LowLevelHttpRequest lowLevelHttpRequest,
       String name,
       Object value,
@@ -633,14 +634,18 @@ public class HttpHeaders extends GenericData {
     String stringValue =
         value instanceof Enum<?> ? FieldInfo.of((Enum<?>) value).getName() : value.toString();
     // log header
+    String loggedStringValue = stringValue;
+    if (("Authorization".equalsIgnoreCase(name) || "Cookie".equalsIgnoreCase(name))
+        && (logger == null || !logger.isLoggable(Level.ALL))) {
+      loggedStringValue = "<Not Logged>";
+    }
     if (logbuf != null) {
       logbuf.append(name).append(": ");
-      if ("Authorization".equalsIgnoreCase(name) && !logger.isLoggable(Level.ALL)) {
-        logbuf.append("<Not Logged>");
-      } else {
-        logbuf.append(stringValue);
-      }
+      logbuf.append(loggedStringValue);
       logbuf.append(StringUtils.LINE_SEPARATOR);
+    }
+    if (curlbuf != null) {
+      curlbuf.append(" -H '").append(name).append(": ").append(loggedStringValue).append("'");
     }
     // add header to lowLevelHttpRequest
     if (lowLevelHttpRequest != null) {
@@ -656,7 +661,7 @@ public class HttpHeaders extends GenericData {
   }
 
   /**
-   * Serializes headers to an @{link LowLevelHttpRequest}.
+   * Serializes headers to an {@link LowLevelHttpRequest}.
    *
    * @param headers HTTP headers
    * @param logbuf log buffer or {@code null} for none
@@ -666,10 +671,29 @@ public class HttpHeaders extends GenericData {
    *        {@code null} for none
    *
    * @since 1.9
+   * @deprecated (scheduled to be removed in 1.12)
    */
+  @Deprecated
   public static void serializeHeaders(HttpHeaders headers, StringBuilder logbuf, Logger logger,
       LowLevelHttpRequest lowLevelHttpRequest) throws IOException {
-    serializeHeaders(headers, logbuf, logger, lowLevelHttpRequest, null);
+    serializeHeaders(headers, logbuf, null, logger, lowLevelHttpRequest, null);
+  }
+
+  /**
+   * Serializes headers to an {@link LowLevelHttpRequest}.
+   *
+   * @param headers HTTP headers
+   * @param logbuf log buffer or {@code null} for none
+   * @param curlbuf log buffer for logging curl requests or {@code null} for none
+   * @param logger logger or {@code null} for none. Logger must be specified if log buffer is
+   *        specified
+   * @param lowLevelHttpRequest low level HTTP request where HTTP headers will be serialized to or
+   *        {@code null} for none
+   */
+  static void serializeHeaders(HttpHeaders headers, StringBuilder logbuf,
+      StringBuilder curlbuf, Logger logger, LowLevelHttpRequest lowLevelHttpRequest)
+      throws IOException {
+    serializeHeaders(headers, logbuf, curlbuf, logger, lowLevelHttpRequest, null);
   }
 
   /**
@@ -685,11 +709,15 @@ public class HttpHeaders extends GenericData {
    */
   public static void serializeHeadersForMultipartRequests(
       HttpHeaders headers, StringBuilder logbuf, Logger logger, Writer writer) throws IOException {
-    serializeHeaders(headers, logbuf, logger, null, writer);
+    serializeHeaders(headers, logbuf, null, logger, null, writer);
   }
 
-  private static void serializeHeaders(HttpHeaders headers, StringBuilder logbuf, Logger logger,
-      LowLevelHttpRequest lowLevelHttpRequest, Writer writer) throws IOException {
+  private static void serializeHeaders(HttpHeaders headers,
+      StringBuilder logbuf,
+      StringBuilder curlbuf,
+      Logger logger,
+      LowLevelHttpRequest lowLevelHttpRequest,
+      Writer writer) throws IOException {
     HashSet<String> headerNames = new HashSet<String>();
     for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
       String name = headerEntry.getKey();
@@ -706,10 +734,16 @@ public class HttpHeaders extends GenericData {
         Class<? extends Object> valueClass = value.getClass();
         if (value instanceof Iterable<?> || valueClass.isArray()) {
           for (Object repeatedValue : Types.iterableOf(value)) {
-            addHeader(logger, logbuf, lowLevelHttpRequest, displayName, repeatedValue, writer);
+            addHeader(logger,
+                logbuf,
+                curlbuf,
+                lowLevelHttpRequest,
+                displayName,
+                repeatedValue,
+                writer);
           }
         } else {
-          addHeader(logger, logbuf, lowLevelHttpRequest, displayName, value, writer);
+          addHeader(logger, logbuf, curlbuf, lowLevelHttpRequest, displayName, value, writer);
         }
       }
     }
@@ -771,7 +805,8 @@ public class HttpHeaders extends GenericData {
   public final void fromHttpHeaders(HttpHeaders headers) {
     try {
       ParseHeaderState state = new ParseHeaderState(this, null);
-      serializeHeaders(headers, null, null, new HeaderParsingFakeLevelHttpRequest(this, state));
+      serializeHeaders(
+          headers, null, null, null, new HeaderParsingFakeLevelHttpRequest(this, state));
       state.finish();
     } catch (IOException ex) {
       // Should never occur as we are dealing with a FakeLowLevelHttpRequest

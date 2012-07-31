@@ -127,6 +127,9 @@ public final class HttpRequest {
   /** Determines whether logging should be enabled for this request. Defaults to {@code true}. */
   private boolean loggingEnabled = true;
 
+  /** Determines whether logging in form of curl commands should be enabled for this request. */
+  private boolean curlLoggingEnabled = true;
+
   /** HTTP request content or {@code null} for none. */
   private HttpContent content;
 
@@ -400,6 +403,29 @@ public final class HttpRequest {
    */
   public HttpRequest setLoggingEnabled(boolean loggingEnabled) {
     this.loggingEnabled = loggingEnabled;
+    return this;
+  }
+
+  /**
+   * Returns whether logging in form of curl commands is enabled for this request.
+   *
+   * @since 1.11
+   */
+  public boolean isCurlLoggingEnabled() {
+    return curlLoggingEnabled;
+  }
+
+  /**
+   * Sets whether logging in form of curl commands should be enabled for this request.
+   *
+   * <p>
+   * Defaults to {@code true}.
+   * </p>
+   *
+   * @since 1.11
+   */
+  public HttpRequest setCurlLoggingEnabled(boolean curlLoggingEnabled) {
+    this.curlLoggingEnabled = curlLoggingEnabled;
     return this;
   }
 
@@ -826,11 +852,20 @@ public final class HttpRequest {
       Logger logger = HttpTransport.LOGGER;
       boolean loggable = loggingEnabled && logger.isLoggable(Level.CONFIG);
       StringBuilder logbuf = null;
+      StringBuilder curlbuf = null;
       // log method and URL
       if (loggable) {
         logbuf = new StringBuilder();
         logbuf.append("-------------- REQUEST  --------------").append(StringUtils.LINE_SEPARATOR);
         logbuf.append(method).append(' ').append(urlString).append(StringUtils.LINE_SEPARATOR);
+
+        // setup curl logging
+        if (curlLoggingEnabled) {
+          curlbuf = new StringBuilder("curl -v --compressed");
+          if (!method.equals(HttpMethod.GET)) {
+            curlbuf.append(" -X ").append(method);
+          }
+        }
       }
       // add to user agent
       String originalUserAgent = headers.getUserAgent();
@@ -840,7 +875,7 @@ public final class HttpRequest {
         headers.setUserAgent(originalUserAgent + " " + USER_AGENT_SUFFIX);
       }
       // headers
-      HttpHeaders.serializeHeaders(headers, logbuf, logger, lowLevelHttpRequest);
+      HttpHeaders.serializeHeaders(headers, logbuf, curlbuf, logger, lowLevelHttpRequest);
       // set the original user agent back to the headers so that retries do not keep appending to it
       headers.setUserAgent(originalUserAgent);
 
@@ -861,6 +896,7 @@ public final class HttpRequest {
               content, contentType, contentEncoding, contentLength, contentLoggingLimit);
         }
         // gzip
+        String underlyingEncoding = content.getEncoding();
         if (enableGZipContent) {
           content = new GZipContent(content, contentType);
           contentEncoding = content.getEncoding();
@@ -869,21 +905,42 @@ public final class HttpRequest {
         // append content headers to log buffer
         if (loggable) {
           if (contentType != null) {
-            logbuf.append("Content-Type: " + contentType).append(StringUtils.LINE_SEPARATOR);
+            String header = "Content-Type: " + contentType;
+            logbuf.append(header).append(StringUtils.LINE_SEPARATOR);
+            if (curlbuf != null) {
+              curlbuf.append(" -H '" + header + "'");
+            }
           }
-          if (contentEncoding != null) {
-            logbuf.append("Content-Encoding: " + contentEncoding)
-                .append(StringUtils.LINE_SEPARATOR);
+          if (underlyingEncoding != null) {
+            // do not use the gzip encoding as the content won't be logged as gzip
+            String header = "Content-Encoding: " + underlyingEncoding;
+            logbuf.append(header).append(StringUtils.LINE_SEPARATOR);
+            if (curlbuf != null) {
+              curlbuf.append(" -H '" + header + "'");
+            }
           }
           if (contentLength >= 0) {
-            logbuf.append("Content-Length: " + contentLength).append(StringUtils.LINE_SEPARATOR);
+            String header = "Content-Length: " + contentLength;
+            logbuf.append(header).append(StringUtils.LINE_SEPARATOR);
+            // do not log @ curl as the user will most likely manipulate the content
           }
+        }
+        if (curlbuf != null) {
+          curlbuf.append(" -d '@-'");
         }
         lowLevelHttpRequest.setContent(content);
       }
       // log from buffer
       if (loggable) {
         logger.config(logbuf.toString());
+        if (curlbuf != null) {
+          curlbuf.append(" -- ");
+          curlbuf.append(urlString);
+          if (content != null) {
+            curlbuf.append(" << $$$");
+          }
+          logger.config(curlbuf.toString());
+        }
       }
 
       // We need to make sure our content type can support retry
