@@ -156,6 +156,7 @@ public class TypesTest extends TestCase {
     public ArrayList aNoType;
     public Stack<? extends Number> wild;
     public Vector<Integer[]> arr;
+    public Vector<T[]> tarr;
     public LinkedList<ArrayList<Boolean>> list;
     public Iterable<T> tv;
     public ArrayList<T> atv;
@@ -176,9 +177,11 @@ public class TypesTest extends TestCase {
     assertEquals("E",
         ((TypeVariable<?>) Types.getIterableParameter(A.class.getField("aNoType").getGenericType()))
             .getName());
-    assertEquals(Integer.class,
-        ((GenericArrayType) Types.getIterableParameter(A.class.getField("arr").getGenericType()))
-            .getGenericComponentType());
+    assertEquals(Integer.class, Types.getArrayComponentType(
+        Types.getIterableParameter(A.class.getField("arr").getGenericType())));
+    assertEquals("T",
+        ((GenericArrayType) Types.getIterableParameter(A.class.getField("tarr").getGenericType()))
+            .getGenericComponentType().toString());
     assertEquals(ArrayList.class,
         ((ParameterizedType) Types.getIterableParameter(A.class.getField("list").getGenericType()))
             .getRawType());
@@ -193,7 +196,8 @@ public class TypesTest extends TestCase {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public ArrayMap aNoType;
     public TreeMap<String, ? extends Number> wild;
-    public HashMap<String, Integer[]> arr;
+    public Vector<Integer[]> arr;
+    public HashMap<String, T[]> tarr;
     public ImmutableMap<String, ArrayList<Boolean>> list;
     public Map<String, T> tv;
     public ArrayMap<String, T> atv;
@@ -214,9 +218,10 @@ public class TypesTest extends TestCase {
     assertEquals("V",
         ((TypeVariable<?>) Types.getMapValueParameter(C.class.getField("aNoType").getGenericType()))
             .getName());
-    assertEquals(Integer.class,
-        ((GenericArrayType) Types.getMapValueParameter(C.class.getField("arr").getGenericType()))
-            .getGenericComponentType());
+    assertEquals(Integer.class, Types.getArrayComponentType(
+        Types.getIterableParameter(A.class.getField("arr").getGenericType())));
+    assertEquals("T", ((GenericArrayType) Types.getMapValueParameter(
+        C.class.getField("tarr").getGenericType())).getGenericComponentType().toString());
     assertEquals(ArrayList.class,
         ((ParameterizedType) Types.getMapValueParameter(C.class.getField("list").getGenericType()))
             .getRawType());
