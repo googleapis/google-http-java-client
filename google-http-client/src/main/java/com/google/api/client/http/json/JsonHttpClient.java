@@ -271,10 +271,10 @@ public class JsonHttpClient {
    *
    * @param transport The transport to use for requests
    * @param jsonFactory A factory for creating JSON parsers and serializers
-   * @param rootUrl The root URL of the service. Must end with a "/"
-   * @param servicePath The service path of the service. Must end with a "/" and not begin with a
-   *        "/". It is allowed to be an empty string {@code ""} or a forward slash {@code "/"}, if
-   *        it is a forward slash then it is treated as an empty string
+   * @param rootUrl The root URL of the service
+   * @param servicePath The service path of the service. It is allowed to be an empty string
+   *        {@code ""} or a forward slash {@code "/"}, if it is a forward slash then it is treated
+   *        as an empty string
    * @param httpRequestInitializer The HTTP request initializer or {@code null} for none
    * @since 1.10
    */
@@ -366,10 +366,10 @@ public class JsonHttpClient {
    * @param jsonFactory A factory for creating JSON parsers and serializers
    * @param jsonObjectParser JSON parser to use or {@code null} if unused. {@code null} won't be
    *        accepted from 1.11 on.
-   * @param rootUrl The root URL of the service. Must end with a "/"
-   * @param servicePath The service path of the service. Must end with a "/" and not begin with a
-   *        "/". It is allowed to be an empty string {@code ""} or a forward slash {@code "/"}, if
-   *        it is a forward slash then it is treated as an empty string
+   * @param rootUrl The root URL of the service
+   * @param servicePath The service path of the service. It is allowed to be an empty string
+   *        {@code ""} or a forward slash {@code "/"}, if it is a forward slash then it is treated
+   *        as an empty string
    * @param applicationName The application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
    * @since 1.10
@@ -383,18 +383,8 @@ public class JsonHttpClient {
       String servicePath,
       String applicationName) {
     this.jsonHttpRequestInitializer = jsonHttpRequestInitializer;
-    this.rootUrl = Preconditions.checkNotNull(rootUrl, "root URL cannot be null.");
-    Preconditions.checkArgument(rootUrl.endsWith("/"), "root URL must end with a \"/\".");
-    Preconditions.checkNotNull(servicePath, "service path cannot be null");
-    if (servicePath.length() == 1) {
-      Preconditions.checkArgument(
-          "/".equals(servicePath), "service path must equal \"/\" if it is of length 1.");
-      servicePath = "";
-    } else if (servicePath.length() > 0) {
-      Preconditions.checkArgument(servicePath.endsWith("/") && !servicePath.startsWith("/"),
-          "service path must end with a \"/\" and not begin with a \"/\".");
-    }
-    this.servicePath = servicePath;
+    this.rootUrl = normalizeRootUrl(rootUrl);
+    this.servicePath = normalizeServicePath(servicePath);
     this.applicationName = applicationName;
     this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
     Preconditions.checkNotNull(transport);
@@ -403,6 +393,36 @@ public class JsonHttpClient {
         ? transport.createRequestFactory() : transport.createRequestFactory(httpRequestInitializer);
     this.baseUrl = null;
     this.baseUrlUsed = false;
+  }
+
+  /** If the specified root URL does not end with a "/" then a "/" is added to the end. */
+  static String normalizeRootUrl(String rootUrl) {
+    Preconditions.checkNotNull(rootUrl, "root URL cannot be null.");
+    if (!rootUrl.endsWith("/")) {
+      rootUrl += "/";
+    }
+    return rootUrl;
+  }
+
+  /**
+   * If the specified service path does not end with a "/" then a "/" is added to the end. If the
+   * specified service path begins with a "/" then the "/" is removed.
+   */
+  static String normalizeServicePath(String servicePath) {
+    Preconditions.checkNotNull(servicePath, "service path cannot be null");
+    if (servicePath.length() == 1) {
+      Preconditions.checkArgument(
+          "/".equals(servicePath), "service path must equal \"/\" if it is of length 1.");
+      servicePath = "";
+    } else if (servicePath.length() > 0) {
+      if (!servicePath.endsWith("/")) {
+        servicePath += "/";
+      }
+      if (servicePath.startsWith("/")) {
+        servicePath = servicePath.substring(1);
+      }
+    }
+    return servicePath;
   }
 
   /**
@@ -605,10 +625,10 @@ public class JsonHttpClient {
      *
      * @param transport The transport to use for requests
      * @param jsonFactory A factory for creating JSON parsers and serializers
-     * @param rootUrl The root URL of the service. Must end with a "/"
-     * @param servicePath The service path of the service. Must end with a "/" and not begin with a
-     *        "/". It is allowed to be an empty string {@code ""} or a forward slash {@code "/"}, if
-     *        it is a forward slash then it is treated as an empty string
+     * @param rootUrl The root URL of the service
+     * @param servicePath The service path of the service. It is allowed to be an empty string
+     *        {@code ""} or a forward slash {@code "/"}, if it is a forward slash then it is treated
+     *        as an empty string
      * @param httpRequestInitializer The HTTP request initializer or {@code null} for none
      * @since 1.10
      */
@@ -758,8 +778,12 @@ public class JsonHttpClient {
 
     /**
      * Sets the root URL of the service, for example {@code https://www.googleapis.com/}. Must be
-     * URL-encoded and must end with a "/". This is determined when the library is generated and
-     * normally should be changed. Subclasses should override by calling super.
+     * URL-encoded. This is determined when the library is generated and normally should be changed.
+     * Subclasses should override by calling super.
+     *
+     * <p>
+     * If the specified root URL does not end with a "/" then a "/" is added to the end.
+     * </p>
      *
      * <p>
      * Use this method only if {@code rootUrl} and {@code servicePath} are used instead of
@@ -770,9 +794,7 @@ public class JsonHttpClient {
      */
     public Builder setRootUrl(String rootUrl) {
       Preconditions.checkArgument(!baseUrlUsed, "root URL cannot be used if base URL is used.");
-      Preconditions.checkNotNull(rootUrl, "root URL cannot be null.");
-      Preconditions.checkArgument(rootUrl.endsWith("/"), "root URL must end with a \"/\".");
-      this.rootUrl = rootUrl;
+      this.rootUrl = normalizeRootUrl(rootUrl);
       return this;
     }
 
@@ -795,11 +817,15 @@ public class JsonHttpClient {
     }
 
     /**
-     * Sets the service path of the service, for example {@code "tasks/v1/"}. Must be URL-encoded
-     * and must end with a "/" and not begin with a "/". It is allowed to be an empty string
-     * {@code ""} or a forward slash {@code "/"}, if it is a forward slash then it is treated as an
-     * empty string. This is determined when the library is generated and normally should not be
-     * changed. Subclasses should override by calling super.
+     * Sets the service path of the service, for example {@code "tasks/v1/"}. Must be URL-encoded.
+     * It is allowed to be an empty string {@code ""} or a forward slash {@code "/"}, if it is a
+     * forward slash then it is treated as an empty string. This is determined when the library is
+     * generated and normally should not be changed. Subclasses should override by calling super.
+     *
+     * <p>
+     * If the specified service path does not end with a "/" then a "/" is added to the end. If the
+     * specified service path begins with a "/" then the "/" is removed.
+     * </p>
      *
      * <p>
      * Use this method only if {@code rootUrl} and {@code servicePath} are used instead of
@@ -810,16 +836,7 @@ public class JsonHttpClient {
      */
     public Builder setServicePath(String servicePath) {
       Preconditions.checkArgument(!baseUrlUsed, "service path cannot be used if base URL is used.");
-      servicePath = Preconditions.checkNotNull(servicePath, "service path cannot be null.");
-      if (servicePath.length() == 1) {
-        Preconditions.checkArgument(
-            "/".equals(servicePath), "service path must equal \"/\" if it is of length 1.");
-        servicePath = "";
-      } else if (servicePath.length() > 0) {
-        Preconditions.checkArgument(servicePath.endsWith("/") && !servicePath.startsWith("/"),
-            "service path must end with a \"/\" and not begin with a \"/\".");
-      }
-      this.servicePath = servicePath;
+      this.servicePath = normalizeServicePath(servicePath);
       return this;
     }
 

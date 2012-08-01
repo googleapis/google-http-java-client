@@ -144,32 +144,15 @@ public class JsonHttpClientTest extends TestCase {
     } catch (IllegalArgumentException e) {
       // expected
     }
-    try {
-      // With no "/" at the end.
-      builder.setRootUrl("http://www.testgoogleapis.com");
-      fail("Expected " + IllegalArgumentException.class);
-    } catch (IllegalArgumentException e) {
-      // expected
-      assertEquals("root URL must end with a \"/\".", e.getMessage());
-    }
-    try {
-      // With no "/" at the end.
-      builder.setServicePath("test");
-      fail("Expected " + IllegalArgumentException.class);
-    } catch (IllegalArgumentException e) {
-      // expected
-      assertEquals(
-          "service path must end with a \"/\" and not begin with a \"/\".", e.getMessage());
-    }
-    try {
-      // With "/" at the start.
-      builder.setServicePath("/test");
-      fail("Expected " + IllegalArgumentException.class);
-    } catch (IllegalArgumentException e) {
-      // expected
-      assertEquals(
-          "service path must end with a \"/\" and not begin with a \"/\".", e.getMessage());
-    }
+    // With no "/" at the end.
+    builder.setRootUrl("http://www.testgoogleapis.com");
+    assertEquals("http://www.testgoogleapis.com/", builder.getRootUrl());
+    // With no "/" at the end.
+    builder.setServicePath("test");
+    assertEquals("test/", builder.getServicePath());
+    // With "/" at the start.
+    builder.setServicePath("/test");
+    assertEquals("test/", builder.getServicePath());
     try {
       // With "?".
       builder.setServicePath("?");
