@@ -169,13 +169,6 @@ public final class ClassInfo {
         return s0 == s1 ? 0 : s0 == null ? -1 : s1 == null ? 1 : s0.compareTo(s1);
       }
     });
-    // inherit from super class
-    Class<?> superClass = srcClass.getSuperclass();
-    if (superClass != null) {
-      ClassInfo superClassInfo = ClassInfo.of(superClass, ignoreCase);
-      nameToFieldInfoMap.putAll(superClassInfo.nameToFieldInfoMap);
-      nameSet.addAll(superClassInfo.names);
-    }
     // iterate over declared fields
     for (Field field : srcClass.getDeclaredFields()) {
       FieldInfo fieldInfo = FieldInfo.of(field);
@@ -195,6 +188,18 @@ public final class ClassInfo {
           conflictingFieldInfo == null ? null : conflictingFieldInfo.getField());
       nameToFieldInfoMap.put(fieldName, fieldInfo);
       nameSet.add(fieldName);
+    }
+    // inherit from super class and add only fields not already in nameToFieldInfoMap
+    Class<?> superClass = srcClass.getSuperclass();
+    if (superClass != null) {
+      ClassInfo superClassInfo = ClassInfo.of(superClass, ignoreCase);
+      nameSet.addAll(superClassInfo.names);
+      for (Map.Entry<String, FieldInfo> e : superClassInfo.nameToFieldInfoMap.entrySet()) {
+        String name = e.getKey();
+        if (!nameToFieldInfoMap.containsKey(name)) {
+          nameToFieldInfoMap.put(name, e.getValue());
+        }
+      }
     }
     names = nameSet.isEmpty() ? Collections.<String>emptyList() : Collections.unmodifiableList(
         new ArrayList<String>(nameSet));

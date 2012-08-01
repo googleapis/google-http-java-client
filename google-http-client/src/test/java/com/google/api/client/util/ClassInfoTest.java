@@ -71,6 +71,13 @@ public class ClassInfoTest extends TestCase {
     String abc2;
   }
 
+  public class A1 {
+    @Key
+    String foo;
+    @Key("foo")
+    String foo2;
+  }
+
   public void testNames() {
     assertEquals(ImmutableList.of("AbC", "b", "oc"), ClassInfo.of(A.class).names);
     assertEquals(ImmutableList.of("AbC", "b", "e", "oc"), ClassInfo.of(B.class).names);
@@ -88,11 +95,14 @@ public class ClassInfoTest extends TestCase {
 
   public void testOf() {
     try {
-      ClassInfo.of(C.class, true);
+      ClassInfo.of(A1.class, true);
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
     }
+
+    ClassInfo.of(C.class, true);
+
     try {
       ClassInfo.of(E.class, true);
       fail("expected " + IllegalArgumentException.class);
