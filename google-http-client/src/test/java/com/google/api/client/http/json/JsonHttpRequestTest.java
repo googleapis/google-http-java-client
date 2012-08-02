@@ -20,9 +20,9 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
+import com.google.api.client.testing.http.json.MockJsonFactory;
 
 import junit.framework.TestCase;
 
@@ -59,7 +59,7 @@ public class JsonHttpRequestTest extends TestCase {
 
     // Verify that enableGZipContent is true by default.
     TestJsonHttpClient client = new TestJsonHttpClient(
-        new MockHttpTransport(), new JacksonFactory(), HttpTesting.SIMPLE_URL, "test/", null);
+        new MockHttpTransport(), new MockJsonFactory(), HttpTesting.SIMPLE_URL, "test/", null);
     client.gzipContentEnabled = true;
     JsonHttpRequest jsonHttpRequest =
         new JsonHttpRequest(client, HttpMethod.POST, "", "test content");

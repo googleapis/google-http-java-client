@@ -21,10 +21,10 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
+import com.google.api.client.testing.http.json.MockJsonFactory;
 
 import junit.framework.TestCase;
 
@@ -59,7 +59,7 @@ public class JsonHttpClientTest extends TestCase {
   @SuppressWarnings("deprecation")
   public void testJsonHttpClientBuilderWithBaseUrl() {
     HttpTransport transport = new NetHttpTransport();
-    JsonFactory jsonFactory = new JacksonFactory();
+    JsonFactory jsonFactory = new MockJsonFactory();
     GenericUrl baseUrl = new GenericUrl("http://www.testgoogleapis.com/test/path/v1/");
     JsonHttpRequestInitializer jsonHttpRequestInitializer = new TestRemoteRequestInitializer();
     String applicationName = "Test Application";
@@ -122,7 +122,7 @@ public class JsonHttpClientTest extends TestCase {
   @SuppressWarnings("deprecation")
   public void testJsonHttpClientBuilderWithRootUrlAndServicePath() {
     HttpTransport transport = new NetHttpTransport();
-    JsonFactory jsonFactory = new JacksonFactory();
+    JsonFactory jsonFactory = new MockJsonFactory();
     String rootUrl = "http://www.testgoogleapis.com/";
     String servicePath = "test/path/v1/";
     JsonHttpRequestInitializer jsonHttpRequestInitializer = new TestRemoteRequestInitializer();
@@ -182,9 +182,8 @@ public class JsonHttpClientTest extends TestCase {
   @SuppressWarnings("deprecation")
   public void testBaseServerAndBasePathBuilder() {
     JsonHttpClient client =
-        new JsonHttpClient
-            .Builder(new NetHttpTransport(), new JacksonFactory(),
-                new GenericUrl("http://www.testgoogleapis.com/test/path/v1/"))
+        new JsonHttpClient.Builder(new NetHttpTransport(),
+            new MockJsonFactory(), new GenericUrl("http://www.testgoogleapis.com/test/path/v1/"))
             .setBaseUrl(new GenericUrl("http://www.googleapis.com/test/path/v2/"))
             .build();
 
@@ -194,8 +193,9 @@ public class JsonHttpClientTest extends TestCase {
   @SuppressWarnings("deprecation")
   public void testInitializeWithBaseUrl() throws IOException {
     TestRemoteRequestInitializer remoteRequestInitializer = new TestRemoteRequestInitializer();
-    JsonHttpClient client = new JsonHttpClient.Builder(
-        new NetHttpTransport(), new JacksonFactory(), new GenericUrl("http://www.test.com/"))
+    JsonHttpClient client = new JsonHttpClient.Builder(new NetHttpTransport(),
+        new MockJsonFactory(),
+        new GenericUrl("http://www.test.com/"))
         .setJsonHttpRequestInitializer(remoteRequestInitializer)
         .setApplicationName("Test Application").build();
     client.initialize(null);
@@ -205,7 +205,7 @@ public class JsonHttpClientTest extends TestCase {
   public void testInitializeWithRootUrl() throws IOException {
     TestRemoteRequestInitializer remoteRequestInitializer = new TestRemoteRequestInitializer();
     JsonHttpClient client = new JsonHttpClient.Builder(
-        new NetHttpTransport(), new JacksonFactory(), "http://www.test.com/", "test/",
+        new NetHttpTransport(), new MockJsonFactory(), "http://www.test.com/", "test/",
         null).setJsonHttpRequestInitializer(remoteRequestInitializer)
         .setApplicationName("Test Application").build();
     client.initialize(null);
@@ -232,7 +232,7 @@ public class JsonHttpClientTest extends TestCase {
     };
     JsonHttpClient client =
       new JsonHttpClient.Builder(
-          transport, new JacksonFactory(), new GenericUrl(testBaseUrl)).build();
+        transport, new MockJsonFactory(), new GenericUrl(testBaseUrl)).build();
     client.executeUnparsed(HttpMethod.GET, new GenericUrl(testBaseUrl + testUriTemplate), null);
   }
 
@@ -255,7 +255,7 @@ public class JsonHttpClientTest extends TestCase {
       }
     };
     JsonHttpClient client = new JsonHttpClient.Builder(
-        transport, new JacksonFactory(), testRootUrl, testServicePath, null).build();
+        transport, new MockJsonFactory(), testRootUrl, testServicePath, null).build();
     client.executeUnparsed(
         HttpMethod.GET, new GenericUrl(testRootUrl + testServicePath + testUriTemplate), null);
   }

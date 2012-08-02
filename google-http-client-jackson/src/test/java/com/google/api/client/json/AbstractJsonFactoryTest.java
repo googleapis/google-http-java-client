@@ -23,8 +23,10 @@ import com.google.api.client.util.Value;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
+//TODO(rmistry): Use TypeToken from Guava r12 when/if a Java 5 compatible flavor is available.
 import com.google.gson.reflect.TypeToken;
 
 import junit.framework.TestCase;
@@ -49,9 +51,17 @@ import java.util.TreeMap;
 /**
  * Abstract test case for testing a {@link JsonFactory}.
  *
+ * <p>
+ * Duplicate of file in
+ * google-http-client-gson/src/test/java/com/google/api/client/json/AbstractJsonFactoryTest.java
+ * if this file is updated please update the other one as well.
+ * </p>
+ *
  * @author Yaniv Inbar
  */
 public abstract class AbstractJsonFactoryTest extends TestCase {
+  // TODO(rmistry): Move AbstractJsonFactoryTest into a new google-http-client-test project to
+  //                avoid duplication with google-http-client-gson.
 
   public AbstractJsonFactoryTest(String name) {
     super(name);
@@ -60,6 +70,10 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   protected abstract JsonFactory newFactory();
 
   private static final String EMPTY = "";
+  private static final String JSON_THREE_ELEMENTS =
+      "{" + "  \"one\": { \"num\": 1 }" +
+            ", \"two\": { \"num\": 2 }" +
+            ", \"three\": { \"num\": 3 }" + "}";
 
   public void testParse_empty() throws IOException {
     JsonParser parser = newFactory().createJsonParser(EMPTY);
@@ -1147,5 +1161,51 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     assertEquals(STRING_ARRAY, factory.toString(result));
     // check types and values
     assertTrue(ImmutableList.of("a", "b", "c").equals(result));
+  }
+
+  public void testToString_withFactory() {
+    GenericJson data = new GenericJson();
+    data.put("a", "b");
+    data.setFactory(newFactory());
+    assertEquals("{\"a\":\"b\"}", data.toString());
+  }
+
+  public void testFactory() {
+    JsonFactory factory = newFactory();
+    GenericJson data = new GenericJson();
+    data.setFactory(factory);
+    assertEquals(factory, data.getFactory());
+  }
+
+  /** Returns a JsonParser which parses the specified string. */
+  private JsonParser createParser(String json) throws IOException {
+    return newFactory().createJsonParser(json);
+  }
+
+  public void testSkipToKey_firstKey() throws Exception {
+    JsonParser parser = createParser(JSON_THREE_ELEMENTS);
+    assertEquals("one", parser.skipToKey(ImmutableSet.of("one")));
+    parser.skipToKey("num");
+    assertEquals(1, parser.getIntValue());
+  }
+
+  public void testSkipToKey_lastKey() throws Exception {
+    JsonParser parser = createParser(JSON_THREE_ELEMENTS);
+    assertEquals("three", parser.skipToKey(ImmutableSet.of("three")));
+    parser.skipToKey("num");
+    assertEquals(3, parser.getIntValue());
+  }
+
+  public void testSkipToKey_multipleKeys() throws Exception {
+    JsonParser parser = createParser(JSON_THREE_ELEMENTS);
+    assertEquals("two", parser.skipToKey(ImmutableSet.of("foo", "three", "two")));
+    parser.skipToKey("num");
+    assertEquals(2, parser.getIntValue());
+  }
+
+  public void testSkipToKey_noMatch() throws Exception {
+    JsonParser parser = createParser(JSON_THREE_ELEMENTS);
+    assertEquals(null, parser.skipToKey(ImmutableSet.of("foo", "bar", "num")));
+    assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());
   }
 }

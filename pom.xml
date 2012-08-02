@@ -48,10 +48,14 @@
   </developers>
 
   <!--
-    If you add a new module, make sure to also add it in the jdiff.xml file, the
-    dependencies section of google-http-client-assembly/pom.xml, and in this
-    pom.xml file below in the dependencyManagement and maven-javadoc-plugin
-    sections.
+    If you add a new module, make sure to also add it in the following places:
+    * release.html
+    * google-http-client-assembly/pom.xml
+    * google-http-client-assembly/readme.html
+    * google-http-client-assembly/.classpath
+    * google-http-client-assembly/dependencies/*-dependencies.html
+    * jdiff.xml
+    * This pom.xml file below in the dependencyManagement and maven-javadoc-plugin sections
   -->
   <modules>
     <module>google-http-client</module>
@@ -60,6 +64,8 @@
     <module>google-http-client-android2</module>
     <module>google-http-client-android3</module>
     <module>google-http-client-protobuf</module>
+    <module>google-http-client-gson</module>
+    <module>google-http-client-jackson</module>
   </modules>
 
   <!--
@@ -142,6 +148,16 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-protobuf</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-gson</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-jackson</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -358,7 +374,15 @@
                 </group>
                 <group>
                   <title>google-http-client-protobuf</title>
-                  <packages>com.google.api.client.extensions.protobuf*</packages>
+                  <packages>com.google.api.client.protobuf*</packages>
+                </group>
+                <group>
+                  <title>google-http-client-gson</title>
+                  <packages>com.google.api.client.json.gson*</packages>
+                </group>
+                <group>
+                  <title>google-http-client-jackson</title>
+                  <packages>com.google.api.client.json.jackson*</packages>
                 </group>
               </groups>
               <windowtitle>google-http-java-client ${project.version}</windowtitle>

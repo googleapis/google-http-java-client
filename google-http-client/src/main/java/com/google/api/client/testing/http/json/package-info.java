@@ -12,20 +12,17 @@
  * the License.
  */
 
-package com.google.api.client.json;
-
-import junit.framework.TestCase;
-
 /**
- * Tests {@link GenericJson}.
+ * Testing utilities used for writing tests based on this library.
  *
- * @author Yaniv Inbar
+ * <p>
+ * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
+ * possibly entirely removed in a future version of the library</b>
+ * </p>
+ *
+ * @since 1.11
+ * @author rmistry@google.com (Ravi Mistry)
  */
-public class GenericJsonTest extends TestCase {
 
-  public void testToString_noFactory() {
-    GenericJson data = new GenericJson();
-    data.put("a", "b");
-    assertEquals("{a=b}", data.toString());
-  }
-}
+package com.google.api.client.testing.http.json;
+

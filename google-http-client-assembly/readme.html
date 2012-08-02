@@ -19,6 +19,8 @@
   <li>google-http-client-android3 is for Android SDK 3.0 & higher.</li>
   <li>google-http-client-appengine is for Google App Engine.</li>
   <li>google-http-client-protobuf is for Protocol Buffer support.</li>
+  <li>google-http-client-gson is for GSON support.</li>
+  <li>google-http-client-jackson is for Jackson support.</li>
 </ul>
 
 <h3>Dependencies and Licenses</h3>
@@ -31,6 +33,8 @@ The dependency structure and licenses for the different libraries can be found h
   <li>google-http-client-android3: <a href='dependencies/android3-dependencies.html'>android3-dependencies.html</a></li>
   <li>google-http-client-appengine: <a href='dependencies/appengine-dependencies.html'>appengine-dependencies.html</a></li>
   <li>google-http-client-protobuf: <a href='dependencies/protobuf-dependencies.html'>protobuf-dependencies.html</a></li>
+  <li>google-http-client-gson: <a href='dependencies/gson-dependencies.html'>gson-dependencies.html</a></li>
+  <li>google-http-client-jackson: <a href='dependencies/jackson-dependencies.html'>jackson-dependencies.html</a></li>
 </ul>
 
 <h3>Maven Usage</h3>
@@ -48,14 +52,24 @@ folder required for android applications or a newer compatible version:
   <li>google-http-client-${project.version}.jar</li>
   <li>google-http-client-android2-${project.version}.jar (only for SDK >= 2.1)</li>
   <li>google-http-client-android3-${project.version}.jar (only for SDK >= 3.0)</li>
-  <li>gson-${project.gson.version}.jar</li>
   <li>guava-${project.guava.version}.jar</li>
-  <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
   <li>jsr305-${project.jsr305.version}.jar</li>
   <li>
     google-http-client-protobuf-${project.version}.jar (when using protobuf-java)
     <ul>
       <li>protobuf-java-${project.protobuf-java.version}.jar</li>
+    </ul>
+  </li>
+  <li>
+    google-http-client-gson-${project.version}.jar (when using GSON)
+    <ul>
+      <li>gson-${project.gson.version}.jar</li>
+    </ul>
+  </li>
+  <li>
+    google-http-client-jackson-${project.version}.jar (when using Jackson)
+    <ul>
+      <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
     </ul>
   </li>
 </ul>
@@ -67,14 +81,24 @@ folder required for Google App Engine applications or a newer compatible version
 <ul>
   <li>google-http-client-${project.version}.jar</li>
   <li>google-http-client-appengine-${project.version}.jar</li>
-  <li>gson-${project.gson.version}.jar</li>
   <li>guava-${project.guava.version}.jar</li>
-  <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
   <li>jsr305-${project.jsr305.version}.jar</li>
   <li>
     google-http-client-protobuf-${project.version}.jar (when using protobuf-java)
     <ul>
       <li>protobuf-java-${project.protobuf-java.version}.jar</li>
+    </ul>
+  </li>
+  <li>
+    google-http-client-gson-${project.version}.jar (when using GSON)
+    <ul>
+      <li>gson-${project.gson.version}.jar</li>
+    </ul>
+  </li>
+  <li>
+    google-http-client-jackson-${project.version}.jar (when using Jackson)
+    <ul>
+      <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
     </ul>
   </li>
   <li>xpp3-${project.xpp3.version}.jar</li>
@@ -87,17 +111,27 @@ folder required for general purpose Java 5 applications or a newer compatible ve
 <ul>
   <li>google-http-client-${project.version}.jar</li>
   <li>commons-logging-${project.commons-logging.version}.jar</li>
-  <li>gson-${project.gson.version}.jar</li>
   <li>guava-${project.guava.version}.jar</li>
   <li>httpclient-${project.httpclient.version}.jar</li>
   <li>httpcore-${project.httpcore.version}.jar</li>
-  <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
   <li>jsr305-${project.jsr305.version}.jar</li>
   <li>xpp3-${project.xpp3.version}.jar</li>
   <li>
     google-http-client-protobuf-${project.version}.jar (when using protobuf-java)
     <ul>
       <li>protobuf-java-${project.protobuf-java.version}.jar</li>
+    </ul>
+  </li>
+  <li>
+    google-http-client-gson-${project.version}.jar (when using GSON)
+    <ul>
+      <li>gson-${project.gson.version}.jar</li>
+    </ul>
+  </li>
+  <li>
+    google-http-client-jackson-${project.version}.jar (when using Jackson)
+    <ul>
+      <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
     </ul>
   </li>
 </ul>

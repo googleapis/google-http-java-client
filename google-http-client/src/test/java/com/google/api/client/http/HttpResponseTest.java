@@ -15,14 +15,10 @@
 package com.google.api.client.http;
 
 import com.google.api.client.http.LogContentTest.Recorder;
-import com.google.api.client.json.JsonObjectParser;
-import com.google.api.client.json.JsonString;
-import com.google.api.client.json.jackson.JacksonFactory;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
-import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.StringUtils;
 
@@ -392,64 +388,5 @@ public class HttpResponseTest extends TestCase {
     HttpTransport.LOGGER.addHandler(recorder);
     response.parseAsString();
     recorder.assertMessages(expectedMessages);
-  }
-
-  public static class A extends GenericData {
-    @Key
-    String foo;
-
-    public A() {
-      super();
-    }
-  }
-
-  public static class B extends A {
-    @SuppressWarnings("hiding")
-    @Key
-    @JsonString
-    Integer foo;
-
-    public B() {
-      super();
-    }
-  }
-
-  public static class C extends B {
-    @SuppressWarnings("hiding")
-    @Key
-    String foo;
-
-    public C() {
-      super();
-    }
-  }
-
-  public void testParseWithOverridenKey() throws IOException {
-    GenericData bData = new B();
-    bData.set("foo", 1);
-    GenericData cData = new C();
-    cData.set("foo", "1");
-
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
-        return new MockLowLevelHttpRequest() {
-          @Override
-          public LowLevelHttpResponse execute() throws IOException {
-            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
-            result.setContentType("application/json; charset=UTF-8");
-            result.setContent("{\"foo\": \"1\"}");
-            return result;
-          }
-        };
-      }
-    };
-    HttpRequest request =
-        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
-    request.setParser(new JsonObjectParser(new JacksonFactory()));
-    HttpResponse response = request.execute();
-    assertEquals(bData, response.parseAs(B.class));
-    response = request.execute();
-    assertEquals(cData, response.parseAs(C.class));
   }
 }

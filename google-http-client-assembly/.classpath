@@ -3,6 +3,8 @@
 	<classpathentry kind="lib" path="libs/google-http-client-android3-${project.version}.jar" sourcepath="libs-sources/google-http-client-android3-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-http-client-appengine-${project.version}.jar" sourcepath="libs-sources/google-http-client-appengine-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-http-client-protobuf-${project.version}.jar" sourcepath="libs-sources/google-http-client-protobuf-${project.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-http-client-gson-${project.version}.jar" sourcepath="libs-sources/google-http-client-gson-${project.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-http-client-jackson-${project.version}.jar" sourcepath="libs-sources/google-http-client-jackson-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/commons-logging-${project.commons-logging.version}.jar" sourcepath="libs-sources/commons-logging-${project.commons-logging.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/gson-${project.gson.version}.jar" sourcepath="libs-sources/gson-${project.gson.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/guava-${project.guava.version}.jar" sourcepath="libs-sources/guava-${project.guava.version}-sources.jar"/>
