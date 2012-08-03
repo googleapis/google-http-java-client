@@ -171,8 +171,8 @@ public abstract class JsonParser {
    * <p>
    * Before this method is called, the parser must either point to the start or end of a JSON object
    * or to a field name. After this method ends, the current token will either be the
-   * {@link JsonToken#END_OBJECT} of the current object if no matching key is found, or the value
-   * of the key that was found.
+   * {@link JsonToken#END_OBJECT} of the current object if no matching key is found, or the value of
+   * the key that was found.
    * </p>
    *
    * @param keysToFind set of keys to look for
@@ -333,8 +333,8 @@ public abstract class JsonParser {
     if (!isGenericData && Map.class.isAssignableFrom(destinationClass)) {
       @SuppressWarnings("unchecked")
       Map<String, Object> destinationMap = (Map<String, Object>) destination;
-      parseMap(
-          destinationMap, Types.getMapValueParameter(destinationClass), context, customizeParser);
+      parseMap(null, destinationMap, Types.getMapValueParameter(destinationClass), context,
+          customizeParser);
       return;
     }
     while (curToken == JsonToken.FIELD_NAME) {
@@ -440,31 +440,45 @@ public abstract class JsonParser {
    */
   public final <T> void parseArray(Collection<? super T> destinationCollection,
       Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws IOException {
-    parseArray(destinationCollection, destinationItemClass, new ArrayList<Type>(), customizeParser);
+    parseArray(
+        null, destinationCollection, destinationItemClass, new ArrayList<Type>(), customizeParser);
   }
 
   /**
    * Parse a JSON Array from the given JSON parser into the given destination collection, optionally
    * using the given parser customizer.
    *
+   * @param fieldContext field context or {@code null} for none
    * @param destinationCollection destination collection
    * @param destinationItemType type of destination collection item
+   * @param context destination context stack (possibly empty)
    * @param customizeParser optional parser customizer or {@code null} for none
    */
-  private <T> void parseArray(Collection<T> destinationCollection, Type destinationItemType,
-      ArrayList<Type> context, CustomizeJsonParser customizeParser) throws IOException {
+  private <T> void parseArray(Field fieldContext, Collection<T> destinationCollection,
+      Type destinationItemType, ArrayList<Type> context, CustomizeJsonParser customizeParser)
+      throws IOException {
     JsonToken curToken = startParsingObjectOrArray();
     while (curToken != JsonToken.END_ARRAY) {
       @SuppressWarnings("unchecked")
       T parsedValue = (T) parseValue(
-          null, destinationItemType, context, destinationCollection, customizeParser);
+          fieldContext, destinationItemType, context, destinationCollection, customizeParser);
       destinationCollection.add(parsedValue);
       curToken = nextToken();
     }
   }
 
-  private void parseMap(Map<String, Object> destinationMap, Type valueType, ArrayList<Type> context,
-      CustomizeJsonParser customizeParser) throws IOException {
+  /**
+   * Parse a JSON Object from the given JSON parser into the given destination map, optionally using
+   * the given parser customizer.
+   *
+   * @param fieldContext field context or {@code null} for none
+   * @param destinationMap destination map
+   * @param valueType valueType of the map value type parameter
+   * @param context destination context stack (possibly empty)
+   * @param customizeParser optional parser customizer or {@code null} for none
+   */
+  private void parseMap(Field fieldContext, Map<String, Object> destinationMap, Type valueType,
+      ArrayList<Type> context, CustomizeJsonParser customizeParser) throws IOException {
     JsonToken curToken = startParsingObjectOrArray();
     while (curToken == JsonToken.FIELD_NAME) {
       String key = getText();
@@ -473,7 +487,7 @@ public abstract class JsonParser {
       if (customizeParser != null && customizeParser.stopAt(destinationMap, key)) {
         return;
       }
-      Object value = parseValue(null, valueType, context, destinationMap, customizeParser);
+      Object value = parseValue(fieldContext, valueType, context, destinationMap, customizeParser);
       destinationMap.put(key, value);
       curToken = nextToken();
     }
@@ -482,7 +496,7 @@ public abstract class JsonParser {
   /**
    * Parse a value.
    *
-   * @param field field or {@code null} for none (for example into a map)
+   * @param fieldContext field context or {@code null} for none (for example into a map)
    * @param valueType value type or {@code null} if not known (for example into a map)
    * @param context destination context stack (possibly empty)
    * @param destination destination object instance or {@code null} for none (for example empty
@@ -490,7 +504,7 @@ public abstract class JsonParser {
    * @param customizeParser customize parser or {@code null} for none
    * @return parsed value
    */
-  private final Object parseValue(Field field, Type valueType, ArrayList<Type> context,
+  private final Object parseValue(Field fieldContext, Type valueType, ArrayList<Type> context,
       Object destination, CustomizeJsonParser customizeParser) throws IOException {
     valueType = Data.resolveWildcardTypeOrTypeVariable(context, valueType);
     // resolve a parameterized type to a class
@@ -500,17 +514,34 @@ public abstract class JsonParser {
     }
     // value type is now null, class, parameterized type, or generic array type
     JsonToken token = getCurrentToken();
+    // build context string
+    String currentName = getCurrentName();
+    StringBuilder contextStringBuilder = new StringBuilder();
+    if (currentName != null || fieldContext != null) {
+      contextStringBuilder.append(" [");
+      if (currentName != null) {
+        contextStringBuilder.append("key ").append(currentName);
+      }
+      if (fieldContext != null) {
+        if (currentName != null) {
+          contextStringBuilder.append(", ");
+        }
+        contextStringBuilder.append("field ").append(fieldContext);
+      }
+      contextStringBuilder.append("]");
+    }
+    String contextString = contextStringBuilder.toString();
+    // switch on token type
     switch (token) {
       case START_ARRAY:
       case END_ARRAY:
         boolean isArray = Types.isArray(valueType);
         Preconditions.checkArgument(valueType == null || isArray || valueClass != null
             && Types.isAssignableToOrFrom(valueClass, Collection.class),
-            "%s: expected collection or array type but got %s for field %s", getCurrentName(),
-            valueType, field);
+            "expected collection or array type but got %s%s", valueType, contextString);
         Collection<Object> collectionValue = null;
-        if (customizeParser != null && field != null) {
-          collectionValue = customizeParser.newInstanceForArray(destination, field);
+        if (customizeParser != null && fieldContext != null) {
+          collectionValue = customizeParser.newInstanceForArray(destination, fieldContext);
         }
         if (collectionValue == null) {
           collectionValue = Data.newCollectionInstance(valueType);
@@ -522,7 +553,7 @@ public abstract class JsonParser {
           subType = Types.getIterableParameter(valueType);
         }
         subType = Data.resolveWildcardTypeOrTypeVariable(context, subType);
-        parseArray(collectionValue, subType, context, customizeParser);
+        parseArray(fieldContext, collectionValue, subType, context, customizeParser);
         if (isArray) {
           return Types.toArray(collectionValue, Types.getRawArrayComponentType(context, subType));
         }
@@ -531,8 +562,7 @@ public abstract class JsonParser {
       case START_OBJECT:
       case END_OBJECT:
         Preconditions.checkArgument(!Types.isArray(valueType),
-            "%s: expected object or map type but got %s for field %s", getCurrentName(), valueType,
-            field);
+            "expected object or map type but got %s%s", valueType, contextString);
         Object newInstance = null;
         if (valueClass != null && customizeParser != null) {
           newInstance = customizeParser.newInstanceForObject(destination, valueClass);
@@ -556,7 +586,7 @@ public abstract class JsonParser {
           if (subValueType != null) {
             @SuppressWarnings("unchecked")
             Map<String, Object> destinationMap = (Map<String, Object>) newInstance;
-            parseMap(destinationMap, subValueType, context, customizeParser);
+            parseMap(fieldContext, destinationMap, subValueType, context, customizeParser);
             return newInstance;
           }
         }
@@ -569,14 +599,14 @@ public abstract class JsonParser {
       case VALUE_FALSE:
         Preconditions.checkArgument(valueType == null || valueClass == boolean.class
             || valueClass != null && valueClass.isAssignableFrom(Boolean.class),
-            "%s: expected type Boolean or boolean but got %s for field %s" + field,
-            getCurrentName(), valueType, field);
+            "expected type Boolean or boolean but got %s%s", valueType, contextString);
         return token == JsonToken.VALUE_TRUE ? Boolean.TRUE : Boolean.FALSE;
       case VALUE_NUMBER_FLOAT:
       case VALUE_NUMBER_INT:
-        Preconditions.checkArgument(field == null || field.getAnnotation(JsonString.class) == null,
-            "%s: number type formatted as a JSON number cannot use @JsonString annotation on "
-            + "the field %s", getCurrentName(), field);
+        Preconditions.checkArgument(
+            fieldContext == null || fieldContext.getAnnotation(JsonString.class) == null,
+            "number type formatted as a JSON number cannot use @JsonString annotation%s",
+            contextString);
         if (valueClass == null || valueClass.isAssignableFrom(BigDecimal.class)) {
           return getDecimalValue();
         }
@@ -607,22 +637,22 @@ public abstract class JsonParser {
         if (valueClass == Byte.class || valueClass == byte.class) {
           return getByteValue();
         }
-        throw new IllegalArgumentException(getCurrentName() + ": expected numeric type but got "
-            + valueType + " for field " + field);
+        throw new IllegalArgumentException(
+            "expected numeric type but got " + valueType + contextString);
       case VALUE_STRING:
         Preconditions.checkArgument(valueClass == null || !Number.class.isAssignableFrom(valueClass)
-            || field != null && field.getAnnotation(JsonString.class) != null,
-            "%s: number field formatted as a JSON string must use the @JsonString annotation: %s",
-            getCurrentName(), field);
+            || fieldContext != null && fieldContext.getAnnotation(JsonString.class) != null,
+            "number field formatted as a JSON string must use the @JsonString annotation%s",
+            contextString);
         // TODO(yanivi): "special" values like Double.POSITIVE_INFINITY?
         try {
           return Data.parsePrimitiveValue(valueType, getText());
         } catch (IllegalArgumentException e) {
-          throw new IllegalArgumentException(getCurrentName() + " for field " + field, e);
+          throw new IllegalArgumentException(contextString, e);
         }
       case VALUE_NULL:
         Preconditions.checkArgument(valueClass == null || !valueClass.isPrimitive(),
-            "%s: primitive number field but found a JSON null: %s", getCurrentName(), field);
+            "primitive number field but found a JSON null%s", contextString);
         if (valueClass != null
             && 0 != (valueClass.getModifiers() & (Modifier.ABSTRACT | Modifier.INTERFACE))) {
           if (Types.isAssignableToOrFrom(valueClass, Collection.class)) {
@@ -634,8 +664,7 @@ public abstract class JsonParser {
         }
         return Data.nullOf(Types.getRawArrayComponentType(context, valueType));
       default:
-        throw new IllegalArgumentException(getCurrentName() + ": unexpected JSON node type: "
-            + token);
+        throw new IllegalArgumentException("unexpected JSON node type: " + token + contextString);
     }
   }
 }
