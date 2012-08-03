@@ -32,16 +32,17 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
-//TODO(rmistry): Use TypeToken from Guava r12 when/if a Java 5 compatible flavor is available.
 import com.google.gson.reflect.TypeToken;
 
 import junit.framework.TestCase;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -59,15 +60,15 @@ import java.util.TreeMap;
  *
  * <p>
  * Duplicate of file in
- * google-http-client-gson/src/test/java/com/google/api/client/json/gson/AbstractJsonFactoryTest.java
- * if this file is updated please update the other one as well.
+ * google-http-client-gson/src/test/java/com/google/api/client/json/gson/AbstractJsonFactoryTest.java if
+ * this file is updated please update the other one as well.
  * </p>
  *
  * @author Yaniv Inbar
  */
 public abstract class AbstractJsonFactoryTest extends TestCase {
   // TODO(rmistry): Move AbstractJsonFactoryTest into a new google-http-client-test project to
-  //                avoid duplication with google-http-client-gson.
+  // avoid duplication with google-http-client-gson.
 
   public AbstractJsonFactoryTest(String name) {
     super(name);
@@ -76,10 +77,8 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   protected abstract JsonFactory newFactory();
 
   private static final String EMPTY = "";
-  private static final String JSON_THREE_ELEMENTS =
-      "{" + "  \"one\": { \"num\": 1 }" +
-            ", \"two\": { \"num\": 2 }" +
-            ", \"three\": { \"num\": 3 }" + "}";
+  private static final String JSON_THREE_ELEMENTS = "{" + "  \"one\": { \"num\": 1 }"
+      + ", \"two\": { \"num\": 2 }" + ", \"three\": { \"num\": 3 }" + "}";
 
   public void testParse_empty() throws IOException {
     JsonParser parser = newFactory().createJsonParser(EMPTY);
@@ -294,7 +293,6 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     assertEquals(ImmutableMap.of("title", "foo"), a.map);
   }
 
-
   public static class NumberTypes {
     @Key
     byte byteValue;
@@ -330,6 +328,12 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     BigDecimal bigDecimalValue;
     @Key("yetAnotherBigDecimalValue")
     BigDecimal anotherBigDecimalValue;
+
+    @Key
+    List<Long> longListValue;
+
+    @Key
+    Map<String, Long> longMapValue;
   }
 
   public static class NumberTypesAsString {
@@ -384,20 +388,29 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     @Key("yetAnotherBigDecimalValue")
     @JsonString
     BigDecimal anotherBigDecimalValue;
+
+    @Key
+    @JsonString
+    List<Long> longListValue;
+
+    @Key
+    @JsonString
+    Map<String, Long> longMapValue;
   }
 
   static final String NUMBER_TYPES =
       "{\"bigDecimalValue\":1.0,\"bigIntegerValue\":1,\"byteObjValue\":1,\"byteValue\":1,"
       + "\"doubleObjValue\":1.0,\"doubleValue\":1.0,\"floatObjValue\":1.0,\"floatValue\":1.0,"
-      + "\"intObjValue\":1,\"intValue\":1,\"longObjValue\":1,\"longValue\":1,"
-      + "\"shortObjValue\":1,\"shortValue\":1,\"unsignedIntegerValue\":1,\"unsignedLongValue\":1,"
-      + "\"yetAnotherBigDecimalValue\":1}";
+      + "\"intObjValue\":1,\"intValue\":1,\"longListValue\":[1],\"longMapValue\":{\"a\":1},"
+      + "\"longObjValue\":1,\"longValue\":1,\"shortObjValue\":1,\"shortValue\":1,"
+      + "\"unsignedIntegerValue\":1,\"unsignedLongValue\":1,\"yetAnotherBigDecimalValue\":1}";
 
   static final String NUMBER_TYPES_AS_STRING =
       "{\"bigDecimalValue\":\"1.0\",\"bigIntegerValue\":\"1\",\"byteObjValue\":\"1\","
       + "\"byteValue\":\"1\",\"doubleObjValue\":\"1.0\",\"doubleValue\":\"1.0\","
       + "\"floatObjValue\":\"1.0\",\"floatValue\":\"1.0\",\"intObjValue\":\"1\","
-      + "\"intValue\":\"1\",\"longObjValue\":\"1\",\"longValue\":\"1\",\"shortObjValue\":\"1\","
+      + "\"intValue\":\"1\",\"longListValue\":[\"1\"],\"longMapValue\":{\"a\":\"1\"},"
+      + "\"longObjValue\":\"1\",\"longValue\":\"1\"," + "\"shortObjValue\":\"1\","
       + "\"shortValue\":\"1\",\"unsignedIntegerValue\":\"1\",\"unsignedLongValue\":\"1\","
       + "\"yetAnotherBigDecimalValue\":\"1\"}";
 
@@ -779,13 +792,13 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     assertEquals(2, subList.size());
     assertEquals(Data.nullOf(ArrayList.class), subList.get(0));
     arrValue = subList.get(1);
-    assertEquals(ImmutableList.of(new Double(1)), arrValue);
+    assertEquals(ImmutableList.of(Double.valueOf(1)), arrValue);
     // null value
     List<Double> nullValue = result.nullValue;
     assertEquals(Data.nullOf(ArrayList.class), nullValue);
     // value
     List<Double> value = result.value;
-    assertEquals(ImmutableList.of(new Double(1)), value);
+    assertEquals(ImmutableList.of(Double.valueOf(1)), value);
   }
 
   public void testParser_floatMapTypeVariableType() throws IOException {
@@ -1152,6 +1165,8 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public void testObjectParserParse_entry() throws Exception {
+    // TODO(rmistry): Use TypeToken from Guava r12 when/if a Java 5 compatible
+    // flavor is available.
     Entry entry = (Entry) newFactory().createJsonObjectParser()
         .parseAndClose(new StringReader(JSON_ENTRY), new TypeToken<Entry>() {}.getType());
     assertEquals("foo", entry.title);
@@ -1213,5 +1228,79 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser = createParser(JSON_THREE_ELEMENTS);
     assertEquals(null, parser.skipToKey(ImmutableSet.of("foo", "bar", "num")));
     assertEquals(JsonToken.END_OBJECT, parser.getCurrentToken());
+  }
+
+  public final void testGson() throws Exception {
+    byte[] asciiJson = Charsets.UTF_8.encode("{ \"foo\": 123 }").array();
+    JsonParser jp =
+        newFactory().createJsonParser(new ByteArrayInputStream(asciiJson), Charsets.UTF_8);
+    assertEquals(com.google.api.client.json.JsonToken.START_OBJECT, jp.nextToken());
+    assertEquals(com.google.api.client.json.JsonToken.FIELD_NAME, jp.nextToken());
+    assertEquals(com.google.api.client.json.JsonToken.VALUE_NUMBER_INT, jp.nextToken());
+    assertEquals(123, jp.getIntValue());
+    assertEquals(com.google.api.client.json.JsonToken.END_OBJECT, jp.nextToken());
+  }
+
+  public final void testParse_array() throws Exception {
+    byte[] jsonData = Charsets.UTF_8.encode("[ 123, 456 ]").array();
+    JsonParser jp =
+        newFactory().createJsonParser(new ByteArrayInputStream(jsonData), Charsets.UTF_8);
+    Type myType = Integer[].class;
+    Integer[] array = (Integer[]) jp.parse(myType, true, null);
+    assertNotNull(array);
+    assertEquals((Integer) 123, array[0]);
+    assertEquals((Integer) 456, array[1]);
+  }
+
+  public static class TestClass {
+    public TestClass() {
+    }
+
+    @Key("foo")
+    public int foo;
+  }
+
+  public final void testParse_class() throws Exception {
+    byte[] jsonData = Charsets.UTF_8.encode("{ \"foo\": 123 }").array();
+    JsonParser jp =
+        newFactory().createJsonParser(new ByteArrayInputStream(jsonData), Charsets.UTF_8);
+    Type myType = TestClass.class;
+    TestClass instance = (TestClass) jp.parse(myType, true, null);
+    assertNotNull(instance);
+    assertEquals(123, instance.foo);
+  }
+
+  public final void testCreateJsonParser_nullCharset() throws Exception {
+    byte[] jsonData = Charsets.UTF_8.encode("{ \"foo\": 123 }").array();
+    JsonParser jp = newFactory().createJsonParser(new ByteArrayInputStream(jsonData), null);
+    Type myType = TestClass.class;
+    TestClass instance = (TestClass) jp.parse(myType, true, null);
+    assertNotNull(instance);
+    assertEquals(123, instance.foo);
+  }
+
+  public final void testGenerate_infinityOrNanError() throws IOException {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    JsonGenerator generator = newFactory().createJsonGenerator(out, Charsets.UTF_8);
+    NumberTypes num = new NumberTypes();
+    for (float f : new float[] {Float.NaN, Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY}) {
+      num.floatValue = f;
+      try {
+        generator.serialize(num);
+        fail("expected " + IllegalArgumentException.class);
+      } catch (IllegalArgumentException e) {
+        // ignore
+      }
+    }
+    num.floatValue = 0;
+    for (double d : new double[] {Double.NaN, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY}) {
+      num.doubleValue = d;
+      try {
+        generator.serialize(num);
+        fail("expected " + IllegalArgumentException.class);
+      } catch (IllegalArgumentException e) {
+        // ignore
+      }
+    }
   }
 }

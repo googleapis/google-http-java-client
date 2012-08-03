@@ -52,6 +52,18 @@ public class HttpRequestTest extends TestCase {
     super(name);
   }
 
+  @Override
+  public void setUp() {
+    // suppress logging warnings to the console
+    HttpTransport.LOGGER.setLevel(java.util.logging.Level.SEVERE);
+  }
+
+  @Override
+  public void tearDown() {
+    // back to the standard logging level for console
+    HttpTransport.LOGGER.setLevel(java.util.logging.Level.WARNING);
+  }
+
   public void testNotSupportedByDefault() throws IOException {
     MockHttpTransport transport = new MockHttpTransport();
     HttpRequest request =

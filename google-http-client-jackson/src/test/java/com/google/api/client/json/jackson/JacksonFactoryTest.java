@@ -15,8 +15,11 @@
 package com.google.api.client.json.jackson;
 
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonParser;
 import com.google.api.client.util.StringUtils;
+import com.google.common.base.Charsets;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
 /**
@@ -58,5 +61,12 @@ public class JacksonFactoryTest extends AbstractJsonFactoryTest {
     feed.entries.add(entryFoo);
     feed.entries.add(entryBar);
     assertEquals(JSON_FEED_PRETTY, newFactory().toPrettyString(feed));
+  }
+
+  public final void testParse_directValue() throws Exception {
+    byte[] jsonData = Charsets.UTF_8.encode("123").array();
+    JsonParser jp =
+        newFactory().createJsonParser(new ByteArrayInputStream(jsonData), Charsets.UTF_8);
+    assertEquals(123, jp.parse(Integer.class, true, null));
   }
 }

@@ -16,11 +16,9 @@ package com.google.api.client.json.gson;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
-import com.google.api.client.util.Key;
 import com.google.common.base.Charsets;
 
 import java.io.ByteArrayInputStream;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
@@ -67,59 +65,10 @@ public class GsonFactoryTest extends AbstractJsonFactoryTest {
     assertEquals(JSON_FEED_PRETTY, newFactory().toPrettyString(feed));
   }
 
-  public final void testGson_ASCII() throws Exception {
-    byte[] asciiJson = Charsets.US_ASCII.encode("{ \"foo\": 123 }").array();
-    JsonParser jp =
-        newFactory().createJsonParser(new ByteArrayInputStream(asciiJson), Charsets.US_ASCII);
-    assertEquals(com.google.api.client.json.JsonToken.START_OBJECT, jp.nextToken());
-    assertEquals(com.google.api.client.json.JsonToken.FIELD_NAME, jp.nextToken());
-    assertEquals(com.google.api.client.json.JsonToken.VALUE_NUMBER_INT, jp.nextToken());
-    assertEquals(123, jp.getIntValue());
-    assertEquals(com.google.api.client.json.JsonToken.END_OBJECT, jp.nextToken());
-  }
-
   public final void testParse_directValue() throws Exception {
     byte[] jsonData = Charsets.UTF_8.encode("123").array();
     JsonParser jp =
-        newFactory().createJsonParser(new ByteArrayInputStream(jsonData), Charsets.US_ASCII);
+        newFactory().createJsonParser(new ByteArrayInputStream(jsonData), Charsets.UTF_8);
     assertEquals(123, jp.parse(Integer.class, true, null));
-  }
-
-  public final void testParse_array() throws Exception {
-    byte[] jsonData = Charsets.UTF_8.encode("[ 123, 456 ]").array();
-    JsonParser jp =
-        newFactory().createJsonParser(new ByteArrayInputStream(jsonData), Charsets.US_ASCII);
-    Type myType = Integer[].class;
-    Integer[] array = (Integer[]) jp.parse(myType, true, null);
-    assertNotNull(array);
-    assertEquals((Integer)123, array[0]);
-    assertEquals((Integer)456, array[1]);
-  }
-
-  public static class TestClass {
-    public TestClass() {}
-
-    @Key("foo")
-    public int foo;
-  }
-
-  public final void testParse_class() throws Exception {
-    byte[] jsonData = Charsets.UTF_8.encode("{ \"foo\": 123 }").array();
-    JsonParser jp =
-        newFactory().createJsonParser(new ByteArrayInputStream(jsonData), Charsets.US_ASCII);
-    Type myType = TestClass.class;
-    TestClass instance = (TestClass) jp.parse(myType, true, null);
-    assertNotNull(instance);
-    assertEquals(123, instance.foo);
-  }
-
-  public final void testCreateJsonParser_nullCharset() throws Exception {
-    byte[] jsonData = Charsets.UTF_8.encode("{ \"foo\": 123 }").array();
-    JsonParser jp =
-        newFactory().createJsonParser(new ByteArrayInputStream(jsonData), null);
-    Type myType = TestClass.class;
-    TestClass instance = (TestClass) jp.parse(myType, true, null);
-    assertNotNull(instance);
-    assertEquals(123, instance.foo);
   }
 }

@@ -19,6 +19,7 @@ import com.google.api.client.util.Data;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Types;
+import com.google.common.base.Preconditions;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
 
@@ -122,6 +123,10 @@ public abstract class JsonGenerator {
    * serialization.
    */
   public final void serialize(Object value) throws IOException {
+    serialize(false, value);
+  }
+
+  private void serialize(boolean isJsonString, Object value) throws IOException {
     if (value == null) {
       return;
     }
@@ -130,24 +135,30 @@ public abstract class JsonGenerator {
       writeNull();
     } else if (value instanceof String) {
       writeString((String) value);
-    } else if (value instanceof BigDecimal) {
-      writeNumber((BigDecimal) value);
-    } else if (value instanceof BigInteger) {
-      writeNumber((BigInteger) value);
-    } else if (value instanceof UnsignedInteger) {
-      writeNumber((UnsignedInteger) value);
-    } else if (value instanceof UnsignedLong) {
-      writeNumber((UnsignedLong) value);
-    } else if (value instanceof Double) {
-      // TODO(yanivi): double: what about +- infinity?
-      writeNumber((Double) value);
-    } else if (value instanceof Long) {
-      writeNumber((Long) value);
-    } else if (value instanceof Float) {
-      // TODO(yanivi): what about +- infinity?
-      writeNumber((Float) value);
-    } else if (value instanceof Integer || value instanceof Short || value instanceof Byte) {
-      writeNumber(((Number) value).intValue());
+    } else if (value instanceof Number) {
+      if (isJsonString) {
+        writeString(value.toString());
+      } else if (value instanceof BigDecimal) {
+        writeNumber((BigDecimal) value);
+      } else if (value instanceof BigInteger) {
+        writeNumber((BigInteger) value);
+      } else if (value instanceof UnsignedInteger) {
+        writeNumber((UnsignedInteger) value);
+      } else if (value instanceof UnsignedLong) {
+        writeNumber((UnsignedLong) value);
+      } else if (value instanceof Long) {
+        writeNumber((Long) value);
+      } else if (value instanceof Float) {
+        float floatValue = ((Number) value).floatValue();
+        Preconditions.checkArgument(!Float.isInfinite(floatValue) && !Float.isNaN(floatValue));
+        writeNumber(floatValue);
+      } else if (value instanceof Integer || value instanceof Short || value instanceof Byte) {
+        writeNumber(((Number) value).intValue());
+      } else {
+        double doubleValue = ((Number) value).doubleValue();
+        Preconditions.checkArgument(!Double.isInfinite(doubleValue) && !Double.isNaN(doubleValue));
+        writeNumber(doubleValue);
+      }
     } else if (value instanceof Boolean) {
       writeBoolean((Boolean) value);
     } else if (value instanceof DateTime) {
@@ -155,7 +166,7 @@ public abstract class JsonGenerator {
     } else if (value instanceof Iterable<?> || valueClass.isArray()) {
       writeStartArray();
       for (Object o : Types.iterableOf(value)) {
-        serialize(o);
+        serialize(isJsonString, o);
       }
       writeEndArray();
     } else if (valueClass.isEnum()) {
@@ -172,14 +183,15 @@ public abstract class JsonGenerator {
         Object fieldValue = entry.getValue();
         if (fieldValue != null) {
           String fieldName = entry.getKey();
-          if (fieldValue instanceof Number) {
+          boolean isJsonStringForField;
+          if (value instanceof Map<?, ?>) {
+            isJsonStringForField = isJsonString;
+          } else {
             Field field = classInfo.getField(fieldName);
-            if (field != null && field.getAnnotation(JsonString.class) != null) {
-              fieldValue = fieldValue.toString();
-            }
+            isJsonStringForField = field != null && field.getAnnotation(JsonString.class) != null;
           }
           writeFieldName(fieldName);
-          serialize(fieldValue);
+          serialize(isJsonStringForField, fieldValue);
         }
       }
       writeEndObject();
