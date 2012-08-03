@@ -14,7 +14,6 @@
 
 package com.google.api.client.json.jackson;
 
-import com.google.api.client.json.AbstractJsonFactoryTest;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.StringUtils;
 

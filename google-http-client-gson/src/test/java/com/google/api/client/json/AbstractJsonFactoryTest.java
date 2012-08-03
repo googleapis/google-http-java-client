@@ -12,8 +12,14 @@
  * the License.
  */
 
-package com.google.api.client.json;
+package com.google.api.client.json.gson;
 
+import com.google.api.client.json.GenericJson;
+import com.google.api.client.json.JsonGenerator;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonParser;
+import com.google.api.client.json.JsonString;
+import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.Key;
@@ -53,7 +59,7 @@ import java.util.TreeMap;
  *
  * <p>
  * Duplicate of file in
- * google-http-client-jackson/src/test/java/com/google/api/client/json/AbstractJsonFactoryTest.java
+ * google-http-client-jackson/src/test/java/com/google/api/client/json/jackson/AbstractJsonFactoryTest.java
  * if this file is updated please update the other one as well.
  * </p>
  *
