@@ -183,6 +183,12 @@ public final class HttpRequest {
   private boolean retryOnExecuteIOException = false;
 
   /**
+   * Whether to not add the suffix {@link #USER_AGENT_SUFFIX} to the User-Agent header
+   * ({@code false} by default).
+   */
+  private boolean suppressUserAgentSuffix;
+
+  /**
    * @param transport HTTP transport
    * @param method HTTP request method (may be {@code null}
    */
@@ -766,6 +772,29 @@ public final class HttpRequest {
   }
 
   /**
+   * Returns whether to not add the suffix {@link #USER_AGENT_SUFFIX} to the User-Agent header.
+   *
+   * @since 1.11
+   */
+  public boolean getSuppressUserAgentSuffix() {
+    return suppressUserAgentSuffix;
+  }
+
+  /**
+   * Sets whether to not add the suffix {@link #USER_AGENT_SUFFIX} to the User-Agent header.
+   *
+   * <p>
+   * The default value is {@code false}.
+   * </p>
+   *
+   * @since 1.11
+   */
+  public HttpRequest setSuppressUserAgentSuffix(boolean suppressUserAgentSuffix) {
+    this.suppressUserAgentSuffix = suppressUserAgentSuffix;
+    return this;
+  }
+
+  /**
    * Execute the HTTP request and returns the HTTP response.
    * <p>
    * Note that regardless of the returned status code, the HTTP response content has not been parsed
@@ -869,15 +898,19 @@ public final class HttpRequest {
       }
       // add to user agent
       String originalUserAgent = headers.getUserAgent();
-      if (originalUserAgent == null) {
-        headers.setUserAgent(USER_AGENT_SUFFIX);
-      } else {
-        headers.setUserAgent(originalUserAgent + " " + USER_AGENT_SUFFIX);
+      if (!suppressUserAgentSuffix) {
+        if (originalUserAgent == null) {
+          headers.setUserAgent(USER_AGENT_SUFFIX);
+        } else {
+          headers.setUserAgent(originalUserAgent + " " + USER_AGENT_SUFFIX);
+        }
       }
       // headers
       HttpHeaders.serializeHeaders(headers, logbuf, curlbuf, logger, lowLevelHttpRequest);
-      // set the original user agent back to the headers so that retries do not keep appending to it
-      headers.setUserAgent(originalUserAgent);
+      if (!suppressUserAgentSuffix) {
+        // set the original user agent back so that retries do not keep appending to it
+        headers.setUserAgent(originalUserAgent);
+      }
 
       // content
       HttpContent content = this.content;

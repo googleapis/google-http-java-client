@@ -814,4 +814,48 @@ public class HttpRequestTest extends TestCase {
     request.getHeaders().set("accept", "text/plain");
     request.execute();
   }
+
+  public void testSuppressUserAgentSuffix() throws IOException {
+    class MyTransport extends MockHttpTransport {
+      String expectedUserAgent;
+
+    @Override
+      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+            @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            List<String> userAgents = getHeaders().get("User-Agent");
+            String actualUserAgent = userAgents == null ? null : userAgents.get(0);
+            assertEquals(expectedUserAgent, actualUserAgent);
+            return super.execute();
+          }
+        };
+      }
+    }
+    MyTransport transport = new MyTransport();
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+
+    // Do not specify a User-Agent.
+    transport.expectedUserAgent = HttpRequest.USER_AGENT_SUFFIX;
+    request.setSuppressUserAgentSuffix(false);
+    request.execute();
+
+    // Do not specify a User-Agent.
+    transport.expectedUserAgent = null;
+    request.setSuppressUserAgentSuffix(true);
+    request.execute();
+
+    // Specify a User-Agent with suppress=false.
+    transport.expectedUserAgent = "Testing " + HttpRequest.USER_AGENT_SUFFIX;
+    request.getHeaders().setUserAgent("Testing");
+    request.setSuppressUserAgentSuffix(false);
+    request.execute();
+
+    // Specify a User-Agent with suppress=true.
+    transport.expectedUserAgent = "Testing";
+    request.getHeaders().setUserAgent("Testing");
+    request.setSuppressUserAgentSuffix(true);
+    request.execute();
+  }
 }
