@@ -60,8 +60,8 @@ import java.util.TreeMap;
  *
  * <p>
  * Duplicate of file in
- * google-http-client-gson/src/test/java/com/google/api/client/json/gson/AbstractJsonFactoryTest.java if
- * this file is updated please update the other one as well.
+ * google-http-client-gson/src/test/java/com/google/api/client/json/gson/AbstractJsonFactoryTest.java
+ * if this file is updated please update the other one as well.
  * </p>
  *
  * @author Yaniv Inbar
@@ -1302,5 +1302,23 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
         // ignore
       }
     }
+  }
+
+  public static class ExtendsGenericJson extends GenericJson {
+    @Key
+    @JsonString
+    Long numAsString;
+  }
+
+  static final String EXTENDS_JSON = "{\"numAsString\":\"1\",\"num\":1}";
+
+  public void testParser_extendsGenericJson() throws IOException {
+    JsonFactory factory = newFactory();
+    JsonParser parser;
+    // number types
+    parser = factory.createJsonParser(EXTENDS_JSON);
+    parser.nextToken();
+    ExtendsGenericJson result = parser.parse(ExtendsGenericJson.class, null);
+    assertEquals(EXTENDS_JSON, factory.toString(result));
   }
 }

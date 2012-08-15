@@ -15,8 +15,8 @@
 package com.google.api.client.json.gson;
 
 import com.google.api.client.json.GenericJson;
-import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonString;
 import com.google.api.client.json.JsonToken;
@@ -1302,5 +1302,23 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
         // ignore
       }
     }
+  }
+
+  public static class ExtendsGenericJson extends GenericJson {
+    @Key
+    @JsonString
+    Long numAsString;
+  }
+
+  static final String EXTENDS_JSON = "{\"numAsString\":\"1\",\"num\":1}";
+
+  public void testParser_extendsGenericJson() throws IOException {
+    JsonFactory factory = newFactory();
+    JsonParser parser;
+    // number types
+    parser = factory.createJsonParser(EXTENDS_JSON);
+    parser.nextToken();
+    ExtendsGenericJson result = parser.parse(ExtendsGenericJson.class, null);
+    assertEquals(EXTENDS_JSON, factory.toString(result));
   }
 }
