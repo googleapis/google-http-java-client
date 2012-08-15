@@ -18,6 +18,7 @@ import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.util.FieldInfo;
+import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.UnsignedInteger;
@@ -178,13 +179,15 @@ public abstract class JsonGenerator {
       }
     } else {
       writeStartObject();
-      ClassInfo classInfo = ClassInfo.of(valueClass);
+      // only inspect fields of POJO (possibly extends GenericData) but not generic Map
+      boolean isMapNotGenericData = value instanceof Map<?, ?> && !(value instanceof GenericData);
+      ClassInfo classInfo = isMapNotGenericData ? null : ClassInfo.of(valueClass);
       for (Map.Entry<String, Object> entry : Data.mapOf(value).entrySet()) {
         Object fieldValue = entry.getValue();
         if (fieldValue != null) {
           String fieldName = entry.getKey();
           boolean isJsonStringForField;
-          if (value instanceof Map<?, ?>) {
+          if (isMapNotGenericData) {
             isJsonStringForField = isJsonString;
           } else {
             Field field = classInfo.getField(fieldName);
