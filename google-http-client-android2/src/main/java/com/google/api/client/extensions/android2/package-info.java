@@ -22,6 +22,10 @@
  *
  * @since 1.4
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.12) Use
+ *             {@code com.google.api.client.extensions.android} package or
+ *             {@code com.google.api.client.extensions.android.http} package from the
+ *             {@code google-http-client-android} library.
  */
 package com.google.api.client.extensions.android2;
 

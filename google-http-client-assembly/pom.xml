@@ -23,6 +23,10 @@
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-android</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-android2</artifactId>
     </dependency>
     <dependency>

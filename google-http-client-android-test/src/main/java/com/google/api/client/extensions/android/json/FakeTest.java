@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Google Inc.
+ * Copyright (c) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -11,21 +11,21 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.google.api.client.extensions.android.json;
+
+import junit.framework.TestCase;
 
 /**
- * Low-level implementation of the GSON parser library built-in to the Android 3.0 SDK.
+ * Fake test case to force Maven test runner to run the tests on device.
  *
- * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
- * </p>
- *
- * @since 1.4
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.12) Use
- *             {@code com.google.api.client.extensions.android.json} package from the
- *             {@code google-http-client-android} library.
  */
+public class FakeTest extends TestCase {
 
-package com.google.api.client.extensions.android3.json;
+  public FakeTest(String name) {
+    super(name);
+  }
 
+  public final void test() throws Exception {
+  }
+}

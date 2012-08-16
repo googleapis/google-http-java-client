@@ -15,8 +15,9 @@
 <h3>Library Details</h3>
 <ul>
   <li>google-http-client can be used for all platforms.</li>
-  <li>google-http-client-android2 is for Android SDK 2.0 & higher.</li>
-  <li>google-http-client-android3 is for Android SDK 3.0 & higher.</li>
+  <li>google-http-client-android is for Android SDK 1.6 & higher.</li>
+  <li>[deprecated] google-http-client-android2 is for Android SDK 2.0 & higher.</li>
+  <li>[deprecated] google-http-client-android3 is for Android SDK 3.0 & higher.</li>
   <li>google-http-client-appengine is for Google App Engine.</li>
   <li>google-http-client-protobuf is for Protocol Buffer support.</li>
   <li>google-http-client-gson is for GSON support.</li>
@@ -29,8 +30,9 @@ Dependent jars can be found in the <a href='libs'>libs</a> folder and the corres
 The dependency structure and licenses for the different libraries can be found here:
 <ul>
   <li>google-http-client: <a href='dependencies/dependencies.html'>dependencies.html</a></li>
-  <li>google-http-client-android2: <a href='dependencies/android2-dependencies.html'>android2-dependencies.html</a></li>
-  <li>google-http-client-android3: <a href='dependencies/android3-dependencies.html'>android3-dependencies.html</a></li>
+  <li>google-http-client-android: <a href='dependencies/android-dependencies.html'>android-dependencies.html</a></li>
+  <li>[deprecated] google-http-client-android2: <a href='dependencies/android2-dependencies.html'>android2-dependencies.html</a></li>
+  <li>[deprecated] google-http-client-android3: <a href='dependencies/android3-dependencies.html'>android3-dependencies.html</a></li>
   <li>google-http-client-appengine: <a href='dependencies/appengine-dependencies.html'>appengine-dependencies.html</a></li>
   <li>google-http-client-protobuf: <a href='dependencies/protobuf-dependencies.html'>protobuf-dependencies.html</a></li>
   <li>google-http-client-gson: <a href='dependencies/gson-dependencies.html'>gson-dependencies.html</a></li>
@@ -45,13 +47,32 @@ For information on how to add these libraries to your Maven project please see
 A .classpath file snippet that can be included in your project's .classpath has been provided <a href='.classpath'>here</a>.
 Please only use the classpathentry's you actually need (see below for details).
 
+  <h3>ProGuard</h3>
+  <p>
+    A ProGuard configuration file <a href="proguard-google-http-client.txt">proguard-google-http-client.txt</a>
+    is included for common settings for using the library. On Android projects,
+    you may want to add a reference to
+    <code>proguard-google-http-client.txt</code>
+    in the
+    <code>project.properties</code>
+    file under the
+    <code>proguard.config</code>
+    property.
+  </p>
+  <p>
+    Please read <a
+      href="http://code.google.com/p/google-http-java-client/wiki/Setup#ProGuard">Setup
+      ProGuard</a> for more details.
+  </p>
+
 <h3>Android Dependencies</h3>
 The following are the jars from the <a href='libs'>libs</a>
-folder required for android applications or a newer compatible version:
+folder required for Android applications or a newer compatible version:
 <ul>
   <li>google-http-client-${project.version}.jar</li>
-  <li>google-http-client-android2-${project.version}.jar (only for SDK >= 2.1)</li>
-  <li>google-http-client-android3-${project.version}.jar (only for SDK >= 3.0)</li>
+  <li>google-http-client-android-${project.version}.jar (only for SDK >= 1.6)</li>
+  <li>[deprecated] google-http-client-android2-${project.version}.jar (only for SDK >= 2.1)</li>
+  <li>[deprecated] google-http-client-android3-${project.version}.jar (only for SDK >= 3.0)</li>
   <li>guava-${project.guava.version}.jar</li>
   <li>jsr305-${project.jsr305.version}.jar</li>
   <li>

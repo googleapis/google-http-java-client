@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Google Inc.
+ * Copyright (c) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,39 +12,32 @@
  * the License.
  */
 
-package com.google.api.client.extensions.android2;
+package com.google.api.client.extensions.android.http;
 
+import com.google.api.client.extensions.android.AndroidUtils;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-
-import android.os.Build;
 
 import java.net.HttpURLConnection;
 
 /**
  * Utilities for Android HTTP transport.
  *
- * @since 1.4
+ * @since 1.11
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.12) Use
- *             {@code com.google.api.client.extensions.android.http.AndroidHttp} or
- *             {@code com.google.api.client.extensions.android.AndroidUtils} from the
- *             {@code google-http-client-android} library.
  */
-@Deprecated
 public class AndroidHttp {
-
-  /** SDK 2.3 version build number. */
-  private static final int GINGERBREAD = 9;
 
   /**
    * Returns a new thread-safe HTTP transport instance that is compatible with Android SDKs prior to
    * Gingerbread.
+   *
    * <p>
    * Don't use this for Android applications that anyway require Gingerbread. Instead just call
    * {@code new NetHttpTransport()}.
    * </p>
+   *
    * <p>
    * Prior to Gingerbread, the {@link HttpURLConnection} implementation was buggy, and the Apache
    * HTTP Client was preferred. However, starting with Gingerbread, the {@link HttpURLConnection}
@@ -55,11 +48,9 @@ public class AndroidHttp {
    * </p>
    */
   public static HttpTransport newCompatibleTransport() {
-    return isGingerbreadOrHigher() ? new NetHttpTransport() : new ApacheHttpTransport();
+    return AndroidUtils.isMinimumSdkLevel(9) ? new NetHttpTransport() : new ApacheHttpTransport();
   }
 
-  /** Returns whether the SDK version is Gingerbread (2.3) or higher. */
-  public static boolean isGingerbreadOrHigher() {
-    return Build.VERSION.SDK_INT >= GINGERBREAD;
+  private AndroidHttp() {
   }
 }

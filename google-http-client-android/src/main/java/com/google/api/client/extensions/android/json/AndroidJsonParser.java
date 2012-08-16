@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Google Inc.
+ * Copyright (c) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.extensions.android3.json;
+package com.google.api.client.extensions.android.json;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
@@ -21,6 +21,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
 
+import android.annotation.TargetApi;
 import android.util.JsonReader;
 
 import java.io.EOFException;
@@ -39,7 +40,7 @@ import java.util.List;
  *
  * @author Yaniv Inbar
  */
-@Deprecated
+@TargetApi(11)
 class AndroidJsonParser extends JsonParser {
   private final JsonReader reader;
   private final AndroidJsonFactory factory;

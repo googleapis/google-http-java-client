@@ -53,7 +53,9 @@
     * google-http-client-assembly/pom.xml
     * google-http-client-assembly/readme.html
     * google-http-client-assembly/.classpath
-    * google-http-client-assembly/dependencies/*-dependencies.html
+    * google-http-client-assembly/dependencies/<name>-dependencies.html
+        (use mvn project-info-reports:dependencies and copy from
+        google-http-client-<name>/target/site/dependencies.html)
     * jdiff.xml
     * This pom.xml file below in the dependencyManagement and maven-javadoc-plugin sections
   -->
@@ -61,6 +63,7 @@
     <module>google-http-client</module>
     <module>google-http-client-assembly</module>
     <module>google-http-client-appengine</module>
+    <module>google-http-client-android</module>
     <module>google-http-client-android2</module>
     <module>google-http-client-android3</module>
     <module>google-http-client-protobuf</module>
@@ -133,6 +136,11 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-appengine</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-android</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -368,6 +376,10 @@
                 <group>
                   <title>google-http-client-appengine</title>
                   <packages>com.google.api.client.extensions.appengine*</packages>
+                </group>
+                <group>
+                  <title>google-http-client-android</title>
+                  <packages>com.google.api.client.extensions.android.*</packages>
                 </group>
                 <group>
                   <title>google-http-client-android2</title>

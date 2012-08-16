@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Google Inc.
+ * Copyright (c) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,13 +12,15 @@
  * the License.
  */
 
-package com.google.api.client.extensions.android3.json;
+package com.google.api.client.extensions.android.json;
 
+import com.google.api.client.extensions.android.AndroidUtils;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
 import com.google.common.base.Charsets;
 
+import android.annotation.TargetApi;
 import android.util.JsonReader;
 import android.util.JsonWriter;
 
@@ -39,16 +41,21 @@ import java.nio.charset.Charset;
  * applications should use a single globally-shared instance of the JSON factory.
  * </p>
  *
- * @since 1.4
+ * <p>
+ * Required minimum Android SDK 3.0 (level 11).
+ * </p>
+ *
+ * @since 1.11
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.12) Use
- *             {@code com.google.api.client.extensions.android.json.AndroidJsonFactory} from
- *             the {@code google-http-client-android} library.
  */
-@Deprecated
+@TargetApi(11)
 public class AndroidJsonFactory extends JsonFactory {
 
   // TODO(yanivi): figure out how to run unit tests based on Android platform
+
+  public AndroidJsonFactory() {
+    AndroidUtils.checkMinimumSdkLevel(11);
+  }
 
   @Override
   public JsonParser createJsonParser(InputStream in) {
