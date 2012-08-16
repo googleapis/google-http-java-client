@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.json.gson;
+package com.google.api.client.testing.json;
 
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
@@ -58,17 +58,9 @@ import java.util.TreeMap;
 /**
  * Abstract test case for testing a {@link JsonFactory}.
  *
- * <p>
- * Duplicate of file in
- * google-http-client-jackson/src/test/java/com/google/api/client/json/jackson/AbstractJsonFactoryTest.java
- * if this file is updated please update the other one as well.
- * </p>
- *
  * @author Yaniv Inbar
  */
 public abstract class AbstractJsonFactoryTest extends TestCase {
-  // TODO(rmistry): Move AbstractJsonFactoryTest into a new google-http-client-test project to
-  // avoid duplication with google-http-client-jackson.
 
   public AbstractJsonFactoryTest(String name) {
     super(name);
@@ -1177,8 +1169,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     @SuppressWarnings("unchecked")
     List<String> result = (List<String>) factory.createJsonObjectParser()
         .parseAndClose(new StringReader(STRING_ARRAY), new TypeToken<List<String>>() {}.getType());
-    @SuppressWarnings("unused")
-    String string = result.get(0);
+    result.get(0);
     assertEquals(STRING_ARRAY, factory.toString(result));
     // check types and values
     assertTrue(ImmutableList.of("a", "b", "c").equals(result));

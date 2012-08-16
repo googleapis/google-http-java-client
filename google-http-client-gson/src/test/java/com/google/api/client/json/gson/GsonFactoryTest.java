@@ -16,6 +16,7 @@ package com.google.api.client.json.gson;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
+import com.google.api.client.testing.json.AbstractJsonFactoryTest;
 import com.google.common.base.Charsets;
 
 import java.io.ByteArrayInputStream;
