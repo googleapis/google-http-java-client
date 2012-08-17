@@ -40,8 +40,9 @@
     <dependency>
       <groupId>android</groupId>
       <artifactId>android</artifactId>
-      <!-- TODO(yanivi): use https://github.com/mosabua/maven-android-sdk-deployer and run:
+      <!-- use https://github.com/mosabua/maven-android-sdk-deployer and run:
       mvn install -P 4.1
+      TODO(yanivi): switch to central maven repo when either annotations.jar or 4.1 is available
        -->
       <version>4.1_r1</version>
     </dependency>
