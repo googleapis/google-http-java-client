@@ -19,6 +19,7 @@ import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
 import com.google.common.base.Charsets;
+import com.google.common.base.Preconditions;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -27,7 +28,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Implements support for HTTP form content encoding serialization of type {@code
@@ -55,18 +55,15 @@ import java.util.logging.Logger;
  */
 public class UrlEncodedContent extends AbstractHttpContent {
 
-  private static final Logger LOGGER = Logger.getLogger(UrlEncodedContent.class.getName());
-
   /** Key name/value data. */
   private Object data;
 
   /**
    * <p>
-   * Upgrade warning: prior to version 1.7, the {@code data} parameter could be {@code null} but now
-   * {@code null} is not allowed and instead a new instance of an implementation of {@link Map} will
-   * be created. In version 1.8 a {@link NullPointerException} will be thrown instead.
+   * Upgrade warning: prior to version 1.11 the {@code data} parameter could be {@code null} but now
+   * instead it throws a {@link NullPointerException}.
    * </p>
-   *
+   * 
    * @param data key name/value data
    */
   public UrlEncodedContent(Object data) {
@@ -142,20 +139,16 @@ public class UrlEncodedContent extends AbstractHttpContent {
    * Overriding is only supported for the purpose of calling the super implementation and changing
    * the return type, but nothing else.
    * </p>
+   *
    * <p>
-   * Upgrade warning: prior to version 1.7, the {@code data} parameter could be {@code null} but now
-   * {@code null} is not allowed and instead a new instance of an implementation of {@link Map} will
-   * be created. In version 1.8 a {@link NullPointerException} will be thrown instead.
+   * Upgrade warning: prior to version 1.11 the {@code data} parameter could be {@code null} but now
+   * instead it throws a {@link NullPointerException}.
    * </p>
    *
    * @since 1.5
    */
   public UrlEncodedContent setData(Object data) {
-    if (data == null) {
-      LOGGER.warning("UrlEncodedContent.setData(null) no longer supported");
-      data = new HashMap<String, Object>();
-    }
-    this.data = data;
+    this.data = Preconditions.checkNotNull(data);
     return this;
   }
 

@@ -57,9 +57,8 @@ public class UrlEncodedContentTest extends TestCase {
   }
 
   public void testGetContent() throws IOException {
-    HttpRequest request =
-        new MockHttpTransport().createRequestFactory().buildGetRequest(
-            HttpTesting.SIMPLE_GENERIC_URL);
+    HttpRequest request = new MockHttpTransport().createRequestFactory()
+        .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     UrlEncodedContent content = UrlEncodedContent.getContent(request);
     assertNotNull(content);
     assertTrue(content.getData() instanceof Map);
@@ -67,10 +66,14 @@ public class UrlEncodedContentTest extends TestCase {
   }
 
   public void testGetData() {
-    UrlEncodedContent content = new UrlEncodedContent(null);
-    assertTrue(content.getData() instanceof Map);
+    try {
+      new UrlEncodedContent(null);
+      fail("expected " + NullPointerException.class);
+    } catch (NullPointerException e) {
+      // expected
+    }
     Map<String, Object> map = new HashMap<String, Object>();
-    content = new UrlEncodedContent(map);
+    UrlEncodedContent content = new UrlEncodedContent(map);
     assertEquals(map, content.getData());
   }
 }
