@@ -82,6 +82,21 @@ public final class DateTime implements Serializable {
   }
 
   /**
+   * Instantiates {@link DateTime} from an <a href='http://tools.ietf.org/html/rfc3339'>RFC 3339</a>
+   * date/time value.
+   *
+   * @since 1.11
+   */
+  public DateTime(String value) {
+    // TODO(rmistry): Move the implementation of parseRfc3339 into this constructor. Implementation
+    // of parseRfc3339 can then do "return new DateTime(str);".
+    DateTime dateTime = parseRfc3339(value);
+    this.dateOnly = dateTime.dateOnly;
+    this.value = dateTime.value;
+    this.tzShift = dateTime.tzShift;
+  }
+
+  /**
    * Returns the date/time value expressed as the number of milliseconds since the Unix epoch.
    *
    * <p>
