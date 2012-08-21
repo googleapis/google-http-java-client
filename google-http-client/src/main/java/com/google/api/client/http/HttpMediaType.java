@@ -18,9 +18,10 @@ import com.google.common.base.Preconditions;
 
 import java.nio.charset.Charset;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,7 +65,7 @@ public final class HttpMediaType {
   private String subType = "octet-stream";
 
   /** Additional parameters to the media type, for example {@code "charset=utf-8"}. */
-  private final Map<String, String> parameters = new HashMap<String, String>();
+  private final SortedMap<String, String> parameters = new TreeMap<String, String>();
 
   /** The last build result or {@code null}. */
   private String cachedBuildResult;

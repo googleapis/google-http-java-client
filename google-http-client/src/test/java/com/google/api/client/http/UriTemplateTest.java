@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 
 /**
  * Tests {@link UriTemplate}.
@@ -32,7 +33,7 @@ import java.util.Map;
 public class UriTemplateTest extends TestCase {
 
   public void testExpandTemplates_initialization() {
-    Map<String, Object> map = Maps.newHashMap();
+    SortedMap<String, Object> map = Maps.newTreeMap();
     map.put("id", Arrays.asList("a", "b", "c"));
 
     // Make sure the UriTemplate.COMPOSITE_PREFIXES map is initialized correctly.
@@ -41,7 +42,7 @@ public class UriTemplateTest extends TestCase {
   }
 
   public void testExpandTemplates_basic() {
-    Map<String, Object> requestMap = Maps.newHashMap();
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
     requestMap.put("def", "123");
     requestMap.put("unused", "unused parameter");
@@ -59,7 +60,7 @@ public class UriTemplateTest extends TestCase {
   }
 
   public void testExpandTemplates_noExpansionsWithQueryParams() {
-    Map<String, Object> requestMap = Maps.newHashMap();
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
     requestMap.put("def", "123");
     assertEquals("foo/xyz/bar/123?abc=xyz&def=123",
@@ -67,27 +68,27 @@ public class UriTemplateTest extends TestCase {
   }
 
   public void testExpandTemplates_noExpansionsWithoutQueryParams() {
-    Map<String, Object> requestMap = Maps.newHashMap();
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
     requestMap.put("def", "123");
     assertEquals("foo/xyz/bar/123", UriTemplate.expand("foo/xyz/bar/123", requestMap, false));
   }
 
   public void testExpandTemplates_missingParameter() {
-    Map<String, Object> requestMap = Maps.newHashMap();
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
     assertEquals("foo/xyz/bar/", UriTemplate.expand("foo/{abc}/bar/{def}", requestMap, true));
   }
 
   public void testExpandTemplates_nullValue() {
-    Map<String, Object> requestMap = Maps.newHashMap();
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
     requestMap.put("def", null);
     assertEquals("foo/xyz/bar/", UriTemplate.expand("foo/{abc}/bar/{def}", requestMap, true));
   }
 
   public void testExpandTemplates_emptyAndNullRequestMap() {
-    Map<String, Object> requestMap = Maps.newHashMap();
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
     assertEquals("foo//bar/", UriTemplate.expand("foo/{abc}/bar/{def}", requestMap, true));
     assertEquals("foo//bar/", UriTemplate.expand("foo/{abc}/bar/{def}", null, true));
   }
@@ -118,7 +119,7 @@ public class UriTemplateTest extends TestCase {
 
   public void testExpandTemplates_explodeIterator() {
     for (String[] test : LIST_TESTS) {
-      Map<String, Object> requestMap = Maps.newHashMap();
+      SortedMap<String, Object> requestMap = Maps.newTreeMap();
       requestMap.put("d", getListIterable().iterator());
       assertEquals(test[1], UriTemplate.expand(test[0], requestMap, true));
     }
@@ -126,7 +127,7 @@ public class UriTemplateTest extends TestCase {
 
   public void testExpandTemplates_explodeIterable() {
     for (String[] test : LIST_TESTS) {
-      Map<String, Object> requestMap = Maps.newHashMap();
+      SortedMap<String, Object> requestMap = Maps.newTreeMap();
       requestMap.put("d", getListIterable());
       assertEquals(test[1], UriTemplate.expand(test[0], requestMap, true));
     }
@@ -138,20 +139,20 @@ public class UriTemplateTest extends TestCase {
   }
 
   public void testExpandTemplates_explodeEnum() {
-    Map<String, Object> requestMap = Maps.newHashMap();
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("d", testEnum.ONE);
     assertEquals(testEnum.ONE.toString(), UriTemplate.expand("{d}", requestMap, true));
   }
 
   public void testExpandTemplates_missingCompositeParameter() {
-    Map<String, Object> requestMap = Maps.newHashMap();
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
     assertEquals("", UriTemplate.expand("{d}", requestMap, false));
     assertEquals("?abc=xyz", UriTemplate.expand("{d}", requestMap, true));
   }
 
   public void testExpandTemplates_emptyListParameter() {
-    Map<String, Object> requestMap = Maps.newHashMap();
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("d", Lists.newArrayList());
     assertEquals("", UriTemplate.expand("{d}", requestMap, true));
   }
@@ -186,15 +187,15 @@ public class UriTemplateTest extends TestCase {
 
   public void testExpandTemplates_explodeMap() {
     for (String[] test : MAP_TESTS) {
-      Map<String, Object> requestMap = Maps.newHashMap();
+      SortedMap<String, Object> requestMap = Maps.newTreeMap();
       requestMap.put("d", getMapParams());
       assertEquals(test[1], UriTemplate.expand(test[0], requestMap, true));
     }
   }
 
   public void testExpandTemplates_emptyMapParameter() {
-    Map<String, Object> requestMap = Maps.newHashMap();
-    requestMap.put("d", Maps.newHashMap());
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
+    requestMap.put("d", Maps.newTreeMap());
     assertEquals("", UriTemplate.expand("{d}", requestMap, true));
   }
 
@@ -250,7 +251,7 @@ public class UriTemplateTest extends TestCase {
   }
 
   public void testExpandTemplates_withBaseUrl() {
-    Map<String, Object> requestMap = Maps.newHashMap();
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
     requestMap.put("def", "123");
 

@@ -140,8 +140,8 @@ public class HttpMediaTypeTest extends TestCase {
   public void testFullSerialization() {
     assertFullSerialization("text/plain");
     assertFullSerialization("text/plain; foo=bar");
-    assertFullSerialization("text/plain; foo=foo; bar=bar");
-    assertFullSerialization("text/plain; foo=Foo; bar=\"Bar Bar\"");
+    assertFullSerialization("text/plain; bar=bar; foo=foo");
+    assertFullSerialization("text/plain; bar=\"Bar Bar\"; foo=Foo");
     assertFullSerialization("text/*");
     assertFullSerialization("*/*");
     assertFullSerialization("text/*; charset=utf-8; foo=\"bar bar bar\"");
