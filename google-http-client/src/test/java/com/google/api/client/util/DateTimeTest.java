@@ -32,11 +32,12 @@ public class DateTimeTest extends TestCase {
     super(testName);
   }
 
-  public void testEquals() {
-    assertEquals(new DateTime(1234567890L), new DateTime(1234567890L, 120));
+  public void testEquals() throws InterruptedException {
+    assertFalse("Check equals with two different tz specified.",
+        new DateTime(1234567890L).equals(new DateTime(1234567890L, 120)));
     assertTrue("Check equals with two identical tz specified.",
         new DateTime(1234567890L, -240).equals(new DateTime(1234567890L, -240)));
-    assertTrue("Check equals with two different tz specified.",
+    assertFalse("Check equals with two different tz specified.",
         new DateTime(1234567890L, 60).equals(new DateTime(1234567890L, 240)));
 
     assertFalse("Check not equal.", new DateTime(1234567890L).equals(new DateTime(9876543210L)));
@@ -44,6 +45,11 @@ public class DateTimeTest extends TestCase {
         new DateTime(1234567890L, 120).equals(new DateTime(9876543210L, 120)));
     assertFalse(
         "Check not equal with Date.", new DateTime(1234567890L).equals(new Date(9876543210L)));
+
+    DateTime dateTime1 = new DateTime("2011-01-01");
+    Thread.sleep(10);
+    DateTime dateTime2 = new DateTime("2011-01-01");
+    assertEquals(dateTime1, dateTime2);
   }
 
   public void testParseRfc3339() {

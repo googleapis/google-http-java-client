@@ -14,6 +14,8 @@
 
 package com.google.api.client.util;
 
+import com.google.common.base.Objects;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -194,6 +196,9 @@ public final class DateTime implements Serializable {
     return toStringRfc3339();
   }
 
+  /**
+   * Upgrade warning: starting with version 1.11 a check is added that the time zone is the same.
+   */
   @Override
   public boolean equals(Object o) {
     if (o == this) {
@@ -203,39 +208,47 @@ public final class DateTime implements Serializable {
       return false;
     }
     DateTime other = (DateTime) o;
-    return dateOnly == other.dateOnly && value == other.value;
+    return dateOnly == other.dateOnly && value == other.value
+        && Objects.equal(tzShift, other.tzShift);
   }
 
   /**
    * Parses an RFC 3339 date/time value.
+   *
+   * <p>
+   * Upgrade warning: starting with version 1.11, for the date-only case the time zone is ignored
+   * and the hourOfDay, minute, second, and millisecond parameters are set to zero.
+   * </p>
    */
   public static DateTime parseRfc3339(String str) throws NumberFormatException {
     try {
-      Calendar dateTime = new GregorianCalendar(GMT);
       int year = Integer.parseInt(str.substring(0, 4));
       int month = Integer.parseInt(str.substring(5, 7)) - 1;
       int day = Integer.parseInt(str.substring(8, 10));
       int tzIndex;
       int length = str.length();
       boolean dateOnly = length <= 10 || Character.toUpperCase(str.charAt(10)) != 'T';
+      int hourOfDay = 0;
+      int minute = 0;
+      int second = 0;
+      int milliseconds = 0;
+      Integer tzShiftInteger = null;
       if (dateOnly) {
-        dateTime.set(year, month, day);
-        tzIndex = 10;
+        tzIndex = Integer.MAX_VALUE;
       } else {
-        int hourOfDay = Integer.parseInt(str.substring(11, 13));
-        int minute = Integer.parseInt(str.substring(14, 16));
-        int second = Integer.parseInt(str.substring(17, 19));
-        dateTime.set(year, month, day, hourOfDay, minute, second);
+        hourOfDay = Integer.parseInt(str.substring(11, 13));
+        minute = Integer.parseInt(str.substring(14, 16));
+        second = Integer.parseInt(str.substring(17, 19));
         if (str.charAt(19) == '.') {
-          int milliseconds = Integer.parseInt(str.substring(20, 23));
-          dateTime.set(Calendar.MILLISECOND, milliseconds);
+          milliseconds = Integer.parseInt(str.substring(20, 23));
           tzIndex = 23;
         } else {
-          dateTime.set(Calendar.MILLISECOND, 0);
           tzIndex = 19;
         }
       }
-      Integer tzShiftInteger = null;
+      Calendar dateTime = new GregorianCalendar(GMT);
+      dateTime.set(year, month, day, hourOfDay, minute, second);
+      dateTime.set(Calendar.MILLISECOND, milliseconds);
       long value = dateTime.getTimeInMillis();
       if (length > tzIndex) {
         int tzShift;
