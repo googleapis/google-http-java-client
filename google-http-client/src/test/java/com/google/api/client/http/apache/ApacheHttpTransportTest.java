@@ -14,6 +14,8 @@
 
 package com.google.api.client.http.apache;
 
+import com.google.api.client.http.ByteArrayContent;
+
 import junit.framework.TestCase;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
@@ -24,6 +26,8 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+
+import java.io.IOException;
 
 /**
  * Tests {@link ApacheHttpTransport}.
@@ -46,6 +50,42 @@ public class ApacheHttpTransportTest extends TestCase {
 
   public void testNewDefaultHttpClient() {
     checkDefaultHttpClient(ApacheHttpTransport.newDefaultHttpClient());
+  }
+
+  public void testRequestsWithContent() throws IOException {
+    ApacheHttpTransport transport = new ApacheHttpTransport();
+
+    // Test GET.
+    subtestUnsupportedRequestsWithContent(transport.buildGetRequest("http://www.test.url"), "GET");
+    // Test DELETE.
+    subtestUnsupportedRequestsWithContent(
+        transport.buildDeleteRequest("http://www.test.url"), "DELETE");
+    // Test HEAD.
+    subtestUnsupportedRequestsWithContent(
+        transport.buildHeadRequest("http://www.test.url"), "HEAD");
+
+    // Test PUT.
+    subtestSupportedRequestsWithContent(transport.buildPutRequest("http://www.test.url"));
+    // Test POST.
+    subtestSupportedRequestsWithContent(transport.buildPostRequest("http://www.test.url"));
+    // Test PATCH.
+    subtestSupportedRequestsWithContent(transport.buildPatchRequest("http://www.test.url"));
+  }
+
+  private void subtestUnsupportedRequestsWithContent(ApacheHttpRequest request, String method)
+      throws IOException {
+    try {
+      request.setContent(ByteArrayContent.fromString("text/html", "abc"));
+      fail("expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // expected
+      assertEquals(e.getMessage(),
+          "Apache HTTP client does not support " + method + " requests with content.");
+    }
+  }
+
+  private void subtestSupportedRequestsWithContent(ApacheHttpRequest request) throws IOException {
+    request.setContent(ByteArrayContent.fromString("text/html", "abc"));
   }
 
   private void checkDefaultHttpClient(DefaultHttpClient client) {
