@@ -805,7 +805,8 @@ public class HttpRequestTest extends TestCase {
     assertTrue(HttpRequest.USER_AGENT_SUFFIX.contains("gzip"));
   }
 
-  public void testExecute_emptyContent() throws IOException {
+  @Deprecated
+  public void testExecute_allowEmptyContent() throws IOException {
     class MyTransport extends MockHttpTransport {
       String expectedContent;
 

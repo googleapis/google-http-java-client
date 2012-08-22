@@ -88,6 +88,7 @@ public final class HttpRequest {
    * value is set to {@code false} then " " is set as the content with Content-Length {@code 1} for
    * empty contents. Defaults to {@code true}.
    */
+  @Deprecated
   private boolean allowEmptyContent = true;
 
   /**
@@ -594,9 +595,13 @@ public final class HttpRequest {
    * empty contents. Defaults to {@code true}.
    *
    * @since 1.7
+   * @deprecated (scheduled to be removed in 1.12) Use {@code setContent(new EmptyContent())}
    */
+  @Deprecated
   public HttpRequest setAllowEmptyContent(boolean allowEmptyContent) {
     this.allowEmptyContent = allowEmptyContent;
+    HttpTransport.LOGGER.warning("setAllowEmptyContent is deprecated and will be removed in 1.12;"
+        + " use setEmptyContent instead (if needed)");
     return this;
   }
 
@@ -606,8 +611,11 @@ public final class HttpRequest {
    * empty contents. Defaults to {@code true}.
    *
    * @since 1.7
+   * @deprecated (scheduled to be removed in 1.12)
    */
+  @Deprecated
   public boolean isAllowEmptyContent() {
+    HttpTransport.LOGGER.warning("isAllowEmptyContent is deprecated and will be removed in 1.12");
     return allowEmptyContent;
   }
 

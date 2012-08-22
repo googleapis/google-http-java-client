@@ -244,6 +244,7 @@ public class HttpResponseTest extends TestCase {
     boolean disconnectCalled;
     DisconnectByteArrayInputStream content;
 
+    @SuppressWarnings("resource")
     @Override
     public MockLowLevelHttpResponse setContent(String stringContent) {
       content = stringContent == null ? null : new DisconnectByteArrayInputStream(StringUtils

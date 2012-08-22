@@ -17,10 +17,12 @@ package com.google.api.client.http.javanet;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
+import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 
 /**
@@ -32,8 +34,11 @@ final class NetHttpRequest extends LowLevelHttpRequest {
   private HttpContent content;
 
   NetHttpRequest(String requestMethod, String url) throws IOException {
-    HttpURLConnection connection =
-        this.connection = (HttpURLConnection) new URL(url).openConnection();
+    this(requestMethod, (HttpURLConnection) new URL(url).openConnection());
+  }
+
+  NetHttpRequest(String requestMethod, HttpURLConnection connection) throws ProtocolException {
+    this.connection = connection;
     connection.setRequestMethod(requestMethod);
     connection.setUseCaches(false);
     connection.setInstanceFollowRedirects(false);
@@ -67,8 +72,8 @@ final class NetHttpRequest extends LowLevelHttpRequest {
       if (contentLength >= 0) {
         addHeader("Content-Length", Long.toString(contentLength));
       }
-      if (contentLength != 0) {
-        // setDoOutput(true) will change a GET method to POST, so only if contentLength != 0
+      String requestMethod = connection.getRequestMethod();
+      if ("POST".equals(requestMethod) || "PUT".equals(requestMethod)) {
         connection.setDoOutput(true);
         // see http://developer.android.com/reference/java/net/HttpURLConnection.html
         if (contentLength >= 0 && contentLength <= Integer.MAX_VALUE) {
@@ -82,6 +87,11 @@ final class NetHttpRequest extends LowLevelHttpRequest {
         } finally {
           out.close();
         }
+      } else {
+        // cannot call setDoOutput(true) because it would change a GET method to POST
+        // for HEAD, OPTIONS, DELETE, or TRACE it would throw an exceptions
+        Preconditions.checkArgument(
+            contentLength == 0, "%s with non-zero content length is not supported", requestMethod);
       }
     }
     // connect

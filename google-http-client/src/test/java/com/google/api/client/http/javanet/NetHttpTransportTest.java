@@ -14,7 +14,15 @@
 
 package com.google.api.client.http.javanet;
 
+import com.google.api.client.http.ByteArrayContent;
+import com.google.api.client.testing.http.HttpTesting;
+import com.google.api.client.testing.http.javanet.MockHttpURLConnection;
+
 import junit.framework.TestCase;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Tests {@link NetHttpTransport}.
@@ -23,8 +31,45 @@ import junit.framework.TestCase;
  */
 public class NetHttpTransportTest extends TestCase {
 
+  private static final String[] METHODS =
+      {"GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"};
+
   public void testSupportsHead() {
     NetHttpTransport transport = new NetHttpTransport();
     assertTrue(transport.supportsHead());
+  }
+
+  public void testExecute_mock() throws IOException {
+    for (String method : METHODS) {
+      boolean isPutOrPost = method.equals("PUT") || method.equals("POST");
+      MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
+      NetHttpRequest request = new NetHttpRequest(method, connection);
+      request.setContent(ByteArrayContent.fromString(null, ""));
+      request.execute();
+      assertEquals(isPutOrPost, connection.doOutputCalled());
+      request.setContent(ByteArrayContent.fromString(null, " "));
+      if (isPutOrPost) {
+        request.execute();
+      } else {
+        try {
+          request.execute();
+          fail("expected " + IllegalArgumentException.class);
+        } catch (IllegalArgumentException e) {
+          // expected
+        }
+      }
+      assertEquals(isPutOrPost, connection.doOutputCalled());
+    }
+  }
+
+  public void testExecute_methodUnchanged() throws IOException {
+    for (String method : METHODS) {
+      HttpURLConnection connection =
+          (HttpURLConnection) new URL("http://www.google.com").openConnection();
+      NetHttpRequest request = new NetHttpRequest(method, connection);
+      request.setContent(ByteArrayContent.fromString("text/html", ""));
+      request.execute().getContent().close();
+      assertEquals(method, connection.getRequestMethod());
+    }
   }
 }

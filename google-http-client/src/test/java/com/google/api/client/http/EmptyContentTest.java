@@ -12,29 +12,29 @@
  * the License.
  */
 
-package com.google.api.client.http.javanet;
+package com.google.api.client.http;
 
-import com.google.api.client.testing.http.javanet.MockHttpURLConnection;
 
 import junit.framework.TestCase;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
- * Tests {@link NetHttpResponse}.
+ * Tests {@link EmptyContent}.
  *
  * @author Yaniv Inbar
  */
-public class NetHttpResponseTest extends TestCase {
+public class EmptyContentTest extends TestCase {
 
-  public void testGetStatusCode() throws IOException {
-    subtestGetStatusCode(0, -1);
-    subtestGetStatusCode(200, 200);
-    subtestGetStatusCode(404, 404);
-  }
-
-  public void subtestGetStatusCode(int expectedCode, int responseCode) throws IOException {
-    assertEquals(expectedCode, new NetHttpResponse(
-        new MockHttpURLConnection(null).setResponseCode(responseCode)).getStatusCode());
+  public void test() throws IOException {
+    EmptyContent content = new EmptyContent();
+    assertEquals(0L, content.getLength());
+    assertNull(content.getEncoding());
+    assertNull(content.getType());
+    assertTrue(content.retrySupported());
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    content.writeTo(out);
+    assertEquals(0, out.size());
   }
 }
