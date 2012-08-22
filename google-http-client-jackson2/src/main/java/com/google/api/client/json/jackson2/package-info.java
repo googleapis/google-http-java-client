@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright (c) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,16 +14,16 @@
 
 /**
  * Low-level implementation of the JSON parser library based on the <a
- * href="http://wiki.fasterxml.com/JacksonHome">Jackson</a> JSON library.
+ * href="http://wiki.fasterxml.com/JacksonRelease20">Jackson 2</a> JSON library.
  *
  * <p>
  * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
  * possibly entirely removed in a future version of the library</b>
  * </p>
  *
- * @since 1.3
+ * @since 1.11
  * @author Yaniv Inbar
  */
 
-package com.google.api.client.json.jackson;
+package com.google.api.client.json.jackson2;
 

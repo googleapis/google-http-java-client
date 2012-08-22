@@ -7,8 +7,8 @@
     <version>1.11.0-beta-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>google-http-client-jackson</artifactId>
-  <name>Jackson extensions to the Google HTTP Client Library for Java.</name>
+  <artifactId>google-http-client-jackson2</artifactId>
+  <name>Jackson 2 extensions to the Google HTTP Client Library for Java.</name>
 
   <build>
     <plugins>
@@ -17,7 +17,7 @@
         <configuration>
           <links>
             <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
-            <link>http://jackson.codehaus.org/1.9.4/javadoc</link>
+            <link>http://fasterxml.github.com/jackson-core/javadoc/2.0.5/</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
@@ -72,8 +72,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-core-asl</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
     </dependency>
   </dependencies>
 </project>

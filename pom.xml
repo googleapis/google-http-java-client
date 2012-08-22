@@ -69,6 +69,7 @@
     <module>google-http-client-protobuf</module>
     <module>google-http-client-gson</module>
     <module>google-http-client-jackson</module>
+    <module>google-http-client-jackson2</module>
   </modules>
 
   <!--
@@ -82,6 +83,11 @@
         <groupId>org.codehaus.jackson</groupId>
         <artifactId>jackson-core-asl</artifactId>
         <version>${project.jackson-core-asl.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${project.jackson-core2.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.gson</groupId>
@@ -166,6 +172,11 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-jackson</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-jackson2</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -364,7 +375,8 @@
               <links>
                 <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
                 <link>http://code.google.com/appengine/docs/java/javadoc</link>
-                <link>http://jackson.codehaus.org/1.9.4/javadoc</link>
+                <link>http://jackson.codehaus.org/1.9.9/javadoc</link>
+                <link>http://fasterxml.github.com/jackson-core/javadoc/2.0.5/</link>
                 <link>http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs</link>
               </links>
               <doctitle>Google HTTP Client Library for Java ${project.version}</doctitle>
@@ -399,7 +411,11 @@
                 </group>
                 <group>
                   <title>google-http-client-jackson</title>
-                  <packages>com.google.api.client.json.jackson*</packages>
+                  <packages>com.google.api.client.json.jackson.*</packages>
+                </group>
+                <group>
+                  <title>google-http-client-jackson2</title>
+                  <packages>com.google.api.client.json.jackson2.*</packages>
                 </group>
               </groups>
               <windowtitle>google-http-java-client ${project.version}</windowtitle>
@@ -442,7 +458,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.jsr305.version>1.3.9</project.jsr305.version>
     <project.gson.version>2.1</project.gson.version>
-    <project.jackson-core-asl.version>1.9.4</project.jackson-core-asl.version>
+    <project.jackson-core-asl.version>1.9.9</project.jackson-core-asl.version>
+    <project.jackson-core2.version>2.0.5</project.jackson-core2.version>
     <project.protobuf-java.version>2.4.1</project.protobuf-java.version>
     <project.guava.version>11.0.1</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
