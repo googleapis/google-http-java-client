@@ -1019,9 +1019,8 @@ public final class HttpRequest {
                 unsuccessfulResponseHandler.handleResponse(this, response, retrySupported);
           }
           if (!errorHandled) {
-            if (getFollowRedirects() && isRedirected(response)) {
+            if (handleRedirect(response.getStatusCode(), response.getHeaders())) {
               // The unsuccessful request's error could not be handled and it is a redirect request.
-              handleRedirect(response);
               redirectRequest = true;
             } else if (retrySupported && backOffPolicy != null
                 && backOffPolicy.isBackOffRequired(response.getStatusCode())) {
@@ -1075,34 +1074,28 @@ public final class HttpRequest {
   }
 
   /**
-   * Sets up this request object to handle the necessary redirect.
+   * Sets up this request object to handle the necessary redirect if redirects are turned on, it is
+   * a redirect status code and the header has a location.
+   *
+   * <p>
+   * When the status code is {@code 303} the method on the request is changed to a GET as per the
+   * RFC2616 specification.
+   * </p>
+   *
+   * @since 1.11
    */
-  private void handleRedirect(HttpResponse response) {
-    String redirectLocation = response.getHeaders().getLocation();
-    setUrl(new GenericUrl(redirectLocation));
+  public boolean handleRedirect(int statusCode, HttpHeaders headers) {
+    String redirectLocation = headers.getLocation();
+    if (getFollowRedirects() && HttpStatusCodes.isRedirect(statusCode)
+        && redirectLocation != null) {
+      setUrl(new GenericUrl(redirectLocation));
 
-    // As per the RFC2616 specification for 303. The response to the request can be found
-    // under a different URI and should be retrieved using a GET method on that resource.
-    if (response.getStatusCode() == HttpStatusCodes.STATUS_CODE_SEE_OTHER) {
-      setMethod(HttpMethod.GET);
+      if (statusCode == HttpStatusCodes.STATUS_CODE_SEE_OTHER) {
+        setMethod(HttpMethod.GET);
+      }
+      return true;
     }
-  }
-
-  /**
-   * Returns whether it is a redirect request.
-   */
-  private boolean isRedirected(HttpResponse response) {
-    int statusCode = response.getStatusCode();
-    switch (statusCode) {
-      case HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY: // 301
-      case HttpStatusCodes.STATUS_CODE_FOUND: // 302
-      case HttpStatusCodes.STATUS_CODE_SEE_OTHER: // 303
-      case HttpStatusCodes.STATUS_CODE_TEMPORARY_REDIRECT: // 307
-        // Redirect requests must have a location header specified.
-        return response.getHeaders().getLocation() != null;
-      default:
-        return false;
-    }
+    return false;
   }
 
   /**

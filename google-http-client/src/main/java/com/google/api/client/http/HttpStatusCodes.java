@@ -72,4 +72,22 @@ public class HttpStatusCodes {
   public static boolean isSuccess(int statusCode) {
     return statusCode >= STATUS_CODE_OK && statusCode < STATUS_CODE_MULTIPLE_CHOICES;
   }
+
+  /**
+   * Returns whether the given HTTP response status code is a redirect code
+   * {@code 301, 302, 303, 307}.
+   *
+   * @since 1.11
+   */
+  public static boolean isRedirect(int statusCode) {
+    switch (statusCode) {
+      case HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY: // 301
+      case HttpStatusCodes.STATUS_CODE_FOUND: // 302
+      case HttpStatusCodes.STATUS_CODE_SEE_OTHER: // 303
+      case HttpStatusCodes.STATUS_CODE_TEMPORARY_REDIRECT: // 307
+        return true;
+      default:
+        return false;
+    }
+  }
 }

@@ -358,6 +358,59 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
+  static private class StatusCodesTransport extends MockHttpTransport {
+
+    int statusCode = 200;
+
+    public StatusCodesTransport() {
+    }
+
+    public MockLowLevelHttpRequest retryableGetRequest = new MockLowLevelHttpRequest() {
+
+      @Override
+      public LowLevelHttpResponse execute() throws IOException {
+        MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+        response.setStatusCode(statusCode);
+        return response;
+      }
+    };
+
+    @Override
+    public LowLevelHttpRequest buildGetRequest(String url) {
+      return retryableGetRequest;
+    }
+  }
+
+  public void testHandleRedirect() throws IOException {
+    StatusCodesTransport transport = new StatusCodesTransport();
+    HttpRequest req = transport.createRequestFactory().buildGetRequest(
+        new GenericUrl("http://not/used"));
+    HttpResponse response = req.execute();
+    // 200 should not be redirected
+    assertFalse(req.handleRedirect(response.getStatusCode(), response.getHeaders()));
+
+    subtestRedirect(301, true);
+    subtestRedirect(302, true);
+    subtestRedirect(303, true);
+    subtestRedirect(307, true);
+    subtestRedirect(307, false);
+  }
+
+  private void subtestRedirect(int statusCode, boolean setLocation) throws IOException {
+    StatusCodesTransport transport = new StatusCodesTransport();
+    transport.statusCode = statusCode;
+    HttpRequest req = transport.createRequestFactory().buildGetRequest(
+        new GenericUrl("http://not/used"));
+    req.setThrowExceptionOnExecuteError(false);
+    HttpResponse response = req.execute();
+    if (setLocation) {
+      response.getHeaders().setLocation("http://redirect/location");
+      assertTrue(req.handleRedirect(response.getStatusCode(), response.getHeaders()));
+    } else {
+      assertFalse(req.handleRedirect(response.getStatusCode(), response.getHeaders()));
+    }
+  }
+
   public void testExecuteErrorWithRetryEnabled() throws IOException {
     int callsBeforeSuccess = 3;
     FailThenSuccessConnectionErrorTransport fakeTransport =
