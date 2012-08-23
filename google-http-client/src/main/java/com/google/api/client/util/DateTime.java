@@ -197,7 +197,13 @@ public final class DateTime implements Serializable {
   }
 
   /**
+   * {@inheritDoc}
+   *
+   * <p>
    * Upgrade warning: starting with version 1.11 a check is added that the time zone is the same.
+   * This may break some existing equality checks. If you ONLY want to check equality of time value,
+   * check equality on the {@link #getValue()}.
+   * </p>
    */
   @Override
   public boolean equals(Object o) {
