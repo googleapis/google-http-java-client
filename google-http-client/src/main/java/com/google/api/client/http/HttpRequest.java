@@ -907,7 +907,7 @@ public final class HttpRequest {
 
       // content
       HttpContent content = this.content;
-      if (!isAllowEmptyContent()
+      if (!allowEmptyContent
           && (method == HttpMethod.PUT || method == HttpMethod.POST || method == HttpMethod.PATCH)
           && (content == null || content.getLength() == 0)) {
         content = ByteArrayContent.fromString(null, " ");
