@@ -38,11 +38,6 @@ import java.util.Map;
  * thread-safe.
  * </p>
  *
- * <p>
- * Backwards incompatibility warning: 1.9 introduced {@link #writeNumber(UnsignedInteger)} and
- * {@link #writeNumber(UnsignedLong)} to this abstract class.
- * </p>
- *
  * @since 1.3
  * @author Yaniv Inbar
  */

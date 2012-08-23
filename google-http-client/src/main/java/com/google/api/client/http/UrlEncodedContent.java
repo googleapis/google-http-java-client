@@ -63,7 +63,7 @@ public class UrlEncodedContent extends AbstractHttpContent {
    * Upgrade warning: prior to version 1.11 the {@code data} parameter could be {@code null} but now
    * instead it throws a {@link NullPointerException}.
    * </p>
-   * 
+   *
    * @param data key name/value data
    */
   public UrlEncodedContent(Object data) {
@@ -91,26 +91,6 @@ public class UrlEncodedContent extends AbstractHttpContent {
     writer.flush();
   }
 
-  /**
-   * Sets the content type or {@code null} for none. Will override any pre-set media type parameter.
-   *
-   * <p>
-   * Default value is {@link UrlEncodedParser#CONTENT_TYPE}.
-   * </p>
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #setMediaType(HttpMediaType)} instead.
-   */
-  @Deprecated
-  public UrlEncodedContent setType(String type) {
-    setMediaType(new HttpMediaType(type));
-    return this;
-  }
-
   @Override
   public UrlEncodedContent setMediaType(HttpMediaType mediaType) {
     super.setMediaType(mediaType);
@@ -120,15 +100,9 @@ public class UrlEncodedContent extends AbstractHttpContent {
   /**
    * Returns the key name/value data or {@code null} for none.
    *
-   * <p>
-   * Upgrade warning: prior to version 1.7 this could return {@code null} but now it always returns
-   * a {@code non-null} value. Also overriding this method is no longer supported, and will be made
-   * final in 1.8.
-   * </p>
-   *
    * @since 1.5
    */
-  public Object getData() {
+  public final Object getData() {
     return data;
   }
 

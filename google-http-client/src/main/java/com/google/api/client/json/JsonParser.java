@@ -44,11 +44,6 @@ import java.util.Set;
  * thread-safe.
  * </p>
  *
- * <p>
- * Backwards incompatibility warning: 1.9 introduced {@link #getUnsignedIntegerValue} and
- * {@link #getUnsignedLongValue} to this abstract class.
- * </p>
- *
  * @since 1.3
  * @author Yaniv Inbar
  */

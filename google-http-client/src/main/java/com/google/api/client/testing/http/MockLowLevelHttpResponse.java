@@ -225,10 +225,6 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
    * By default it is {@code -1}.
    * </p>
    *
-   * <p>
-   * Warning: in prior version {@code 0} was the default, but now the default is {@code -1}.
-   * </p>
-   *
    * @since 1.5
    */
   public MockLowLevelHttpResponse setContentLength(long contentLength) {

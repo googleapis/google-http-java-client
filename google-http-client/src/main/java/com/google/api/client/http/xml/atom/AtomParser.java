@@ -17,13 +17,12 @@ package com.google.api.client.http.xml.atom;
 import com.google.api.client.http.xml.XmlHttpParser;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.XmlObjectParser;
-import com.google.api.client.xml.atom.Atom;
 
 /**
  * Atom XML HTTP parser into an data class of key/value pairs.
  *
  * <p>
- * It overrides the {@link #getContentType} to {@link Atom#CONTENT_TYPE}.
+ * It overrides the {@link #getContentType} to {@code "application/atom+xml"}.
  * </p>
  *
  * <p>
@@ -42,7 +41,7 @@ import com.google.api.client.xml.atom.Atom;
  *
  * @since 1.4
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.11) Content-Type is no longer stored inside of the
+ * @deprecated (scheduled to be removed in 1.12) Content-Type is no longer stored inside of the
  *             Parser. Use an {@link XmlObjectParser} instead.
  */
 @Deprecated
@@ -53,6 +52,6 @@ public final class AtomParser extends XmlHttpParser {
    * @since 1.5
    */
   public AtomParser(XmlNamespaceDictionary namespaceDictionary) {
-    super(namespaceDictionary, Atom.CONTENT_TYPE);
+    super(namespaceDictionary, "application/atom+xml");
   }
 }

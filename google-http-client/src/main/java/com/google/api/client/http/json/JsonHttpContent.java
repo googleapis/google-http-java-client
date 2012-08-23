@@ -80,7 +80,7 @@ public class JsonHttpContent extends AbstractHttpContent {
    * </p>
    *
    * @since 1.5
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #setMediaType(HttpMediaType)} instead.
+   * @deprecated (scheduled to be removed in 1.12) Use {@link #setMediaType(HttpMediaType)} instead.
    */
   @Deprecated
   public JsonHttpContent setType(String type) {

@@ -29,11 +29,6 @@ import java.io.IOException;
  * implemented using {@link HttpHeaders#setBasicAuthentication(String, String)}.
  * </p>
  *
- * <p>
- * Warning: for backwards-compatibility {@link #initialize} also calls
- * {@link #intercept(HttpRequest)}, but this call will be removed in version 1.8.
- * </p>
- *
  * @since 1.7
  * @author Yaniv Inbar
  */
@@ -50,7 +45,6 @@ public final class BasicAuthentication implements HttpRequestInitializer, HttpEx
 
   public void initialize(HttpRequest request) throws IOException {
     request.setInterceptor(this);
-    intercept(request);
   }
 
   public void intercept(HttpRequest request) throws IOException {

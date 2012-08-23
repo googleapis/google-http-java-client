@@ -233,11 +233,6 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
    * Subclasses may override if a different algorithm is required.
    * </p>
    *
-   * <p>
-   * Upgrade warning: {@link #getNextBackOffMillis} now throws an {@link IOException}, it was not
-   * thrown prior to 1.9.
-   * </p>
-   *
    * @return the number of milliseconds to wait when backing off requests, or {@link #STOP} if no
    *         more retries should be made
    */

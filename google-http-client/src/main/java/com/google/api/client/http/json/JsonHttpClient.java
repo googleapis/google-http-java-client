@@ -37,13 +37,6 @@ import java.util.logging.Logger;
  * Implementation is not thread-safe.
  * </p>
  *
- * <p>
- * Upgrade warning: prior to version 1.10 there was a {@code builder} method in
- * {@link JsonHttpClient}, this has been removed in version 1.10. The Builder can now be
- * instantiated with
- * {@link Builder#Builder(HttpTransport, JsonFactory, String, String, HttpRequestInitializer)}.
- * </p>
- *
  * @since 1.6
  * @author Ravi Mistry
  */
@@ -103,7 +96,7 @@ public class JsonHttpClient {
    * Returns if baseUrl is used instead of {@code servicePath} and {@code rootUrl}.
    *
    * @since 1.10
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #getRootUrl} and
+   * @deprecated (scheduled to be removed in 1.12) Use {@link #getRootUrl} and
    *             {@link #getServicePath} instead.
    */
   @Deprecated
@@ -174,7 +167,7 @@ public class JsonHttpClient {
    * Returns the JSON HTTP Parser. Initializes the parser once and then caches it for all subsequent
    * calls to this method.
    *
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #getJsonObjectParser()} instead.
+   * @deprecated (scheduled to be removed in 1.12) Use {@link #getJsonObjectParser()} instead.
    */
   @Deprecated
   public final JsonHttpParser getJsonHttpParser() {
@@ -188,7 +181,7 @@ public class JsonHttpClient {
    * Creates a JSON parser. Subclasses may override if specific {@link JsonHttpParser}
    * implementations are required.
    *
-   * @deprecated (scheduled to be removed in 1.11) Use
+   * @deprecated (scheduled to be removed in 1.12) Use
    *             {@link Builder#setObjectParser(JsonObjectParser)} instead.
    */
   @Deprecated
@@ -254,7 +247,7 @@ public class JsonHttpClient {
    * @param transport The transport to use for requests
    * @param jsonFactory A factory for creating JSON parsers and serializers
    * @param baseUrl The base URL of the service. Must end with a "/"
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #JsonHttpClient(HttpTransport,
+   * @deprecated (scheduled to be removed in 1.12) Use {@link #JsonHttpClient(HttpTransport,
    *             JsonFactory, String, String, HttpRequestInitializer)}.
    */
   @Deprecated
@@ -295,7 +288,7 @@ public class JsonHttpClient {
    * @param baseUrl The base URL of the service. Must end with a "/"
    * @param applicationName The application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #JsonHttpClient(HttpTransport,
+   * @deprecated (scheduled to be removed in 1.12) Use {@link #JsonHttpClient(HttpTransport,
    *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, JsonObjectParser,
    *             String, String, String)}.
    */
@@ -327,7 +320,7 @@ public class JsonHttpClient {
    * @param baseUrl The base URL of the service. Must end with a "/"
    * @param applicationName The application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #JsonHttpClient(HttpTransport,
+   * @deprecated (scheduled to be removed in 1.12) Use {@link #JsonHttpClient(HttpTransport,
    *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, JsonObjectParser,
    *             String, String, String)}.
    * @since 1.10
@@ -609,7 +602,7 @@ public class JsonHttpClient {
      * @param jsonFactory A factory for creating JSON parsers and serializers
      * @param baseUrl The base URL of the service. Must end with a "/"
      *
-     * @deprecated (scheduled to be removed in 1.11) Use {@link #Builder(HttpTransport, JsonFactory,
+     * @deprecated (scheduled to be removed in 1.12) Use {@link #Builder(HttpTransport, JsonFactory,
      *             String, String, HttpRequestInitializer)} instead.
      */
     @Deprecated
@@ -672,7 +665,7 @@ public class JsonHttpClient {
      * Returns if {@code baseUrl} is used instead of {@code rootUrl} and {@code servicePath}.
      *
      * @since 1.10
-     * @deprecated (scheduled to be removed in 1.11) Use {@link #getRootUrl} and
+     * @deprecated (scheduled to be removed in 1.12) Use {@link #getRootUrl} and
      *             {@link #getServicePath} instead.
      */
     @Deprecated
@@ -729,7 +722,7 @@ public class JsonHttpClient {
      * {@code servicePath}.
      * </p>
      *
-     * @deprecated (scheduled to be removed in 1.11) Use {@link #getRootUrl} and
+     * @deprecated (scheduled to be removed in 1.12) Use {@link #getRootUrl} and
      *             {@link #getServicePath} instead.
      */
     @Deprecated
@@ -749,7 +742,7 @@ public class JsonHttpClient {
      * </p>
      *
      * @since 1.7
-     * @deprecated (scheduled to be removed in 1.11) Use {@link #setRootUrl} and
+     * @deprecated (scheduled to be removed in 1.12) Use {@link #setRootUrl} and
      *             {@link #setServicePath} instead.
      */
     @Deprecated

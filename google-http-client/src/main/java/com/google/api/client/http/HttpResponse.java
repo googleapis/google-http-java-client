@@ -189,11 +189,6 @@ public final class HttpResponse {
    * Defaults to {@link HttpRequest#getContentLoggingLimit()}.
    * </p>
    *
-   * <p>
-   * Upgrade warning: prior to version 1.9, the default was {@code 100,000} bytes, but now it is
-   * {@link HttpRequest#getContentLoggingLimit()}.
-   * </p>
-   *
    * @since 1.7
    */
   public int getContentLoggingLimit() {
@@ -218,11 +213,6 @@ public final class HttpResponse {
    *
    * <p>
    * Defaults to {@link HttpRequest#getContentLoggingLimit()}.
-   * </p>
-   *
-   * <p>
-   * Upgrade warning: prior to version 1.9, the default was {@code 100,000} bytes, but now it is
-   * {@link HttpRequest#getContentLoggingLimit()}.
    * </p>
    *
    * @since 1.7
@@ -446,12 +436,8 @@ public final class HttpResponse {
   }
 
   /**
-   * Close the HTTP response content and disconnect using {@link LowLevelHttpResponse#disconnect()}.
-   *
-   * <p>
-   * Upgrade warning: since version 1.10 {@link #disconnect} now closes the HTTP response content
-   * input stream. This was not done by this method prior to version 1.10.
-   * </p>
+   * Close the HTTP response content using {@link #ignore}, and disconnect using
+   * {@link LowLevelHttpResponse#disconnect()}.
    *
    * @since 1.4
    */
@@ -464,7 +450,7 @@ public final class HttpResponse {
    * Returns the HTTP response content parser to use for the content type of this HTTP response or
    * {@code null} for none.
    *
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #getRequest()}.
+   * @deprecated (scheduled to be removed in 1.12) Use {@link #getRequest()}.
    *             {@link HttpRequest#getParser()} instead
    */
   @Deprecated
@@ -479,9 +465,9 @@ public final class HttpResponse {
    * <p>
    * <b>Upgrade Warning:</b> Prior to version 1.11 this method would throw an
    * {@link IllegalArgumentException} when no Content-Type is present in the response and the
-   * deprecated HttpParsers were used. Since 1.11 this method will return {@code null} as
-   * documented when the server responds with a status code indicating that there is no content,
-   * or when a HEAD request was made to the server.
+   * deprecated HttpParsers were used. Since 1.11 this method will return {@code null} as documented
+   * when the server responds with a status code indicating that there is no content, or when a HEAD
+   * request was made to the server.
    * </p>
    *
    * <p>
@@ -516,8 +502,8 @@ public final class HttpResponse {
   }
 
   /**
-   * Returns {@code true} if this response contains a message body. Implemented according to
-   * {@href http://tools.ietf.org/html/rfc2616#section-4.3}.
+   * Returns {@code true} if this response contains a message body. Implemented according to {@href
+   *  http://tools.ietf.org/html/rfc2616#section-4.3}.
    */
   private boolean hasMessageBody() {
     if (getRequest().getMethod() == HttpMethod.HEAD) {
@@ -528,8 +514,8 @@ public final class HttpResponse {
     if (statusCode / 100 == 1) { // 1xx
       return false;
     }
-    if (statusCode == HttpStatusCodes.STATUS_CODE_NO_CONTENT ||
-        statusCode == HttpStatusCodes.STATUS_CODE_NOT_MODIFIED) {
+    if (statusCode == HttpStatusCodes.STATUS_CODE_NO_CONTENT
+        || statusCode == HttpStatusCodes.STATUS_CODE_NOT_MODIFIED) {
       return false;
     }
 
@@ -561,10 +547,10 @@ public final class HttpResponse {
    * </p>
    *
    * <p>
-   * Warning: in prior version 1.9 the maximum amount of content parsed for un-GZipped content was
-   * set by the Content-Length header, but now instead all content is read. Also, prior version
-   * assumed the charset was {@code "UTF-8"}, but now it follows the specification by parsing the
-   * "charset" parameter of the Content-Type header or {@code "ISO-8859-1"} if missing.
+   * All content is read from the input content stream rather than being limited by the
+   * Content-Length. For the character set, it follows the specification by parsing the "charset"
+   * parameter of the Content-Type header or by default {@code "ISO-8859-1"} if the parameter is
+   * missing.
    * </p>
    *
    * @return parsed string or {@code ""} for no content

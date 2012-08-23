@@ -42,21 +42,12 @@ public abstract class LowLevelHttpRequest {
    * {@link #addHeader} will be called for each instance of the header.
    * </p>
    *
-   * <p>
-   * Warning: in prior version 1.9 there was no IOException declared as thrown, but
-   * in version 1.10 an IOException may be thrown.
-   * </p>
-   *
    * @param name header name
    * @param value header value
    */
   public abstract void addHeader(String name, String value) throws IOException;
 
-  /**
-   * Sets the HTTP request content.
-   *
-   * @throws IOException I/O exception
-   */
+  /** Sets the HTTP request content. */
   public abstract void setContent(HttpContent content) throws IOException;
 
   /**

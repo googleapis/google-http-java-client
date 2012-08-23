@@ -91,29 +91,18 @@ public class HttpResponseException extends IOException {
    * Returns whether received a successful HTTP status code {@code >= 200 && < 300} (see
    * {@link #getStatusCode()}).
    *
-   * <p>
-   * Upgrade warning: Overriding this method is no longer supported, and will be made final in
-   * 1.10.
-   * </p>
-   *
-   *
    * @since 1.7
    */
-  public boolean isSuccessStatusCode() {
+  public final boolean isSuccessStatusCode() {
     return HttpStatusCodes.isSuccess(statusCode);
   }
 
   /**
    * Returns the HTTP status code or {@code 0} for none.
    *
-   * <p>
-   * Upgrade warning: Overriding this method is no longer supported, and will be made final in
-   * 1.10.
-   * </p>
-   *
    * @since 1.7
    */
-  public int getStatusCode() {
+  public final int getStatusCode() {
     return statusCode;
   }
 

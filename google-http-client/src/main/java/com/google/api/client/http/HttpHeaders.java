@@ -257,11 +257,6 @@ public class HttpHeaders extends GenericData {
   /**
    * Returns the {@code "Content-Length"} header or {@code null} for none.
    *
-   * <p>
-   * Upgrade warning: in prior version content length was represented as a String, but now it is
-   * represented as a Long.
-   * </p>
-   *
    * @since 1.5
    */
   public final Long getContentLength() {
@@ -270,11 +265,6 @@ public class HttpHeaders extends GenericData {
 
   /**
    * Sets the {@code "Content-Length"} header or {@code null} for none.
-   *
-   * <p>
-   * Upgrade warning: in prior version content length was represented as a String, but now it is
-   * represented as a Long.
-   * </p>
    *
    * @since 1.5
    */

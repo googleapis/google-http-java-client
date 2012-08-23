@@ -29,14 +29,6 @@ public final class Atom {
   public static final String ATOM_NAMESPACE = "http://www.w3.org/2005/Atom";
 
   /**
-   * Atom content type.
-   *
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #MEDIA_TYPE} instead.
-   */
-  @Deprecated
-  public static final String CONTENT_TYPE = "application/atom+xml";
-
-  /**
    * {@code "application/atom+xml; charset=utf-8"} media type used as a default for Atom parsing.
    *
    * <p>
@@ -62,12 +54,12 @@ public final class Atom {
   }
 
   /**
-   * Checks the given content type matches the Atom content type specified in {@link #CONTENT_TYPE}.
+   * Checks the given content type matches the Atom content type specified in {@link #MEDIA_TYPE}.
    *
    * @throws IllegalArgumentException if content type doesn't match
    */
   public static void checkContentType(String contentType) {
-    Preconditions.checkArgument(contentType != null); // for backwards compability
+    Preconditions.checkArgument(contentType != null); // for backwards compatibility
     Preconditions.checkArgument(HttpMediaType.equalsIgnoreParameters(MEDIA_TYPE, contentType),
         "Wrong content type: expected <" + MEDIA_TYPE + "> but got <%s>", contentType);
   }

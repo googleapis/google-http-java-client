@@ -63,49 +63,10 @@ import java.util.Map;
  * @since 1.0
  * @author Yaniv Inbar
  */
-@SuppressWarnings("deprecation")
-public class UrlEncodedParser implements HttpParser, ObjectParser {
+public class UrlEncodedParser implements ObjectParser {
 
   /** {@code "application/x-www-form-urlencoded"} content type. */
   public static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
-
-  /** Content type. */
-  @Deprecated
-  private final String contentType;
-
-  @Deprecated
-  public final String getContentType() {
-    return contentType;
-  }
-
-  /**
-   * Constructor that uses {@link #CONTENT_TYPE} as the content type.
-   *
-   * <p>
-   * To override the defaults, use {@link #builder()}.
-   * </p>
-   */
-  public UrlEncodedParser() {
-    this(CONTENT_TYPE);
-  }
-
-  /**
-   * @param contentType content type
-   * @since 1.7
-   * @deprecated (scheduled to be removed in 1.11) {@link HttpParser} has been replaced by
-   *             {@link ObjectParser}
-   */
-  @Deprecated
-  protected UrlEncodedParser(String contentType) {
-    this.contentType = contentType;
-  }
-
-  @Deprecated
-  public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
-    T newInstance = Types.newInstance(dataClass);
-    parse(response.parseAsString(), newInstance);
-    return newInstance;
-  }
 
   /**
    * Parses the given URL-encoded content into the given data object of data key name/value pairs,
@@ -208,57 +169,6 @@ public class UrlEncodedParser implements HttpParser, ObjectParser {
   private static Object parseValue(Type valueType, List<Type> context, String value) {
     Type resolved = Data.resolveWildcardTypeOrTypeVariable(context, valueType);
     return Data.parsePrimitiveValue(resolved, value);
-  }
-
-  /**
-   * Returns an instance of a new builder.
-   *
-   * @since 1.5
-   */
-  public static Builder builder() {
-    return new Builder();
-  }
-
-  /**
-   * Builder for {@link UrlEncodedParser}.
-   *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.11) Content-Type is no longer stored in the parser.
-   */
-  @Deprecated
-  public static class Builder {
-
-    /** Content type or {@code null} for none. */
-    private String contentType = CONTENT_TYPE;
-
-    protected Builder() {
-    }
-
-    /** Builds a new instance of {@link UrlEncodedParser}. */
-    public UrlEncodedParser build() {
-      return new UrlEncodedParser(contentType);
-    }
-
-    /** Returns the content type or {@code null} for none. */
-    public final String getContentType() {
-      return contentType;
-    }
-
-    /**
-     * Sets the content type.
-     *
-     * <p>
-     * Default value is {@link #CONTENT_TYPE}.
-     * </p>
-     */
-    public Builder setContentType(String contentType) {
-      this.contentType = Preconditions.checkNotNull(contentType);
-      return this;
-    }
   }
 
   public <T> T parseAndClose(InputStream in, Charset charset, Class<T> dataClass)

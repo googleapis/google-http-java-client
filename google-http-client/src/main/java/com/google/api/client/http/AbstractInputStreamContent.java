@@ -36,9 +36,8 @@ import java.io.OutputStream;
  * </p>
  *
  * <p>
- * Warning: in prior version 1.9 the maximum amount of content read from the input stream was
- * limited by the {@link #getLength()}, but now instead all content is read. You may use
- * {@link LimitInputStream} if that functionality is needed.
+ * By default, all content is read from the input stream. If instead you want to limit the maximum
+ * amount of content read from the input stream, you may use {@link LimitInputStream}.
  * </p>
  *
  * @since 1.4
@@ -71,10 +70,6 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    * {@link AbstractInputStreamContent}. If the specific implementation will return {@code true} for
    * {@link #retrySupported()} this should be a factory function which will create a new
    * {@link InputStream} from the source data whenever invoked.
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.6 {@link #getInputStream} was protected, it is now public.
-   * </p>
    *
    * @since 1.7
    */
@@ -191,8 +186,9 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    * @param closeInputStream whether the input stream should be closed at the end of this method
    * @since 1.7
    */
-  public static void copy(InputStream inputStream, OutputStream outputStream,
-      boolean closeInputStream) throws IOException {
+  public static void copy(
+      InputStream inputStream, OutputStream outputStream, boolean closeInputStream)
+      throws IOException {
     try {
       ByteStreams.copy(inputStream, outputStream);
     } finally {

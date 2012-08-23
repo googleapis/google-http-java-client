@@ -117,11 +117,6 @@ public final class HttpRequest {
    * <p>
    * Defaults to 16KB.
    * </p>
-   *
-   * <p>
-   * Upgrade warning: prior to version 1.9, the default was {@code 100,000} bytes, but now it is
-   * 16KB.
-   * </p>
    */
   private int contentLoggingLimit = 0x4000;
 
@@ -341,11 +336,6 @@ public final class HttpRequest {
    * Defaults to 16KB.
    * </p>
    *
-   * <p>
-   * Upgrade warning: prior to version 1.9, the default was {@code 100,000} bytes, but now it is
-   * 16KB.
-   * </p>
-   *
    * @since 1.7
    */
   public int getContentLoggingLimit() {
@@ -370,11 +360,6 @@ public final class HttpRequest {
    *
    * <p>
    * Defaults to 16KB.
-   * </p>
-   *
-   * <p>
-   * Upgrade warning: prior to version 1.9, the default was {@code 100,000} bytes, but now it is
-   * 16KB.
    * </p>
    *
    * @since 1.7
@@ -659,7 +644,7 @@ public final class HttpRequest {
    * </p>
    *
    * @since 1.4
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #setParser(ObjectParser)} instead.
+   * @deprecated (scheduled to be removed in 1.12) Use {@link #setParser(ObjectParser)} instead.
    */
   @Deprecated
   public void addParser(HttpParser parser) {
@@ -689,7 +674,7 @@ public final class HttpRequest {
    * @param contentType content type or {@code null} for {@code null} result
    * @return HTTP response content parser or {@code null} for {@code null} input
    * @since 1.4
-   * @deprecated (scheduled to be removed in 1.11) Use {@link #getParser()} instead.
+   * @deprecated (scheduled to be removed in 1.12) Use {@link #getParser()} instead.
    */
   @Deprecated
   public final HttpParser getParser(String contentType) {
@@ -1129,7 +1114,7 @@ public final class HttpRequest {
    *        {@code null} result
    * @return normalized media type without parameters or {@code null} for {@code null} input
    * @since 1.4
-   * @deprecated (scheduled to be removed in 1.11) Use
+   * @deprecated (scheduled to be removed in 1.12) Use
    *             {@link HttpMediaType#equalsIgnoreParameters(HttpMediaType)} instead
    */
   @Deprecated
