@@ -8,7 +8,7 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client-android2</artifactId>
-  <name>Android Eclair (SDK 2.1) platform extensions to the Google HTTP Client Library for Java.</name>
+  <name>[Deprecated] Android Eclair (SDK 2.1) platform extensions to the Google HTTP Client Library for Java.</name>
 
   <build>
     <plugins>

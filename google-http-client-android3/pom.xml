@@ -8,7 +8,7 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client-android3</artifactId>
-  <name>Android Honeycomb (SDK 3.0) platform extensions to the Google HTTP Client Library for Java.</name>
+  <name>[Deprecated] Android Honeycomb (SDK 3.0) platform extensions to the Google HTTP Client Library for Java.</name>
 
   <build>
     <plugins>

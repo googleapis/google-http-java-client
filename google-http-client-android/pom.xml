@@ -40,11 +40,7 @@
     <dependency>
       <groupId>android</groupId>
       <artifactId>android</artifactId>
-      <!-- use https://github.com/mosabua/maven-android-sdk-deployer and run:
-      mvn install -P 4.1
-      TODO(yanivi): switch to central maven repo when either annotations.jar or 4.1 is available
-       -->
-      <version>4.1_r1</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
