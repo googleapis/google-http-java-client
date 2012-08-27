@@ -31,6 +31,11 @@
       <outputDirectory>libs</outputDirectory>
     </fileSet>
     <fileSet>
+      <directory>android-properties</directory>
+      <outputDirectory>libs</outputDirectory>
+      <filtered>true</filtered>
+    </fileSet>
+    <fileSet>
       <directory>target/libs-sources</directory>
       <outputDirectory>libs-sources</outputDirectory>
     </fileSet>

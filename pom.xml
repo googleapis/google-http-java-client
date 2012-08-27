@@ -57,6 +57,7 @@
         (use mvn project-info-reports:dependencies and copy from
         google-http-client-<name>/target/site/dependencies.html)
     * jdiff.xml
+    * google-http-client-assembly/android-properties/*.properties
     * This pom.xml file below in the dependencyManagement and maven-javadoc-plugin sections
   -->
   <modules>
