@@ -55,6 +55,12 @@ public final class HttpRequest {
    */
   public static final String USER_AGENT_SUFFIX = "Google-HTTP-Java-Client/" + VERSION + " (gzip)";
 
+  /** Whether we've warned about {@link #setAllowEmptyContent} being deprecated. */
+  private static volatile boolean warnedDeprecatedSetAllowEmptyContent;
+
+  /** Whether we've warned about {@link #isAllowEmptyContent} being deprecated. */
+  private static volatile boolean warnedDeprecatedIsAllowEmptyContent;
+
   /**
    * HTTP request execute interceptor to intercept the start of {@link #execute()} (before executing
    * the HTTP request) or {@code null} for none.
@@ -585,8 +591,11 @@ public final class HttpRequest {
   @Deprecated
   public HttpRequest setAllowEmptyContent(boolean allowEmptyContent) {
     this.allowEmptyContent = allowEmptyContent;
-    HttpTransport.LOGGER.warning("setAllowEmptyContent is deprecated and will be removed in 1.12;"
-        + " use setEmptyContent instead (if needed)");
+    if (!warnedDeprecatedSetAllowEmptyContent) {
+      HttpTransport.LOGGER.warning("setAllowEmptyContent is deprecated and will be removed in 1.12;"
+          + " use setEmptyContent instead (if needed)");
+      warnedDeprecatedSetAllowEmptyContent = true;
+    }
     return this;
   }
 
@@ -600,7 +609,10 @@ public final class HttpRequest {
    */
   @Deprecated
   public boolean isAllowEmptyContent() {
-    HttpTransport.LOGGER.warning("isAllowEmptyContent is deprecated and will be removed in 1.12");
+    if (!warnedDeprecatedIsAllowEmptyContent) {
+      HttpTransport.LOGGER.warning("isAllowEmptyContent is deprecated and will be removed in 1.12");
+      warnedDeprecatedIsAllowEmptyContent = true;
+    }
     return allowEmptyContent;
   }
 
