@@ -1,53 +1,64 @@
 <html>
 <title>${project.name} ${project.version}</title>
 <body>
-<h2>${project.name} ${project.version}</h2>
+  <h2>${project.name} ${project.version}</h2>
 
-<h3>Overview</h3>
-<p>High-level details about this library can be found at <a href="http://code.google.com/p/google-http-java-client">http://code.google.com/p/google-http-java-client</a>
-<ul>
-  <li><a href='http://code.google.com/p/google-http-java-client/wiki/ReleaseNotes#Version_${project.version}'>Release Notes</a></li>
-  <li><a href='http://javadoc.google-http-java-client.googlecode.com/hg/${project.version}/index.html'>JavaDoc</a></li>
-  <li><a href='http://code.google.com/p/google-http-java-client/wiki/DeveloperGuide'>Developer's Guide</a></li>
-  <li><a href='http://groups.google.com/group/google-http-java-client'>Support</a></li>
-</ul>
+  <h3>Overview</h3>
+  <p>
+    High-level details about this library can be found at <a
+      href="http://code.google.com/p/google-http-java-client">http://code.google.com/p/google-http-java-client</a>
+  </p>
+  <ul>
+    <li><a
+      href='http://code.google.com/p/google-http-java-client/wiki/ReleaseNotes#Version_${project.version}'>Release
+        Notes</a></li>
+    <li><a
+      href='http://javadoc.google-http-java-client.googlecode.com/hg/${project.version}/index.html'>JavaDoc</a></li>
+    <li><a
+      href='http://code.google.com/p/google-http-java-client/wiki/DeveloperGuide'>Developer's
+        Guide</a></li>
+    <li><a href='http://groups.google.com/group/google-http-java-client'>Support</a></li>
+  </ul>
 
-<h3>Library Details</h3>
-<ul>
-  <li>google-http-client can be used for all platforms.</li>
-  <li>google-http-client-android is for Android SDK 1.6 (Donut) & higher.</li>
-  <li>[deprecated] google-http-client-android2 is for Android SDK 2.0 & higher.</li>
-  <li>[deprecated] google-http-client-android3 is for Android SDK 3.0 & higher.</li>
-  <li>google-http-client-appengine is for Google App Engine.</li>
-  <li>google-http-client-protobuf is for Protocol Buffer support.</li>
-  <li>google-http-client-gson is for GSON support.</li>
-  <li>google-http-client-jackson is for Jackson support.</li>
-  <li>google-http-client-jackson2 is for Jackson 2 support.</li>
-</ul>
+  <h3>Dependencies and Licenses</h3>
+  The license can be found
+  <a href='LICENSE.txt'>here</a>.
+  <br /> Dependent jars can be found in the
+  <a href='libs'>libs</a> folder and the corresponding source jars can be found
+  in the
+  <a href='libs-sources'>libs-sources</a> folder.
+  <br />
+  <br /> The dependency structure and licenses for the different libraries can
+  be found here:
+  <ul>
+    <li>google-http-client: <a href='dependencies/dependencies.html'>dependencies.html</a></li>
+    <li>google-http-client-android: <a
+      href='dependencies/android-dependencies.html'>android-dependencies.html</a></li>
+    <li>[deprecated] google-http-client-android2: <a
+      href='dependencies/android2-dependencies.html'>android2-dependencies.html</a></li>
+    <li>[deprecated] google-http-client-android3: <a
+      href='dependencies/android3-dependencies.html'>android3-dependencies.html</a></li>
+    <li>google-http-client-appengine: <a
+      href='dependencies/appengine-dependencies.html'>appengine-dependencies.html</a></li>
+    <li>google-http-client-protobuf: <a
+      href='dependencies/protobuf-dependencies.html'>protobuf-dependencies.html</a></li>
+    <li>google-http-client-gson: <a
+      href='dependencies/gson-dependencies.html'>gson-dependencies.html</a></li>
+    <li>google-http-client-jackson: <a
+      href='dependencies/jackson-dependencies.html'>jackson-dependencies.html</a></li>
+    <li>google-http-client-jackson2: <a
+      href='dependencies/jackson2-dependencies.html'>jackson2-dependencies.html</a></li>
+  </ul>
 
-<h3>Dependencies and Licenses</h3>
-The license can be found <a href='LICENSE.txt'>here</a>.<br/>
-Dependent jars can be found in the <a href='libs'>libs</a> folder and the corresponding source jars can be found in the <a href='libs-sources'>libs-sources</a> folder.<br/><br/>
-The dependency structure and licenses for the different libraries can be found here:
-<ul>
-  <li>google-http-client: <a href='dependencies/dependencies.html'>dependencies.html</a></li>
-  <li>google-http-client-android: <a href='dependencies/android-dependencies.html'>android-dependencies.html</a></li>
-  <li>[deprecated] google-http-client-android2: <a href='dependencies/android2-dependencies.html'>android2-dependencies.html</a></li>
-  <li>[deprecated] google-http-client-android3: <a href='dependencies/android3-dependencies.html'>android3-dependencies.html</a></li>
-  <li>google-http-client-appengine: <a href='dependencies/appengine-dependencies.html'>appengine-dependencies.html</a></li>
-  <li>google-http-client-protobuf: <a href='dependencies/protobuf-dependencies.html'>protobuf-dependencies.html</a></li>
-  <li>google-http-client-gson: <a href='dependencies/gson-dependencies.html'>gson-dependencies.html</a></li>
-  <li>google-http-client-jackson: <a href='dependencies/jackson-dependencies.html'>jackson-dependencies.html</a></li>
-  <li>google-http-client-jackson2: <a href='dependencies/jackson2-dependencies.html'>jackson2-dependencies.html</a></li>
-</ul>
+  <h3>Maven Usage</h3>
+  For information on how to add these libraries to your Maven project please see
+  <a href='http://code.google.com/p/google-http-java-client/wiki/Setup#Maven'>http://code.google.com/p/google-http-java-client/wiki/Setup#Maven</a>.
 
-<h3>Maven Usage</h3>
-For information on how to add these libraries to your Maven project please see
-<a href='http://code.google.com/p/google-http-java-client/wiki/Setup#Maven'>http://code.google.com/p/google-http-java-client/wiki/Setup#Maven</a>.
-
-<h3>Eclipse</h3>
-A .classpath file snippet that can be included in your project's .classpath has been provided <a href='.classpath'>here</a>.
-Please only use the classpathentry's you actually need (see below for details).
+  <h3>Eclipse</h3>
+  A .classpath file snippet that can be included in your project's .classpath
+  has been provided
+  <a href='.classpath'>here</a>. Please only use the classpathentry's you
+  actually need (see below for details).
 
   <h3>ProGuard</h3>
   <p>
@@ -67,116 +78,79 @@ Please only use the classpathentry's you actually need (see below for details).
       ProGuard</a> for more details.
   </p>
 
-<h3>Android Dependencies</h3>
-The following are the jars from the <a href='libs'>libs</a>
-folder required for Android applications or a newer compatible version:
-<ul>
-  <li>google-http-client-${project.version}.jar</li>
-  <li>google-http-client-android-${project.version}.jar (only for SDK >= 1.6)</li>
-  <li>[deprecated] google-http-client-android2-${project.version}.jar (only for SDK >= 2.1)</li>
-  <li>[deprecated] google-http-client-android3-${project.version}.jar (only for SDK >= 3.0)</li>
-  <li>guava-${project.guava.version}.jar</li>
-  <li>jsr305-${project.jsr305.version}.jar</li>
-  <li>
-    google-http-client-protobuf-${project.version}.jar (when using protobuf-java)
-    <ul>
-      <li>protobuf-java-${project.protobuf-java.version}.jar</li>
-    </ul>
-  </li>
-  <li>
-    google-http-client-gson-${project.version}.jar (when using GSON)
-    <ul>
-      <li>gson-${project.gson.version}.jar</li>
-    </ul>
-  </li>
-  <li>
-    google-http-client-jackson-${project.version}.jar (when using Jackson)
-    <ul>
-      <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
-    </ul>
-  </li>
-  <li>
-    google-http-client-jackson2-${project.version}.jar (when using Jackson 2)
-    <ul>
-      <li>jackson-core-${project.jackson-core2.version}.jar</li>
-    </ul>
-  </li>
-</ul>
-The <a href='libs'>libs</a> folder also contains properties files that specify the location of source jars for Android projects in Eclipse.<br/>
-Please see the <a href='http://code.google.com/p/google-http-java-client/wiki/Android'>Android wiki</a> for the Android Developer's Guide.
+  <h3>Dependencies for all Platforms</h3>
+  The following are the jars from the
+  <a href='libs'>libs</a> folder needed for applications on all platform:
+  <ul>
+    <li>google-http-client-${project.version}.jar</li>
+    <li>guava-${project.guava.version}.jar</li>
+    <li>jsr305-${project.jsr305.version}.jar</li>
+    <li>google-http-client-protobuf-${project.version}.jar (when using
+      protobuf-java)
+      <ul>
+        <li>protobuf-java-${project.protobuf-java.version}.jar</li>
+      </ul>
+    </li>
+    <li>google-http-client-gson-${project.version}.jar (when using GSON)
+      <ul>
+        <li>gson-${project.gson.version}.jar</li>
+      </ul>
+    </li>
+    <li>google-http-client-jackson-${project.version}.jar (when using
+      Jackson)
+      <ul>
+        <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
+      </ul>
+    </li>
+    <li>google-http-client-jackson2-${project.version}.jar (when using
+      Jackson 2)
+      <ul>
+        <li>jackson-core-${project.jackson-core2.version}.jar</li>
+      </ul>
+    </li>
+  </ul>
 
-<h3>Google App Engine Dependencies</h3>
-The following are the jars from the <a href='libs'>libs</a>
-folder required for Google App Engine applications or a newer compatible version:
-<ul>
-  <li>google-http-client-${project.version}.jar</li>
-  <li>google-http-client-appengine-${project.version}.jar</li>
-  <li>guava-${project.guava.version}.jar</li>
-  <li>jsr305-${project.jsr305.version}.jar</li>
-  <li>
-    google-http-client-protobuf-${project.version}.jar (when using protobuf-java)
-    <ul>
-      <li>protobuf-java-${project.protobuf-java.version}.jar</li>
-    </ul>
-  </li>
-  <li>
-    google-http-client-gson-${project.version}.jar (when using GSON)
-    <ul>
-      <li>gson-${project.gson.version}.jar</li>
-    </ul>
-  </li>
-  <li>
-    google-http-client-jackson-${project.version}.jar (when using Jackson)
-    <ul>
-      <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
-    </ul>
-  </li>
-  <li>
-    google-http-client-jackson2-${project.version}.jar (when using Jackson 2)
-    <ul>
-      <li>jackson-core-${project.jackson-core2.version}.jar</li>
-    </ul>
-  </li>
-  <li>xpp3-${project.xpp3.version}.jar</li>
-</ul>
-Please see the <a href='http://code.google.com/p/google-http-java-client/wiki/GoogleAppEngine'>GoogleAppEngine wiki</a> for the Google App Engine Developer's Guide.
+  <h3>Android Dependencies</h3>
+  The following are the jars from the
+  <a href='libs'>libs</a> folder required for Android applications or a newer
+  compatible version:
+  <ul>
+    <li>google-http-client-android-${project.version}.jar (for SDK >= 1.6)</li>
+    <li>[deprecated] google-http-client-android2-${project.version}.jar
+      (only for SDK >= 2.1)</li>
+    <li>[deprecated] google-http-client-android3-${project.version}.jar
+      (only for SDK >= 3.0)</li>
+  </ul>
+  The
+  <a href='libs'>libs</a> folder also contains properties files that specify the
+  location of source jars for Android projects in Eclipse.
+  <br /> Please see the
+  <a href='http://code.google.com/p/google-http-java-client/wiki/Android'>Android
+    wiki</a> for the Android Developer's Guide.
 
-<h3>General Purpose Java 5 Environment Dependencies</h3>
-The following are the jars from the <a href='libs'>libs</a>
-folder required for general purpose Java 5 applications or a newer compatible version:
-<ul>
-  <li>google-http-client-${project.version}.jar</li>
-  <li>commons-logging-${project.commons-logging.version}.jar</li>
-  <li>guava-${project.guava.version}.jar</li>
-  <li>httpclient-${project.httpclient.version}.jar</li>
-  <li>httpcore-${project.httpcore.version}.jar</li>
-  <li>jsr305-${project.jsr305.version}.jar</li>
-  <li>xpp3-${project.xpp3.version}.jar</li>
-  <li>
-    google-http-client-protobuf-${project.version}.jar (when using protobuf-java)
-    <ul>
-      <li>protobuf-java-${project.protobuf-java.version}.jar</li>
-    </ul>
-  </li>
-  <li>
-    google-http-client-gson-${project.version}.jar (when using GSON)
-    <ul>
-      <li>gson-${project.gson.version}.jar</li>
-    </ul>
-  </li>
-  <li>
-    google-http-client-jackson-${project.version}.jar (when using Jackson)
-    <ul>
-      <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
-    </ul>
-  </li>
-  <li>
-    google-http-client-jackson2-${project.version}.jar (when using Jackson 2)
-    <ul>
-      <li>jackson-core-${project.jackson-core2.version}.jar</li>
-    </ul>
-  </li>
-</ul>
+  <h3>Google App Engine Dependencies</h3>
+  The following are the jars from the
+  <a href='libs'>libs</a> folder required for Google App Engine applications or
+  a newer compatible version:
+  <ul>
+    <li>google-http-client-appengine-${project.version}.jar</li>
+    <li>xpp3-${project.xpp3.version}.jar</li>
+  </ul>
+  Please see the
+  <a
+    href='http://code.google.com/p/google-http-java-client/wiki/GoogleAppEngine'>GoogleAppEngine
+    wiki</a> for the Google App Engine Developer's Guide.
+
+  <h3>General Purpose Java 5 Environment Dependencies</h3>
+  The following are the jars from the
+  <a href='libs'>libs</a> folder required for general purpose Java 5
+  applications or a newer compatible version:
+  <ul>
+    <li>commons-logging-${project.commons-logging.version}.jar</li>
+    <li>httpclient-${project.httpclient.version}.jar</li>
+    <li>httpcore-${project.httpcore.version}.jar</li>
+    <li>xpp3-${project.xpp3.version}.jar</li>
+  </ul>
 
 </body>
 </html>
