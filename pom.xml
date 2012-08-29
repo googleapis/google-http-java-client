@@ -29,7 +29,6 @@
     <connection>scm:hg:https://google-http-java-client.googlecode.com/hg/</connection>
     <developerConnection>scm:hg:https://google-http-java-client.googlecode.com/hg/</developerConnection>
     <url>http://code.google.com/p/google-http-java-client/source/browse/</url>
-    <tag>1.11.0-beta</tag>
   </scm>
 
   <developers>
