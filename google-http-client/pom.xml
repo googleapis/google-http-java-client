@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.11.0-beta-SNAPSHOT</version>
+    <version>1.11.0-beta</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client</artifactId>
@@ -82,12 +81,12 @@
               <target>
                 <jar destfile="target/scrubbed.jar" filesetmanifest="merge">
                   <zipfileset src="target/google-http-client-${project.version}.jar">
-                    <exclude name="**/org/apache/commons/codec/language/bm/*.txt"/>
-                    <exclude name="META-INF/*.txt"/>
-                    <exclude name="META-INF/maven/**"/>
+                    <exclude name="**/org/apache/commons/codec/language/bm/*.txt" />
+                    <exclude name="META-INF/*.txt" />
+                    <exclude name="META-INF/maven/**" />
                   </zipfileset>
                 </jar>
-                <move file="target/scrubbed.jar" tofile="target/google-http-client-${project.version}.jar"/>
+                <move file="target/scrubbed.jar" tofile="target/google-http-client-${project.version}.jar" />
               </target>
             </configuration>
           </execution>
