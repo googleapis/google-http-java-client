@@ -71,6 +71,7 @@
     <module>google-http-client-gson</module>
     <module>google-http-client-jackson</module>
     <module>google-http-client-jackson2</module>
+    <module>google-http-client-test</module>
   </modules>
 
   <!--
