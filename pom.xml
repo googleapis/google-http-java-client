@@ -49,6 +49,8 @@
 
   <!--
     If you add a new module, make sure to also add it in the following places:
+    * below in the dependencyManagement and maven-javadoc-plugin sections
+    * jdiff.xml
     * release.html
     * google-http-client-assembly/pom.xml
     * google-http-client-assembly/readme.html
@@ -56,17 +58,13 @@
     * google-http-client-assembly/dependencies/<name>-dependencies.html
         (use mvn project-info-reports:dependencies and copy from
         google-http-client-<name>/target/site/dependencies.html)
-    * jdiff.xml
     * google-http-client-assembly/android-properties/*.properties
-    * This pom.xml file below in the dependencyManagement and maven-javadoc-plugin sections
   -->
   <modules>
     <module>google-http-client</module>
     <module>google-http-client-assembly</module>
     <module>google-http-client-appengine</module>
     <module>google-http-client-android</module>
-    <module>google-http-client-android2</module>
-    <module>google-http-client-android3</module>
     <module>google-http-client-protobuf</module>
     <module>google-http-client-gson</module>
     <module>google-http-client-jackson</module>
@@ -81,15 +79,6 @@
   -->
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>android</groupId>
-        <artifactId>android</artifactId>
-        <!-- use https://github.com/mosabua/maven-android-sdk-deployer and run:
-        mvn install -P 4.1
-        TODO(yanivi): switch to central maven repo when either annotations.jar or 4.1 is available
-         -->
-        <version>4.1_r1</version>
-      </dependency>
       <dependency>
         <groupId>org.codehaus.jackson</groupId>
         <artifactId>jackson-core-asl</artifactId>
@@ -158,16 +147,6 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-android</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-android2</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-android3</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -403,14 +382,6 @@
                 <group>
                   <title>google-http-client-android</title>
                   <packages>com.google.api.client.extensions.android.*</packages>
-                </group>
-                <group>
-                  <title>google-http-client-android2</title>
-                  <packages>com.google.api.client.extensions.android2*</packages>
-                </group>
-                <group>
-                  <title>google-http-client-android3</title>
-                  <packages>com.google.api.client.extensions.android3*</packages>
                 </group>
                 <group>
                   <title>google-http-client-protobuf</title>
