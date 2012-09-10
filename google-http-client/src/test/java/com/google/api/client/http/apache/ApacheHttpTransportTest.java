@@ -56,20 +56,20 @@ public class ApacheHttpTransportTest extends TestCase {
     ApacheHttpTransport transport = new ApacheHttpTransport();
 
     // Test GET.
-    subtestUnsupportedRequestsWithContent(transport.buildGetRequest("http://www.test.url"), "GET");
+    subtestUnsupportedRequestsWithContent(transport.buildRequest("GET", "http://www.test.url"), "GET");
     // Test DELETE.
     subtestUnsupportedRequestsWithContent(
-        transport.buildDeleteRequest("http://www.test.url"), "DELETE");
+        transport.buildRequest("DELETE", "http://www.test.url"), "DELETE");
     // Test HEAD.
     subtestUnsupportedRequestsWithContent(
-        transport.buildHeadRequest("http://www.test.url"), "HEAD");
+        transport.buildRequest("HEAD", "http://www.test.url"), "HEAD");
 
     // Test PUT.
-    subtestSupportedRequestsWithContent(transport.buildPutRequest("http://www.test.url"));
+    subtestSupportedRequestsWithContent(transport.buildRequest("PUT", "http://www.test.url"));
     // Test POST.
-    subtestSupportedRequestsWithContent(transport.buildPostRequest("http://www.test.url"));
+    subtestSupportedRequestsWithContent(transport.buildRequest("POST", "http://www.test.url"));
     // Test PATCH.
-    subtestSupportedRequestsWithContent(transport.buildPatchRequest("http://www.test.url"));
+    subtestSupportedRequestsWithContent(transport.buildRequest("PATCH", "http://www.test.url"));
   }
 
   private void subtestUnsupportedRequestsWithContent(ApacheHttpRequest request, String method)

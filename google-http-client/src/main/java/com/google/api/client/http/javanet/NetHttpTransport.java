@@ -14,9 +14,13 @@
 
 package com.google.api.client.http.javanet;
 
+import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
+import com.google.common.base.Preconditions;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.Arrays;
 
 /**
  * Thread-safe HTTP low-level transport based on the {@code java.net} package.
@@ -36,7 +40,7 @@ import java.io.IOException;
  * <p>
  * Upgrade warning: in prior version 1.10 when using GET method with non-zero content, it
  * automatically changed the method to POST. However, starting with version 1.11 it now throws an
- * {@link IllegalArgumentException} instead.  Instead, use POST.
+ * {@link IllegalArgumentException} instead. Instead, use POST.
  * </p>
  *
  * @since 1.0
@@ -44,33 +48,29 @@ import java.io.IOException;
  */
 public final class NetHttpTransport extends HttpTransport {
 
-  @Override
-  public boolean supportsHead() {
-    return true;
+  /**
+   * All valid request methods as specified in {@link HttpURLConnection#setRequestMethod}, sorted in
+   * ascending alphabetical order.
+   */
+  private static final String[] SUPPORTED_METHODS = {HttpMethods.DELETE,
+      HttpMethods.GET,
+      HttpMethods.HEAD,
+      HttpMethods.OPTIONS,
+      HttpMethods.POST,
+      HttpMethods.PUT,
+      HttpMethods.TRACE};
+  static {
+    Arrays.sort(SUPPORTED_METHODS);
   }
 
   @Override
-  public NetHttpRequest buildDeleteRequest(String url) throws IOException {
-    return new NetHttpRequest("DELETE", url);
+  public boolean supportsMethod(String method) {
+    return Arrays.binarySearch(SUPPORTED_METHODS, method) >= 0;
   }
 
   @Override
-  public NetHttpRequest buildGetRequest(String url) throws IOException {
-    return new NetHttpRequest("GET", url);
-  }
-
-  @Override
-  public NetHttpRequest buildHeadRequest(String url) throws IOException {
-    return new NetHttpRequest("HEAD", url);
-  }
-
-  @Override
-  public NetHttpRequest buildPostRequest(String url) throws IOException {
-    return new NetHttpRequest("POST", url);
-  }
-
-  @Override
-  public NetHttpRequest buildPutRequest(String url) throws IOException {
-    return new NetHttpRequest("PUT", url);
+  protected NetHttpRequest buildRequest(String method, String url) throws IOException {
+    Preconditions.checkArgument(supportsMethod(method));
+    return new NetHttpRequest(method, url);
   }
 }

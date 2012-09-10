@@ -14,12 +14,14 @@
 
 package com.google.api.client.extensions.appengine.http;
 
+import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.appengine.api.urlfetch.HTTPMethod;
+import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.Arrays;
 
 /**
  * Thread-safe HTTP transport for Google App Engine based on <a
@@ -46,33 +48,36 @@ import java.net.HttpURLConnection;
  */
 public final class UrlFetchTransport extends HttpTransport {
 
-  @Override
-  public boolean supportsHead() {
-    return true;
+  /**
+   * All valid request methods as specified in {@link HTTPMethod}, sorted in ascending alphabetical
+   * order.
+   */
+  private static final String[] SUPPORTED_METHODS =
+      {HttpMethods.DELETE, HttpMethods.GET, HttpMethods.HEAD, HttpMethods.POST, HttpMethods.PUT};
+  static {
+    Arrays.sort(SUPPORTED_METHODS);
   }
 
   @Override
-  public LowLevelHttpRequest buildDeleteRequest(String url) throws IOException {
-    return new UrlFetchRequest(HTTPMethod.DELETE, url);
+  public boolean supportsMethod(String method) {
+    return Arrays.binarySearch(SUPPORTED_METHODS, method) >= 0;
   }
 
   @Override
-  public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
-    return new UrlFetchRequest(HTTPMethod.GET, url);
-  }
-
-  @Override
-  public LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
-    return new UrlFetchRequest(HTTPMethod.HEAD, url);
-  }
-
-  @Override
-  public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
-    return new UrlFetchRequest(HTTPMethod.POST, url);
-  }
-
-  @Override
-  public LowLevelHttpRequest buildPutRequest(String url) throws IOException {
-    return new UrlFetchRequest(HTTPMethod.PUT, url);
+  protected UrlFetchRequest buildRequest(String method, String url) throws IOException {
+    Preconditions.checkArgument(supportsMethod(method));
+    HTTPMethod httpMethod;
+    if (method.equals(HttpMethods.DELETE)) {
+      httpMethod = HTTPMethod.DELETE;
+    } else if (method.equals(HttpMethods.GET)) {
+      httpMethod = HTTPMethod.GET;
+    } else if (method.equals(HttpMethods.HEAD)) {
+      httpMethod = HTTPMethod.HEAD;
+    } else if (method.equals(HttpMethods.POST)) {
+      httpMethod = HTTPMethod.POST;
+    } else {
+      httpMethod = HTTPMethod.PUT;
+    }
+    return new UrlFetchRequest(httpMethod, url);
   }
 }

@@ -14,6 +14,7 @@
 
 package com.google.api.client.http.apache;
 
+import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
 
@@ -22,8 +23,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpOptions;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpTrace;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
@@ -39,6 +43,8 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+
+import java.io.IOException;
 
 /**
  * Thread-safe HTTP transport based on the Apache HTTP Client library.
@@ -140,43 +146,31 @@ public final class ApacheHttpTransport extends HttpTransport {
   }
 
   @Override
-  public boolean supportsHead() {
+  public boolean supportsMethod(String method) {
     return true;
   }
 
   @Override
-  public boolean supportsPatch() {
-    return true;
-  }
-
-  @Override
-  public ApacheHttpRequest buildDeleteRequest(String url) {
-    return new ApacheHttpRequest(httpClient, new HttpDelete(url));
-  }
-
-  @Override
-  public ApacheHttpRequest buildGetRequest(String url) {
-    return new ApacheHttpRequest(httpClient, new HttpGet(url));
-  }
-
-  @Override
-  public ApacheHttpRequest buildHeadRequest(String url) {
-    return new ApacheHttpRequest(httpClient, new HttpHead(url));
-  }
-
-  @Override
-  public ApacheHttpRequest buildPatchRequest(String url) {
-    return new ApacheHttpRequest(httpClient, new HttpPatch(url));
-  }
-
-  @Override
-  public ApacheHttpRequest buildPostRequest(String url) {
-    return new ApacheHttpRequest(httpClient, new HttpPost(url));
-  }
-
-  @Override
-  public ApacheHttpRequest buildPutRequest(String url) {
-    return new ApacheHttpRequest(httpClient, new HttpPut(url));
+  protected ApacheHttpRequest buildRequest(String method, String url) throws IOException {
+    HttpRequestBase requestBase;
+    if (method.equals(HttpMethods.DELETE)) {
+      requestBase = new HttpDelete(url);
+    } else if (method.equals(HttpMethods.GET)) {
+      requestBase = new HttpGet(url);
+    } else if (method.equals(HttpMethods.HEAD)) {
+      requestBase = new HttpHead(url);
+    } else if (method.equals(HttpMethods.POST)) {
+      requestBase = new HttpPost(url);
+    } else if (method.equals(HttpMethods.PUT)) {
+      requestBase = new HttpPut(url);
+    } else if (method.equals(HttpMethods.TRACE)) {
+      requestBase = new HttpTrace(url);
+    } else if (method.equals(HttpMethods.OPTIONS)) {
+      requestBase = new HttpOptions(url);
+    } else {
+      requestBase = new HttpExtensionMethod(method, url);
+    }
+    return new ApacheHttpRequest(httpClient, requestBase);
   }
 
   /**

@@ -39,7 +39,9 @@ import java.util.logging.Logger;
  *
  * @since 1.6
  * @author Ravi Mistry
+ * @deprecated (scheduled to be removed in 1.13) Use {@link HttpTransport} instead.
  */
+@Deprecated
 public class JsonHttpClient {
 
   static final Logger LOGGER = Logger.getLogger(JsonHttpClient.class.getName());
@@ -55,7 +57,6 @@ public class JsonHttpClient {
    * be URL-encoded and must end with a "/". This is determined when the library is generated and
    * normally should not be changed.
    */
-  @Deprecated
   private final String baseUrl;
 
   /** The root URL of the service, for example {@code "https://www.googleapis.com/"}. */
@@ -78,7 +79,6 @@ public class JsonHttpClient {
    * The JSON parser to use for parsing requests or {@code null} for none if it is used before
    * initialized in {@link #getJsonHttpParser}.
    */
-  @Deprecated
   private JsonHttpParser jsonHttpParser;
 
   /**
@@ -89,17 +89,13 @@ public class JsonHttpClient {
   /**
    * Set to {@code true} if baseUrl is used instead of {@code servicePath} and {@code rootUrl}.
    */
-  @Deprecated
   private final boolean baseUrlUsed;
 
   /**
    * Returns if baseUrl is used instead of {@code servicePath} and {@code rootUrl}.
    *
    * @since 1.10
-   * @deprecated (scheduled to be removed in 1.12) Use {@link #getRootUrl} and
-   *             {@link #getServicePath} instead.
    */
-  @Deprecated
   protected final boolean isBaseUrlUsed() {
     return baseUrlUsed;
   }
@@ -166,10 +162,7 @@ public class JsonHttpClient {
   /**
    * Returns the JSON HTTP Parser. Initializes the parser once and then caches it for all subsequent
    * calls to this method.
-   *
-   * @deprecated (scheduled to be removed in 1.12) Use {@link #getJsonObjectParser()} instead.
    */
-  @Deprecated
   public final JsonHttpParser getJsonHttpParser() {
     if (jsonHttpParser == null) {
       jsonHttpParser = createParser();
@@ -180,11 +173,7 @@ public class JsonHttpClient {
   /**
    * Creates a JSON parser. Subclasses may override if specific {@link JsonHttpParser}
    * implementations are required.
-   *
-   * @deprecated (scheduled to be removed in 1.12) Use
-   *             {@link Builder#setObjectParser(JsonObjectParser)} instead.
    */
-  @Deprecated
   protected JsonHttpParser createParser() {
     return new JsonHttpParser(jsonFactory);
   }
@@ -247,10 +236,7 @@ public class JsonHttpClient {
    * @param transport The transport to use for requests
    * @param jsonFactory A factory for creating JSON parsers and serializers
    * @param baseUrl The base URL of the service. Must end with a "/"
-   * @deprecated (scheduled to be removed in 1.12) Use {@link #JsonHttpClient(HttpTransport,
-   *             JsonFactory, String, String, HttpRequestInitializer)}.
    */
-  @Deprecated
   public JsonHttpClient(HttpTransport transport, JsonFactory jsonFactory, String baseUrl) {
     this(transport, null, null, jsonFactory, baseUrl, null);
   }
@@ -288,11 +274,7 @@ public class JsonHttpClient {
    * @param baseUrl The base URL of the service. Must end with a "/"
    * @param applicationName The application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
-   * @deprecated (scheduled to be removed in 1.12) Use {@link #JsonHttpClient(HttpTransport,
-   *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, JsonObjectParser,
-   *             String, String, String)}.
    */
-  @Deprecated
   protected JsonHttpClient(HttpTransport transport,
       JsonHttpRequestInitializer jsonHttpRequestInitializer,
       HttpRequestInitializer httpRequestInitializer,
@@ -320,12 +302,8 @@ public class JsonHttpClient {
    * @param baseUrl The base URL of the service. Must end with a "/"
    * @param applicationName The application name to be sent in the User-Agent header of requests or
    *        {@code null} for none
-   * @deprecated (scheduled to be removed in 1.12) Use {@link #JsonHttpClient(HttpTransport,
-   *             JsonHttpRequestInitializer, HttpRequestInitializer, JsonFactory, JsonObjectParser,
-   *             String, String, String)}.
    * @since 1.10
    */
-  @Deprecated
   protected JsonHttpClient(HttpTransport transport,
       JsonHttpRequestInitializer jsonHttpRequestInitializer,
       HttpRequestInitializer httpRequestInitializer,
@@ -551,7 +529,9 @@ public class JsonHttpClient {
    * </p>
    *
    * @since 1.6
+   * @deprecated (scheduled to be removed in 1.13) Use {@link HttpTransport} instead.
    */
+  @Deprecated
   public static class Builder {
 
     /** The transport to use for requests. */
@@ -574,7 +554,6 @@ public class JsonHttpClient {
      * be URL-encoded and must end with a "/". This is determined when the library is generated and
      * normally should not be changed.
      */
-    @Deprecated
     private GenericUrl baseUrl;
 
     /** The root URL of the service, for example {@code "https://www.googleapis.com/"}. */
@@ -592,7 +571,6 @@ public class JsonHttpClient {
     /**
      * Set to {@code true} if baseUrl is used instead of servicePath and rootUrl.
      */
-    @Deprecated
     private boolean baseUrlUsed;
 
     /**
@@ -601,11 +579,7 @@ public class JsonHttpClient {
      * @param transport The transport to use for requests
      * @param jsonFactory A factory for creating JSON parsers and serializers
      * @param baseUrl The base URL of the service. Must end with a "/"
-     *
-     * @deprecated (scheduled to be removed in 1.12) Use {@link #Builder(HttpTransport, JsonFactory,
-     *             String, String, HttpRequestInitializer)} instead.
      */
-    @Deprecated
     protected Builder(HttpTransport transport, JsonFactory jsonFactory, GenericUrl baseUrl) {
       this.transport = transport;
       this.jsonFactory = jsonFactory;
@@ -626,8 +600,7 @@ public class JsonHttpClient {
      * @since 1.10
      */
     public Builder(HttpTransport transport, JsonFactory jsonFactory, String rootUrl,
-        String servicePath,
-        HttpRequestInitializer httpRequestInitializer) {
+        String servicePath, HttpRequestInitializer httpRequestInitializer) {
       this.transport = transport;
       this.jsonFactory = jsonFactory;
       setRootUrl(rootUrl);
@@ -665,10 +638,7 @@ public class JsonHttpClient {
      * Returns if {@code baseUrl} is used instead of {@code rootUrl} and {@code servicePath}.
      *
      * @since 1.10
-     * @deprecated (scheduled to be removed in 1.12) Use {@link #getRootUrl} and
-     *             {@link #getServicePath} instead.
      */
-    @Deprecated
     protected final boolean isBaseUrlUsed() {
       return baseUrlUsed;
     }
@@ -721,11 +691,7 @@ public class JsonHttpClient {
      * Use this method only if {@code baseUrl} is used instead of {@code rootUrl} and
      * {@code servicePath}.
      * </p>
-     *
-     * @deprecated (scheduled to be removed in 1.12) Use {@link #getRootUrl} and
-     *             {@link #getServicePath} instead.
      */
-    @Deprecated
     public final GenericUrl getBaseUrl() {
       Preconditions.checkArgument(baseUrlUsed);
       return baseUrl;
@@ -742,10 +708,7 @@ public class JsonHttpClient {
      * </p>
      *
      * @since 1.7
-     * @deprecated (scheduled to be removed in 1.12) Use {@link #setRootUrl} and
-     *             {@link #setServicePath} instead.
      */
-    @Deprecated
     public Builder setBaseUrl(GenericUrl baseUrl) {
       Preconditions.checkArgument(baseUrlUsed);
       this.baseUrl = Preconditions.checkNotNull(baseUrl);

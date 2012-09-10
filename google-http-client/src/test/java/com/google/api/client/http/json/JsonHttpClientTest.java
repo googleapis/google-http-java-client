@@ -35,6 +35,7 @@ import java.io.IOException;
  *
  * @author Ravi Mistry
  */
+@Deprecated
 public class JsonHttpClientTest extends TestCase {
 
   public JsonHttpClientTest() {

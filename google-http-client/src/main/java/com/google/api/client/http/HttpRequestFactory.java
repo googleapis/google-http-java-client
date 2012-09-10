@@ -83,14 +83,31 @@ public final class HttpRequestFactory {
    * @param url HTTP request URL or {@code null} for none
    * @param content HTTP request content or {@code null} for none
    * @return new HTTP request
+   * @deprecated (scheduled to be removed in 1.13) Use
+   *             {@link #buildRequest(String, GenericUrl, HttpContent)} instead
    */
+  @Deprecated
   public HttpRequest buildRequest(HttpMethod method, GenericUrl url, HttpContent content)
+      throws IOException {
+    return buildRequest(method.toString(), url, content);
+  }
+
+  /**
+   * Builds a request for the given HTTP method, URL, and content.
+   *
+   * @param requestMethod HTTP request method
+   * @param url HTTP request URL or {@code null} for none
+   * @param content HTTP request content or {@code null} for none
+   * @return new HTTP request
+   * @since 1.12
+   */
+  public HttpRequest buildRequest(String requestMethod, GenericUrl url, HttpContent content)
       throws IOException {
     HttpRequest request = transport.buildRequest();
     if (initializer != null) {
       initializer.initialize(request);
     }
-    request.setMethod(method);
+    request.setRequestMethod(requestMethod);
     if (url != null) {
       request.setUrl(url);
     }
@@ -107,7 +124,7 @@ public final class HttpRequestFactory {
    * @return new HTTP request
    */
   public HttpRequest buildDeleteRequest(GenericUrl url) throws IOException {
-    return buildRequest(HttpMethod.DELETE, url, null);
+    return buildRequest(HttpMethods.DELETE, url, null);
   }
 
   /**
@@ -117,7 +134,7 @@ public final class HttpRequestFactory {
    * @return new HTTP request
    */
   public HttpRequest buildGetRequest(GenericUrl url) throws IOException {
-    return buildRequest(HttpMethod.GET, url, null);
+    return buildRequest(HttpMethods.GET, url, null);
   }
 
   /**
@@ -128,7 +145,7 @@ public final class HttpRequestFactory {
    * @return new HTTP request
    */
   public HttpRequest buildPostRequest(GenericUrl url, HttpContent content) throws IOException {
-    return buildRequest(HttpMethod.POST, url, content);
+    return buildRequest(HttpMethods.POST, url, content);
   }
 
   /**
@@ -139,7 +156,7 @@ public final class HttpRequestFactory {
    * @return new HTTP request
    */
   public HttpRequest buildPutRequest(GenericUrl url, HttpContent content) throws IOException {
-    return buildRequest(HttpMethod.PUT, url, content);
+    return buildRequest(HttpMethods.PUT, url, content);
   }
 
   /**
@@ -148,11 +165,13 @@ public final class HttpRequestFactory {
    * @param url HTTP request URL or {@code null} for none
    * @param content HTTP request content or {@code null} for none
    * @return new HTTP request
+   * @deprecated (scheduled to be removed in 1.13) Use
+   *             {@link #buildRequest(String, GenericUrl, HttpContent)} instead
    */
+  @Deprecated
   public HttpRequest buildPatchRequest(GenericUrl url, HttpContent content) throws IOException {
-    return buildRequest(HttpMethod.PATCH, url, content);
+    return buildRequest("PATCH", url, content);
   }
-
 
   /**
    * Builds a {@code HEAD} request for the given URL.
@@ -161,6 +180,6 @@ public final class HttpRequestFactory {
    * @return new HTTP request
    */
   public HttpRequest buildHeadRequest(GenericUrl url) throws IOException {
-    return buildRequest(HttpMethod.HEAD, url, null);
+    return buildRequest(HttpMethods.HEAD, url, null);
   }
 }

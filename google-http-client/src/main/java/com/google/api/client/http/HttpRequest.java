@@ -55,12 +55,6 @@ public final class HttpRequest {
    */
   public static final String USER_AGENT_SUFFIX = "Google-HTTP-Java-Client/" + VERSION + " (gzip)";
 
-  /** Whether we've warned about {@link #setAllowEmptyContent} being deprecated. */
-  private static volatile boolean warnedDeprecatedSetAllowEmptyContent;
-
-  /** Whether we've warned about {@link #isAllowEmptyContent} being deprecated. */
-  private static volatile boolean warnedDeprecatedIsAllowEmptyContent;
-
   /**
    * HTTP request execute interceptor to intercept the start of {@link #execute()} (before executing
    * the HTTP request) or {@code null} for none.
@@ -88,14 +82,6 @@ public final class HttpRequest {
    * </pre>
    */
   private HttpHeaders responseHeaders = new HttpHeaders();
-
-  /**
-   * Some servers will fail to process a POST/PUT/PATCH unless Content-Length header >= 1. If this
-   * value is set to {@code false} then " " is set as the content with Content-Length {@code 1} for
-   * empty contents. Defaults to {@code true}.
-   */
-  @Deprecated
-  private boolean allowEmptyContent = true;
 
   /**
    * Set the number of retries that will be allowed to execute as the result of an
@@ -138,8 +124,15 @@ public final class HttpRequest {
   /** HTTP transport. */
   private final HttpTransport transport;
 
-  /** HTTP request method. */
+  /**
+   * HTTP request method or {@code null} for none or if request method is not one of the values in
+   * {@link HttpMethod}.
+   */
+  @Deprecated
   private HttpMethod method;
+
+  /** HTTP request method or {@code null} for none. */
+  private String requestMethod;
 
   /** HTTP request URL. */
   private GenericUrl url;
@@ -192,11 +185,11 @@ public final class HttpRequest {
 
   /**
    * @param transport HTTP transport
-   * @param method HTTP request method (may be {@code null}
+   * @param requestMethod HTTP request method or {@code null} for none
    */
-  HttpRequest(HttpTransport transport, HttpMethod method) {
+  HttpRequest(HttpTransport transport, String requestMethod) {
     this.transport = transport;
-    this.method = method;
+    setRequestMethod(requestMethod);
   }
 
   /**
@@ -209,10 +202,13 @@ public final class HttpRequest {
   }
 
   /**
-   * Returns the HTTP request method.
+   * Returns the HTTP request method or {@code null} for none or if request method is not one of the
+   * values in {@link HttpMethod}.
    *
    * @since 1.5
+   * @deprecated (scheduled to be removed in 1.13) Use {@link #getRequestMethod()} instead
    */
+  @Deprecated
   public HttpMethod getMethod() {
     return method;
   }
@@ -221,9 +217,50 @@ public final class HttpRequest {
    * Sets the HTTP request method.
    *
    * @since 1.5
+   * @deprecated (scheduled to be removed in 1.13) Use {@link #setRequestMethod} instead
    */
+  @Deprecated
   public HttpRequest setMethod(HttpMethod method) {
-    this.method = Preconditions.checkNotNull(method);
+    return setRequestMethod(method.toString());
+  }
+
+  /**
+   * Returns the HTTP request method or {@code null} for none.
+   *
+   * @since 1.12
+   */
+  public String getRequestMethod() {
+    return requestMethod;
+  }
+
+  /**
+   * Sets the HTTP request method or {@code null} for none.
+   *
+   * @since 1.12
+   */
+  @SuppressWarnings("deprecation")
+  public HttpRequest setRequestMethod(String requestMethod) {
+    Preconditions.checkArgument(requestMethod == null || HttpMediaType.matchesToken(requestMethod));
+    this.requestMethod = requestMethod;
+    method = null;
+    if (HttpMethods.DELETE.equals(requestMethod)) {
+      method = HttpMethod.DELETE;
+    }
+    if (HttpMethods.GET.equals(requestMethod)) {
+      method = HttpMethod.GET;
+    }
+    if (HttpMethods.HEAD.equals(requestMethod)) {
+      method = HttpMethod.HEAD;
+    }
+    if ("PATCH".equals(requestMethod)) {
+      method = HttpMethod.PATCH;
+    }
+    if (HttpMethods.POST.equals(requestMethod)) {
+      method = HttpMethod.POST;
+    }
+    if (HttpMethods.PUT.equals(requestMethod)) {
+      method = HttpMethod.PUT;
+    }
     return this;
   }
 
@@ -581,42 +618,6 @@ public final class HttpRequest {
   }
 
   /**
-   * Some servers will fail to process a POST/PUT/PATCH unless Content-Length header >= 1. If this
-   * value is set to {@code false} then " " is set as the content with Content-Length {@code 1} for
-   * empty contents. Defaults to {@code true}.
-   *
-   * @since 1.7
-   * @deprecated (scheduled to be removed in 1.12) Use {@code setContent(new EmptyContent())}
-   */
-  @Deprecated
-  public HttpRequest setAllowEmptyContent(boolean allowEmptyContent) {
-    this.allowEmptyContent = allowEmptyContent;
-    if (!warnedDeprecatedSetAllowEmptyContent) {
-      HttpTransport.LOGGER.warning("setAllowEmptyContent is deprecated and will be removed in 1.12;"
-          + " use setEmptyContent instead (if needed)");
-      warnedDeprecatedSetAllowEmptyContent = true;
-    }
-    return this;
-  }
-
-  /**
-   * Some servers will fail to process a POST/PUT/PATCH unless Content-Length header >= 1. If this
-   * value is set to {@code false} then " " is set as the content with Content-Length {@code 1} for
-   * empty contents. Defaults to {@code true}.
-   *
-   * @since 1.7
-   * @deprecated (scheduled to be removed in 1.12)
-   */
-  @Deprecated
-  public boolean isAllowEmptyContent() {
-    if (!warnedDeprecatedIsAllowEmptyContent) {
-      HttpTransport.LOGGER.warning("isAllowEmptyContent is deprecated and will be removed in 1.12");
-      warnedDeprecatedIsAllowEmptyContent = true;
-    }
-    return allowEmptyContent;
-  }
-
-  /**
    * Returns the number of retries that will be allowed to execute as the result of an
    * {@link HttpUnsuccessfulResponseHandler} before being terminated or {@code 0} to not retry
    * requests.
@@ -829,6 +830,7 @@ public final class HttpRequest {
    *         {@link #getThrowExceptionOnExecuteError()} is {@code true})
    * @see HttpResponse#isSuccessStatusCode()
    */
+  @SuppressWarnings("deprecation")
   public HttpResponse execute() throws IOException {
     boolean retrySupported = false;
     Preconditions.checkArgument(numRetries >= 0);
@@ -840,7 +842,7 @@ public final class HttpRequest {
     HttpResponse response = null;
     IOException executeException;
 
-    Preconditions.checkNotNull(method);
+    Preconditions.checkNotNull(requestMethod);
     Preconditions.checkNotNull(url);
 
     do {
@@ -859,29 +861,20 @@ public final class HttpRequest {
       // build low-level HTTP request
       String urlString = url.build();
       LowLevelHttpRequest lowLevelHttpRequest;
-      switch (method) {
-        case DELETE:
-          lowLevelHttpRequest = transport.buildDeleteRequest(urlString);
-          break;
-        default:
-          lowLevelHttpRequest = transport.buildGetRequest(urlString);
-          break;
-        case HEAD:
-          Preconditions.checkArgument(
-              transport.supportsHead(), "HTTP transport doesn't support HEAD");
-          lowLevelHttpRequest = transport.buildHeadRequest(urlString);
-          break;
-        case PATCH:
-          Preconditions.checkArgument(
-              transport.supportsPatch(), "HTTP transport doesn't support PATCH");
-          lowLevelHttpRequest = transport.buildPatchRequest(urlString);
-          break;
-        case POST:
-          lowLevelHttpRequest = transport.buildPostRequest(urlString);
-          break;
-        case PUT:
-          lowLevelHttpRequest = transport.buildPutRequest(urlString);
-          break;
+      if (requestMethod.equals(HttpMethods.DELETE)) {
+        lowLevelHttpRequest = transport.buildDeleteRequest(urlString);
+      } else if (requestMethod.equals(HttpMethods.GET)) {
+        lowLevelHttpRequest = transport.buildGetRequest(urlString);
+      } else if (requestMethod.equals(HttpMethods.HEAD)) {
+        lowLevelHttpRequest = transport.buildHeadRequest(urlString);
+      } else if (requestMethod.equals("PATCH")) {
+        lowLevelHttpRequest = transport.buildPatchRequest(urlString);
+      } else if (requestMethod.equals(HttpMethods.POST)) {
+        lowLevelHttpRequest = transport.buildPostRequest(urlString);
+      } else if (requestMethod.equals(HttpMethods.PUT)) {
+        lowLevelHttpRequest = transport.buildPutRequest(urlString);
+      } else {
+        lowLevelHttpRequest = transport.buildRequest(requestMethod, urlString);
       }
       Logger logger = HttpTransport.LOGGER;
       boolean loggable = loggingEnabled && logger.isLoggable(Level.CONFIG);
@@ -891,13 +884,14 @@ public final class HttpRequest {
       if (loggable) {
         logbuf = new StringBuilder();
         logbuf.append("-------------- REQUEST  --------------").append(StringUtils.LINE_SEPARATOR);
-        logbuf.append(method).append(' ').append(urlString).append(StringUtils.LINE_SEPARATOR);
+        logbuf.append(requestMethod)
+            .append(' ').append(urlString).append(StringUtils.LINE_SEPARATOR);
 
         // setup curl logging
         if (curlLoggingEnabled) {
           curlbuf = new StringBuilder("curl -v --compressed");
-          if (!method.equals(HttpMethod.GET)) {
-            curlbuf.append(" -X ").append(method);
+          if (!requestMethod.equals(HttpMethods.GET)) {
+            curlbuf.append(" -X ").append(requestMethod);
           }
         }
       }
@@ -919,11 +913,6 @@ public final class HttpRequest {
 
       // content
       HttpContent content = this.content;
-      if (!allowEmptyContent
-          && (method == HttpMethod.PUT || method == HttpMethod.POST || method == HttpMethod.PATCH)
-          && (content == null || content.getLength() == 0)) {
-        content = ByteArrayContent.fromString(null, " ");
-      }
       if (content != null) {
         String contentEncoding = content.getEncoding();
         long contentLength = content.getLength();
@@ -1096,7 +1085,7 @@ public final class HttpRequest {
       setUrl(new GenericUrl(redirectLocation));
 
       if (statusCode == HttpStatusCodes.STATUS_CODE_SEE_OTHER) {
-        setMethod(HttpMethod.GET);
+        setRequestMethod(HttpMethods.GET);
       }
       return true;
     }

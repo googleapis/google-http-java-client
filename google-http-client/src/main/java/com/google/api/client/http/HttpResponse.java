@@ -506,7 +506,7 @@ public final class HttpResponse {
    *  http://tools.ietf.org/html/rfc2616#section-4.3}.
    */
   private boolean hasMessageBody() {
-    if (getRequest().getMethod() == HttpMethod.HEAD) {
+    if (getRequest().getRequestMethod().equals(HttpMethods.HEAD)) {
       return false;
     }
 

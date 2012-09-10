@@ -59,7 +59,7 @@ public class HttpResponseTest extends TestCase {
   public void testParseAsString_utf8() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
       @Override
-      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
           public LowLevelHttpResponse execute() throws IOException {
@@ -80,7 +80,7 @@ public class HttpResponseTest extends TestCase {
   public void testParseAsString_noContentType() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
         @Override
-      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
             @Override
           public LowLevelHttpResponse execute() throws IOException {
@@ -114,7 +114,7 @@ public class HttpResponseTest extends TestCase {
   public void testHeaderParsing() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
       @Override
-      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
           public LowLevelHttpResponse execute() throws IOException {
@@ -150,7 +150,7 @@ public class HttpResponseTest extends TestCase {
     final DisconnectLowLevelHttpResponse result = new DisconnectLowLevelHttpResponse();
     HttpTransport transport = new MockHttpTransport() {
       @Override
-      public LowLevelHttpRequest buildGetRequest(final String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, final String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
           public LowLevelHttpResponse execute() throws IOException {
@@ -193,7 +193,7 @@ public class HttpResponseTest extends TestCase {
         HttpStatusCodes.STATUS_CODE_NO_CONTENT, HttpStatusCodes.STATUS_CODE_NOT_MODIFIED, 102}) {
       HttpTransport transport = new MockHttpTransport() {
           @Override
-        public LowLevelHttpRequest buildGetRequest(final String url) throws IOException {
+        public LowLevelHttpRequest buildRequest(String method, final String url) throws IOException {
           return new MockLowLevelHttpRequest() {
               @Override
             public LowLevelHttpResponse execute() throws IOException {
@@ -220,7 +220,7 @@ public class HttpResponseTest extends TestCase {
   public void testDownload() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
       @Override
-      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
           public LowLevelHttpResponse execute() throws IOException {
@@ -292,7 +292,7 @@ public class HttpResponseTest extends TestCase {
 
     HttpTransport transport = new MockHttpTransport() {
         @Override
-      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
             @Override
           public LowLevelHttpResponse execute() throws IOException {
@@ -320,7 +320,7 @@ public class HttpResponseTest extends TestCase {
 
     HttpTransport transport = new MockHttpTransport() {
         @Override
-      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
             @Override
           public LowLevelHttpResponse execute() throws IOException {
@@ -364,7 +364,7 @@ public class HttpResponseTest extends TestCase {
       boolean loggingEnabled, String... expectedMessages) throws IOException {
     HttpTransport transport = new MockHttpTransport() {
       @Override
-      public LowLevelHttpRequest buildGetRequest(final String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, final String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
           public LowLevelHttpResponse execute() throws IOException {

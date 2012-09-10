@@ -37,7 +37,9 @@ import java.io.OutputStream;
  *
  * @since 1.6
  * @author Ravi Mistry
+ * @deprecated (scheduled to be removed in 1.13) Use {@link HttpRequest} instead.
  */
+@Deprecated
 public class JsonHttpRequest extends GenericData {
 
   private final JsonHttpClient client;

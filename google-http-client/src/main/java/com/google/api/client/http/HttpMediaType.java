@@ -248,8 +248,12 @@ public final class HttpMediaType {
     return Collections.unmodifiableMap(parameters);
   }
 
-  private static boolean requiresQuotes(String parameterValue) {
-    return !TOKEN_REGEX.matcher(parameterValue).matches();
+  /**
+   * Returns whether the given value matches the regular expression for "token" as specified in <a
+   * href="http://tools.ietf.org/html/rfc2616#section-2.2">RFC 2616 section 2.2</a>.
+   */
+  static boolean matchesToken(String value) {
+    return TOKEN_REGEX.matcher(value).matches();
   }
 
   private static String quoteString(String unquotedString) {
@@ -276,7 +280,7 @@ public final class HttpMediaType {
         str.append("; ");
         str.append(entry.getKey());
         str.append("=");
-        str.append(requiresQuotes(value) ? quoteString(value) : value);
+        str.append(!matchesToken(value) ? quoteString(value) : value);
       }
     }
     cachedBuildResult = str.toString();

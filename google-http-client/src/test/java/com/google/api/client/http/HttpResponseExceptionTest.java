@@ -57,7 +57,7 @@ public class HttpResponseExceptionTest extends TestCase {
   public void testConstructorWithStatusMessage() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
       @Override
-      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
           public LowLevelHttpResponse execute() throws IOException {
@@ -78,7 +78,7 @@ public class HttpResponseExceptionTest extends TestCase {
   public void testConstructor_noStatusCode() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
       @Override
-      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
           public LowLevelHttpResponse execute() throws IOException {
@@ -102,7 +102,7 @@ public class HttpResponseExceptionTest extends TestCase {
   public void testConstructor_messageButNoStatusCode() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
       @Override
-      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
           public LowLevelHttpResponse execute() throws IOException {
@@ -148,7 +148,7 @@ public class HttpResponseExceptionTest extends TestCase {
   public void testThrown() throws IOException {
     HttpTransport transport = new MockHttpTransport() {
       @Override
-      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
           public LowLevelHttpResponse execute() throws IOException {

@@ -19,10 +19,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -33,104 +30,52 @@ import java.util.Set;
  * globally-shared instance of the HTTP transport.
  * </p>
  *
+ * <p>
+ * Upgrade warning: in prior version 1.11 this used {@link HttpMethod} to specify the set of
+ * supported methods, but now it uses a {@link String} instead to allow for arbitrary methods to be
+ * specified.
+ * </p>
+ *
  * @author Yaniv Inbar
  * @since 1.3
  */
+@SuppressWarnings({"javadoc", "deprecation"})
 public class MockHttpTransport extends HttpTransport {
 
-  /**
-   * Default supported optional methods.
-   *
-   * @since 1.5
-   */
-  public static final Set<HttpMethod> DEFAULT_SUPPORTED_OPTIONAL_METHODS =
-      Collections.unmodifiableSet(
-          new HashSet<HttpMethod>(Arrays.asList(HttpMethod.HEAD, HttpMethod.PATCH)));
-
-  /**
-   * Set of supported optional methods or {@link HttpMethod#HEAD} and {@link HttpMethod#PATCH} by
-   * default.
-   */
-  private EnumSet<HttpMethod> supportedOptionalMethods =
-      EnumSet.of(HttpMethod.HEAD, HttpMethod.PATCH);
+  /** Supported HTTP methods or {@code null} to specify that all methods are supported. */
+  private Set<String> supportedMethods;
 
   public MockHttpTransport() {
   }
 
   /**
-   * @param supportedOptionalMethods set of supported optional methods
-   * @since 1.5
+   * @param supportedMethods supported HTTP methods or {@code null} to specify that all methods are
+   *        supported
+   * @since 1.12
    */
-  protected MockHttpTransport(Set<HttpMethod> supportedOptionalMethods) {
-    this.supportedOptionalMethods =
-        supportedOptionalMethods.isEmpty() ? EnumSet.noneOf(HttpMethod.class) : EnumSet.copyOf(
-            supportedOptionalMethods);
-  }
-
-  /**
-   * Returns the set of supported optional methods.
-   *
-   * <p>
-   * Default value is {@link #DEFAULT_SUPPORTED_OPTIONAL_METHODS}.
-   * </p>
-   *
-   * @since 1.5
-   */
-  public final Set<HttpMethod> getSupportedOptionalMethods() {
-    return supportedOptionalMethods;
-  }
-
-  /**
-   * @param supportedOptionalMethods the supportedOptionalMethods to set
-   */
-  public void setSupportedOptionalMethods(EnumSet<HttpMethod> supportedOptionalMethods) {
-    this.supportedOptionalMethods = supportedOptionalMethods;
+  protected MockHttpTransport(Set<String> supportedMethods) {
+    this.supportedMethods = supportedMethods;
   }
 
   @Override
-  public LowLevelHttpRequest buildDeleteRequest(String url) throws IOException {
-    return new MockLowLevelHttpRequest(url);
+  public boolean supportsMethod(String method) {
+    return supportedMethods == null || supportedMethods.contains(method);
   }
 
   @Override
-  public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
-    return new MockLowLevelHttpRequest(url);
-  }
-
-  @Override
-  public LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
-    if (!supportsHead()) {
-      return super.buildHeadRequest(url);
+  protected LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+    if (!supportsMethod(method)) {
+      return super.buildRequest(method, url);
     }
     return new MockLowLevelHttpRequest(url);
   }
 
-  @Override
-  public LowLevelHttpRequest buildPatchRequest(String url) throws IOException {
-    if (!supportsPatch()) {
-      return super.buildPatchRequest(url);
-    }
-    return new MockLowLevelHttpRequest(url);
-  }
-
-  @Override
-  public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
-    return new MockLowLevelHttpRequest(url);
-  }
-
-  @Override
-  public LowLevelHttpRequest buildPutRequest(String url) throws IOException {
-    return new MockLowLevelHttpRequest(url);
-  }
-
-  @Override
-  public boolean supportsHead() {
-    return supportedOptionalMethods.contains(HttpMethod.HEAD);
-  }
-
-  @Override
-  public boolean supportsPatch() {
-    return supportedOptionalMethods.contains(HttpMethod.PATCH);
+  /**
+   * Returns the unmodifiable set of supported HTTP methods or {@code null} to specify that all
+   * methods are supported.
+   */
+  public final Set<String> getSupportedMethods() {
+    return supportedMethods == null ? null : Collections.unmodifiableSet(supportedMethods);
   }
 
   /**
@@ -153,36 +98,29 @@ public class MockHttpTransport extends HttpTransport {
    */
   public static class Builder {
 
-    private Set<HttpMethod> supportedOptionalMethods = DEFAULT_SUPPORTED_OPTIONAL_METHODS;
+    /** Supported HTTP methods or {@code null} to specify that all methods are supported. */
+    private Set<String> supportedMethods;
 
     protected Builder() {
     }
 
     /** Builds a new instance of {@link MockHttpTransport}. */
     public MockHttpTransport build() {
-      return new MockHttpTransport(supportedOptionalMethods);
+      return new MockHttpTransport(supportedMethods);
     }
 
     /**
-     * Returns the set of supported optional methods.
-     *
-     * <p>
-     * Default value is {@link #DEFAULT_SUPPORTED_OPTIONAL_METHODS}.
-     * </p>
+     * Returns the supported HTTP methods or {@code null} to specify that all methods are supported.
      */
-    public final Set<HttpMethod> getSupportedOptionalMethods() {
-      return supportedOptionalMethods;
+    public final Set<String> getSupportedMethods() {
+      return supportedMethods;
     }
 
     /**
-     * Sets the set of supported optional methods.
-     *
-     * <p>
-     * Default value is {@link #DEFAULT_SUPPORTED_OPTIONAL_METHODS}.
-     * </p>
+     * Sets the supported HTTP methods or {@code null} to specify that all methods are supported.
      */
-    public Builder setSupportedOptionalMethods(Set<HttpMethod> supportedOptionalMethods) {
-      this.supportedOptionalMethods = supportedOptionalMethods;
+    public final Builder setSupportedMethods(Set<String> supportedMethods) {
+      this.supportedMethods = supportedMethods;
       return this;
     }
   }

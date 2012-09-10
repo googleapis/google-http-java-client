@@ -14,8 +14,7 @@
 
 /**
  * Subset of HTTP 1.1 needed from the specification in <a
- * href="http://tools.ietf.org/html/rfc2616">RFC 2616: Hypertext Transfer Protocol -- HTTP/1.1</a> .
- * Additionally, it includes <a href="http://tools.ietf.org/html/rfc5789">PATCH Method for HTTP</a>.
+ * href="http://tools.ietf.org/html/rfc2616">RFC 2616: Hypertext Transfer Protocol -- HTTP/1.1</a>.
  *
  * <p>
  * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or

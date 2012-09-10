@@ -1,6 +1,4 @@
 /*
- * Copyright (c) 2010 Google Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
  *
@@ -14,18 +12,33 @@
 
 package com.google.api.client.http.apache;
 
+import com.google.common.base.Preconditions;
+
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 
 import java.net.URI;
 
-final class HttpPatch extends HttpEntityEnclosingRequestBase {
+/**
+ * HTTP extension method.
+ *
+ * @author Yaniv Inbar
+ */
+final class HttpExtensionMethod extends HttpEntityEnclosingRequestBase {
 
-  public HttpPatch(String uri) {
+  /** Request method name. */
+  private final String methodName;
+
+  /**
+   * @param methodName request method name
+   * @param uri URI
+   */
+  public HttpExtensionMethod(String methodName, String uri) {
+    this.methodName = Preconditions.checkNotNull(methodName);
     setURI(URI.create(uri));
   }
 
   @Override
   public String getMethod() {
-    return "PATCH";
+    return methodName;
   }
 }

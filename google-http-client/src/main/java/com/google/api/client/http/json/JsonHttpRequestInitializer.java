@@ -14,6 +14,8 @@
 
 package com.google.api.client.http.json;
 
+import com.google.api.client.http.HttpRequestInitializer;
+
 import java.io.IOException;
 
 /**
@@ -39,7 +41,9 @@ import java.io.IOException;
  *
  * @since 1.6
  * @author Ravi Mistry
+ * @deprecated (scheduled to be removed in 1.13) Use {@link HttpRequestInitializer} instead.
  */
+@Deprecated
 public interface JsonHttpRequestInitializer {
 
   /**

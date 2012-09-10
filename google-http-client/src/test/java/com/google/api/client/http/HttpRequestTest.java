@@ -29,12 +29,11 @@ import com.google.common.collect.Lists;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Tests {@link HttpRequest}.
@@ -43,10 +42,10 @@ import java.util.Map;
  */
 public class HttpRequestTest extends TestCase {
 
-  private static final EnumSet<HttpMethod> BASIC_METHODS = EnumSet.of(HttpMethod.GET,
-      HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE);
-  private static final EnumSet<HttpMethod> OTHER_METHODS = EnumSet.of(HttpMethod.HEAD,
-      HttpMethod.PATCH);
+  private static final Set<String> BASIC_METHODS =
+      ImmutableSet.of(HttpMethods.GET, HttpMethods.PUT, HttpMethods.POST, HttpMethods.DELETE);
+  private static final Set<String> OTHER_METHODS =
+      ImmutableSet.of(HttpMethods.HEAD, "PATCH");
 
   public HttpRequestTest(String name) {
     super(name);
@@ -68,25 +67,23 @@ public class HttpRequestTest extends TestCase {
     MockHttpTransport transport = new MockHttpTransport();
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
-    for (HttpMethod method : BASIC_METHODS) {
-      request.setMethod(method);
+    for (String method : BASIC_METHODS) {
+      request.setRequestMethod(method);
       request.execute();
     }
-    for (HttpMethod method : OTHER_METHODS) {
+    for (String method : OTHER_METHODS) {
       transport =
-          MockHttpTransport.builder().setSupportedOptionalMethods(ImmutableSet.<HttpMethod>of())
-              .build();
+          MockHttpTransport.builder().setSupportedMethods(ImmutableSet.<String>of()).build();
       request = transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
-      request.setMethod(method);
+      request.setRequestMethod(method);
       try {
         request.execute();
         fail("expected IllegalArgumentException");
       } catch (IllegalArgumentException e) {
       }
-      transport =
-          MockHttpTransport.builder().setSupportedOptionalMethods(ImmutableSet.of(method)).build();
+      transport = MockHttpTransport.builder().setSupportedMethods(ImmutableSet.of(method)).build();
       request = transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
-      request.setMethod(method);
+      request.setRequestMethod(method);
       request.execute();
     }
   }
@@ -157,20 +154,15 @@ public class HttpRequestTest extends TestCase {
       }
     };
 
-    protected RedirectTransport(boolean removeLocation, boolean infiniteRedirection,
-        int redirectStatusCode) {
+    protected RedirectTransport(
+        boolean removeLocation, boolean infiniteRedirection, int redirectStatusCode) {
       this.removeLocation = removeLocation;
       this.infiniteRedirection = infiniteRedirection;
       this.redirectStatusCode = redirectStatusCode;
     }
 
     @Override
-    public LowLevelHttpRequest buildGetRequest(String url) {
-      return retryableGetRequest;
-    }
-
-    @Override
-    public LowLevelHttpRequest buildPostRequest(String url) {
+    public LowLevelHttpRequest buildRequest(String method, String url) {
       return retryableGetRequest;
     }
   }
@@ -241,16 +233,15 @@ public class HttpRequestTest extends TestCase {
         new RedirectTransport(false, false, HttpStatusCodes.STATUS_CODE_SEE_OTHER);
     byte[] content = new byte[300];
     Arrays.fill(content, (byte) ' ');
-    HttpRequest request =
-        fakeTransport.createRequestFactory().buildPostRequest(new GenericUrl("http://gmail.com"),
-            new ByteArrayContent(null, content));
-    request.setMethod(HttpMethod.POST);
+    HttpRequest request = fakeTransport.createRequestFactory()
+        .buildPostRequest(new GenericUrl("http://gmail.com"), new ByteArrayContent(null, content));
+    request.setRequestMethod(HttpMethods.POST);
     HttpResponse resp = request.execute();
 
     Assert.assertEquals(200, resp.getStatusCode());
     Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
     // Assert that the method in the request was changed to a GET due to the 303.
-    Assert.assertEquals(HttpMethod.GET, request.getMethod());
+    Assert.assertEquals(HttpMethods.GET, request.getRequestMethod());
   }
 
   public void testInfiniteRedirects() throws IOException {
@@ -318,7 +309,7 @@ public class HttpRequestTest extends TestCase {
     };
 
     @Override
-    public LowLevelHttpRequest buildGetRequest(String url) {
+    public LowLevelHttpRequest buildRequest(String method, String url) {
       return retryableGetRequest;
     }
   }
@@ -352,7 +343,7 @@ public class HttpRequestTest extends TestCase {
     };
 
     @Override
-    public LowLevelHttpRequest buildGetRequest(String url) {
+    public LowLevelHttpRequest buildRequest(String method, String url) {
       retryableGetRequest.getHeaders().clear();
       return retryableGetRequest;
     }
@@ -376,15 +367,15 @@ public class HttpRequestTest extends TestCase {
     };
 
     @Override
-    public LowLevelHttpRequest buildGetRequest(String url) {
+    public LowLevelHttpRequest buildRequest(String method, String url) {
       return retryableGetRequest;
     }
   }
 
   public void testHandleRedirect() throws IOException {
     StatusCodesTransport transport = new StatusCodesTransport();
-    HttpRequest req = transport.createRequestFactory().buildGetRequest(
-        new GenericUrl("http://not/used"));
+    HttpRequest req =
+        transport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
     HttpResponse response = req.execute();
     // 200 should not be redirected
     assertFalse(req.handleRedirect(response.getStatusCode(), response.getHeaders()));
@@ -399,8 +390,8 @@ public class HttpRequestTest extends TestCase {
   private void subtestRedirect(int statusCode, boolean setLocation) throws IOException {
     StatusCodesTransport transport = new StatusCodesTransport();
     transport.statusCode = statusCode;
-    HttpRequest req = transport.createRequestFactory().buildGetRequest(
-        new GenericUrl("http://not/used"));
+    HttpRequest req =
+        transport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
     req.setThrowExceptionOnExecuteError(false);
     HttpResponse response = req.execute();
     if (setLocation) {
@@ -531,9 +522,8 @@ public class HttpRequestTest extends TestCase {
 
   public void testBackOffMultipleCalls() throws IOException {
     int callsBeforeSuccess = 5;
-    FailThenSuccessBackoffTransport fakeTransport =
-        new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR,
-            callsBeforeSuccess);
+    FailThenSuccessBackoffTransport fakeTransport = new FailThenSuccessBackoffTransport(
+        HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
 
@@ -552,9 +542,8 @@ public class HttpRequestTest extends TestCase {
 
   public void testBackOffCallsBeyondRetryLimit() throws IOException {
     int callsBeforeSuccess = 11;
-    FailThenSuccessBackoffTransport fakeTransport =
-        new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR,
-            callsBeforeSuccess);
+    FailThenSuccessBackoffTransport fakeTransport = new FailThenSuccessBackoffTransport(
+        HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
 
@@ -598,9 +587,8 @@ public class HttpRequestTest extends TestCase {
 
   public void testBackOffStop() throws IOException {
     int callsBeforeSuccess = 5;
-    FailThenSuccessBackoffTransport fakeTransport =
-        new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR,
-            callsBeforeSuccess);
+    FailThenSuccessBackoffTransport fakeTransport = new FailThenSuccessBackoffTransport(
+        HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
     backOffPolicy.returnBackOffStop = true;
@@ -625,7 +613,8 @@ public class HttpRequestTest extends TestCase {
   public enum E {
 
     @Value
-    VALUE, @Value("other")
+    VALUE,
+    @Value("other")
     OTHER_VALUE,
   }
 
@@ -670,7 +659,7 @@ public class HttpRequestTest extends TestCase {
     final MockLowLevelHttpRequest lowLevelRequest = new MockLowLevelHttpRequest();
     HttpTransport transport = new MockHttpTransport() {
       @Override
-      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return lowLevelRequest;
       }
     };
@@ -685,8 +674,8 @@ public class HttpRequestTest extends TestCase {
     assertEquals(ImmutableList.of("a2", "b2", "c2"), headers.get("objList"));
     assertEquals(ImmutableList.of("a1", "a2"), headers.get("r"));
     assertFalse(headers.containsKey("Accept-Encoding"));
-    assertEquals(ImmutableList.of("foo " + HttpRequest.USER_AGENT_SUFFIX),
-        headers.get("User-Agent"));
+    assertEquals(
+        ImmutableList.of("foo " + HttpRequest.USER_AGENT_SUFFIX), headers.get("User-Agent"));
     assertEquals(ImmutableList.of("b"), headers.get("a"));
     assertEquals(ImmutableList.of("VALUE"), headers.get("value"));
     assertEquals(ImmutableList.of("other"), headers.get("otherValue"));
@@ -704,7 +693,7 @@ public class HttpRequestTest extends TestCase {
       boolean expectGZip;
 
       @Override
-      public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
 
           @Override
@@ -724,9 +713,8 @@ public class HttpRequestTest extends TestCase {
     MyTransport transport = new MyTransport();
     byte[] content = new byte[300];
     Arrays.fill(content, (byte) ' ');
-    HttpRequest request =
-        transport.createRequestFactory().buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL,
-            new ByteArrayContent(null, content));
+    HttpRequest request = transport.createRequestFactory()
+        .buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL, new ByteArrayContent(null, content));
     assertFalse(request.getEnableGZipContent());
     request.execute();
     assertFalse(request.getEnableGZipContent());
@@ -743,7 +731,7 @@ public class HttpRequestTest extends TestCase {
       boolean expectLogContent;
 
       @Override
-      public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
           public void setContent(HttpContent content) throws IOException {
@@ -763,9 +751,8 @@ public class HttpRequestTest extends TestCase {
     // Create content of length 300.
     byte[] content = new byte[300];
     Arrays.fill(content, (byte) ' ');
-    HttpRequest request =
-        transport.createRequestFactory().buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL,
-            new ByteArrayContent("text/html", content));
+    HttpRequest request = transport.createRequestFactory().buildPostRequest(
+        HttpTesting.SIMPLE_GENERIC_URL, new ByteArrayContent("text/html", content));
 
     // Assert logging is enabled by default.
     assertTrue(request.isLoggingEnabled());
@@ -805,61 +792,6 @@ public class HttpRequestTest extends TestCase {
     assertTrue(HttpRequest.USER_AGENT_SUFFIX.contains("gzip"));
   }
 
-  @Deprecated
-  public void testExecute_allowEmptyContent() throws IOException {
-    class MyTransport extends MockHttpTransport {
-      String expectedContent;
-
-      @Override
-      public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
-        return new MockLowLevelHttpRequest() {
-          @Override
-          public LowLevelHttpResponse execute() throws IOException {
-            if (expectedContent == null) {
-              assertNull(getContent());
-            } else if (getContent() == null) {
-              assertEquals(expectedContent, null);
-            } else {
-              ByteArrayOutputStream stream = new ByteArrayOutputStream();
-              getContent().writeTo(stream);
-              assertEquals(expectedContent, stream.toString());
-            }
-            return super.execute();
-          }
-        };
-      }
-    }
-    MyTransport transport = new MyTransport();
-    HttpRequestFactory requestFactory = transport.createRequestFactory();
-    // Turn off allowEmptyContent and assert
-    for (HttpMethod method : HttpMethod.values()) {
-      boolean isOverriden =
-          method == HttpMethod.PUT || method == HttpMethod.PATCH || method == HttpMethod.POST;
-      transport.expectedContent = isOverriden ? " " : null;
-      requestFactory.buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL, null)
-          .setAllowEmptyContent(false).execute();
-      transport.expectedContent = isOverriden ? " " : "";
-      requestFactory
-          .buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL,
-              ByteArrayContent.fromString(null, "")).setAllowEmptyContent(false).execute();
-      transport.expectedContent = "abc";
-      requestFactory.buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL,
-          ByteArrayContent.fromString(null, "abc")).execute();
-    }
-
-    // Leave allowEmptyContent turned on (default value) and assert
-    for (HttpMethod method : HttpMethod.values()) {
-      transport.expectedContent = null;
-      requestFactory.buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL, null).execute();
-      transport.expectedContent = "";
-      requestFactory.buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL,
-          ByteArrayContent.fromString(null, "")).execute();
-      transport.expectedContent = "abc";
-      requestFactory.buildRequest(method, HttpTesting.SIMPLE_GENERIC_URL,
-          ByteArrayContent.fromString(null, "abc")).execute();
-    }
-  }
-
   public void testExecute_headers() throws IOException {
     HttpTransport transport = new MockHttpTransport();
     HttpRequest request =
@@ -873,8 +805,8 @@ public class HttpRequestTest extends TestCase {
     class MyTransport extends MockHttpTransport {
       String expectedUserAgent;
 
-    @Override
-      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+      @Override
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
             @Override
           public LowLevelHttpResponse execute() throws IOException {
