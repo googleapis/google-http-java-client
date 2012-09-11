@@ -474,12 +474,16 @@ public final class HttpResponse {
    * <b>Reference:</b> http://tools.ietf.org/html/rfc2616#section-4.3
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @return parsed data class or {@code null} for no content
-   * @throws IOException I/O exception
    * @throws IllegalArgumentException if no parser is defined for the given content type
    */
   @SuppressWarnings("deprecation")
-  public <T> T parseAs(Class<T> dataClass) throws IOException {
+  public <T> T parseAs(Class<T> dataClass) throws Exception {
     // Return null if we can be sure that the response contains no content.
     if (!hasMessageBody()) {
       return null;
@@ -526,12 +530,17 @@ public final class HttpResponse {
    * Parses the content of the HTTP response from {@link #getContent()} and reads it into a data
    * type of key/value pairs using the parser returned by {@link #getParser()}.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @return parsed data type instance or {@code null} for no content
    * @throws IOException I/O exception
    * @throws IllegalArgumentException if no parser is defined for this response
    * @since 1.10
    */
-  public Object parseAs(Type dataType) throws IOException {
+  public Object parseAs(Type dataType) throws Exception {
     // Check if we have an ObjectParser that we can use
     ObjectParser objectParser = request.getParser();
     Preconditions.checkArgument(objectParser != null, "No ObjectParser defined for response");

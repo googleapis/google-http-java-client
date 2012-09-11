@@ -14,7 +14,6 @@
 
 package com.google.api.client.http;
 
-import java.io.IOException;
 
 /**
  * HTTP request initializer.
@@ -69,7 +68,12 @@ public interface HttpRequestInitializer {
   /**
    * Initializes a request.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param request HTTP request
    */
-  void initialize(HttpRequest request) throws IOException;
+  void initialize(HttpRequest request) throws Exception;
 }

@@ -27,8 +27,6 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 
-import java.io.IOException;
-
 /**
  * Tests {@link ApacheHttpTransport}.
  *
@@ -52,7 +50,7 @@ public class ApacheHttpTransportTest extends TestCase {
     checkDefaultHttpClient(ApacheHttpTransport.newDefaultHttpClient());
   }
 
-  public void testRequestsWithContent() throws IOException {
+  public void testRequestsWithContent() throws Exception {
     ApacheHttpTransport transport = new ApacheHttpTransport();
 
     // Test GET.
@@ -73,7 +71,7 @@ public class ApacheHttpTransportTest extends TestCase {
   }
 
   private void subtestUnsupportedRequestsWithContent(ApacheHttpRequest request, String method)
-      throws IOException {
+      throws Exception {
     try {
       request.setContent(ByteArrayContent.fromString("text/html", "abc"));
       fail("expected " + IllegalArgumentException.class);
@@ -84,7 +82,7 @@ public class ApacheHttpTransportTest extends TestCase {
     }
   }
 
-  private void subtestSupportedRequestsWithContent(ApacheHttpRequest request) throws IOException {
+  private void subtestSupportedRequestsWithContent(ApacheHttpRequest request) throws Exception {
     request.setContent(ByteArrayContent.fromString("text/html", "abc"));
   }
 

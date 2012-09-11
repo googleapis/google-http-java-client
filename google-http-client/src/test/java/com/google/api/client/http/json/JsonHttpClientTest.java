@@ -211,7 +211,7 @@ public class JsonHttpClientTest extends TestCase {
   }
 
   @SuppressWarnings("deprecation")
-  public void testExecuteWithBaseUrl() throws IOException {
+  public void testExecuteWithBaseUrl() throws Exception {
     final String testBaseUrl = "http://www.test.com/";
     final String testUriTemplate = "uri/template";
     HttpTransport transport = new MockHttpTransport() {
@@ -234,7 +234,7 @@ public class JsonHttpClientTest extends TestCase {
     client.executeUnparsed(HttpMethod.GET, new GenericUrl(testBaseUrl + testUriTemplate), null);
   }
 
-  public void testExecuteWithRootUrl() throws IOException {
+  public void testExecuteWithRootUrl() throws Exception {
     final String testRootUrl = "http://www.test.com/";
     final String testServicePath = "test123/";
     final String testUriTemplate = "uri/template";

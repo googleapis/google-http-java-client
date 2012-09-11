@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableList;
 import junit.framework.TestCase;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
@@ -77,7 +76,7 @@ public class HttpHeadersTest extends TestCase {
   }
 
   @SuppressWarnings("deprecation")
-  public void testSerializeHeaders() throws IOException {
+  public void testSerializeHeaders() throws Exception {
     // custom headers
     MyHeaders myHeaders = new MyHeaders();
     myHeaders.foo = "bar";
@@ -96,7 +95,7 @@ public class HttpHeadersTest extends TestCase {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     Writer writer = new OutputStreamWriter(outputStream);
 
-    HttpHeaders.serializeHeaders(myHeaders, null, null, lowLevelRequest);
+    HttpHeaders.serializeHeaders(myHeaders, null, null, null, lowLevelRequest, null);
 
     // check headers in the lowLevelRequest
     Map<String, List<String>> headers = lowLevelRequest.getHeaders();

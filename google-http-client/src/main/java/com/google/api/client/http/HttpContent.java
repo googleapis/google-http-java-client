@@ -14,7 +14,6 @@
 
 package com.google.api.client.http;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -29,8 +28,15 @@ import java.io.OutputStream;
  */
 public interface HttpContent {
 
-  /** Returns the content length or less than zero if not known. */
-  long getLength() throws IOException;
+  /**
+   * Returns the content length or less than zero if not known.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   */
+  long getLength() throws Exception;
 
   /**
    * Returns the content encoding (for example {@code "gzip"}) or {@code null} for none.
@@ -44,12 +50,17 @@ public interface HttpContent {
    * Writes the content to the given output stream.
    *
    * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
+   * <p>
    * The recommendation for implementations is that they should not close the output stream. Callers
    * should not assume whether or not the output stream has been closed. Implementations that do not
    * close the output stream should flush it at the end of the method.
    * </p>
    */
-  void writeTo(OutputStream out) throws IOException;
+  void writeTo(OutputStream out) throws Exception;
 
   /**
    * Returns whether or not retry is supported on this content type.

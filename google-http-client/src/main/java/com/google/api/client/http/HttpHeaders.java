@@ -615,7 +615,7 @@ public class HttpHeaders extends GenericData {
       LowLevelHttpRequest lowLevelHttpRequest,
       String name,
       Object value,
-      Writer writer) throws IOException {
+      Writer writer) throws Exception {
     // ignore nulls
     if (value == null || Data.isNull(value)) {
       return;
@@ -653,25 +653,11 @@ public class HttpHeaders extends GenericData {
   /**
    * Serializes headers to an {@link LowLevelHttpRequest}.
    *
-   * @param headers HTTP headers
-   * @param logbuf log buffer or {@code null} for none
-   * @param logger logger or {@code null} for none. Logger must be specified if log buffer is
-   *        specified
-   * @param lowLevelHttpRequest low level HTTP request where HTTP headers will be serialized to or
-   *        {@code null} for none
-   *
-   * @since 1.9
-   * @deprecated (scheduled to be removed in 1.12)
-   */
-  @Deprecated
-  public static void serializeHeaders(HttpHeaders headers, StringBuilder logbuf, Logger logger,
-      LowLevelHttpRequest lowLevelHttpRequest) throws IOException {
-    serializeHeaders(headers, logbuf, null, logger, lowLevelHttpRequest, null);
-  }
-
-  /**
-   * Serializes headers to an {@link LowLevelHttpRequest}.
-   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   * 
    * @param headers HTTP headers
    * @param logbuf log buffer or {@code null} for none
    * @param curlbuf log buffer for logging curl requests or {@code null} for none
@@ -682,12 +668,17 @@ public class HttpHeaders extends GenericData {
    */
   static void serializeHeaders(HttpHeaders headers, StringBuilder logbuf,
       StringBuilder curlbuf, Logger logger, LowLevelHttpRequest lowLevelHttpRequest)
-      throws IOException {
+      throws Exception {
     serializeHeaders(headers, logbuf, curlbuf, logger, lowLevelHttpRequest, null);
   }
 
   /**
    * Serializes headers to an {@link Writer} for Multi-part requests.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
    *
    * @param headers HTTP headers
    * @param logbuf log buffer or {@code null} for none
@@ -698,16 +689,16 @@ public class HttpHeaders extends GenericData {
    * @since 1.9
    */
   public static void serializeHeadersForMultipartRequests(
-      HttpHeaders headers, StringBuilder logbuf, Logger logger, Writer writer) throws IOException {
+      HttpHeaders headers, StringBuilder logbuf, Logger logger, Writer writer) throws Exception {
     serializeHeaders(headers, logbuf, null, logger, null, writer);
   }
 
-  private static void serializeHeaders(HttpHeaders headers,
+  static void serializeHeaders(HttpHeaders headers,
       StringBuilder logbuf,
       StringBuilder curlbuf,
       Logger logger,
       LowLevelHttpRequest lowLevelHttpRequest,
-      Writer writer) throws IOException {
+      Writer writer) throws Exception {
     HashSet<String> headerNames = new HashSet<String>();
     for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
       String name = headerEntry.getKey();
@@ -798,7 +789,7 @@ public class HttpHeaders extends GenericData {
       serializeHeaders(
           headers, null, null, null, new HeaderParsingFakeLevelHttpRequest(this, state));
       state.finish();
-    } catch (IOException ex) {
+    } catch (Exception ex) {
       // Should never occur as we are dealing with a FakeLowLevelHttpRequest
       throw new IllegalStateException(ex);
     }

@@ -177,11 +177,10 @@ public abstract class HttpTransport {
    * @param method HTTP method
    * @param url URL
    * @return new low level HTTP request
-   * @throws IOException I/O exception
    * @throws IllegalArgumentException if HTTP method is not supported
    * @since 1.12
    */
-  protected LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+  protected LowLevelHttpRequest buildRequest(String method, String url) throws Exception {
     throw new IllegalArgumentException("HTTP transport doesn't support " + method);
   }
 
@@ -192,13 +191,17 @@ public abstract class HttpTransport {
    * Default implementation calls {@link #buildRequest}.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param url URL
-   * @throws IOException I/O exception
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #buildRequest(String, String)} instead
    */
   @Deprecated
-  protected LowLevelHttpRequest buildDeleteRequest(String url) throws IOException {
+  protected LowLevelHttpRequest buildDeleteRequest(String url) throws Exception {
     return buildRequest("DELETE", url);
   }
 
@@ -209,13 +212,17 @@ public abstract class HttpTransport {
    * Default implementation calls {@link #buildRequest}.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param url URL
-   * @throws IOException I/O exception
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #buildRequest(String, String)} instead
    */
   @Deprecated
-  protected LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+  protected LowLevelHttpRequest buildGetRequest(String url) throws Exception {
     return buildRequest("GET", url);
   }
 
@@ -235,13 +242,17 @@ public abstract class HttpTransport {
    * default}.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param url URL
-   * @throws IOException I/O exception
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #buildRequest(String, String)} instead
    */
   @Deprecated
-  protected LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
+  protected LowLevelHttpRequest buildHeadRequest(String url) throws Exception {
     return buildRequest("HEAD", url);
   }
 
@@ -261,13 +272,17 @@ public abstract class HttpTransport {
    * default}.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param url URL
-   * @throws IOException I/O exception
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #buildRequest(String, String)} instead
    */
   @Deprecated
-  protected LowLevelHttpRequest buildPatchRequest(String url) throws IOException {
+  protected LowLevelHttpRequest buildPatchRequest(String url) throws Exception {
     return buildRequest("PATCH", url);
   }
 
@@ -278,13 +293,17 @@ public abstract class HttpTransport {
    * Default implementation calls {@link #buildRequest}.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param url URL
-   * @throws IOException I/O exception
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #buildRequest(String, String)} instead
    */
   @Deprecated
-  protected LowLevelHttpRequest buildPostRequest(String url) throws IOException {
+  protected LowLevelHttpRequest buildPostRequest(String url) throws Exception {
     return buildRequest("POST", url);
   }
 
@@ -295,13 +314,17 @@ public abstract class HttpTransport {
    * Default implementation calls {@link #buildRequest}.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param url URL
-   * @throws IOException I/O exception
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #buildRequest(String, String)} instead
    */
   @Deprecated
-  protected LowLevelHttpRequest buildPutRequest(String url) throws IOException {
+  protected LowLevelHttpRequest buildPutRequest(String url) throws Exception {
     return buildRequest("PUT", url);
   }
 

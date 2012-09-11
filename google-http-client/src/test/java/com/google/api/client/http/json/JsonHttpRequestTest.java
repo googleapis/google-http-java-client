@@ -26,8 +26,6 @@ import com.google.api.client.testing.http.json.MockJsonFactory;
 
 import junit.framework.TestCase;
 
-import java.io.IOException;
-
 /**
  * Tests {@link JsonHttpRequest}.
  *
@@ -46,17 +44,17 @@ public class JsonHttpRequestTest extends TestCase {
     }
 
     @Override
-    protected HttpResponse executeUnparsed(HttpRequest request) throws IOException {
+    protected HttpResponse executeUnparsed(HttpRequest request) throws Exception {
       if (gzipContentEnabled) {
         assertTrue(request.getEnableGZipContent());
       } else {
         assertFalse(request.getEnableGZipContent());
       }
-      return request.execute();
+      return super.executeUnparsed(request);
     }
   }
 
-  public void testEnableGZipContent() throws IOException {
+  public void testEnableGZipContent() throws Exception {
 
     // Verify that enableGZipContent is true by default.
     TestJsonHttpClient client = new TestJsonHttpClient(

@@ -57,7 +57,7 @@ final class UrlFetchRequest extends LowLevelHttpRequest {
   }
 
   @Override
-  public LowLevelHttpResponse execute() throws IOException {
+  public LowLevelHttpResponse execute() throws Exception {
     // write content
     if (content != null) {
       String contentType = content.getType();
@@ -81,9 +81,7 @@ final class UrlFetchRequest extends LowLevelHttpRequest {
       HTTPResponse response = service.fetch(request);
       return new UrlFetchResponse(response);
     } catch (ResponseTooLargeException e) {
-      IOException ioException = new IOException();
-      ioException.initCause(e);
-      throw ioException;
+      throw new Exception(e);
     }
   }
 

@@ -20,7 +20,6 @@ import com.google.api.client.testing.http.javanet.MockHttpURLConnection;
 
 import junit.framework.TestCase;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -40,7 +39,7 @@ public class NetHttpTransportTest extends TestCase {
     assertTrue(transport.supportsHead());
   }
 
-  public void testExecute_mock() throws IOException {
+  public void testExecute_mock() throws Exception {
     for (String method : METHODS) {
       boolean isPutOrPost = method.equals("PUT") || method.equals("POST");
       MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
@@ -63,7 +62,7 @@ public class NetHttpTransportTest extends TestCase {
     }
   }
 
-  public void testExecute_methodUnchanged() throws IOException {
+  public void testExecute_methodUnchanged() throws Exception {
     for (String method : METHODS) {
       HttpURLConnection connection =
           (HttpURLConnection) new URL("http://www.google.com").openConnection();

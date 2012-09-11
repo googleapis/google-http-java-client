@@ -824,6 +824,11 @@ public final class HttpRequest {
      }
    * </pre>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @return HTTP response for an HTTP success response (or HTTP error response if
    *         {@link #getThrowExceptionOnExecuteError()} is {@code false})
    * @throws HttpResponseException for an HTTP error response (only if
@@ -831,7 +836,7 @@ public final class HttpRequest {
    * @see HttpResponse#isSuccessStatusCode()
    */
   @SuppressWarnings("deprecation")
-  public HttpResponse execute() throws IOException {
+  public HttpResponse execute() throws Exception {
     boolean retrySupported = false;
     Preconditions.checkArgument(numRetries >= 0);
     int retriesRemaining = numRetries;

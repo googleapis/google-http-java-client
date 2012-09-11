@@ -14,7 +14,6 @@
 
 package com.google.api.client.http;
 
-import java.io.IOException;
 
 /**
  * Low-level HTTP request.
@@ -42,13 +41,25 @@ public abstract class LowLevelHttpRequest {
    * {@link #addHeader} will be called for each instance of the header.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param name header name
    * @param value header value
    */
-  public abstract void addHeader(String name, String value) throws IOException;
+  public abstract void addHeader(String name, String value) throws Exception;
 
-  /** Sets the HTTP request content. */
-  public abstract void setContent(HttpContent content) throws IOException;
+  /**
+   * Sets the HTTP request content.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   */
+  public abstract void setContent(HttpContent content) throws Exception;
 
   /**
    * Sets the connection and read timeouts.
@@ -57,17 +68,28 @@ public abstract class LowLevelHttpRequest {
    * Default implementation does nothing, but subclasses should normally override.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param connectTimeout timeout in milliseconds to establish a connection or {@code 0} for an
    *        infinite timeout
    * @param readTimeout Timeout in milliseconds to read data from an established connection or
    *        {@code 0} for an infinite timeout
-   * @throws IOException I/O exception
    * @since 1.4
    */
-  public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
+  public void setTimeout(int connectTimeout, int readTimeout) throws Exception {
 
   }
 
-  /** Executes the request and returns a low-level HTTP response object. */
-  public abstract LowLevelHttpResponse execute() throws IOException;
+  /**
+   * Executes the request and returns a low-level HTTP response object.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   */
+  public abstract LowLevelHttpResponse execute() throws Exception;
 }

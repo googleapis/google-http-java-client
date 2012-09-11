@@ -45,7 +45,7 @@ public class HttpResponseTest extends TestCase {
     super(name);
   }
 
-  public void testParseAsString_none() throws IOException {
+  public void testParseAsString_none() throws Exception {
     HttpTransport transport = new MockHttpTransport();
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
@@ -56,7 +56,7 @@ public class HttpResponseTest extends TestCase {
   private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
   private static final String SAMPLE2 = "123abc";
 
-  public void testParseAsString_utf8() throws IOException {
+  public void testParseAsString_utf8() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
@@ -77,7 +77,7 @@ public class HttpResponseTest extends TestCase {
     assertEquals(SAMPLE, response.parseAsString());
   }
 
-  public void testParseAsString_noContentType() throws IOException {
+  public void testParseAsString_noContentType() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
         @Override
       public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
@@ -111,7 +111,7 @@ public class HttpResponseTest extends TestCase {
 
   static final String ETAG_VALUE = "\"abc\"";
 
-  public void testHeaderParsing() throws IOException {
+  public void testHeaderParsing() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
@@ -146,7 +146,7 @@ public class HttpResponseTest extends TestCase {
     assertEquals(ETAG_VALUE, response.getHeaders().getETag());
   }
 
-  public void testParseAs_noParser() throws IOException {
+  public void testParseAs_noParser() throws Exception {
     final DisconnectLowLevelHttpResponse result = new DisconnectLowLevelHttpResponse();
     HttpTransport transport = new MockHttpTransport() {
       @Override
@@ -186,7 +186,7 @@ public class HttpResponseTest extends TestCase {
     }
   }
 
-  public void testParseAs_noContent() throws IOException {
+  public void testParseAs_noContent() throws Exception {
     final DisconnectLowLevelHttpResponse result = new DisconnectLowLevelHttpResponse();
 
     for (final int status : new int[] {
@@ -217,7 +217,7 @@ public class HttpResponseTest extends TestCase {
     }
   }
 
-  public void testDownload() throws IOException {
+  public void testDownload() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
@@ -286,7 +286,7 @@ public class HttpResponseTest extends TestCase {
     }
   }
 
-  public void testDisconnectWithContent() throws IOException {
+  public void testDisconnectWithContent() throws Exception {
     final DisconnectLowLevelHttpResponse lowLevelHttpResponse =
         new DisconnectLowLevelHttpResponse();
 
@@ -314,7 +314,7 @@ public class HttpResponseTest extends TestCase {
     assertTrue(lowLevelHttpResponse.content.closeCalled);
   }
 
-  public void testDisconnectWithNoContent() throws IOException {
+  public void testDisconnectWithNoContent() throws Exception {
     final DisconnectLowLevelHttpResponse lowLevelHttpResponse =
         new DisconnectLowLevelHttpResponse();
 
@@ -338,7 +338,7 @@ public class HttpResponseTest extends TestCase {
     assertTrue(lowLevelHttpResponse.disconnectCalled);
   }
 
-  public void testContentLoggingLimitWithLoggingEnabledAndDisabled() throws IOException {
+  public void testContentLoggingLimitWithLoggingEnabledAndDisabled() throws Exception {
     subtestContentLoggingLimit("", 2, false);
     subtestContentLoggingLimit("A", 2, false);
     subtestContentLoggingLimit("ABC" + '\0' + "DEF", 20, true, "Total: 7 bytes", "ABC DEF");
@@ -361,7 +361,7 @@ public class HttpResponseTest extends TestCase {
   }
 
   public void subtestContentLoggingLimit(final String content, int contentLoggingLimit,
-      boolean loggingEnabled, String... expectedMessages) throws IOException {
+      boolean loggingEnabled, String... expectedMessages) throws Exception {
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildRequest(String method, final String url) throws IOException {

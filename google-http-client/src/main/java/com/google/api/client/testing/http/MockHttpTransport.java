@@ -18,7 +18,6 @@ import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -63,7 +62,7 @@ public class MockHttpTransport extends HttpTransport {
   }
 
   @Override
-  protected LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+  protected LowLevelHttpRequest buildRequest(String method, String url) throws Exception {
     if (!supportsMethod(method)) {
       return super.buildRequest(method, url);
     }
