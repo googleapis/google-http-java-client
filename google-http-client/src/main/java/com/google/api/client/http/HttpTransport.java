@@ -14,7 +14,6 @@
 
 package com.google.api.client.http;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
@@ -332,9 +331,13 @@ public abstract class HttpTransport {
    * Default implementation does nothing, but subclasses may override to possibly release allocated
    * system resources or close connections.
    *
-   * @throws IOException I/O exception
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @since 1.4
    */
-  public void shutdown() throws IOException {
+  public void shutdown() throws Exception {
   }
 }
