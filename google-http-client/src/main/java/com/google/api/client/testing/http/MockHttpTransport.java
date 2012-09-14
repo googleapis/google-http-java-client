@@ -62,7 +62,7 @@ public class MockHttpTransport extends HttpTransport {
   }
 
   @Override
-  protected LowLevelHttpRequest buildRequest(String method, String url) throws Exception {
+  public LowLevelHttpRequest buildRequest(String method, String url) throws Exception {
     if (!supportsMethod(method)) {
       return super.buildRequest(method, url);
     }
