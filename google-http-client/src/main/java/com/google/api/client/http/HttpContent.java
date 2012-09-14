@@ -50,14 +50,14 @@ public interface HttpContent {
    * Writes the content to the given output stream.
    *
    * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
-   * <p>
    * The recommendation for implementations is that they should not close the output stream. Callers
    * should not assume whether or not the output stream has been closed. Implementations that do not
    * close the output stream should flush it at the end of the method.
+   * </p>
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
    * </p>
    */
   void writeTo(OutputStream out) throws Exception;
