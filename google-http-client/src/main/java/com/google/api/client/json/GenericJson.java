@@ -16,6 +16,7 @@ package com.google.api.client.json;
 
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
+import com.google.common.base.Throwables;
 
 import java.util.concurrent.ConcurrentMap;
 
@@ -61,7 +62,11 @@ public class GenericJson extends GenericData implements Cloneable {
   @Override
   public String toString() {
     if (jsonFactory != null) {
-      return jsonFactory.toString(this);
+      try {
+        return jsonFactory.toString(this);
+      } catch (Exception e) {
+        throw Throwables.propagate(e);
+      }
     }
     return super.toString();
   }
@@ -70,9 +75,14 @@ public class GenericJson extends GenericData implements Cloneable {
    * Returns a pretty-printed serialized JSON string representation or {@link #toString()} if
    * {@link #getFactory()} is {@code null}.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
+   *
    * @since 1.6
    */
-  public String toPrettyString() {
+  public String toPrettyString() throws Exception {
     if (jsonFactory != null) {
       return jsonFactory.toPrettyString(this);
     }

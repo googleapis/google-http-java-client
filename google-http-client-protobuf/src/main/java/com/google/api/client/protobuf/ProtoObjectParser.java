@@ -42,14 +42,13 @@ import java.nio.charset.Charset;
  * @since 1.10
  */
 public class ProtoObjectParser implements ObjectParser {
+
   @SuppressWarnings("unchecked")
-  public <T> T parseAndClose(InputStream in, Charset charset, Class<T> dataClass)
-      throws IOException {
+  public <T> T parseAndClose(InputStream in, Charset charset, Class<T> dataClass) throws Exception {
     return (T) ProtocolBuffers.parseAndClose(in, (Class<? extends MessageLite>) dataClass);
   }
 
-  public Object parseAndClose(InputStream in, Charset charset, Type dataType)
-      throws IOException {
+  public Object parseAndClose(InputStream in, Charset charset, Type dataType) throws Exception {
     if (dataType instanceof Class<?>) {
       return parseAndClose(in, charset, (Class<?>) dataType);
     }

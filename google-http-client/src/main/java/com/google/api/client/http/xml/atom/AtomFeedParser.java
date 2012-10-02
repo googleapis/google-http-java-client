@@ -83,6 +83,11 @@ public final class AtomFeedParser<T, E> extends AbstractAtomFeedParser<T> {
   /**
    * Parses the given HTTP response using the given feed class and entry class.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param <T> feed type
    * @param <E> entry type
    * @param response HTTP response
@@ -90,12 +95,10 @@ public final class AtomFeedParser<T, E> extends AbstractAtomFeedParser<T> {
    * @param feedClass feed class
    * @param entryClass entry class
    * @return Atom feed parser
-   * @throws IOException I/O exception
-   * @throws XmlPullParserException XML pull parser exception
    */
   public static <T, E> AtomFeedParser<T, E> create(HttpResponse response,
       XmlNamespaceDictionary namespaceDictionary, Class<T> feedClass, Class<E> entryClass)
-      throws IOException, XmlPullParserException {
+      throws Exception {
     InputStream content = response.getContent();
     try {
       Atom.checkContentType(response.getContentType());

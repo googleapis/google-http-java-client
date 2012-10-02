@@ -44,8 +44,6 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 
-import java.io.IOException;
-
 /**
  * Thread-safe HTTP transport based on the Apache HTTP Client library.
  *
@@ -151,7 +149,7 @@ public final class ApacheHttpTransport extends HttpTransport {
   }
 
   @Override
-  protected ApacheHttpRequest buildRequest(String method, String url) throws IOException {
+  protected ApacheHttpRequest buildRequest(String method, String url) {
     HttpRequestBase requestBase;
     if (method.equals(HttpMethods.DELETE)) {
       requestBase = new HttpDelete(url);
@@ -171,6 +169,54 @@ public final class ApacheHttpTransport extends HttpTransport {
       requestBase = new HttpExtensionMethod(method, url);
     }
     return new ApacheHttpRequest(httpClient, requestBase);
+  }
+
+  @Deprecated
+  @Override
+  public boolean supportsHead() {
+    return true;
+  }
+
+  @Deprecated
+  @Override
+  public boolean supportsPatch() {
+    return true;
+  }
+
+  @Deprecated
+  @Override
+  public ApacheHttpRequest buildDeleteRequest(String url) {
+    return buildRequest("DELETE", url);
+  }
+
+  @Deprecated
+  @Override
+  public ApacheHttpRequest buildGetRequest(String url) {
+    return buildRequest("GET", url);
+  }
+
+  @Deprecated
+  @Override
+  public ApacheHttpRequest buildHeadRequest(String url) {
+    return buildRequest("HEAD", url);
+  }
+
+  @Deprecated
+  @Override
+  public ApacheHttpRequest buildPatchRequest(String url) {
+    return buildRequest("PATCH", url);
+  }
+
+  @Deprecated
+  @Override
+  public ApacheHttpRequest buildPostRequest(String url) {
+    return buildRequest("POST", url);
+  }
+
+  @Deprecated
+  @Override
+  public ApacheHttpRequest buildPutRequest(String url) {
+    return buildRequest("PUT", url);
   }
 
   /**

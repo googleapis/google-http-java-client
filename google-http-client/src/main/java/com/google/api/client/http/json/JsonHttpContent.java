@@ -21,7 +21,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.common.base.Preconditions;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -66,7 +65,7 @@ public class JsonHttpContent extends AbstractHttpContent {
     this.data = Preconditions.checkNotNull(data);
   }
 
-  public void writeTo(OutputStream out) throws IOException {
+  public void writeTo(OutputStream out) throws Exception {
     JsonGenerator generator = jsonFactory.createJsonGenerator(out, getCharset());
     generator.serialize(data);
     generator.flush();

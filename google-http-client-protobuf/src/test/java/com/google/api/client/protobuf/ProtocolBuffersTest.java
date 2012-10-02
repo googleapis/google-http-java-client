@@ -14,12 +14,9 @@
 
 package com.google.api.client.protobuf;
 
-import com.google.api.client.protobuf.ProtocolBuffers;
-
 import junit.framework.TestCase;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 /**
  * Tests {@link ProtocolBuffers}.
@@ -28,9 +25,8 @@ import java.io.IOException;
  */
 public class ProtocolBuffersTest extends TestCase {
 
-  public void testParseAndClose() throws IOException {
-    SimpleProto.TestMessage mockResponse = SimpleProto.TestMessage
-        .newBuilder()
+  public void testParseAndClose() throws Exception {
+    SimpleProto.TestMessage mockResponse = SimpleProto.TestMessage.newBuilder()
         .setStatus(SimpleProto.TestStatus.SUCCESS)
         .setName("This is a test!")
         .setValue(123454321)

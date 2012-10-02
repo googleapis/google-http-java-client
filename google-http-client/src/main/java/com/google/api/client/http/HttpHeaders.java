@@ -24,6 +24,7 @@ import com.google.api.client.util.Key;
 import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Throwables;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -328,7 +329,11 @@ public class HttpHeaders extends GenericData {
 
   /**
    * Returns the {@code "Cookie"} header or {@code null} for none.
-   * <a href='http://tools.ietf.org/html/rfc6265'>See Cookie Specification.</a>
+   * 
+   * <p>
+   * See <a href='http://tools.ietf.org/html/rfc6265'>Cookie Specification.</a>
+   * </p>
+   * 
    * @since 1.6
    */
   public final String getCookie() {
@@ -736,12 +741,18 @@ public class HttpHeaders extends GenericData {
   /**
    * Puts all headers of the {@link LowLevelHttpResponse} into this {@link HttpHeaders} object.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
+   *
    * @param response Response from which the headers are copied
    * @param logger {@link StringBuilder} to which logging output is added or {@code null} to disable
    *        logging
    * @since 1.10
    */
-  public final void fromHttpResponse(LowLevelHttpResponse response, StringBuilder logger) {
+  public final void fromHttpResponse(LowLevelHttpResponse response, StringBuilder logger)
+      throws Exception {
     ParseHeaderState state = new ParseHeaderState(this, logger);
     int headerCount = response.getHeaderCount();
     for (int i = 0; i < headerCount; i++) {
@@ -791,7 +802,7 @@ public class HttpHeaders extends GenericData {
       state.finish();
     } catch (Exception ex) {
       // Should never occur as we are dealing with a FakeLowLevelHttpRequest
-      throw new IllegalStateException(ex);
+      throw Throwables.propagate(ex);
     }
   }
 

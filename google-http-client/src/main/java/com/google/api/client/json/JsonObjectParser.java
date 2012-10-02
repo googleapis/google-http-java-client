@@ -17,7 +17,6 @@ package com.google.api.client.json;
 import com.google.api.client.util.ObjectParser;
 import com.google.common.base.Preconditions;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Type;
@@ -66,23 +65,21 @@ public class JsonObjectParser implements ObjectParser {
   }
 
   @SuppressWarnings("unchecked")
-  public <T> T parseAndClose(InputStream in, Charset charset, Class<T> dataClass)
-      throws IOException {
+  public <T> T parseAndClose(InputStream in, Charset charset, Class<T> dataClass) throws Exception {
     return (T) parseAndClose(in, charset, (Type) dataClass);
   }
 
-  public Object parseAndClose(InputStream in, Charset charset, Type dataType)
-      throws IOException {
+  public Object parseAndClose(InputStream in, Charset charset, Type dataType) throws Exception {
     JsonParser parser = jsonFactory.createJsonParser(in, charset);
     return parser.parse(dataType, true, null);
   }
 
   @SuppressWarnings("unchecked")
-  public <T> T parseAndClose(Reader reader, Class<T> dataClass) throws IOException {
+  public <T> T parseAndClose(Reader reader, Class<T> dataClass) throws Exception {
     return (T) parseAndClose(reader, (Type) dataClass);
   }
 
-  public Object parseAndClose(Reader reader, Type dataType) throws IOException {
+  public Object parseAndClose(Reader reader, Type dataType) throws Exception {
     JsonParser parser = jsonFactory.createJsonParser(reader);
     return parser.parse(dataType, true, null);
   }

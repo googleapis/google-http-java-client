@@ -16,8 +16,6 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.StringUtils;
 
-import java.io.IOException;
-
 /**
  * Exception thrown when an error status code is detected in an HTTP response.
  *
@@ -137,7 +135,7 @@ public class HttpResponseException extends Exception {
     String content = "";
     try {
       content = response.parseAsString();
-    } catch (IOException exception) {
+    } catch (Exception exception) {
       // it would be bad to throw an exception while throwing an exception
       exception.printStackTrace();
     }

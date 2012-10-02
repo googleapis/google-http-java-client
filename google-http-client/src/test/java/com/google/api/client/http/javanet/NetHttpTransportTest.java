@@ -34,7 +34,7 @@ public class NetHttpTransportTest extends TestCase {
       {"GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"};
 
   @Deprecated
-  public void testSupportsHead() {
+  public void testSupportsHead() throws Exception {
     NetHttpTransport transport = new NetHttpTransport();
     assertTrue(transport.supportsHead());
   }

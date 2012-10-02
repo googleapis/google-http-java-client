@@ -22,7 +22,6 @@ import com.google.appengine.api.urlfetch.HTTPHeader;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
-import com.google.appengine.api.urlfetch.ResponseTooLargeException;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 
@@ -77,12 +76,8 @@ final class UrlFetchRequest extends LowLevelHttpRequest {
     }
     // connect
     URLFetchService service = URLFetchServiceFactory.getURLFetchService();
-    try {
-      HTTPResponse response = service.fetch(request);
-      return new UrlFetchResponse(response);
-    } catch (ResponseTooLargeException e) {
-      throw new Exception(e);
-    }
+    HTTPResponse response = service.fetch(request);
+    return new UrlFetchResponse(response);
   }
 
   @Override

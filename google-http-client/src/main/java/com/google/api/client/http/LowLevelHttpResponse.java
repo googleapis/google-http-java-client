@@ -14,7 +14,6 @@
 
 package com.google.api.client.http;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -38,51 +37,119 @@ public abstract class LowLevelHttpResponse {
   /**
    * Returns the HTTP response content input stream or {@code null} for none.
    *
-   * @throws IOException I/O exception
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
    */
-  public abstract InputStream getContent() throws IOException;
+  public abstract InputStream getContent() throws Exception;
 
   /**
    * Returns the content encoding (for example {@code "gzip"}) or {@code null} for none.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
    */
-  public abstract String getContentEncoding();
+  public abstract String getContentEncoding() throws Exception;
 
-  /** Returns the content length or {@code 0} for none. */
-  public abstract long getContentLength();
+  /**
+   * Returns the content length or {@code 0} for none.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
+   */
+  public abstract long getContentLength() throws Exception;
 
-  /** Returns the content type or {@code null} for none. */
-  public abstract String getContentType();
+  /**
+   * Returns the content type or {@code null} for none.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
+   */
+  public abstract String getContentType() throws Exception;
 
-  /** Returns the response status line or {@code null} for none. */
-  public abstract String getStatusLine();
+  /**
+   * Returns the response status line or {@code null} for none.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
+   */
+  public abstract String getStatusLine() throws Exception;
 
-  /** Returns the response status code or {@code 0} for none. */
-  public abstract int getStatusCode();
+  /**
+   * Returns the response status code or {@code 0} for none.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
+   */
+  public abstract int getStatusCode() throws Exception;
 
-  /** Returns the HTTP reason phrase or {@code null} for none. */
-  public abstract String getReasonPhrase();
+  /**
+   * Returns the HTTP reason phrase or {@code null} for none.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
+   */
+  public abstract String getReasonPhrase() throws Exception;
 
   /**
    * Returns the number of HTTP response headers.
+   *
    * <p>
    * Note that multiple headers of the same name need to be supported, in which case each header
    * value is treated as a separate header.
+   * </p>
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
    */
-  public abstract int getHeaderCount();
+  public abstract int getHeaderCount() throws Exception;
 
-  /** Returns the HTTP response header name at the given zero-based index. */
-  public abstract String getHeaderName(int index);
+  /**
+   * Returns the HTTP response header name at the given zero-based index.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
+   */
+  public abstract String getHeaderName(int index) throws Exception;
 
-  /** Returns the HTTP response header value at the given zero-based index. */
-  public abstract String getHeaderValue(int index);
+  /**
+   * Returns the HTTP response header value at the given zero-based index.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
+   */
+  public abstract String getHeaderValue(int index) throws Exception;
 
   /**
    * Default implementation does nothing, but subclasses may override to attempt to abort the
    * connection or release allocated system resources for this connection.
    *
-   * @throws IOException I/O exception
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @since 1.4
    */
-  public void disconnect() throws IOException {
+  public void disconnect() throws Exception {
   }
 }

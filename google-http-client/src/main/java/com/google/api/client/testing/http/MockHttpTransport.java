@@ -17,6 +17,7 @@ package com.google.api.client.testing.http;
 import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
+import com.google.common.base.Preconditions;
 
 import java.util.Collections;
 import java.util.Set;
@@ -57,15 +58,13 @@ public class MockHttpTransport extends HttpTransport {
   }
 
   @Override
-  public boolean supportsMethod(String method) {
+  public boolean supportsMethod(String method) throws Exception {
     return supportedMethods == null || supportedMethods.contains(method);
   }
 
   @Override
-  public LowLevelHttpRequest buildRequest(String method, String url) throws Exception {
-    if (!supportsMethod(method)) {
-      return super.buildRequest(method, url);
-    }
+  protected LowLevelHttpRequest buildRequest(String method, String url) throws Exception {
+    Preconditions.checkArgument(supportsMethod(method), "HTTP method %s not supported", method);
     return new MockLowLevelHttpRequest(url);
   }
 
@@ -115,13 +114,13 @@ public class MockHttpTransport extends HttpTransport {
 
   @Deprecated
   @Override
-  public boolean supportsHead() {
+  public boolean supportsHead() throws Exception {
     return super.supportsHead();
   }
 
   @Deprecated
   @Override
-  public boolean supportsPatch() {
+  public boolean supportsPatch() throws Exception {
     return super.supportsPatch();
   }
 

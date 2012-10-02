@@ -23,7 +23,6 @@ import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.common.base.Preconditions;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -86,7 +85,7 @@ public class JsonHttpParser implements HttpParser {
     return contentType;
   }
 
-  public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
+  public <T> T parse(HttpResponse response, Class<T> dataClass) throws Exception {
     return parserForResponse(jsonFactory, response).parseAndClose(dataClass, null);
   }
 
@@ -107,6 +106,11 @@ public class JsonHttpParser implements HttpParser {
    * {@link JsonToken#START_OBJECT}.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param jsonFactory JSON factory to use
    * @param response HTTP response
    * @return JSON parser
@@ -114,7 +118,7 @@ public class JsonHttpParser implements HttpParser {
    * @since 1.3
    */
   public static JsonParser parserForResponse(JsonFactory jsonFactory, HttpResponse response)
-      throws IOException {
+      throws Exception {
     InputStream content = response.getContent();
     try {
       JsonParser parser = jsonFactory.createJsonParser(content);

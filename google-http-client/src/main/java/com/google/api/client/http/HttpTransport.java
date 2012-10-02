@@ -127,11 +127,16 @@ public abstract class HttpTransport {
    * Default implementation calls {@link #supportsMethod}.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
+   *
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #supportsMethod(String)} instead
    */
   @Deprecated
-  public boolean supportsHead() {
+  public boolean supportsHead() throws Exception {
     return supportsMethod("HEAD");
   }
 
@@ -142,11 +147,16 @@ public abstract class HttpTransport {
    * Default implementation calls {@link #supportsMethod}.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
+   *
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #supportsMethod(String)} instead
    */
   @Deprecated
-  public boolean supportsPatch() {
+  public boolean supportsPatch() throws Exception {
     return supportsMethod("PATCH");
   }
 
@@ -161,7 +171,7 @@ public abstract class HttpTransport {
    * @param method HTTP method
    * @since 1.12
    */
-  public boolean supportsMethod(String method) {
+  public boolean supportsMethod(String method) throws Exception {
     return Arrays.binarySearch(SUPPORTED_METHODS, method) >= 0;
   }
 
@@ -169,8 +179,9 @@ public abstract class HttpTransport {
    * Builds a low level HTTP request for the given HTTP method.
    *
    * <p>
-   * Default implementation throws an {@link IllegalArgumentException}. Subclasses must override,
-   * though they should call the super implementation for an unsupported HTTP method.
+   * Warning: for backwards compatibility, in version 1.12 a default implementation that throws an
+   * {@link IllegalArgumentException} is provided, but it will be made abstract in the next version
+   * 1.13.
    * </p>
    *
    * @param method HTTP method
@@ -180,7 +191,7 @@ public abstract class HttpTransport {
    * @since 1.12
    */
   protected LowLevelHttpRequest buildRequest(String method, String url) throws Exception {
-    throw new IllegalArgumentException("HTTP transport doesn't support " + method);
+    throw new IllegalArgumentException("HTTP method " + method + " not supported");
   }
 
   /**

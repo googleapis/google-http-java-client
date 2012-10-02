@@ -23,7 +23,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -56,80 +55,181 @@ public abstract class JsonParser {
    * Closes the parser and the underlying input stream or reader, and releases any memory associated
    * with it.
    *
-   * @throws IOException if failed
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
    */
-  public abstract void close() throws IOException;
+  public abstract void close() throws Exception;
 
-  /** Returns the next token from the stream or {@code null} to indicate end of input. */
-  public abstract JsonToken nextToken() throws IOException;
+  /**
+   * Returns the next token from the stream or {@code null} to indicate end of input.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   */
+  public abstract JsonToken nextToken() throws Exception;
 
   /**
    * Returns the token the parser currently points to or {@code null} for none (at start of input or
    * after end of input).
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
+   * throw an exception.
+   * </p>
    */
-  public abstract JsonToken getCurrentToken();
+  public abstract JsonToken getCurrentToken() throws Exception;
 
   /**
    * Returns the most recent field name or {@code null} for array values or for root-level values.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
    */
-  public abstract String getCurrentName() throws IOException;
+  public abstract String getCurrentName() throws Exception;
 
   /**
    * Skips to the matching {@link JsonToken#END_ARRAY} if current token is
    * {@link JsonToken#START_ARRAY}, the matching {@link JsonToken#END_OBJECT} if the current token
    * is {@link JsonToken#START_OBJECT}, else does nothing.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
    */
-  public abstract JsonParser skipChildren() throws IOException;
+  public abstract JsonParser skipChildren() throws Exception;
 
   /**
    * Returns a textual representation of the current token or {@code null} if
    * {@link #getCurrentToken()} is {@code null}.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
    */
-  public abstract String getText() throws IOException;
+  public abstract String getText() throws Exception;
 
   // TODO(yanivi): Jackson provides getTextCharacters(), getTextLength(), and getTextOffset()
 
-  /** Returns the byte value of the current token. */
-  public abstract byte getByteValue() throws IOException;
+  /**
+   * Returns the byte value of the current token.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   */
+  public abstract byte getByteValue() throws Exception;
 
-  /** Returns the short value of the current token. */
-  public abstract short getShortValue() throws IOException;
+  /**
+   * Returns the short value of the current token.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   */
+  public abstract short getShortValue() throws Exception;
 
-  /** Returns the int value of the current token. */
-  public abstract int getIntValue() throws IOException;
+  /**
+   * Returns the int value of the current token.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   */
+  public abstract int getIntValue() throws Exception;
 
-  /** Returns the float value of the current token. */
-  public abstract float getFloatValue() throws IOException;
+  /**
+   * Returns the float value of the current token.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   */
+  public abstract float getFloatValue() throws Exception;
 
-  /** Returns the long value of the current token. */
-  public abstract long getLongValue() throws IOException;
+  /**
+   * Returns the long value of the current token.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   */
+  public abstract long getLongValue() throws Exception;
 
-  /** Returns the double value of the current token. */
-  public abstract double getDoubleValue() throws IOException;
+  /**
+   * Returns the double value of the current token.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   */
+  public abstract double getDoubleValue() throws Exception;
 
-  /** Returns the {@link BigInteger} value of the current token. */
-  public abstract BigInteger getBigIntegerValue() throws IOException;
+  /**
+   * Returns the {@link BigInteger} value of the current token.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   */
+  public abstract BigInteger getBigIntegerValue() throws Exception;
 
   /**
    * Returns the {@link UnsignedInteger} value of the current token.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @since 1.9
    */
-  public abstract UnsignedInteger getUnsignedIntegerValue() throws IOException;
+  public abstract UnsignedInteger getUnsignedIntegerValue() throws Exception;
 
   /**
    * Returns the {@link UnsignedLong} value of the current token.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @since 1.9
    */
-  public abstract UnsignedLong getUnsignedLongValue() throws IOException;
+  public abstract UnsignedLong getUnsignedLongValue() throws Exception;
 
-  /** Returns the {@link BigDecimal} value of the current token. */
-  public abstract BigDecimal getDecimalValue() throws IOException;
+  /**
+   * Returns the {@link BigDecimal} value of the current token.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   */
+  public abstract BigDecimal getDecimalValue() throws Exception;
 
   /**
    * Parse a JSON object, array, or value into a new instance of the given destination class using
    * {@link JsonParser#parse(Class, CustomizeJsonParser)}, and then closes the parser.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
    *
    * @param <T> destination class type
    * @param destinationClass destination class that has a public default constructor to use to
@@ -138,7 +238,7 @@ public abstract class JsonParser {
    * @return new instance of the parsed destination class
    */
   public final <T> T parseAndClose(Class<T> destinationClass, CustomizeJsonParser customizeParser)
-      throws IOException {
+      throws Exception {
     try {
       return parse(destinationClass, customizeParser);
     } finally {
@@ -155,9 +255,14 @@ public abstract class JsonParser {
    * key that was found.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param keyToFind key to find
    */
-  public final void skipToKey(String keyToFind) throws IOException {
+  public final void skipToKey(String keyToFind) throws Exception {
     skipToKey(Collections.singleton(keyToFind));
   }
 
@@ -170,11 +275,16 @@ public abstract class JsonParser {
    * the key that was found.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param keysToFind set of keys to look for
    * @return name of the first matching key found or {@code null} if no match was found
    * @since 1.10
    */
-  public final String skipToKey(Set<String> keysToFind) throws IOException {
+  public final String skipToKey(Set<String> keysToFind) throws Exception {
     JsonToken curToken = startParsingObjectOrArray();
     while (curToken == JsonToken.FIELD_NAME) {
       String key = getText();
@@ -189,7 +299,7 @@ public abstract class JsonParser {
   }
 
   /** Starts parsing that handles start of input by calling {@link #nextToken()}. */
-  private JsonToken startParsing() throws IOException {
+  private JsonToken startParsing() throws Exception {
     JsonToken currentToken = getCurrentToken();
     // token is null at start, so get next token
     if (currentToken == null) {
@@ -210,7 +320,7 @@ public abstract class JsonParser {
    * {@link JsonToken#FIELD_NAME} or {@link JsonToken#END_OBJECT}.
    * </p>
    */
-  private JsonToken startParsingObjectOrArray() throws IOException {
+  private JsonToken startParsingObjectOrArray() throws Exception {
     JsonToken currentToken = startParsing();
     switch (currentToken) {
       case START_OBJECT:
@@ -234,11 +344,16 @@ public abstract class JsonParser {
    * or to a field name.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param destination destination object
    * @param customizeParser optional parser customizer or {@code null} for none
    */
   public final void parseAndClose(Object destination, CustomizeJsonParser customizeParser)
-      throws IOException {
+      throws Exception {
     try {
       parse(destination, customizeParser);
     } finally {
@@ -255,6 +370,11 @@ public abstract class JsonParser {
    * will be the array's ending {@link JsonToken#END_ARRAY}.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param <T> destination class type
    * @param destinationClass destination class that has a public default constructor to use to
    *        create a new instance
@@ -262,7 +382,7 @@ public abstract class JsonParser {
    * @return new instance of the parsed destination class
    */
   public final <T> T parse(Class<T> destinationClass, CustomizeJsonParser customizeParser)
-      throws IOException {
+      throws Exception {
     startParsing();
     @SuppressWarnings("unchecked")
     T result = (T) parse(destinationClass, false, customizeParser);
@@ -278,6 +398,11 @@ public abstract class JsonParser {
    * will be the array's ending {@link JsonToken#END_ARRAY}.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param dataType Type into which the JSON should be parsed
    * @param close {@code true} if {@link #close()} should be called after parsing
    * @param customizeParser optional parser customizer or {@code null} for none
@@ -285,7 +410,7 @@ public abstract class JsonParser {
    * @since 1.10
    */
   public Object parse(Type dataType, boolean close, CustomizeJsonParser customizeParser)
-      throws IOException {
+      throws Exception {
     try {
       startParsing();
       return parseValue(null, dataType, new ArrayList<Type>(), null, customizeParser);
@@ -305,11 +430,16 @@ public abstract class JsonParser {
    * {@link JsonToken#END_OBJECT} of the current object.
    * </p>
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param destination destination object
    * @param customizeParser optional parser customizer or {@code null} for none
    */
   public final void parse(Object destination, CustomizeJsonParser customizeParser)
-      throws IOException {
+      throws Exception {
     ArrayList<Type> context = new ArrayList<Type>();
     context.add(destination.getClass());
     parse(context, destination, customizeParser);
@@ -317,7 +447,7 @@ public abstract class JsonParser {
 
   private void parse(
       ArrayList<Type> context, Object destination, CustomizeJsonParser customizeParser)
-      throws IOException {
+      throws Exception {
     if (destination instanceof GenericJson) {
       ((GenericJson) destination).setFactory(getFactory());
     }
@@ -372,6 +502,11 @@ public abstract class JsonParser {
    * Parse a JSON Array from the given JSON parser (which is closed after parsing completes) into
    * the given destination collection, optionally using the given parser customizer.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param destinationCollectionClass class of destination collection (must have a public default
    *        constructor)
    * @param destinationItemClass class of destination collection item (must have a public default
@@ -379,7 +514,7 @@ public abstract class JsonParser {
    * @param customizeParser optional parser customizer or {@code null} for none
    */
   public final <T> Collection<T> parseArrayAndClose(Class<?> destinationCollectionClass,
-      Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws IOException {
+      Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws Exception {
     try {
       return parseArray(destinationCollectionClass, destinationItemClass, customizeParser);
     } finally {
@@ -391,13 +526,18 @@ public abstract class JsonParser {
    * Parse a JSON Array from the given JSON parser (which is closed after parsing completes) into
    * the given destination collection, optionally using the given parser customizer.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param destinationCollection destination collection
    * @param destinationItemClass class of destination collection item (must have a public default
    *        constructor)
    * @param customizeParser optional parser customizer or {@code null} for none
    */
   public final <T> void parseArrayAndClose(Collection<? super T> destinationCollection,
-      Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws IOException {
+      Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws Exception {
     try {
       parseArray(destinationCollection, destinationItemClass, customizeParser);
     } finally {
@@ -409,6 +549,11 @@ public abstract class JsonParser {
    * Parse a JSON Array from the given JSON parser into the given destination collection, optionally
    * using the given parser customizer.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param destinationCollectionClass class of destination collection (must have a public default
    *        constructor)
    * @param destinationItemClass class of destination collection item (must have a public default
@@ -416,7 +561,7 @@ public abstract class JsonParser {
    * @param customizeParser optional parser customizer or {@code null} for none
    */
   public final <T> Collection<T> parseArray(Class<?> destinationCollectionClass,
-      Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws IOException {
+      Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws Exception {
     @SuppressWarnings("unchecked")
     Collection<T> destinationCollection =
         (Collection<T>) Data.newCollectionInstance(destinationCollectionClass);
@@ -428,13 +573,18 @@ public abstract class JsonParser {
    * Parse a JSON Array from the given JSON parser into the given destination collection, optionally
    * using the given parser customizer.
    *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
+   *
    * @param destinationCollection destination collection
    * @param destinationItemClass class of destination collection item (must have a public default
    *        constructor)
    * @param customizeParser optional parser customizer or {@code null} for none
    */
   public final <T> void parseArray(Collection<? super T> destinationCollection,
-      Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws IOException {
+      Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws Exception {
     parseArray(
         null, destinationCollection, destinationItemClass, new ArrayList<Type>(), customizeParser);
   }
@@ -451,7 +601,7 @@ public abstract class JsonParser {
    */
   private <T> void parseArray(Field fieldContext, Collection<T> destinationCollection,
       Type destinationItemType, ArrayList<Type> context, CustomizeJsonParser customizeParser)
-      throws IOException {
+      throws Exception {
     JsonToken curToken = startParsingObjectOrArray();
     while (curToken != JsonToken.END_ARRAY) {
       @SuppressWarnings("unchecked")
@@ -473,7 +623,7 @@ public abstract class JsonParser {
    * @param customizeParser optional parser customizer or {@code null} for none
    */
   private void parseMap(Field fieldContext, Map<String, Object> destinationMap, Type valueType,
-      ArrayList<Type> context, CustomizeJsonParser customizeParser) throws IOException {
+      ArrayList<Type> context, CustomizeJsonParser customizeParser) throws Exception {
     JsonToken curToken = startParsingObjectOrArray();
     while (curToken == JsonToken.FIELD_NAME) {
       String key = getText();
@@ -500,7 +650,7 @@ public abstract class JsonParser {
    * @return parsed value
    */
   private final Object parseValue(Field fieldContext, Type valueType, ArrayList<Type> context,
-      Object destination, CustomizeJsonParser customizeParser) throws IOException {
+      Object destination, CustomizeJsonParser customizeParser) throws Exception {
     valueType = Data.resolveWildcardTypeOrTypeVariable(context, valueType);
     // resolve a parameterized type to a class
     Class<?> valueClass = valueType instanceof Class<?> ? (Class<?>) valueType : null;

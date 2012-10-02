@@ -16,6 +16,7 @@ package com.google.api.client.extensions.appengine.http;
 
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.common.base.Preconditions;
 
@@ -65,7 +66,7 @@ public final class UrlFetchTransport extends HttpTransport {
 
   @Override
   protected UrlFetchRequest buildRequest(String method, String url) throws IOException {
-    Preconditions.checkArgument(supportsMethod(method));
+    Preconditions.checkArgument(supportsMethod(method), "HTTP method %s not supported", method);
     HTTPMethod httpMethod;
     if (method.equals(HttpMethods.DELETE)) {
       httpMethod = HTTPMethod.DELETE;
@@ -79,5 +80,41 @@ public final class UrlFetchTransport extends HttpTransport {
       httpMethod = HTTPMethod.PUT;
     }
     return new UrlFetchRequest(httpMethod, url);
+  }
+
+  @Deprecated
+  @Override
+  public boolean supportsHead() {
+    return true;
+  }
+
+  @Deprecated
+  @Override
+  public LowLevelHttpRequest buildDeleteRequest(String url) throws IOException {
+    return buildRequest("DELETE", url);
+  }
+
+  @Deprecated
+  @Override
+  public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+    return buildRequest("GET", url);
+  }
+
+  @Deprecated
+  @Override
+  public LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
+    return buildRequest("HEAD", url);
+  }
+
+  @Deprecated
+  @Override
+  public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
+    return buildRequest("POST", url);
+  }
+
+  @Deprecated
+  @Override
+  public LowLevelHttpRequest buildPutRequest(String url) throws IOException {
+    return buildRequest("PUT", url);
   }
 }

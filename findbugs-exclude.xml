@@ -64,6 +64,9 @@
     <Bug pattern="SS_SHOULD_BE_STATIC"/>
     <Class name="com.google.api.client.json.rpc2.JsonRpcRequest"/>
   </And>
+  <And>
+    <Bug pattern="SE_BAD_FIELD_INNER_CLASS"/>
+  </And>
   <!-- The following are known to be bugs and should be fixed -->
   <!-- The following are known to not be bugs and should not be fixed -->
 </FindBugsFilter>

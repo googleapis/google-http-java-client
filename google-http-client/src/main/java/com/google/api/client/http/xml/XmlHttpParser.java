@@ -86,8 +86,13 @@ public class XmlHttpParser implements HttpParser {
   /**
    * Default implementation parses the content of the response into the data class of key/value
    * pairs, but subclasses may override.
+   *
+   * <p>
+   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
+   * {@link java.io.IOException}.
+   * </p>
    */
-  public <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException {
+  public <T> T parse(HttpResponse response, Class<T> dataClass) throws Exception {
     InputStream content = response.getContent();
     try {
       T result = Types.newInstance(dataClass);
