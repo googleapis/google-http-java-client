@@ -14,8 +14,10 @@
 
 package com.google.api.client.protobuf;
 
+import com.google.common.base.Throwables;
 import com.google.protobuf.MessageLite;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 
@@ -44,21 +46,21 @@ public class ProtocolBuffers {
    * Parses protocol buffer content from an input stream (closing the input stream) into a protocol
    * buffer message.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param <T> destination message type
    * @param messageClass destination message class that has a {@code parseFrom(InputStream)} public
    *        static method
    * @return new instance of the parsed destination message class
    */
   public static <T extends MessageLite> T parseAndClose(
-      InputStream inputStream, Class<T> messageClass) throws Exception {
+      InputStream inputStream, Class<T> messageClass) throws IOException {
     try {
       Method newBuilder = messageClass.getDeclaredMethod("parseFrom", InputStream.class);
       return messageClass.cast(newBuilder.invoke(null, inputStream));
+    } catch (Exception e) {
+      Throwables.propagateIfPossible(e, IOException.class);
+      IOException io = new IOException("Error parsing message of type " + messageClass);
+      io.initCause(e);
+      throw io;
     } finally {
       inputStream.close();
     }

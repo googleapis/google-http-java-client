@@ -16,18 +16,15 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.StringUtils;
 
+import java.io.IOException;
+
 /**
  * Exception thrown when an error status code is detected in an HTTP response.
- *
- * <p>
- * Upgrade warning: this interface now extends {@link Exception}. In prior version 1.11 it extended
- * {@link java.io.IOException}.
- * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
  */
-public class HttpResponseException extends Exception {
+public class HttpResponseException extends IOException {
 
   private static final long serialVersionUID = -1875819453475890043L;
 
@@ -135,7 +132,7 @@ public class HttpResponseException extends Exception {
     String content = "";
     try {
       content = response.parseAsString();
-    } catch (Exception exception) {
+    } catch (IOException exception) {
       // it would be bad to throw an exception while throwing an exception
       exception.printStackTrace();
     }

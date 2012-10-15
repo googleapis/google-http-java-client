@@ -21,6 +21,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -65,26 +66,10 @@ public class JsonHttpContent extends AbstractHttpContent {
     this.data = Preconditions.checkNotNull(data);
   }
 
-  public void writeTo(OutputStream out) throws Exception {
+  public void writeTo(OutputStream out) throws IOException {
     JsonGenerator generator = jsonFactory.createJsonGenerator(out, getCharset());
     generator.serialize(data);
     generator.flush();
-  }
-
-  /**
-   * Sets the content type or {@code null} for none.
-   *
-   * <p>
-   * Defaults to {@link Json#CONTENT_TYPE}.
-   * </p>
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.12) Use {@link #setMediaType(HttpMediaType)} instead.
-   */
-  @Deprecated
-  public JsonHttpContent setType(String type) {
-    setMediaType(new HttpMediaType(type));
-    return this;
   }
 
   @Override

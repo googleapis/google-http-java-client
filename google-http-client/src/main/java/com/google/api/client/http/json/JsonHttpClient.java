@@ -407,11 +407,6 @@ public class JsonHttpClient {
    * {@link HttpRequest#setEnableGZipContent}.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param method HTTP Method type
    * @param url The complete URL of the service where requests should be sent
    * @param body A POJO that can be serialized into JSON or {@code null} for none
@@ -420,7 +415,7 @@ public class JsonHttpClient {
    */
   @SuppressWarnings("deprecation")
   protected HttpRequest buildHttpRequest(HttpMethod method, GenericUrl url, Object body)
-      throws Exception {
+      throws IOException {
     HttpRequest httpRequest = requestFactory.buildRequest(method, url, null);
     JsonObjectParser parser = getJsonObjectParser();
 
@@ -456,11 +451,6 @@ public class JsonHttpClient {
      }
    * </pre>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param method HTTP Method type
    * @param url The complete URL of the service where requests should be sent
    * @param body A POJO that can be serialized into JSON or {@code null} for none
@@ -469,7 +459,7 @@ public class JsonHttpClient {
    * @since 1.7
    */
   protected HttpResponse executeUnparsed(HttpMethod method, GenericUrl url, Object body)
-      throws Exception {
+      throws IOException {
     HttpRequest request = buildHttpRequest(method, url, body);
     return executeUnparsed(request);
   }
@@ -492,16 +482,12 @@ public class JsonHttpClient {
      }
    * </pre>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param request HTTP Request
    * @return {@link HttpResponse} type
+   * @throws IOException if the request fails
    * @since 1.9
    */
-  protected HttpResponse executeUnparsed(HttpRequest request) throws Exception {
+  protected HttpResponse executeUnparsed(HttpRequest request) throws IOException {
     return request.execute();
   }
 
@@ -522,11 +508,6 @@ public class JsonHttpClient {
      }
    * </pre>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param method HTTP Method type
    * @param url The complete URL of the service where requests should be sent
    * @param body A POJO that can be serialized into JSON or {@code null} for none
@@ -535,7 +516,7 @@ public class JsonHttpClient {
    * @since 1.8
    */
   protected InputStream executeAsInputStream(HttpMethod method, GenericUrl url, Object body)
-      throws Exception {
+      throws IOException {
     HttpResponse response = executeUnparsed(method, url, body);
     return response.getContent();
   }

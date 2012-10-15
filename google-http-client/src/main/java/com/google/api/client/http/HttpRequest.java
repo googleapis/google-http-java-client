@@ -657,7 +657,7 @@ public final class HttpRequest {
    * </p>
    *
    * @since 1.4
-   * @deprecated (scheduled to be removed in 1.12) Use {@link #setParser(ObjectParser)} instead.
+   * @deprecated (scheduled to be removed in 1.13) Use {@link #setParser(ObjectParser)} instead.
    */
   @Deprecated
   public void addParser(HttpParser parser) {
@@ -687,7 +687,7 @@ public final class HttpRequest {
    * @param contentType content type or {@code null} for {@code null} result
    * @return HTTP response content parser or {@code null} for {@code null} input
    * @since 1.4
-   * @deprecated (scheduled to be removed in 1.12) Use {@link #getParser()} instead.
+   * @deprecated (scheduled to be removed in 1.13) Use {@link #getParser()} instead.
    */
   @Deprecated
   public final HttpParser getParser(String contentType) {
@@ -824,11 +824,6 @@ public final class HttpRequest {
      }
    * </pre>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @return HTTP response for an HTTP success response (or HTTP error response if
    *         {@link #getThrowExceptionOnExecuteError()} is {@code false})
    * @throws HttpResponseException for an HTTP error response (only if
@@ -836,7 +831,7 @@ public final class HttpRequest {
    * @see HttpResponse#isSuccessStatusCode()
    */
   @SuppressWarnings("deprecation")
-  public HttpResponse execute() throws Exception {
+  public HttpResponse execute() throws IOException {
     boolean retrySupported = false;
     Preconditions.checkArgument(numRetries >= 0);
     int retriesRemaining = numRetries;
@@ -1120,7 +1115,7 @@ public final class HttpRequest {
    *        {@code null} result
    * @return normalized media type without parameters or {@code null} for {@code null} input
    * @since 1.4
-   * @deprecated (scheduled to be removed in 1.12) Use
+   * @deprecated (scheduled to be removed in 1.13) Use
    *             {@link HttpMediaType#equalsIgnoreParameters(HttpMediaType)} instead
    */
   @Deprecated

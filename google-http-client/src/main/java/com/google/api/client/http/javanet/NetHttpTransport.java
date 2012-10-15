@@ -37,12 +37,6 @@ import java.util.Arrays;
  * globally-shared instance of the HTTP transport.
  * </p>
  *
- * <p>
- * Upgrade warning: in prior version 1.10 when using GET method with non-zero content, it
- * automatically changed the method to POST. However, starting with version 1.11 it now throws an
- * {@link IllegalArgumentException} instead. Instead, use POST.
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */

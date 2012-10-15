@@ -77,35 +77,41 @@ public class XmlObjectParser implements ObjectParser {
 
   @SuppressWarnings("unchecked")
   public <T> T parseAndClose(InputStream in, Charset charset, Class<T> dataClass)
-      throws IOException, XmlPullParserException {
+      throws IOException {
     return (T) parseAndClose(in, charset, (Type) dataClass);
   }
 
   public Object parseAndClose(InputStream in, Charset charset, Type dataType)
-      throws IOException, XmlPullParserException {
+      throws IOException {
     try {
       // Initialize the parser
       XmlPullParser parser = Xml.createParser();
       parser.setInput(in, charset.name());
       return readObject(parser, dataType);
+    } catch (XmlPullParserException e) {
+      IOException exception = new IOException();
+      exception.initCause(e);
+      throw exception;
     } finally {
       in.close();
     }
   }
 
   @SuppressWarnings("unchecked")
-  public <T> T parseAndClose(Reader reader, Class<T> dataClass)
-      throws IOException, XmlPullParserException {
+  public <T> T parseAndClose(Reader reader, Class<T> dataClass) throws IOException {
     return (T) parseAndClose(reader, (Type) dataClass);
   }
 
-  public Object parseAndClose(Reader reader, Type dataType)
-      throws IOException, XmlPullParserException {
+  public Object parseAndClose(Reader reader, Type dataType) throws IOException {
     try {
       // Initialize the parser
       XmlPullParser parser = Xml.createParser();
       parser.setInput(reader);
       return readObject(parser, dataType);
+    } catch (XmlPullParserException e) {
+      IOException exception = new IOException();
+      exception.initCause(e);
+      throw exception;
     } finally {
       reader.close();
     }

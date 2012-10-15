@@ -19,6 +19,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -58,12 +59,12 @@ public class MockHttpTransport extends HttpTransport {
   }
 
   @Override
-  public boolean supportsMethod(String method) throws Exception {
+  public boolean supportsMethod(String method) throws IOException {
     return supportedMethods == null || supportedMethods.contains(method);
   }
 
   @Override
-  protected LowLevelHttpRequest buildRequest(String method, String url) throws Exception {
+  protected LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
     Preconditions.checkArgument(supportsMethod(method), "HTTP method %s not supported", method);
     return new MockLowLevelHttpRequest(url);
   }
@@ -78,49 +79,49 @@ public class MockHttpTransport extends HttpTransport {
 
   @Deprecated
   @Override
-  public LowLevelHttpRequest buildDeleteRequest(String url) throws Exception {
+  public LowLevelHttpRequest buildDeleteRequest(String url) throws IOException {
     return super.buildDeleteRequest(url);
   }
 
   @Deprecated
   @Override
-  public LowLevelHttpRequest buildGetRequest(String url) throws Exception {
+  public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
     return super.buildGetRequest(url);
   }
 
   @Deprecated
   @Override
-  public LowLevelHttpRequest buildHeadRequest(String url) throws Exception {
+  public LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
     return super.buildHeadRequest(url);
   }
 
   @Deprecated
   @Override
-  public LowLevelHttpRequest buildPatchRequest(String url) throws Exception {
+  public LowLevelHttpRequest buildPatchRequest(String url) throws IOException {
     return super.buildPatchRequest(url);
   }
 
   @Deprecated
   @Override
-  public LowLevelHttpRequest buildPostRequest(String url) throws Exception {
+  public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
     return super.buildPostRequest(url);
   }
 
   @Deprecated
   @Override
-  public LowLevelHttpRequest buildPutRequest(String url) throws Exception {
+  public LowLevelHttpRequest buildPutRequest(String url) throws IOException {
     return super.buildPutRequest(url);
   }
 
   @Deprecated
   @Override
-  public boolean supportsHead() throws Exception {
+  public boolean supportsHead() throws IOException {
     return super.supportsHead();
   }
 
   @Deprecated
   @Override
-  public boolean supportsPatch() throws Exception {
+  public boolean supportsPatch() throws IOException {
     return super.supportsPatch();
   }
 

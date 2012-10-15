@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import java.io.IOException;
 
 /**
  * HTTP request execute interceptor to intercept the start of {@link HttpRequest#execute()} before
@@ -25,7 +26,7 @@ package com.google.api.client.http;
  *
  * <pre>
   public class OAuthSigner implements HttpExecuteInterceptor {
-    public void intercept(HttpRequest request) throws Exception {
+    public void intercept(HttpRequest request) throws IOException {
       // sign request...
     }
   }
@@ -56,7 +57,7 @@ package com.google.api.client.http;
     return transport.createRequestFactory(new HttpRequestInitializer() {
       public void initialize(HttpRequest request) {
         request.interceptor = new HttpExecuteInterceptor() {
-          public void intercept(HttpRequest request) throws Exception {
+          public void intercept(HttpRequest request) throws IOException {
             signer.intercept(request);
           }
         };
@@ -74,13 +75,6 @@ package com.google.api.client.http;
  */
 public interface HttpExecuteInterceptor {
 
-  /**
-   * Invoked at the start of {@link HttpRequest#execute()} before executing the HTTP request.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  void intercept(HttpRequest request) throws Exception;
+  /** Invoked at the start of {@link HttpRequest#execute()} before executing the HTTP request. */
+  void intercept(HttpRequest request) throws IOException;
 }

@@ -329,11 +329,11 @@ public class HttpHeaders extends GenericData {
 
   /**
    * Returns the {@code "Cookie"} header or {@code null} for none.
-   * 
+   *
    * <p>
    * See <a href='http://tools.ietf.org/html/rfc6265'>Cookie Specification.</a>
    * </p>
-   * 
+   *
    * @since 1.6
    */
   public final String getCookie() {
@@ -620,7 +620,7 @@ public class HttpHeaders extends GenericData {
       LowLevelHttpRequest lowLevelHttpRequest,
       String name,
       Object value,
-      Writer writer) throws Exception {
+      Writer writer) throws IOException {
     // ignore nulls
     if (value == null || Data.isNull(value)) {
       return;
@@ -658,11 +658,6 @@ public class HttpHeaders extends GenericData {
   /**
    * Serializes headers to an {@link LowLevelHttpRequest}.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   * 
    * @param headers HTTP headers
    * @param logbuf log buffer or {@code null} for none
    * @param curlbuf log buffer for logging curl requests or {@code null} for none
@@ -671,19 +666,13 @@ public class HttpHeaders extends GenericData {
    * @param lowLevelHttpRequest low level HTTP request where HTTP headers will be serialized to or
    *        {@code null} for none
    */
-  static void serializeHeaders(HttpHeaders headers, StringBuilder logbuf,
-      StringBuilder curlbuf, Logger logger, LowLevelHttpRequest lowLevelHttpRequest)
-      throws Exception {
+  static void serializeHeaders(HttpHeaders headers, StringBuilder logbuf, StringBuilder curlbuf,
+      Logger logger, LowLevelHttpRequest lowLevelHttpRequest) throws IOException {
     serializeHeaders(headers, logbuf, curlbuf, logger, lowLevelHttpRequest, null);
   }
 
   /**
    * Serializes headers to an {@link Writer} for Multi-part requests.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
    *
    * @param headers HTTP headers
    * @param logbuf log buffer or {@code null} for none
@@ -694,7 +683,7 @@ public class HttpHeaders extends GenericData {
    * @since 1.9
    */
   public static void serializeHeadersForMultipartRequests(
-      HttpHeaders headers, StringBuilder logbuf, Logger logger, Writer writer) throws Exception {
+      HttpHeaders headers, StringBuilder logbuf, Logger logger, Writer writer) throws IOException {
     serializeHeaders(headers, logbuf, null, logger, null, writer);
   }
 
@@ -703,7 +692,7 @@ public class HttpHeaders extends GenericData {
       StringBuilder curlbuf,
       Logger logger,
       LowLevelHttpRequest lowLevelHttpRequest,
-      Writer writer) throws Exception {
+      Writer writer) throws IOException {
     HashSet<String> headerNames = new HashSet<String>();
     for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
       String name = headerEntry.getKey();
@@ -742,8 +731,8 @@ public class HttpHeaders extends GenericData {
    * Puts all headers of the {@link LowLevelHttpResponse} into this {@link HttpHeaders} object.
    *
    * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
-   * throw an exception.
+   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
+   * not throw an exception.
    * </p>
    *
    * @param response Response from which the headers are copied
@@ -752,7 +741,7 @@ public class HttpHeaders extends GenericData {
    * @since 1.10
    */
   public final void fromHttpResponse(LowLevelHttpResponse response, StringBuilder logger)
-      throws Exception {
+      throws IOException {
     ParseHeaderState state = new ParseHeaderState(this, logger);
     int headerCount = response.getHeaderCount();
     for (int i = 0; i < headerCount; i++) {
@@ -800,7 +789,7 @@ public class HttpHeaders extends GenericData {
       serializeHeaders(
           headers, null, null, null, new HeaderParsingFakeLevelHttpRequest(this, state));
       state.finish();
-    } catch (Exception ex) {
+    } catch (IOException ex) {
       // Should never occur as we are dealing with a FakeLowLevelHttpRequest
       throw Throwables.propagate(ex);
     }
@@ -859,8 +848,8 @@ public class HttpHeaders extends GenericData {
       // type is now class, parameterized type, or generic array type
       if (Types.isArray(type)) {
         // array that can handle repeating values
-        Class<?> rawArrayComponentType = Types.getRawArrayComponentType(
-            context, Types.getArrayComponentType(type));
+        Class<?> rawArrayComponentType =
+            Types.getRawArrayComponentType(context, Types.getArrayComponentType(type));
         arrayValueMap.put(fieldInfo.getField(), rawArrayComponentType,
             parseValue(rawArrayComponentType, context, headerValue));
       } else if (Types.isAssignableToOrFrom(

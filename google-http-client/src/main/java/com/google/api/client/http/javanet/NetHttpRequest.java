@@ -56,7 +56,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
   }
 
   @Override
-  public LowLevelHttpResponse execute() throws Exception {
+  public LowLevelHttpResponse execute() throws IOException {
     HttpURLConnection connection = this.connection;
     // write content
     if (content != null) {

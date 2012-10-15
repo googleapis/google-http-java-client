@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import java.io.IOException;
 
 /**
  * Interface which handles abnormal HTTP responses (in other words not 2XX).
@@ -61,7 +62,7 @@ package com.google.api.client.http;
         request.unsuccessfulResponseHandler = new HttpUnsuccessfulResponseHandler() {
           public boolean handleResponse(
               HttpRequest request, HttpResponse response, boolean retrySupported)
-              throws Exception {
+              throws IOException {
             return handler.handleResponse(request, response, retrySupported);
           }
         };
@@ -89,11 +90,6 @@ public interface HttpUnsuccessfulResponseHandler {
    * access to it.</li>
    * </ul>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param request Request object that can be read from for context or modified before retry
    * @param response Response to process
    * @param supportsRetry Whether there will actually be a retry if this handler return {@code
@@ -103,5 +99,5 @@ public interface HttpUnsuccessfulResponseHandler {
    *         re-sent.
    */
   boolean handleResponse(HttpRequest request, HttpResponse response, boolean supportsRetry)
-      throws Exception;
+      throws IOException;
 }

@@ -46,215 +46,83 @@ public abstract class JsonGenerator {
   /** Returns the JSON factory from which this generator was created. */
   public abstract JsonFactory getFactory();
 
-  /**
-   * Flushes any buffered content to the underlying output stream or writer.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void flush() throws Exception;
+  /** Flushes any buffered content to the underlying output stream or writer. */
+  public abstract void flush() throws IOException;
 
   /**
    * Closes the serializer and the underlying output stream or writer, and releases any memory
    * associated with it.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
    */
-  public abstract void close() throws Exception;
+  public abstract void close() throws IOException;
 
-  /**
-   * Writes a JSON start array character '['.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void writeStartArray() throws Exception;
+  /** Writes a JSON start array character '['. */
+  public abstract void writeStartArray() throws IOException;
 
-  /**
-   * Writes a JSON end array character ']'.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void writeEndArray() throws Exception;
+  /** Writes a JSON end array character ']'. */
+  public abstract void writeEndArray() throws IOException;
 
-  /**
-   * Writes a JSON start object character '{'.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void writeStartObject() throws Exception;
+  /** Writes a JSON start object character '{'. */
+  public abstract void writeStartObject() throws IOException;
 
-  /**
-   * Writes a JSON end object character '}'.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void writeEndObject() throws Exception;
+  /** Writes a JSON end object character '}'. */
+  public abstract void writeEndObject() throws IOException;
 
-  /**
-   * Writes a JSON quoted field name.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void writeFieldName(String name) throws Exception;
+  /** Writes a JSON quoted field name. */
+  public abstract void writeFieldName(String name) throws IOException;
 
-  /**
-   * Writes a literal JSON null value.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void writeNull() throws Exception;
+  /** Writes a literal JSON null value. */
+  public abstract void writeNull() throws IOException;
 
-  /**
-   * Writes a JSON quoted string value.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void writeString(String value) throws Exception;
+  /** Writes a JSON quoted string value. */
+  public abstract void writeString(String value) throws IOException;
 
-  /**
-   * Writes a literal JSON boolean value ('true' or 'false').
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void writeBoolean(boolean state) throws Exception;
+  /** Writes a literal JSON boolean value ('true' or 'false'). */
+  public abstract void writeBoolean(boolean state) throws IOException;
 
-  /**
-   * Writes a JSON int value.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void writeNumber(int v) throws Exception;
+  /** Writes a JSON int value. */
+  public abstract void writeNumber(int v) throws IOException;
 
-  /**
-   * Writes a JSON long value.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void writeNumber(long v) throws Exception;
+  /** Writes a JSON long value. */
+  public abstract void writeNumber(long v) throws IOException;
 
-  /**
-   * Writes a JSON big integer value.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void writeNumber(BigInteger v) throws Exception;
+  /** Writes a JSON big integer value. */
+  public abstract void writeNumber(BigInteger v) throws IOException;
 
   /**
    * Writes a JSON unsigned integer value.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @since 1.9
    */
-  public abstract void writeNumber(UnsignedInteger v) throws Exception;
+  public abstract void writeNumber(UnsignedInteger v) throws IOException;
 
   /**
    * Writes a JSON unsigned long value.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @since 1.9
    */
-  public abstract void writeNumber(UnsignedLong v) throws Exception;
+  public abstract void writeNumber(UnsignedLong v) throws IOException;
 
-  /**
-   * Writes a JSON float value.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void writeNumber(float v) throws Exception;
+  /** Writes a JSON float value. */
+  public abstract void writeNumber(float v) throws IOException;
 
-  /**
-   * Writes a JSON double value.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void writeNumber(double v) throws Exception;
+  /** Writes a JSON double value. */
+  public abstract void writeNumber(double v) throws IOException;
 
-  /**
-   * Writes a JSON big decimal value.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void writeNumber(BigDecimal v) throws Exception;
+  /** Writes a JSON big decimal value. */
+  public abstract void writeNumber(BigDecimal v) throws IOException;
 
-  /**
-   * Writes a JSON numeric value that has already been encoded properly.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public abstract void writeNumber(String encodedValue) throws Exception;
+  /** Writes a JSON numeric value that has already been encoded properly. */
+  public abstract void writeNumber(String encodedValue) throws IOException;
 
   /**
    * Serializes the given JSON value object, or if {@code value} is {@code null} it does no
    * serialization.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
    */
-  public final void serialize(Object value) throws Exception {
+  public final void serialize(Object value) throws IOException {
     serialize(false, value);
   }
 
-  private void serialize(boolean isJsonString, Object value) throws Exception {
+  private void serialize(boolean isJsonString, Object value) throws IOException {
     if (value == null) {
       return;
     }

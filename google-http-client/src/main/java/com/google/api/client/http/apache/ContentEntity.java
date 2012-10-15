@@ -15,7 +15,6 @@
 package com.google.api.client.http.apache;
 
 import com.google.api.client.http.HttpContent;
-import com.google.common.base.Throwables;
 
 import org.apache.http.entity.AbstractHttpEntity;
 
@@ -54,14 +53,7 @@ final class ContentEntity extends AbstractHttpEntity {
 
   public void writeTo(OutputStream out) throws IOException {
     if (contentLength != 0) {
-      try {
-        content.writeTo(out);
-      } catch (Exception exception) {
-        Throwables.propagateIfPossible(exception, IOException.class);
-        IOException ioexception = new IOException();
-        ioexception.initCause(exception);
-        throw ioexception;
-      }
+      content.writeTo(out);
     }
   }
 }

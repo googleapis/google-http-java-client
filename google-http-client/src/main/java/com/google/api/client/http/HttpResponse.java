@@ -21,6 +21,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -120,7 +121,7 @@ public final class HttpResponse {
   /** Signals whether the content has been read from the input stream. */
   private boolean contentRead;
 
-  HttpResponse(HttpRequest request, LowLevelHttpResponse response) throws Exception {
+  HttpResponse(HttpRequest request, LowLevelHttpResponse response) throws IOException {
     this.request = request;
     transport = request.getTransport();
     headers = request.getResponseHeaders();
@@ -352,14 +353,10 @@ public final class HttpResponse {
    * <p>
    * {@link HttpResponse#disconnect} does not have to be called if the content is closed.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   * 
    * @return input stream content of the HTTP response or {@code null} for none
+   * @throws IOException I/O exception
    */
-  public InputStream getContent() throws Exception {
+  public InputStream getContent() throws IOException {
     if (!contentRead) {
       InputStream lowLevelResponseContent = this.response.getContent();
       if (lowLevelResponseContent != null) {
@@ -419,28 +416,19 @@ public final class HttpResponse {
    * This method does not close the given output stream.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param outputStream destination output stream
+   * @throws IOException I/O exception
    * @since 1.9
    */
-  public void download(OutputStream outputStream) throws Exception {
+  public void download(OutputStream outputStream) throws IOException {
     InputStream inputStream = getContent();
     AbstractInputStreamContent.copy(inputStream, outputStream);
   }
 
   /**
    * Closes the content of the HTTP response from {@link #getContent()}, ignoring any content.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
    */
-  public void ignore() throws Exception {
+  public void ignore() throws IOException {
     InputStream content = getContent();
     if (content != null) {
       content.close();
@@ -451,14 +439,9 @@ public final class HttpResponse {
    * Close the HTTP response content using {@link #ignore}, and disconnect using
    * {@link LowLevelHttpResponse#disconnect()}.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @since 1.4
    */
-  public void disconnect() throws Exception {
+  public void disconnect() throws IOException {
     ignore();
     response.disconnect();
   }
@@ -467,7 +450,7 @@ public final class HttpResponse {
    * Returns the HTTP response content parser to use for the content type of this HTTP response or
    * {@code null} for none.
    *
-   * @deprecated (scheduled to be removed in 1.12) Use {@link #getRequest()}.
+   * @deprecated (scheduled to be removed in 1.13) Use {@link #getRequest()}.
    *             {@link HttpRequest#getParser()} instead
    */
   @Deprecated
@@ -491,16 +474,12 @@ public final class HttpResponse {
    * <b>Reference:</b> http://tools.ietf.org/html/rfc2616#section-4.3
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @return parsed data class or {@code null} for no content
+   * @throws IOException I/O exception
    * @throws IllegalArgumentException if no parser is defined for the given content type
    */
   @SuppressWarnings("deprecation")
-  public <T> T parseAs(Class<T> dataClass) throws Exception {
+  public <T> T parseAs(Class<T> dataClass) throws IOException {
     // Return null if we can be sure that the response contains no content.
     if (!hasMessageBody()) {
       return null;
@@ -547,16 +526,12 @@ public final class HttpResponse {
    * Parses the content of the HTTP response from {@link #getContent()} and reads it into a data
    * type of key/value pairs using the parser returned by {@link #getParser()}.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @return parsed data type instance or {@code null} for no content
+   * @throws IOException I/O exception
    * @throws IllegalArgumentException if no parser is defined for this response
    * @since 1.10
    */
-  public Object parseAs(Type dataType) throws Exception {
+  public Object parseAs(Type dataType) throws IOException {
     // Check if we have an ObjectParser that we can use
     ObjectParser objectParser = request.getParser();
     Preconditions.checkArgument(objectParser != null, "No ObjectParser defined for response");
@@ -578,14 +553,10 @@ public final class HttpResponse {
    * missing.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @return parsed string or {@code ""} for no content
+   * @throws IOException I/O exception
    */
-  public String parseAsString() throws Exception {
+  public String parseAsString() throws IOException {
     InputStream content = getContent();
     if (content == null) {
       return "";

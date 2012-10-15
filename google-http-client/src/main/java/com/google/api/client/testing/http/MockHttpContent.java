@@ -17,6 +17,7 @@ package com.google.api.client.testing.http;
 import com.google.api.client.http.HttpContent;
 import com.google.common.base.Preconditions;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -47,13 +48,7 @@ public class MockHttpContent implements HttpContent {
     return encoding;
   }
 
-  /**
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public long getLength() throws Exception {
+  public long getLength() throws IOException {
     return length;
   }
 
@@ -61,13 +56,7 @@ public class MockHttpContent implements HttpContent {
     return type;
   }
 
-  /**
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
-  public void writeTo(OutputStream out) throws Exception {
+  public void writeTo(OutputStream out) throws IOException {
     out.write(content);
     out.flush();
   }

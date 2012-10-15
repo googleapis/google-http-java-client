@@ -17,6 +17,7 @@ package com.google.api.client.json;
 import com.google.common.base.Charsets;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
@@ -40,23 +41,13 @@ public abstract class JsonFactory {
    * Returns a new instance of a low-level JSON parser for the given input stream. The parser tries
    * to detect the charset of the input stream by itself.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param in input stream
    * @return new instance of a low-level JSON parser
    */
-  public abstract JsonParser createJsonParser(InputStream in) throws Exception;
+  public abstract JsonParser createJsonParser(InputStream in) throws IOException;
 
   /**
    * Returns a new instance of a low-level JSON parser for the given input stream.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
    *
    * @param in input stream
    * @param charset charset in which the input stream is encoded or {@code null} to let the parser
@@ -64,61 +55,42 @@ public abstract class JsonFactory {
    * @return new instance of a low-level JSON parser
    * @since 1.10
    */
-  public abstract JsonParser createJsonParser(InputStream in, Charset charset) throws Exception;
+  public abstract JsonParser createJsonParser(InputStream in, Charset charset) throws IOException;
 
   /**
    * Returns a new instance of a low-level JSON parser for the given string value.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param value string value
    * @return new instance of a low-level JSON parser
    */
-  public abstract JsonParser createJsonParser(String value) throws Exception;
+  public abstract JsonParser createJsonParser(String value) throws IOException;
 
   /**
    * Returns a new instance of a low-level JSON parser for the given reader.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param reader reader
    * @return new instance of a low-level JSON parser
    */
-  public abstract JsonParser createJsonParser(Reader reader) throws Exception;
+  public abstract JsonParser createJsonParser(Reader reader) throws IOException;
 
   /**
    * Returns a new instance of a low-level JSON serializer for the given output stream and encoding.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
    *
    * @param out output stream
    * @param enc encoding
    * @return new instance of a low-level JSON serializer
    * @since 1.10
    */
-  public abstract JsonGenerator createJsonGenerator(OutputStream out, Charset enc) throws Exception;
+  public abstract JsonGenerator createJsonGenerator(OutputStream out, Charset enc)
+      throws IOException;
 
   /**
    * Returns a new instance of a low-level JSON serializer for the given writer.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param writer writer
    * @return new instance of a low-level JSON serializer
    */
-  public abstract JsonGenerator createJsonGenerator(Writer writer) throws Exception;
+  public abstract JsonGenerator createJsonGenerator(Writer writer) throws IOException;
 
   /**
    * Creates an object parser which uses this factory to parse JSON data.
@@ -134,14 +106,14 @@ public abstract class JsonFactory {
    * {@link JsonGenerator#serialize(Object)}.
    *
    * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
-   * throw an exception.
+   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
+   * not throw an exception.
    * </p>
    *
    * @param item data key/value pairs
    * @return serialized JSON string representation
    */
-  public final String toString(Object item) throws Exception {
+  public final String toString(Object item) throws IOException {
     return toString(item, false);
   }
 
@@ -156,15 +128,15 @@ public abstract class JsonFactory {
    * </p>
    *
    * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
-   * throw an exception.
+   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
+   * not throw an exception.
    * </p>
    *
    * @param item data key/value pairs
    * @return serialized JSON string representation
    * @since 1.6
    */
-  public final String toPrettyString(Object item) throws Exception {
+  public final String toPrettyString(Object item) throws IOException {
     return toString(item, true);
   }
 
@@ -173,15 +145,15 @@ public abstract class JsonFactory {
    * using {@link JsonGenerator#serialize(Object)}.
    *
    * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
-   * throw an exception.
+   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
+   * not throw an exception.
    * </p>
    *
    * @param item data key/value pairs
    * @return byte array of the serialized JSON representation
    * @since 1.7
    */
-  public final byte[] toByteArray(Object item) throws Exception {
+  public final byte[] toByteArray(Object item) throws IOException {
     return toByteStream(item, false).toByteArray();
   }
 
@@ -190,15 +162,15 @@ public abstract class JsonFactory {
    * {@link JsonGenerator#serialize(Object)}.
    *
    * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
-   * throw an exception.
+   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
+   * not throw an exception.
    * </p>
    *
    * @param item data key/value pairs
    * @param pretty whether to return a pretty representation
    * @return serialized JSON string representation
    */
-  private String toString(Object item, boolean pretty) throws Exception {
+  private String toString(Object item, boolean pretty) throws IOException {
     return toByteStream(item, pretty).toString("UTF-8");
   }
 
@@ -210,7 +182,7 @@ public abstract class JsonFactory {
    * @param pretty whether to return a pretty representation
    * @return serialized JSON string representation
    */
-  private ByteArrayOutputStream toByteStream(Object item, boolean pretty) throws Exception {
+  private ByteArrayOutputStream toByteStream(Object item, boolean pretty) throws IOException {
     ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
     JsonGenerator generator = createJsonGenerator(byteStream, Charsets.UTF_8);
     if (pretty) {
@@ -225,18 +197,13 @@ public abstract class JsonFactory {
    * Parses a string value as a JSON object, array, or value into a new instance of the given
    * destination class using {@link JsonParser#parse(Class, CustomizeJsonParser)}.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param value JSON string value
    * @param destinationClass destination class that has an accessible default constructor to use to
    *        create a new instance
    * @return new instance of the parsed destination class
    * @since 1.4
    */
-  public final <T> T fromString(String value, Class<T> destinationClass) throws Exception {
+  public final <T> T fromString(String value, Class<T> destinationClass) throws IOException {
     return createJsonParser(value).parse(destinationClass, null);
   }
 
@@ -245,11 +212,6 @@ public abstract class JsonFactory {
    * given destination class using {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}.
    * Tries to detect the charset of the input stream automatically.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param inputStream JSON value in an input stream
    * @param destinationClass destination class that has an accessible default constructor to use to
    *        create a new instance
@@ -257,18 +219,13 @@ public abstract class JsonFactory {
    * @since 1.7
    */
   public final <T> T fromInputStream(InputStream inputStream, Class<T> destinationClass)
-      throws Exception {
+      throws IOException {
     return createJsonParser(inputStream).parseAndClose(destinationClass, null);
   }
 
   /**
    * Parse and close an input stream as a JSON object, array, or value into a new instance of the
    * given destination class using {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
    *
    * @param inputStream JSON value in an input stream
    * @param charset Charset in which the stream is encoded
@@ -278,7 +235,7 @@ public abstract class JsonFactory {
    * @since 1.10
    */
   public final <T> T fromInputStream(
-      InputStream inputStream, Charset charset, Class<T> destinationClass) throws Exception {
+      InputStream inputStream, Charset charset, Class<T> destinationClass) throws IOException {
     return createJsonParser(inputStream, charset).parseAndClose(destinationClass, null);
   }
 
@@ -286,18 +243,13 @@ public abstract class JsonFactory {
    * Parse and close a reader as a JSON object, array, or value into a new instance of the given
    * destination class using {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param reader JSON value in a reader
    * @param destinationClass destination class that has an accessible default constructor to use to
    *        create a new instance
    * @return new instance of the parsed destination class
    * @since 1.7
    */
-  public final <T> T fromReader(Reader reader, Class<T> destinationClass) throws Exception {
+  public final <T> T fromReader(Reader reader, Class<T> destinationClass) throws IOException {
     return createJsonParser(reader).parseAndClose(destinationClass, null);
   }
 }

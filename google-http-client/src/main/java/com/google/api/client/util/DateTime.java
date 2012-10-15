@@ -200,9 +200,8 @@ public final class DateTime implements Serializable {
    * {@inheritDoc}
    *
    * <p>
-   * Upgrade warning: starting with version 1.11 a check is added that the time zone is the same.
-   * This may break some existing equality checks. If you ONLY want to check equality of time value,
-   * check equality on the {@link #getValue()}.
+   * A check is added that the time zone is the same. If you ONLY want to check equality of time
+   * value, check equality on the {@link #getValue()}.
    * </p>
    */
   @Override
@@ -222,8 +221,8 @@ public final class DateTime implements Serializable {
    * Parses an RFC 3339 date/time value.
    *
    * <p>
-   * Upgrade warning: starting with version 1.11, for the date-only case the time zone is ignored
-   * and the hourOfDay, minute, second, and millisecond parameters are set to zero.
+   * For the date-only case, the time zone is ignored and the hourOfDay, minute, second, and
+   * millisecond parameters are set to zero.
    * </p>
    */
   public static DateTime parseRfc3339(String str) throws NumberFormatException {

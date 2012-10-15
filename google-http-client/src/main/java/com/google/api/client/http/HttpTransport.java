@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
@@ -128,15 +129,15 @@ public abstract class HttpTransport {
    * </p>
    *
    * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
-   * throw an exception.
+   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
+   * not throw an exception.
    * </p>
    *
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #supportsMethod(String)} instead
    */
   @Deprecated
-  public boolean supportsHead() throws Exception {
+  public boolean supportsHead() throws IOException {
     return supportsMethod("HEAD");
   }
 
@@ -148,15 +149,15 @@ public abstract class HttpTransport {
    * </p>
    *
    * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
-   * throw an exception.
+   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
+   * not throw an exception.
    * </p>
    *
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #supportsMethod(String)} instead
    */
   @Deprecated
-  public boolean supportsPatch() throws Exception {
+  public boolean supportsPatch() throws IOException {
     return supportsMethod("PATCH");
   }
 
@@ -169,9 +170,10 @@ public abstract class HttpTransport {
    * </p>
    *
    * @param method HTTP method
+   * @throws IOException I/O exception
    * @since 1.12
    */
-  public boolean supportsMethod(String method) throws Exception {
+  public boolean supportsMethod(String method) throws IOException {
     return Arrays.binarySearch(SUPPORTED_METHODS, method) >= 0;
   }
 
@@ -188,9 +190,10 @@ public abstract class HttpTransport {
    * @param url URL
    * @return new low level HTTP request
    * @throws IllegalArgumentException if HTTP method is not supported
+   * @throws IOException I/O exception
    * @since 1.12
    */
-  protected LowLevelHttpRequest buildRequest(String method, String url) throws Exception {
+  protected LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
     throw new IllegalArgumentException("HTTP method " + method + " not supported");
   }
 
@@ -201,17 +204,12 @@ public abstract class HttpTransport {
    * Default implementation calls {@link #buildRequest}.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param url URL
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #buildRequest(String, String)} instead
    */
   @Deprecated
-  protected LowLevelHttpRequest buildDeleteRequest(String url) throws Exception {
+  protected LowLevelHttpRequest buildDeleteRequest(String url) throws IOException {
     return buildRequest("DELETE", url);
   }
 
@@ -222,17 +220,12 @@ public abstract class HttpTransport {
    * Default implementation calls {@link #buildRequest}.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param url URL
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #buildRequest(String, String)} instead
    */
   @Deprecated
-  protected LowLevelHttpRequest buildGetRequest(String url) throws Exception {
+  protected LowLevelHttpRequest buildGetRequest(String url) throws IOException {
     return buildRequest("GET", url);
   }
 
@@ -252,17 +245,12 @@ public abstract class HttpTransport {
    * default}.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param url URL
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #buildRequest(String, String)} instead
    */
   @Deprecated
-  protected LowLevelHttpRequest buildHeadRequest(String url) throws Exception {
+  protected LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
     return buildRequest("HEAD", url);
   }
 
@@ -282,17 +270,12 @@ public abstract class HttpTransport {
    * default}.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param url URL
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #buildRequest(String, String)} instead
    */
   @Deprecated
-  protected LowLevelHttpRequest buildPatchRequest(String url) throws Exception {
+  protected LowLevelHttpRequest buildPatchRequest(String url) throws IOException {
     return buildRequest("PATCH", url);
   }
 
@@ -303,17 +286,12 @@ public abstract class HttpTransport {
    * Default implementation calls {@link #buildRequest}.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param url URL
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #buildRequest(String, String)} instead
    */
   @Deprecated
-  protected LowLevelHttpRequest buildPostRequest(String url) throws Exception {
+  protected LowLevelHttpRequest buildPostRequest(String url) throws IOException {
     return buildRequest("POST", url);
   }
 
@@ -324,17 +302,12 @@ public abstract class HttpTransport {
    * Default implementation calls {@link #buildRequest}.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
    * @param url URL
    * @since 1.3
    * @deprecated (scheduled to be removed in 1.13) Use {@link #buildRequest(String, String)} instead
    */
   @Deprecated
-  protected LowLevelHttpRequest buildPutRequest(String url) throws Exception {
+  protected LowLevelHttpRequest buildPutRequest(String url) throws IOException {
     return buildRequest("PUT", url);
   }
 
@@ -342,13 +315,9 @@ public abstract class HttpTransport {
    * Default implementation does nothing, but subclasses may override to possibly release allocated
    * system resources or close connections.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   *
+   * @throws IOException I/O exception
    * @since 1.4
    */
-  public void shutdown() throws Exception {
+  public void shutdown() throws IOException {
   }
 }

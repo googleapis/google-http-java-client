@@ -697,7 +697,7 @@ public class HttpRequestTest extends TestCase {
         return new MockLowLevelHttpRequest() {
 
           @Override
-          public void setContent(HttpContent content) throws Exception {
+          public void setContent(HttpContent content) throws IOException {
             if (expectGZip) {
               assertEquals(GZipContent.class, content.getClass());
               assertEquals("gzip", content.getEncoding());
@@ -734,7 +734,7 @@ public class HttpRequestTest extends TestCase {
       public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
-          public void setContent(HttpContent content) throws Exception {
+          public void setContent(HttpContent content) throws IOException {
             if (expectLogContent) {
               assertEquals(LogContent.class, content.getClass());
             } else {
@@ -809,7 +809,7 @@ public class HttpRequestTest extends TestCase {
       public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
             @Override
-          public LowLevelHttpResponse execute() throws Exception {
+          public LowLevelHttpResponse execute() throws IOException {
             List<String> userAgents = getHeaders().get("User-Agent");
             String actualUserAgent = userAgents == null ? null : userAgents.get(0);
             assertEquals(expectedUserAgent, actualUserAgent);

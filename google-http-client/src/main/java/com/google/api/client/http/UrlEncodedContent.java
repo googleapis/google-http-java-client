@@ -59,11 +59,6 @@ public class UrlEncodedContent extends AbstractHttpContent {
   private Object data;
 
   /**
-   * <p>
-   * Upgrade warning: prior to version 1.11 the {@code data} parameter could be {@code null} but now
-   * instead it throws a {@link NullPointerException}.
-   * </p>
-   *
    * @param data key name/value data
    */
   public UrlEncodedContent(Object data) {
@@ -112,11 +107,6 @@ public class UrlEncodedContent extends AbstractHttpContent {
    * <p>
    * Overriding is only supported for the purpose of calling the super implementation and changing
    * the return type, but nothing else.
-   * </p>
-   *
-   * <p>
-   * Upgrade warning: prior to version 1.11 the {@code data} parameter could be {@code null} but now
-   * instead it throws a {@link NullPointerException}.
    * </p>
    *
    * @since 1.5

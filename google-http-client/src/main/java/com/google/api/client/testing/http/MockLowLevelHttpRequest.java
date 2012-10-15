@@ -18,6 +18,7 @@ import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,14 +65,8 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
     this.url = url;
   }
 
-  /**
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it did not
-   * throw an exception.
-   * </p>
-   */
   @Override
-  public void addHeader(String name, String value) throws Exception {
+  public void addHeader(String name, String value) throws IOException {
     List<String> values = headersMap.get(name);
     if (values == null) {
       values = new ArrayList<String>();
@@ -80,25 +75,13 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
     values.add(value);
   }
 
-  /**
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
   @Override
-  public LowLevelHttpResponse execute() throws Exception {
+  public LowLevelHttpResponse execute() throws IOException {
     return response;
   }
 
-  /**
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
-   */
   @Override
-  public void setContent(HttpContent content) throws Exception {
+  public void setContent(HttpContent content) throws IOException {
     this.content = content;
   }
 

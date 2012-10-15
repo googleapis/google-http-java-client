@@ -16,6 +16,8 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.ObjectParser;
 
+import java.io.IOException;
+
 /**
  * Parses HTTP response content into an data class of key/value pairs.
  *
@@ -25,7 +27,7 @@ import com.google.api.client.util.ObjectParser;
  *
  * @since 1.0
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.12) Use {@link ObjectParser} instead.
+ * @deprecated (scheduled to be removed in 1.13) Use {@link ObjectParser} instead.
  */
 @Deprecated
 public interface HttpParser {
@@ -41,11 +43,6 @@ public interface HttpParser {
    * concrete implementation. Implementations should check
    * {@link HttpResponse#isSuccessStatusCode()} to know whether they are parsing a success or error
    * response.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link Exception}. In prior version 1.11 it threw an
-   * {@link java.io.IOException}.
-   * </p>
    */
-  <T> T parse(HttpResponse response, Class<T> dataClass) throws Exception;
+  <T> T parse(HttpResponse response, Class<T> dataClass) throws IOException;
 }
