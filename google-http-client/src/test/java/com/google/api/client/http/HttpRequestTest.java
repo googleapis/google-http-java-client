@@ -22,6 +22,7 @@ import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Value;
+import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -44,8 +45,7 @@ public class HttpRequestTest extends TestCase {
 
   private static final Set<String> BASIC_METHODS =
       ImmutableSet.of(HttpMethods.GET, HttpMethods.PUT, HttpMethods.POST, HttpMethods.DELETE);
-  private static final Set<String> OTHER_METHODS =
-      ImmutableSet.of(HttpMethods.HEAD, "PATCH");
+  private static final Set<String> OTHER_METHODS = ImmutableSet.of(HttpMethods.HEAD, "PATCH");
 
   public HttpRequestTest(String name) {
     super(name);
@@ -707,14 +707,23 @@ public class HttpRequestTest extends TestCase {
             }
             super.setContent(content);
           }
+
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            char[] content = new char[300];
+            Arrays.fill(content, ' ');
+            assertEquals(new String(content), getContentAsString());
+            return super.execute();
+          }
         };
       }
     }
     MyTransport transport = new MyTransport();
     byte[] content = new byte[300];
     Arrays.fill(content, (byte) ' ');
-    HttpRequest request = transport.createRequestFactory()
-        .buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL, new ByteArrayContent(null, content));
+    HttpRequest request = transport.createRequestFactory().buildPostRequest(
+        HttpTesting.SIMPLE_GENERIC_URL, new ByteArrayContent(
+            new HttpMediaType("text/plain").setCharsetParameter(Charsets.UTF_8).build(), content));
     assertFalse(request.getEnableGZipContent());
     request.execute();
     assertFalse(request.getEnableGZipContent());

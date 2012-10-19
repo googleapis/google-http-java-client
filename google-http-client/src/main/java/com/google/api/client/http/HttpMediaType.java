@@ -279,6 +279,11 @@ public final class HttpMediaType {
     return cachedBuildResult;
   }
 
+  @Override
+  public String toString() {
+    return build();
+  }
+
   /**
    * Returns {@code true} if the specified media type has both the same type and subtype, or
    * {@code false} if they don't match or the media type is {@code null}.
