@@ -16,14 +16,17 @@ package com.google.api.client.http;
 
 import com.google.api.client.http.HttpRequestTest.E;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
+import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Key;
 import com.google.common.collect.ImmutableList;
 
 import junit.framework.TestCase;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -43,8 +46,8 @@ public class HttpHeadersTest extends TestCase {
 
   public void testBasicAuthentication() {
     HttpHeaders headers = new HttpHeaders();
-    headers.setBasicAuthentication(BasicAuthenticationTest.USERNAME,
-        BasicAuthenticationTest.PASSWORD);
+    headers.setBasicAuthentication(
+        BasicAuthenticationTest.USERNAME, BasicAuthenticationTest.PASSWORD);
     assertEquals(BasicAuthenticationTest.AUTH_HEADER, headers.getAuthorization());
   }
 
@@ -145,7 +148,7 @@ public class HttpHeadersTest extends TestCase {
     rawHeaders.set("list", ImmutableList.of("a", "b", "c"));
     rawHeaders.set("objNum", "5");
     rawHeaders.set("objList", ImmutableList.of("a2", "b2", "c2"));
-    rawHeaders.set("r", new String[] { "a1", "a2" });
+    rawHeaders.set("r", new String[] {"a1", "a2"});
     rawHeaders.set("a", "b");
     rawHeaders.set("value", E.VALUE);
     rawHeaders.set("otherValue", E.OTHER_VALUE);
@@ -164,5 +167,26 @@ public class HttpHeadersTest extends TestCase {
     assertEquals(ImmutableList.of("b"), myHeaders.get("a"));
     assertEquals(E.VALUE, myHeaders.value);
     assertEquals(E.OTHER_VALUE, myHeaders.otherValue);
+  }
+
+  private static final String AUTHORIZATION_HEADERS =
+      "Accept-Encoding: gzip\r\nAuthorization: Foo\r\nAuthorization: Bar\r\n";
+
+  public void testAuthorizationHeader() throws IOException {
+    // serialization
+    HttpHeaders headers = new HttpHeaders();
+    headers.setAuthorization(Arrays.asList("Foo", "Bar"));
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    Writer writer = new OutputStreamWriter(outputStream);
+    HttpHeaders.serializeHeadersForMultipartRequests(headers, null, null, writer);
+    assertEquals(AUTHORIZATION_HEADERS, outputStream.toString());
+    // parsing
+    MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+    response.addHeader("Authorization", "Foo");
+    response.addHeader("Authorization", "Bar");
+    headers = new HttpHeaders();
+    headers.fromHttpResponse(response, null);
+    Object authHeader = headers.get("Authorization");
+    assertTrue(authHeader.toString(), ImmutableList.of("Foo", "Bar").equals(authHeader));
   }
 }

@@ -70,7 +70,7 @@ public class HttpHeaders extends GenericData {
 
   /** {@code "Authorization"} header. */
   @Key("Authorization")
-  private String authorization;
+  private Object authorization;
 
   /** {@code "Cache-Control"} header. */
   @Key("Cache-Control")
@@ -204,10 +204,15 @@ public class HttpHeaders extends GenericData {
   /**
    * Returns the {@code "Authorization"} header or {@code null} for none.
    *
+   * <p>
+   * Authorization must be a {@link String} or else it will throw a {@link ClassCastException}. If
+   * you need to use multiple headers, instead call {@code get("Authorization")}.
+   * </p>
+   *
    * @since 1.5
    */
   public final String getAuthorization() {
-    return authorization;
+    return (String) authorization;
   }
 
   /**
@@ -215,7 +220,7 @@ public class HttpHeaders extends GenericData {
    *
    * @since 1.5
    */
-  public final void setAuthorization(String authorization) {
+  public final void setAuthorization(Object authorization) {
     this.authorization = authorization;
   }
 
