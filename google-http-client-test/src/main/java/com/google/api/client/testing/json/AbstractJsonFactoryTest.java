@@ -616,15 +616,15 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     // serialize
     assertEquals(WILDCARD_TYPE, factory.toString(result));
     // check parsed result
-    Collection<BigDecimal>[] simple = (Collection<BigDecimal>[]) result.simple;
+    Collection<?>[] simple = result.simple;
     ArrayList<BigDecimal> wildcard = (ArrayList<BigDecimal>) simple[0];
     BigDecimal wildcardFirstValue = wildcard.get(0);
     assertEquals(1, wildcardFirstValue.intValue());
-    Collection<Integer>[] upper = (Collection<Integer>[]) result.upper;
+    Collection<? extends Integer>[] upper = result.upper;
     ArrayList<Integer> wildcardUpper = (ArrayList<Integer>) upper[0];
     Integer wildcardFirstValueUpper = wildcardUpper.get(0);
     assertEquals(1, wildcardFirstValueUpper.intValue());
-    Collection<Integer>[] lower = (Collection<Integer>[]) result.lower;
+    Collection<? super Integer>[] lower = result.lower;
     ArrayList<Integer> wildcardLower = (ArrayList<Integer>) lower[0];
     Integer wildcardFirstValueLower = wildcardLower.get(0);
     assertEquals(1, wildcardFirstValueLower.intValue());
@@ -634,9 +634,9 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     Map<String, Integer> mapUpper = (Map<String, Integer>) result.mapUpper;
     Integer mapUpperValue = mapUpper.get("v");
     assertEquals(1, mapUpperValue.intValue());
-    ArrayList<TreeMap<String, ? extends Integer>> mapInWild =
-        (ArrayList<TreeMap<String, ? extends Integer>>) result.mapInWild;
-    TreeMap<String, Integer> mapInWildFirst = (TreeMap<String, Integer>) mapInWild.get(0);
+    Collection<? super TreeMap<String, ? extends Integer>> mapInWild = result.mapInWild;
+    TreeMap<String, ? extends Integer> mapInWildFirst =
+        (TreeMap<String, ? extends Integer>) mapInWild.toArray()[0];
     Integer mapInWildFirstValue = mapInWildFirst.get("v");
     assertEquals(1, mapInWildFirstValue.intValue());
   }
