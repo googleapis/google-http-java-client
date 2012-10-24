@@ -237,7 +237,6 @@
             <archive>
               <addMavenDescriptor>false</addMavenDescriptor>
               <manifest>
-                <addClasspath>true</addClasspath>
                 <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
               </manifest>
               <manifestEntries>
