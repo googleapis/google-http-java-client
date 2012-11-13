@@ -17,6 +17,7 @@ package com.google.api.client.util;
 import junit.framework.TestCase;
 
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Tests {@link DateTime}.
@@ -30,6 +31,32 @@ public class DateTimeTest extends TestCase {
 
   public DateTimeTest(String testName) {
     super(testName);
+  }
+
+  public void testToStringRfc3339() {
+    TimeZone.setDefault(TimeZone.getTimeZone("GMT-4"));
+
+    assertEquals("Check with explicit Date and Timezone.",
+        "2012-11-06T12:10:44.000-08:00",
+        new DateTime(new Date(1352232644000L), TimeZone.getTimeZone("GMT-8")).toStringRfc3339());
+
+    assertEquals("Check with explicit Date but no explicit Timezone.",
+        "2012-11-06T16:10:44.000-04:00",
+        new DateTime(new Date(1352232644000L)).toStringRfc3339());
+
+    assertEquals("Check with explicit Date and Timezone-Shift.",
+        "2012-11-06T17:10:44.000-03:00",
+        new DateTime(1352232644000L, -180).toStringRfc3339());
+
+    assertEquals("Check with explicit Date and Zulu Timezone Offset.",
+        "2012-11-06T20:10:44.000Z",
+        new DateTime(1352232644000L, 0).toStringRfc3339());
+
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+
+    assertEquals("Check with explicit Date but no explicit Timezone.",
+        "2012-11-06T20:10:44.000Z",
+        new DateTime(new Date(1352232644000L)).toStringRfc3339());
   }
 
   public void testEquals() throws InterruptedException {

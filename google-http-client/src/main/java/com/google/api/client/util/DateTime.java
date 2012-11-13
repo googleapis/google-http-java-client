@@ -14,8 +14,6 @@
 
 package com.google.api.client.util;
 
-import com.google.common.base.Objects;
-
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,40 +51,80 @@ public final class DateTime implements Serializable {
   private final boolean dateOnly;
 
   /**
-   * Time zone shift from UTC in minutes. If {@code null}, no time zone is set, and the time is
-   * always interpreted as local time.
+   * Time zone shift from UTC in minutes. If {@code null}, no time zone is set, and the time always
+   * interpreted as local time.
    */
-  private final Integer tzShift;
+  private final int tzShift;
 
+  /**
+   * Instantiates {@link DateTime} from a {@link Date} and {@link TimeZone}.
+   *
+   * @param date date and time
+   * @param zone time zone; if {@code null}, it is interpreted as {@code TimeZone.getDefault()}.
+   */
   public DateTime(Date date, TimeZone zone) {
-    long value = date.getTime();
-    dateOnly = false;
-    this.value = value;
-    tzShift = zone.getOffset(value) / 60000;
+    this(false, date.getTime(), zone == null ? null : zone.getOffset(date.getTime()) / 60000);
   }
 
+  /**
+   * Instantiates {@link DateTime} from the number of milliseconds since the Unix epoch.
+   *
+   * <p>
+   * The time zone is interpreted as {@code TimeZone.getDefault()}, which may vary with
+   * implementation.
+   * </p>
+   *
+   * @param value number of milliseconds since the Unix epoch (January 1, 1970, 00:00:00 GMT)
+   */
   public DateTime(long value) {
     this(false, value, null);
   }
 
+  /**
+   * Instantiates {@link DateTime} from a {@link Date}.
+   *
+   * <p>
+   * The time zone is interpreted as {@code TimeZone.getDefault()}, which may vary with
+   * implementation.
+   * </p>
+   *
+   * @param value date and time
+   */
   public DateTime(Date value) {
     this(value.getTime());
   }
 
-  public DateTime(long value, Integer tzShift) {
+  /**
+   * Instantiates {@link DateTime} from the number of milliseconds since the Unix epoch, and a shift
+   * from UTC in minutes.
+   *
+   * @param value number of milliseconds since the Unix epoch (January 1, 1970, 00:00:00 GMT)
+   * @param tzShift time zone, represented by the number of minutes off of UTC.
+   */
+  public DateTime(long value, int tzShift) {
     this(false, value, tzShift);
   }
 
+  /**
+   * Instantiates {@link DateTime}, which may represent a date-only value, from the number of
+   * milliseconds since the Unix epoch, and a shift from UTC in minutes.
+   *
+   * @param dateOnly specifies if this should represent a date-only value
+   * @param value number of milliseconds since the Unix epoch (January 1, 1970, 00:00:00 GMT)
+   * @param tzShift time zone, represented by the number of minutes off of UTC, or {@code null} for
+   *        {@code TimeZone.getDefault()}.
+   */
   public DateTime(boolean dateOnly, long value, Integer tzShift) {
     this.dateOnly = dateOnly;
     this.value = value;
-    this.tzShift = tzShift;
+    this.tzShift = tzShift == null ? TimeZone.getDefault().getOffset(value) / 60000 : tzShift;
   }
 
   /**
    * Instantiates {@link DateTime} from an <a href='http://tools.ietf.org/html/rfc3339'>RFC 3339</a>
    * date/time value.
    *
+   * @param value an <a href='http://tools.ietf.org/html/rfc3339'>RFC 3339</a> date/time value.
    * @since 1.11
    */
   public DateTime(String value) {
@@ -122,11 +160,18 @@ public final class DateTime implements Serializable {
   }
 
   /**
-   * Returns the time zone shift from UTC in minutes or {@code null} for local time zone.
+   * Returns the time zone shift from UTC in minutes
+   *
+   * <p>
+   * Upgrade warning: In the previous version this method would return a boxed {@code Integer},
+   * whereas it now returns a primitive {@code int}. Before, this method would return {@code null}
+   * to represent the local time zone, but it now always returns the shift of the local time zone
+   * from UTC.
+   * </p>
    *
    * @since 1.5
    */
-  public Integer getTimeZoneShift() {
+  public int getTimeZoneShift() {
     return tzShift;
   }
 
@@ -136,11 +181,8 @@ public final class DateTime implements Serializable {
     StringBuilder sb = new StringBuilder();
 
     Calendar dateTime = new GregorianCalendar(GMT);
-    long localTime = value;
-    Integer tzShift = this.tzShift;
-    if (tzShift != null) {
-      localTime += tzShift.longValue() * 60000;
-    }
+    long localTime = value + (tzShift * 60000);
+
     dateTime.setTimeInMillis(localTime);
 
     appendInt(sb, dateTime.get(Calendar.YEAR), 4);
@@ -164,28 +206,25 @@ public final class DateTime implements Serializable {
       }
     }
 
-    if (tzShift != null) {
+    if (tzShift == 0) {
 
-      if (tzShift.intValue() == 0) {
+      sb.append('Z');
 
-        sb.append('Z');
+    } else {
 
+      int absTzShift = tzShift;
+      if (tzShift > 0) {
+        sb.append('+');
       } else {
-
-        int absTzShift = tzShift.intValue();
-        if (tzShift > 0) {
-          sb.append('+');
-        } else {
-          sb.append('-');
-          absTzShift = -absTzShift;
-        }
-
-        int tzHours = absTzShift / 60;
-        int tzMinutes = absTzShift % 60;
-        appendInt(sb, tzHours, 2);
-        sb.append(':');
-        appendInt(sb, tzMinutes, 2);
+        sb.append('-');
+        absTzShift = -absTzShift;
       }
+
+      int tzHours = absTzShift / 60;
+      int tzMinutes = absTzShift % 60;
+      appendInt(sb, tzHours, 2);
+      sb.append(':');
+      appendInt(sb, tzMinutes, 2);
     }
 
     return sb.toString();
@@ -213,8 +252,7 @@ public final class DateTime implements Serializable {
       return false;
     }
     DateTime other = (DateTime) o;
-    return dateOnly == other.dateOnly && value == other.value
-        && Objects.equal(tzShift, other.tzShift);
+    return dateOnly == other.dateOnly && value == other.value && tzShift == other.tzShift;
   }
 
   /**
