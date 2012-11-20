@@ -31,6 +31,11 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +90,17 @@ public class HttpRequestTest extends TestCase {
       request = transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
       request.setRequestMethod(method);
       request.execute();
+    }
+  }
+
+  static private class MockExecutor implements Executor {
+    private Runnable runnable;
+    public void actuallyRun() {
+      runnable.run();
+    }
+
+    public void execute(Runnable command) {
+      this.runnable = command;
     }
   }
 
@@ -852,5 +868,19 @@ public class HttpRequestTest extends TestCase {
     request.getHeaders().setUserAgent("Testing");
     request.setSuppressUserAgentSuffix(true);
     request.execute();
+  }
+
+    public void testExecuteAsync()
+        throws IOException, InterruptedException, ExecutionException, TimeoutException {
+    MockExecutor mockExecutor = new MockExecutor();
+    HttpTransport transport = new MockHttpTransport();
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    Future<HttpResponse> futureResponse = request.executeAsync(mockExecutor);
+
+    assertFalse(futureResponse.isDone());
+    mockExecutor.actuallyRun();
+    assertTrue(futureResponse.isDone());
+    assertNotNull(futureResponse.get(10, TimeUnit.MILLISECONDS));
   }
 }

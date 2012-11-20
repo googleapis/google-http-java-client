@@ -17,8 +17,12 @@ package com.google.api.client.http;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.StringUtils;
 import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.SettableFuture;
 
 import java.io.IOException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -1065,6 +1069,41 @@ public final class HttpRequest {
       }
     }
     return response;
+  }
+
+  /**
+   * Executes this request asynchronously using {@link
+   * #executeAsync(Executor)} in a single separate thread using
+   * the supplied Executor.
+   *
+   * @param exec An executor to run the synchronous HttpRequest
+   * @return A future for accessing the results of the asynchronous request.
+   * @since 1.13
+   */
+  public Future<HttpResponse> executeAsync(Executor exec) {
+    final SettableFuture<HttpResponse> future = SettableFuture.create();
+    exec.execute(new Runnable() {
+        public void run() {
+          try {
+            future.set(execute());
+          } catch (IOException ex) {
+            future.setException(ex);
+          }
+        }
+      });
+    return future;
+  }
+
+  /**
+   * Executes this request asynchronously using {@link
+   * #executeAsync(Executor)} in a single separate thread using {@link
+   * Executors#newSingleThreadExecutor()}.
+   *
+   * @return A future for accessing the results of the asynchronous request.
+   * @since 1.13
+   */
+  public Future<HttpResponse> executeAsync() {
+    return executeAsync(Executors.newSingleThreadExecutor());
   }
 
   /**
