@@ -21,8 +21,8 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 /**
- * Immutable representation of a date with an optional time and an optional time zone based on RFC
- * 3339.
+ * Immutable representation of a date with an optional time and an optional time zone based on <a
+ * href="http://tools.ietf.org/html/rfc3339">RFC 3339</a>.
  *
  * <p>
  * Implementation is immutable and therefore thread-safe.
@@ -50,10 +50,7 @@ public final class DateTime implements Serializable {
   /** Specifies whether this is a date-only value. */
   private final boolean dateOnly;
 
-  /**
-   * Time zone shift from UTC in minutes. If {@code null}, no time zone is set, and the time always
-   * interpreted as local time.
-   */
+  /** Time zone shift from UTC in minutes or {@code 0} for date-only value. */
   private final int tzShift;
 
   /**
@@ -117,7 +114,8 @@ public final class DateTime implements Serializable {
   public DateTime(boolean dateOnly, long value, Integer tzShift) {
     this.dateOnly = dateOnly;
     this.value = value;
-    this.tzShift = tzShift == null ? TimeZone.getDefault().getOffset(value) / 60000 : tzShift;
+    this.tzShift =
+        dateOnly ? 0 : tzShift == null ? TimeZone.getDefault().getOffset(value) / 60000 : tzShift;
   }
 
   /**
@@ -160,13 +158,13 @@ public final class DateTime implements Serializable {
   }
 
   /**
-   * Returns the time zone shift from UTC in minutes
+   * Returns the time zone shift from UTC in minutes or {@code 0} for date-only value.
    *
    * <p>
-   * Upgrade warning: In the previous version this method would return a boxed {@code Integer},
-   * whereas it now returns a primitive {@code int}. Before, this method would return {@code null}
-   * to represent the local time zone, but it now always returns the shift of the local time zone
-   * from UTC.
+   * Upgrade warning: in previous version 1.12 this method would return an {@code Integer}, whereas
+   * starting with version 1.13 it returns an {@code int}. Before, this method would return
+   * {@code null} to represent the local time zone, but it now always returns the shift of the local
+   * time zone from UTC.
    * </p>
    *
    * @since 1.5
@@ -177,22 +175,18 @@ public final class DateTime implements Serializable {
 
   /** Formats the value as an RFC 3339 date/time string. */
   public String toStringRfc3339() {
-
     StringBuilder sb = new StringBuilder();
-
     Calendar dateTime = new GregorianCalendar(GMT);
     long localTime = value + (tzShift * 60000);
-
     dateTime.setTimeInMillis(localTime);
-
+    // date
     appendInt(sb, dateTime.get(Calendar.YEAR), 4);
     sb.append('-');
     appendInt(sb, dateTime.get(Calendar.MONTH) + 1, 2);
     sb.append('-');
     appendInt(sb, dateTime.get(Calendar.DAY_OF_MONTH), 2);
-
     if (!dateOnly) {
-
+      // time
       sb.append('T');
       appendInt(sb, dateTime.get(Calendar.HOUR_OF_DAY), 2);
       sb.append(':');
@@ -204,29 +198,25 @@ public final class DateTime implements Serializable {
         sb.append('.');
         appendInt(sb, dateTime.get(Calendar.MILLISECOND), 3);
       }
-    }
-
-    if (tzShift == 0) {
-
-      sb.append('Z');
-
-    } else {
-
-      int absTzShift = tzShift;
-      if (tzShift > 0) {
-        sb.append('+');
+      // time zone
+      if (tzShift == 0) {
+        sb.append('Z');
       } else {
-        sb.append('-');
-        absTzShift = -absTzShift;
+        int absTzShift = tzShift;
+        if (tzShift > 0) {
+          sb.append('+');
+        } else {
+          sb.append('-');
+          absTzShift = -absTzShift;
+        }
+
+        int tzHours = absTzShift / 60;
+        int tzMinutes = absTzShift % 60;
+        appendInt(sb, tzHours, 2);
+        sb.append(':');
+        appendInt(sb, tzMinutes, 2);
       }
-
-      int tzHours = absTzShift / 60;
-      int tzMinutes = absTzShift % 60;
-      appendInt(sb, tzHours, 2);
-      sb.append(':');
-      appendInt(sb, tzMinutes, 2);
     }
-
     return sb.toString();
   }
 
