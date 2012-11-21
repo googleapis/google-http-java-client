@@ -57,12 +57,19 @@ public class DateTimeTest extends TestCase {
     assertEquals("Check with explicit Date but no explicit Timezone.",
         "2012-11-06T20:10:44.000Z",
         new DateTime(new Date(1352232644000L)).toStringRfc3339());
-    assertEquals(
-        "2012-11-06",
-        new DateTime(true, 1352232644000L, 1).toStringRfc3339());
-    assertEquals(
-        "2012-11-06",
-        new DateTime(true, 1352232644000L, null).toStringRfc3339());
+  }
+
+  public void testToStringRfc3339_dateOnly() {
+    for (String timeZoneString : new String[]{"GMT-4", "UTC", "UTC-7"}) {
+      TimeZone.setDefault(TimeZone.getTimeZone(timeZoneString));
+      assertEquals(
+          "2012-11-06",
+          new DateTime(true, 1352232644000L, 1).toStringRfc3339());
+      assertEquals(
+          "2012-11-06",
+          new DateTime(true, 1352232644000L, null).toStringRfc3339());
+      assertEquals("2000-01-01", new DateTime("2000-01-01").toStringRfc3339());
+    }
   }
 
   public void testEquals() throws InterruptedException {
