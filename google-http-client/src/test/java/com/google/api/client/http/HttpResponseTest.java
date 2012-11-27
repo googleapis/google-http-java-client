@@ -390,4 +390,25 @@ public class HttpResponseTest extends TestCase {
     response.parseAsString();
     recorder.assertMessages(expectedMessages);
   }
+
+  public void testGetContent_gzipNoContent() throws IOException {
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildRequest(String method, final String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+            result.setContent("");
+            result.setContentEncoding("gzip");
+            result.setContentType("text/plain");
+            return result;
+          }
+        };
+      }
+    };
+    HttpRequest request =
+        transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.execute().getContent();
+  }
 }

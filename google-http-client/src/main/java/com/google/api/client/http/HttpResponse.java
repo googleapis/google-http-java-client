@@ -21,6 +21,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -377,6 +378,9 @@ public final class HttpResponse {
           }
           content = lowLevelResponseContent;
           contentProcessed = true;
+        } catch (EOFException e) {
+          // this may happen for example on a HEAD request since there no actual response data read
+          // in GZIPInputStream
         } finally {
           if (!contentProcessed) {
             lowLevelResponseContent.close();
