@@ -19,7 +19,7 @@ package com.google.api.client.http;
  * @since 1.12
  * @author Yaniv Inbar
  */
-public class HttpMethods {
+public final class HttpMethods {
 
   /** HTTP CONNECT method. */
   public static final String CONNECT = "CONNECT";
