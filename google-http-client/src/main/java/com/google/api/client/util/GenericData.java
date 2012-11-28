@@ -113,17 +113,23 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
    * Sets the given field value (may be {@code null}) for the given field name. Any existing value
    * for the field will be overwritten. It may be more slightly more efficient than
    * {@link #put(String, Object)} because it avoids accessing the field's original value.
+   *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
    */
-  public final void set(String fieldName, Object value) {
+  public GenericData set(String fieldName, Object value) {
     FieldInfo fieldInfo = classInfo.getFieldInfo(fieldName);
     if (fieldInfo != null) {
       fieldInfo.setValue(this, value);
-      return;
+    } else {
+      if (classInfo.getIgnoreCase()) {
+        fieldName = fieldName.toLowerCase();
+      }
+      unknownFields.put(fieldName, value);
     }
-    if (classInfo.getIgnoreCase()) {
-      fieldName = fieldName.toLowerCase();
-    }
-    unknownFields.put(fieldName, value);
+    return this;
   }
 
   @Override

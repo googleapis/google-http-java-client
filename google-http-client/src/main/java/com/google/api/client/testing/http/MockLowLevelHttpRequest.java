@@ -20,6 +20,8 @@ import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.common.base.Charsets;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -27,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +54,11 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
   private HttpContent content;
 
   /** Map of header name to values. */
+  @Deprecated
   private final Map<String, List<String>> headersMap = new HashMap<String, List<String>>();
+
+  /** List multimap of lower-case header name to its values. */
+  private final ListMultimap<String, String> headersMultimap = ArrayListMultimap.create();
 
   /**
    * HTTP response to return from {@link #execute()}.
@@ -81,6 +88,7 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
       headersMap.put(name, values);
     }
     values.add(value);
+    headersMultimap.put(name.toLowerCase(), value);
   }
 
   @Override
@@ -106,9 +114,34 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
    * Returns the map of header name to values.
    *
    * @since 1.5
+   * @deprecated (scheduled in 1.14 to have the return type changed to ListMultimap<String, String>
+   *             with lowercase header names) Use {@link #getFirstHeaderValue(String)} or
+   *             {@link #getHeaderValues(String)}
    */
+  @Deprecated
   public Map<String, List<String>> getHeaders() {
     return headersMap;
+  }
+
+  /**
+   * Returns the value of the first header of the given name or {@code null} for none.
+   *
+   * @param name header name (may be any case)
+   * @since 1.13
+   */
+  public String getFirstHeaderValue(String name) {
+    List<String> values = getHeaderValues(name);
+    return values.isEmpty() ? null : values.get(0);
+  }
+
+  /**
+   * Returns the unmodifiable list of values of the headers of the given name (may be empty).
+   *
+   * @param name header name (may be any case)
+   * @since 1.13
+   */
+  public List<String> getHeaderValues(String name) {
+    return Collections.unmodifiableList(headersMultimap.get(name.toLowerCase()));
   }
 
   /**

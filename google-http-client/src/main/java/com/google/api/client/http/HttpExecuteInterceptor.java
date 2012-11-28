@@ -41,26 +41,26 @@ import java.io.IOException;
     final OAuthSigner signer = new OAuthSigner(...);
     return transport.createRequestFactory(new HttpRequestInitializer() {
       public void initialize(HttpRequest request) {
-        request.interceptor = signer;
+        request.setInterceptor(signer);
       }
     });
   }
  * </pre>
  *
  * <p>
- * If you have a custom request execute interceptor, use this more complex example:
+ * More complex usage example:
  * </p>
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
+  public static HttpRequestFactory createRequestFactory2(HttpTransport transport) {
     final OAuthSigner signer = new OAuthSigner(...);
     return transport.createRequestFactory(new HttpRequestInitializer() {
       public void initialize(HttpRequest request) {
-        request.interceptor = new HttpExecuteInterceptor() {
+        request.setInterceptor(new HttpExecuteInterceptor() {
           public void intercept(HttpRequest request) throws IOException {
             signer.intercept(request);
           }
-        };
+        });
       }
     });
   }

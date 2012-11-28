@@ -18,7 +18,6 @@ import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
-import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 
 import java.io.BufferedWriter;
@@ -30,8 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Implements support for HTTP form content encoding serialization of type {@code
- * application/x-www-form-urlencoded} as specified in the <a href=
+ * Implements support for HTTP form content encoding serialization of type
+ * {@code application/x-www-form-urlencoded} as specified in the <a href=
  * "http://www.w3.org/TR/REC-html40/interact/forms.html#h-17.13.4.1">HTML 4.0 Specification</a>.
  *
  * <p>
@@ -39,11 +38,9 @@ import java.util.Map;
  * </p>
  *
  * <pre>
- * <code>
   static void setContent(HttpRequest request, Object item) {
     request.setContent(new UrlEncodedContent(item));
   }
- * </code>
  * </pre>
  *
  * <p>
@@ -62,7 +59,7 @@ public class UrlEncodedContent extends AbstractHttpContent {
    * @param data key name/value data
    */
   public UrlEncodedContent(Object data) {
-    super(new HttpMediaType(UrlEncodedParser.CONTENT_TYPE).setCharsetParameter(Charsets.UTF_8));
+    super(UrlEncodedParser.MEDIA_TYPE);
     setData(data);
   }
 

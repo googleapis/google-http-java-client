@@ -25,6 +25,7 @@ import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
+import com.google.common.collect.Lists;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -32,6 +33,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
@@ -51,6 +53,13 @@ import java.util.logging.Logger;
  * Implementation is not thread-safe.
  * </p>
  *
+ * <p>
+ * Upgrade warning: in prior version 1.12 most fields were stored internally as a string, but as of
+ * version 1.13 those fields are now stored internally as a list of string. Thus, any use of methods
+ * like {@link #get(Object)} or {@link #set(String, Object)} that expose the internal implementation
+ * may be broken in a backwards-incompatible way.
+ * </p>
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -62,130 +71,141 @@ public class HttpHeaders extends GenericData {
 
   /** {@code "Accept"} header. */
   @Key("Accept")
-  private String accept;
+  private List<String> accept;
 
   /** {@code "Accept-Encoding"} header. */
   @Key("Accept-Encoding")
-  private String acceptEncoding = "gzip";
+  private List<String> acceptEncoding = Lists.newArrayList("gzip");
 
   /** {@code "Authorization"} header. */
   @Key("Authorization")
-  private Object authorization;
+  private List<String> authorization;
 
   /** {@code "Cache-Control"} header. */
   @Key("Cache-Control")
-  private String cacheControl;
+  private List<String> cacheControl;
 
   /** {@code "Content-Encoding"} header. */
   @Key("Content-Encoding")
-  private String contentEncoding;
+  private List<String> contentEncoding;
 
   /** {@code "Content-Length"} header. */
   @Key("Content-Length")
-  private Long contentLength;
+  private List<Long> contentLength;
 
   /** {@code "Content-MD5"} header. */
   @Key("Content-MD5")
-  private String contentMD5;
+  private List<String> contentMD5;
 
   /** {@code "Content-Range"} header. */
   @Key("Content-Range")
-  private String contentRange;
+  private List<String> contentRange;
 
   /** {@code "Content-Type"} header. */
   @Key("Content-Type")
-  private String contentType;
+  private List<String> contentType;
 
   /** {@code "Cookie"} header. */
   @Key("Cookie")
-  private String cookie;
+  private List<String> cookie;
 
   /** {@code "Date"} header. */
   @Key("Date")
-  private String date;
+  private List<String> date;
 
   /** {@code "ETag"} header. */
   @Key("ETag")
-  private String etag;
+  private List<String> etag;
 
   /** {@code "Expires"} header. */
   @Key("Expires")
-  private String expires;
+  private List<String> expires;
 
   /** {@code "If-Modified-Since"} header. */
   @Key("If-Modified-Since")
-  private String ifModifiedSince;
+  private List<String> ifModifiedSince;
 
   /** {@code "If-Match"} header. */
   @Key("If-Match")
-  private String ifMatch;
+  private List<String> ifMatch;
 
   /** {@code "If-None-Match"} header. */
   @Key("If-None-Match")
-  private String ifNoneMatch;
+  private List<String> ifNoneMatch;
 
   /** {@code "If-Unmodified-Since"} header. */
   @Key("If-Unmodified-Since")
-  private String ifUnmodifiedSince;
+  private List<String> ifUnmodifiedSince;
 
   /** {@code "Last-Modified"} header. */
   @Key("Last-Modified")
-  private String lastModified;
+  private List<String> lastModified;
 
   /** {@code "Location"} header. */
   @Key("Location")
-  private String location;
+  private List<String> location;
 
   /** {@code "MIME-Version"} header. */
   @Key("MIME-Version")
-  private String mimeVersion;
+  private List<String> mimeVersion;
 
   /** {@code "Range"} header. */
   @Key("Range")
-  private String range;
+  private List<String> range;
 
   /** {@code "Retry-After"} header. */
   @Key("Retry-After")
-  private String retryAfter;
+  private List<String> retryAfter;
 
   /** {@code "User-Agent"} header. */
   @Key("User-Agent")
-  private String userAgent;
+  private List<String> userAgent;
 
   /** {@code "WWW-Authenticate"} header. */
   @Key("WWW-Authenticate")
-  private String authenticate;
+  private List<String> authenticate;
 
   @Override
   public HttpHeaders clone() {
     return (HttpHeaders) super.clone();
   }
 
+  @Override
+  public HttpHeaders set(String fieldName, Object value) {
+    return (HttpHeaders) super.set(fieldName, value);
+  }
+
   /**
-   * Returns the {@code "Accept"} header or {@code null} for none.
+   * Returns the first {@code "Accept"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getAccept() {
-    return accept;
+    return getFirstHeaderValue(accept);
   }
 
   /**
    * Sets the {@code "Accept"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setAccept(String accept) {
-    this.accept = accept;
+  public HttpHeaders setAccept(String accept) {
+    this.accept = getAsList(accept);
+    return this;
   }
 
   /**
-   * Returns the {@code "Accept-Encoding"} header or {@code null} for none.
+   * Returns the first {@code "Accept-Encoding"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getAcceptEncoding() {
-    return acceptEncoding;
+    return getFirstHeaderValue(acceptEncoding);
   }
 
   /**
@@ -197,143 +217,204 @@ public class HttpHeaders extends GenericData {
    *
    * @since 1.5
    */
-  public final void setAcceptEncoding(String acceptEncoding) {
-    this.acceptEncoding = acceptEncoding;
+  public HttpHeaders setAcceptEncoding(String acceptEncoding) {
+    this.acceptEncoding = getAsList(acceptEncoding);
+    return this;
   }
 
   /**
-   * Returns the {@code "Authorization"} header or {@code null} for none.
-   *
-   * <p>
-   * Authorization must be a {@link String} or else it will throw a {@link ClassCastException}. If
-   * you need to use multiple headers, instead call {@code get("Authorization")}.
-   * </p>
+   * Returns the first {@code "Authorization"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getAuthorization() {
-    return (String) authorization;
+    return getFirstHeaderValue(authorization);
+  }
+
+  /**
+   * Returns all {@code "Authorization"} headers or {@code null} for none.
+   *
+   * @since 1.13
+   */
+  public final List<String> getAuthorizationAsList() {
+    return authorization;
   }
 
   /**
    * Sets the {@code "Authorization"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setAuthorization(Object authorization) {
-    this.authorization = authorization;
+  public HttpHeaders setAuthorization(String authorization) {
+    return setAuthorization(getAsList(authorization));
   }
 
   /**
-   * Returns the {@code "Cache-Control"} header or {@code null} for none.
+   * Sets the {@code "Authorization"} header or {@code null} for none.
+   *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
+   * @since 1.13
+   */
+  public HttpHeaders setAuthorization(List<String> authorization) {
+    this.authorization = authorization;
+    return this;
+  }
+
+  /**
+   * Returns the first {@code "Cache-Control"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getCacheControl() {
-    return cacheControl;
+    return getFirstHeaderValue(cacheControl);
   }
 
   /**
    * Sets the {@code "Cache-Control"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setCacheControl(String cacheControl) {
-    this.cacheControl = cacheControl;
+  public HttpHeaders setCacheControl(String cacheControl) {
+    this.cacheControl = getAsList(cacheControl);
+    return this;
   }
 
   /**
-   * Returns the {@code "Content-Encoding"} header or {@code null} for none.
+   * Returns the first {@code "Content-Encoding"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getContentEncoding() {
-    return contentEncoding;
+    return getFirstHeaderValue(contentEncoding);
   }
 
   /**
    * Sets the {@code "Content-Encoding"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setContentEncoding(String contentEncoding) {
-    this.contentEncoding = contentEncoding;
+  public HttpHeaders setContentEncoding(String contentEncoding) {
+    this.contentEncoding = getAsList(contentEncoding);
+    return this;
   }
 
   /**
-   * Returns the {@code "Content-Length"} header or {@code null} for none.
+   * Returns the first {@code "Content-Length"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final Long getContentLength() {
-    return contentLength;
+    return getFirstHeaderValue(contentLength);
   }
 
   /**
    * Sets the {@code "Content-Length"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setContentLength(Long contentLength) {
-    this.contentLength = contentLength;
+  public HttpHeaders setContentLength(Long contentLength) {
+    this.contentLength = getAsList(contentLength);
+    return this;
   }
 
   /**
-   * Returns the {@code "Content-MD5"} header or {@code null} for none.
+   * Returns the first {@code "Content-MD5"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getContentMD5() {
-    return contentMD5;
+    return getFirstHeaderValue(contentMD5);
   }
 
   /**
    * Sets the {@code "Content-MD5"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setContentMD5(String contentMD5) {
-    this.contentMD5 = contentMD5;
+  public HttpHeaders setContentMD5(String contentMD5) {
+    this.contentMD5 = getAsList(contentMD5);
+    return this;
   }
 
   /**
-   * Returns the {@code "Content-Range"} header or {@code null} for none.
+   * Returns the first {@code "Content-Range"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getContentRange() {
-    return contentRange;
+    return getFirstHeaderValue(contentRange);
   }
 
   /**
    * Sets the {@code "Content-Range"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setContentRange(String contentRange) {
-    this.contentRange = contentRange;
+  public HttpHeaders setContentRange(String contentRange) {
+    this.contentRange = getAsList(contentRange);
+    return this;
   }
 
   /**
-   * Returns the {@code "Content-Type"} header or {@code null} for none.
+   * Returns the first {@code "Content-Type"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getContentType() {
-    return contentType;
+    return getFirstHeaderValue(contentType);
   }
 
   /**
    * Sets the {@code "Content-Type"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setContentType(String contentType) {
-    this.contentType = contentType;
+  public HttpHeaders setContentType(String contentType) {
+    this.contentType = getAsList(contentType);
+    return this;
   }
 
   /**
-   * Returns the {@code "Cookie"} header or {@code null} for none.
+   * Returns the first {@code "Cookie"} header or {@code null} for none.
    *
    * <p>
    * See <a href='http://tools.ietf.org/html/rfc6265'>Cookie Specification.</a>
@@ -342,281 +423,376 @@ public class HttpHeaders extends GenericData {
    * @since 1.6
    */
   public final String getCookie() {
-    return cookie;
+    return getFirstHeaderValue(cookie);
   }
 
   /**
    * Sets the {@code "Cookie"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.6
    */
-  public final void setCookie(String cookie) {
-    this.cookie = cookie;
+  public HttpHeaders setCookie(String cookie) {
+    this.cookie = getAsList(cookie);
+    return this;
   }
 
   /**
-   * Returns the {@code "Date"} header or {@code null} for none.
+   * Returns the first {@code "Date"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getDate() {
-    return date;
+    return getFirstHeaderValue(date);
   }
 
   /**
    * Sets the {@code "Date"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setDate(String date) {
-    this.date = date;
+  public HttpHeaders setDate(String date) {
+    this.date = getAsList(date);
+    return this;
   }
 
   /**
-   * Returns the {@code "ETag"} header or {@code null} for none.
+   * Returns the first {@code "ETag"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getETag() {
-    return etag;
+    return getFirstHeaderValue(etag);
   }
 
   /**
    * Sets the {@code "ETag"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setETag(String etag) {
-    this.etag = etag;
+  public HttpHeaders setETag(String etag) {
+    this.etag = getAsList(etag);
+    return this;
   }
 
   /**
-   * Returns the {@code "Expires"} header or {@code null} for none.
+   * Returns the first {@code "Expires"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getExpires() {
-    return expires;
+    return getFirstHeaderValue(expires);
   }
 
   /**
    * Sets the {@code "Expires"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setExpires(String expires) {
-    this.expires = expires;
+  public HttpHeaders setExpires(String expires) {
+    this.expires = getAsList(expires);
+    return this;
   }
 
   /**
-   * Returns the {@code "If-Modified-Since"} header or {@code null} for none.
+   * Returns the first {@code "If-Modified-Since"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getIfModifiedSince() {
-    return ifModifiedSince;
+    return getFirstHeaderValue(ifModifiedSince);
   }
 
   /**
    * Sets the {@code "If-Modified-Since"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setIfModifiedSince(String ifModifiedSince) {
-    this.ifModifiedSince = ifModifiedSince;
+  public HttpHeaders setIfModifiedSince(String ifModifiedSince) {
+    this.ifModifiedSince = getAsList(ifModifiedSince);
+    return this;
   }
 
   /**
-   * Returns the {@code "If-Match"} header or {@code null} for none.
+   * Returns the first {@code "If-Match"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getIfMatch() {
-    return ifMatch;
+    return getFirstHeaderValue(ifMatch);
   }
 
   /**
    * Sets the {@code "If-Match"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setIfMatch(String ifMatch) {
-    this.ifMatch = ifMatch;
+  public HttpHeaders setIfMatch(String ifMatch) {
+    this.ifMatch = getAsList(ifMatch);
+    return this;
   }
 
   /**
-   * Returns the {@code "If-None-Match"} header or {@code null} for none.
+   * Returns the first {@code "If-None-Match"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getIfNoneMatch() {
-    return ifNoneMatch;
+    return getFirstHeaderValue(ifNoneMatch);
   }
 
   /**
    * Sets the {@code "If-None-Match"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setIfNoneMatch(String ifNoneMatch) {
-    this.ifNoneMatch = ifNoneMatch;
+  public HttpHeaders setIfNoneMatch(String ifNoneMatch) {
+    this.ifNoneMatch = getAsList(ifNoneMatch);
+    return this;
   }
 
   /**
-   * Returns the {@code "If-Unmodified-Since"} header or {@code null} for none.
+   * Returns the first {@code "If-Unmodified-Since"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getIfUnmodifiedSince() {
-    return ifUnmodifiedSince;
+    return getFirstHeaderValue(ifUnmodifiedSince);
   }
 
   /**
    * Sets the {@code "If-Unmodified-Since"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setIfUnmodifiedSince(String ifUnmodifiedSince) {
-    this.ifUnmodifiedSince = ifUnmodifiedSince;
+  public HttpHeaders setIfUnmodifiedSince(String ifUnmodifiedSince) {
+    this.ifUnmodifiedSince = getAsList(ifUnmodifiedSince);
+    return this;
   }
 
   /**
-   * Returns the {@code "Last-Modified"} header or {@code null} for none.
+   * Returns the first {@code "Last-Modified"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getLastModified() {
-    return lastModified;
+    return getFirstHeaderValue(lastModified);
   }
 
   /**
    * Sets the {@code "Last-Modified"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setLastModified(String lastModified) {
-    this.lastModified = lastModified;
+  public HttpHeaders setLastModified(String lastModified) {
+    this.lastModified = getAsList(lastModified);
+    return this;
   }
 
   /**
-   * Returns the {@code "Location"} header or {@code null} for none.
+   * Returns the first {@code "Location"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getLocation() {
-    return location;
+    return getFirstHeaderValue(location);
   }
 
   /**
    * Sets the {@code "Location"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setLocation(String location) {
-    this.location = location;
+  public HttpHeaders setLocation(String location) {
+    this.location = getAsList(location);
+    return this;
   }
 
   /**
-   * Returns the {@code "MIME-Version"} header or {@code null} for none.
+   * Returns the first {@code "MIME-Version"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getMimeVersion() {
-    return mimeVersion;
+    return getFirstHeaderValue(mimeVersion);
   }
 
   /**
    * Sets the {@code "MIME-Version"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setMimeVersion(String mimeVersion) {
-    this.mimeVersion = mimeVersion;
+  public HttpHeaders setMimeVersion(String mimeVersion) {
+    this.mimeVersion = getAsList(mimeVersion);
+    return this;
   }
 
   /**
-   * Returns the {@code "Range"} header or {@code null} for none.
+   * Returns the first {@code "Range"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getRange() {
-    return range;
+    return getFirstHeaderValue(range);
   }
 
   /**
    * Sets the {@code "Range"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setRange(String range) {
-    this.range = range;
+  public HttpHeaders setRange(String range) {
+    this.range = getAsList(range);
+    return this;
   }
 
   /**
-   * Returns the {@code "Retry-After"} header or {@code null} for none.
+   * Returns the first {@code "Retry-After"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getRetryAfter() {
-    return retryAfter;
+    return getFirstHeaderValue(retryAfter);
   }
 
   /**
    * Sets the {@code "Retry-After"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setRetryAfter(String retryAfter) {
-    this.retryAfter = retryAfter;
+  public HttpHeaders setRetryAfter(String retryAfter) {
+    this.retryAfter = getAsList(retryAfter);
+    return this;
   }
 
   /**
-   * Returns the {@code "User-Agent"} header or {@code null} for none.
+   * Returns the first {@code "User-Agent"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getUserAgent() {
-    return userAgent;
+    return getFirstHeaderValue(userAgent);
   }
 
   /**
    * Sets the {@code "User-Agent"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setUserAgent(String userAgent) {
-    this.userAgent = userAgent;
+  public HttpHeaders setUserAgent(String userAgent) {
+    this.userAgent = getAsList(userAgent);
+    return this;
   }
 
   /**
-   * Returns the {@code "WWW-Authenticate"} header or {@code null} for none.
+   * Returns the first {@code "WWW-Authenticate"} header or {@code null} for none.
    *
    * @since 1.5
    */
   public final String getAuthenticate() {
-    return authenticate;
+    return getFirstHeaderValue(authenticate);
   }
 
   /**
    * Sets the {@code "WWW-Authenticate"} header or {@code null} for none.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.5
    */
-  public final void setAuthenticate(String authenticate) {
-    this.authenticate = authenticate;
+  public HttpHeaders setAuthenticate(String authenticate) {
+    this.authenticate = getAsList(authenticate);
+    return this;
   }
 
   /**
    * Sets the {@link #authorization} header as specified in <a
    * href="http://tools.ietf.org/html/rfc2617#section-2">Basic Authentication Scheme</a>.
    *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
    * @since 1.2
    */
-  public final void setBasicAuthentication(String username, String password) {
+  public HttpHeaders setBasicAuthentication(String username, String password) {
     String userPass =
         Preconditions.checkNotNull(username) + ":" + Preconditions.checkNotNull(password);
     String encoded = Base64.encodeBase64String(StringUtils.getBytesUtf8(userPass));
-    authorization = "Basic " + encoded;
+    return setAuthorization("Basic " + encoded);
   }
 
   private static void addHeader(Logger logger,
@@ -631,8 +807,7 @@ public class HttpHeaders extends GenericData {
       return;
     }
     // compute value
-    String stringValue =
-        value instanceof Enum<?> ? FieldInfo.of((Enum<?>) value).getName() : value.toString();
+    String stringValue = toStringValue(value);
     // log header
     String loggedStringValue = stringValue;
     if (("Authorization".equalsIgnoreCase(name) || "Cookie".equalsIgnoreCase(name))
@@ -658,6 +833,14 @@ public class HttpHeaders extends GenericData {
       writer.write(stringValue);
       writer.write("\r\n");
     }
+  }
+
+  /**
+   * Returns the string header value for the given header value as an object.
+   */
+  private static String toStringValue(Object headerValue) {
+    return headerValue instanceof Enum<?>
+        ? FieldInfo.of((Enum<?>) headerValue).getName() : headerValue.toString();
   }
 
   /**
@@ -781,6 +964,64 @@ public class HttpHeaders extends GenericData {
     }
   }
 
+  /** Returns the first header value based on the given internal list value. */
+  private <T> T getFirstHeaderValue(List<T> internalValue) {
+    return internalValue == null ? null : internalValue.get(0);
+  }
+
+  /** Returns the list value to use for the given parameter passed to the setter method. */
+  private <T> List<T> getAsList(T passedValue) {
+    if (passedValue == null) {
+      return null;
+    }
+    List<T> result = Lists.<T>newArrayList();
+    result.add(passedValue);
+    return result;
+  }
+
+  /**
+   * Returns the first header string value for the given header name.
+   *
+   * @param name header name (may be any case)
+   * @return first header string value or {@code null} if not found
+   * @since 1.13
+   */
+  public String getFirstHeaderStringValue(String name) {
+    Object value = get(name.toLowerCase());
+    if (value == null) {
+      return null;
+    }
+    Class<? extends Object> valueClass = value.getClass();
+    if (value instanceof Iterable<?> || valueClass.isArray()) {
+      for (Object repeatedValue : Types.iterableOf(value)) {
+        return toStringValue(repeatedValue);
+      }
+    }
+    return toStringValue(value);
+  }
+
+  /**
+   * Returns an unmodifiable list of the header string values for the given header name.
+   *
+   * @param name header name (may be any case)
+   * @return header string values or empty if not found
+   * @since 1.13
+   */
+  public List<String> getHeaderStringValues(String name) {
+    Object value = get(name.toLowerCase());
+    if (value == null) {
+      return Collections.emptyList();
+    }
+    Class<? extends Object> valueClass = value.getClass();
+    if (value instanceof Iterable<?> || valueClass.isArray()) {
+      List<String> values = Lists.newArrayList();
+      for (Object repeatedValue : Types.iterableOf(value)) {
+        values.add(toStringValue(repeatedValue));
+      }
+      return Collections.unmodifiableList(values);
+    }
+    return Collections.singletonList(toStringValue(value));
+  }
 
   /**
    * Puts all headers of the {@link HttpHeaders} object into this {@link HttpHeaders} object.

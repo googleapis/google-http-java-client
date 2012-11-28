@@ -20,11 +20,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.SettableFuture;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -63,7 +63,7 @@ public final class HttpRequest {
    * HTTP request execute interceptor to intercept the start of {@link #execute()} (before executing
    * the HTTP request) or {@code null} for none.
    */
-  private HttpExecuteInterceptor interceptor;
+  private HttpExecuteInterceptor executeInterceptor;
 
   /** HTTP request headers. */
   private HttpHeaders headers = new HttpHeaders();
@@ -153,6 +153,9 @@ public final class HttpRequest {
   /** HTTP unsuccessful (non-2XX) response handler or {@code null} for none. */
   private HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler;
 
+  /** HTTP response interceptor or {@code null} for none. */
+  private HttpResponseInterceptor responseInterceptor;
+
   /** Map from normalized content type to HTTP parser. */
   @Deprecated
   private final Map<String, HttpParser> contentTypeToParserMap = new HashMap<String, HttpParser>();
@@ -182,8 +185,11 @@ public final class HttpRequest {
   private boolean retryOnExecuteIOException = false;
 
   /**
-   * Whether to not add the suffix {@link #USER_AGENT_SUFFIX} to the User-Agent header
-   * ({@code false} by default).
+   * Whether to not add the suffix {@link #USER_AGENT_SUFFIX} to the User-Agent header.
+   *
+   * <p>
+   * It is {@code false} by default.
+   * </p>
    */
   private boolean suppressUserAgentSuffix;
 
@@ -587,7 +593,7 @@ public final class HttpRequest {
    * @since 1.5
    */
   public HttpExecuteInterceptor getInterceptor() {
-    return interceptor;
+    return executeInterceptor;
   }
 
   /**
@@ -597,7 +603,7 @@ public final class HttpRequest {
    * @since 1.5
    */
   public HttpRequest setInterceptor(HttpExecuteInterceptor interceptor) {
-    this.interceptor = interceptor;
+    this.executeInterceptor = interceptor;
     return this;
   }
 
@@ -618,6 +624,25 @@ public final class HttpRequest {
   public HttpRequest setUnsuccessfulResponseHandler(
       HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler) {
     this.unsuccessfulResponseHandler = unsuccessfulResponseHandler;
+    return this;
+  }
+
+  /**
+   * Returns the HTTP response interceptor or {@code null} for none.
+   *
+   * @since 1.13
+   */
+  public HttpResponseInterceptor getResponseInterceptor() {
+    return responseInterceptor;
+  }
+
+  /**
+   * Returns the HTTP response interceptor or {@code null} for none.
+   *
+   * @since 1.13
+   */
+  public HttpRequest setResponseInterceptor(HttpResponseInterceptor responseInterceptor) {
+    this.responseInterceptor = responseInterceptor;
     return this;
   }
 
@@ -859,8 +884,8 @@ public final class HttpRequest {
       executeException = null;
 
       // run the interceptor
-      if (interceptor != null) {
-        interceptor.intercept(this);
+      if (executeInterceptor != null) {
+        executeInterceptor.intercept(this);
       }
       // build low-level HTTP request
       String urlString = url.build();
@@ -1060,7 +1085,11 @@ public final class HttpRequest {
       // Retries did not help resolve the execute exception, re-throw it.
       throw executeException;
     }
-
+    // response interceptor
+    if (responseInterceptor != null) {
+      responseInterceptor.interceptResponse(response);
+    }
+    // throw an exception if unsuccessful response
     if (throwExceptionOnExecuteError && !response.isSuccessStatusCode()) {
       try {
         throw new HttpResponseException(response);
@@ -1072,9 +1101,8 @@ public final class HttpRequest {
   }
 
   /**
-   * Executes this request asynchronously using {@link
-   * #executeAsync(Executor)} in a single separate thread using
-   * the supplied Executor.
+   * Executes this request asynchronously using {@link #executeAsync(Executor)} in a single separate
+   * thread using the supplied Executor.
    *
    * @param exec An executor to run the synchronous HttpRequest
    * @return A future for accessing the results of the asynchronous request.
@@ -1083,21 +1111,20 @@ public final class HttpRequest {
   public Future<HttpResponse> executeAsync(Executor exec) {
     final SettableFuture<HttpResponse> future = SettableFuture.create();
     exec.execute(new Runnable() {
-        public void run() {
-          try {
-            future.set(execute());
-          } catch (IOException ex) {
-            future.setException(ex);
-          }
+      public void run() {
+        try {
+          future.set(execute());
+        } catch (IOException ex) {
+          future.setException(ex);
         }
-      });
+      }
+    });
     return future;
   }
 
   /**
-   * Executes this request asynchronously using {@link
-   * #executeAsync(Executor)} in a single separate thread using {@link
-   * Executors#newSingleThreadExecutor()}.
+   * Executes this request asynchronously using {@link #executeAsync(Executor)} in a single separate
+   * thread using {@link Executors#newSingleThreadExecutor()}.
    *
    * @return A future for accessing the results of the asynchronous request.
    * @since 1.13

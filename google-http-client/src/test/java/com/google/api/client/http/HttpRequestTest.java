@@ -31,15 +31,14 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Tests {@link HttpRequest}.
@@ -93,7 +92,7 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
-  static private class MockExecutor implements Executor {
+  static class MockExecutor implements Executor {
     private Runnable runnable;
     public void actuallyRun() {
       runnable.run();
@@ -340,28 +339,25 @@ public class HttpRequestTest extends TestCase {
       this.callsBeforeSuccess = callsBeforeSuccess;
     }
 
-    public MockLowLevelHttpRequest retryableGetRequest = new MockLowLevelHttpRequest() {
-
-      @Override
-      public LowLevelHttpResponse execute() throws IOException {
-        lowLevelExecCalls++;
-
-        userAgentHeader = getHeaders().get("User-Agent");
-
-        if (lowLevelExecCalls <= callsBeforeSuccess) {
-          throw new IOException();
-        }
-        // Return success when count is more than callsBeforeSuccess
-        MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
-        response.setStatusCode(200);
-        return response;
-      }
-    };
-
     @Override
     public LowLevelHttpRequest buildRequest(String method, String url) {
-      retryableGetRequest.getHeaders().clear();
-      return retryableGetRequest;
+      return new MockLowLevelHttpRequest() {
+
+          @Override
+        public LowLevelHttpResponse execute() throws IOException {
+          lowLevelExecCalls++;
+
+          userAgentHeader = getHeaderValues("User-Agent");
+
+          if (lowLevelExecCalls <= callsBeforeSuccess) {
+            throw new IOException();
+          }
+          // Return success when count is more than callsBeforeSuccess
+          MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+          response.setStatusCode(200);
+          return response;
+        }
+      };
     }
   }
 
@@ -684,17 +680,16 @@ public class HttpRequestTest extends TestCase {
     request.setHeaders(myHeaders);
     request.execute();
     // check headers
-    Map<String, List<String>> headers = lowLevelRequest.getHeaders();
-    assertEquals(ImmutableList.of("bar"), headers.get("foo"));
-    assertEquals(ImmutableList.of("a", "b", "c"), headers.get("list"));
-    assertEquals(ImmutableList.of("a2", "b2", "c2"), headers.get("objList"));
-    assertEquals(ImmutableList.of("a1", "a2"), headers.get("r"));
-    assertFalse(headers.containsKey("Accept-Encoding"));
-    assertEquals(
-        ImmutableList.of("foo " + HttpRequest.USER_AGENT_SUFFIX), headers.get("User-Agent"));
-    assertEquals(ImmutableList.of("b"), headers.get("a"));
-    assertEquals(ImmutableList.of("VALUE"), headers.get("value"));
-    assertEquals(ImmutableList.of("other"), headers.get("otherValue"));
+    assertEquals(ImmutableList.of("bar"), lowLevelRequest.getHeaderValues("foo"));
+    assertEquals(ImmutableList.of("a", "b", "c"), lowLevelRequest.getHeaderValues("list"));
+    assertEquals(ImmutableList.of("a2", "b2", "c2"), lowLevelRequest.getHeaderValues("objlist"));
+    assertEquals(ImmutableList.of("a1", "a2"), lowLevelRequest.getHeaderValues("r"));
+    assertTrue(lowLevelRequest.getHeaderValues("accept-encoding").isEmpty());
+    assertEquals(ImmutableList.of("foo " + HttpRequest.USER_AGENT_SUFFIX),
+        lowLevelRequest.getHeaderValues("user-agent"));
+    assertEquals(ImmutableList.of("b"), lowLevelRequest.getHeaderValues("a"));
+    assertEquals(ImmutableList.of("VALUE"), lowLevelRequest.getHeaderValues("value"));
+    assertEquals(ImmutableList.of("other"), lowLevelRequest.getHeaderValues("othervalue"));
   }
 
   @SuppressWarnings("deprecation")
@@ -822,7 +817,7 @@ public class HttpRequestTest extends TestCase {
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.getHeaders().setAccept("*/*");
-    request.getHeaders().set("accept", "text/plain");
+    request.getHeaders().set("accept", Arrays.asList("text/plain"));
     request.execute();
   }
 
@@ -833,11 +828,9 @@ public class HttpRequestTest extends TestCase {
       @Override
       public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
-            @Override
+          @Override
           public LowLevelHttpResponse execute() throws IOException {
-            List<String> userAgents = getHeaders().get("User-Agent");
-            String actualUserAgent = userAgents == null ? null : userAgents.get(0);
-            assertEquals(expectedUserAgent, actualUserAgent);
+            assertEquals(expectedUserAgent, getFirstHeaderValue("User-Agent"));
             return super.execute();
           }
         };

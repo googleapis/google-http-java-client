@@ -28,7 +28,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Tests {@link HttpHeaders}.
@@ -101,17 +100,17 @@ public class HttpHeadersTest extends TestCase {
     HttpHeaders.serializeHeaders(myHeaders, null, null, null, lowLevelRequest, null);
 
     // check headers in the lowLevelRequest
-    Map<String, List<String>> headers = lowLevelRequest.getHeaders();
-    assertEquals(ImmutableList.of("bar"), headers.get("foo"));
-    assertEquals(ImmutableList.of("a", "b", "c"), headers.get("list"));
-    assertEquals(ImmutableList.of("a2", "b2", "c2"), headers.get("objList"));
-    assertEquals(ImmutableList.of("a1", "a2"), headers.get("r"));
-    assertFalse(headers.containsKey("Accept-Encoding"));
-    assertEquals(ImmutableList.of("foo"), headers.get("User-Agent"));
-    assertEquals(ImmutableList.of("b"), headers.get("a"));
-    assertEquals(ImmutableList.of("VALUE"), headers.get("value"));
-    assertEquals(ImmutableList.of("other"), headers.get("otherValue"));
-    assertEquals(ImmutableList.of(String.valueOf(Long.MAX_VALUE)), headers.get("Content-Length"));
+    assertEquals(ImmutableList.of("bar"), lowLevelRequest.getHeaderValues("foo"));
+    assertEquals(ImmutableList.of("a", "b", "c"), lowLevelRequest.getHeaderValues("list"));
+    assertEquals(ImmutableList.of("a2", "b2", "c2"), lowLevelRequest.getHeaderValues("objlist"));
+    assertEquals(ImmutableList.of("a1", "a2"), lowLevelRequest.getHeaderValues("r"));
+    assertTrue(lowLevelRequest.getHeaderValues("accept-encoding").isEmpty());
+    assertEquals(ImmutableList.of("foo"), lowLevelRequest.getHeaderValues("user-agent"));
+    assertEquals(ImmutableList.of("b"), lowLevelRequest.getHeaderValues("a"));
+    assertEquals(ImmutableList.of("VALUE"), lowLevelRequest.getHeaderValues("value"));
+    assertEquals(ImmutableList.of("other"), lowLevelRequest.getHeaderValues("othervalue"));
+    assertEquals(ImmutableList.of(String.valueOf(Long.MAX_VALUE)),
+        lowLevelRequest.getHeaderValues("content-length"));
 
     HttpHeaders.serializeHeadersForMultipartRequests(myHeaders, null, null, writer);
 
@@ -188,5 +187,45 @@ public class HttpHeadersTest extends TestCase {
     headers.fromHttpResponse(response, null);
     Object authHeader = headers.get("Authorization");
     assertTrue(authHeader.toString(), ImmutableList.of("Foo", "Bar").equals(authHeader));
+  }
+
+  public void testHeaderStringValues() {
+    // custom headers
+    MyHeaders myHeaders = new MyHeaders();
+    myHeaders.foo = "bar";
+    myHeaders.objNum = 5;
+    myHeaders.list = ImmutableList.of("a", "b", "c");
+    myHeaders.objList = ImmutableList.of("a2", "b2", "c2");
+    myHeaders.r = new String[] {"a1", "a2"};
+    myHeaders.setAcceptEncoding(null);
+    myHeaders.setContentLength(Long.MAX_VALUE);
+    myHeaders.setUserAgent("foo");
+    myHeaders.set("a", "b");
+    myHeaders.value = E.VALUE;
+    myHeaders.otherValue = E.OTHER_VALUE;
+    // check first header string values
+    assertEquals("bar", myHeaders.getFirstHeaderStringValue("foo"));
+    assertEquals("a", myHeaders.getFirstHeaderStringValue("list"));
+    assertEquals("a2", myHeaders.getFirstHeaderStringValue("objlist"));
+    assertEquals("a1", myHeaders.getFirstHeaderStringValue("r"));
+    assertNull(myHeaders.getFirstHeaderStringValue("accept-encoding"));
+    assertEquals("foo", myHeaders.getFirstHeaderStringValue("user-agent"));
+    assertEquals("b", myHeaders.getFirstHeaderStringValue("a"));
+    assertEquals("VALUE", myHeaders.getFirstHeaderStringValue("value"));
+    assertEquals("other", myHeaders.getFirstHeaderStringValue("othervalue"));
+    assertEquals(
+        String.valueOf(Long.MAX_VALUE), myHeaders.getFirstHeaderStringValue("content-length"));
+    // check header string values
+    assertEquals(ImmutableList.of("bar"), myHeaders.getHeaderStringValues("foo"));
+    assertEquals(ImmutableList.of("a", "b", "c"), myHeaders.getHeaderStringValues("list"));
+    assertEquals(ImmutableList.of("a2", "b2", "c2"), myHeaders.getHeaderStringValues("objlist"));
+    assertEquals(ImmutableList.of("a1", "a2"), myHeaders.getHeaderStringValues("r"));
+    assertTrue(myHeaders.getHeaderStringValues("accept-encoding").isEmpty());
+    assertEquals(ImmutableList.of("foo"), myHeaders.getHeaderStringValues("user-agent"));
+    assertEquals(ImmutableList.of("b"), myHeaders.getHeaderStringValues("a"));
+    assertEquals(ImmutableList.of("VALUE"), myHeaders.getHeaderStringValues("value"));
+    assertEquals(ImmutableList.of("other"), myHeaders.getHeaderStringValues("othervalue"));
+    assertEquals(ImmutableList.of(String.valueOf(Long.MAX_VALUE)),
+        myHeaders.getHeaderStringValues("content-length"));
   }
 }

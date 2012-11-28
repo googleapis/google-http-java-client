@@ -22,6 +22,7 @@ import com.google.api.client.util.GenericData;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
+import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.io.CharStreams;
 
@@ -67,6 +68,14 @@ public class UrlEncodedParser implements ObjectParser {
 
   /** {@code "application/x-www-form-urlencoded"} content type. */
   public static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
+
+  /**
+   * {@code "application/x-www-form-urlencoded"} media type with UTF-8 encoding.
+   *
+   * @since 1.13
+   */
+  public static final String MEDIA_TYPE =
+      new HttpMediaType(UrlEncodedParser.CONTENT_TYPE).setCharsetParameter(Charsets.UTF_8).build();
 
   /**
    * Parses the given URL-encoded content into the given data object of data key name/value pairs,

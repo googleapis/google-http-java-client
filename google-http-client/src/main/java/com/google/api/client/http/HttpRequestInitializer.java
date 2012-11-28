@@ -43,11 +43,11 @@ import java.io.IOException;
  * </pre>
  *
  * <p>
- * If you have a custom request initializer, use this more complex example:
+ * More complex usage example:
  * </p>
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
+  public static HttpRequestFactory createRequestFactory2(HttpTransport transport) {
     final DisableTimeout disableTimeout = new DisableTimeout();
     return transport.createRequestFactory(new HttpRequestInitializer() {
       public void initialize(HttpRequest request) {

@@ -27,7 +27,7 @@ import java.io.IOException;
   public static class RefreshTokenHandler implements HttpUnsuccessfulResponseHandler {
     public boolean handleResponse(
         HttpRequest request, HttpResponse response, boolean retrySupported) throws IOException {
-      if (response.statusCode == HttpStatusCodes.STATUS_CODE_UNAUTHORIZED) {
+      if (response.getStatusCode() == HttpStatusCodes.STATUS_CODE_UNAUTHORIZED) {
         refreshToken();
       }
       return false;
@@ -44,28 +44,28 @@ import java.io.IOException;
     final RefreshTokenHandler handler = new RefreshTokenHandler();
     return transport.createRequestFactory(new HttpRequestInitializer() {
       public void initialize(HttpRequest request) {
-        request.unsuccessfulResponseHandler = handler;
+        request.setUnsuccessfulResponseHandler(handler);
       }
     });
   }
  * </pre>
  *
  * <p>
- * If you have a custom unsuccessful response handler, use this more complex example:
+ * More complex usage example:
  * </p>
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
+  public static HttpRequestFactory createRequestFactory2(HttpTransport transport) {
     final RefreshTokenHandler handler = new RefreshTokenHandler();
     return transport.createRequestFactory(new HttpRequestInitializer() {
       public void initialize(HttpRequest request) {
-        request.unsuccessfulResponseHandler = new HttpUnsuccessfulResponseHandler() {
+        request.setUnsuccessfulResponseHandler(new HttpUnsuccessfulResponseHandler() {
           public boolean handleResponse(
               HttpRequest request, HttpResponse response, boolean retrySupported)
               throws IOException {
             return handler.handleResponse(request, response, retrySupported);
           }
-        };
+        });
       }
     });
   }
