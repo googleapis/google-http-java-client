@@ -299,7 +299,7 @@ public final class DateTime implements Serializable {
       }
       return new DateTime(dateOnly, value, tzShiftInteger);
     } catch (StringIndexOutOfBoundsException e) {
-      throw new NumberFormatException("Invalid date/time format.");
+      throw new NumberFormatException("Invalid date/time format: " + str);
     }
   }
 
