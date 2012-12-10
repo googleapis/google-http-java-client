@@ -17,6 +17,8 @@ package com.google.api.client.http.apache;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpUtils;
+import com.google.common.base.Preconditions;
 
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
@@ -43,6 +45,8 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+
+import java.security.GeneralSecurityException;
 
 /**
  * Thread-safe HTTP transport based on the Apache HTTP Client library.
@@ -74,6 +78,10 @@ public final class ApacheHttpTransport extends HttpTransport {
   /**
    * Constructor that uses {@link #newDefaultHttpClient()} for the Apache HTTP client.
    *
+   * <p>
+   * Use {@link Builder} to modify HTTP client options.
+   * </p>
+   *
    * @since 1.3
    */
   public ApacheHttpTransport() {
@@ -95,6 +103,10 @@ public final class ApacheHttpTransport extends HttpTransport {
    * <li>{@link HttpConnectionParams#setSoTimeout} is set on each request based on
    * {@link HttpRequest#getReadTimeout()}.</li>
    * </ul>
+   *
+   * <p>
+   * Use {@link Builder} for a more user-friendly way to modify the HTTP client options.
+   * </p>
    *
    * @param httpClient Apache HTTP client to use
    *
@@ -126,6 +138,17 @@ public final class ApacheHttpTransport extends HttpTransport {
    * @since 1.6
    */
   public static DefaultHttpClient newDefaultHttpClient() {
+    return newDefaultHttpClient(SSLSocketFactory.getSocketFactory());
+  }
+
+  /**
+   * Creates a new instance of the Apache HTTP client that is used by the
+   * {@link #ApacheHttpTransport()} constructor.
+   *
+   * @param socketFactory SSL socket factory
+   * @return new instance of the Apache HTTP client
+   */
+  static DefaultHttpClient newDefaultHttpClient(SSLSocketFactory socketFactory) {
     // Turn off stale checking. Our connections break all the time anyway,
     // and it's not worth it to pay the penalty of checking every time.
     HttpParams params = new BasicHttpParams();
@@ -136,7 +159,7 @@ public final class ApacheHttpTransport extends HttpTransport {
     // See http://hc.apache.org/httpcomponents-client-ga/tutorial/html/connmgmt.html
     SchemeRegistry registry = new SchemeRegistry();
     registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-    registry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+    registry.register(new Scheme("https", socketFactory, 443));
     ClientConnectionManager connectionManager = new ThreadSafeClientConnManager(params, registry);
     DefaultHttpClient defaultHttpClient = new DefaultHttpClient(connectionManager, params);
     defaultHttpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(0, false));
@@ -237,5 +260,52 @@ public final class ApacheHttpTransport extends HttpTransport {
    */
   public HttpClient getHttpClient() {
     return httpClient;
+  }
+
+  /**
+   * Builder for {@link ApacheHttpTransport}.
+   *
+   * <p>
+   * Implementation is not thread-safe.
+   * </p>
+   *
+   * @since 1.13
+   */
+  public static final class Builder {
+
+    /** SSL socket factory. */
+    private SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
+
+    /**
+     * Disables validating server SSL certificates by setting the SSL socket factory using
+     * {@link NetHttpUtils#trustAllSSLContext()} for the SSL context and
+     * {@link SSLSocketFactory#ALLOW_ALL_HOSTNAME_VERIFIER} for the host name verifier.
+     *
+     * <p>
+     * Be careful! Disabling certificate validation is dangerous and should only be done in testing
+     * environments.
+     * </p>
+     */
+    public Builder doNotValidateCertificate() throws GeneralSecurityException {
+      socketFactory = new SSLSocketFactory(NetHttpUtils.trustAllSSLContext());
+      socketFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+      return this;
+    }
+
+    /** Sets the SSL socket factory ({@link SSLSocketFactory#getSocketFactory()} by default). */
+    public Builder setSocketFactory(SSLSocketFactory socketFactory) {
+      this.socketFactory = Preconditions.checkNotNull(socketFactory);
+      return this;
+    }
+
+    /** Returns the SSL socket factory ({@link SSLSocketFactory#getSocketFactory()} by default). */
+    public SSLSocketFactory getSSLSocketFactory() {
+      return socketFactory;
+    }
+
+    /** Returns a new instance of {@link ApacheHttpTransport} based on the options. */
+    public ApacheHttpTransport build() {
+      return new ApacheHttpTransport(newDefaultHttpClient(socketFactory));
+    }
   }
 }

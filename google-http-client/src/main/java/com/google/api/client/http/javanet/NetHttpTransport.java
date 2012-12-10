@@ -20,7 +20,12 @@ import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.security.GeneralSecurityException;
 import java.util.Arrays;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Thread-safe HTTP low-level transport based on the {@code java.net} package.
@@ -57,6 +62,33 @@ public final class NetHttpTransport extends HttpTransport {
     Arrays.sort(SUPPORTED_METHODS);
   }
 
+  /** SSL socket factory. */
+  private final SSLSocketFactory sslSocketFactory;
+
+  /** Host name verifier. */
+  private final HostnameVerifier hostnameVerifier;
+
+  /**
+   * Constructor with the default behavior.
+   *
+   * <p>
+   * Instead use {@link Builder} to modify behavior.
+   * </p>
+   */
+  public NetHttpTransport() {
+    this(HttpsURLConnection.getDefaultSSLSocketFactory(), HttpsURLConnection
+        .getDefaultHostnameVerifier());
+  }
+
+  /**
+   * @param sslSocketFactory SSL socket factory
+   * @param hostnameVerifier host name verifier
+   */
+  NetHttpTransport(SSLSocketFactory sslSocketFactory, HostnameVerifier hostnameVerifier) {
+    this.sslSocketFactory = sslSocketFactory;
+    this.hostnameVerifier = hostnameVerifier;
+  }
+
   @Override
   public boolean supportsMethod(String method) {
     return Arrays.binarySearch(SUPPORTED_METHODS, method) >= 0;
@@ -65,7 +97,7 @@ public final class NetHttpTransport extends HttpTransport {
   @Override
   protected NetHttpRequest buildRequest(String method, String url) throws IOException {
     Preconditions.checkArgument(supportsMethod(method), "HTTP method %s not supported", method);
-    return new NetHttpRequest(method, url);
+    return new NetHttpRequest(sslSocketFactory, hostnameVerifier, method, url);
   }
 
   @Deprecated
@@ -102,5 +134,72 @@ public final class NetHttpTransport extends HttpTransport {
   @Override
   public NetHttpRequest buildPutRequest(String url) throws IOException {
     return buildRequest("PUT", url);
+  }
+
+  /**
+   * Builder for {@link NetHttpTransport}.
+   *
+   * <p>
+   * Implementation is not thread-safe.
+   * </p>
+   *
+   * @since 1.13
+   */
+  public static final class Builder {
+
+    /** SSL socket factory. */
+    private SSLSocketFactory sslSocketFactory = HttpsURLConnection.getDefaultSSLSocketFactory();
+
+    /** Host name verifier. */
+    private HostnameVerifier hostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier();
+
+    /**
+     * Disables validating server SSL certificates by setting the SSL socket factory using
+     * {@link NetHttpUtils#trustAllSSLContext()} for the SSL context and
+     * {@link AllowAllHostnameVerifier} for the host name verifier.
+     *
+     * <p>
+     * Be careful! Disabling certificate validation is dangerous and should only be done in testing
+     * environments.
+     * </p>
+     */
+    public Builder doNotValidateCertificate() throws GeneralSecurityException {
+      hostnameVerifier = new AllowAllHostnameVerifier();
+      sslSocketFactory = NetHttpUtils.trustAllSSLContext().getSocketFactory();
+      return this;
+    }
+
+    /** Returns the SSL socket factory. */
+    public SSLSocketFactory getSslSocketFactory() {
+      return sslSocketFactory;
+    }
+
+    /**
+     * Sets the SSL socket factory ({@link HttpsURLConnection#getDefaultSSLSocketFactory()} by
+     * default).
+     */
+    public Builder setSslSocketFactory(SSLSocketFactory sslSocketFactory) {
+      this.sslSocketFactory = Preconditions.checkNotNull(sslSocketFactory);
+      return this;
+    }
+
+    /** Returns the host name verifier. */
+    public HostnameVerifier getHostnameVerifier() {
+      return hostnameVerifier;
+    }
+
+    /**
+     * Sets the host name verifier ({@link HttpsURLConnection#getDefaultHostnameVerifier()} by
+     * default).
+     */
+    public Builder setHostnameVerifier(HostnameVerifier hostnameVerifier) {
+      this.hostnameVerifier = Preconditions.checkNotNull(hostnameVerifier);
+      return this;
+    }
+
+    /** Returns a new instance of {@link NetHttpTransport} based on the options. */
+    public NetHttpTransport build() {
+      return new NetHttpTransport(sslSocketFactory, hostnameVerifier);
+    }
   }
 }

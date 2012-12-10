@@ -22,8 +22,11 @@ import com.google.common.base.Preconditions;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * @author Yaniv Inbar
@@ -33,15 +36,45 @@ final class NetHttpRequest extends LowLevelHttpRequest {
   private final HttpURLConnection connection;
   private HttpContent content;
 
-  NetHttpRequest(String requestMethod, String url) throws IOException {
-    this(requestMethod, (HttpURLConnection) new URL(url).openConnection());
+  /**
+   * @param sslSocketFactory SSL socket factory
+   * @param hostnameVerifier host name verifier
+   * @param requestMethod request method
+   * @param url URL
+   */
+  NetHttpRequest(SSLSocketFactory sslSocketFactory, HostnameVerifier hostnameVerifier,
+      String requestMethod, String url) throws IOException {
+    this(sslSocketFactory, hostnameVerifier, requestMethod, (HttpURLConnection) new URL(url)
+        .openConnection());
   }
 
-  NetHttpRequest(String requestMethod, HttpURLConnection connection) throws ProtocolException {
+  /**
+   * @param requestMethod request method
+   * @param connection HTTP URL connection
+   */
+  NetHttpRequest(String requestMethod, HttpURLConnection connection) throws IOException {
+    this(HttpsURLConnection.getDefaultSSLSocketFactory(), HttpsURLConnection
+        .getDefaultHostnameVerifier(), requestMethod, connection);
+  }
+
+  /**
+   * @param sslSocketFactory SSL socket factory
+   * @param hostnameVerifier host name verifier
+   * @param requestMethod request method
+   * @param connection HTTP URL connection
+   */
+  NetHttpRequest(SSLSocketFactory sslSocketFactory, HostnameVerifier hostnameVerifier,
+      String requestMethod, HttpURLConnection connection) throws IOException {
     this.connection = connection;
     connection.setRequestMethod(requestMethod);
     connection.setUseCaches(false);
     connection.setInstanceFollowRedirects(false);
+    // do not validate certificate
+    if (connection instanceof HttpsURLConnection) {
+      HttpsURLConnection secureConnection = (HttpsURLConnection) connection;
+      secureConnection.setHostnameVerifier(hostnameVerifier);
+      secureConnection.setSSLSocketFactory(sslSocketFactory);
+    }
   }
 
   @Override

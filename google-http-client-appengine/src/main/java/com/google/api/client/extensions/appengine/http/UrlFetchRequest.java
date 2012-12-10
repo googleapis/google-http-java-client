@@ -34,13 +34,11 @@ import java.net.URL;
  */
 final class UrlFetchRequest extends LowLevelHttpRequest {
 
-  private static final FetchOptions OPTIONS =
-      FetchOptions.Builder.doNotFollowRedirects().disallowTruncate().validateCertificate();
   private HttpContent content;
   private final HTTPRequest request;
 
-  UrlFetchRequest(HTTPMethod method, String url) throws IOException {
-    request = new HTTPRequest(new URL(url), method, OPTIONS);
+  UrlFetchRequest(FetchOptions fetchOptions, HTTPMethod method, String url) throws IOException {
+    request = new HTTPRequest(new URL(url), method, fetchOptions);
   }
 
   @Override

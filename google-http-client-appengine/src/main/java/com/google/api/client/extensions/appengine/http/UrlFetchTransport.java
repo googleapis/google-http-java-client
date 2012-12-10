@@ -17,6 +17,7 @@ package com.google.api.client.extensions.appengine.http;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
+import com.google.appengine.api.urlfetch.FetchOptions;
 import com.google.appengine.api.urlfetch.HTTPMethod;
 import com.google.common.base.Preconditions;
 
@@ -50,6 +51,14 @@ import java.util.Arrays;
 public final class UrlFetchTransport extends HttpTransport {
 
   /**
+   * Certificate validation behavior to use with {@link FetchOptions#doNotValidateCertificate()} or
+   * {@link FetchOptions#validateCertificate()}.
+   */
+  enum CertificateValidationBehavior {
+    DEFAULT, VALIDATE, DO_NOT_VALIDATE
+  }
+
+  /**
    * All valid request methods as specified in {@link HTTPMethod}, sorted in ascending alphabetical
    * order.
    */
@@ -57,6 +66,37 @@ public final class UrlFetchTransport extends HttpTransport {
       {HttpMethods.DELETE, HttpMethods.GET, HttpMethods.HEAD, HttpMethods.POST, HttpMethods.PUT};
   static {
     Arrays.sort(SUPPORTED_METHODS);
+  }
+
+  /** Fetch options. */
+  private final FetchOptions fetchOptions =
+      FetchOptions.Builder.doNotFollowRedirects().disallowTruncate().validateCertificate();
+
+  /**
+   * Constructor with the default fetch options.
+   *
+   * <p>
+   * Use {@link Builder} to modify fetch options.
+   * </p>
+   */
+  public UrlFetchTransport() {
+    this(CertificateValidationBehavior.DEFAULT);
+  }
+
+  /**
+   * @param certificateValidationBehavior certificate validation behavior
+   */
+  UrlFetchTransport(CertificateValidationBehavior certificateValidationBehavior) {
+    switch (certificateValidationBehavior) {
+      case VALIDATE:
+        fetchOptions.validateCertificate();
+        break;
+      case DO_NOT_VALIDATE:
+        fetchOptions.doNotValidateCertificate();
+        break;
+      default:
+        break;
+    }
   }
 
   @Override
@@ -79,7 +119,7 @@ public final class UrlFetchTransport extends HttpTransport {
     } else {
       httpMethod = HTTPMethod.PUT;
     }
-    return new UrlFetchRequest(httpMethod, url);
+    return new UrlFetchRequest(fetchOptions, httpMethod, url);
   }
 
   @Deprecated
@@ -116,5 +156,58 @@ public final class UrlFetchTransport extends HttpTransport {
   @Override
   public LowLevelHttpRequest buildPutRequest(String url) throws IOException {
     return buildRequest("PUT", url);
+  }
+
+  /**
+   * Builder for {@link UrlFetchTransport}.
+   *
+   * <p>
+   * Implementation is not thread-safe.
+   * </p>
+   *
+   * @since 1.13
+   */
+  public static final class Builder {
+
+    /** Certificate validation behavior. */
+    private CertificateValidationBehavior certificateValidationBehavior =
+        CertificateValidationBehavior.DEFAULT;
+
+    /**
+     * Sets whether to use {@link FetchOptions#doNotValidateCertificate()} ({@code false} by
+     * default).
+     *
+     * <p>
+     * Be careful! Disabling certificate validation is dangerous and should be done in testing
+     * environments only.
+     * </p>
+     */
+    public Builder doNotValidateCertificate() {
+      this.certificateValidationBehavior = CertificateValidationBehavior.DO_NOT_VALIDATE;
+      return this;
+    }
+
+    /**
+     * Sets whether to use {@link FetchOptions#validateCertificate()} ({@code false} by default).
+     */
+    public Builder validateCertificate() {
+      this.certificateValidationBehavior = CertificateValidationBehavior.VALIDATE;
+      return this;
+    }
+
+    /** Returns whether to use {@link FetchOptions#validateCertificate()}. */
+    public boolean getValidateCertificate() {
+      return certificateValidationBehavior == CertificateValidationBehavior.VALIDATE;
+    }
+
+    /** Returns whether to use {@link FetchOptions#validateCertificate()}. */
+    public boolean getDoNotValidateCertificate() {
+      return certificateValidationBehavior == CertificateValidationBehavior.DO_NOT_VALIDATE;
+    }
+
+    /** Returns a new instance of {@link UrlFetchTransport} based on the options. */
+    public UrlFetchTransport build() {
+      return new UrlFetchTransport(certificateValidationBehavior);
+    }
   }
 }
