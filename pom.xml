@@ -448,7 +448,7 @@
     <project.guava.version>13.0</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.commons-logging.version>1.1.1</project.commons-logging.version>
-    <project.httpclient.version>4.0.3</project.httpclient.version>
+    <project.httpclient.version>4.0.1</project.httpclient.version>
     <project.httpcore.version>4.0.1</project.httpcore.version>
   </properties>
 </project>

@@ -287,8 +287,7 @@ public final class ApacheHttpTransport extends HttpTransport {
      * </p>
      */
     public Builder doNotValidateCertificate() throws GeneralSecurityException {
-      socketFactory = new SSLSocketFactory(NetHttpUtils.trustAllSSLContext());
-      socketFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+      socketFactory = new TrustAllSSLSocketFactory();
       return this;
     }
 
