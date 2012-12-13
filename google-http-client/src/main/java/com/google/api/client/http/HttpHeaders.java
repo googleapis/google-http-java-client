@@ -25,7 +25,6 @@ import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.Types;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
-import com.google.common.collect.Lists;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -75,7 +74,7 @@ public class HttpHeaders extends GenericData {
 
   /** {@code "Accept-Encoding"} header. */
   @Key("Accept-Encoding")
-  private List<String> acceptEncoding = Lists.newArrayList("gzip");
+  private List<String> acceptEncoding = new ArrayList<String>(Collections.singleton("gzip"));
 
   /** {@code "Authorization"} header. */
   @Key("Authorization")
@@ -974,7 +973,7 @@ public class HttpHeaders extends GenericData {
     if (passedValue == null) {
       return null;
     }
-    List<T> result = Lists.<T>newArrayList();
+    List<T> result = new ArrayList<T>();
     result.add(passedValue);
     return result;
   }
@@ -1014,7 +1013,7 @@ public class HttpHeaders extends GenericData {
     }
     Class<? extends Object> valueClass = value.getClass();
     if (value instanceof Iterable<?> || valueClass.isArray()) {
-      List<String> values = Lists.newArrayList();
+      List<String> values = new ArrayList<String>();
       for (Object repeatedValue : Types.iterableOf(value)) {
         values.add(toStringValue(repeatedValue));
       }
