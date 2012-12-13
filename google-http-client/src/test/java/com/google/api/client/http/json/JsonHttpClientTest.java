@@ -19,7 +19,6 @@ import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
@@ -59,7 +58,7 @@ public class JsonHttpClientTest extends TestCase {
 
   @SuppressWarnings("deprecation")
   public void testJsonHttpClientBuilderWithBaseUrl() {
-    HttpTransport transport = new NetHttpTransport();
+    HttpTransport transport = new MockHttpTransport();
     JsonFactory jsonFactory = new MockJsonFactory();
     GenericUrl baseUrl = new GenericUrl("http://www.testgoogleapis.com/test/path/v1/");
     JsonHttpRequestInitializer jsonHttpRequestInitializer = new TestRemoteRequestInitializer();
@@ -121,7 +120,7 @@ public class JsonHttpClientTest extends TestCase {
 
   @SuppressWarnings("deprecation")
   public void testJsonHttpClientBuilderWithRootUrlAndServicePath() {
-    HttpTransport transport = new NetHttpTransport();
+    HttpTransport transport = new MockHttpTransport();
     JsonFactory jsonFactory = new MockJsonFactory();
     String rootUrl = "http://www.testgoogleapis.com/";
     String servicePath = "test/path/v1/";
@@ -181,7 +180,7 @@ public class JsonHttpClientTest extends TestCase {
   @SuppressWarnings("deprecation")
   public void testBaseServerAndBasePathBuilder() {
     JsonHttpClient client = new JsonHttpClient.Builder(
-        new NetHttpTransport(), new MockJsonFactory(),
+        new MockHttpTransport(), new MockJsonFactory(),
         new GenericUrl("http://www.testgoogleapis.com/test/path/v1/")).setBaseUrl(
         new GenericUrl("http://www.googleapis.com/test/path/v2/"))
         .setApplicationName("Test Application").build();
@@ -193,7 +192,7 @@ public class JsonHttpClientTest extends TestCase {
   public void testInitializeWithBaseUrl() throws IOException {
     TestRemoteRequestInitializer remoteRequestInitializer = new TestRemoteRequestInitializer();
     JsonHttpClient client = new JsonHttpClient.Builder(
-        new NetHttpTransport(), new MockJsonFactory(),
+        new MockHttpTransport(), new MockJsonFactory(),
         new GenericUrl("http://www.test.com/")).setJsonHttpRequestInitializer(
         remoteRequestInitializer).setApplicationName("Test Application").build();
     client.initialize(null);
@@ -203,7 +202,7 @@ public class JsonHttpClientTest extends TestCase {
   public void testInitializeWithRootUrl() throws IOException {
     TestRemoteRequestInitializer remoteRequestInitializer = new TestRemoteRequestInitializer();
     JsonHttpClient client = new JsonHttpClient.Builder(
-        new NetHttpTransport(), new MockJsonFactory(), "http://www.test.com/", "test/",
+        new MockHttpTransport(), new MockJsonFactory(), "http://www.test.com/", "test/",
         null).setJsonHttpRequestInitializer(remoteRequestInitializer)
         .setApplicationName("Test Application").build();
     client.initialize(null);
