@@ -68,9 +68,8 @@ public final class UrlFetchTransport extends HttpTransport {
     Arrays.sort(SUPPORTED_METHODS);
   }
 
-  /** Fetch options. */
-  private final FetchOptions fetchOptions =
-      FetchOptions.Builder.doNotFollowRedirects().disallowTruncate().validateCertificate();
+  /** Certificate validation behavior. */
+  private final CertificateValidationBehavior certificateValidationBehavior;
 
   /**
    * Constructor with the default fetch options.
@@ -87,16 +86,7 @@ public final class UrlFetchTransport extends HttpTransport {
    * @param certificateValidationBehavior certificate validation behavior
    */
   UrlFetchTransport(CertificateValidationBehavior certificateValidationBehavior) {
-    switch (certificateValidationBehavior) {
-      case VALIDATE:
-        fetchOptions.validateCertificate();
-        break;
-      case DO_NOT_VALIDATE:
-        fetchOptions.doNotValidateCertificate();
-        break;
-      default:
-        break;
-    }
+    this.certificateValidationBehavior = Preconditions.checkNotNull(certificateValidationBehavior);
   }
 
   @Override
@@ -118,6 +108,19 @@ public final class UrlFetchTransport extends HttpTransport {
       httpMethod = HTTPMethod.POST;
     } else {
       httpMethod = HTTPMethod.PUT;
+    }
+    // fetch options
+    FetchOptions fetchOptions =
+        FetchOptions.Builder.doNotFollowRedirects().disallowTruncate().validateCertificate();
+    switch (certificateValidationBehavior) {
+      case VALIDATE:
+        fetchOptions.validateCertificate();
+        break;
+      case DO_NOT_VALIDATE:
+        fetchOptions.doNotValidateCertificate();
+        break;
+      default:
+        break;
     }
     return new UrlFetchRequest(fetchOptions, httpMethod, url);
   }
