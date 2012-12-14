@@ -12,29 +12,32 @@
  * the License.
  */
 
-package com.google.api.client.http.javanet;
+package com.google.api.client.util;
 
 import java.security.GeneralSecurityException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 /**
- * Utilities for the {@code java.net} package.
+ * SSL utilities.
  *
- * @author Yaniv Inbar
  * @since 1.13
+ * @author Yaniv Inbar
  */
-public final class NetHttpUtils {
+public final class SslUtils {
 
   /**
    * Returns an SSL context in which all X.509 certificates are trusted.
    *
    * <p>
-   * Be careful! Using this is dangerous and should only be done in testing environments.
+   * Be careful! Disabling SSL certificate validation is dangerous and should only be done in
+   * testing environments.
    * </p>
    */
   public static SSLContext trustAllSSLContext() throws GeneralSecurityException {
@@ -57,6 +60,23 @@ public final class NetHttpUtils {
     return context;
   }
 
-  private NetHttpUtils() {
+  /**
+   * Returns a verifier that trusts all host names.
+   *
+   * <p>
+   * Be careful! Disabling host name verification is dangerous and should only be done in testing
+   * environments.
+   * </p>
+   */
+  public static HostnameVerifier trustAllHostnameVerifier() {
+    return new HostnameVerifier() {
+
+      public boolean verify(String arg0, SSLSession arg1) {
+        return true;
+      }
+    };
+  }
+
+  private SslUtils() {
   }
 }

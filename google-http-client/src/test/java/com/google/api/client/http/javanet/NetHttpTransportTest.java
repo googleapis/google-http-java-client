@@ -43,7 +43,8 @@ public class NetHttpTransportTest extends TestCase {
     for (String method : METHODS) {
       boolean isPutOrPost = method.equals("PUT") || method.equals("POST");
       MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
-      NetHttpRequest request = new NetHttpRequest(method, connection);
+      connection.setRequestMethod(method);
+      NetHttpRequest request = new NetHttpRequest(connection);
       request.setContent(ByteArrayContent.fromString(null, ""));
       request.execute();
       assertEquals(isPutOrPost, connection.doOutputCalled());
@@ -66,7 +67,8 @@ public class NetHttpTransportTest extends TestCase {
     for (String method : METHODS) {
       HttpURLConnection connection =
           (HttpURLConnection) new URL("http://www.google.com").openConnection();
-      NetHttpRequest request = new NetHttpRequest(method, connection);
+      connection.setRequestMethod(method);
+      NetHttpRequest request = new NetHttpRequest(connection);
       request.setContent(ByteArrayContent.fromString("text/html", ""));
       request.execute().getContent().close();
       assertEquals(method, connection.getRequestMethod());

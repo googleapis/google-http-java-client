@@ -12,7 +12,7 @@
 
 package com.google.api.client.http.apache;
 
-import com.google.api.client.http.javanet.NetHttpUtils;
+import com.google.api.client.util.SslUtils;
 
 import org.apache.http.conn.ssl.SSLSocketFactory;
 
@@ -36,7 +36,7 @@ class TrustAllSSLSocketFactory extends SSLSocketFactory {
 
   /** Wrapped Java SSL socket factory. */
   private final javax.net.ssl.SSLSocketFactory socketFactory =
-      NetHttpUtils.trustAllSSLContext().getSocketFactory();
+      SslUtils.trustAllSSLContext().getSocketFactory();
 
   TrustAllSSLSocketFactory() throws GeneralSecurityException {
     super(KeyStore.getInstance(KeyStore.getDefaultType()));

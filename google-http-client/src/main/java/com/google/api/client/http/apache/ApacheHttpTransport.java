@@ -17,9 +17,10 @@ package com.google.api.client.http.apache;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpUtils;
+import com.google.api.client.util.SslUtils;
 import com.google.common.base.Preconditions;
 
+import org.apache.http.HttpHost;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
@@ -34,18 +35,22 @@ import org.apache.http.client.params.ClientPNames;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRouteBean;
+import org.apache.http.conn.params.ConnRouteParams;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
+import org.apache.http.impl.conn.DefaultHttpRoutePlanner;
+import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 
+import java.net.ProxySelector;
 import java.security.GeneralSecurityException;
 
 /**
@@ -63,8 +68,7 @@ import java.security.GeneralSecurityException;
  * Alternatively, use {@link #ApacheHttpTransport()} and change the {@link #getHttpClient()}. Please
  * read the <a
  * href="http://hc.apache.org/httpcomponents-client-ga/tutorial/html/connmgmt.html">Apache HTTP
- * Client connection management tutorial</a> for more complex configuration questions, such as how
- * to set up an HTTP proxy.
+ * Client connection management tutorial</a> for more complex configuration options.
  * </p>
  *
  * @since 1.0
@@ -80,6 +84,11 @@ public final class ApacheHttpTransport extends HttpTransport {
    *
    * <p>
    * Use {@link Builder} to modify HTTP client options.
+   * </p>
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.12 the route planner was {@link DefaultHttpRoutePlanner}
+   * but starting with version 1.13 the route planner is {@link ProxySelectorRoutePlanner}.
    * </p>
    *
    * @since 1.3
@@ -109,7 +118,7 @@ public final class ApacheHttpTransport extends HttpTransport {
    * </p>
    *
    * @param httpClient Apache HTTP client to use
-   *
+   * 
    * @since 1.6
    */
   public ApacheHttpTransport(HttpClient httpClient) {
@@ -131,14 +140,36 @@ public final class ApacheHttpTransport extends HttpTransport {
    * <li>The socket buffer size is set to 8192 using
    * {@link HttpConnectionParams#setSocketBufferSize}.</li>
    * <li><The retry mechanism is turned off by setting
-   * {@code new DefaultHttpRequestRetryHandler(0, false)}</li>
+   * {@code new DefaultHttpRequestRetryHandler(0, false)}.</li>
+   * <li>The route planner uses {@link ProxySelectorRoutePlanner} with
+   * {@link ProxySelector#getDefault()}, which uses the proxy settings from <a
+   * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
+   * properties</a>.</li>
    * </ul>
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.12 the route planner was {@link DefaultHttpRoutePlanner}
+   * but starting with version 1.13 the route planner is {@link ProxySelectorRoutePlanner}.
+   * </p>
    *
    * @return new instance of the Apache HTTP client
    * @since 1.6
    */
   public static DefaultHttpClient newDefaultHttpClient() {
-    return newDefaultHttpClient(SSLSocketFactory.getSocketFactory());
+    return newDefaultHttpClient(
+        SSLSocketFactory.getSocketFactory(), newDefaultHttpParams(), ProxySelector.getDefault());
+  }
+
+  /** Returns a new instance of the default HTTP parameters we use. */
+  static HttpParams newDefaultHttpParams() {
+    HttpParams params = new BasicHttpParams();
+    // Turn off stale checking. Our connections break all the time anyway,
+    // and it's not worth it to pay the penalty of checking every time.
+    HttpConnectionParams.setStaleCheckingEnabled(params, false);
+    HttpConnectionParams.setSocketBufferSize(params, 8192);
+    ConnManagerParams.setMaxTotalConnections(params, 200);
+    ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(20));
+    return params;
   }
 
   /**
@@ -146,16 +177,13 @@ public final class ApacheHttpTransport extends HttpTransport {
    * {@link #ApacheHttpTransport()} constructor.
    *
    * @param socketFactory SSL socket factory
+   * @param params HTTP parameters
+   * @param proxySelector HTTP proxy selector to use {@link ProxySelectorRoutePlanner} or
+   *        {@code null} for {@link DefaultHttpRoutePlanner}
    * @return new instance of the Apache HTTP client
    */
-  static DefaultHttpClient newDefaultHttpClient(SSLSocketFactory socketFactory) {
-    // Turn off stale checking. Our connections break all the time anyway,
-    // and it's not worth it to pay the penalty of checking every time.
-    HttpParams params = new BasicHttpParams();
-    HttpConnectionParams.setStaleCheckingEnabled(params, false);
-    HttpConnectionParams.setSocketBufferSize(params, 8192);
-    ConnManagerParams.setMaxTotalConnections(params, 200);
-    ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(20));
+  static DefaultHttpClient newDefaultHttpClient(
+      SSLSocketFactory socketFactory, HttpParams params, ProxySelector proxySelector) {
     // See http://hc.apache.org/httpcomponents-client-ga/tutorial/html/connmgmt.html
     SchemeRegistry registry = new SchemeRegistry();
     registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
@@ -163,6 +191,9 @@ public final class ApacheHttpTransport extends HttpTransport {
     ClientConnectionManager connectionManager = new ThreadSafeClientConnManager(params, registry);
     DefaultHttpClient defaultHttpClient = new DefaultHttpClient(connectionManager, params);
     defaultHttpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(0, false));
+    if (proxySelector != null) {
+      defaultHttpClient.setRoutePlanner(new ProxySelectorRoutePlanner(registry, proxySelector));
+    }
     return defaultHttpClient;
   }
 
@@ -276,9 +307,62 @@ public final class ApacheHttpTransport extends HttpTransport {
     /** SSL socket factory. */
     private SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
 
+    /** HTTP parameters. */
+    private HttpParams params = newDefaultHttpParams();
+
+    /**
+     * HTTP proxy selector to use {@link ProxySelectorRoutePlanner} or {@code null} for
+     * {@link DefaultHttpRoutePlanner}.
+     */
+    private ProxySelector proxySelector = ProxySelector.getDefault();
+
+    /**
+     * Sets the HTTP proxy to use {@link DefaultHttpRoutePlanner} or {@code null} to use
+     * {@link #setProxySelector(ProxySelector)} with {@link ProxySelector#getDefault()}.
+     *
+     * <p>
+     * By default it is {@code null}, which uses the proxy settings from <a
+     * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
+     * properties</a>.
+     * </p>
+     *
+     * <p>
+     * For example:
+     * </p>
+     *
+     * <pre>
+       setProxy(new HttpHost("127.0.0.1", 8080))
+     * </pre>
+     */
+    public Builder setProxy(HttpHost proxy) {
+      ConnRouteParams.setDefaultProxy(params, proxy);
+      if (proxy != null) {
+        proxySelector = null;
+      }
+      return this;
+    }
+
+    /**
+     * Sets the HTTP proxy selector to use {@link ProxySelectorRoutePlanner} or {@code null} for
+     * {@link DefaultHttpRoutePlanner}.
+     *
+     * <p>
+     * By default it is {@link ProxySelector#getDefault()} which uses the proxy settings from <a
+     * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
+     * properties</a>.
+     * </p>
+     */
+    public Builder setProxySelector(ProxySelector proxySelector) {
+      this.proxySelector = proxySelector;
+      if (proxySelector != null) {
+        ConnRouteParams.setDefaultProxy(params, null);
+      }
+      return this;
+    }
+
     /**
      * Disables validating server SSL certificates by setting the SSL socket factory using
-     * {@link NetHttpUtils#trustAllSSLContext()} for the SSL context and
+     * {@link SslUtils#trustAllSSLContext()} for the SSL context and
      * {@link SSLSocketFactory#ALLOW_ALL_HOSTNAME_VERIFIER} for the host name verifier.
      *
      * <p>
@@ -302,9 +386,14 @@ public final class ApacheHttpTransport extends HttpTransport {
       return socketFactory;
     }
 
+    /** Returns the HTTP parameters. */
+    public HttpParams getHttpParams() {
+      return params;
+    }
+
     /** Returns a new instance of {@link ApacheHttpTransport} based on the options. */
     public ApacheHttpTransport build() {
-      return new ApacheHttpTransport(newDefaultHttpClient(socketFactory));
+      return new ApacheHttpTransport(newDefaultHttpClient(socketFactory, params, proxySelector));
     }
   }
 }

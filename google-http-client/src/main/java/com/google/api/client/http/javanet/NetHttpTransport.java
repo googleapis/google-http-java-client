@@ -16,10 +16,14 @@ package com.google.api.client.http.javanet;
 
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.util.SslUtils;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.URLConnection;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 
@@ -62,10 +66,17 @@ public final class NetHttpTransport extends HttpTransport {
     Arrays.sort(SUPPORTED_METHODS);
   }
 
-  /** SSL socket factory. */
+  /**
+   * HTTP proxy or {@code null} to use the proxy settings from <a
+   * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
+   * properties</a>.
+   */
+  private final Proxy proxy;
+
+  /** SSL socket factory or {@code null} for the default. */
   private final SSLSocketFactory sslSocketFactory;
 
-  /** Host name verifier. */
+  /** Host name verifier or {@code null} for the default. */
   private final HostnameVerifier hostnameVerifier;
 
   /**
@@ -76,15 +87,19 @@ public final class NetHttpTransport extends HttpTransport {
    * </p>
    */
   public NetHttpTransport() {
-    this(HttpsURLConnection.getDefaultSSLSocketFactory(), HttpsURLConnection
-        .getDefaultHostnameVerifier());
+    this(null, null, null);
   }
 
   /**
-   * @param sslSocketFactory SSL socket factory
-   * @param hostnameVerifier host name verifier
+   * @param proxy HTTP proxy or {@code null} to use the proxy settings from <a
+   *        href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">
+   *        system properties</a>
+   * @param sslSocketFactory SSL socket factory or {@code null} for the default
+   * @param hostnameVerifier host name verifier or {@code null} for the default
    */
-  NetHttpTransport(SSLSocketFactory sslSocketFactory, HostnameVerifier hostnameVerifier) {
+  NetHttpTransport(
+      Proxy proxy, SSLSocketFactory sslSocketFactory, HostnameVerifier hostnameVerifier) {
+    this.proxy = proxy;
     this.sslSocketFactory = sslSocketFactory;
     this.hostnameVerifier = hostnameVerifier;
   }
@@ -97,7 +112,22 @@ public final class NetHttpTransport extends HttpTransport {
   @Override
   protected NetHttpRequest buildRequest(String method, String url) throws IOException {
     Preconditions.checkArgument(supportsMethod(method), "HTTP method %s not supported", method);
-    return new NetHttpRequest(sslSocketFactory, hostnameVerifier, method, url);
+    // connection with proxy settings
+    URL connUrl = new URL(url);
+    URLConnection conn = proxy == null ? connUrl.openConnection() : connUrl.openConnection(proxy);
+    HttpURLConnection connection = (HttpURLConnection) conn;
+    connection.setRequestMethod(method);
+    // SSL settings
+    if (connection instanceof HttpsURLConnection) {
+      HttpsURLConnection secureConnection = (HttpsURLConnection) connection;
+      if (hostnameVerifier != null) {
+        secureConnection.setHostnameVerifier(hostnameVerifier);
+      }
+      if (sslSocketFactory != null) {
+        secureConnection.setSSLSocketFactory(sslSocketFactory);
+      }
+    }
+    return new NetHttpRequest(connection);
   }
 
   @Deprecated
@@ -147,16 +177,41 @@ public final class NetHttpTransport extends HttpTransport {
    */
   public static final class Builder {
 
-    /** SSL socket factory. */
-    private SSLSocketFactory sslSocketFactory = HttpsURLConnection.getDefaultSSLSocketFactory();
+    /** SSL socket factory or {@code null} for the default. */
+    private SSLSocketFactory sslSocketFactory;
 
-    /** Host name verifier. */
-    private HostnameVerifier hostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier();
+    /** Host name verifier or {@code null} for the default. */
+    private HostnameVerifier hostnameVerifier;
+
+    /**
+     * HTTP proxy or {@code null} to use the proxy settings from <a
+     * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
+     * properties</a>.
+     */
+    private Proxy proxy;
+
+    /**
+     * Sets the HTTP proxy or {@code null} to use the proxy settings from <a
+     * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
+     * properties</a>.
+     *
+     * <p>
+     * For example:
+     * </p>
+     *
+     * <pre>
+       setProxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 8080)))
+     * </pre>
+     */
+    public Builder setProxy(Proxy proxy) {
+      this.proxy = proxy;
+      return this;
+    }
 
     /**
      * Disables validating server SSL certificates by setting the SSL socket factory using
-     * {@link NetHttpUtils#trustAllSSLContext()} for the SSL context and
-     * {@link AllowAllHostnameVerifier} for the host name verifier.
+     * {@link SslUtils#trustAllSSLContext()} for the SSL context and
+     * {@link SslUtils#trustAllHostnameVerifier()} for the host name verifier.
      *
      * <p>
      * Be careful! Disabling certificate validation is dangerous and should only be done in testing
@@ -164,8 +219,8 @@ public final class NetHttpTransport extends HttpTransport {
      * </p>
      */
     public Builder doNotValidateCertificate() throws GeneralSecurityException {
-      hostnameVerifier = new AllowAllHostnameVerifier();
-      sslSocketFactory = NetHttpUtils.trustAllSSLContext().getSocketFactory();
+      hostnameVerifier = SslUtils.trustAllHostnameVerifier();
+      sslSocketFactory = SslUtils.trustAllSSLContext().getSocketFactory();
       return this;
     }
 
@@ -174,32 +229,26 @@ public final class NetHttpTransport extends HttpTransport {
       return sslSocketFactory;
     }
 
-    /**
-     * Sets the SSL socket factory ({@link HttpsURLConnection#getDefaultSSLSocketFactory()} by
-     * default).
-     */
+    /** Sets the SSL socket factory or {@code null} for the default. */
     public Builder setSslSocketFactory(SSLSocketFactory sslSocketFactory) {
-      this.sslSocketFactory = Preconditions.checkNotNull(sslSocketFactory);
+      this.sslSocketFactory = sslSocketFactory;
       return this;
     }
 
-    /** Returns the host name verifier. */
+    /** Returns the host name verifier or {@code null} for the default. */
     public HostnameVerifier getHostnameVerifier() {
       return hostnameVerifier;
     }
 
-    /**
-     * Sets the host name verifier ({@link HttpsURLConnection#getDefaultHostnameVerifier()} by
-     * default).
-     */
+    /** Sets the host name verifier or {@code null} for the default. */
     public Builder setHostnameVerifier(HostnameVerifier hostnameVerifier) {
-      this.hostnameVerifier = Preconditions.checkNotNull(hostnameVerifier);
+      this.hostnameVerifier = hostnameVerifier;
       return this;
     }
 
     /** Returns a new instance of {@link NetHttpTransport} based on the options. */
     public NetHttpTransport build() {
-      return new NetHttpTransport(sslSocketFactory, hostnameVerifier);
+      return new NetHttpTransport(proxy, sslSocketFactory, hostnameVerifier);
     }
   }
 }
