@@ -454,7 +454,7 @@ public final class HttpResponse {
    * Returns the HTTP response content parser to use for the content type of this HTTP response or
    * {@code null} for none.
    *
-   * @deprecated (scheduled to be removed in 1.13) Use {@link #getRequest()}.
+   * @deprecated (scheduled to be removed in 1.14) Use {@link #getRequest()}.
    *             {@link HttpRequest#getParser()} instead
    */
   @Deprecated

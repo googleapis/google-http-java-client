@@ -216,7 +216,7 @@ public final class HttpRequest {
    * values in {@link HttpMethod}.
    *
    * @since 1.5
-   * @deprecated (scheduled to be removed in 1.13) Use {@link #getRequestMethod()} instead
+   * @deprecated (scheduled to be removed in 1.14) Use {@link #getRequestMethod()} instead
    */
   @Deprecated
   public HttpMethod getMethod() {
@@ -227,7 +227,7 @@ public final class HttpRequest {
    * Sets the HTTP request method.
    *
    * @since 1.5
-   * @deprecated (scheduled to be removed in 1.13) Use {@link #setRequestMethod} instead
+   * @deprecated (scheduled to be removed in 1.14) Use {@link #setRequestMethod} instead
    */
   @Deprecated
   public HttpRequest setMethod(HttpMethod method) {
@@ -686,7 +686,7 @@ public final class HttpRequest {
    * </p>
    *
    * @since 1.4
-   * @deprecated (scheduled to be removed in 1.13) Use {@link #setParser(ObjectParser)} instead.
+   * @deprecated (scheduled to be removed in 1.14) Use {@link #setParser(ObjectParser)} instead.
    */
   @Deprecated
   public void addParser(HttpParser parser) {
@@ -716,7 +716,7 @@ public final class HttpRequest {
    * @param contentType content type or {@code null} for {@code null} result
    * @return HTTP response content parser or {@code null} for {@code null} input
    * @since 1.4
-   * @deprecated (scheduled to be removed in 1.13) Use {@link #getParser()} instead.
+   * @deprecated (scheduled to be removed in 1.14) Use {@link #getParser()} instead.
    */
   @Deprecated
   public final HttpParser getParser(String contentType) {
@@ -1181,7 +1181,7 @@ public final class HttpRequest {
    *        {@code null} result
    * @return normalized media type without parameters or {@code null} for {@code null} input
    * @since 1.4
-   * @deprecated (scheduled to be removed in 1.13) Use
+   * @deprecated (scheduled to be removed in 1.14) Use
    *             {@link HttpMediaType#equalsIgnoreParameters(HttpMediaType)} instead
    */
   @Deprecated

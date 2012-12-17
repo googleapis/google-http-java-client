@@ -47,7 +47,7 @@ import java.io.InputStream;
  *
  * @since 1.0
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.13) Use {@link JsonObjectParser} instead.
+ * @deprecated (scheduled to be removed in 1.14) Use {@link JsonObjectParser} instead.
  */
 @Deprecated
 public class JsonHttpParser implements HttpParser {

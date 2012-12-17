@@ -47,7 +47,7 @@ import java.io.InputStream;
  *
  * @since 1.0
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.13) Use {@link XmlObjectParser} instead.
+ * @deprecated (scheduled to be removed in 1.14) Use {@link XmlObjectParser} instead.
  */
 @Deprecated
 public class XmlHttpParser implements HttpParser {

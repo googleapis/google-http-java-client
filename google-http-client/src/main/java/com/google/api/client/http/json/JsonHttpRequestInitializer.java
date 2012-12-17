@@ -41,7 +41,7 @@ import java.io.IOException;
  *
  * @since 1.6
  * @author Ravi Mistry
- * @deprecated (scheduled to be removed in 1.13) Use {@link HttpRequestInitializer} instead.
+ * @deprecated (scheduled to be removed in 1.14) Use {@link HttpRequestInitializer} instead.
  */
 @Deprecated
 public interface JsonHttpRequestInitializer {
