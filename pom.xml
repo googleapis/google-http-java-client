@@ -295,6 +295,11 @@
           <version>2.3.2</version>
         </plugin>
         <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>clirr-maven-plugin</artifactId>
+          <version>2.5</version>
+        </plugin>
+        <plugin>
           <groupId>org.sonatype.plugins</groupId>
           <artifactId>jarjar-maven-plugin</artifactId>
           <version>1.5</version>
@@ -427,6 +432,21 @@
         <artifactId>findbugs-maven-plugin</artifactId>
         <configuration>
           <excludeFilterFile>${basedir}/../findbugs-exclude.xml</excludeFilterFile>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>clirr-maven-plugin</artifactId>
+        <configuration>
+          <comparisonVersion>1.13.0-beta</comparisonVersion>
+          <ignoredDifferencesFile>${basedir}/../clirr-ignored-differences.xml</ignoredDifferencesFile>
         </configuration>
         <executions>
           <execution>
