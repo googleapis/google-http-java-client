@@ -447,13 +447,13 @@
           <comparisonVersion>1.13.0-beta</comparisonVersion>
           <ignoredDifferencesFile>${basedir}/../clirr-ignored-differences.xml</ignoredDifferencesFile>
         </configuration>
-        <!--<executions>
+        <executions>
           <execution>
             <goals>
               <goal>check</goal>
             </goals>
           </execution>
-        </executions>-->
+        </executions>
       </plugin>
     </plugins>
   </build>
