@@ -16,7 +16,7 @@
 
     <taskdef name="jdiff" classname="jdiff.JDiffAntTask"
       classpath="${JDIFF_HOME}/antjdiff.jar:${MAVEN_REPOSITORY_HOME}/org/codehaus/jackson/jackson-core-asl/1.9.9/jackson-core-asl-1.9.9.jar:${MAVEN_REPOSITORY_HOME}/com/fasterxml/jackson/core/jackson-core/2.0.5/jackson-core-2.0.5.jar:${MAVEN_REPOSITORY_HOME}/xpp3/xpp3/1.1.4c/xpp3-1.1.4c.jar" />
-    <jdiff destdir="${JAVADOC_PROJECT_ROOT_DIR}/1.13.1-beta/jdiff" verbose="on"
+    <jdiff destdir="${JAVADOC_PROJECT_ROOT_DIR}/1.13.2-beta/jdiff" verbose="on"
       stats="on" docchanges="on">
       <old name="Google HTTP Client Library for Java 1.12.0-beta">
         <!-- This is the location of your old source files -->
@@ -30,15 +30,15 @@
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.12.0-beta/google-http-client-jackson/src/main/java" />
         <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.12.0-beta/google-http-client-jackson2/src/main/java" />
       </old>
-      <new name="Google HTTP Client Library for Java 1.13.1-beta">
+      <new name="Google HTTP Client Library for Java 1.13.2-beta">
         <!-- This is the location of your new source files -->
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.1-beta/google-http-client/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.1-beta/google-http-client-appengine/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.1-beta/google-http-client-android/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.1-beta/google-http-client-protobuf/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.1-beta/google-http-client-gson/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.1-beta/google-http-client-jackson/src/main/java" />
-        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.1-beta/google-http-client-jackson2/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.2-beta/google-http-client/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.2-beta/google-http-client-appengine/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.2-beta/google-http-client-android/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.2-beta/google-http-client-protobuf/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.2-beta/google-http-client-gson/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.2-beta/google-http-client-jackson/src/main/java" />
+        <dirset dir="${TMP_PROJECT_ROOT_DIR}/1.13.2-beta/google-http-client-jackson2/src/main/java" />
       </new>
     </jdiff>
   </target>
