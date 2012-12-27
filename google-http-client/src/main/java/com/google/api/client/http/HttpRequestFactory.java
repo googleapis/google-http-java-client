@@ -167,9 +167,8 @@ public final class HttpRequestFactory {
    * @param content HTTP request content or {@code null} for none
    * @return new HTTP request
    */
-  @Deprecated
   public HttpRequest buildPatchRequest(GenericUrl url, HttpContent content) throws IOException {
-    return buildRequest("PATCH", url, content);
+    return buildRequest(HttpMethods.PATCH, url, content);
   }
 
   /**

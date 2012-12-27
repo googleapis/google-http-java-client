@@ -50,7 +50,8 @@ public class HttpRequestTest extends TestCase {
 
   private static final Set<String> BASIC_METHODS =
       ImmutableSet.of(HttpMethods.GET, HttpMethods.PUT, HttpMethods.POST, HttpMethods.DELETE);
-  private static final Set<String> OTHER_METHODS = ImmutableSet.of(HttpMethods.HEAD, "PATCH");
+  private static final Set<String> OTHER_METHODS =
+      ImmutableSet.of(HttpMethods.HEAD, HttpMethods.PATCH);
 
   public HttpRequestTest(String name) {
     super(name);

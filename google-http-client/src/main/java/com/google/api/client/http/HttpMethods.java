@@ -36,6 +36,13 @@ public final class HttpMethods {
   /** HTTP OPTIONS method. */
   public static final String OPTIONS = "OPTIONS";
 
+  /**
+   * HTTP PATCH method.
+   *
+   * @since 1.14
+   */
+  public static final String PATCH = "PATCH";
+
   /** HTTP POST method. */
   public static final String POST = "POST";
 
