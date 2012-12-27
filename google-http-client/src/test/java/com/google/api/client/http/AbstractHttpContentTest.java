@@ -57,6 +57,7 @@ public class AbstractHttpContentTest extends TestCase {
 
   }
 
+  @Deprecated
   public void testGetEncoding() {
     AbstractHttpContent content = new TestHttpContent(true, 0);
     assertNull(content.getEncoding());

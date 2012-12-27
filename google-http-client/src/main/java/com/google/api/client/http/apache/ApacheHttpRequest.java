@@ -14,7 +14,6 @@
 
 package com.google.api.client.http.apache;
 
-import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.common.base.Preconditions;
@@ -56,17 +55,15 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
 
   @Override
   public LowLevelHttpResponse execute() throws IOException {
+    if (getStreamingContent() != null) {
+      Preconditions.checkArgument(request instanceof HttpEntityEnclosingRequest,
+          "Apache HTTP client does not support %s requests with content.",
+          request.getRequestLine().getMethod());
+      ContentEntity entity = new ContentEntity(getContentLength(), getStreamingContent());
+      entity.setContentEncoding(getContentEncoding());
+      entity.setContentType(getContentType());
+      ((HttpEntityEnclosingRequest) request).setEntity(entity);
+    }
     return new ApacheHttpResponse(request, httpClient.execute(request));
-  }
-
-  @Override
-  public void setContent(HttpContent content) throws IOException {
-    Preconditions.checkArgument(request instanceof HttpEntityEnclosingRequest,
-        "Apache HTTP client does not support %s requests with content.",
-        request.getRequestLine().getMethod());
-    ContentEntity entity = new ContentEntity(content.getLength(), content);
-    entity.setContentEncoding(content.getEncoding());
-    entity.setContentType(content.getType());
-    ((HttpEntityEnclosingRequest) request).setEntity(entity);
   }
 }

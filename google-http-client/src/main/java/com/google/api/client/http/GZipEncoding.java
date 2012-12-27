@@ -14,28 +14,27 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.io.StreamingContent;
 
-import junit.framework.TestCase;
-
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.zip.GZIPOutputStream;
 
 /**
- * Tests {@link EmptyContent}.
+ * GZip HTTP content encoding.
  *
+ * @since 1.14
  * @author Yaniv Inbar
  */
-public class EmptyContentTest extends TestCase {
+public class GZipEncoding implements HttpEncoding {
 
-  @SuppressWarnings("deprecation")
-  public void test() throws IOException {
-    EmptyContent content = new EmptyContent();
-    assertEquals(0L, content.getLength());
-    assertNull(content.getEncoding());
-    assertNull(content.getType());
-    assertTrue(content.retrySupported());
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    content.writeTo(out);
-    assertEquals(0, out.size());
+  public String getName() {
+    return "gzip";
+  }
+
+  public void encode(StreamingContent content, OutputStream out) throws IOException {
+    GZIPOutputStream zipper = new GZIPOutputStream(out);
+    content.writeTo(zipper);
+    zipper.close();
   }
 }

@@ -81,6 +81,7 @@ public final class FileContent extends AbstractInputStreamContent {
   }
 
   @Override
+  @Deprecated
   public FileContent setEncoding(String encoding) {
     return (FileContent) super.setEncoding(encoding);
   }

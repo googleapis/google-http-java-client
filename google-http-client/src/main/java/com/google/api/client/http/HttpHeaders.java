@@ -953,11 +953,6 @@ public class HttpHeaders extends GenericData {
     }
 
     @Override
-    public void setContent(HttpContent content) throws IOException {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
     public LowLevelHttpResponse execute() throws IOException {
       throw new UnsupportedOperationException();
     }

@@ -14,6 +14,8 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.io.StreamingContent;
+
 import java.io.IOException;
 
 /**
@@ -34,6 +36,18 @@ import java.io.IOException;
  */
 public abstract class LowLevelHttpRequest {
 
+  /** Content length or less than zero if not known. */
+  private long contentLength = -1;
+
+  /** Content encoding (for example {@code "gzip"}) or {@code null} for none. */
+  private String contentEncoding;
+
+  /** Content type or {@code null} for none. */
+  private String contentType;
+
+  /** Streaming content or {@code null} for no content. */
+  private StreamingContent streamingContent;
+
   /**
    * Adds a header to the HTTP request.
    *
@@ -47,8 +61,100 @@ public abstract class LowLevelHttpRequest {
    */
   public abstract void addHeader(String name, String value) throws IOException;
 
-  /** Sets the HTTP request content. */
-  public abstract void setContent(HttpContent content) throws IOException;
+  /**
+   * Sets the HTTP request content.
+   *
+   * <p>Default implementation does nothing.</p>
+   *
+   * @throws IOException I/O exception
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #setContentLength(long)},
+   *             {@link #setContentEncoding(String)}, {@link #setContentType(String)}, and
+   *             {@link #setStreamingContent(StreamingContent)} instead.
+   */
+  @Deprecated
+  public void setContent(HttpContent content) throws IOException {
+  }
+
+  /**
+   * Sets the content length or less than zero if not known.
+   *
+   * <p>
+   * Default value is {@code -1}.
+   * </p>
+   *
+   * @throws IOException I/O exception
+   * @since 1.14
+   */
+  public final void setContentLength(long contentLength) throws IOException {
+    this.contentLength = contentLength;
+  }
+
+  /**
+   * Returns the content length or less than zero if not known.
+   *
+   * @since 1.14
+   */
+  public final long getContentLength() {
+    return contentLength;
+  }
+
+  /**
+   * Sets the content encoding (for example {@code "gzip"}) or {@code null} for none.
+   *
+   * @throws IOException I/O exception
+   * @since 1.14
+   */
+  public final void setContentEncoding(String contentEncoding) throws IOException {
+    this.contentEncoding = contentEncoding;
+  }
+
+  /**
+   * Returns the content encoding (for example {@code "gzip"}) or {@code null} for none.
+   *
+   * @since 1.14
+   */
+  public final String getContentEncoding() {
+    return contentEncoding;
+  }
+
+  /**
+   * Sets the content type or {@code null} for none.
+   *
+   * @throws IOException I/O exception
+   * @since 1.14
+   */
+  public final void setContentType(String contentType) throws IOException {
+    this.contentType = contentType;
+  }
+
+  /**
+   * Returns the content type or {@code null} for none.
+   *
+   * @since 1.14
+   */
+  public final String getContentType() {
+    return contentType;
+  }
+
+  /**
+   * Sets the streaming content or {@code null} for no content.
+   *
+   * @throws IOException I/O exception
+   * @since 1.14
+   */
+  public final void setStreamingContent(StreamingContent streamingContent)
+      throws IOException {
+    this.streamingContent = streamingContent;
+  }
+
+  /**
+   * Returns the streaming content or {@code null} for no content.
+   *
+   * @since 1.14
+   */
+  public final StreamingContent getStreamingContent() {
+    return streamingContent;
+  }
 
   /**
    * Sets the connection and read timeouts.

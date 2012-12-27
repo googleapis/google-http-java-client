@@ -67,6 +67,10 @@
   <And>
     <Bug pattern="SE_BAD_FIELD_INNER_CLASS"/>
   </And>
+  <And>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+    <Class name="com.google.api.client.util.io.ByteArrayStreamingContent"/>
+  </And>
   <!-- The following are known to be bugs and should be fixed -->
   <!-- The following are known to not be bugs and should not be fixed -->
 </FindBugsFilter>

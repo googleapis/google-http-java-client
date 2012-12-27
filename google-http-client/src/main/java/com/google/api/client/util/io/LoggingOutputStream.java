@@ -12,56 +12,49 @@
  * the License.
  */
 
-package com.google.api.client.util;
+package com.google.api.client.util.io;
 
-import java.io.FilterInputStream;
+import java.io.FilterOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Thread-safe input stream wrapper that forwards all reads to a given input stream, while logging
- * all reads to a {@link LoggingByteArrayOutputStream}.
+ * Thread-safe output stream wrapper that forwards all writes to a given output stream, while
+ * logging all writes to a {@link LoggingByteArrayOutputStream}.
  *
  * @since 1.9
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.15) Use
- *             {@link com.google.api.client.util.io.LoggingInputStream} instead
  */
-@Deprecated
-public class LoggingInputStream extends FilterInputStream {
+public class LoggingOutputStream extends FilterOutputStream {
 
   /** Log stream. */
   private final LoggingByteArrayOutputStream logStream;
 
   /**
-   * @param inputStream input stream to forward all reads to
+   * @param outputStream output stream to forward all writes to
    * @param logger logger
    * @param loggingLevel logging level
    * @param contentLoggingLimit maximum number of bytes to log (may be {@code 0} to avoid logging
    *        content)
    */
-  public LoggingInputStream(
-      InputStream inputStream, Logger logger, Level loggingLevel, int contentLoggingLimit) {
-    super(inputStream);
+  public LoggingOutputStream(
+      OutputStream outputStream, Logger logger, Level loggingLevel, int contentLoggingLimit) {
+    super(outputStream);
     logStream = new LoggingByteArrayOutputStream(logger, loggingLevel, contentLoggingLimit);
   }
 
   @Override
-  public int read() throws IOException {
-    int read = super.read();
-    logStream.write(read);
-    return read;
+  public void write(int b) throws IOException {
+    out.write(b);
+    logStream.write(b);
   }
 
   @Override
-  public int read(byte[] b, int off, int len) throws IOException {
-    int read = super.read(b, off, len);
-    if (read > 0) {
-      logStream.write(b, off, read);
-    }
-    return read;
+  public void write(byte[] b, int off, int len) throws IOException {
+    out.write(b, off, len);
+    logStream.write(b, off, len);
   }
 
   @Override

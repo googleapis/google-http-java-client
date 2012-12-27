@@ -14,10 +14,11 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.io.IOUtils;
+import com.google.api.client.util.io.StreamingContent;
 import com.google.common.base.Charsets;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 /**
@@ -56,6 +57,7 @@ public abstract class AbstractHttpContent implements HttpContent {
   }
 
   /** Default implementation returns {@code null}, but subclasses may override. */
+  @Deprecated
   public String getEncoding() {
     return null;
   }
@@ -101,8 +103,8 @@ public abstract class AbstractHttpContent implements HttpContent {
    * @since 1.10
    */
   protected final Charset getCharset() {
-    return mediaType == null || mediaType.getCharsetParameter() == null ? Charsets.UTF_8 : mediaType
-        .getCharsetParameter();
+    return mediaType == null || mediaType.getCharsetParameter() == null
+        ? Charsets.UTF_8 : mediaType.getCharsetParameter();
   }
 
   public String getType() {
@@ -114,22 +116,15 @@ public abstract class AbstractHttpContent implements HttpContent {
    *
    * <p>
    * Subclasses may override, but by default this computes the length by calling
-   * {@link #writeTo(OutputStream)} with an output stream that does not process the bytes written,
-   * but only retains the count of bytes. If {@link #retrySupported()} is {@code false}, it will
-   * instead return {@code -1}.
+   * {@link IOUtils#computeLength(StreamingContent)}. If {@link #retrySupported()} is
+   * {@code false}, it will instead return {@code -1} because the stream must not be read twice.
    * </p>
    */
   protected long computeLength() throws IOException {
     if (!retrySupported()) {
       return -1;
     }
-    ByteCountingOutputStream countingStream = new ByteCountingOutputStream();
-    try {
-      writeTo(countingStream);
-    } finally {
-      countingStream.close();
-    }
-    return countingStream.count;
+    return IOUtils.computeLength(this);
   }
 
   /** Default implementation returns {@code true}, but subclasses may override. */

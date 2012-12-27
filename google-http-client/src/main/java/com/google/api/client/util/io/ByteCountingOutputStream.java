@@ -12,30 +12,29 @@
  * the License.
  */
 
-package com.google.api.client.http;
+package com.google.api.client.util.io;
 
-
-import junit.framework.TestCase;
-
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
- * Tests {@link EmptyContent}.
+ * Output stream that throws away any content and only retains the count of bytes written to the
+ * stream.
  *
  * @author Yaniv Inbar
  */
-public class EmptyContentTest extends TestCase {
+final class ByteCountingOutputStream extends OutputStream {
 
-  @SuppressWarnings("deprecation")
-  public void test() throws IOException {
-    EmptyContent content = new EmptyContent();
-    assertEquals(0L, content.getLength());
-    assertNull(content.getEncoding());
-    assertNull(content.getType());
-    assertTrue(content.retrySupported());
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    content.writeTo(out);
-    assertEquals(0, out.size());
+  /** Number of bytes written. */
+  long count;
+
+  @Override
+  public void write(byte[] b, int off, int len) throws IOException {
+    count += len;
+  }
+
+  @Override
+  public void write(int b) throws IOException {
+    count++;
   }
 }

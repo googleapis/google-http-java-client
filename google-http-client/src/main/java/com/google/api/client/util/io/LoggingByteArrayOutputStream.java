@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.util;
+package com.google.api.client.util.io;
 
 import com.google.common.base.Preconditions;
 
@@ -37,10 +37,7 @@ import java.util.logging.Logger;
  *
  * @since 1.9
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.15) Use
- *             {@link com.google.api.client.util.io.LoggingByteArrayOutputStream} instead
  */
-@Deprecated
 public class LoggingByteArrayOutputStream extends ByteArrayOutputStream {
 
   /** Bytes written to the stream (may or may not have been logged). */

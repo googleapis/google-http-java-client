@@ -97,6 +97,7 @@ public final class InputStreamContent extends AbstractInputStreamContent {
   }
 
   @Override
+  @Deprecated
   public InputStreamContent setEncoding(String encoding) {
     return (InputStreamContent) super.setEncoding(encoding);
   }

@@ -15,6 +15,7 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.StringUtils;
+import com.google.api.client.util.io.IOUtils;
 
 import junit.framework.TestCase;
 
@@ -59,7 +60,7 @@ public class ByteArrayContentTest extends TestCase {
     assertTrue(content.retrySupported());
     assertEquals(expected.length(), content.getLength());
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    AbstractInputStreamContent.copy(content.getInputStream(), out);
+    IOUtils.copy(content.getInputStream(), out);
     assertEquals(expected, out.toString());
   }
 }

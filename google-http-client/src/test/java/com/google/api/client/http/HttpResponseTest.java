@@ -14,11 +14,11 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.http.LogContentTest.Recorder;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
+import com.google.api.client.testing.util.LogRecordingHandler;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.StringUtils;
 
@@ -385,10 +385,10 @@ public class HttpResponseTest extends TestCase {
     assertEquals(loggingEnabled, response.isLoggingEnabled());
 
     response.setContentLoggingLimit(contentLoggingLimit);
-    Recorder recorder = new Recorder();
+    LogRecordingHandler recorder = new LogRecordingHandler();
     HttpTransport.LOGGER.addHandler(recorder);
     response.parseAsString();
-    recorder.assertMessages(expectedMessages);
+    assertEquals(Arrays.asList(expectedMessages), recorder.messages());
   }
 
   public void testGetContent_gzipNoContent() throws IOException {

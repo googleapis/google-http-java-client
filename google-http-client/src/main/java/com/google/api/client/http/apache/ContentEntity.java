@@ -14,7 +14,8 @@
 
 package com.google.api.client.http.apache;
 
-import com.google.api.client.http.HttpContent;
+import com.google.api.client.util.io.StreamingContent;
+import com.google.common.base.Preconditions;
 
 import org.apache.http.entity.AbstractHttpEntity;
 
@@ -27,12 +28,19 @@ import java.io.OutputStream;
  */
 final class ContentEntity extends AbstractHttpEntity {
 
+  /** Content length or less than zero if not known. */
   private final long contentLength;
-  private final HttpContent content;
 
-  ContentEntity(long contentLength, HttpContent content) {
+  /** Streaming content. */
+  private final StreamingContent streamingContent;
+
+  /**
+   * @param contentLength content length or less than zero if not known
+   * @param streamingContent streaming content
+   */
+  ContentEntity(long contentLength, StreamingContent streamingContent) {
     this.contentLength = contentLength;
-    this.content = content;
+    this.streamingContent = Preconditions.checkNotNull(streamingContent);
   }
 
   public InputStream getContent() {
@@ -53,7 +61,7 @@ final class ContentEntity extends AbstractHttpEntity {
 
   public void writeTo(OutputStream out) throws IOException {
     if (contentLength != 0) {
-      content.writeTo(out);
+      streamingContent.writeTo(out);
     }
   }
 }

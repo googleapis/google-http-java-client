@@ -14,9 +14,10 @@
 
 package com.google.api.client.http.javanet;
 
-import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.javanet.MockHttpURLConnection;
+import com.google.api.client.util.StringUtils;
+import com.google.api.client.util.io.ByteArrayStreamingContent;
 
 import junit.framework.TestCase;
 
@@ -45,10 +46,10 @@ public class NetHttpTransportTest extends TestCase {
       MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
       connection.setRequestMethod(method);
       NetHttpRequest request = new NetHttpRequest(connection);
-      request.setContent(ByteArrayContent.fromString(null, ""));
+      setContent(request, null, "");
       request.execute();
       assertEquals(isPutOrPost, connection.doOutputCalled());
-      request.setContent(ByteArrayContent.fromString(null, " "));
+      setContent(request, null, " ");
       if (isPutOrPost) {
         request.execute();
       } else {
@@ -69,9 +70,16 @@ public class NetHttpTransportTest extends TestCase {
           (HttpURLConnection) new URL("http://www.google.com").openConnection();
       connection.setRequestMethod(method);
       NetHttpRequest request = new NetHttpRequest(connection);
-      request.setContent(ByteArrayContent.fromString("text/html", ""));
+      setContent(request, "text/html", "");
       request.execute().getContent().close();
       assertEquals(method, connection.getRequestMethod());
     }
+  }
+
+  private void setContent(NetHttpRequest request, String type, String value) throws Exception {
+    byte[] bytes = StringUtils.getBytesUtf8(value);
+    request.setStreamingContent(new ByteArrayStreamingContent(bytes));
+    request.setContentType(type);
+    request.setContentLength(bytes.length);
   }
 }

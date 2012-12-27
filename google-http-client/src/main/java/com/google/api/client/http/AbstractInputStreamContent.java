@@ -14,7 +14,7 @@
 
 package com.google.api.client.http;
 
-import com.google.common.io.ByteStreams;
+import com.google.api.client.util.io.IOUtils;
 import com.google.common.io.LimitInputStream;
 
 import java.io.IOException;
@@ -49,6 +49,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
   private String type;
 
   /** Content encoding (for example {@code "gzip"}) or {@code null} for none. */
+  @Deprecated
   private String encoding;
 
   /**
@@ -76,10 +77,11 @@ public abstract class AbstractInputStreamContent implements HttpContent {
   public abstract InputStream getInputStream() throws IOException;
 
   public void writeTo(OutputStream out) throws IOException {
-    copy(getInputStream(), out, closeInputStream);
+    IOUtils.copy(getInputStream(), out, closeInputStream);
     out.flush();
   }
 
+  @Deprecated
   public String getEncoding() {
     return encoding;
   }
@@ -103,7 +105,9 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    * should override by calling super.
    *
    * @since 1.5
+   * @deprecated (scheduled to be removed in 1.15) Use {@link HttpEncoding} instead.
    */
+  @Deprecated
   public AbstractInputStreamContent setEncoding(String encoding) {
     this.encoding = encoding;
     return this;
@@ -140,6 +144,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    *
    * <p>
    * Sample use:
+   * </p>
    *
    * <pre>
   static void downloadMedia(HttpResponse response, File file)
@@ -152,13 +157,15 @@ public abstract class AbstractInputStreamContent implements HttpContent {
     }
   }
    * </pre>
-   * </p>
    *
    * @param inputStream source input stream
    * @param outputStream destination output stream
+   * @deprecated (scheduled to be removed in 1.15) Use
+   *             {@link IOUtils#copy(InputStream, OutputStream)} instead
    */
+  @Deprecated
   public static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
-    copy(inputStream, outputStream, true);
+    IOUtils.copy(inputStream, outputStream);
   }
 
   /**
@@ -185,16 +192,13 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    * @param outputStream destination output stream
    * @param closeInputStream whether the input stream should be closed at the end of this method
    * @since 1.7
+   * @deprecated (scheduled to be removed in 1.15) Use
+   *             {@link IOUtils#copy(InputStream, OutputStream, boolean)} instead
    */
+  @Deprecated
   public static void copy(
       InputStream inputStream, OutputStream outputStream, boolean closeInputStream)
       throws IOException {
-    try {
-      ByteStreams.copy(inputStream, outputStream);
-    } finally {
-      if (closeInputStream) {
-        inputStream.close();
-      }
-    }
+    IOUtils.copy(inputStream, outputStream, closeInputStream);
   }
 }

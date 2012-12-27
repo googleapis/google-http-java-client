@@ -16,10 +16,14 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.StringUtils;
+import com.google.api.client.util.io.IOUtils;
+import com.google.api.client.util.io.LoggingStreamingContent;
+import com.google.api.client.util.io.StreamingContent;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.SettableFuture;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -163,7 +167,11 @@ public final class HttpRequest {
   /** Parser used to parse responses. */
   private ObjectParser objectParser;
 
+  /** HTTP content encoding or {@code null} for none. */
+  private HttpEncoding encoding;
+
   /** Whether to enable gzip compression of HTTP content ({@code false} by default). */
+  @Deprecated
   private boolean enableGZipContent;
 
   /** The {@link BackOffPolicy} to use between retry attempts or {@code null} for none. */
@@ -313,10 +321,31 @@ public final class HttpRequest {
   }
 
   /**
+   * Returns the HTTP content encoding or {@code null} for none.
+   *
+   * @since 1.14
+   */
+  public HttpEncoding getEncoding() {
+    return encoding;
+  }
+
+  /**
+   * Sets the HTTP content encoding or {@code null} for none.
+   *
+   * @since 1.14
+   */
+  public HttpRequest setEncoding(HttpEncoding encoding) {
+    this.encoding = encoding;
+    return this;
+  }
+
+  /**
    * Returns whether to enable gzip compression of HTTP content.
    *
    * @since 1.5
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #getEncoding()} instead.
    */
+  @Deprecated
   public boolean getEnableGZipContent() {
     return enableGZipContent;
   }
@@ -343,8 +372,16 @@ public final class HttpRequest {
   }
    * </pre>
    *
+   * <p>
+   * Warning: this will override any encoding for the request set in
+   * {@link #setEncoding(HttpEncoding)}
+   * </p>
+   *
    * @since 1.5
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #setEncoding(HttpEncoding)} with
+   *             {@link GZipEncoding} instead.
    */
+  @Deprecated
   public HttpRequest setEnableGZipContent(boolean enableGZipContent) {
     this.enableGZipContent = enableGZipContent;
     return this;
@@ -941,22 +978,31 @@ public final class HttpRequest {
       }
 
       // content
-      HttpContent content = this.content;
-      if (content != null) {
-        String contentEncoding = content.getEncoding();
-        long contentLength = content.getLength();
-        String contentType = content.getType();
+      StreamingContent streamingContent = content;
+      final boolean contentRetrySupported = streamingContent == null || content.retrySupported();
+      if (streamingContent != null) {
+        final String contentEncoding;
+        final long contentLength;
+        final String contentType = content.getType();
         // log content
         if (loggable) {
-          content = new LogContent(
-              content, contentType, contentEncoding, contentLength, contentLoggingLimit);
+          streamingContent = new LoggingStreamingContent(
+              streamingContent, HttpTransport.LOGGER, Level.CONFIG, contentLoggingLimit);
         }
-        // gzip
+        // encoding
         String underlyingEncoding = content.getEncoding();
         if (enableGZipContent) {
-          content = new GZipContent(content, contentType);
-          contentEncoding = content.getEncoding();
+          Preconditions.checkArgument(encoding == null || encoding instanceof GZipEncoding);
+          setEncoding(new GZipEncoding());
+        }
+        if (encoding == null || underlyingEncoding != null) {
+          Preconditions.checkArgument(encoding == null || underlyingEncoding == null);
+          contentEncoding = underlyingEncoding;
           contentLength = content.getLength();
+        } else {
+          contentEncoding = encoding.getName();
+          streamingContent = new HttpEncodingStreamingContent(streamingContent, encoding);
+          contentLength = contentRetrySupported ? IOUtils.computeLength(streamingContent) : -1;
         }
         // append content headers to log buffer
         if (loggable) {
@@ -984,7 +1030,36 @@ public final class HttpRequest {
         if (curlbuf != null) {
           curlbuf.append(" -d '@-'");
         }
-        lowLevelHttpRequest.setContent(content);
+        // temporarily pass an HttpContent to LowLevelHttpRequest for backwards compatibility
+        final StreamingContent streamingContent2 = streamingContent;
+        lowLevelHttpRequest.setContent(new HttpContent() {
+
+          public void writeTo(OutputStream out) throws IOException {
+            streamingContent2.writeTo(out);
+          }
+
+          @Deprecated
+          public String getEncoding() {
+            return contentEncoding;
+          }
+
+          public long getLength() throws IOException {
+            return contentLength;
+          }
+
+          public String getType() {
+            return contentType;
+          }
+
+          public boolean retrySupported() {
+            return contentRetrySupported;
+          }
+        });
+        // send content information to low-level HTTP request
+        lowLevelHttpRequest.setContentType(contentType);
+        lowLevelHttpRequest.setContentEncoding(contentEncoding);
+        lowLevelHttpRequest.setContentLength(contentLength);
+        lowLevelHttpRequest.setStreamingContent(streamingContent);
       }
       // log from buffer
       if (loggable) {
@@ -992,7 +1067,7 @@ public final class HttpRequest {
         if (curlbuf != null) {
           curlbuf.append(" -- ");
           curlbuf.append(urlString);
-          if (content != null) {
+          if (streamingContent != null) {
             curlbuf.append(" << $$$");
           }
           logger.config(curlbuf.toString());
@@ -1001,7 +1076,7 @@ public final class HttpRequest {
 
       // We need to make sure our content type can support retry
       // null content is inherently able to be retried
-      retrySupported = retriesRemaining > 0 && (content == null || content.retrySupported());
+      retrySupported = contentRetrySupported && retriesRemaining > 0;
 
       // execute
       lowLevelHttpRequest.setTimeout(connectTimeout, readTimeout);

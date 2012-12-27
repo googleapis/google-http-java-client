@@ -14,7 +14,8 @@
 
 package com.google.api.client.http.apache;
 
-import com.google.api.client.http.ByteArrayContent;
+import com.google.api.client.util.StringUtils;
+import com.google.api.client.util.io.ByteArrayStreamingContent;
 
 import junit.framework.TestCase;
 import org.apache.http.HttpVersion;
@@ -54,7 +55,8 @@ public class ApacheHttpTransportTest extends TestCase {
     ApacheHttpTransport transport = new ApacheHttpTransport();
 
     // Test GET.
-    subtestUnsupportedRequestsWithContent(transport.buildRequest("GET", "http://www.test.url"), "GET");
+    subtestUnsupportedRequestsWithContent(
+        transport.buildRequest("GET", "http://www.test.url"), "GET");
     // Test DELETE.
     subtestUnsupportedRequestsWithContent(
         transport.buildRequest("DELETE", "http://www.test.url"), "DELETE");
@@ -63,17 +65,17 @@ public class ApacheHttpTransportTest extends TestCase {
         transport.buildRequest("HEAD", "http://www.test.url"), "HEAD");
 
     // Test PUT.
-    subtestSupportedRequestsWithContent(transport.buildRequest("PUT", "http://www.test.url"));
+    execute(transport.buildRequest("PUT", "http://www.test.url"));
     // Test POST.
-    subtestSupportedRequestsWithContent(transport.buildRequest("POST", "http://www.test.url"));
+    execute(transport.buildRequest("POST", "http://www.test.url"));
     // Test PATCH.
-    subtestSupportedRequestsWithContent(transport.buildRequest("PATCH", "http://www.test.url"));
+    execute(transport.buildRequest("PATCH", "http://www.test.url"));
   }
 
   private void subtestUnsupportedRequestsWithContent(ApacheHttpRequest request, String method)
       throws Exception {
     try {
-      request.setContent(ByteArrayContent.fromString("text/html", "abc"));
+      execute(request);
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
@@ -82,8 +84,12 @@ public class ApacheHttpTransportTest extends TestCase {
     }
   }
 
-  private void subtestSupportedRequestsWithContent(ApacheHttpRequest request) throws Exception {
-    request.setContent(ByteArrayContent.fromString("text/html", "abc"));
+  private void execute(ApacheHttpRequest request) throws Exception {
+    byte[] bytes = StringUtils.getBytesUtf8("abc");
+    request.setStreamingContent(new ByteArrayStreamingContent(bytes));
+    request.setContentType("text/html");
+    request.setContentLength(bytes.length);
+    request.execute();
   }
 
   private void checkDefaultHttpClient(DefaultHttpClient client) {

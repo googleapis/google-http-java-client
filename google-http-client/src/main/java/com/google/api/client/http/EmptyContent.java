@@ -37,6 +37,7 @@ public class EmptyContent implements HttpContent {
     return 0;
   }
 
+  @Deprecated
   public String getEncoding() {
     return null;
   }

@@ -14,7 +14,6 @@
 
 package com.google.api.client.http.javanet;
 
-import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.common.base.Preconditions;
@@ -29,7 +28,6 @@ import java.net.HttpURLConnection;
 final class NetHttpRequest extends LowLevelHttpRequest {
 
   private final HttpURLConnection connection;
-  private HttpContent content;
 
   /**
    * @param connection HTTP URL connection
@@ -55,16 +53,16 @@ final class NetHttpRequest extends LowLevelHttpRequest {
   public LowLevelHttpResponse execute() throws IOException {
     HttpURLConnection connection = this.connection;
     // write content
-    if (content != null) {
-      String contentType = content.getType();
+    if (getStreamingContent() != null) {
+      String contentType = getContentType();
       if (contentType != null) {
         addHeader("Content-Type", contentType);
       }
-      String contentEncoding = content.getEncoding();
+      String contentEncoding = getContentEncoding();
       if (contentEncoding != null) {
         addHeader("Content-Encoding", contentEncoding);
       }
-      long contentLength = content.getLength();
+      long contentLength = getContentLength();
       if (contentLength >= 0) {
         addHeader("Content-Length", Long.toString(contentLength));
       }
@@ -79,7 +77,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
         }
         OutputStream out = connection.getOutputStream();
         try {
-          content.writeTo(out);
+          getStreamingContent().writeTo(out);
         } finally {
           out.close();
         }
@@ -102,10 +100,5 @@ final class NetHttpRequest extends LowLevelHttpRequest {
         connection.disconnect();
       }
     }
-  }
-
-  @Override
-  public void setContent(HttpContent content) {
-    this.content = content;
   }
 }

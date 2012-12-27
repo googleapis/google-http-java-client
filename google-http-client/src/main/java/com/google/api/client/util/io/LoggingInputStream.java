@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.util;
+package com.google.api.client.util.io;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -26,10 +26,7 @@ import java.util.logging.Logger;
  *
  * @since 1.9
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.15) Use
- *             {@link com.google.api.client.util.io.LoggingInputStream} instead
  */
-@Deprecated
 public class LoggingInputStream extends FilterInputStream {
 
   /** Log stream. */

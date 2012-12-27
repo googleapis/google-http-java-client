@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright (c) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -17,37 +17,28 @@ package com.google.api.client.http;
 import com.google.api.client.util.io.StreamingContent;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
- * Serializes HTTP request content into an output stream.
+ * HTTP content encoding.
  *
  * <p>
  * Implementations don't need to be thread-safe.
  * </p>
  *
- * @since 1.0
+ * @since 1.14
  * @author Yaniv Inbar
  */
-public interface HttpContent extends StreamingContent {
+public interface HttpEncoding {
 
-  /** Returns the content length or less than zero if not known. */
-  long getLength() throws IOException;
-
-  /**
-   * Returns the content encoding (for example {@code "gzip"}) or {@code null} for none.
-   *
-   * @deprecated (scheduled to be removed in 1.15) Use {@link HttpEncoding} instead
-   */
-  @Deprecated
-  String getEncoding();
-
-  /** Returns the content type or {@code null} for none. */
-  String getType();
+  /** Returns the content encoding name (for example {@code "gzip"}) or {@code null} for none. */
+  String getName();
 
   /**
-   * Returns whether or not retry is supported on this content type.
+   * Encodes the streaming content into the output stream.
    *
-   * @since 1.4
+   * @param content streaming content
+   * @param out output stream
    */
-  boolean retrySupported();
+  void encode(StreamingContent content, OutputStream out) throws IOException;
 }

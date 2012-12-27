@@ -14,11 +14,11 @@
 
 package com.google.api.client.testing.http;
 
-import com.google.api.client.http.AbstractInputStreamContent;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
+import com.google.api.client.util.io.IOUtils;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -51,6 +51,7 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
   private String url;
 
   /** HTTP content or {@code null} for none. */
+  @Deprecated
   private HttpContent content;
 
   /** Map of header name to values. */
@@ -97,6 +98,7 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
   }
 
   @Override
+  @Deprecated
   public void setContent(HttpContent content) throws IOException {
     this.content = content;
   }
@@ -158,7 +160,11 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
    * Returns the HTTP content or {@code null} for none.
    *
    * @since 1.5
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #getContentLength()},
+   *             {@link #getContentEncoding()}, {@link #getContentType()}, or
+   *             {@link #getStreamingContent()} instead.
    */
+  @Deprecated
   public HttpContent getContent() {
     return content;
   }
@@ -171,17 +177,17 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
   public String getContentAsString() throws IOException {
     // write content to a byte[]
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    getContent().writeTo(out);
+    getStreamingContent().writeTo(out);
     // determine gzip encoding
-    String contentEncoding = content.getEncoding();
+    String contentEncoding = getContentEncoding();
     if (contentEncoding != null && contentEncoding.contains("gzip")) {
       InputStream contentInputStream =
           new GZIPInputStream(new ByteArrayInputStream(out.toByteArray()));
       out = new ByteArrayOutputStream();
-      AbstractInputStreamContent.copy(contentInputStream, out);
+      IOUtils.copy(contentInputStream, out);
     }
     // determine charset parameter from content type
-    String contentType = content.getType();
+    String contentType = getContentType();
     HttpMediaType mediaType = contentType != null ? new HttpMediaType(contentType) : null;
     Charset charset = mediaType == null || mediaType.getCharsetParameter() == null
         ? Charsets.ISO_8859_1 : mediaType.getCharsetParameter();

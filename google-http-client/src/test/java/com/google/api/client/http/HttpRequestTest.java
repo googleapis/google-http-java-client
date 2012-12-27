@@ -22,6 +22,7 @@ import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Value;
+import com.google.api.client.util.io.LoggingStreamingContent;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -698,6 +699,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals("text/html", HttpRequest.normalizeMediaType("text/html; charset=ISO-8859-4"));
   }
 
+  @Deprecated
   public void testEnabledGZipContent() throws Exception {
     class MyTransport extends MockHttpTransport {
 
@@ -708,19 +710,15 @@ public class HttpRequestTest extends TestCase {
         return new MockLowLevelHttpRequest() {
 
           @Override
-          public void setContent(HttpContent content) throws IOException {
-            if (expectGZip) {
-              assertEquals(GZipContent.class, content.getClass());
-              assertEquals("gzip", content.getEncoding());
-            } else {
-              assertFalse(content.getClass().equals(GZipContent.class));
-              assertNull(content.getEncoding());
-            }
-            super.setContent(content);
-          }
-
-          @Override
           public LowLevelHttpResponse execute() throws IOException {
+            if (expectGZip) {
+              assertEquals(HttpEncodingStreamingContent.class, getStreamingContent().getClass());
+              assertEquals("gzip", getContentEncoding());
+            } else {
+              assertFalse(
+                  getStreamingContent().getClass().equals(HttpEncodingStreamingContent.class));
+              assertNull(getContentEncoding());
+            }
             char[] content = new char[300];
             Arrays.fill(content, ' ');
             assertEquals(new String(content), getContentAsString());
@@ -754,13 +752,13 @@ public class HttpRequestTest extends TestCase {
       public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
-          public void setContent(HttpContent content) throws IOException {
+          public LowLevelHttpResponse execute() throws IOException {
             if (expectLogContent) {
-              assertEquals(LogContent.class, content.getClass());
+              assertEquals(LoggingStreamingContent.class, getStreamingContent().getClass());
             } else {
-              assertEquals(ByteArrayContent.class, content.getClass());
+              assertEquals(ByteArrayContent.class, getStreamingContent().getClass());
             }
-            super.setContent(content);
+            return super.execute();
           }
         };
       }

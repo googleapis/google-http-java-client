@@ -14,7 +14,6 @@
 
 package com.google.api.client.extensions.appengine.http;
 
-import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.appengine.api.urlfetch.FetchOptions;
@@ -34,7 +33,6 @@ import java.net.URL;
  */
 final class UrlFetchRequest extends LowLevelHttpRequest {
 
-  private HttpContent content;
   private final HTTPRequest request;
 
   UrlFetchRequest(FetchOptions fetchOptions, HTTPMethod method, String url) throws IOException {
@@ -56,17 +54,17 @@ final class UrlFetchRequest extends LowLevelHttpRequest {
   @Override
   public LowLevelHttpResponse execute() throws IOException {
     // write content
-    if (content != null) {
-      String contentType = content.getType();
+    if (getStreamingContent() != null) {
+      String contentType = getContentType();
       if (contentType != null) {
         addHeader("Content-Type", contentType);
       }
-      String contentEncoding = content.getEncoding();
+      String contentEncoding = getContentEncoding();
       if (contentEncoding != null) {
         addHeader("Content-Encoding", contentEncoding);
       }
       ByteArrayOutputStream out = new ByteArrayOutputStream();
-      content.writeTo(out);
+      getStreamingContent().writeTo(out);
       byte[] payload = out.toByteArray();
       if (payload.length != 0) {
         request.setPayload(payload);
@@ -76,10 +74,5 @@ final class UrlFetchRequest extends LowLevelHttpRequest {
     URLFetchService service = URLFetchServiceFactory.getURLFetchService();
     HTTPResponse response = service.fetch(request);
     return new UrlFetchResponse(response);
-  }
-
-  @Override
-  public void setContent(HttpContent content) {
-    this.content = content;
   }
 }

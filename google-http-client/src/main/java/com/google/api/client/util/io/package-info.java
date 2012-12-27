@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Google Inc.
+ * Copyright (c) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,29 +12,17 @@
  * the License.
  */
 
-package com.google.api.client.http;
-
-import java.io.IOException;
-import java.io.OutputStream;
-
 /**
- * Output stream that throws away any content and only retains the count of bytes written to the
- * stream.
+ * Utilities for I/O streams.
  *
+ * <p>
+ * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
+ * possibly entirely removed in a future version of the library</b>
+ * </p>
+ *
+ * @since 1.0
  * @author Yaniv Inbar
  */
-final class ByteCountingOutputStream extends OutputStream {
 
-  /** Number of bytes written. */
-  long count;
+package com.google.api.client.util.io;
 
-  @Override
-  public void write(byte[] b, int off, int len) throws IOException {
-    count += len;
-  }
-
-  @Override
-  public void write(int b) throws IOException {
-    count++;
-  }
-}

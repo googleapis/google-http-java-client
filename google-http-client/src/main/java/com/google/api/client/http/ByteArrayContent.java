@@ -119,6 +119,7 @@ public final class ByteArrayContent extends AbstractInputStreamContent {
     return new ByteArrayInputStream(byteArray, offset, length);
   }
 
+  @Deprecated
   @Override
   public ByteArrayContent setEncoding(String encoding) {
     return (ByteArrayContent) super.setEncoding(encoding);
