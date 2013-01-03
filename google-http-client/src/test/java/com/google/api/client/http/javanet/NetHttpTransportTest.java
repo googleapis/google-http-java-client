@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 /**
  * Tests {@link NetHttpTransport}.
@@ -71,7 +72,11 @@ public class NetHttpTransportTest extends TestCase {
       connection.setRequestMethod(method);
       NetHttpRequest request = new NetHttpRequest(connection);
       setContent(request, "text/html", "");
-      request.execute().getContent().close();
+      try {
+        request.execute().getContent().close();
+      } catch (UnknownHostException e) {
+        // expected when not connected to network
+      }
       assertEquals(method, connection.getRequestMethod());
     }
   }

@@ -14,6 +14,7 @@
 
 package com.google.api.client.http.apache;
 
+import com.google.api.client.testing.http.apache.MockHttpClient;
 import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.io.ByteArrayStreamingContent;
 
@@ -52,7 +53,7 @@ public class ApacheHttpTransportTest extends TestCase {
   }
 
   public void testRequestsWithContent() throws Exception {
-    ApacheHttpTransport transport = new ApacheHttpTransport();
+    ApacheHttpTransport transport = new ApacheHttpTransport(new MockHttpClient());
 
     // Test GET.
     subtestUnsupportedRequestsWithContent(
