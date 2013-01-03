@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.util.io;
+package com.google.api.client.util;
 
 import com.google.common.io.ByteStreams;
 

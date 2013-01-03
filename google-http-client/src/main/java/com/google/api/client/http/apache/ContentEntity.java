@@ -14,7 +14,7 @@
 
 package com.google.api.client.http.apache;
 
-import com.google.api.client.util.io.StreamingContent;
+import com.google.api.client.util.StreamingContent;
 import com.google.common.base.Preconditions;
 
 import org.apache.http.entity.AbstractHttpEntity;

@@ -15,8 +15,8 @@
 package com.google.api.client.http.apache;
 
 import com.google.api.client.testing.http.apache.MockHttpClient;
+import com.google.api.client.util.ByteArrayStreamingContent;
 import com.google.api.client.util.StringUtils;
-import com.google.api.client.util.io.ByteArrayStreamingContent;
 
 import junit.framework.TestCase;
 import org.apache.http.HttpVersion;

@@ -12,17 +12,29 @@
  * the License.
  */
 
+package com.google.api.client.util;
+
+import java.io.IOException;
+import java.io.OutputStream;
+
 /**
- * Utilities for I/O streams.
+ * Output stream that throws away any content and only retains the count of bytes written to the
+ * stream.
  *
- * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
- * </p>
- *
- * @since 1.0
  * @author Yaniv Inbar
  */
+final class ByteCountingOutputStream extends OutputStream {
 
-package com.google.api.client.util.io;
+  /** Number of bytes written. */
+  long count;
 
+  @Override
+  public void write(byte[] b, int off, int len) throws IOException {
+    count += len;
+  }
+
+  @Override
+  public void write(int b) throws IOException {
+    count++;
+  }
+}

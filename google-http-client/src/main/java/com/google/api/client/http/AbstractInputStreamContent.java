@@ -14,7 +14,7 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.io.IOUtils;
+import com.google.api.client.util.IOUtils;
 import com.google.common.io.LimitInputStream;
 
 import java.io.IOException;

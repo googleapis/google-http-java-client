@@ -14,10 +14,10 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.IOUtils;
+import com.google.api.client.util.LoggingInputStream;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.StringUtils;
-import com.google.api.client.util.io.IOUtils;
-import com.google.api.client.util.io.LoggingInputStream;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 

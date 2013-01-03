@@ -27,10 +27,7 @@ import java.util.logging.Logger;
  *
  * @since 1.9
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.15) Use
- *             {@link com.google.api.client.util.io.LoggingOutputStream} instead
  */
-@Deprecated
 public class LoggingOutputStream extends FilterOutputStream {
 
   /** Log stream. */

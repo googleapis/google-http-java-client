@@ -14,7 +14,7 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.io.StreamingContent;
+import com.google.api.client.util.StreamingContent;
 
 import java.io.IOException;
 
