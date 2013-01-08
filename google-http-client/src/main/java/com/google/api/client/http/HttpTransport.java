@@ -31,7 +31,8 @@ import java.util.logging.Logger;
  * you are running in:
  * </p>
  * <ul>
- * <li>Google App Engine: use {@code com.google.api.client.appengine.UrlFetchTransport}.
+ * <li>Google App Engine: use
+ * {@code com.google.api.client.extensions.appengine.http.UrlFetchTransport}.
  * <ul>
  * <li>{@code com.google.api.client.apache.ApacheHttpTransport} doesn't work on App Engine because
  * the Apache HTTP Client opens its own sockets (though in theory there are ways to hack it to work
@@ -42,12 +43,11 @@ import java.util.logging.Logger;
  * </li>
  * <li>Android:
  * <ul>
- * <li>Starting with SDK 2.3, strongly recommended to use
- * {@code com.google.api.client.javanet.NetHttpTransport}. Their Apache HTTP Client implementation
- * is not as well maintained.</li>
- * <li>For SDK 2.2 and earlier, use {@code com.google.api.client.apache.ApacheHttpTransport}.
- * {@code com.google.api.client.javanet.NetHttpTransport} is not recommended due to some bugs in the
- * Android SDK implementation of HttpURLConnection.</li>
+ * <li>For maximum backwards compatibility with older SDK's use {@code newCompatibleTransport} from
+ * {@code com.google.api.client.extensions.android.http.AndroidHttp} (read its JavaDoc for details).
+ * </li>
+ * <li>If your application is targeting Gingerbread (SDK 2.3) or higher, simply use
+ * {@code com.google.api.client.javanet.NetHttpTransport}.</li>
  * </ul>
  * </li>
  * <li>Other Java environments

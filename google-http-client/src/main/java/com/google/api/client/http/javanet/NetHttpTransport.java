@@ -16,19 +16,24 @@ package com.google.api.client.http.javanet;
 
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.SslUtils;
 import com.google.common.base.Preconditions;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.cert.CertificateFactory;
 import java.util.Arrays;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
 /**
@@ -206,6 +211,66 @@ public final class NetHttpTransport extends HttpTransport {
     public Builder setProxy(Proxy proxy) {
       this.proxy = proxy;
       return this;
+    }
+
+    /**
+     * Sets the SSL socket factory based on root certificates in a Java KeyStore.
+     *
+     * <p>
+     * Example usage:
+     * </p>
+     *
+     * <pre>
+    trustCertificatesFromJavaKeyStore(new FileInputStream("certs.jks"), "password");
+     * </pre>
+     *
+     * @param keyStoreStream input stream to the key store (closed at the end of this method in a
+     *        finally block)
+     * @param storePass password protecting the key store file
+     * @since 1.14
+     */
+    public Builder trustCertificatesFromJavaKeyStore(InputStream keyStoreStream, String storePass)
+        throws GeneralSecurityException, IOException {
+      KeyStore trustStore = SecurityUtils.getJavaKeyStore();
+      SecurityUtils.loadKeyStore(trustStore, keyStoreStream, storePass);
+      return trustCertificates(trustStore);
+    }
+
+    /**
+     * Sets the SSL socket factory based root certificates generated from the specified stream using
+     * {@link CertificateFactory#generateCertificates(InputStream)}.
+     *
+     * <p>
+     * Example usage:
+     * </p>
+     *
+     * <pre>
+    trustCertificatesFromStream(new FileInputStream("certs.pem"));
+     * </pre>
+     *
+     * @param certificateStream certificate stream
+     * @since 1.14
+     */
+    public Builder trustCertificatesFromStream(InputStream certificateStream)
+        throws GeneralSecurityException, IOException {
+      KeyStore trustStore = SecurityUtils.getJavaKeyStore();
+      trustStore.load(null, null);
+      SecurityUtils.loadKeyStoreFromCertificates(
+          trustStore, SecurityUtils.getX509CertificateFactory(), certificateStream);
+      return trustCertificates(trustStore);
+    }
+
+    /**
+     * Sets the SSL socket factory based on a root certificate trust store.
+     *
+     * @param trustStore certificate trust store (use for example {@link SecurityUtils#loadKeyStore}
+     *        or {@link SecurityUtils#loadKeyStoreFromCertificates})
+     * @since 1.14
+     */
+    public Builder trustCertificates(KeyStore trustStore) throws GeneralSecurityException {
+      SSLContext sslContext = SslUtils.getTlsSslContext();
+      SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());
+      return setSslSocketFactory(sslContext.getSocketFactory());
     }
 
     /**

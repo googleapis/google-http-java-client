@@ -17,6 +17,7 @@ package com.google.api.client.http.apache;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.SslUtils;
 import com.google.common.base.Preconditions;
 
@@ -50,8 +51,14 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.ProxySelector;
 import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.cert.CertificateFactory;
+
+import javax.net.ssl.SSLContext;
 
 /**
  * Thread-safe HTTP transport based on the Apache HTTP Client library.
@@ -118,7 +125,7 @@ public final class ApacheHttpTransport extends HttpTransport {
    * </p>
    *
    * @param httpClient Apache HTTP client to use
-   * 
+   *
    * @since 1.6
    */
   public ApacheHttpTransport(HttpClient httpClient) {
@@ -359,6 +366,66 @@ public final class ApacheHttpTransport extends HttpTransport {
       }
       return this;
     }
+    /**
+     * Sets the SSL socket factory based on root certificates in a Java KeyStore.
+     *
+     * <p>
+     * Example usage:
+     * </p>
+     *
+     * <pre>
+    trustCertificatesFromJavaKeyStore(new FileInputStream("certs.jks"), "password");
+     * </pre>
+     *
+     * @param keyStoreStream input stream to the key store (closed at the end of this method in a
+     *        finally block)
+     * @param storePass password protecting the key store file
+     * @since 1.14
+     */
+    public Builder trustCertificatesFromJavaKeyStore(InputStream keyStoreStream, String storePass)
+        throws GeneralSecurityException, IOException {
+      KeyStore trustStore = SecurityUtils.getJavaKeyStore();
+      SecurityUtils.loadKeyStore(trustStore, keyStoreStream, storePass);
+      return trustCertificates(trustStore);
+    }
+
+    /**
+     * Sets the SSL socket factory based root certificates generated from the specified stream using
+     * {@link CertificateFactory#generateCertificates(InputStream)}.
+     *
+     * <p>
+     * Example usage:
+     * </p>
+     *
+     * <pre>
+    trustCertificatesFromStream(new FileInputStream("certs.pem"));
+     * </pre>
+     *
+     * @param certificateStream certificate stream
+     * @since 1.14
+     */
+    public Builder trustCertificatesFromStream(InputStream certificateStream)
+        throws GeneralSecurityException, IOException {
+      KeyStore trustStore = SecurityUtils.getJavaKeyStore();
+      trustStore.load(null, null);
+      SecurityUtils.loadKeyStoreFromCertificates(
+          trustStore, SecurityUtils.getX509CertificateFactory(), certificateStream);
+      return trustCertificates(trustStore);
+    }
+
+    /**
+     * Sets the SSL socket factory based on a root certificate trust store.
+     *
+     * @param trustStore certificate trust store (use for example {@link SecurityUtils#loadKeyStore}
+     *        or {@link SecurityUtils#loadKeyStoreFromCertificates})
+     *
+     * @since 1.14
+     */
+    public Builder trustCertificates(KeyStore trustStore) throws GeneralSecurityException {
+      SSLContext sslContext = SslUtils.getTlsSslContext();
+      SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());
+      return setSocketFactory(new SSLSocketFactory(sslContext, null));
+    }
 
     /**
      * Disables validating server SSL certificates by setting the SSL socket factory using
@@ -371,7 +438,8 @@ public final class ApacheHttpTransport extends HttpTransport {
      * </p>
      */
     public Builder doNotValidateCertificate() throws GeneralSecurityException {
-      socketFactory = new TrustAllSSLSocketFactory();
+      socketFactory = new SSLSocketFactory(SslUtils.trustAllSSLContext(), null);
+      socketFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
       return this;
     }
 

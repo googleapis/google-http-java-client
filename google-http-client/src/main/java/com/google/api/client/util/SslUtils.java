@@ -15,13 +15,17 @@
 package com.google.api.client.util;
 
 import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 /**
@@ -31,6 +35,81 @@ import javax.net.ssl.X509TrustManager;
  * @author Yaniv Inbar
  */
 public final class SslUtils {
+
+  /**
+   * Returns the SSL context for "SSL" algorithm.
+   *
+   * @since 1.14
+   */
+  public static SSLContext getSslContext() throws NoSuchAlgorithmException {
+    return SSLContext.getInstance("SSL");
+  }
+
+  /**
+   * Returns the SSL context for "TLS" algorithm.
+   *
+   * @since 1.14
+   */
+  public static SSLContext getTlsSslContext() throws NoSuchAlgorithmException {
+    return SSLContext.getInstance("TLS");
+  }
+
+  /**
+   * Returns the default trust manager factory.
+   *
+   * @since 1.14
+   */
+  public static TrustManagerFactory getDefaultTrustManagerFactory()
+      throws NoSuchAlgorithmException {
+    return TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+  }
+
+  /**
+   * Returns the PKIX trust manager factory.
+   *
+   * @since 1.14
+   */
+  public static TrustManagerFactory getPkixTrustManagerFactory() throws NoSuchAlgorithmException {
+    return TrustManagerFactory.getInstance("PKIX");
+  }
+
+  /**
+   * Returns the default key manager factory.
+   *
+   * @since 1.14
+   */
+  public static KeyManagerFactory getDefaultKeyManagerFactory() throws NoSuchAlgorithmException {
+    return KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+  }
+
+  /**
+   * Returns the PKIX key manager factory.
+   *
+   * @since 1.14
+   */
+  public static KeyManagerFactory getPkixKeyManagerFactory() throws NoSuchAlgorithmException {
+    return KeyManagerFactory.getInstance("PKIX");
+  }
+
+  /**
+   * Initializes the SSL context to the trust managers supplied by the trust manager factory for the
+   * given trust store.
+   *
+   * @param sslContext SSL context (for example {@link SSLContext#getInstance})
+   * @param trustStore key store for certificates to trust (for example
+   *        {@link SecurityUtils#getJavaKeyStore()})
+   * @param trustManagerFactory trust manager factory (for example
+   *        {@link #getPkixTrustManagerFactory()})
+   *
+   * @since 1.14
+   */
+  public static SSLContext initSslContext(
+      SSLContext sslContext, KeyStore trustStore, TrustManagerFactory trustManagerFactory)
+      throws GeneralSecurityException {
+    trustManagerFactory.init(trustStore);
+    sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
+    return sslContext;
+  }
 
   /**
    * Returns an SSL context in which all X.509 certificates are trusted.
@@ -55,7 +134,7 @@ public final class SslUtils {
         return null;
       }
     }};
-    SSLContext context = SSLContext.getInstance("SSL");
+    SSLContext context = getTlsSslContext();
     context.init(null, trustAllCerts, null);
     return context;
   }
