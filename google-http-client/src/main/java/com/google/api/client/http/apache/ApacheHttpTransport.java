@@ -424,7 +424,7 @@ public final class ApacheHttpTransport extends HttpTransport {
     public Builder trustCertificates(KeyStore trustStore) throws GeneralSecurityException {
       SSLContext sslContext = SslUtils.getTlsSslContext();
       SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());
-      return setSocketFactory(new SSLSocketFactory(sslContext, null));
+      return setSocketFactory(new SSLSocketFactoryExtension(sslContext));
     }
 
     /**
@@ -438,7 +438,7 @@ public final class ApacheHttpTransport extends HttpTransport {
      * </p>
      */
     public Builder doNotValidateCertificate() throws GeneralSecurityException {
-      socketFactory = new SSLSocketFactory(SslUtils.trustAllSSLContext(), null);
+      socketFactory = new SSLSocketFactoryExtension(SslUtils.trustAllSSLContext());
       socketFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
       return this;
     }
