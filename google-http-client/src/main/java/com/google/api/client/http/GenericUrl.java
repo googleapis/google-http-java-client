@@ -87,20 +87,29 @@ public class GenericUrl extends GenericData {
 
   /**
    * Constructs from an encoded URL.
+   *
    * <p>
    * Any known query parameters with pre-defined fields as data keys will be parsed based on their
    * data type. Any unrecognized query parameter will always be parsed as a string.
+   * </p>
+   *
+   * <p>
+   * Any {@link URISyntaxException} is wrapped in an {@link IllegalArgumentException}.
+   * </p>
    *
    * @param encodedUrl encoded URL, including any existing query parameters that should be parsed
    * @throws IllegalArgumentException if URL has a syntax error
    */
   public GenericUrl(String encodedUrl) {
-    URI uri;
-    try {
-      uri = new URI(encodedUrl);
-    } catch (URISyntaxException e) {
-      throw new IllegalArgumentException(e);
-    }
+    this(toURI(encodedUrl));
+  }
+
+  /**
+   * @param uri URI
+   *
+   * @since 1.14
+   */
+  public GenericUrl(URI uri) {
     scheme = uri.getScheme().toLowerCase();
     host = uri.getHost();
     port = uri.getPort();
@@ -308,6 +317,21 @@ public class GenericUrl extends GenericData {
   }
 
   /**
+   * Constructs the URI based on the string representation of the URL from {@link #build()}.
+   *
+   * <p>
+   * Any {@link URISyntaxException} is wrapped in an {@link IllegalArgumentException}.
+   * </p>
+   *
+   * @return new URI instance
+   *
+   * @since 1.14
+   */
+  public final URI toURI() {
+    return toURI(build());
+  }
+
+  /**
    * Returns the first query parameter value for the given query parameter name.
    *
    * @param name query parameter name
@@ -471,5 +495,23 @@ public class GenericUrl extends GenericData {
       buf.append('=').append(stringValue);
     }
     return first;
+  }
+
+  /**
+   * Returns the URI for the given encoded URL.
+   *
+   * <p>
+   * Any {@link URISyntaxException} is wrapped in an {@link IllegalArgumentException}.
+   * </p>
+   *
+   * @param encodedUrl encoded URL
+   * @return URI
+   */
+  private static URI toURI(String encodedUrl) {
+    try {
+      return new URI(encodedUrl);
+    } catch (URISyntaxException e) {
+      throw new IllegalArgumentException(e);
+    }
   }
 }

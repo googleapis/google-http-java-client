@@ -136,6 +136,10 @@ public class HttpHeaders extends GenericData {
   @Key("If-Unmodified-Since")
   private List<String> ifUnmodifiedSince;
 
+  /** {@code "If-Range"} header. */
+  @Key("If-Range")
+  private List<String> ifRange;
+
   /** {@code "Last-Modified"} header. */
   @Key("Last-Modified")
   private List<String> lastModified;
@@ -605,6 +609,30 @@ public class HttpHeaders extends GenericData {
    */
   public HttpHeaders setIfUnmodifiedSince(String ifUnmodifiedSince) {
     this.ifUnmodifiedSince = getAsList(ifUnmodifiedSince);
+    return this;
+  }
+
+  /**
+   * Returns the first {@code "If-Range"} header or {@code null} for none.
+   *
+   * @since 1.14
+   */
+  public final String getIfRange() {
+    return getFirstHeaderValue(ifRange);
+  }
+
+  /**
+   * Sets the {@code "If-Range"} header or {@code null} for none.
+   *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
+   * @since 1.14
+   */
+  public HttpHeaders setIfRange(String ifRange) {
+    this.ifRange = getAsList(ifRange);
     return this;
   }
 

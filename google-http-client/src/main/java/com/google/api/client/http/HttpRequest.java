@@ -1123,8 +1123,7 @@ public final class HttpRequest {
             } else if (retrySupported && backOffPolicy != null
                 && backOffPolicy.isBackOffRequired(response.getStatusCode())) {
               // The unsuccessful request's error could not be handled and should be backed off
-              // before
-              // retrying.
+              // before retrying
               long backOffTime = backOffPolicy.getNextBackOffMillis();
               if (backOffTime != BackOffPolicy.STOP) {
                 sleep(backOffTime);
@@ -1214,20 +1213,35 @@ public final class HttpRequest {
    *
    * <p>
    * When the status code is {@code 303} the method on the request is changed to a GET as per the
-   * RFC2616 specification.
+   * RFC2616 specification. On a redirect, it also removes the {@code "Authorization"} and all
+   * {@code "If-*"} request headers.
    * </p>
    *
+   * <p>
+   * Upgrade warning: in prior version 1.13 all request headers were retained, but starting with
+   * version 1.14 it now removes the {@code "Authorization"} and all {@code "If-*"} request headers.
+   * </p>
+   *
+   * @return whether the redirect was successful
    * @since 1.11
    */
-  public boolean handleRedirect(int statusCode, HttpHeaders headers) {
-    String redirectLocation = headers.getLocation();
+  public boolean handleRedirect(int statusCode, HttpHeaders responseHeaders) {
+    String redirectLocation = responseHeaders.getLocation();
     if (getFollowRedirects() && HttpStatusCodes.isRedirect(statusCode)
         && redirectLocation != null) {
-      setUrl(new GenericUrl(redirectLocation));
-
+      // resolve the redirect location relative to the current location
+      setUrl(new GenericUrl(url.toURI().resolve(redirectLocation)));
+      // on 303 change method to GET
       if (statusCode == HttpStatusCodes.STATUS_CODE_SEE_OTHER) {
         setRequestMethod(HttpMethods.GET);
       }
+      // remove Authorization and If-* headers
+      headers.setAuthorization((String) null);
+      headers.setIfMatch((String) null);
+      headers.setIfNoneMatch((String) null);
+      headers.setIfModifiedSince((String) null);
+      headers.setIfUnmodifiedSince((String) null);
+      headers.setIfRange((String) null);
       return true;
     }
     return false;

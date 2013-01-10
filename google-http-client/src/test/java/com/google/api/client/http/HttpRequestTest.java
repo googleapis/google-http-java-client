@@ -407,13 +407,56 @@ public class HttpRequestTest extends TestCase {
     HttpRequest req =
         transport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
     req.setThrowExceptionOnExecuteError(false);
+    req.getHeaders()
+        .setAuthorization("auth")
+        .setIfMatch("etag")
+        .setIfNoneMatch("etag")
+        .setIfModifiedSince("date")
+        .setIfUnmodifiedSince("date")
+        .setIfRange("range");
     HttpResponse response = req.execute();
     if (setLocation) {
       response.getHeaders().setLocation("http://redirect/location");
-      assertTrue(req.handleRedirect(response.getStatusCode(), response.getHeaders()));
-    } else {
-      assertFalse(req.handleRedirect(response.getStatusCode(), response.getHeaders()));
     }
+    boolean handleRedirect = req.handleRedirect(response.getStatusCode(), response.getHeaders());
+    if (setLocation) {
+      assertTrue(handleRedirect);
+      assertNull(req.getHeaders().getAuthorization());
+      assertNull(req.getHeaders().getIfMatch());
+      assertNull(req.getHeaders().getIfNoneMatch());
+      assertNull(req.getHeaders().getIfModifiedSince());
+      assertNull(req.getHeaders().getIfUnmodifiedSince());
+      assertNull(req.getHeaders().getIfRange());
+      assertEquals("http://redirect/location", req.getUrl().toString());
+    } else {
+      assertFalse(handleRedirect);
+      assertEquals("auth", req.getHeaders().getAuthorization());
+      assertEquals("etag", req.getHeaders().getIfMatch());
+      assertEquals("etag", req.getHeaders().getIfNoneMatch());
+      assertEquals("date", req.getHeaders().getIfModifiedSince());
+      assertEquals("date", req.getHeaders().getIfUnmodifiedSince());
+      assertEquals("range", req.getHeaders().getIfRange());
+      assertEquals("http://not/used", req.getUrl().toString());
+    }
+  }
+
+  public void testHandleRedirect_relativeLocation() throws IOException {
+    subtestHandleRedirect_relativeLocation("http://some.org/a/b", "z", "http://some.org/a/z");
+    subtestHandleRedirect_relativeLocation("http://some.org/a/b", "z/", "http://some.org/a/z/");
+    subtestHandleRedirect_relativeLocation("http://some.org/a/b", "/z", "http://some.org/z");
+    subtestHandleRedirect_relativeLocation("http://some.org/a/b", "x/z", "http://some.org/a/x/z");
+    subtestHandleRedirect_relativeLocation(
+        "http://some.org/a/b", "http://other.org/c", "http://other.org/c");
+  }
+
+  public void subtestHandleRedirect_relativeLocation(
+      String curLocation, String relLocation, String newLocation) throws IOException {
+    HttpTransport transport = new MockHttpTransport();
+    HttpRequest req =
+        transport.createRequestFactory().buildGetRequest(new GenericUrl(curLocation));
+    HttpHeaders responseHeaders = new HttpHeaders().setLocation(relLocation);
+    req.handleRedirect(HttpStatusCodes.STATUS_CODE_SEE_OTHER, responseHeaders);
+    assertEquals(newLocation, req.getUrl().toString());
   }
 
   public void testExecuteErrorWithRetryEnabled() throws Exception {
