@@ -14,6 +14,8 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.NanoClock;
+
 import junit.framework.TestCase;
 
 /**
@@ -27,7 +29,7 @@ public class ExponentialBackOffPolicyTest extends TestCase {
     super(name);
   }
 
-  public void testConstructors() {
+  public void testConstructor() {
     ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
     assertEquals(ExponentialBackOffPolicy.DEFAULT_INITIAL_INTERVAL_MILLIS,
         backOffPolicy.getInitialIntervalMillis());
@@ -40,22 +42,6 @@ public class ExponentialBackOffPolicyTest extends TestCase {
         ExponentialBackOffPolicy.DEFAULT_MAX_INTERVAL_MILLIS, backOffPolicy.getMaxIntervalMillis());
     assertEquals(ExponentialBackOffPolicy.DEFAULT_MAX_ELAPSED_TIME_MILLIS,
         backOffPolicy.getMaxElapsedTimeMillis());
-
-    int testInitialInterval = 1;
-    double testRandomizationFactor = 0.1;
-    double testMultiplier = 5.0;
-    int testMaxInterval = 10;
-    int testMaxElapsedTime = 900000;
-
-    backOffPolicy = new ExponentialBackOffPolicy(
-        testInitialInterval, testRandomizationFactor, testMultiplier, testMaxInterval,
-        testMaxElapsedTime);
-    assertEquals(testInitialInterval, backOffPolicy.getInitialIntervalMillis());
-    assertEquals(testInitialInterval, backOffPolicy.getCurrentIntervalMillis());
-    assertEquals(testRandomizationFactor, backOffPolicy.getRandomizationFactor());
-    assertEquals(testMultiplier, backOffPolicy.getMultiplier());
-    assertEquals(testMaxInterval, backOffPolicy.getMaxIntervalMillis());
-    assertEquals(testMaxElapsedTime, backOffPolicy.getMaxElapsedTimeMillis());
   }
 
   public void testBuilder() {
@@ -130,27 +116,33 @@ public class ExponentialBackOffPolicyTest extends TestCase {
     assertEquals(3, ExponentialBackOffPolicy.getRandomValueFromInterval(0.5, 0.99, 2));
   }
 
-  public void testGetElapsedTimeMillis() {
-    ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
-    // one second sleep
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException exception) {
-      // ignore
+  static class MyNanoClock implements NanoClock {
+
+    private int i = 0;
+    private long startSeconds;
+
+    MyNanoClock() {
     }
+
+    MyNanoClock(long startSeconds) {
+      this.startSeconds = startSeconds;
+    }
+
+    public long nanoTime() {
+      return (startSeconds + i++) * 1000000000;
+    }
+  }
+
+  public void testGetElapsedTimeMillis() {
+    ExponentialBackOffPolicy backOffPolicy =
+        new ExponentialBackOffPolicy.Builder().setNanoClock(new MyNanoClock()).build();
     long elapsedTimeMillis = backOffPolicy.getElapsedTimeMillis();
-    assertTrue("elapsedTimeMillis=" + elapsedTimeMillis,
-        elapsedTimeMillis >= 1000 && elapsedTimeMillis < 2000);
+    assertEquals("elapsedTimeMillis=" + elapsedTimeMillis, 1000, elapsedTimeMillis);
   }
 
   public void testMaxElapsedTime() throws Exception {
-    ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
-    // one second sleep
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException exception) {
-      // ignore
-    }
+    ExponentialBackOffPolicy backOffPolicy =
+        new ExponentialBackOffPolicy.Builder().setNanoClock(new MyNanoClock(10000)).build();
     assertTrue(backOffPolicy.getNextBackOffMillis() != BackOffPolicy.STOP);
     // Change the currentElapsedTimeMillis to be 0 ensuring that the elapsed time will be greater
     // than the max elapsed time.

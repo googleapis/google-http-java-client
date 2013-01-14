@@ -50,10 +50,22 @@ public class MockHttpTransport extends HttpTransport {
   }
 
   /**
+   * @param builder builder
+   *
+   * @since 1.14
+   */
+  protected MockHttpTransport(Builder builder) {
+    supportedMethods = builder.supportedMethods;
+  }
+
+  /**
    * @param supportedMethods supported HTTP methods or {@code null} to specify that all methods are
    *        supported
+   *
    * @since 1.12
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #MockHttpTransport(Builder)}
    */
+  @Deprecated
   protected MockHttpTransport(Set<String> supportedMethods) {
     this.supportedMethods = supportedMethods;
   }
@@ -146,14 +158,14 @@ public class MockHttpTransport extends HttpTransport {
   public static class Builder {
 
     /** Supported HTTP methods or {@code null} to specify that all methods are supported. */
-    private Set<String> supportedMethods;
+    Set<String> supportedMethods;
 
     protected Builder() {
     }
 
     /** Builds a new instance of {@link MockHttpTransport}. */
     public MockHttpTransport build() {
-      return new MockHttpTransport(supportedMethods);
+      return new MockHttpTransport(this);
     }
 
     /**
