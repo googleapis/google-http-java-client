@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.http.HttpResponseException.Builder;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
@@ -41,10 +42,16 @@ public class HttpResponseExceptionTest extends TestCase {
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
+    HttpHeaders headers = response.getHeaders();
     HttpResponseException e = new HttpResponseException(response);
     assertEquals("200", e.getMessage());
+    assertNull(e.getContent());
+    assertEquals(200, e.getStatusCode());
+    assertNull(e.getStatusMessage());
+    assertTrue(headers == e.getHeaders());
   }
 
+  @Deprecated
   public void testConstructorWithMessage() throws Exception {
     HttpTransport transport = new MockHttpTransport();
     HttpRequest request =
@@ -52,6 +59,23 @@ public class HttpResponseExceptionTest extends TestCase {
     HttpResponse response = request.execute();
     HttpResponseException e = new HttpResponseException(response, "foo");
     assertEquals("foo", e.getMessage());
+  }
+
+  public void testBuilder() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    Builder builder = new HttpResponseException.Builder(9, "statusMessage", headers).setMessage(
+        "message").setContent("content");
+    assertEquals("message", builder.getMessage());
+    assertEquals("content", builder.getContent());
+    assertEquals(9, builder.getStatusCode());
+    assertEquals("statusMessage", builder.getStatusMessage());
+    assertTrue(headers == builder.getHeaders());
+    HttpResponseException e = builder.build();
+    assertEquals("message", e.getMessage());
+    assertEquals("content", e.getContent());
+    assertEquals(9, e.getStatusCode());
+    assertEquals("statusMessage", e.getStatusMessage());
+    assertTrue(headers == e.getHeaders());
   }
 
   public void testConstructorWithStatusMessage() throws Exception {
@@ -71,7 +95,7 @@ public class HttpResponseExceptionTest extends TestCase {
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
-    HttpResponseException e = new HttpResponseException(response, "foo");
+    HttpResponseException e = new HttpResponseException(response);
     assertEquals("OK", e.getStatusMessage());
   }
 

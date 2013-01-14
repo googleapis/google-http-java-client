@@ -15,11 +15,16 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.StringUtils;
+import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 
 /**
  * Exception thrown when an error status code is detected in an HTTP response.
+ *
+ * <p>
+ * Implementation is not thread safe.
+ * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -36,6 +41,9 @@ public class HttpResponseException extends IOException {
 
   /** HTTP headers. */
   private final transient HttpHeaders headers;
+
+  /** HTTP response content or {@code null} for none. */
+  private final String content;
 
   /**
    * Constructor that constructs a detail message from the given HTTP response that includes the
@@ -57,7 +65,7 @@ public class HttpResponseException extends IOException {
    * @param response HTTP response
    */
   public HttpResponseException(HttpResponse response) {
-    this(response, computeMessageWithContent(response));
+    this(new Builder(response));
   }
 
   /**
@@ -79,12 +87,29 @@ public class HttpResponseException extends IOException {
    * @param response HTTP response
    * @param message detail message to use or {@code null} for none
    * @since 1.6
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #HttpResponseException(Builder)}
+   *             instead
    */
+  @Deprecated
   public HttpResponseException(HttpResponse response, String message) {
     super(message);
     statusCode = response.getStatusCode();
     statusMessage = response.getStatusMessage();
     headers = response.getHeaders();
+    content = null;
+  }
+
+  /**
+   * @param builder builder
+   *
+   * @since 1.14
+   */
+  protected HttpResponseException(Builder builder) {
+    super(builder.message);
+    statusCode = builder.statusCode;
+    statusMessage = builder.statusMessage;
+    headers = builder.headers;
+    content = builder.content;
   }
 
   /**
@@ -125,21 +150,170 @@ public class HttpResponseException extends IOException {
   }
 
   /**
-   * Returns an exception message to use for the given HTTP response.
+   * Returns the HTTP response content or {@code null} for none.
+   *
+   * @since 1.14
    */
-  private static String computeMessageWithContent(HttpResponse response) {
-    StringBuilder builder = computeMessageBuffer(response);
-    String content = "";
-    try {
-      content = response.parseAsString();
-    } catch (IOException exception) {
-      // it would be bad to throw an exception while throwing an exception
-      exception.printStackTrace();
+  public final String getContent() {
+    return content;
+  }
+
+  /**
+   * Builder.
+   *
+   * <p>
+   * Implementation is not thread safe.
+   * </p>
+   *
+   *
+   * @since 1.14
+   */
+  public static class Builder {
+
+    /** HTTP status code. */
+    int statusCode;
+
+    /** Status message or {@code null}. */
+    String statusMessage;
+
+    /** HTTP headers. */
+    HttpHeaders headers;
+
+    /** Response content or {@code null} for none. */
+    String content;
+
+    /** Detail message to use or {@code null} for none. */
+    String message;
+
+    /**
+     * @param statusCode HTTP status code
+     * @param statusMessage status message or {@code null}
+     * @param headers HTTP headers
+     */
+    public Builder(int statusCode, String statusMessage, HttpHeaders headers) {
+      setStatusCode(statusCode);
+      setStatusMessage(statusMessage);
+      setHeaders(headers);
     }
-    if (content.length() != 0) {
-      builder.append(StringUtils.LINE_SEPARATOR).append(content);
+
+    /**
+     * @param response HTTP response
+     */
+    public Builder(HttpResponse response) {
+      this(response.getStatusCode(), response.getStatusMessage(), response.getHeaders());
+      // content
+      try {
+        content = response.parseAsString();
+        if (content.length() == 0) {
+          content = null;
+        }
+      } catch (IOException exception) {
+        // it would be bad to throw an exception while throwing an exception
+        exception.printStackTrace();
+      }
+      // message
+      StringBuilder builder = computeMessageBuffer(response);
+      if (content != null) {
+        builder.append(StringUtils.LINE_SEPARATOR).append(content);
+      }
+      message = builder.toString();
     }
-    return builder.toString();
+
+    /** Returns the detail message to use or {@code null} for none. */
+    public final String getMessage() {
+      return message;
+    }
+
+    /**
+     * Sets the detail message to use or {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     */
+    public Builder setMessage(String message) {
+      this.message = message;
+      return this;
+    }
+
+    /** Returns the HTTP status code or {@code 0} for none. */
+    public final int getStatusCode() {
+      return statusCode;
+    }
+
+    /**
+     * Sets the HTTP status code or {@code 0} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     */
+    public Builder setStatusCode(int statusCode) {
+      Preconditions.checkArgument(statusCode >= 0);
+      this.statusCode = statusCode;
+      return this;
+    }
+
+    /** Returns the HTTP status message or {@code null} for none. */
+    public final String getStatusMessage() {
+      return statusMessage;
+    }
+
+    /**
+     * Sets the HTTP status message or {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     */
+    public Builder setStatusMessage(String statusMessage) {
+      this.statusMessage = statusMessage;
+      return this;
+    }
+
+    /** Returns the HTTP response headers. */
+    public HttpHeaders getHeaders() {
+      return headers;
+    }
+
+    /**
+     * Sets the HTTP response headers.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     */
+    public Builder setHeaders(HttpHeaders headers) {
+      this.headers = Preconditions.checkNotNull(headers);
+      return this;
+    }
+
+    /** Returns the HTTP response content or {@code null} for none. */
+    public final String getContent() {
+      return content;
+    }
+
+    /**
+     * Sets the HTTP response content or {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     */
+    public Builder setContent(String content) {
+      this.content = content;
+      return this;
+    }
+
+    /** Returns a new instance of {@link HttpResponseException} based on this builder. */
+    public HttpResponseException build() {
+      return new HttpResponseException(this);
+    }
   }
 
   /**
