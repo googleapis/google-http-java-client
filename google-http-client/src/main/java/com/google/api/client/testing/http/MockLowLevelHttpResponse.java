@@ -63,12 +63,17 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   /**
    * Adds a header to the response.
    *
+   * <p>
+   * Upgrade warning: in prior version 1.13 this method was void, but starting with version 1.14 it
+   * now returns this instance.
+   * </p>
    * @param name header name
    * @param value header value
    */
-  public void addHeader(String name, String value) {
+  public MockLowLevelHttpResponse addHeader(String name, String value) {
     headerNames.add(Preconditions.checkNotNull(name));
     headerValues.add(Preconditions.checkNotNull(value));
+    return this;
   }
 
   /**

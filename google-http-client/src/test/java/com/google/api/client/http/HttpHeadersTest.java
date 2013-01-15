@@ -228,4 +228,45 @@ public class HttpHeadersTest extends TestCase {
     assertEquals(ImmutableList.of(String.valueOf(Long.MAX_VALUE)),
         myHeaders.getHeaderStringValues("content-length"));
   }
+
+  public static class SlugHeaders extends HttpHeaders {
+    @Key("Slug")
+    String slug;
+  }
+
+  public void testFromHttpResponse_normalFlow() throws Exception {
+    MockLowLevelHttpResponse httpResponse = new MockLowLevelHttpResponse().setHeaderNames(
+        Arrays.asList("Content-Type", "Slug"))
+        .setHeaderValues(Arrays.asList("foo/bar", "123456789"));
+
+    // Test the normal HttpHeaders class
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.fromHttpResponse(httpResponse, null);
+    assertEquals("foo/bar", httpHeaders.getContentType());
+    assertEquals(ImmutableList.of("123456789"), httpHeaders.get("Slug"));
+
+    // Test creating a SlugHeaders obj using the HttpHeaders' data
+    SlugHeaders slugHeaders = new SlugHeaders();
+    slugHeaders.fromHttpHeaders(httpHeaders);
+    assertEquals("foo/bar", slugHeaders.getContentType());
+    assertEquals("123456789", slugHeaders.slug);
+  }
+
+  public void testFromHttpResponse_doubleConvert() throws Exception {
+    MockLowLevelHttpResponse httpResponse = new MockLowLevelHttpResponse().setHeaderNames(
+        Arrays.asList("Content-Type", "Slug"))
+        .setHeaderValues(Arrays.asList("foo/bar", "123456789"));
+
+    // Test the normal HttpHeaders class
+    SlugHeaders slugHeaders = new SlugHeaders();
+    slugHeaders.fromHttpResponse(httpResponse, null);
+    assertEquals("foo/bar", slugHeaders.getContentType());
+    assertEquals("123456789", slugHeaders.slug);
+
+    // Test creating a HttpHeaders obj using the HttpHeaders' data
+    SlugHeaders slugHeaders2 = new SlugHeaders();
+    slugHeaders2.fromHttpHeaders(slugHeaders);
+    assertEquals("foo/bar", slugHeaders2.getContentType());
+    assertEquals("123456789", slugHeaders2.slug);
+  }
 }

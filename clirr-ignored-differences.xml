@@ -3,8 +3,16 @@
 
 <differences>
   <difference>
+    <!-- 8001 (Class removed): className -->
     <differenceType>8001</differenceType>
     <className>com/google/api/client/repackaged/**</className>
+  </difference>
+  <difference>
+    <!-- 7006 (Method Return Type changed): className, method, to (to is just the return type) -->
+    <differenceType>7006</differenceType>
+    <className>com/google/api/client/testing/http/MockLowLevelHttpResponse</className>
+    <method>void addHeader(java.lang.String, java.lang.String)</method>
+    <to>com.google.api.client.testing.http.MockLowLevelHttpResponse</to>
   </difference>
 </differences>
 
