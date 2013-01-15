@@ -94,4 +94,9 @@ public class GenericJson extends GenericData implements Cloneable {
   public GenericJson clone() {
     return (GenericJson) super.clone();
   }
+
+  @Override
+  public GenericJson set(String fieldName, Object value) {
+    return (GenericJson) super.set(fieldName, value);
+  }
 }

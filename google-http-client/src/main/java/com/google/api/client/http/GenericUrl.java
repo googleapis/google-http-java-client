@@ -154,6 +154,10 @@ public class GenericUrl extends GenericData {
     return result;
   }
 
+  @Override
+  public GenericUrl set(String fieldName, Object value) {
+    return (GenericUrl) super.set(fieldName, value);
+  }
 
   /**
    * Returns the scheme (lowercase), for example {@code "https"}.

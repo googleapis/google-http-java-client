@@ -101,6 +101,11 @@ public class UrlEncodedParserTest extends TestCase {
 
     @Key
     Object o;
+
+    @Override
+    public Generic set(String fieldName, Object value) {
+      return (Generic) super.set(fieldName, value);
+    }
   }
 
   public void testParse_simple() {
@@ -125,8 +130,7 @@ public class UrlEncodedParserTest extends TestCase {
     expected.c = "z";
     expected.q = new ArrayList<String>(Arrays.asList("1", "2"));
     expected.o = new ArrayList<String>(Arrays.asList("object"));
-    expected.set("d", Collections.singletonList("v"));
-    expected.set("p", Arrays.asList("4", "3", "5"));
+    expected.set("d", Collections.singletonList("v")).set("p", Arrays.asList("4", "3", "5"));
     assertEquals(expected, actual);
     assertEquals(ArrayList.class, actual.get("d").getClass());
   }
@@ -174,6 +178,11 @@ public class UrlEncodedParserTest extends TestCase {
     public E value;
     @Key
     public E otherValue;
+
+    @Override
+    public EnumValue set(String fieldName, Object value) {
+      return (EnumValue) super.set(fieldName, value);
+    }
   }
 
   static final String ENUM_VALUE = "otherValue=other&value=VALUE";

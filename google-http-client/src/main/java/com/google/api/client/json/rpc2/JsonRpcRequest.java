@@ -117,4 +117,9 @@ public class JsonRpcRequest extends GenericData {
   public void setParameters(Object parameters) {
     this.params = parameters;
   }
+
+  @Override
+  public JsonRpcRequest set(String fieldName, Object value) {
+    return (JsonRpcRequest) super.set(fieldName, value);
+  }
 }

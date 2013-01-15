@@ -162,10 +162,7 @@ public class GenericUrlTest extends TestCase {
     url.setHost("www.google.com");
     url.setPort(223);
     url.setPathParts(FULL_PARTS);
-    url.set("alt", "json");
-    url.set("max-results", 3);
-    url.set("prettyprint", true);
-    url.set("q", "Go=#/%& ?<o>gle");
+    url.set("alt", "json").set("max-results", 3).set("prettyprint", true).set("q", "Go=#/%& ?<o>gle");
     url.foo = "bar";
     url.hidden = "invisible";
     assertEquals(FULL, url.build());
@@ -217,6 +214,11 @@ public class GenericUrlTest extends TestCase {
 
     FieldTypesUrl(String encodedUrl) {
       super(encodedUrl);
+    }
+
+    @Override
+    public FieldTypesUrl set(String fieldName, Object value) {
+      return (FieldTypesUrl) super.set(fieldName, value);
     }
   }
 

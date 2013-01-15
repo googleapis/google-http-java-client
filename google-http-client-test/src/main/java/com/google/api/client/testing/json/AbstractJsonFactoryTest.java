@@ -1297,6 +1297,11 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     @Key
     @JsonString
     Long numAsString;
+
+    @Override
+    public ExtendsGenericJson set(String fieldName, Object value) {
+      return (ExtendsGenericJson) super.set(fieldName, value);
+    }
   }
 
   static final String EXTENDS_JSON = "{\"numAsString\":\"1\",\"num\":1}";

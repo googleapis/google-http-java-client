@@ -62,4 +62,9 @@ public class GenericXml extends GenericData implements Cloneable {
     }
     return namespaceDictionary.toStringOf(name, this);
   }
+
+  @Override
+  public GenericXml set(String fieldName, Object value) {
+    return (GenericXml) super.set(fieldName, value);
+  }
 }

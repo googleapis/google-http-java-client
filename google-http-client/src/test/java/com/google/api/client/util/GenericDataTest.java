@@ -117,8 +117,7 @@ public class GenericDataTest extends TestCase {
     assertEquals(1, data.remove("OnE"));
     assertEquals(0, data.getUnknownKeys().size());
 
-    data.set("testA", 1);
-    data.set("testa", 2);
+    data.set("testA", 1).set("testa", 2);
     assertEquals(2, data.remove("TESTA"));
     assertEquals(null, data.remove("TESTA"));
   }
