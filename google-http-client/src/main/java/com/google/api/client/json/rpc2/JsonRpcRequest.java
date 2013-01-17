@@ -122,4 +122,9 @@ public class JsonRpcRequest extends GenericData {
   public JsonRpcRequest set(String fieldName, Object value) {
     return (JsonRpcRequest) super.set(fieldName, value);
   }
+
+  @Override
+  public JsonRpcRequest clone() {
+    return (JsonRpcRequest) super.clone();
+  }
 }
