@@ -774,7 +774,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     List<Double> arrValue = subArr[1];
     assertEquals(1, arrValue.size());
     Double dValue = arrValue.get(0);
-    assertEquals(1.0, dValue.doubleValue());
+    assertEquals(1.0, dValue);
     // collection
     LinkedList<LinkedList<List<Double>>> list = result.list;
     assertEquals(2, list.size());
@@ -812,7 +812,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     Map<String, Float> arrValue = subArr[1];
     assertEquals(1, arrValue.size());
     Float fValue = arrValue.get("a");
-    assertEquals(1.0f, fValue.floatValue());
+    assertEquals(1.0f, fValue);
     // collection
     LinkedList<LinkedList<Map<String, Float>>> list = result.list;
     assertEquals(2, list.size());
@@ -823,7 +823,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     arrValue = subList.get(1);
     assertEquals(1, arrValue.size());
     fValue = arrValue.get("a");
-    assertEquals(1.0f, fValue.floatValue());
+    assertEquals(1.0f, fValue);
     // null value
     Map<String, Float> nullValue = result.nullValue;
     assertEquals(Data.nullOf(HashMap.class), nullValue);
@@ -831,7 +831,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     Map<String, Float> value = result.value;
     assertEquals(1, value.size());
     fValue = value.get("a");
-    assertEquals(1.0f, fValue.floatValue());
+    assertEquals(1.0f, fValue);
   }
 
   @SuppressWarnings("unchecked")
