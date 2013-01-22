@@ -27,14 +27,6 @@
     <Class name="com.google.api.client.http.MultipartRelatedContent"/>
   </And>
   <And>
-    <Bug pattern="DM_DEFAULT_ENCODING"/>
-    <Class name="com.google.api.client.util.SecurityUtils"/>
-  </And>
-  <And>
-    <Bug pattern="DM_DEFAULT_ENCODING"/>
-    <Class name="com.google.api.client.testing.json.AbstractJsonFactoryTest"/>
-  </And>
-  <And>
     <Bug pattern="NP_NULL_PARAM_DEREF_NONVIRTUAL"/>
     <!-- Non-virtual method call passes null for nonnull parameter -->
     <Class name="com.google.api.client.xml.atom.AbstractAtomFeedParser"/>

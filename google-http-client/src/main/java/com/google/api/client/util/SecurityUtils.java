@@ -141,16 +141,19 @@ public final class SecurityUtils {
    * </p>
    *
    * <pre>
-    byte[] encodedKey = SecurityUtils.readPrivateKeyFromPem(new FileInputStream("secret.pem"));
+    byte[] encodedKey =
+        SecurityUtils.readPrivateKeyFromPem(new FileInputStream("secret.pem"), Charset
+            .defaultCharset().name());
    * </pre>
    *
    * @param pemStream PEM input stream
+   * @param charsetName charset for reading PEM input stream
    */
-  public static byte[] readPrivateKeyFromPem(InputStream pemStream)
+  public static byte[] readPrivateKeyFromPem(InputStream pemStream, String charsetName)
       throws IOException, GeneralSecurityException {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     IOUtils.copy(pemStream, out);
-    String str = out.toString();
+    String str = out.toString(charsetName);
     int beginIndex = str.indexOf(BEGIN);
     int endIndex = str.indexOf(END);
     int startKeyIndex = beginIndex + BEGIN.length();
@@ -198,16 +201,19 @@ public final class SecurityUtils {
    *
    * <pre>
     PrivateKey privateKey = SecurityUtils.loadPkcs8PrivateKeyFromPem(
-        SecurityUtils.getRsaKeyFactory(), new FileInputStream("secret.pem"));
+        SecurityUtils.getRsaKeyFactory(), new FileInputStream("secret.pem"),
+        Charset.defaultCharset().name());
    * </pre>
    *
    * @param keyFactory key factory
    * @param pemStream PEM input stream
+   * @param charsetName charset for reading PEM input stream
    * @return generated private key
    */
-  public static PrivateKey loadPkcs8PrivateKeyFromPem(KeyFactory keyFactory, InputStream pemStream)
+  public static PrivateKey loadPkcs8PrivateKeyFromPem(
+      KeyFactory keyFactory, InputStream pemStream, String charsetName)
       throws GeneralSecurityException, IOException {
-    return generatePkcs8PrivateKey(keyFactory, readPrivateKeyFromPem(pemStream));
+    return generatePkcs8PrivateKey(keyFactory, readPrivateKeyFromPem(pemStream, charsetName));
   }
 
   /** Returns the SHA-1 with RSA signature algorithm. */
@@ -247,8 +253,8 @@ public final class SecurityUtils {
    *
    * <p>
    * For each certificate, {@link KeyStore#setCertificateEntry(String, Certificate)} is called with
-   * an alias that is the string form of incrementing non-negative integers starting with 0
-   * (0, 1, 2, 3, ...).
+   * an alias that is the string form of incrementing non-negative integers starting with 0 (0, 1,
+   * 2, 3, ...).
    * </p>
    *
    * <p>

@@ -1062,7 +1062,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     entry.title = "foo";
     generator.serialize(entry);
     generator.flush();
-    assertEquals(JSON_ENTRY, new String(out.toByteArray()));
+    assertEquals(JSON_ENTRY, StringUtils.newStringUtf8(out.toByteArray()));
   }
 
   public final void testGenerateFeed() throws Exception {
@@ -1078,7 +1078,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     feed.entries.add(entryBar);
     generator.serialize(feed);
     generator.flush();
-    assertEquals(JSON_FEED, new String(out.toByteArray()));
+    assertEquals(JSON_FEED, StringUtils.newStringUtf8(out.toByteArray()));
   }
 
   public final void testToString_entry() throws Exception {

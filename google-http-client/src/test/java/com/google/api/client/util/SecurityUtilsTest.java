@@ -18,6 +18,7 @@ import junit.framework.TestCase;
 import org.junit.Assert;
 
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.security.PrivateKey;
 
 /**
@@ -98,6 +99,7 @@ public class SecurityUtilsTest extends TestCase {
   private PrivateKey loadPrivateKey() throws Exception {
     InputStream stream =
         getClass().getClassLoader().getResourceAsStream("com/google/api/client/util/secret.pem");
-    return SecurityUtils.loadPkcs8PrivateKeyFromPem(SecurityUtils.getRsaKeyFactory(), stream);
+    return SecurityUtils.loadPkcs8PrivateKeyFromPem(
+        SecurityUtils.getRsaKeyFactory(), stream, Charset.defaultCharset().name());
   }
 }
