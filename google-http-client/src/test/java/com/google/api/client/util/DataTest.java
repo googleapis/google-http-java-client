@@ -127,7 +127,7 @@ public class DataTest extends TestCase {
     assertEquals(map, Data.clone(map));
   }
 
-  public void testNewCollectionInstance() {
+  public void testNewCollectionInstance() throws Exception {
     assertEquals(ArrayList.class, Data.newCollectionInstance(null).getClass());
     assertEquals(ArrayList.class, Data.newCollectionInstance(String[].class).getClass());
     assertEquals(ArrayList.class, Data.newCollectionInstance(Object.class).getClass());
@@ -144,11 +144,19 @@ public class DataTest extends TestCase {
       Data.newMapInstance(AbstractQueue.class);
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
+      // expected
     }
     try {
       Data.newMapInstance(String.class);
       fail("expected " + ClassCastException.class);
     } catch (ClassCastException e) {
+      // expected
+    }
+    TypeVariable<?> tTypeVar = (TypeVariable<?>) Resolve.class.getField("t").getGenericType();
+    try {
+      assertNull(Data.newCollectionInstance(tTypeVar));
+      fail("expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
       // expected
     }
   }

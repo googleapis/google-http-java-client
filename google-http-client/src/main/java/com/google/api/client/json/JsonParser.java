@@ -220,6 +220,8 @@ public abstract class JsonParser {
       case START_ARRAY:
         currentToken = nextToken();
         break;
+      default:
+        break;
     }
     return currentToken;
   }

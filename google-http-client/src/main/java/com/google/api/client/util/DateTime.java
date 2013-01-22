@@ -15,6 +15,7 @@
 package com.google.api.client.util;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -177,7 +178,7 @@ public final class DateTime implements Serializable {
   public String toStringRfc3339() {
     StringBuilder sb = new StringBuilder();
     Calendar dateTime = new GregorianCalendar(GMT);
-    long localTime = value + (tzShift * 60000);
+    long localTime = value + (tzShift * 60000L);
     dateTime.setTimeInMillis(localTime);
     // date
     appendInt(sb, dateTime.get(Calendar.YEAR), 4);
@@ -245,6 +246,11 @@ public final class DateTime implements Serializable {
     return dateOnly == other.dateOnly && value == other.value && tzShift == other.tzShift;
   }
 
+  @Override
+  public int hashCode() {
+    return Arrays.hashCode(new long[] {value, dateOnly ? 1 : 0, tzShift});
+  }
+
   /**
    * Parses an RFC 3339 date/time value.
    *
@@ -293,7 +299,7 @@ public final class DateTime implements Serializable {
           if (str.charAt(tzIndex) == '-') {
             tzShift = -tzShift;
           }
-          value -= tzShift * 60000;
+          value -= tzShift * 60000L;
         }
         tzShiftInteger = tzShift;
       }

@@ -159,6 +159,8 @@ class AndroidJsonParser extends JsonParser {
           reader.beginObject();
           currentNameStack.add(null);
           break;
+        default:
+          break;
       }
     }
     // work around bug in GSON parser that it throws an EOFException for an empty document
@@ -227,17 +229,21 @@ class AndroidJsonParser extends JsonParser {
 
   @Override
   public JsonParser skipChildren() throws IOException {
-    switch (currentToken) {
-      case START_ARRAY:
-        reader.skipValue();
-        currentText = "]";
-        currentToken = JsonToken.END_ARRAY;
-        break;
-      case START_OBJECT:
-        reader.skipValue();
-        currentText = "}";
-        currentToken = JsonToken.END_OBJECT;
-        break;
+    if (currentToken != null) {
+      switch (currentToken) {
+        case START_ARRAY:
+          reader.skipValue();
+          currentText = "]";
+          currentToken = JsonToken.END_ARRAY;
+          break;
+        case START_OBJECT:
+          reader.skipValue();
+          currentText = "}";
+          currentToken = JsonToken.END_OBJECT;
+          break;
+        default:
+          break;
+      }
     }
     return this;
   }

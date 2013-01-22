@@ -213,7 +213,9 @@ public class Xml {
       XmlNamespaceDictionary namespaceDictionary, CustomizeParser customizeParser)
       throws IOException, XmlPullParserException {
     ArrayList<Type> context = new ArrayList<Type>();
-    context.add(destination.getClass());
+    if (destination != null) {
+      context.add(destination.getClass());
+    }
     parseElementInternal(parser, context, destination, null, namespaceDictionary, customizeParser);
   }
 
@@ -346,6 +348,8 @@ public class Xml {
                           destinationMap,
                           fieldName);
                     }
+                    break;
+                  default:
                     break;
                 }
               }
@@ -512,7 +516,7 @@ public class Xml {
     if (isAttribute) {
       buf.append('@');
     }
-    if (alias != "") {
+    if (alias.length() != 0) {
       buf.append(alias).append(':');
     }
     return buf.append(name).toString();
@@ -538,6 +542,8 @@ public class Xml {
           if (!ignoreTextContent && level == 1) {
             result = parseValue(textContentType, context, parser.getText());
           }
+          break;
+        default:
           break;
       }
     }

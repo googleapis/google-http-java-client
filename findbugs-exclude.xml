@@ -17,38 +17,9 @@
 
   <!-- The following are known to be bugs and should be fixed -->
   <And>
-    <Bug pattern="NP_NULL_ON_SOME_PATH"/>
-    <!-- Possible null pointer dereference due to return value of called method -->
-    <Class name="com.google.api.client.util.Data"/>
-  </And>
-  <And>
-    <Bug pattern="ICAST_INTEGER_MULTIPLY_CAST_TO_LONG"/>
-    <!-- Result of integer multiplication cast to long -->
-    <Class name="com.google.api.client.util.DateTime"/>
-  </And>
-  <And>
-    <Bug pattern="SF_SWITCH_NO_DEFAULT"/>
-    <!-- Switch statement found where default case is missing -->
-  </And>
-  <And>
-    <Bug pattern="IM_BAD_CHECK_FOR_ODD"/>
-    <!-- Check for oddness that won't work for negative numbers -->
-    <Class name="com.google.api.client.util.ArrayMap"/>
-  </And>
-  <And>
-    <Bug pattern="HE_EQUALS_USE_HASHCODE"/>
-    <!-- Class defines equals() and uses Object.hashCode() -->
-    <Class name="com.google.api.client.util.DateTime"/>
-  </And>
-  <And>
     <Bug pattern="SE_BAD_FIELD"/>
     <!-- Non-transient non-serializable instance field in serializable class -->    
     <Class name="com.google.api.client.http.HttpResponseException"/>
-  </And>
-  <And>
-    <Bug pattern="ES_COMPARING_PARAMETER_STRING_WITH_EQ"/>
-    <!-- Comparison of String parameter using == or != -->
-    <Class name="com.google.api.client.xml.Xml"/>
   </And>
   <And>
     <Bug pattern="DM_DEFAULT_ENCODING"/>

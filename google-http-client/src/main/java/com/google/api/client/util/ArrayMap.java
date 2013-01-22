@@ -230,12 +230,15 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
    * Ensures that the capacity of the internal arrays is at least a given capacity.
    */
   public final void ensureCapacity(int minCapacity) {
+    if (minCapacity < 0) {
+      throw new IndexOutOfBoundsException();
+    }
     Object[] data = this.data;
     int minDataCapacity = minCapacity << 1;
     int oldDataCapacity = data == null ? 0 : data.length;
     if (minDataCapacity > oldDataCapacity) {
       int newDataCapacity = oldDataCapacity / 2 * 3 + 1;
-      if (newDataCapacity % 2 == 1) {
+      if (newDataCapacity % 2 != 0) {
         newDataCapacity++;
       }
       if (newDataCapacity < minDataCapacity) {

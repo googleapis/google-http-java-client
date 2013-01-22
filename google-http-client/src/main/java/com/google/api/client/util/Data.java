@@ -480,6 +480,9 @@ public class Data {
         && (collectionClass.isArray() || collectionClass.isAssignableFrom(ArrayList.class))) {
       return new ArrayList<Object>();
     }
+    if (collectionClass == null) {
+      throw new IllegalArgumentException("unable to create new instance of type: " + type);
+    }
     if (collectionClass.isAssignableFrom(HashSet.class)) {
       return new HashSet<Object>();
     }
