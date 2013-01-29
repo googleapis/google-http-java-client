@@ -20,15 +20,16 @@ import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.StreamingContent;
 import com.google.api.client.util.StringUtils;
 import com.google.common.base.Preconditions;
-import com.google.common.util.concurrent.SettableFuture;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -1175,24 +1176,20 @@ public final class HttpRequest {
   }
 
   /**
-   * Executes this request asynchronously using {@link #executeAsync(Executor)} in a single separate
-   * thread using the supplied Executor.
+   * Executes this request asynchronously in a single separate thread using the supplied executor.
    *
-   * @param exec An executor to run the synchronous HttpRequest
-   * @return A future for accessing the results of the asynchronous request.
+   * @param executor executor to run the asynchronous request
+   * @return future for accessing the HTTP response
    * @since 1.13
    */
-  public Future<HttpResponse> executeAsync(Executor exec) {
-    final SettableFuture<HttpResponse> future = SettableFuture.create();
-    exec.execute(new Runnable() {
-      public void run() {
-        try {
-          future.set(execute());
-        } catch (IOException ex) {
-          future.setException(ex);
-        }
+  public Future<HttpResponse> executeAsync(Executor executor) {
+    FutureTask<HttpResponse> future = new FutureTask<HttpResponse>(new Callable<HttpResponse>() {
+
+      public HttpResponse call() throws Exception {
+        return execute();
       }
     });
+    executor.execute(future);
     return future;
   }
 
