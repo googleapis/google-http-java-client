@@ -27,6 +27,7 @@ import java.io.ByteArrayOutputStream;
  *
  * @author Yaniv Inbar
  */
+@Deprecated
 public class MultipartRelatedContentTest extends TestCase {
 
   private static final String CRLF = "\r\n";

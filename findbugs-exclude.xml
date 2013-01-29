@@ -22,11 +22,6 @@
     <Class name="com.google.api.client.http.HttpResponseException"/>
   </And>
   <And>
-    <Bug pattern="DM_DEFAULT_ENCODING"/>
-    <!-- Reliance on default encoding -->
-    <Class name="com.google.api.client.http.MultipartRelatedContent"/>
-  </And>
-  <And>
     <Bug pattern="NP_NULL_PARAM_DEREF_NONVIRTUAL"/>
     <!-- Non-virtual method call passes null for nonnull parameter -->
     <Class name="com.google.api.client.xml.atom.AbstractAtomFeedParser"/>
@@ -72,5 +67,11 @@
     <Bug pattern="EI_EXPOSE_REP2"/>
     <!-- May expose internal representation by incorporating reference to mutable object -->
     <Class name="com.google.api.client.util.io.ByteArrayStreamingContent"/>
+  </And>
+  <And>
+    <Bug pattern="DM_DEFAULT_ENCODING"/>
+    <!-- Reliance on default encoding -->
+    <Class name="com.google.api.client.http.MultipartRelatedContent"/>
+    <!-- Deprecated -->
   </And>
 </FindBugsFilter>

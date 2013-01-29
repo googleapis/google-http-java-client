@@ -58,7 +58,9 @@ import java.util.List;
  *
  * @since 1.1
  * @author Yaniv Inbar
+ * @deprecated (scheduled to be removed in 1.15) Use {@link MultipartContent} instead.
  */
+@Deprecated
 public final class MultipartRelatedContent extends AbstractHttpContent {
   /**
    * Collection of HTTP content parts.

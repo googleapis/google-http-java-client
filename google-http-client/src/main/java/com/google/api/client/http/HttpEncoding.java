@@ -37,6 +37,12 @@ public interface HttpEncoding {
   /**
    * Encodes the streaming content into the output stream.
    *
+   * <p>
+   * Implementations must not close the output stream, and instead should flush the output stream.
+   * Some callers may assume that the the output stream has not been closed, and will fail to work
+   * if it has been closed.
+   * </p>
+   *
    * @param content streaming content
    * @param out output stream
    */

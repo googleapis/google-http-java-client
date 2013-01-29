@@ -17,6 +17,7 @@ package com.google.api.client.http;
 import com.google.api.client.util.StreamingContent;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Serializes HTTP request content into an output stream.
@@ -50,4 +51,14 @@ public interface HttpContent extends StreamingContent {
    * @since 1.4
    */
   boolean retrySupported();
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.13 the implementation of this method was allowed to close
+   * the stream, but starting with 1.14 closing the stream is no longer allowed.
+   * </p>
+   */
+  void writeTo(OutputStream out) throws IOException;
 }

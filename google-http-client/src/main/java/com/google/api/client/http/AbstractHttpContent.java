@@ -116,19 +116,32 @@ public abstract class AbstractHttpContent implements HttpContent {
    *
    * <p>
    * Subclasses may override, but by default this computes the length by calling
-   * {@link IOUtils#computeLength(StreamingContent)}. If {@link #retrySupported()} is
-   * {@code false}, it will instead return {@code -1} because the stream must not be read twice.
+   * {@link #computeLength(HttpContent)}.
    * </p>
    */
   protected long computeLength() throws IOException {
-    if (!retrySupported()) {
-      return -1;
-    }
-    return IOUtils.computeLength(this);
+    return computeLength(this);
   }
 
   /** Default implementation returns {@code true}, but subclasses may override. */
   public boolean retrySupported() {
     return true;
+  }
+
+  /**
+   * Returns the computed content length based using {@link IOUtils#computeLength(StreamingContent)}
+   * or instead {@code -1} if {@link HttpContent#retrySupported()} is {@code false} because the
+   * stream must not be read twice.
+   *
+   * @param content HTTP content
+   * @return computed content length or {@code -1} if retry is not supported
+   *
+   * @since 1.14
+   */
+  public static long computeLength(HttpContent content) throws IOException {
+    if (!content.retrySupported()) {
+      return -1;
+    }
+    return IOUtils.computeLength(content);
   }
 }

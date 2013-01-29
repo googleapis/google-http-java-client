@@ -786,6 +786,50 @@ public class HttpRequestTest extends TestCase {
     request.execute();
   }
 
+  public void testGZipEncoding() throws Exception {
+    class MyTransport extends MockHttpTransport {
+
+      boolean expectGZip;
+
+      @Override
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            if (expectGZip) {
+              assertEquals(HttpEncodingStreamingContent.class, getStreamingContent().getClass());
+              assertEquals("gzip", getContentEncoding());
+              assertEquals(25, getContentLength());
+            } else {
+              assertFalse(
+                  getStreamingContent().getClass().equals(HttpEncodingStreamingContent.class));
+              assertNull(getContentEncoding());
+              assertEquals(300, getContentLength());
+            }
+            char[] content = new char[300];
+            Arrays.fill(content, ' ');
+            assertEquals(new String(content), getContentAsString());
+            return super.execute();
+          }
+        };
+      }
+    }
+    MyTransport transport = new MyTransport();
+    byte[] content = new byte[300];
+    Arrays.fill(content, (byte) ' ');
+    HttpRequest request = transport.createRequestFactory().buildPostRequest(
+        HttpTesting.SIMPLE_GENERIC_URL, new ByteArrayContent(
+            new HttpMediaType("text/plain").setCharsetParameter(Charsets.UTF_8).build(), content));
+    assertNull(request.getEncoding());
+    request.execute();
+    assertNull(request.getEncoding());
+    request.execute();
+    request.setEncoding(new GZipEncoding());
+    transport.expectGZip = true;
+    request.execute();
+  }
+
   public void testContentLoggingLimitWithLoggingEnabledAndDisabled() throws Exception {
 
     class MyTransport extends MockHttpTransport {
