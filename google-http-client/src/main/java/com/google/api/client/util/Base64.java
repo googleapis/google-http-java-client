@@ -32,10 +32,10 @@ public class Base64 {
   /**
    * Encodes binary data using the base64 algorithm but does not chunk the output.
    *
-   * @param binaryData binary data to encode
-   * @return byte[] containing Base64 characters in their UTF-8 representation.
+   * @param binaryData binary data to encode or {@code null} for {@code null} result
+   * @return byte[] containing Base64 characters in their UTF-8 representation or {@code null} for
+   *         {@code null} input
    * @see org.apache.commons.codec.binary.Base64#encodeBase64(byte[])
-   * @since 1.8
    */
   public static byte[] encodeBase64(byte[] binaryData) {
     return org.apache.commons.codec.binary.Base64.encodeBase64(binaryData);
@@ -44,10 +44,9 @@ public class Base64 {
   /**
    * Encodes binary data using the base64 algorithm but does not chunk the output.
    *
-   * @param binaryData binary data to encode
-   * @return String containing Base64 characters.
+   * @param binaryData binary data to encode or {@code null} for {@code null} result
+   * @return String containing Base64 characters or {@code null} for {@code null} input
    * @see org.apache.commons.codec.binary.Base64#encodeBase64String(byte[])
-   * @since 1.8
    */
   public static String encodeBase64String(byte[] binaryData) {
     return org.apache.commons.codec.binary.Base64.encodeBase64String(binaryData);
@@ -58,10 +57,10 @@ public class Base64 {
    * Encodes binary data using a URL-safe variation of the base64 algorithm but does not chunk the
    * output. The url-safe variation emits - and _ instead of + and / characters.
    *
-   * @param binaryData binary data to encode
-   * @return byte[] containing Base64 characters in their UTF-8 representation.
+   * @param binaryData binary data to encode or {@code null} for {@code null} result
+   * @return byte[] containing Base64 characters in their UTF-8 representation or {@code null} for
+   *         {@code null} input
    * @see org.apache.commons.codec.binary.Base64#encodeBase64URLSafe(byte[])
-   * @since 1.8
    */
   public static byte[] encodeBase64URLSafe(byte[] binaryData) {
     return org.apache.commons.codec.binary.Base64.encodeBase64URLSafe(binaryData);
@@ -71,10 +70,9 @@ public class Base64 {
    * Encodes binary data using a URL-safe variation of the base64 algorithm but does not chunk the
    * output. The url-safe variation emits - and _ instead of + and / characters.
    *
-   * @param binaryData binary data to encode
-   * @return String containing Base64 characters
+   * @param binaryData binary data to encode or {@code null} for {@code null} result
+   * @return String containing Base64 characters or {@code null} for {@code null} input
    * @see org.apache.commons.codec.binary.Base64#encodeBase64URLSafeString(byte[])
-   * @since 1.8
    */
   public static String encodeBase64URLSafeString(byte[] binaryData) {
     return org.apache.commons.codec.binary.Base64.encodeBase64URLSafeString(binaryData);
@@ -83,10 +81,9 @@ public class Base64 {
   /**
    * Decodes Base64 data into octets.
    *
-   * @param base64Data Byte array containing Base64 data
-   * @return Array containing decoded data.
+   * @param base64Data Byte array containing Base64 data or {@code null} for {@code null} result
+   * @return Array containing decoded data or {@code null} for {@code null} input
    * @see org.apache.commons.codec.binary.Base64#decodeBase64(byte[])
-   * @since 1.8
    */
   public static byte[] decodeBase64(byte[] base64Data) {
     return org.apache.commons.codec.binary.Base64.decodeBase64(base64Data);
@@ -95,10 +92,9 @@ public class Base64 {
   /**
    * Decodes a Base64 String into octets.
    *
-   * @param base64String String containing Base64 data
-   * @return Array containing decoded data.
+   * @param base64String String containing Base64 data or {@code null} for {@code null} result
+   * @return Array containing decoded data or {@code null} for {@code null} input
    * @see org.apache.commons.codec.binary.Base64#decodeBase64(String)
-   * @since 1.8
    */
   public static byte[] decodeBase64(String base64String) {
     return org.apache.commons.codec.binary.Base64.decodeBase64(base64String);
