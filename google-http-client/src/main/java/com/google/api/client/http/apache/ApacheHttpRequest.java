@@ -16,7 +16,7 @@ package com.google.api.client.http.apache;
 
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.client.HttpClient;

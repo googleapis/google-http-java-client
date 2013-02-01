@@ -14,7 +14,6 @@
 
 package com.google.api.client.util;
 
-import com.google.common.base.Preconditions;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
 

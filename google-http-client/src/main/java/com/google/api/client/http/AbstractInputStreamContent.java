@@ -14,8 +14,8 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.ByteStreams;
 import com.google.api.client.util.IOUtils;
-import com.google.common.io.LimitInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,17 +27,13 @@ import java.io.OutputStream;
  * <p>
  * The {@link #type} field is required. Subclasses should implement the {@link #getLength()},
  * {@link #getInputStream()}, and {@link #retrySupported()} for their specific type of input stream.
- * If you need to limit the amount of content read from the input stream, you may use
- * {@link LimitInputStream}.
+ * By default, all content is read from the input stream. If instead you want to limit the maximum
+ * amount of content read from the input stream, you may use
+ * {@link ByteStreams#limit(InputStream, long)}.
  * <p>
  *
  * <p>
  * Implementations don't need to be thread-safe.
- * </p>
- *
- * <p>
- * By default, all content is read from the input stream. If instead you want to limit the maximum
- * amount of content read from the input stream, you may use {@link LimitInputStream}.
  * </p>
  *
  * @since 1.4

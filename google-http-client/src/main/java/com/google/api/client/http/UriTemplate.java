@@ -16,9 +16,9 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
+import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
-import com.google.common.base.Preconditions;
 
 import java.util.HashMap;
 import java.util.Iterator;

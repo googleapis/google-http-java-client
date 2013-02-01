@@ -16,7 +16,7 @@ package com.google.api.client.json;
 
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
-import com.google.common.base.Throwables;
+import com.google.api.client.util.Throwables;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentMap;

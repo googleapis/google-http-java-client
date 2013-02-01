@@ -12,7 +12,7 @@
 
 package com.google.api.client.http.apache;
 
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 

@@ -21,10 +21,10 @@ import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
+import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
+import com.google.api.client.util.Throwables;
 import com.google.api.client.util.Types;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Throwables;
 
 import java.io.IOException;
 import java.io.Writer;

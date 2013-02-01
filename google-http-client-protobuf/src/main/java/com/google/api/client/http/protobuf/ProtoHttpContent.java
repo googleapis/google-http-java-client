@@ -17,7 +17,7 @@ package com.google.api.client.http.protobuf;
 import com.google.api.client.http.AbstractHttpContent;
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.protobuf.ProtocolBuffers;
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 import com.google.protobuf.MessageLite;
 
 import java.io.IOException;

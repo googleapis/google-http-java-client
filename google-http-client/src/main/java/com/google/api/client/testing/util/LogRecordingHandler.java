@@ -14,7 +14,7 @@
 
 package com.google.api.client.testing.util;
 
-import com.google.common.collect.Lists;
+import com.google.api.client.util.Lists;
 
 import java.util.List;
 import java.util.logging.Handler;

@@ -14,7 +14,7 @@
 
 package com.google.api.client.http;
 
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 
 import java.io.InputStream;
 import java.io.OutputStream;

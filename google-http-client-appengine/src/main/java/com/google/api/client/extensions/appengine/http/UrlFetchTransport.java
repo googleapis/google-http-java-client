@@ -17,9 +17,9 @@ package com.google.api.client.extensions.appengine.http;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
+import com.google.api.client.util.Preconditions;
 import com.google.appengine.api.urlfetch.FetchOptions;
 import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

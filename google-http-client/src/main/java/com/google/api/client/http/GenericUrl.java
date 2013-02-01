@@ -16,10 +16,10 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
+import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.escape.CharEscapers;
 import com.google.api.client.util.escape.Escaper;
 import com.google.api.client.util.escape.PercentEscaper;
-import com.google.common.base.Preconditions;
 
 import java.net.URI;
 import java.net.URISyntaxException;

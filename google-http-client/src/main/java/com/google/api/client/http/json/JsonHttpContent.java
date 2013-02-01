@@ -19,7 +19,7 @@ import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
 import java.io.OutputStream;

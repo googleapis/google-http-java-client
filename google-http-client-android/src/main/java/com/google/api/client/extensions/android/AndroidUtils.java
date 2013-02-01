@@ -14,7 +14,7 @@
 
 package com.google.api.client.extensions.android;
 
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 
 import android.os.Build;
 

@@ -23,8 +23,8 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import com.google.api.client.util.Preconditions;
+import com.google.api.client.util.Strings;
 
 import java.io.IOException;
 import java.io.InputStream;

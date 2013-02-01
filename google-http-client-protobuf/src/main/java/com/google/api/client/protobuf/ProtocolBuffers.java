@@ -14,7 +14,7 @@
 
 package com.google.api.client.protobuf;
 
-import com.google.common.base.Throwables;
+import com.google.api.client.util.Throwables;
 import com.google.protobuf.MessageLite;
 
 import java.io.IOException;

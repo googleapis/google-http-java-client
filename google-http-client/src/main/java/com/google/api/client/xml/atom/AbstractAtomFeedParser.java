@@ -14,10 +14,10 @@
 
 package com.google.api.client.xml.atom;
 
+import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
 import com.google.api.client.xml.Xml;
 import com.google.api.client.xml.XmlNamespaceDictionary;
-import com.google.common.base.Preconditions;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

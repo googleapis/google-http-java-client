@@ -16,12 +16,12 @@ package com.google.api.client.xml;
 
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.util.ArrayValueMap;
+import com.google.api.client.util.Charsets;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
+import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
-import com.google.common.base.Charsets;
-import com.google.common.base.Preconditions;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

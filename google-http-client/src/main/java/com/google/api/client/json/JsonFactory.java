@@ -14,7 +14,7 @@
 
 package com.google.api.client.json;
 
-import com.google.common.base.Charsets;
+import com.google.api.client.util.Charsets;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -15,8 +15,8 @@
 package com.google.api.client.xml;
 
 import com.google.api.client.util.ObjectParser;
+import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
-import com.google.common.base.Preconditions;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

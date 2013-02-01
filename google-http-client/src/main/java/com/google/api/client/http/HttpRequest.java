@@ -17,9 +17,9 @@ package com.google.api.client.http;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingStreamingContent;
 import com.google.api.client.util.ObjectParser;
+import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StreamingContent;
 import com.google.api.client.util.StringUtils;
-import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.io.OutputStream;

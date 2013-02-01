@@ -14,7 +14,7 @@
 
 package com.google.api.client.testing.http.apache;
 
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 
 import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.HttpException;

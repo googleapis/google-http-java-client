@@ -16,9 +16,9 @@ package com.google.api.client.http.xml;
 
 import com.google.api.client.http.AbstractHttpContent;
 import com.google.api.client.http.HttpMediaType;
+import com.google.api.client.util.Preconditions;
 import com.google.api.client.xml.Xml;
 import com.google.api.client.xml.XmlNamespaceDictionary;
-import com.google.common.base.Preconditions;
 
 import org.xmlpull.v1.XmlSerializer;
 

@@ -15,7 +15,8 @@
 package com.google.api.client.util;
 
 /**
- * Proxy for version 1.6 (or newer) of the Apache Commons Codec {@link Base64} implementation.
+ * Proxy for version 1.6 (or newer) of the Apache Commons Codec
+ * {@link org.apache.commons.codec.binary.Base64} implementation.
  *
  * <p>
  * This is needed in order to support platforms like Android which already include an older version

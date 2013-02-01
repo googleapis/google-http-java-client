@@ -15,7 +15,7 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.NanoClock;
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
 

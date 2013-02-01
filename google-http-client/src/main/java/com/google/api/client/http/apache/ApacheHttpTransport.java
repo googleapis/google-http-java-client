@@ -17,9 +17,9 @@ package com.google.api.client.http.apache;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.SslUtils;
-import com.google.common.base.Preconditions;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpVersion;

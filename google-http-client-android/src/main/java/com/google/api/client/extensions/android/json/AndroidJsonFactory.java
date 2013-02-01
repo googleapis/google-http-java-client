@@ -18,7 +18,7 @@ import com.google.api.client.extensions.android.AndroidUtils;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
-import com.google.common.base.Charsets;
+import com.google.api.client.util.Charsets;
 
 import android.annotation.TargetApi;
 import android.util.JsonReader;

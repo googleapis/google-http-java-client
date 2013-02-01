@@ -14,12 +14,12 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Charsets;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingInputStream;
 import com.google.api.client.util.ObjectParser;
+import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
-import com.google.common.base.Charsets;
-import com.google.common.base.Preconditions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;

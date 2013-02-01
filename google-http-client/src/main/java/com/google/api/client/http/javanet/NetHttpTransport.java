@@ -16,9 +16,9 @@ package com.google.api.client.http.javanet;
 
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.SslUtils;
-import com.google.common.base.Preconditions;
 
 import java.io.IOException;
 import java.io.InputStream;

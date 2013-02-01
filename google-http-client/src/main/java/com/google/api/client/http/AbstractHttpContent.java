@@ -14,9 +14,9 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Charsets;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.StreamingContent;
-import com.google.common.base.Charsets;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

@@ -15,7 +15,7 @@
 package com.google.api.client.json;
 
 import com.google.api.client.http.HttpMediaType;
-import com.google.common.base.Charsets;
+import com.google.api.client.util.Charsets;
 
 /**
  * JSON utilities.

@@ -18,7 +18,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
 import java.io.InputStream;

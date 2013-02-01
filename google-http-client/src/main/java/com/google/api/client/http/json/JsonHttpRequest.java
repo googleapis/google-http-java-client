@@ -22,7 +22,7 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.UriTemplate;
 import com.google.api.client.util.GenericData;
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
 import java.io.InputStream;

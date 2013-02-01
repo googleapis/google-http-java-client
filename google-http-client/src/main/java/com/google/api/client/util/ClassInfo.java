@@ -14,8 +14,6 @@
 
 package com.google.api.client.util;
 
-import com.google.common.base.Preconditions;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;

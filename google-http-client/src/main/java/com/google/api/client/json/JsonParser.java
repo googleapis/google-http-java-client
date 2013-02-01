@@ -18,8 +18,8 @@ import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
+import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
-import com.google.common.base.Preconditions;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
 

@@ -14,7 +14,7 @@
 
 package com.google.api.client.testing.http.javanet;
 
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

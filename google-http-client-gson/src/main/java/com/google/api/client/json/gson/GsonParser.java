@@ -17,7 +17,7 @@ package com.google.api.client.json.gson;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
-import com.google.common.base.Preconditions;
+import com.google.api.client.util.Preconditions;
 import com.google.common.primitives.UnsignedInteger;
 import com.google.common.primitives.UnsignedLong;
 import com.google.gson.stream.JsonReader;
