@@ -225,7 +225,8 @@ public class DataTest extends TestCase {
     assertEquals(new Double(Double.MAX_VALUE),
         Data.parsePrimitiveValue(double.class, String.valueOf(Double.MAX_VALUE)));
     BigInteger bigint = BigInteger.valueOf(Long.MAX_VALUE);
-    assertEquals(bigint, Data.parsePrimitiveValue(BigInteger.class, String.valueOf(Long.MAX_VALUE)));
+    assertEquals(bigint,
+        Data.parsePrimitiveValue(BigInteger.class, String.valueOf(Long.MAX_VALUE)));
     assertEquals(UnsignedInteger.MAX_VALUE,
         Data.parsePrimitiveValue(UnsignedInteger.class, String.valueOf(UnsignedInteger.MAX_VALUE)));
     assertEquals(UnsignedLong.MAX_VALUE,
