@@ -20,8 +20,6 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.Charsets;
 import com.google.api.client.util.IOUtils;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -54,12 +52,8 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
   @Deprecated
   private HttpContent content;
 
-  /** Map of header name to values. */
-  @Deprecated
+  /** Map of lowercase header name to values. */
   private final Map<String, List<String>> headersMap = new HashMap<String, List<String>>();
-
-  /** List multimap of lower-case header name to its values. */
-  private final ListMultimap<String, String> headersMultimap = ArrayListMultimap.create();
 
   /**
    * HTTP response to return from {@link #execute()}.
@@ -83,13 +77,13 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
 
   @Override
   public void addHeader(String name, String value) throws IOException {
+    name = name.toLowerCase();
     List<String> values = headersMap.get(name);
     if (values == null) {
       values = new ArrayList<String>();
       headersMap.put(name, values);
     }
     values.add(value);
-    headersMultimap.put(name.toLowerCase(), value);
   }
 
   @Override
@@ -113,16 +107,22 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
   }
 
   /**
-   * Returns the map of header name to values.
+   * Returns an unmodifiable view of the map of lowercase header name to values.
+   *
+   * <p>
+   * Note that unlike this method, {@link #getFirstHeaderValue(String)} and
+   * {@link #getHeaderValues(String)} are not case sensitive with respect to the input header name.
+   * </p>
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.13 the keys could be in any case, but starting with version
+   * 1.14, the keys will all be lowercase.
+   * </p>
    *
    * @since 1.5
-   * @deprecated (scheduled in 1.14 to have the return type changed to ListMultimap<String, String>
-   *             with lowercase header names) Use {@link #getFirstHeaderValue(String)} or
-   *             {@link #getHeaderValues(String)}
    */
-  @Deprecated
   public Map<String, List<String>> getHeaders() {
-    return headersMap;
+    return Collections.unmodifiableMap(headersMap);
   }
 
   /**
@@ -132,8 +132,8 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
    * @since 1.13
    */
   public String getFirstHeaderValue(String name) {
-    List<String> values = getHeaderValues(name);
-    return values.isEmpty() ? null : values.get(0);
+    List<String> values = headersMap.get(name.toLowerCase());
+    return values == null ? null : values.get(0);
   }
 
   /**
@@ -143,7 +143,8 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
    * @since 1.13
    */
   public List<String> getHeaderValues(String name) {
-    return Collections.unmodifiableList(headersMultimap.get(name.toLowerCase()));
+    List<String> values = headersMap.get(name.toLowerCase());
+    return values == null ? Collections.<String>emptyList() : Collections.unmodifiableList(values);
   }
 
   /**
