@@ -22,14 +22,17 @@ import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Preconditions;
+import com.google.api.client.util.Throwables;
 import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
-import com.google.common.io.CharStreams;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -54,6 +57,7 @@ import java.util.Map;
  *
  * <p>
  * Sample usage:
+ * </p>
  *
  * <pre>
    static void setParser(HttpTransport transport) {
@@ -78,6 +82,25 @@ public class UrlEncodedParser implements ObjectParser {
       new HttpMediaType(UrlEncodedParser.CONTENT_TYPE).setCharsetParameter(Charsets.UTF_8).build();
 
   /**
+   * Parses the given URL-encoded content into the given data object of data key name/value pairs
+   * using {@link #parse(Reader, Object)}.
+   *
+   * @param content URL-encoded content or {@code null} to ignore content
+   * @param data data key name/value pairs
+   */
+  public static void parse(String content, Object data) {
+    if (content == null) {
+      return;
+    }
+    try {
+      parse(new StringReader(content), data);
+    } catch (IOException exception) {
+      // I/O exception not expected on a string
+      throw Throwables.propagate(exception);
+    }
+  }
+
+  /**
    * Parses the given URL-encoded content into the given data object of data key name/value pairs,
    * including support for repeating data key names.
    *
@@ -96,13 +119,12 @@ public class UrlEncodedParser implements ObjectParser {
    * either as a string, or as a {@link ArrayList}&lt;String&gt; in the case of repeated parameters.
    * </p>
    *
-   * @param content URL-encoded content or {@code null} to ignore content
+   * @param reader URL-encoded reader
    * @param data data key name/value pairs
+   *
+   * @since 1.14
    */
-  public static void parse(String content, Object data) {
-    if (content == null) {
-      return;
-    }
+  public static void parse(Reader reader, Object data) throws IOException {
     Class<?> clazz = data.getClass();
     ClassInfo classInfo = ClassInfo.of(clazz);
     List<Type> context = Arrays.<Type>asList(clazz);
@@ -110,67 +132,81 @@ public class UrlEncodedParser implements ObjectParser {
     @SuppressWarnings("unchecked")
     Map<Object, Object> map = Map.class.isAssignableFrom(clazz) ? (Map<Object, Object>) data : null;
     ArrayValueMap arrayValueMap = new ArrayValueMap(data);
-    int cur = 0;
-    int length = content.length();
-    int nextEquals = content.indexOf('=');
-    while (cur < length) {
-      // parse next parameter
-      int amp = content.indexOf('&', cur);
-      if (amp == -1) {
-        amp = length;
-      }
-      String name;
-      String stringValue;
-      if (nextEquals != -1 && nextEquals < amp) {
-        name = content.substring(cur, nextEquals);
-        stringValue = CharEscapers.decodeUri(content.substring(nextEquals + 1, amp));
-        nextEquals = content.indexOf('=', amp + 1);
-      } else {
-        name = content.substring(cur, amp);
-        stringValue = "";
-      }
-      name = CharEscapers.decodeUri(name);
-      // get the field from the type information
-      FieldInfo fieldInfo = classInfo.getFieldInfo(name);
-      if (fieldInfo != null) {
-        Type type = Data.resolveWildcardTypeOrTypeVariable(context, fieldInfo.getGenericType());
-        // type is now class, parameterized type, or generic array type
-        if (Types.isArray(type)) {
-          // array that can handle repeating values
-          Class<?> rawArrayComponentType = Types.getRawArrayComponentType(
-              context, Types.getArrayComponentType(type));
-          arrayValueMap.put(fieldInfo.getField(), rawArrayComponentType,
-              parseValue(rawArrayComponentType, context, stringValue));
-        } else if (Types.isAssignableToOrFrom(
-            Types.getRawArrayComponentType(context, type), Iterable.class)) {
-          // iterable that can handle repeating values
-          @SuppressWarnings("unchecked")
-          Collection<Object> collection = (Collection<Object>) fieldInfo.getValue(data);
-          if (collection == null) {
-            collection = Data.newCollectionInstance(type);
-            fieldInfo.setValue(data, collection);
+    StringWriter nameWriter = new StringWriter();
+    StringWriter valueWriter = new StringWriter();
+    boolean readingName = true;
+    mainLoop: while (true) {
+      int read = reader.read();
+      switch (read) {
+        case -1:
+      // falls through
+        case '&':
+          // parse name/value pair
+          String name = CharEscapers.decodeUri(nameWriter.toString());
+          if (name.length() != 0) {
+            String stringValue = CharEscapers.decodeUri(valueWriter.toString());
+            // get the field from the type information
+            FieldInfo fieldInfo = classInfo.getFieldInfo(name);
+            if (fieldInfo != null) {
+              Type type =
+                  Data.resolveWildcardTypeOrTypeVariable(context, fieldInfo.getGenericType());
+              // type is now class, parameterized type, or generic array type
+              if (Types.isArray(type)) {
+                // array that can handle repeating values
+                Class<?> rawArrayComponentType =
+                    Types.getRawArrayComponentType(context, Types.getArrayComponentType(type));
+                arrayValueMap.put(fieldInfo.getField(), rawArrayComponentType,
+                    parseValue(rawArrayComponentType, context, stringValue));
+              } else if (Types.isAssignableToOrFrom(
+                  Types.getRawArrayComponentType(context, type), Iterable.class)) {
+                // iterable that can handle repeating values
+                @SuppressWarnings("unchecked")
+                Collection<Object> collection = (Collection<Object>) fieldInfo.getValue(data);
+                if (collection == null) {
+                  collection = Data.newCollectionInstance(type);
+                  fieldInfo.setValue(data, collection);
+                }
+                Type subFieldType = type == Object.class ? null : Types.getIterableParameter(type);
+                collection.add(parseValue(subFieldType, context, stringValue));
+              } else {
+                // parse into a field that assumes it is a single value
+                fieldInfo.setValue(data, parseValue(type, context, stringValue));
+              }
+            } else if (map != null) {
+              // parse into a map: store as an ArrayList of values
+              @SuppressWarnings("unchecked")
+              ArrayList<String> listValue = (ArrayList<String>) map.get(name);
+              if (listValue == null) {
+                listValue = new ArrayList<String>();
+                if (genericData != null) {
+                  genericData.set(name, listValue);
+                } else {
+                  map.put(name, listValue);
+                }
+              }
+              listValue.add(stringValue);
+            }
           }
-          Type subFieldType = type == Object.class ? null : Types.getIterableParameter(type);
-          collection.add(parseValue(subFieldType, context, stringValue));
-        } else {
-          // parse into a field that assumes it is a single value
-          fieldInfo.setValue(data, parseValue(type, context, stringValue));
-        }
-      } else if (map != null) {
-        // parse into a map: store as an ArrayList of values
-        @SuppressWarnings("unchecked")
-        ArrayList<String> listValue = (ArrayList<String>) map.get(name);
-        if (listValue == null) {
-          listValue = new ArrayList<String>();
-          if (genericData != null) {
-            genericData.set(name, listValue);
+          // ready to read next name/value pair
+          readingName = true;
+          nameWriter = new StringWriter();
+          valueWriter = new StringWriter();
+          if (read == -1) {
+            break mainLoop;
+          }
+          break;
+        case '=':
+          // finished with name, now read value
+          readingName = false;
+          break;
+        default:
+          // read one more character
+          if (readingName) {
+            nameWriter.write(read);
           } else {
-            map.put(name, listValue);
+            valueWriter.write(read);
           }
-        }
-        listValue.add(stringValue);
       }
-      cur = amp + 1;
     }
     arrayValueMap.setValues();
   }
@@ -192,18 +228,16 @@ public class UrlEncodedParser implements ObjectParser {
   }
 
   @SuppressWarnings("unchecked")
-  public <T> T parseAndClose(Reader reader, Class<T> dataClass)
-      throws IOException {
+  public <T> T parseAndClose(Reader reader, Class<T> dataClass) throws IOException {
     return (T) parseAndClose(reader, (Type) dataClass);
   }
 
-  public Object parseAndClose(Reader reader, Type dataType)
-      throws IOException {
+  public Object parseAndClose(Reader reader, Type dataType) throws IOException {
     Preconditions.checkArgument(
         dataType instanceof Class<?>, "dataType has to be of type Class<?>");
 
     Object newInstance = Types.newInstance((Class<?>) dataType);
-    parse(CharStreams.toString(reader), newInstance);
+    parse(new BufferedReader(reader), newInstance);
     return newInstance;
   }
 }

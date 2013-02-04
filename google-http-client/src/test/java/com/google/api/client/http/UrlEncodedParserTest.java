@@ -161,7 +161,7 @@ public class UrlEncodedParserTest extends TestCase {
 
   public void testParse_null() {
     ArrayMap<String, Object> actual = new ArrayMap<String, Object>();
-    UrlEncodedParser.parse(null, actual);
+    UrlEncodedParser.parse((String) null, actual);
     assertTrue(actual.isEmpty());
   }
 
