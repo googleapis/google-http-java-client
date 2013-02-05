@@ -21,8 +21,6 @@ import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
-import com.google.common.primitives.UnsignedInteger;
-import com.google.common.primitives.UnsignedLong;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -36,6 +34,12 @@ import java.util.Map;
  * <p>
  * Implementation has no fields and therefore thread-safe, but sub-classes are not necessarily
  * thread-safe.
+ * </p>
+ *
+ * <p>
+ * Upgrade warning: in prior version 1.13 there were methods {@code writeNumber(UnsignedInteger)}
+ * and {@code writeNumber(UnsignedLong)}, but starting in version 1.14 they were removed. Instead
+ * use {@link #writeNumber(long)} and {@link #writeNumber(BigInteger)}.
  * </p>
  *
  * @since 1.3
@@ -88,20 +92,6 @@ public abstract class JsonGenerator {
   /** Writes a JSON big integer value. */
   public abstract void writeNumber(BigInteger v) throws IOException;
 
-  /**
-   * Writes a JSON unsigned integer value.
-   *
-   * @since 1.9
-   */
-  public abstract void writeNumber(UnsignedInteger v) throws IOException;
-
-  /**
-   * Writes a JSON unsigned long value.
-   *
-   * @since 1.9
-   */
-  public abstract void writeNumber(UnsignedLong v) throws IOException;
-
   /** Writes a JSON float value. */
   public abstract void writeNumber(float v) throws IOException;
 
@@ -138,10 +128,6 @@ public abstract class JsonGenerator {
         writeNumber((BigDecimal) value);
       } else if (value instanceof BigInteger) {
         writeNumber((BigInteger) value);
-      } else if (value instanceof UnsignedInteger) {
-        writeNumber((UnsignedInteger) value);
-      } else if (value instanceof UnsignedLong) {
-        writeNumber((UnsignedLong) value);
       } else if (value instanceof Long) {
         writeNumber((Long) value);
       } else if (value instanceof Float) {

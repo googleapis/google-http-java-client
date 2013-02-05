@@ -18,8 +18,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Preconditions;
-import com.google.common.primitives.UnsignedInteger;
-import com.google.common.primitives.UnsignedLong;
 import com.google.gson.stream.JsonReader;
 
 import java.io.EOFException;
@@ -102,18 +100,6 @@ class GsonParser extends JsonParser {
   public BigInteger getBigIntegerValue() {
     checkNumber();
     return new BigInteger(currentText);
-  }
-
-  @Override
-  public UnsignedInteger getUnsignedIntegerValue() {
-    checkNumber();
-    return UnsignedInteger.valueOf(currentText);
-  }
-
-  @Override
-  public UnsignedLong getUnsignedLongValue() {
-    checkNumber();
-    return UnsignedLong.valueOf(currentText);
   }
 
   @Override

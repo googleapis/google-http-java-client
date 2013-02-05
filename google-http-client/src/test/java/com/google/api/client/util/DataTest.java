@@ -14,9 +14,6 @@
 
 package com.google.api.client.util;
 
-import com.google.common.primitives.UnsignedInteger;
-import com.google.common.primitives.UnsignedLong;
-
 import junit.framework.TestCase;
 
 import java.lang.reflect.ParameterizedType;
@@ -55,10 +52,6 @@ public class DataTest extends TestCase {
     assertEquals("java.lang.Object", Data.nullOf(Object.class).getClass().getName());
     assertEquals("java.lang.String", Data.nullOf(String.class).getClass().getName());
     assertEquals("java.lang.Integer", Data.nullOf(Integer.class).getClass().getName());
-    assertEquals("com.google.common.primitives.UnsignedInteger", Data.nullOf(UnsignedInteger.class)
-        .getClass().getName());
-    assertEquals("com.google.common.primitives.UnsignedLong", Data.nullOf(UnsignedLong.class)
-        .getClass().getName());
     assertEquals("[[[[Ljava.lang.String;", Data.nullOf(String[][][][].class).getClass().getName());
     assertEquals("[[[I", Data.nullOf(int[][][].class).getClass().getName());
     assertNotNull(Data.nullOf(Object.class));
@@ -87,8 +80,6 @@ public class DataTest extends TestCase {
     assertTrue(Data.isNull(Data.NULL_FLOAT));
     assertTrue(Data.isNull(Data.NULL_DOUBLE));
     assertTrue(Data.isNull(Data.NULL_BIG_INTEGER));
-    assertTrue(Data.isNull(Data.NULL_UNSIGNED_INTEGER));
-    assertTrue(Data.isNull(Data.NULL_UNSIGNED_LONG));
     assertTrue(Data.isNull(Data.NULL_BIG_DECIMAL));
     assertTrue(Data.isNull(Data.NULL_DATE_TIME));
     assertFalse(Data.isNull(null));
@@ -103,8 +94,6 @@ public class DataTest extends TestCase {
     assertFalse(Data.isNull((double) 0));
     assertFalse(Data.isNull(BigDecimal.ZERO));
     assertFalse(Data.isNull(BigInteger.ZERO));
-    assertFalse(Data.isNull(UnsignedInteger.ZERO));
-    assertFalse(Data.isNull(UnsignedLong.ZERO));
   }
 
   public void testClone_array() {
@@ -188,8 +177,6 @@ public class DataTest extends TestCase {
     assertFalse(Data.isPrimitive(null));
     assertTrue(Data.isPrimitive(int.class));
     assertTrue(Data.isPrimitive(Integer.class));
-    assertTrue(Data.isPrimitive(UnsignedInteger.class));
-    assertTrue(Data.isPrimitive(UnsignedLong.class));
   }
 
   public void testParsePrimitiveValue() {
@@ -227,10 +214,6 @@ public class DataTest extends TestCase {
     BigInteger bigint = BigInteger.valueOf(Long.MAX_VALUE);
     assertEquals(bigint,
         Data.parsePrimitiveValue(BigInteger.class, String.valueOf(Long.MAX_VALUE)));
-    assertEquals(UnsignedInteger.MAX_VALUE,
-        Data.parsePrimitiveValue(UnsignedInteger.class, String.valueOf(UnsignedInteger.MAX_VALUE)));
-    assertEquals(UnsignedLong.MAX_VALUE,
-        Data.parsePrimitiveValue(UnsignedLong.class, String.valueOf(UnsignedLong.MAX_VALUE)));
     BigDecimal bigdec = BigDecimal.valueOf(Double.MAX_VALUE);
     assertEquals(bigdec,
         Data.parsePrimitiveValue(BigDecimal.class, String.valueOf(Double.MAX_VALUE)));

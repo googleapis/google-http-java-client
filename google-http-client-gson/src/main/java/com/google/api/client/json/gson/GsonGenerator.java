@@ -16,8 +16,6 @@ package com.google.api.client.json.gson;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
-import com.google.common.primitives.UnsignedInteger;
-import com.google.common.primitives.UnsignedLong;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
@@ -97,16 +95,6 @@ class GsonGenerator extends JsonGenerator {
 
   @Override
   public void writeNumber(BigInteger v) throws IOException {
-    writer.value(v);
-  }
-
-  @Override
-  public void writeNumber(UnsignedInteger v) throws IOException {
-    writer.value(v);
-  }
-
-  @Override
-  public void writeNumber(UnsignedLong v) throws IOException {
     writer.value(v);
   }
 

@@ -16,8 +16,6 @@ package com.google.api.client.json.jackson2;
 
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
-import com.google.common.primitives.UnsignedInteger;
-import com.google.common.primitives.UnsignedLong;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -101,16 +99,6 @@ final class JacksonParser extends JsonParser {
   @Override
   public BigInteger getBigIntegerValue() throws IOException {
     return parser.getBigIntegerValue();
-  }
-
-  @Override
-  public UnsignedInteger getUnsignedIntegerValue() throws IOException {
-    return UnsignedInteger.valueOf(parser.getLongValue());
-  }
-
-  @Override
-  public UnsignedLong getUnsignedLongValue() throws IOException {
-    return UnsignedLong.valueOf(parser.getBigIntegerValue());
   }
 
   @Override

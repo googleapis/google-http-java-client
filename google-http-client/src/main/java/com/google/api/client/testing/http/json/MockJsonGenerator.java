@@ -16,8 +16,6 @@ package com.google.api.client.testing.http.json;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
-import com.google.common.primitives.UnsignedInteger;
-import com.google.common.primitives.UnsignedLong;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -96,14 +94,6 @@ public class MockJsonGenerator extends JsonGenerator {
 
   @Override
   public void writeNumber(BigInteger v) throws IOException {
-  }
-
-  @Override
-  public void writeNumber(UnsignedInteger v) throws IOException {
-  }
-
-  @Override
-  public void writeNumber(UnsignedLong v) throws IOException {
   }
 
   @Override

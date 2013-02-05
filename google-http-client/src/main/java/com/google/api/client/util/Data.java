@@ -14,9 +14,6 @@
 
 package com.google.api.client.util;
 
-import com.google.common.primitives.UnsignedInteger;
-import com.google.common.primitives.UnsignedLong;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
@@ -76,12 +73,6 @@ public class Data {
   /** The single instance of the magic null object for a {@link BigInteger}. */
   public static final BigInteger NULL_BIG_INTEGER = new BigInteger("0");
 
-  /** The single instance of the magic null object for a {@link UnsignedInteger}. */
-  public static final UnsignedInteger NULL_UNSIGNED_INTEGER = UnsignedInteger.asUnsigned(0);
-
-  /** The single instance of the magic null object for a {@link UnsignedLong}. */
-  public static final UnsignedLong NULL_UNSIGNED_LONG = UnsignedLong.asUnsigned(0);
-
   /** The single instance of the magic null object for a {@link BigDecimal}. */
   public static final BigDecimal NULL_BIG_DECIMAL = new BigDecimal("0");
 
@@ -103,8 +94,6 @@ public class Data {
     NULL_CACHE.put(Long.class, NULL_LONG);
     NULL_CACHE.put(Double.class, NULL_DOUBLE);
     NULL_CACHE.put(BigInteger.class, NULL_BIG_INTEGER);
-    NULL_CACHE.put(UnsignedInteger.class, NULL_UNSIGNED_INTEGER);
-    NULL_CACHE.put(UnsignedLong.class, NULL_UNSIGNED_LONG);
     NULL_CACHE.put(BigDecimal.class, NULL_BIG_DECIMAL);
     NULL_CACHE.put(DateTime.class, NULL_DATE_TIME);
   }
@@ -259,13 +248,12 @@ public class Data {
    * Final fields cannot be changed and therefore their value won't be copied.
    * </p>
    *
-   * @param src source object (non-primitive as defined by {@link Data#isPrimitive(Type)}
+   * @param src source object
    * @param dest destination object of identical type as source object, and any contained arrays
    *        must be the same length
    */
   public static void deepCopy(Object src, Object dest) {
     Class<?> srcClass = src.getClass();
-    Preconditions.checkArgument(!Data.isPrimitive(srcClass));
     Preconditions.checkArgument(srcClass == dest.getClass());
     if (srcClass.isArray()) {
       // clone array
@@ -335,6 +323,20 @@ public class Data {
    * Returns whether the given type is one of the supported primitive classes like number and
    * date/time, or is a wildcard of one.
    *
+   * <p>
+   * A primitive class is any class for whom {@link Class#isPrimitive()} is true, as well as any
+   * classes of type: {@link Character}, {@link String}, {@link Integer}, {@link Long},
+   * {@link Short}, {@link Byte}, {@link Float}, {@link Double}, {@link BigInteger},
+   * {@link BigDecimal}, {@link Boolean}, and {@link DateTime}.
+   * </p>
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.13, types
+   * {@code com.google.common.primitives.UnsignedInteger} and
+   * {@code com.google.common.primitives.UnsignedLong} were considered primitive, but starting in
+   * version 1.14 they are no longer be considered primitive.
+   * </p>
+   *
    * @param type type or {@code null} for {@code false} result
    * @return whether it is a primitive
    */
@@ -350,8 +352,7 @@ public class Data {
     return typeClass.isPrimitive() || typeClass == Character.class || typeClass == String.class
         || typeClass == Integer.class || typeClass == Long.class || typeClass == Short.class
         || typeClass == Byte.class || typeClass == Float.class || typeClass == Double.class
-        || typeClass == BigInteger.class || typeClass == UnsignedInteger.class
-        || typeClass == UnsignedLong.class || typeClass == BigDecimal.class
+        || typeClass == BigInteger.class || typeClass == BigDecimal.class
         || typeClass == DateTime.class || typeClass == Boolean.class;
   }
 
@@ -379,12 +380,20 @@ public class Data {
    * <li>{@code float} or {@link Float}: {@link Float#valueOf(String)}</li>
    * <li>{@code double} or {@link Double}: {@link Double#valueOf(String)}</li>
    * <li>{@link BigInteger}: {@link BigInteger#BigInteger(String) BigInteger(String)}</li>
-   * <li>{@link UnsignedInteger}: {@link UnsignedInteger#valueOf(String)}</li>
-   * <li>{@link UnsignedLong}: {@link UnsignedLong#valueOf(String)}</li>
    * <li>{@link BigDecimal}: {@link BigDecimal#BigDecimal(String) BigDecimal(String)}</li>
    * <li>{@link DateTime}: {@link DateTime#parseRfc3339(String)}</li>
    * </ul>
+   *
+   * <p>
    * Note that this may not be the right behavior for some use cases.
+   * </p>
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.13, types
+   * {@code com.google.common.primitives.UnsignedInteger} and {code
+   * com.google.common.primitives.UnsignedLong} were parsed, but starting in version 1.14 they are
+   * no longer be considered primitive and an exception will be thrown.
+   * </p>
    *
    * @param type primitive type or {@code null} to parse as a string
    * @param stringValue string value to parse or {@code null} for {@code null} result
@@ -431,12 +440,6 @@ public class Data {
       }
       if (primitiveClass == BigInteger.class) {
         return new BigInteger(stringValue);
-      }
-      if (primitiveClass == UnsignedInteger.class) {
-        return UnsignedInteger.valueOf(stringValue);
-      }
-      if (primitiveClass == UnsignedLong.class) {
-        return UnsignedLong.valueOf(stringValue);
       }
       if (primitiveClass == BigDecimal.class) {
         return new BigDecimal(stringValue);

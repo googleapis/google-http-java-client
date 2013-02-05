@@ -14,5 +14,65 @@
     <method>void addHeader(java.lang.String, java.lang.String)</method>
     <to>com.google.api.client.testing.http.MockLowLevelHttpResponse</to>
   </difference>
+  <difference>
+    <!-- 6001 (removed field): className, field) -->
+    <differenceType>6001</differenceType>
+    <className>com/google/api/client/util/Data</className>
+    <field>NULL_UNSIGNED_INTEGER</field>
+  </difference>
+  <difference>
+    <!-- 6001 (removed field): className, field) -->
+    <differenceType>6001</differenceType>
+    <className>com/google/api/client/util/Data</className>
+    <field>NULL_UNSIGNED_LONG</field>
+  </difference>
+  <difference>
+    <!-- 7002 (method removed): className, method -->
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/json/JsonGenerator</className>
+    <method>void writeNumber(com.google.common.primitives.UnsignedInteger)</method>
+  </difference>
+  <difference>
+    <!-- 7002 (method removed): className, method -->
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/json/JsonGenerator</className>
+    <method>void writeNumber(com.google.common.primitives.UnsignedLong)</method>
+  </difference>
+  <difference>
+    <!-- 7002 (method removed): className, method -->
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/json/JsonParser</className>
+    <method>com.google.common.primitives.UnsignedInteger getUnsignedIntegerValue()</method>
+  </difference>
+  <difference>
+    <!-- 7002 (method removed): className, method -->
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/json/JsonParser</className>
+    <method>com.google.common.primitives.UnsignedLong getUnsignedLongValue()</method>
+  </difference>
+  <difference>
+    <!-- 7002 (method removed): className, method -->
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/testing/http/json/MockJsonGenerator</className>
+    <method>void writeNumber(com.google.common.primitives.UnsignedInteger)</method>
+  </difference>
+  <difference>
+    <!-- 7002 (method removed): className, method -->
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/testing/http/json/MockJsonGenerator</className>
+    <method>void writeNumber(com.google.common.primitives.UnsignedLong)</method>
+  </difference>
+  <difference>
+    <!-- 7002 (method removed): className, method -->
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/testing/http/json/MockJsonParser</className>
+    <method>com.google.common.primitives.UnsignedInteger getUnsignedIntegerValue()</method>
+  </difference>
+  <difference>
+    <!-- 7002 (method removed): className, method -->
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/testing/http/json/MockJsonParser</className>
+    <method>com.google.common.primitives.UnsignedLong getUnsignedLongValue()</method>
+  </difference>
 </differences>
 

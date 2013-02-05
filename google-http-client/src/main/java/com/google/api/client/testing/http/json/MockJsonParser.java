@@ -17,8 +17,6 @@ package com.google.api.client.testing.http.json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
-import com.google.common.primitives.UnsignedInteger;
-import com.google.common.primitives.UnsignedLong;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -108,16 +106,6 @@ public class MockJsonParser extends JsonParser {
 
   @Override
   public BigInteger getBigIntegerValue() throws IOException {
-    return null;
-  }
-
-  @Override
-  public UnsignedInteger getUnsignedIntegerValue() throws IOException {
-    return null;
-  }
-
-  @Override
-  public UnsignedLong getUnsignedLongValue() throws IOException {
     return null;
   }
 

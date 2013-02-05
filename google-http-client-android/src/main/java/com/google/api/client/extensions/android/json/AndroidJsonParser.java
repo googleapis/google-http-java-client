@@ -18,8 +18,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Preconditions;
-import com.google.common.primitives.UnsignedInteger;
-import com.google.common.primitives.UnsignedLong;
 
 import android.annotation.TargetApi;
 import android.util.JsonReader;
@@ -105,18 +103,6 @@ class AndroidJsonParser extends JsonParser {
   public BigInteger getBigIntegerValue() {
     checkNumber();
     return new BigInteger(currentText);
-  }
-
-  @Override
-  public UnsignedInteger getUnsignedIntegerValue() {
-    checkNumber();
-    return UnsignedInteger.valueOf(currentText);
-  }
-
-  @Override
-  public UnsignedLong getUnsignedLongValue() {
-    checkNumber();
-    return UnsignedLong.valueOf(currentText);
   }
 
   @Override
