@@ -14,9 +14,11 @@
 
 package com.google.api.client.testing.json;
 
+import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
+import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonString;
 import com.google.api.client.json.JsonToken;
@@ -47,6 +49,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -1314,5 +1317,66 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     parser.nextToken();
     ExtendsGenericJson result = parser.parse(ExtendsGenericJson.class, null);
     assertEquals(EXTENDS_JSON, factory.toString(result));
+  }
+
+  public static class Simple {
+    @Key
+    String a;
+  }
+
+  static final String SIMPLE = "{\"a\":\"b\"}";
+  static final String SIMPLE_WRAPPED = "{\"d\":{\"a\":\"b\"}}";
+
+  public void testJsonObjectParser_reader() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonObjectParser parser = new JsonObjectParser(factory);
+    Simple simple = parser.parseAndClose(new StringReader(SIMPLE), Simple.class);
+    assertEquals("b", simple.a);
+  }
+
+  public void testJsonObjectParser_inputStream() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonObjectParser parser = new JsonObjectParser(factory);
+    Simple simple = parser.parseAndClose(
+        new ByteArrayInputStream(StringUtils.getBytesUtf8(SIMPLE)), Charsets.UTF_8, Simple.class);
+    assertEquals("b", simple.a);
+  }
+
+  public void testJsonObjectParser_readerWrapped() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonObjectParser parser =
+        new JsonObjectParser.Builder(factory).setWrapperKeys(Collections.singleton("d")).build();
+    Simple simple = parser.parseAndClose(new StringReader(SIMPLE_WRAPPED), Simple.class);
+    assertEquals("b", simple.a);
+  }
+
+  public void testJsonObjectParser_inputStreamWrapped() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonObjectParser parser =
+        new JsonObjectParser.Builder(factory).setWrapperKeys(Collections.singleton("d")).build();
+    Simple simple = parser.parseAndClose(
+        new ByteArrayInputStream(StringUtils.getBytesUtf8(SIMPLE_WRAPPED)), Charsets.UTF_8,
+        Simple.class);
+    assertEquals("b", simple.a);
+  }
+
+  public void testJsonHttpContent_simple() throws Exception {
+    JsonFactory factory = newFactory();
+    Simple simple = new Simple();
+    simple.a = "b";
+    JsonHttpContent content = new JsonHttpContent(factory, simple);
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    content.writeTo(out);
+    assertEquals(SIMPLE, out.toString("UTF-8"));
+  }
+
+  public void testJsonHttpContent_wrapped() throws Exception {
+    JsonFactory factory = newFactory();
+    Simple simple = new Simple();
+    simple.a = "b";
+    JsonHttpContent content = new JsonHttpContent(factory, simple).setWrapperKey("d");
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    content.writeTo(out);
+    assertEquals(SIMPLE_WRAPPED, out.toString("UTF-8"));
   }
 }

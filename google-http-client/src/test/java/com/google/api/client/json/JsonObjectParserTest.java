@@ -38,7 +38,7 @@ public class JsonObjectParserTest extends TestCase {
 
   public void testConstructor_null() {
     try {
-      new JsonObjectParser(null);
+      new JsonObjectParser((JsonFactory) null);
       fail("Did not throw NullPointerException");
     } catch (NullPointerException expected) {}
   }

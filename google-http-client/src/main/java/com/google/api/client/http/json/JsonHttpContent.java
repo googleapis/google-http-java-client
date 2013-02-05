@@ -32,7 +32,7 @@ import java.io.OutputStream;
  * </p>
  *
  * <pre>
- * <code>
+ *<code>
   static void setContent(HttpRequest request, Object data) {
     request.setContent(new JsonHttpContent(new JacksonFactory(), data));
   }
@@ -55,6 +55,9 @@ public class JsonHttpContent extends AbstractHttpContent {
   /** JSON factory. */
   private final JsonFactory jsonFactory;
 
+  /** Wrapper key for the JSON content or {@code null} for none. */
+  private String wrapperKey;
+
   /**
    * @param jsonFactory JSON factory to use
    * @param data JSON key name/value data
@@ -68,7 +71,14 @@ public class JsonHttpContent extends AbstractHttpContent {
 
   public void writeTo(OutputStream out) throws IOException {
     JsonGenerator generator = jsonFactory.createJsonGenerator(out, getCharset());
+    if (wrapperKey != null) {
+      generator.writeStartObject();
+      generator.writeFieldName(wrapperKey);
+    }
     generator.serialize(data);
+    if (wrapperKey != null) {
+      generator.writeEndObject();
+    }
     generator.flush();
   }
 
@@ -94,5 +104,29 @@ public class JsonHttpContent extends AbstractHttpContent {
    */
   public final JsonFactory getJsonFactory() {
     return jsonFactory;
+  }
+
+  /**
+   * Returns the wrapper key for the JSON content or {@code null} for none.
+   *
+   * @since 1.14
+   */
+  public final String getWrapperKey() {
+    return wrapperKey;
+  }
+
+  /**
+   * Sets the wrapper key for the JSON content or {@code null} for none.
+   *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
+   * @since 1.14
+   */
+  public JsonHttpContent setWrapperKey(String wrapperKey) {
+    this.wrapperKey = wrapperKey;
+    return this;
   }
 }

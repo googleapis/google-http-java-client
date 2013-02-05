@@ -14,7 +14,10 @@
 
 package com.google.api.client.util;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -42,6 +45,25 @@ public final class Lists {
    */
   public static <E> ArrayList<E> newArrayList(Iterable<? extends E> elements) {
     return com.google.common.collect.Lists.newArrayList(elements);
+  }
+
+  /**
+   * Creates an {@code ArrayList} instance backed by an array of the <i>exact</i> size specified;
+   * equivalent to {@link ArrayList#ArrayList(int)}.
+   *
+   * <p>
+   * <b>Note:</b> if you know the exact size your list will be, consider using a fixed-size list (
+   * {@link Arrays#asList(Object[])}) or an {@link ImmutableList} instead of a growable
+   * {@link ArrayList}.
+   *
+   * @param initialArraySize the exact size of the initial backing array for the returned array list
+   *        ({@code ArrayList} documentation calls this value the "capacity")
+   * @return a new, empty {@code ArrayList} which is guaranteed not to resize itself unless its size
+   *         reaches {@code initialArraySize + 1}
+   * @throws IllegalArgumentException if {@code initialArraySize} is negative
+   */
+  public static <E> ArrayList<E> newArrayListWithCapacity(int initialArraySize) {
+    return com.google.common.collect.Lists.newArrayListWithCapacity(initialArraySize);
   }
 
   private Lists() {
