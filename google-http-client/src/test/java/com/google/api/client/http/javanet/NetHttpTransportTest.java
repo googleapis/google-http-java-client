@@ -21,9 +21,9 @@ import com.google.api.client.util.StringUtils;
 
 import junit.framework.TestCase;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.UnknownHostException;
 
 /**
  * Tests {@link NetHttpTransport}.
@@ -74,7 +74,7 @@ public class NetHttpTransportTest extends TestCase {
       setContent(request, "text/html", "");
       try {
         request.execute().getContent().close();
-      } catch (UnknownHostException e) {
+      } catch (IOException e) {
         // expected when not connected to network
       }
       assertEquals(method, connection.getRequestMethod());
