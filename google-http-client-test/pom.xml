@@ -64,5 +64,10 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava-jdk5</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 </project>

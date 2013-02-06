@@ -23,7 +23,9 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -70,7 +72,7 @@ public class JsonObjectParser implements ObjectParser {
    */
   protected JsonObjectParser(Builder builder) {
     jsonFactory = builder.jsonFactory;
-    wrapperKeys = Sets.newHashSet(builder.wrapperKeys);
+    wrapperKeys = new HashSet<String>(builder.wrapperKeys);
   }
 
   @SuppressWarnings("unchecked")
@@ -147,7 +149,7 @@ public class JsonObjectParser implements ObjectParser {
     final JsonFactory jsonFactory;
 
     /** Wrapper keys for the JSON content or empty for none. */
-    Iterable<String> wrapperKeys = Sets.newHashSet();
+    Collection<String> wrapperKeys = Sets.newHashSet();
 
     /**
      * @param jsonFactory JSON factory
@@ -167,7 +169,7 @@ public class JsonObjectParser implements ObjectParser {
     }
 
     /** Returns the wrapper keys for the JSON content. */
-    public final Iterable<String> getWrapperKeys() {
+    public final Collection<String> getWrapperKeys() {
       return wrapperKeys;
     }
 
@@ -179,7 +181,7 @@ public class JsonObjectParser implements ObjectParser {
      * the return type, but nothing else.
      * </p>
      */
-    public Builder setWrapperKeys(Iterable<String> wrapperKeys) {
+    public Builder setWrapperKeys(Collection<String> wrapperKeys) {
       this.wrapperKeys = wrapperKeys;
       return this;
     }

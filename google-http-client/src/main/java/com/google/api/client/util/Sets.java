@@ -22,7 +22,7 @@ import java.util.TreeSet;
  * Static utility methods pertaining to {@link Set} instances.
  *
  * <p>
- * NOTE: proxy for the Guava implementation of {@link com.google.common.collect.Sets}.
+ * NOTE: this is a copy of a subset of Guava's {@link com.google.common.collect.Sets}.
  * </p>
  *
  * @since 1.14
@@ -32,18 +32,7 @@ public final class Sets {
 
   /** Returns a new mutable, empty {@code HashSet} instance. */
   public static <E> HashSet<E> newHashSet() {
-    return com.google.common.collect.Sets.newHashSet();
-  }
-
-  /**
-   * Returns a new mutable {@code HashSet} instance containing the given elements in unspecified
-   * order.
-   *
-   * @param elements the elements that the set should contain
-   * @return a new {@code HashSet} containing those elements (minus duplicates)
-   */
-  public static <E> HashSet<E> newHashSet(Iterable<? extends E> elements) {
-    return com.google.common.collect.Sets.newHashSet(elements);
+    return new HashSet<E>();
   }
 
   /**
@@ -51,7 +40,7 @@ public final class Sets {
    * its elements.
    */
   public static <E extends Comparable<?>> TreeSet<E> newTreeSet() {
-    return com.google.common.collect.Sets.newTreeSet();
+    return new TreeSet<E>();
   }
 
   private Sets() {

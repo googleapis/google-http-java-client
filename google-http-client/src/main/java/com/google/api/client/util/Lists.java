@@ -14,17 +14,14 @@
 
 package com.google.api.client.util;
 
-import com.google.common.collect.ImmutableList;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * Static utility methods pertaining to {@link List} instances.
  *
  * <p>
- * NOTE: proxy for the Guava implementation of {@link com.google.common.collect.Lists}.
+ * NOTE: this is a copy of a subset of Guava's {@link com.google.common.collect.Lists}.
  * </p>
  *
  * @since 1.14
@@ -34,27 +31,12 @@ public final class Lists {
 
   /** Returns a new mutable, empty {@code ArrayList} instance. */
   public static <E> ArrayList<E> newArrayList() {
-    return com.google.common.collect.Lists.newArrayList();
-  }
-
-  /**
-   * Returns a new mutable {@code ArrayList} instance containing the given elements.
-   *
-   * @param elements the elements that the list should contain, in order
-   * @return a new {@code ArrayList} containing those elements
-   */
-  public static <E> ArrayList<E> newArrayList(Iterable<? extends E> elements) {
-    return com.google.common.collect.Lists.newArrayList(elements);
+    return new ArrayList<E>();
   }
 
   /**
    * Creates an {@code ArrayList} instance backed by an array of the <i>exact</i> size specified;
    * equivalent to {@link ArrayList#ArrayList(int)}.
-   *
-   * <p>
-   * <b>Note:</b> if you know the exact size your list will be, consider using a fixed-size list (
-   * {@link Arrays#asList(Object[])}) or an {@link ImmutableList} instead of a growable
-   * {@link ArrayList}.
    *
    * @param initialArraySize the exact size of the initial backing array for the returned array list
    *        ({@code ArrayList} documentation calls this value the "capacity")
@@ -63,7 +45,7 @@ public final class Lists {
    * @throws IllegalArgumentException if {@code initialArraySize} is negative
    */
   public static <E> ArrayList<E> newArrayListWithCapacity(int initialArraySize) {
-    return com.google.common.collect.Lists.newArrayListWithCapacity(initialArraySize);
+    return new ArrayList<E>(initialArraySize);
   }
 
   private Lists() {

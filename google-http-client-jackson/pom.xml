@@ -75,5 +75,10 @@
       <groupId>org.codehaus.jackson</groupId>
       <artifactId>jackson-core-asl</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava-jdk5</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

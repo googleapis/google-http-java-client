@@ -23,7 +23,7 @@ import java.util.TreeMap;
  * Static utility methods pertaining to {@link Map} instances.
  *
  * <p>
- * NOTE: proxy for the Guava implementation of {@link com.google.common.collect.Maps}.
+ * NOTE: this is a copy of a subset of Guava's {@link com.google.common.collect.Maps}.
  * </p>
  *
  * @since 1.14
@@ -33,21 +33,20 @@ public final class Maps {
 
   /** Returns a new mutable, empty {@code HashMap} instance. */
   public static <K, V> HashMap<K, V> newHashMap() {
-    return com.google.common.collect.Maps.newHashMap();
+    return new HashMap<K, V>();
   }
 
   /** Returns a new mutable, empty, insertion-ordered {@code LinkedHashMap} instance. */
   public static <K, V> LinkedHashMap<K, V> newLinkedHashMap() {
-    return com.google.common.collect.Maps.newLinkedHashMap();
+    return new LinkedHashMap<K, V>();
   }
 
   /**
    * Returns a new mutable, empty {@code TreeMap} instance using the natural ordering of its
    * elements.
    */
-  @SuppressWarnings("rawtypes")
-  public static <K extends Comparable, V> TreeMap<K, V> newTreeMap() {
-    return com.google.common.collect.Maps.newTreeMap();
+  public static <K extends Comparable<?>, V> TreeMap<K, V> newTreeMap() {
+    return new TreeMap<K, V>();
   }
 
   private Maps() {
