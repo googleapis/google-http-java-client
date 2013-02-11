@@ -152,7 +152,7 @@ public class HttpResponseExceptionTest extends TestCase {
   public void testComputeMessage() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
       @Override
-      public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
           public LowLevelHttpResponse execute() throws IOException {
