@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Google Inc.
+ * Copyright (c) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,24 +12,18 @@
  * the License.
  */
 
-package com.google.api.client.testing.http;
-
-import com.google.api.client.http.GenericUrl;
-
 /**
- * Utilities and constants related to testing the HTTP library.
+ * <a href="http://tools.ietf.org/html/draft-jones-json-web-token-10">JSON Web Token (JWT)</a> and
+ * <a href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-08">JSON Web Signature
+ * (JWS)</a>.
  *
+ * <p>
+ * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
+ * possibly entirely removed in a future version of the library.</b>
+ * </p>
+ *
+ * @since 1.14 (since 1.7 as com.google.api.client.auth.jsontoken)
  * @author Yaniv Inbar
- * @since 1.6
  */
-public final class HttpTesting {
 
-  /** A simple string URL for testing of value {@code "http://google.com/"}. */
-  public static final String SIMPLE_URL = "http://google.com/";
-
-  /** A simple generic URL for testing of value {@link #SIMPLE_URL}. */
-  public static final GenericUrl SIMPLE_GENERIC_URL = new GenericUrl(SIMPLE_URL);
-
-  private HttpTesting() {
-  }
-}
+package com.google.api.client.json.webtoken;

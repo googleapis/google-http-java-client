@@ -74,4 +74,10 @@
     <Class name="com.google.api.client.http.MultipartRelatedContent"/>
     <!-- Deprecated -->
   </And>
+  <And>
+    <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/> 
+    <!-- May expose internal representation by returning reference to mutable object -->
+    <!-- May expose internal representation by incorporating reference to mutable object -->
+    <Class name="com.google.api.client.json.webtoken.JsonWebSignature"/>
+  </And>
 </FindBugsFilter>
