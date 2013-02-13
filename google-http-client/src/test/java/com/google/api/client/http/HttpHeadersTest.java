@@ -234,6 +234,16 @@ public class HttpHeadersTest extends TestCase {
     String slug;
   }
 
+  public void testParseAge() throws Exception {
+    MockLowLevelHttpResponse httpResponse = new MockLowLevelHttpResponse()
+        .setHeaderNames(Arrays.asList("Age"))
+        .setHeaderValues(Arrays.asList("3456"));
+
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.fromHttpResponse(httpResponse, null);
+    assertEquals(3456L, httpHeaders.getAge().longValue());
+  }
+
   public void testFromHttpResponse_normalFlow() throws Exception {
     MockLowLevelHttpResponse httpResponse = new MockLowLevelHttpResponse().setHeaderNames(
         Arrays.asList("Content-Type", "Slug"))
