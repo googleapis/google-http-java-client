@@ -168,6 +168,10 @@ public class HttpHeaders extends GenericData {
   @Key("WWW-Authenticate")
   private List<String> authenticate;
 
+  /** {@code "Age"} header. */
+  @Key("Age")
+  private List<Long> age;
+
   @Override
   public HttpHeaders clone() {
     return (HttpHeaders) super.clone();
@@ -801,6 +805,30 @@ public class HttpHeaders extends GenericData {
    */
   public HttpHeaders setAuthenticate(String authenticate) {
     this.authenticate = getAsList(authenticate);
+    return this;
+  }
+
+  /**
+   * Returns the first {@code "Age"} header or {@code null} for none.
+   *
+   * @since 1.14
+   */
+  public final Long getAge() {
+    return getFirstHeaderValue(age);
+  }
+
+  /**
+   * Sets the {@code "Age"} header or {@code null} for none.
+   *
+   * <p>
+   * Overriding is only supported for the purpose of calling the super implementation and changing
+   * the return type, but nothing else.
+   * </p>
+   *
+   * @since 1.14
+   */
+  public HttpHeaders setAge(Long age) {
+    this.age = getAsList(age);
     return this;
   }
 
