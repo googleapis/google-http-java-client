@@ -67,7 +67,7 @@ public abstract class LowLevelHttpRequest {
    * <p>Default implementation does nothing.</p>
    *
    * @throws IOException I/O exception
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #setContentLength(long)},
+   * @deprecated (scheduled to be removed in the future) Use {@link #setContentLength(long)},
    *             {@link #setContentEncoding(String)}, {@link #setContentType(String)}, and
    *             {@link #setStreamingContent(StreamingContent)} instead.
    */

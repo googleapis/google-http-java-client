@@ -37,7 +37,7 @@ public interface HttpContent extends StreamingContent {
   /**
    * Returns the content encoding (for example {@code "gzip"}) or {@code null} for none.
    *
-   * @deprecated (scheduled to be removed in 1.15) Use {@link HttpEncoding} instead
+   * @deprecated (scheduled to be removed in the future) Use {@link HttpEncoding} instead
    */
   @Deprecated
   String getEncoding();

@@ -38,16 +38,14 @@ import java.io.InputStream;
  * </p>
  *
  * <pre>
- * <code>
   static void setParser(HttpRequest request) {
     request.addParser(new JsonHttpParser(new JacksonFactory()));
   }
- * </code>
  * </pre>
  *
  * @since 1.0
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.14) Use {@link JsonObjectParser} instead.
+ * @deprecated (scheduled to be removed in the future) Use {@link JsonObjectParser} instead.
  */
 @Deprecated
 public class JsonHttpParser implements HttpParser {

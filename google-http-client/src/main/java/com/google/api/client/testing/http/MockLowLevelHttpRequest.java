@@ -161,7 +161,7 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
    * Returns the HTTP content or {@code null} for none.
    *
    * @since 1.5
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #getContentLength()},
+   * @deprecated (scheduled to be removed in the future) Use {@link #getContentLength()},
    *             {@link #getContentEncoding()}, {@link #getContentType()}, or
    *             {@link #getStreamingContent()} instead.
    */

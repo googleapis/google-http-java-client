@@ -95,7 +95,7 @@ public class MockHttpContent implements HttpContent {
    * Sets the HTTP content encoding or {@code null} for none.
    *
    * @since 1.5
-   * @deprecated (scheduled to be removed in 1.15) Use {@link HttpEncoding} instead.
+   * @deprecated (scheduled to be removed in the future) Use {@link HttpEncoding} instead.
    */
   @Deprecated
   public MockHttpContent setEncoding(String encoding) {

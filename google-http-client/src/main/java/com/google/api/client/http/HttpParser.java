@@ -27,7 +27,7 @@ import java.io.IOException;
  *
  * @since 1.0
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in 1.14) Use {@link ObjectParser} instead.
+ * @deprecated (scheduled to be removed in the future) Use {@link ObjectParser} instead.
  */
 @Deprecated
 public interface HttpParser {

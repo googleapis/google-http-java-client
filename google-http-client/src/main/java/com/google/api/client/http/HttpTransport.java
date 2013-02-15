@@ -134,7 +134,7 @@ public abstract class HttpTransport {
    * </p>
    *
    * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #supportsMethod(String)} instead
+   * @deprecated (scheduled to be removed in the future) Use {@link #supportsMethod(String)} instead
    */
   @Deprecated
   public boolean supportsHead() throws IOException {
@@ -154,7 +154,7 @@ public abstract class HttpTransport {
    * </p>
    *
    * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #supportsMethod(String)} instead
+   * @deprecated (scheduled to be removed in the future) Use {@link #supportsMethod(String)} instead
    */
   @Deprecated
   public boolean supportsPatch() throws IOException {
@@ -206,7 +206,8 @@ public abstract class HttpTransport {
    *
    * @param url URL
    * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #buildRequest(String, String)} instead
+   * @deprecated (scheduled to be removed in the future) Use {@link #buildRequest(String, String)}
+   *             instead
    */
   @Deprecated
   protected LowLevelHttpRequest buildDeleteRequest(String url) throws IOException {
@@ -222,7 +223,8 @@ public abstract class HttpTransport {
    *
    * @param url URL
    * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #buildRequest(String, String)} instead
+   * @deprecated (scheduled to be removed in the future) Use {@link #buildRequest(String, String)}
+   *             instead
    */
   @Deprecated
   protected LowLevelHttpRequest buildGetRequest(String url) throws IOException {
@@ -247,7 +249,8 @@ public abstract class HttpTransport {
    *
    * @param url URL
    * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #buildRequest(String, String)} instead
+   * @deprecated (scheduled to be removed in the future) Use {@link #buildRequest(String, String)}
+   *             instead
    */
   @Deprecated
   protected LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
@@ -272,7 +275,8 @@ public abstract class HttpTransport {
    *
    * @param url URL
    * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #buildRequest(String, String)} instead
+   * @deprecated (scheduled to be removed in the future) Use {@link #buildRequest(String, String)}
+   *             instead
    */
   @Deprecated
   protected LowLevelHttpRequest buildPatchRequest(String url) throws IOException {
@@ -288,7 +292,8 @@ public abstract class HttpTransport {
    *
    * @param url URL
    * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #buildRequest(String, String)} instead
+   * @deprecated (scheduled to be removed in the future) Use {@link #buildRequest(String, String)}
+   *             instead
    */
   @Deprecated
   protected LowLevelHttpRequest buildPostRequest(String url) throws IOException {
@@ -304,7 +309,8 @@ public abstract class HttpTransport {
    *
    * @param url URL
    * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #buildRequest(String, String)} instead
+   * @deprecated (scheduled to be removed in the future) Use {@link #buildRequest(String, String)}
+   *             instead
    */
   @Deprecated
   protected LowLevelHttpRequest buildPutRequest(String url) throws IOException {

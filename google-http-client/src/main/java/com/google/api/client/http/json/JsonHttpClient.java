@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  *
  * @since 1.6
  * @author Ravi Mistry
- * @deprecated (scheduled to be removed in 1.14) Use {@link HttpTransport} instead.
+ * @deprecated (scheduled to be removed in the future) Use {@link HttpTransport} instead.
  */
 @Deprecated
 public class JsonHttpClient {
@@ -529,7 +529,7 @@ public class JsonHttpClient {
    * </p>
    *
    * @since 1.6
-   * @deprecated (scheduled to be removed in 1.14) Use {@link HttpTransport} instead.
+   * @deprecated (scheduled to be removed in the future) Use {@link HttpTransport} instead.
    */
   @Deprecated
   public static class Builder {

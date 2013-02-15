@@ -84,7 +84,7 @@ public final class HttpRequestFactory {
    * @param url HTTP request URL or {@code null} for none
    * @param content HTTP request content or {@code null} for none
    * @return new HTTP request
-   * @deprecated (scheduled to be removed in 1.14) Use
+   * @deprecated (scheduled to be removed in the future) Use
    *             {@link #buildRequest(String, GenericUrl, HttpContent)} instead
    */
   @Deprecated

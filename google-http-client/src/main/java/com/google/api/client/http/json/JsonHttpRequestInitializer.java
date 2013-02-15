@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -41,7 +41,7 @@ import java.io.IOException;
  *
  * @since 1.6
  * @author Ravi Mistry
- * @deprecated (scheduled to be removed in 1.14) Use {@link HttpRequestInitializer} instead.
+ * @deprecated (scheduled to be removed in the future) Use {@link HttpRequestInitializer} instead.
  */
 @Deprecated
 public interface JsonHttpRequestInitializer {
