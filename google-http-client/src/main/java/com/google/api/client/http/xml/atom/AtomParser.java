@@ -41,8 +41,8 @@ import com.google.api.client.xml.XmlObjectParser;
  *
  * @since 1.4
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in the future) Content-Type is no longer stored inside of
- *             the Parser. Use an {@link XmlObjectParser} instead.
+ * @deprecated (scheduled to be removed in 1.14) Content-Type is no longer stored inside of the
+ *             Parser. Use an {@link XmlObjectParser} instead.
  */
 @Deprecated
 public final class AtomParser extends XmlHttpParser {

@@ -63,7 +63,7 @@ public class MockHttpTransport extends HttpTransport {
    *        supported
    *
    * @since 1.12
-   * @deprecated (scheduled to be removed in the future) Use {@link #MockHttpTransport(Builder)}
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #MockHttpTransport(Builder)}
    */
   @Deprecated
   protected MockHttpTransport(Set<String> supportedMethods) {

@@ -26,7 +26,7 @@ import com.google.api.client.util.Charsets;
 public class Json {
   /**
    * {@code "application/json"} content type.
-   * @deprecated (scheduled to be removed in the future) Use {@link #MEDIA_TYPE} instead.
+   * @deprecated (scheduled to be removed in 1.14) Use {@link #MEDIA_TYPE} instead.
    */
   @Deprecated
   public static final String CONTENT_TYPE = "application/json";

@@ -87,7 +87,7 @@ public class HttpResponseException extends IOException {
    * @param response HTTP response
    * @param message detail message to use or {@code null} for none
    * @since 1.6
-   * @deprecated (scheduled to be removed in the future) Use {@link #HttpResponseException(Builder)}
+   * @deprecated (scheduled to be removed in 1.15) Use {@link #HttpResponseException(Builder)}
    *             instead
    */
   @Deprecated

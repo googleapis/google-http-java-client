@@ -101,7 +101,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    * should override by calling super.
    *
    * @since 1.5
-   * @deprecated (scheduled to be removed in the future) Use {@link HttpEncoding} instead.
+   * @deprecated (scheduled to be removed in 1.15) Use {@link HttpEncoding} instead.
    */
   @Deprecated
   public AbstractInputStreamContent setEncoding(String encoding) {
@@ -156,7 +156,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    *
    * @param inputStream source input stream
    * @param outputStream destination output stream
-   * @deprecated (scheduled to be removed in the future) Use
+   * @deprecated (scheduled to be removed in 1.15) Use
    *             {@link IOUtils#copy(InputStream, OutputStream)} instead
    */
   @Deprecated
@@ -188,7 +188,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    * @param outputStream destination output stream
    * @param closeInputStream whether the input stream should be closed at the end of this method
    * @since 1.7
-   * @deprecated (scheduled to be removed in the future) Use
+   * @deprecated (scheduled to be removed in 1.15) Use
    *             {@link IOUtils#copy(InputStream, OutputStream, boolean)} instead
    */
   @Deprecated

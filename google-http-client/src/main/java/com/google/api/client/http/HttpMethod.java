@@ -19,9 +19,9 @@ package com.google.api.client.http;
  *
  * @since 1.3
  * @author Yaniv Inbar
- * @deprecated (scheduled to be removed in the future) Use {@link HttpMethods} instead.
- *             The purpose of this deprecation is to allow any arbitrary HTTP method to be used,
- *             rather than restrict it to a small set of HTTP methods.
+ * @deprecated (scheduled to be removed in 1.14) Use {@link HttpMethods} instead. The purpose of
+ *             this deprecation is to allow any arbitrary HTTP method to be used, rather than
+ *             restrict it to a small set of HTTP methods.
  */
 @Deprecated
 public enum HttpMethod {
