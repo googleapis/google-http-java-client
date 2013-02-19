@@ -14,7 +14,6 @@
 
 package com.google.api.client.util;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
@@ -24,13 +23,12 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 
 /**
  * Utilities related to Java security.
@@ -39,9 +37,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
  * @author Yaniv Inbar
  */
 public final class SecurityUtils {
-
-  private static final String BEGIN = "-----BEGIN PRIVATE KEY-----";
-  private static final String END = "-----END PRIVATE KEY-----";
 
   /** Returns the default key store using {@link KeyStore#getDefaultType()}. */
   public static KeyStore getDefaultKeyStore() throws KeyStoreException {
@@ -116,104 +111,9 @@ public final class SecurityUtils {
     return getPrivateKey(keyStore, alias, keyPass);
   }
 
-  /**
-   * Reads a private key from a {@code PEM} formatted stream.
-   *
-   * <p>
-   * This supports any PEM stream if and only if it contains a DER and Base64 encoded key, and the
-   * contents are enclosed by the following:
-   * </p>
-   *
-   * <pre>
-   *-----BEGIN PRIVATE KEY-----
-   *-----END PRIVATE KEY-----
-   *</pre>
-   *
-   * <p>
-   * The PEM stream may contain additional content outside of the BEGIN and END tags, but it will be
-   * ignored. This method does not support additional content such as headers inside the BEGIN and
-   * END tags. If the file contains multiple BEGIN and END tags, only the content inside the first
-   * pair will be read.
-   * </p>
-   *
-   * <p>
-   * Example usage:
-   * </p>
-   *
-   * <pre>
-    byte[] encodedKey =
-        SecurityUtils.readPrivateKeyFromPem(new FileInputStream("secret.pem"), Charset
-            .defaultCharset().name());
-   * </pre>
-   *
-   * @param pemStream PEM input stream
-   * @param charsetName charset for reading PEM input stream
-   */
-  public static byte[] readPrivateKeyFromPem(InputStream pemStream, String charsetName)
-      throws IOException, GeneralSecurityException {
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    IOUtils.copy(pemStream, out);
-    String str = out.toString(charsetName);
-    int beginIndex = str.indexOf(BEGIN);
-    int endIndex = str.indexOf(END);
-    int startKeyIndex = beginIndex + BEGIN.length();
-    if (beginIndex == -1 || startKeyIndex >= endIndex) {
-      throw new GeneralSecurityException(
-          "Missing required BEGIN PRIVATE KEY or END PRIVATE KEY tags.");
-    }
-    String privKey = str.substring(startKeyIndex, endIndex);
-    return Base64.decodeBase64(privKey);
-  }
-
   /** Returns the RSA key factory. */
   public static KeyFactory getRsaKeyFactory() throws NoSuchAlgorithmException {
     return KeyFactory.getInstance("RSA");
-  }
-
-  /**
-   * Generates a {@code PKCS8} encoded private key.
-   *
-   *
-   * <p>
-   * Example usage:
-   * </p>
-   *
-   * <pre>
-    PrivateKey privateKey = SecurityUtils.generatePkcs8PrivateKey(
-        SecurityUtils.getRsaKeyFactory(), encodedKey);
-   * </pre>
-   *
-   * @param keyFactory key factory
-   * @param encodedKeyBytes encoded key bytes
-   * @return generated private key
-   */
-  public static PrivateKey generatePkcs8PrivateKey(KeyFactory keyFactory, byte[] encodedKeyBytes)
-      throws InvalidKeySpecException {
-    return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(encodedKeyBytes));
-  }
-
-  /**
-   * Generates a {@code PKCS8} encoded private key loaded from a {@code PEM} formatted stream.
-   *
-   * <p>
-   * Example usage:
-   * </p>
-   *
-   * <pre>
-    PrivateKey privateKey = SecurityUtils.loadPkcs8PrivateKeyFromPem(
-        SecurityUtils.getRsaKeyFactory(), new FileInputStream("secret.pem"),
-        Charset.defaultCharset().name());
-   * </pre>
-   *
-   * @param keyFactory key factory
-   * @param pemStream PEM input stream
-   * @param charsetName charset for reading PEM input stream
-   * @return generated private key
-   */
-  public static PrivateKey loadPkcs8PrivateKeyFromPem(
-      KeyFactory keyFactory, InputStream pemStream, String charsetName)
-      throws GeneralSecurityException, IOException {
-    return generatePkcs8PrivateKey(keyFactory, readPrivateKeyFromPem(pemStream, charsetName));
   }
 
   /** Returns the SHA-1 with RSA signature algorithm. */
@@ -240,6 +140,23 @@ public final class SecurityUtils {
     signatureAlgorithm.initSign(privateKey);
     signatureAlgorithm.update(contentBytes);
     return signatureAlgorithm.sign();
+  }
+
+  /**
+   * Verifies the signature of signed content based on a public key.
+   *
+   * @param signatureAlgorithm signature algorithm
+   * @param publicKey public key
+   * @param signatureBytes signature bytes
+   * @param contentBytes content bytes
+   * @return whether the signature was verified
+   */
+  public static boolean verify(
+      Signature signatureAlgorithm, PublicKey publicKey, byte[] signatureBytes, byte[] contentBytes)
+      throws InvalidKeyException, SignatureException {
+    signatureAlgorithm.initVerify(publicKey);
+    signatureAlgorithm.update(contentBytes);
+    return signatureAlgorithm.verify(signatureBytes);
   }
 
   /** Returns the X.509 certificate factory. */

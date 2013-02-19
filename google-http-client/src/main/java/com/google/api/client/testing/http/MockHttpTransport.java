@@ -75,8 +75,16 @@ public class MockHttpTransport extends HttpTransport {
     return supportedMethods == null || supportedMethods.contains(method);
   }
 
+  /**
+   * {@inheritDoc}
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.13 this method was protected, but starting with version
+   * 1.14 this method is public.
+   * </p>
+   */
   @Override
-  protected LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+  public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
     Preconditions.checkArgument(supportsMethod(method), "HTTP method %s not supported", method);
     return new MockLowLevelHttpRequest(url);
   }

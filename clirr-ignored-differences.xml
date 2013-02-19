@@ -2,77 +2,69 @@
 <!-- see http://mojo.codehaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
 
 <differences>
+  <!-- 6001 (removed field): className, field) -->
   <difference>
-    <!-- 8001 (Class removed): className -->
-    <differenceType>8001</differenceType>
-    <className>com/google/api/client/repackaged/**</className>
-  </difference>
-  <difference>
-    <!-- 7006 (Method Return Type changed): className, method, to (to is just the return type) -->
-    <differenceType>7006</differenceType>
-    <className>com/google/api/client/testing/http/MockLowLevelHttpResponse</className>
-    <method>void addHeader(java.lang.String, java.lang.String)</method>
-    <to>com.google.api.client.testing.http.MockLowLevelHttpResponse</to>
-  </difference>
-  <difference>
-    <!-- 6001 (removed field): className, field) -->
     <differenceType>6001</differenceType>
     <className>com/google/api/client/util/Data</className>
     <field>NULL_UNSIGNED_INTEGER</field>
   </difference>
   <difference>
-    <!-- 6001 (removed field): className, field) -->
     <differenceType>6001</differenceType>
     <className>com/google/api/client/util/Data</className>
     <field>NULL_UNSIGNED_LONG</field>
   </difference>
+  <!-- 7002 (method removed): className, method -->
   <difference>
-    <!-- 7002 (method removed): className, method -->
     <differenceType>7002</differenceType>
     <className>com/google/api/client/json/JsonGenerator</className>
     <method>void writeNumber(com.google.common.primitives.UnsignedInteger)</method>
   </difference>
   <difference>
-    <!-- 7002 (method removed): className, method -->
     <differenceType>7002</differenceType>
     <className>com/google/api/client/json/JsonGenerator</className>
     <method>void writeNumber(com.google.common.primitives.UnsignedLong)</method>
   </difference>
   <difference>
-    <!-- 7002 (method removed): className, method -->
     <differenceType>7002</differenceType>
     <className>com/google/api/client/json/JsonParser</className>
     <method>com.google.common.primitives.UnsignedInteger getUnsignedIntegerValue()</method>
   </difference>
   <difference>
-    <!-- 7002 (method removed): className, method -->
     <differenceType>7002</differenceType>
     <className>com/google/api/client/json/JsonParser</className>
     <method>com.google.common.primitives.UnsignedLong getUnsignedLongValue()</method>
   </difference>
   <difference>
-    <!-- 7002 (method removed): className, method -->
     <differenceType>7002</differenceType>
     <className>com/google/api/client/testing/http/json/MockJsonGenerator</className>
     <method>void writeNumber(com.google.common.primitives.UnsignedInteger)</method>
   </difference>
   <difference>
-    <!-- 7002 (method removed): className, method -->
     <differenceType>7002</differenceType>
     <className>com/google/api/client/testing/http/json/MockJsonGenerator</className>
     <method>void writeNumber(com.google.common.primitives.UnsignedLong)</method>
   </difference>
   <difference>
-    <!-- 7002 (method removed): className, method -->
     <differenceType>7002</differenceType>
     <className>com/google/api/client/testing/http/json/MockJsonParser</className>
     <method>com.google.common.primitives.UnsignedInteger getUnsignedIntegerValue()</method>
   </difference>
   <difference>
-    <!-- 7002 (method removed): className, method -->
     <differenceType>7002</differenceType>
     <className>com/google/api/client/testing/http/json/MockJsonParser</className>
     <method>com.google.common.primitives.UnsignedLong getUnsignedLongValue()</method>
+  </difference>
+  <!-- 7006 (Method Return Type changed): className, method, to (to is just the return type) -->
+  <difference>
+    <differenceType>7006</differenceType>
+    <className>com/google/api/client/testing/http/MockLowLevelHttpResponse</className>
+    <method>void addHeader(java.lang.String, java.lang.String)</method>
+    <to>com.google.api.client.testing.http.MockLowLevelHttpResponse</to>
+  </difference>
+  <!-- 8001 (Class removed): className -->
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/api/client/repackaged/**</className>
   </difference>
 </differences>
 

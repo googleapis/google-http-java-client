@@ -15,12 +15,15 @@
 package com.google.api.client.json.webtoken;
 
 import com.google.api.client.json.GenericJson;
-import com.google.api.client.util.Clock;
 import com.google.api.client.util.Key;
+import com.google.api.client.util.Objects;
 import com.google.api.client.util.Preconditions;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
- * <a href="http://tools.ietf.org/html/draft-jones-json-web-token-10">JSON Web Token (JWT)</a>.
+ * <a href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06">JSON Web Token (JWT)</a>.
  *
  * <p>
  * Implementation is not thread-safe.
@@ -48,28 +51,32 @@ public class JsonWebToken {
 
   /**
    * Header as specified in <a
-   * href="http://tools.ietf.org/html/draft-jones-json-web-token-10#section-5">JWT Header</a>.
+   * href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06#section-5">JWT Header</a>.
    */
   public static class Header extends GenericJson {
 
-    /**
-     * Type header parameter used to declare structural information about the JWT or {@code null}
-     * for none.
-     */
+    /** Type header parameter used to declare the type of this object or {@code null} for none. */
     @Key("typ")
     private String type;
 
     /**
-     * Returns the type header parameter used to declare structural information about the JWT or
+     * Content type header parameter used to declare structural information about the JWT or
      * {@code null} for none.
+     */
+    @Key("cty")
+    private String contentType;
+
+    /**
+     * Returns the type header parameter used to declare the type of this object or {@code null} for
+     * none.
      */
     public final String getType() {
       return type;
     }
 
     /**
-     * Sets the type header parameter used to declare structural information about the JWT or
-     * {@code null} for none.
+     * Sets the type header parameter used to declare the type of this object or {@code null} for
+     * none.
      *
      * <p>
      * Overriding is only supported for the purpose of calling the super implementation and changing
@@ -78,6 +85,28 @@ public class JsonWebToken {
      */
     public Header setType(String type) {
       this.type = type;
+      return this;
+    }
+
+    /**
+     * Returns the content type header parameter used to declare structural information about the
+     * JWT or {@code null} for none.
+     */
+    public final String getContentType() {
+      return contentType;
+    }
+
+    /**
+     * Sets the content type header parameter used to declare structural information about the JWT
+     * or {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     */
+    public Header setContentType(String contentType) {
+      this.contentType = contentType;
       return this;
     }
 
@@ -94,13 +123,10 @@ public class JsonWebToken {
 
   /**
    * Payload as specified in <a
-   * href="http://tools.ietf.org/html/draft-jones-json-web-token-10#section-4.1">Reserved Claim
+   * href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06#section-4.1">Reserved Claim
    * Names</a>.
    */
   public static class Payload extends GenericJson {
-
-    /** Clock used for expiration checks. */
-    private final Clock clock;
 
     /**
      * Expiration time claim that identifies the expiration time (in seconds) on or after which the
@@ -123,24 +149,16 @@ public class JsonWebToken {
     @Key("iat")
     private Long issuedAtTimeSeconds;
 
-    /**
-     * Issuer claim that identifies the principal that issued the JWT or {@code null} for none.
-     */
+    /** Issuer claim that identifies the principal that issued the JWT or {@code null} for none. */
     @Key("iss")
     private String issuer;
 
     /**
-     * Audience claim that identifies the audience that the JWT is intended for or {@code null} for
-     * none.
+     * Audience claim that identifies the audience that the JWT is intended for (should either be a
+     * {@code String} or a {@code List<String>}) or {@code null} for none.
      */
     @Key("aud")
-    private String audience;
-
-    /**
-     * Principal claim that identifies the subject of the JWT or {@code null} for none.
-     */
-    @Key("prn")
-    private String principal;
+    private Object audience;
 
     /**
      * JWT ID claim that provides a unique identifier for the JWT or {@code null} for none.
@@ -155,16 +173,12 @@ public class JsonWebToken {
     @Key("typ")
     private String type;
 
-    public Payload() {
-      this(Clock.SYSTEM);
-    }
-
     /**
-     * @param clock clock to use for expiration checks
+     * Subject claim identifying the principal that is the subject of the JWT or {@code null} for
+     * none.
      */
-    public Payload(Clock clock) {
-      this.clock = Preconditions.checkNotNull(clock);
-    }
+    @Key("sub")
+    private String subject;
 
     /**
      * Returns the expiration time (in seconds) claim that identifies the expiration time on or
@@ -255,44 +269,39 @@ public class JsonWebToken {
     }
 
     /**
-     * Returns the audience claim that identifies the audience that the JWT is intended for or
-     * {@code null} for none.
+     * Returns the audience claim that identifies the audience that the JWT is intended for (should
+     * either be a {@code String} or a {@code List<String>}) or {@code null} for none.
      */
-    public final String getAudience() {
+    public final Object getAudience() {
       return audience;
     }
 
     /**
-     * Sets the audience claim that identifies the audience that the JWT is intended for or
-     * {@code null} for none.
+     * Returns the list of audience claim that identifies the audience that the JWT is intended for
+     * or empty for none.
+     */
+    @SuppressWarnings("unchecked")
+    public final List<String> getAudienceAsList() {
+      if (audience == null) {
+        return Collections.emptyList();
+      }
+      if (audience instanceof String) {
+        return Collections.singletonList((String) audience);
+      }
+      return (List<String>) audience;
+    }
+
+    /**
+     * Sets the audience claim that identifies the audience that the JWT is intended for (should
+     * either be a {@code String} or a {@code List<String>}) or {@code null} for none.
      *
      * <p>
      * Overriding is only supported for the purpose of calling the super implementation and changing
      * the return type, but nothing else.
      * </p>
      */
-    public Payload setAudience(String audience) {
+    public Payload setAudience(Object audience) {
       this.audience = audience;
-      return this;
-    }
-
-    /**
-     * Returns the principal claim that identifies the subject of the JWT or {@code null} for none.
-     */
-    public final String getPrincipal() {
-      return principal;
-    }
-
-    /**
-     * Sets the principal claim that identifies the subject of the JWT or {@code null} for none.
-     *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
-     */
-    public Payload setPrincipal(String principal) {
-      this.principal = principal;
       return this;
     }
 
@@ -339,30 +348,26 @@ public class JsonWebToken {
       return this;
     }
 
-    /** Returns the clock used for expiration checks. */
-    public final Clock getClock() {
-      return clock;
+    /**
+     * Returns the subject claim identifying the principal that is the subject of the JWT or
+     * {@code null} for none.
+     */
+    public final String getSubject() {
+      return subject;
     }
 
     /**
-     * Returns whether the {@link #getExpirationTimeSeconds} and {@link #getIssuedAtTimeSeconds} are
-     * valid relative to the current time, optionally allowing for a clock skew.
+     * Sets the subject claim identifying the principal that is the subject of the JWT or
+     * {@code null} for none.
      *
      * <p>
-     * Default implementation checks that the {@link #getExpirationTimeSeconds() expiration time}
-     * and {@link #getIssuedAtTimeSeconds() issued at time} are valid based on the
-     * {@link Clock#currentTimeMillis() current time}, allowing for the clock skew. Subclasses may
-     * override.
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
      * </p>
-     *
-     * @param acceptableTimeSkewSeconds seconds of acceptable clock skew
      */
-    public boolean isValidTime(long acceptableTimeSkewSeconds) {
-      long now = clock.currentTimeMillis();
-      return (expirationTimeSeconds == null
-          || now <= (expirationTimeSeconds + acceptableTimeSkewSeconds) * 1000) && (
-          issuedAtTimeSeconds == null
-          || now >= (issuedAtTimeSeconds - acceptableTimeSkewSeconds) * 1000);
+    public Payload setSubject(String subject) {
+      this.subject = subject;
+      return this;
     }
 
     @Override
@@ -374,6 +379,11 @@ public class JsonWebToken {
     public Payload clone() {
       return (Payload) super.clone();
     }
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toStringHelper(this).add("header", header).add("payload", payload).toString();
   }
 
   /**

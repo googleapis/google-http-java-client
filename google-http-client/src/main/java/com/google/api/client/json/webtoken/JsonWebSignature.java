@@ -25,6 +25,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.Signature;
 
 /**
  * <a href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-08">JSON Web Signature
@@ -313,6 +315,29 @@ public class JsonWebSignature extends JsonWebToken {
     return (Header) super.getHeader();
   }
 
+  /**
+   * Verifies the signature of the content.
+   *
+   * <p>
+   * Currently only {@code "RS256"} algorithm is verified, but others may be added in the future.
+   * For any other algorithm it returns {@code false}.
+   * </p>
+   *
+   * @param publicKey public key
+   * @return whether the algorithm is recognized and it is verified
+   * @throws GeneralSecurityException
+   */
+  public final boolean verifySignature(PublicKey publicKey) throws GeneralSecurityException {
+    Signature signatureAlg = null;
+    String algorithm = getHeader().getAlgorithm();
+    if ("RS256".equals(algorithm)) {
+      signatureAlg = SecurityUtils.getSha256WithRsaSignatureAlgorithm();
+    } else {
+      return false;
+    }
+    return SecurityUtils.verify(signatureAlg, publicKey, signatureBytes, signedContentBytes);
+  }
+
   /** Returns the modifiable array of bytes of the signature. */
   public final byte[] getSignatureBytes() {
     return signatureBytes;
@@ -424,7 +449,7 @@ public class JsonWebSignature extends JsonWebToken {
    * Signs a given JWS header and payload based on the given private key using RSA and SHA-256 as
    * described in <a
    * href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-08#appendix-A.2">JWS using
-   * RSA SHA-256</a>
+   * RSA SHA-256</a>.
    *
    * @param privateKey private key
    * @param jsonFactory JSON factory

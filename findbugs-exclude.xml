@@ -54,19 +54,9 @@
     <Class name="com.google.api.client.util.ClassInfo$1"/>
   </And>
   <And>
-    <Bug pattern="EI_EXPOSE_REP"/>
-    <!-- May expose internal representation by returning reference to mutable object -->
-    <Class name="com.google.api.client.testing.http.MockHttpContent"/>
-  </And>
-  <And>
     <Bug pattern="SS_SHOULD_BE_STATIC"/>
     <!-- Unread field: should this field be static? -->
     <Class name="com.google.api.client.json.rpc2.JsonRpcRequest"/>
-  </And>
-  <And>
-    <Bug pattern="EI_EXPOSE_REP2"/>
-    <!-- May expose internal representation by incorporating reference to mutable object -->
-    <Class name="com.google.api.client.util.io.ByteArrayStreamingContent"/>
   </And>
   <And>
     <Bug pattern="DM_DEFAULT_ENCODING"/>
@@ -78,6 +68,5 @@
     <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/> 
     <!-- May expose internal representation by returning reference to mutable object -->
     <!-- May expose internal representation by incorporating reference to mutable object -->
-    <Class name="com.google.api.client.json.webtoken.JsonWebSignature"/>
   </And>
 </FindBugsFilter>

@@ -12,11 +12,8 @@
  * the License.
  */
 
-package com.google.api.client.http.json.webtoken;
+package com.google.api.client.json.webtoken;
 
-import com.google.api.client.json.webtoken.JsonWebSignature;
-import com.google.api.client.json.webtoken.JsonWebToken;
-import com.google.api.client.testing.http.FixedClock;
 import com.google.api.client.testing.http.json.MockJsonFactory;
 import com.google.api.client.testing.util.SecurityTestUtils;
 
@@ -32,17 +29,16 @@ import java.security.interfaces.RSAPrivateKey;
 public class JsonWebSignatureTest extends TestCase {
 
   public void testSign() throws Exception {
-    FixedClock clock = new FixedClock(0L);
     JsonWebSignature.Header header = new JsonWebSignature.Header();
     header.setAlgorithm("RS256");
     header.setType("JWT");
-    JsonWebToken.Payload payload = new JsonWebToken.Payload(clock);
+    JsonWebToken.Payload payload = new JsonWebToken.Payload();
     payload.setIssuer("issuer")
         .setAudience("audience").setIssuedAtTimeSeconds(0L).setExpirationTimeSeconds(3600L);
     RSAPrivateKey privateKey = SecurityTestUtils.newRsaPrivateKey();
     assertEquals(
-        "..LvqmJGrq1nip7PL0H5D7YyIGFP1EbAjOxLb2SZhUHzx5FtGanoZE8LEV7ectBy0yikWN_McLcjnZxNzy8D9FNdFb"
-        + "bu1fsbeLUnAgjY1AY4o_3UZL29QlN3xT0VqbXZpIB_pqh_u7TR5npZJtp__EgEO59d4KV25P2eHWJwJqL08",
+        "..kDmKaHNYByLmqAi9ROeLcFmZM7W_emsceKvDZiEGAo-ineCunC6_Nb0HEpAuzIidV-LYTMHS3BvI49KFz9gi6hI3"
+        + "ZndDL5EzplpFJo1ZclVk1_hLn94P2OTAkZ4ydsTfus6Bl98EbCkInpF_2t5Fr8OaHxCZCDdDU7W5DSnOsx4",
         JsonWebSignature.signUsingRsaSha256(privateKey, new MockJsonFactory(), header, payload));
   }
 }

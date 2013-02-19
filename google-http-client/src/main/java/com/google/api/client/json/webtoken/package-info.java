@@ -13,8 +13,8 @@
  */
 
 /**
- * <a href="http://tools.ietf.org/html/draft-jones-json-web-token-10">JSON Web Token (JWT)</a> and
- * <a href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-08">JSON Web Signature
+ * <a href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06">JSON Web Token (JWT)</a>
+ * and <a href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-08">JSON Web Signature
  * (JWS)</a>.
  *
  * <p>
@@ -27,3 +27,4 @@
  */
 
 package com.google.api.client.json.webtoken;
+
