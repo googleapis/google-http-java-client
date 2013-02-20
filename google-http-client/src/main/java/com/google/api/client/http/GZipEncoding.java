@@ -16,6 +16,7 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.StreamingContent;
 
+import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
@@ -33,8 +34,20 @@ public class GZipEncoding implements HttpEncoding {
   }
 
   public void encode(StreamingContent content, OutputStream out) throws IOException {
-    GZIPOutputStream zipper = new GZIPOutputStream(out);
+    // must not close the underlying output stream
+    OutputStream out2 = new FilterOutputStream(out) {
+      @Override
+      public void close() throws IOException {
+        // copy implementation of super.close(), except do not close the underlying output stream
+        try {
+          flush();
+        } catch (IOException ignored) {
+        }
+      }
+    };
+    GZIPOutputStream zipper = new GZIPOutputStream(out2);
     content.writeTo(zipper);
-    zipper.finish();
+    // cannot call just zipper.finish() because that would cause a severe memory leak
+    zipper.close();
   }
 }

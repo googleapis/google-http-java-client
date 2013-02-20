@@ -14,7 +14,6 @@
 
 package com.google.api.client.http;
 
-
 import com.google.api.client.testing.util.TestableByteArrayOutputStream;
 import com.google.api.client.util.ByteArrayStreamingContent;
 import com.google.api.client.util.StringUtils;
@@ -25,11 +24,11 @@ import org.junit.Assert;
 import java.io.IOException;
 
 /**
- * Tests {@link GZipEncoding}.
+ * Tests {@link HttpEncodingStreamingContent}.
  *
  * @author Yaniv Inbar
  */
-public class GZipEncodingTest extends TestCase {
+public class HttpEncodingStreamingContentTest extends TestCase {
 
   byte[] EXPECED_ZIPPED = new byte[] {31, -117, 8, 0, 0, 0, 0, 0, 0, 0, -53, -49, -57, 13, 0, -30,
       -66, -14, 54, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -39,7 +38,9 @@ public class GZipEncodingTest extends TestCase {
     ByteArrayStreamingContent content =
         new ByteArrayStreamingContent(StringUtils.getBytesUtf8("oooooooooooooooooooooooooooo"));
     TestableByteArrayOutputStream out = new TestableByteArrayOutputStream();
-    encoding.encode(content, out);
+    HttpEncodingStreamingContent encodingContent =
+        new HttpEncodingStreamingContent(content, encoding);
+    encodingContent.writeTo(out);
     assertFalse(out.isClosed());
     Assert.assertArrayEquals(EXPECED_ZIPPED, out.getBuffer());
   }
