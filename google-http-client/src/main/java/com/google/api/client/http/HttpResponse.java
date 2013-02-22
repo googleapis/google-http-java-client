@@ -71,9 +71,6 @@ public final class HttpResponse {
   /** Parsed content-type/media type or {@code null} if content-type is null. */
   private final HttpMediaType mediaType;
 
-  /** HTTP headers. */
-  private final HttpHeaders headers;
-
   /** Low-level HTTP response. */
   LowLevelHttpResponse response;
 
@@ -82,9 +79,6 @@ public final class HttpResponse {
 
   /** Status message or {@code null}. */
   private final String statusMessage;
-
-  /** HTTP transport. */
-  private final HttpTransport transport;
 
   /** HTTP request. */
   private final HttpRequest request;
@@ -125,8 +119,6 @@ public final class HttpResponse {
 
   HttpResponse(HttpRequest request, LowLevelHttpResponse response) throws IOException {
     this.request = request;
-    transport = request.getTransport();
-    headers = request.getResponseHeaders();
     contentLoggingLimit = request.getContentLoggingLimit();
     loggingEnabled = request.isLoggingEnabled();
     this.response = response;
@@ -154,13 +146,13 @@ public final class HttpResponse {
     }
 
     // headers
-    headers.fromHttpResponse(response, loggable ? logbuf : null);
+    request.getResponseHeaders().fromHttpResponse(response, loggable ? logbuf : null);
 
     // Retrieve the content-type directly from the headers as response.getContentType() is outdated
     // and e.g. not set by BatchUnparsedResponse.FakeLowLevelHttpResponse
     String contentType = response.getContentType();
     if (contentType == null) {
-      contentType = headers.getContentType();
+      contentType = request.getResponseHeaders().getContentType();
     }
     this.contentType = contentType;
     mediaType = contentType == null ? null : new HttpMediaType(contentType);
@@ -287,7 +279,7 @@ public final class HttpResponse {
    * @since 1.5
    */
   public HttpHeaders getHeaders() {
-    return headers;
+    return request.getResponseHeaders();
   }
 
   /**
@@ -324,7 +316,7 @@ public final class HttpResponse {
    * @since 1.5
    */
   public HttpTransport getTransport() {
-    return transport;
+    return request.getTransport();
   }
 
   /**

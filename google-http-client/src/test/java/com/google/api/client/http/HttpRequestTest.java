@@ -962,4 +962,31 @@ public class HttpRequestTest extends TestCase {
     assertTrue(futureResponse.isDone());
     assertNotNull(futureResponse.get(10, TimeUnit.MILLISECONDS));
   }
+
+  public void testExecute_redirects() throws Exception {
+    class MyTransport extends MockHttpTransport {
+      int count = 1;
+
+    @Override
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+        // expect that it redirected to new URL every time using the count
+        assertEquals(HttpTesting.SIMPLE_URL + "_" + count, url);
+        count++;
+        return new MockLowLevelHttpRequest().setResponse(
+            new MockLowLevelHttpResponse().setStatusCode(
+                HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY)
+                .setHeaderNames(Arrays.asList("Location"))
+                .setHeaderValues(Arrays.asList(HttpTesting.SIMPLE_URL + "_" + count)));
+      }
+    }
+    MyTransport transport = new MyTransport();
+    HttpRequest request = transport.createRequestFactory()
+        .buildGetRequest(new GenericUrl(HttpTesting.SIMPLE_URL + "_" + transport.count));
+    try {
+      request.execute();
+      fail("expected " + HttpResponseException.class);
+    } catch (HttpResponseException e) {
+      assertEquals(HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY, e.getStatusCode());
+    }
+  }
 }

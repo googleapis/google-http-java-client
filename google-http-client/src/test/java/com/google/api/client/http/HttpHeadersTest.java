@@ -279,4 +279,12 @@ public class HttpHeadersTest extends TestCase {
     assertEquals("foo/bar", slugHeaders2.getContentType());
     assertEquals("123456789", slugHeaders2.slug);
   }
+
+  public void testFromHttpResponse_clearOldValue() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.put("Foo", "oldValue");
+    headers.fromHttpResponse(new MockLowLevelHttpResponse().setHeaderNames(Arrays.asList("Foo"))
+        .setHeaderValues(Arrays.asList("newvalue")), null);
+    assertEquals(Arrays.asList("newvalue"), headers.get("Foo"));
+  }
 }

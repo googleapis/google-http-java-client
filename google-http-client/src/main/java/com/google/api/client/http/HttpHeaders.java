@@ -974,8 +974,8 @@ public class HttpHeaders extends GenericData {
    * Puts all headers of the {@link LowLevelHttpResponse} into this {@link HttpHeaders} object.
    *
    * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
+   * Upgrade warning: in prior version 1.13 it did not clear the headers before parsing the
+   * response, but starting in version 1.14 it does clear the headers first.
    * </p>
    *
    * @param response Response from which the headers are copied
@@ -985,6 +985,7 @@ public class HttpHeaders extends GenericData {
    */
   public final void fromHttpResponse(LowLevelHttpResponse response, StringBuilder logger)
       throws IOException {
+    clear();
     ParseHeaderState state = new ParseHeaderState(this, logger);
     int headerCount = response.getHeaderCount();
     for (int i = 0; i < headerCount; i++) {
