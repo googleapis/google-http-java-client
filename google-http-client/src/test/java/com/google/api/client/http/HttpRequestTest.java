@@ -22,6 +22,7 @@ import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.LoggingStreamingContent;
+import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.Value;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
@@ -31,6 +32,7 @@ import com.google.common.collect.Lists;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -140,20 +142,24 @@ public class HttpRequestTest extends TestCase {
   /**
    * Transport used for testing the redirection logic in HttpRequest.
    */
-  static private class RedirectTransport extends MockHttpTransport {
+  static class RedirectTransport extends MockHttpTransport {
 
     int lowLevelExecCalls;
 
-    final boolean removeLocation;
-    final boolean infiniteRedirection;
-    final int redirectStatusCode;
+    boolean removeLocation;
+    boolean infiniteRedirection;
+    int redirectStatusCode = HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY;
+    String[] expectedContent;
 
     LowLevelHttpRequest retryableGetRequest = new MockLowLevelHttpRequest() {
 
       @Override
-      public LowLevelHttpResponse execute() {
+      public LowLevelHttpResponse execute() throws IOException {
+        if (expectedContent != null) {
+          assertEquals(String.valueOf(lowLevelExecCalls), expectedContent[lowLevelExecCalls],
+              getContentAsString());
+        }
         lowLevelExecCalls++;
-
         if (infiniteRedirection || lowLevelExecCalls == 1) {
           // Return redirect on only the first call.
           // If infiniteRedirection is true then always return the redirect status code.
@@ -171,13 +177,6 @@ public class HttpRequestTest extends TestCase {
       }
     };
 
-    protected RedirectTransport(
-        boolean removeLocation, boolean infiniteRedirection, int redirectStatusCode) {
-      this.removeLocation = removeLocation;
-      this.infiniteRedirection = infiniteRedirection;
-      this.redirectStatusCode = redirectStatusCode;
-    }
-
     @Override
     public LowLevelHttpRequest buildRequest(String method, String url) {
       return retryableGetRequest;
@@ -186,8 +185,7 @@ public class HttpRequestTest extends TestCase {
 
   public void test301Redirect() throws Exception {
     // Set up RedirectTransport to redirect on the first request and then return success.
-    RedirectTransport fakeTransport =
-        new RedirectTransport(false, false, HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY);
+    RedirectTransport fakeTransport = new RedirectTransport();
     HttpRequest request =
         fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://gmail.com"));
     HttpResponse resp = request.execute();
@@ -200,8 +198,7 @@ public class HttpRequestTest extends TestCase {
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(true);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
     // Set up RedirectTransport to redirect on the first request and then return success.
-    RedirectTransport fakeTransport =
-        new RedirectTransport(false, false, HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY);
+    RedirectTransport fakeTransport = new RedirectTransport();
     HttpRequest request =
         fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://gmail.com"));
     request.setUnsuccessfulResponseHandler(handler);
@@ -225,8 +222,7 @@ public class HttpRequestTest extends TestCase {
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
     // Set up RedirectTransport to redirect on the first request and then return success.
-    RedirectTransport fakeTransport =
-        new RedirectTransport(false, false, HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY);
+    RedirectTransport fakeTransport = new RedirectTransport();
     HttpRequest request =
         fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://gmail.com"));
     request.setUnsuccessfulResponseHandler(handler);
@@ -246,8 +242,8 @@ public class HttpRequestTest extends TestCase {
 
   public void test303Redirect() throws Exception {
     // Set up RedirectTransport to redirect on the first request and then return success.
-    RedirectTransport fakeTransport =
-        new RedirectTransport(false, false, HttpStatusCodes.STATUS_CODE_SEE_OTHER);
+    RedirectTransport fakeTransport = new RedirectTransport();
+    fakeTransport.redirectStatusCode = HttpStatusCodes.STATUS_CODE_SEE_OTHER;
     byte[] content = new byte[300];
     Arrays.fill(content, (byte) ' ');
     HttpRequest request = fakeTransport.createRequestFactory()
@@ -263,8 +259,8 @@ public class HttpRequestTest extends TestCase {
 
   public void testInfiniteRedirects() throws Exception {
     // Set up RedirectTransport to cause infinite redirections.
-    RedirectTransport fakeTransport =
-        new RedirectTransport(false, true, HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY);
+    RedirectTransport fakeTransport = new RedirectTransport();
+    fakeTransport.infiniteRedirection = true;
     HttpRequest request =
         fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://gmail.com"));
     try {
@@ -280,8 +276,8 @@ public class HttpRequestTest extends TestCase {
 
   public void testMissingLocationRedirect() throws Exception {
     // Set up RedirectTransport to set responses with missing location headers.
-    RedirectTransport fakeTransport =
-        new RedirectTransport(true, false, HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY);
+    RedirectTransport fakeTransport = new RedirectTransport();
+    fakeTransport.removeLocation = true;
     HttpRequest request =
         fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://gmail.com"));
     try {
@@ -452,8 +448,7 @@ public class HttpRequestTest extends TestCase {
   public void subtestHandleRedirect_relativeLocation(
       String curLocation, String relLocation, String newLocation) throws IOException {
     HttpTransport transport = new MockHttpTransport();
-    HttpRequest req =
-        transport.createRequestFactory().buildGetRequest(new GenericUrl(curLocation));
+    HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl(curLocation));
     HttpHeaders responseHeaders = new HttpHeaders().setLocation(relLocation);
     req.handleRedirect(HttpStatusCodes.STATUS_CODE_SEE_OTHER, responseHeaders);
     assertEquals(newLocation, req.getUrl().toString());
@@ -949,8 +944,8 @@ public class HttpRequestTest extends TestCase {
     request.execute();
   }
 
-    public void testExecuteAsync()
-        throws IOException, InterruptedException, ExecutionException, TimeoutException {
+  public void testExecuteAsync()
+      throws IOException, InterruptedException, ExecutionException, TimeoutException {
     MockExecutor mockExecutor = new MockExecutor();
     HttpTransport transport = new MockHttpTransport();
     HttpRequest request =
@@ -988,5 +983,22 @@ public class HttpRequestTest extends TestCase {
     } catch (HttpResponseException e) {
       assertEquals(HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY, e.getStatusCode());
     }
+  }
+
+  public void testExecute_redirectWithIncorrectContentRetryableSetting() throws Exception {
+    // TODO(yanivi): any way we can warn user about this?
+    RedirectTransport fakeTransport = new RedirectTransport();
+    String contentValue = "hello";
+    fakeTransport.expectedContent = new String[] {contentValue, ""};
+    byte[] bytes = StringUtils.getBytesUtf8(contentValue);
+    InputStreamContent content = new InputStreamContent(
+        new HttpMediaType("text/plain").setCharsetParameter(Charsets.UTF_8).build(),
+        new ByteArrayInputStream(bytes));
+    content.setRetrySupported(true);
+    HttpRequest request = fakeTransport.createRequestFactory()
+        .buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL, content);
+    HttpResponse resp = request.execute();
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
   }
 }

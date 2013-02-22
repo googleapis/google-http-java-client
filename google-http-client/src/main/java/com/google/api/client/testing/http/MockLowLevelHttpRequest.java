@@ -173,9 +173,16 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
   /**
    * Returns HTTP content as a string, taking care of any encodings of the content if necessary.
    *
+   * <p>
+   * Returns an empty string if there is no HTTP content.
+   * </p>
+   *
    * @since 1.12
    */
   public String getContentAsString() throws IOException {
+    if (getStreamingContent() == null) {
+      return "";
+    }
     // write content to a byte[]
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     getStreamingContent().writeTo(out);
