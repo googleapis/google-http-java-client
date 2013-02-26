@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.google.http-client</groupId>
   <artifactId>google-http-client-parent</artifactId>
-  <version>1.14.0-beta-SNAPSHOT</version>
+  <version>1.15.0-beta-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Parent for the Google HTTP Client Library for Java</name>
 
@@ -445,7 +445,7 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>clirr-maven-plugin</artifactId>
         <configuration>
-          <comparisonVersion>1.13.0-beta</comparisonVersion>
+          <comparisonVersion>1.14.0-beta</comparisonVersion>
           <ignoredDifferencesFile>${basedir}/../clirr-ignored-differences.xml</ignoredDifferencesFile>
         </configuration>
         <executions>
