@@ -21,8 +21,10 @@ import com.google.api.client.util.escape.CharEscapers;
 import com.google.api.client.util.escape.Escaper;
 import com.google.api.client.util.escape.PercentEscaper;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -105,17 +107,48 @@ public class GenericUrl extends GenericData {
   }
 
   /**
+   * Constructs from a URI.
+   *
    * @param uri URI
    *
    * @since 1.14
    */
   public GenericUrl(URI uri) {
-    scheme = uri.getScheme().toLowerCase();
-    host = uri.getHost();
-    port = uri.getPort();
-    pathParts = toPathParts(uri.getRawPath());
-    fragment = uri.getFragment();
-    String query = uri.getRawQuery();
+    this(uri.getScheme(),
+        uri.getHost(),
+        uri.getPort(),
+        uri.getRawPath(),
+        uri.getFragment(),
+        uri.getRawQuery());
+  }
+
+  /**
+   * Constructs from a URL.
+   *
+   * @param url URL
+   *
+   * @since 1.14
+   */
+  public GenericUrl(URL url) {
+    this(url.getProtocol(),
+        url.getHost(),
+        url.getPort(),
+        url.getPath(),
+        url.getRef(),
+        url.getQuery());
+  }
+
+  private GenericUrl(String scheme,
+      String host,
+      int port,
+      String path,
+      String fragment,
+      String query) {
+    this.scheme = scheme.toLowerCase();
+    this.host = host;
+    this.port = port;
+    this.pathParts = toPathParts(path);
+    this.fragment = fragment;
     if (query != null) {
       UrlEncodedParser.parse(query, this);
     }
@@ -333,6 +366,46 @@ public class GenericUrl extends GenericData {
    */
   public final URI toURI() {
     return toURI(build());
+  }
+
+  /**
+   * Constructs the URL based on the string representation of the URL from {@link #build()}.
+   *
+   * <p>
+   * Any {@link MalformedURLException} is wrapped in an {@link IllegalArgumentException}.
+   * </p>
+   *
+   * @return new URL instance
+   *
+   * @since 1.14
+   */
+  public final URL toURL() {
+    try {
+      return new URL(build());
+    } catch (MalformedURLException e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
+
+  /**
+   * Constructs the URL based on {@link URL#URL(URL, String)} with this URL representation from
+   * {@link #toURL()} and a relative url.
+   *
+   * <p>
+   * Any {@link MalformedURLException} is wrapped in an {@link IllegalArgumentException}.
+   * </p>
+   *
+   * @return new URL instance
+   *
+   * @since 1.14
+   */
+  public final URL toURL(String relativeUrl) {
+    try {
+      URL url = toURL();
+      return new URL(url, relativeUrl);
+    } catch (MalformedURLException e) {
+      throw new IllegalArgumentException(e);
+    }
   }
 
   /**
