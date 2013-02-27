@@ -14,7 +14,6 @@
 
 package com.google.api.client.testing.http;
 
-import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.util.Preconditions;
@@ -29,12 +28,6 @@ import java.util.Set;
  * <p>
  * Implementation is thread-safe. For maximum efficiency, applications should use a single
  * globally-shared instance of the HTTP transport.
- * </p>
- *
- * <p>
- * Upgrade warning: in prior version 1.11 this used {@link HttpMethod} to specify the set of
- * supported methods, but now it uses a {@link String} instead to allow for arbitrary methods to be
- * specified.
  * </p>
  *
  * @author Yaniv Inbar
@@ -95,54 +88,6 @@ public class MockHttpTransport extends HttpTransport {
    */
   public final Set<String> getSupportedMethods() {
     return supportedMethods == null ? null : Collections.unmodifiableSet(supportedMethods);
-  }
-
-  @Deprecated
-  @Override
-  public LowLevelHttpRequest buildDeleteRequest(String url) throws IOException {
-    return super.buildDeleteRequest(url);
-  }
-
-  @Deprecated
-  @Override
-  public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
-    return super.buildGetRequest(url);
-  }
-
-  @Deprecated
-  @Override
-  public LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
-    return super.buildHeadRequest(url);
-  }
-
-  @Deprecated
-  @Override
-  public LowLevelHttpRequest buildPatchRequest(String url) throws IOException {
-    return super.buildPatchRequest(url);
-  }
-
-  @Deprecated
-  @Override
-  public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
-    return super.buildPostRequest(url);
-  }
-
-  @Deprecated
-  @Override
-  public LowLevelHttpRequest buildPutRequest(String url) throws IOException {
-    return super.buildPutRequest(url);
-  }
-
-  @Deprecated
-  @Override
-  public boolean supportsHead() throws IOException {
-    return super.supportsHead();
-  }
-
-  @Deprecated
-  @Override
-  public boolean supportsPatch() throws IOException {
-    return super.supportsPatch();
   }
 
   /**

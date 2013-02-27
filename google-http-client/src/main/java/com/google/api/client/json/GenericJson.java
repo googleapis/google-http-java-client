@@ -76,11 +76,6 @@ public class GenericJson extends GenericData implements Cloneable {
    * Returns a pretty-printed serialized JSON string representation or {@link #toString()} if
    * {@link #getFactory()} is {@code null}.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
-   *
    * @since 1.6
    */
   public String toPrettyString() throws IOException {

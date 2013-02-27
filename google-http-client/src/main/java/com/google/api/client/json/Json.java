@@ -24,12 +24,6 @@ import com.google.api.client.util.Charsets;
  * @author Yaniv Inbar
  */
 public class Json {
-  /**
-   * {@code "application/json"} content type.
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #MEDIA_TYPE} instead.
-   */
-  @Deprecated
-  public static final String CONTENT_TYPE = "application/json";
 
   /**
    * {@code "application/json; charset=utf-8"} media type used as a default for JSON parsing.

@@ -14,7 +14,6 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.json.Json;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockHttpUnsuccessfulResponseHandler;
@@ -730,12 +729,6 @@ public class HttpRequestTest extends TestCase {
     assertEquals(ImmutableList.of("b"), lowLevelRequest.getHeaderValues("a"));
     assertEquals(ImmutableList.of("VALUE"), lowLevelRequest.getHeaderValues("value"));
     assertEquals(ImmutableList.of("other"), lowLevelRequest.getHeaderValues("othervalue"));
-  }
-
-  @SuppressWarnings("deprecation")
-  public void testNormalizeMediaType() {
-    assertEquals(Json.CONTENT_TYPE, HttpRequest.normalizeMediaType(Json.CONTENT_TYPE));
-    assertEquals("text/html", HttpRequest.normalizeMediaType("text/html; charset=ISO-8859-4"));
   }
 
   @Deprecated

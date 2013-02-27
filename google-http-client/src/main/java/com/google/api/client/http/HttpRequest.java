@@ -23,8 +23,6 @@ import com.google.api.client.util.StringUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -133,13 +131,6 @@ public final class HttpRequest {
   /** HTTP transport. */
   private final HttpTransport transport;
 
-  /**
-   * HTTP request method or {@code null} for none or if request method is not one of the values in
-   * {@link HttpMethod}.
-   */
-  @Deprecated
-  private HttpMethod method;
-
   /** HTTP request method or {@code null} for none. */
   private String requestMethod;
 
@@ -160,10 +151,6 @@ public final class HttpRequest {
 
   /** HTTP response interceptor or {@code null} for none. */
   private HttpResponseInterceptor responseInterceptor;
-
-  /** Map from normalized content type to HTTP parser. */
-  @Deprecated
-  private final Map<String, HttpParser> contentTypeToParserMap = new HashMap<String, HttpParser>();
 
   /** Parser used to parse responses. */
   private ObjectParser objectParser;
@@ -221,29 +208,6 @@ public final class HttpRequest {
   }
 
   /**
-   * Returns the HTTP request method or {@code null} for none or if request method is not one of the
-   * values in {@link HttpMethod}.
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #getRequestMethod()} instead
-   */
-  @Deprecated
-  public HttpMethod getMethod() {
-    return method;
-  }
-
-  /**
-   * Sets the HTTP request method.
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #setRequestMethod} instead
-   */
-  @Deprecated
-  public HttpRequest setMethod(HttpMethod method) {
-    return setRequestMethod(method.toString());
-  }
-
-  /**
    * Returns the HTTP request method or {@code null} for none.
    *
    * @since 1.12
@@ -261,25 +225,6 @@ public final class HttpRequest {
   public HttpRequest setRequestMethod(String requestMethod) {
     Preconditions.checkArgument(requestMethod == null || HttpMediaType.matchesToken(requestMethod));
     this.requestMethod = requestMethod;
-    method = null;
-    if (HttpMethods.DELETE.equals(requestMethod)) {
-      method = HttpMethod.DELETE;
-    }
-    if (HttpMethods.GET.equals(requestMethod)) {
-      method = HttpMethod.GET;
-    }
-    if (HttpMethods.HEAD.equals(requestMethod)) {
-      method = HttpMethod.HEAD;
-    }
-    if ("PATCH".equals(requestMethod)) {
-      method = HttpMethod.PATCH;
-    }
-    if (HttpMethods.POST.equals(requestMethod)) {
-      method = HttpMethod.POST;
-    }
-    if (HttpMethods.PUT.equals(requestMethod)) {
-      method = HttpMethod.PUT;
-    }
     return this;
   }
 
@@ -713,26 +658,6 @@ public final class HttpRequest {
   }
 
   /**
-   * Adds an HTTP response content parser.
-   * <p>
-   * If there is already a previous parser defined for this new parser (as defined by
-   * {@link #getParser(String)} then the previous parser will be removed.
-   * </p>
-   *
-   * <p>
-   * Any parser set by calling {@link #setParser(ObjectParser)} will be preferred over this parser.
-   * </p>
-   *
-   * @since 1.4
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #setParser(ObjectParser)} instead.
-   */
-  @Deprecated
-  public void addParser(HttpParser parser) {
-    String contentType = normalizeMediaType(parser.getContentType());
-    contentTypeToParserMap.put(contentType, parser);
-  }
-
-  /**
    * Sets the {@link ObjectParser} used to parse the response to this request or {@code null} for
    * none.
    *
@@ -745,21 +670,6 @@ public final class HttpRequest {
   public HttpRequest setParser(ObjectParser parser) {
     this.objectParser = parser;
     return this;
-  }
-
-  /**
-   * Returns the HTTP response content parser to use for the given content type or {@code null} if
-   * none is defined.
-   *
-   * @param contentType content type or {@code null} for {@code null} result
-   * @return HTTP response content parser or {@code null} for {@code null} input
-   * @since 1.4
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #getParser()} instead.
-   */
-  @Deprecated
-  public final HttpParser getParser(String contentType) {
-    contentType = normalizeMediaType(contentType);
-    return contentTypeToParserMap.get(contentType);
   }
 
   /**
@@ -927,22 +837,7 @@ public final class HttpRequest {
       }
       // build low-level HTTP request
       String urlString = url.build();
-      LowLevelHttpRequest lowLevelHttpRequest;
-      if (requestMethod.equals(HttpMethods.DELETE)) {
-        lowLevelHttpRequest = transport.buildDeleteRequest(urlString);
-      } else if (requestMethod.equals(HttpMethods.GET)) {
-        lowLevelHttpRequest = transport.buildGetRequest(urlString);
-      } else if (requestMethod.equals(HttpMethods.HEAD)) {
-        lowLevelHttpRequest = transport.buildHeadRequest(urlString);
-      } else if (requestMethod.equals("PATCH")) {
-        lowLevelHttpRequest = transport.buildPatchRequest(urlString);
-      } else if (requestMethod.equals(HttpMethods.POST)) {
-        lowLevelHttpRequest = transport.buildPostRequest(urlString);
-      } else if (requestMethod.equals(HttpMethods.PUT)) {
-        lowLevelHttpRequest = transport.buildPutRequest(urlString);
-      } else {
-        lowLevelHttpRequest = transport.buildRequest(requestMethod, urlString);
-      }
+      LowLevelHttpRequest lowLevelHttpRequest = transport.buildRequest(requestMethod, urlString);
       Logger logger = HttpTransport.LOGGER;
       boolean loggable = loggingEnabled && logger.isLoggable(Level.CONFIG);
       StringBuilder logbuf = null;
@@ -1257,25 +1152,5 @@ public final class HttpRequest {
     } catch (InterruptedException e) {
       // Ignore.
     }
-  }
-
-  /**
-   * Returns the normalized media type without parameters of the form {@code type "/" subtype"} as
-   * specified in <a href="http://tools.ietf.org/html/rfc2616#section-3.7">Media Types</a>.
-   *
-   * @param mediaType unnormalized media type with possible parameters or {@code null} for
-   *        {@code null} result
-   * @return normalized media type without parameters or {@code null} for {@code null} input
-   * @since 1.4
-   * @deprecated (scheduled to be removed in 1.14) Use
-   *             {@link HttpMediaType#equalsIgnoreParameters(HttpMediaType)} instead
-   */
-  @Deprecated
-  public static String normalizeMediaType(String mediaType) {
-    if (mediaType == null) {
-      return null;
-    }
-    int semicolon = mediaType.indexOf(';');
-    return semicolon == -1 ? mediaType : mediaType.substring(0, semicolon);
   }
 }

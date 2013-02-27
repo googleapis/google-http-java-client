@@ -13,7 +13,48 @@
     <className>com/google/api/client/util/Data</className>
     <field>NULL_UNSIGNED_LONG</field>
   </difference>
+  <!-- 6011 (removed a constant field): className, field -->
+  <difference>
+    <differenceType>6011</differenceType>
+    <className>com/google/api/client/json/Json</className>
+    <field>CONTENT_TYPE</field>
+  </difference>
   <!-- 7002 (method removed): className, method -->
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/extensions/appengine/http/UrlFetchTransport</className>
+    <method>*</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/HttpRequest</className>
+    <method>*</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/HttpRequestFactory</className>
+    <method>com.google.api.client.http.HttpRequest buildRequest(com.google.api.client.http.HttpMethod, com.google.api.client.http.GenericUrl, com.google.api.client.http.HttpContent)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/HttpResponse</className>
+    <method>com.google.api.client.http.HttpParser getParser()</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/HttpTransport</className>
+    <method>*</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/apache/ApacheHttpTransport</className>
+    <method>*</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/javanet/NetHttpTransport</className>
+    <method>*</method>
+  </difference>
   <difference>
     <differenceType>7002</differenceType>
     <className>com/google/api/client/json/JsonGenerator</className>
@@ -33,6 +74,11 @@
     <differenceType>7002</differenceType>
     <className>com/google/api/client/json/JsonParser</className>
     <method>com.google.common.primitives.UnsignedLong getUnsignedLongValue()</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/testing/http/MockHttpTransport</className>
+    <method>*</method>
   </difference>
   <difference>
     <differenceType>7002</differenceType>
@@ -62,6 +108,30 @@
     <to>com.google.api.client.testing.http.MockLowLevelHttpResponse</to>
   </difference>
   <!-- 8001 (Class removed): className -->
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/api/client/http/HttpMethod</className>
+  </difference>
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/api/client/http/HttpParser</className>
+  </difference>
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/api/client/http/json/*</className>
+  </difference>
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/api/client/http/xml/XmlHttpParser</className>
+  </difference>
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/api/client/http/xml/XmlHttpParser$Builder</className>
+  </difference>
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/api/client/http/xml/atom/AtomParser</className>
+  </difference>
   <difference>
     <differenceType>8001</differenceType>
     <className>com/google/api/client/repackaged/**</className>

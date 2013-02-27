@@ -80,22 +80,6 @@ public final class HttpRequestFactory {
   /**
    * Builds a request for the given HTTP method, URL, and content.
    *
-   * @param method HTTP request method
-   * @param url HTTP request URL or {@code null} for none
-   * @param content HTTP request content or {@code null} for none
-   * @return new HTTP request
-   * @deprecated (scheduled to be removed in 1.14) Use
-   *             {@link #buildRequest(String, GenericUrl, HttpContent)} instead
-   */
-  @Deprecated
-  public HttpRequest buildRequest(HttpMethod method, GenericUrl url, HttpContent content)
-      throws IOException {
-    return buildRequest(method.toString(), url, content);
-  }
-
-  /**
-   * Builds a request for the given HTTP method, URL, and content.
-   *
    * @param requestMethod HTTP request method
    * @param url HTTP request URL or {@code null} for none
    * @param content HTTP request content or {@code null} for none

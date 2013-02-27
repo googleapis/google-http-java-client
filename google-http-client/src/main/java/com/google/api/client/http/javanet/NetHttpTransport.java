@@ -135,42 +135,6 @@ public final class NetHttpTransport extends HttpTransport {
     return new NetHttpRequest(connection);
   }
 
-  @Deprecated
-  @Override
-  public boolean supportsHead() {
-    return true;
-  }
-
-  @Deprecated
-  @Override
-  public NetHttpRequest buildDeleteRequest(String url) throws IOException {
-    return buildRequest("DELETE", url);
-  }
-
-  @Deprecated
-  @Override
-  public NetHttpRequest buildGetRequest(String url) throws IOException {
-    return buildRequest("GET", url);
-  }
-
-  @Deprecated
-  @Override
-  public NetHttpRequest buildHeadRequest(String url) throws IOException {
-    return buildRequest("HEAD", url);
-  }
-
-  @Deprecated
-  @Override
-  public NetHttpRequest buildPostRequest(String url) throws IOException {
-    return buildRequest("POST", url);
-  }
-
-  @Deprecated
-  @Override
-  public NetHttpRequest buildPutRequest(String url) throws IOException {
-    return buildRequest("PUT", url);
-  }
-
   /**
    * Builder for {@link NetHttpTransport}.
    *

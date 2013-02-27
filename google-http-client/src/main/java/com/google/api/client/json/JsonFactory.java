@@ -105,11 +105,6 @@ public abstract class JsonFactory {
    * Returns a serialized JSON string representation for the given item using
    * {@link JsonGenerator#serialize(Object)}.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
-   *
    * @param item data key/value pairs
    * @return serialized JSON string representation
    */
@@ -127,11 +122,6 @@ public abstract class JsonFactory {
    * {@link #toString(Object)} only by adding whitespace that does not change its meaning.
    * </p>
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
-   *
    * @param item data key/value pairs
    * @return serialized JSON string representation
    * @since 1.6
@@ -144,11 +134,6 @@ public abstract class JsonFactory {
    * Returns a UTF-8 encoded byte array of the serialized JSON representation for the given item
    * using {@link JsonGenerator#serialize(Object)}.
    *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
-   *
    * @param item data key/value pairs
    * @return byte array of the serialized JSON representation
    * @since 1.7
@@ -160,11 +145,6 @@ public abstract class JsonFactory {
   /**
    * Returns a serialized JSON string representation for the given item using
    * {@link JsonGenerator#serialize(Object)}.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
    *
    * @param item data key/value pairs
    * @param pretty whether to return a pretty representation
