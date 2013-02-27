@@ -19,6 +19,10 @@ import com.google.api.client.util.Key;
 import junit.framework.TestCase;
 import org.junit.Assert;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -150,8 +154,8 @@ public class GenericUrlTest extends TestCase {
 
   private static String FULL =
       "https://www.google.com:223/m8/feeds/contacts/someone=%23%25&%20%3F%3Co%3E%7B%7D@gmail.com/"
-          + "full?" + "foo=bar&" + "alt=json&" + "max-results=3&" + "prettyprint=true&"
-          + "q=Go%3D%23/%25%26%20?%3Co%3Egle";
+      + "full?" + "foo=bar&" + "alt=json&" + "max-results=3&" + "prettyprint=true&"
+      + "q=Go%3D%23/%25%26%20?%3Co%3Egle#DOWNLOADING";
 
   private static List<String> FULL_PARTS =
       Arrays.asList("", "m8", "feeds", "contacts", "someone=#%& ?<o>{}@gmail.com", "full");
@@ -162,14 +166,47 @@ public class GenericUrlTest extends TestCase {
     url.setHost("www.google.com");
     url.setPort(223);
     url.setPathParts(FULL_PARTS);
-    url.set("alt", "json").set("max-results", 3).set("prettyprint", true).set("q", "Go=#/%& ?<o>gle");
+    url.set("alt", "json")
+        .set("max-results", 3).set("prettyprint", true).set("q", "Go=#/%& ?<o>gle");
     url.foo = "bar";
     url.hidden = "invisible";
+    url.setFragment("DOWNLOADING");
     assertEquals(FULL, url.build());
   }
 
   public void testParse_full() {
     TestUrl url = new TestUrl(FULL);
+    subtestFull(url);
+    assertNull(url.hidden);
+    assertEquals("bar", url.get("foo"));
+    assertEquals("bar", url.foo);
+  }
+
+  public void testConstructor_url() throws MalformedURLException {
+    GenericUrl url = new GenericUrl(new URL(FULL));
+    subtestFull(url);
+  }
+
+  public void testConstructor_uri() throws URISyntaxException {
+    GenericUrl url = new GenericUrl(new URI(FULL));
+    subtestFull(url);
+  }
+
+  public void testConstructor_string() {
+    GenericUrl url = new GenericUrl(FULL);
+    subtestFull(url);
+  }
+
+  public void testConstructor_schemeToLowerCase() throws URISyntaxException, MalformedURLException {
+    GenericUrl url = new GenericUrl("HTTps://www.google.com:223");
+    assertEquals("https", url.getScheme());
+    url = new GenericUrl(new URI("HTTPS://www.google.com:223"));
+    assertEquals("https", url.getScheme());
+    url = new GenericUrl(new URL("hTTPs://www.google.com:223"));
+    assertEquals("https", url.getScheme());
+  }
+
+  private void subtestFull(GenericUrl url) {
     assertEquals("https", url.getScheme());
     assertEquals("www.google.com", url.getHost());
     assertEquals(223, url.getPort());
@@ -178,10 +215,8 @@ public class GenericUrlTest extends TestCase {
     assertEquals("3", url.getFirst("max-results"));
     assertEquals("true", url.getFirst("prettyprint"));
     assertEquals("Go=#/%& ?<o>gle", url.getFirst("q"));
-    assertNull(url.hidden);
-    assertEquals("bar", url.foo);
-    assertEquals("bar", url.get("foo"));
     assertEquals("bar", url.getFirst("foo"));
+    assertEquals("DOWNLOADING", url.getFragment());
   }
 
   public static class FieldTypesUrl extends GenericUrl {
@@ -303,7 +338,8 @@ public class GenericUrlTest extends TestCase {
     try {
       url.buildAuthority();
       Assert.fail("no exception was thrown");
-    } catch (NullPointerException expected) {}
+    } catch (NullPointerException expected) {
+    }
 
     // Test without a host.
     url = new GenericUrl();
@@ -312,7 +348,8 @@ public class GenericUrlTest extends TestCase {
     try {
       url.buildAuthority();
       Assert.fail("no exception was thrown");
-    } catch (NullPointerException expected) {}
+    } catch (NullPointerException expected) {
+    }
   }
 
   public void testBuildAuthority_simple() {
@@ -377,7 +414,7 @@ public class GenericUrlTest extends TestCase {
   private static final String FULL_PATH = "/some/path/someone%2Fis%2F@gmail.com/test/?one=1&two=2";
 
   public void testBuildRelativeUrl_full() {
-    GenericUrl url = new GenericUrl(BASE_URL+FULL_PATH);
+    GenericUrl url = new GenericUrl(BASE_URL + FULL_PATH);
     assertEquals(FULL_PATH, url.buildRelativeUrl());
   }
 
@@ -496,5 +533,35 @@ public class GenericUrlTest extends TestCase {
     GenericUrl url = new GenericUrl("http://www.google.com");
     GenericUrl clone = url.clone();
     assertEquals("http://www.google.com", clone.build());
+  }
+
+  public void testToUrl_relative() {
+    // relative redirect
+    testRedirectUtility("http://www.google.com/test", "http://www.google.com", "/test");
+    testRedirectUtility("http://www.google.com/test", "http://www.google.com/foo/bar/", "/test");
+
+    testRedirectUtility("http://www.google.com/test", "http://www.google.com", "test");
+    testRedirectUtility("http://www.google.com/test", "http://www.google.com/foo", "test");
+    testRedirectUtility("http://www.google.com/foo/test", "http://www.google.com/foo/", "test");
+    testRedirectUtility("http://www.google.com/foo/test", "http://www.google.com/foo/bar", "test");
+
+    testRedirectUtility(
+        "http://www.google.com/foo/test/", "http://www.google.com/foo/bar", "test/");
+    testRedirectUtility(
+        "http://www.google.com/foo/test/sub", "http://www.google.com/foo/bar", "test/sub");
+
+    // absolute redirect
+    testRedirectUtility(
+        "https://example.com/test", "http://www.google.com/foo", "https://example.com/test");
+    testRedirectUtility(
+        "https://example.com/test", "http://www.google.com", "https://example.com/test");
+    testRedirectUtility(
+        "https://example.com/test", "http://www.google.com/", "https://example.com/test");
+  }
+
+  private void testRedirectUtility(String expectedResult, String url, String relative) {
+    GenericUrl gu = new GenericUrl(url);
+    GenericUrl redirectedUrl = new GenericUrl(gu.toURL(relative));
+    assertEquals(expectedResult, redirectedUrl.toString());
   }
 }

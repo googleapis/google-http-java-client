@@ -1227,7 +1227,7 @@ public final class HttpRequest {
     if (getFollowRedirects() && HttpStatusCodes.isRedirect(statusCode)
         && redirectLocation != null) {
       // resolve the redirect location relative to the current location
-      setUrl(new GenericUrl(url.toURI().resolve(redirectLocation)));
+      setUrl(new GenericUrl(url.toURL(redirectLocation)));
       // on 303 change method to GET
       if (statusCode == HttpStatusCodes.STATUS_CODE_SEE_OTHER) {
         setRequestMethod(HttpMethods.GET);
