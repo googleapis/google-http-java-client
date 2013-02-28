@@ -14,7 +14,6 @@
 
 package com.google.api.client.testing.http;
 
-import com.google.api.client.http.HttpMethod;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.util.Preconditions;
@@ -29,12 +28,6 @@ import java.util.Set;
  * <p>
  * Implementation is thread-safe. For maximum efficiency, applications should use a single
  * globally-shared instance of the HTTP transport.
- * </p>
- *
- * <p>
- * Upgrade warning: in prior version 1.11 this used {@link HttpMethod} to specify the set of
- * supported methods, but now it uses a {@link String} instead to allow for arbitrary methods to be
- * specified.
  * </p>
  *
  * @author Yaniv Inbar

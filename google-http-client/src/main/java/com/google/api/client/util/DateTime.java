@@ -161,13 +161,6 @@ public final class DateTime implements Serializable {
   /**
    * Returns the time zone shift from UTC in minutes or {@code 0} for date-only value.
    *
-   * <p>
-   * Upgrade warning: in previous version 1.12 this method would return an {@code Integer}, whereas
-   * starting with version 1.13 it returns an {@code int}. Before, this method would return
-   * {@code null} to represent the local time zone, but it now always returns the shift of the local
-   * time zone from UTC.
-   * </p>
-   *
    * @since 1.5
    */
   public int getTimeZoneShift() {

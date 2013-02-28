@@ -14,19 +14,33 @@
 
 package com.google.api.client.testing.util;
 
-import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * Testable extension for a byte array output stream.
+ * Testable extension for a byte array input stream.
  *
  * @author Yaniv Inbar
  * @since 1.14
  */
-public class TestableByteArrayOutputStream extends ByteArrayOutputStream {
+public class TestableByteArrayInputStream extends ByteArrayInputStream {
 
-  /** Whether the output stream has been closed. */
+  /** Whether the input stream has been closed. */
   private boolean closed;
+
+  /** @param buf buffer */
+  public TestableByteArrayInputStream(byte[] buf) {
+    super(buf);
+  }
+
+  /**
+   * @param buf buffer
+   * @param offset offset in the buffer of the first byte to read
+   * @param length maximum number of bytes to read from the buffer
+   */
+  public TestableByteArrayInputStream(byte buf[], int offset, int length) {
+    super(buf);
+  }
 
   /**
    * {@inheritDoc}

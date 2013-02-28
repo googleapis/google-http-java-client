@@ -42,64 +42,22 @@ public abstract class LowLevelHttpResponse {
    */
   public abstract InputStream getContent() throws IOException;
 
-  /**
-   * Returns the content encoding (for example {@code "gzip"}) or {@code null} for none.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
-   */
+  /** Returns the content encoding (for example {@code "gzip"}) or {@code null} for none. */
   public abstract String getContentEncoding() throws IOException;
 
-  /**
-   * Returns the content length or {@code 0} for none.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
-   */
+  /** Returns the content length or {@code 0} for none. */
   public abstract long getContentLength() throws IOException;
 
-  /**
-   * Returns the content type or {@code null} for none.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
-   */
+  /** Returns the content type or {@code null} for none. */
   public abstract String getContentType() throws IOException;
 
-  /**
-   * Returns the response status line or {@code null} for none.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
-   */
+  /** Returns the response status line or {@code null} for none. */
   public abstract String getStatusLine() throws IOException;
 
-  /**
-   * Returns the response status code or {@code 0} for none.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
-   */
+  /** Returns the response status code or {@code 0} for none. */
   public abstract int getStatusCode() throws IOException;
 
-  /**
-   * Returns the HTTP reason phrase or {@code null} for none.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
-   */
+  /** Returns the HTTP reason phrase or {@code null} for none. */
   public abstract String getReasonPhrase() throws IOException;
 
   /**
@@ -109,32 +67,13 @@ public abstract class LowLevelHttpResponse {
    * Note that multiple headers of the same name need to be supported, in which case each header
    * value is treated as a separate header.
    * </p>
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
    */
   public abstract int getHeaderCount() throws IOException;
 
-  /**
-   * Returns the HTTP response header name at the given zero-based index.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
-   */
+  /** Returns the HTTP response header name at the given zero-based index. */
   public abstract String getHeaderName(int index) throws IOException;
 
-  /**
-   * Returns the HTTP response header value at the given zero-based index.
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
-   */
+  /** Returns the HTTP response header value at the given zero-based index. */
   public abstract String getHeaderValue(int index) throws IOException;
 
   /**

@@ -15,6 +15,7 @@
 package com.google.api.client.testing.http;
 
 import com.google.api.client.http.LowLevelHttpResponse;
+import com.google.api.client.testing.util.TestableByteArrayInputStream;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
 
@@ -60,6 +61,9 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   /** Content length or {@code -1} if unknown. */
   private long contentLength = -1;
 
+  /** Whether {@link #disconnect()} has been called. */
+  private boolean isDisconnected;
+
   /**
    * Adds a header to the response.
    *
@@ -79,6 +83,16 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   /**
    * Sets the response content to the given content string.
    *
+   * <p>
+   * If the input string is {@code null}, it will set the content to {@code null}. Else, it will use
+   * {@link TestableByteArrayInputStream} with the UTF-8 encoded string content.
+   * </p>
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.13 it used {@link ByteArrayInputStream}, but starting with
+   * version 1.14 it uses the subclass {@link TestableByteArrayInputStream}.
+   * </p>
+   *
    * @param stringContent content string or {@code null} for none
    */
   public MockLowLevelHttpResponse setContent(String stringContent) {
@@ -87,7 +101,7 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
       setContentLength(0);
     } else {
       byte[] bytes = StringUtils.getBytesUtf8(stringContent);
-      content = new ByteArrayInputStream(bytes);
+      content = new TestableByteArrayInputStream(bytes);
       setContentLength(bytes.length);
     }
     return this;
@@ -261,5 +275,20 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   public MockLowLevelHttpResponse setReasonPhrase(String reasonPhrase) {
     this.reasonPhrase = reasonPhrase;
     return this;
+  }
+
+  @Override
+  public void disconnect() throws IOException {
+    isDisconnected = true;
+    super.disconnect();
+  }
+
+  /**
+   * Returns whether {@link #disconnect()} has been called.
+   *
+   * @since 1.14
+   */
+  public boolean isDisconnected() {
+    return isDisconnected;
   }
 }

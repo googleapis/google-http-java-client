@@ -93,11 +93,6 @@ public final class ApacheHttpTransport extends HttpTransport {
    * Use {@link Builder} to modify HTTP client options.
    * </p>
    *
-   * <p>
-   * Upgrade warning: in prior version 1.12 the route planner was {@link DefaultHttpRoutePlanner}
-   * but starting with version 1.13 the route planner is {@link ProxySelectorRoutePlanner}.
-   * </p>
-   *
    * @since 1.3
    */
   public ApacheHttpTransport() {
@@ -153,11 +148,6 @@ public final class ApacheHttpTransport extends HttpTransport {
    * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
    * properties</a>.</li>
    * </ul>
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.12 the route planner was {@link DefaultHttpRoutePlanner}
-   * but starting with version 1.13 the route planner is {@link ProxySelectorRoutePlanner}.
-   * </p>
    *
    * @return new instance of the Apache HTTP client
    * @since 1.6

@@ -52,13 +52,6 @@ import java.util.logging.Logger;
  * Implementation is not thread-safe.
  * </p>
  *
- * <p>
- * Upgrade warning: in prior version 1.12 most fields were stored internally as a string, but as of
- * version 1.13 those fields are now stored internally as a list of string. Thus, any use of methods
- * like {@link #get(Object)} or {@link #set(String, Object)} that expose the internal implementation
- * may be broken in a backwards-incompatible way.
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */
