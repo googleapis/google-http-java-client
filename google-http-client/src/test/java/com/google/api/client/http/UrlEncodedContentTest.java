@@ -33,27 +33,25 @@ import java.util.Map;
  */
 public class UrlEncodedContentTest extends TestCase {
 
-  public UrlEncodedContentTest() {
-  }
-
-  public UrlEncodedContentTest(String name) {
-    super(name);
-  }
-
   public void testWriteTo() throws IOException {
-    assertEquals("a=x", toString(ArrayMap.of("a", "x")));
-    assertEquals("noval", toString(ArrayMap.of("noval", "")));
-    assertEquals(
-        "multi=a&multi=b&multi=c", toString(ArrayMap.of("multi", Arrays.asList("a", "b", "c"))));
-    assertEquals(
-        "multi=a&multi=b&multi=c", toString(ArrayMap.of("multi", new String[] {"a", "b", "c"})));
+    subtestWriteTo("a=x", ArrayMap.of("a", "x"));
+    subtestWriteTo("noval", ArrayMap.of("noval", ""));
+    subtestWriteTo(
+        "multi=a&multi=b&multi=c", ArrayMap.of("multi", Arrays.asList("a", "b", "c")));
+    subtestWriteTo(
+        "multi=a&multi=b&multi=c", ArrayMap.of("multi", new String[] {"a", "b", "c"}));
+    // https://code.google.com/p/google-http-java-client/issues/detail?id=202
+    final Map<String, String> params = new HashMap<String, String>();
+    params.put("username", "un");
+    params.put("password", "password123;{}");
+    subtestWriteTo("username=un&password=password123%3B%7B%7D", params);
   }
 
-  static String toString(Object data) throws IOException {
+  private void subtestWriteTo(String expected, Object data) throws IOException {
     UrlEncodedContent content = new UrlEncodedContent(data);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     content.writeTo(out);
-    return out.toString();
+    assertEquals(expected, out.toString());
   }
 
   public void testGetContent() throws Exception {

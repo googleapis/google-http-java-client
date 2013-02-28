@@ -22,6 +22,7 @@ import com.google.common.base.Objects;
 
 import junit.framework.TestCase;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -194,6 +195,13 @@ public class UrlEncodedParserTest extends TestCase {
     expected.value = E.VALUE;
     expected.otherValue = E.OTHER_VALUE;
     assertEquals(expected, actual);
-    assertEquals(ENUM_VALUE, UrlEncodedContentTest.toString(actual));
+    subtestWriteTo(ENUM_VALUE, actual);
+  }
+
+  private void subtestWriteTo(String expected, Object data) throws IOException {
+    UrlEncodedContent content = new UrlEncodedContent(data);
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    content.writeTo(out);
+    assertEquals(expected, out.toString());
   }
 }
