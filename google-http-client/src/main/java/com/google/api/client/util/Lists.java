@@ -15,6 +15,8 @@
 package com.google.api.client.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -46,6 +48,31 @@ public final class Lists {
    */
   public static <E> ArrayList<E> newArrayListWithCapacity(int initialArraySize) {
     return new ArrayList<E>(initialArraySize);
+  }
+
+  /**
+   * Returns a new mutable {@code ArrayList} instance containing the given elements.
+   *
+   * @param elements the elements that the list should contain, in order
+   * @return a new {@code ArrayList} containing those elements
+   */
+  public static <E> ArrayList<E> newArrayList(Iterable<? extends E> elements) {
+    return (elements instanceof Collection)
+        ? new ArrayList<E>(Collections2.cast(elements)) : newArrayList(elements.iterator());
+  }
+
+  /**
+   * Returns a new mutable {@code ArrayList} instance containing the given elements.
+   *
+   * @param elements the elements that the list should contain, in order
+   * @return a new {@code ArrayList} containing those elements
+   */
+  public static <E> ArrayList<E> newArrayList(Iterator<? extends E> elements) {
+    ArrayList<E> list = newArrayList();
+    while (elements.hasNext()) {
+      list.add(elements.next());
+    }
+    return list;
   }
 
   private Lists() {
