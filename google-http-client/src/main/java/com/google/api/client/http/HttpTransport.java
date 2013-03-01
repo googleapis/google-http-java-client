@@ -122,46 +122,6 @@ public abstract class HttpTransport {
   }
 
   /**
-   * Returns whether this HTTP transport implementation supports the {@code HEAD} request method.
-   *
-   * <p>
-   * Default implementation calls {@link #supportsMethod}.
-   * </p>
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
-   *
-   * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #supportsMethod(String)} instead
-   */
-  @Deprecated
-  public boolean supportsHead() throws IOException {
-    return supportsMethod("HEAD");
-  }
-
-  /**
-   * Returns whether this HTTP transport implementation supports the {@code PATCH} request method.
-   *
-   * <p>
-   * Default implementation calls {@link #supportsMethod}.
-   * </p>
-   *
-   * <p>
-   * Upgrade warning: this method now throws an {@link IOException}. In prior version 1.11 it did
-   * not throw an exception.
-   * </p>
-   *
-   * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #supportsMethod(String)} instead
-   */
-  @Deprecated
-  public boolean supportsPatch() throws IOException {
-    return supportsMethod("PATCH");
-  }
-
-  /**
    * Returns whether a specified HTTP method is supported by this transport.
    *
    * <p>
@@ -180,136 +140,13 @@ public abstract class HttpTransport {
   /**
    * Builds a low level HTTP request for the given HTTP method.
    *
-   * <p>
-   * Warning: for backwards compatibility, in version 1.12 a default implementation that throws an
-   * {@link IllegalArgumentException} is provided, but it will be made abstract in the next version
-   * 1.13.
-   * </p>
-   *
    * @param method HTTP method
    * @param url URL
    * @return new low level HTTP request
    * @throws IllegalArgumentException if HTTP method is not supported
-   * @throws IOException I/O exception
    * @since 1.12
    */
-  protected LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
-    throw new IllegalArgumentException("HTTP method " + method + " not supported");
-  }
-
-  /**
-   * Builds a {@code DELETE} request.
-   *
-   * <p>
-   * Default implementation calls {@link #buildRequest}.
-   * </p>
-   *
-   * @param url URL
-   * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #buildRequest(String, String)} instead
-   */
-  @Deprecated
-  protected LowLevelHttpRequest buildDeleteRequest(String url) throws IOException {
-    return buildRequest("DELETE", url);
-  }
-
-  /**
-   * Builds a {@code GET} request.
-   *
-   * <p>
-   * Default implementation calls {@link #buildRequest}.
-   * </p>
-   *
-   * @param url URL
-   * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #buildRequest(String, String)} instead
-   */
-  @Deprecated
-  protected LowLevelHttpRequest buildGetRequest(String url) throws IOException {
-    return buildRequest("GET", url);
-  }
-
-  /**
-   * Builds a {@code HEAD} request.
-   *
-   * <p>
-   * Won't be called if {@link #supportsHead()} returns {@code false}.
-   * </p>
-   *
-   * <p>
-   * Default implementation calls {@link #buildRequest}.
-   * </p>
-   *
-   * <p>
-   * Upgrade warning: in prior version it threw an {@link UnsupportedOperationException} by
-   * default}.
-   * </p>
-   *
-   * @param url URL
-   * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #buildRequest(String, String)} instead
-   */
-  @Deprecated
-  protected LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
-    return buildRequest("HEAD", url);
-  }
-
-  /**
-   * Builds a {@code PATCH} request.
-   *
-   * <p>
-   * Won't be called if {@link #supportsPatch()} returns {@code false}.
-   * </p>
-   *
-   * <p>
-   * Default implementation calls {@link #buildRequest}.
-   * </p>
-   *
-   * <p>
-   * Upgrade warning: in prior version it threw an {@link UnsupportedOperationException} by
-   * default}.
-   * </p>
-   *
-   * @param url URL
-   * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #buildRequest(String, String)} instead
-   */
-  @Deprecated
-  protected LowLevelHttpRequest buildPatchRequest(String url) throws IOException {
-    return buildRequest("PATCH", url);
-  }
-
-  /**
-   * Builds a {@code POST} request.
-   *
-   * <p>
-   * Default implementation calls {@link #buildRequest}.
-   * </p>
-   *
-   * @param url URL
-   * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #buildRequest(String, String)} instead
-   */
-  @Deprecated
-  protected LowLevelHttpRequest buildPostRequest(String url) throws IOException {
-    return buildRequest("POST", url);
-  }
-
-  /**
-   * Builds a {@code PUT} request.
-   *
-   * <p>
-   * Default implementation calls {@link #buildRequest}.
-   * </p>
-   *
-   * @param url URL
-   * @since 1.3
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #buildRequest(String, String)} instead
-   */
-  @Deprecated
-  protected LowLevelHttpRequest buildPutRequest(String url) throws IOException {
-    return buildRequest("PUT", url);
-  }
+  protected abstract LowLevelHttpRequest buildRequest(String method, String url) throws IOException;
 
   /**
    * Default implementation does nothing, but subclasses may override to possibly release allocated

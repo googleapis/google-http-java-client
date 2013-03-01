@@ -90,54 +90,6 @@ public class MockHttpTransport extends HttpTransport {
     return supportedMethods == null ? null : Collections.unmodifiableSet(supportedMethods);
   }
 
-  @Deprecated
-  @Override
-  public LowLevelHttpRequest buildDeleteRequest(String url) throws IOException {
-    return super.buildDeleteRequest(url);
-  }
-
-  @Deprecated
-  @Override
-  public LowLevelHttpRequest buildGetRequest(String url) throws IOException {
-    return super.buildGetRequest(url);
-  }
-
-  @Deprecated
-  @Override
-  public LowLevelHttpRequest buildHeadRequest(String url) throws IOException {
-    return super.buildHeadRequest(url);
-  }
-
-  @Deprecated
-  @Override
-  public LowLevelHttpRequest buildPatchRequest(String url) throws IOException {
-    return super.buildPatchRequest(url);
-  }
-
-  @Deprecated
-  @Override
-  public LowLevelHttpRequest buildPostRequest(String url) throws IOException {
-    return super.buildPostRequest(url);
-  }
-
-  @Deprecated
-  @Override
-  public LowLevelHttpRequest buildPutRequest(String url) throws IOException {
-    return super.buildPutRequest(url);
-  }
-
-  @Deprecated
-  @Override
-  public boolean supportsHead() throws IOException {
-    return super.supportsHead();
-  }
-
-  @Deprecated
-  @Override
-  public boolean supportsPatch() throws IOException {
-    return super.supportsPatch();
-  }
-
   /**
    * Returns an instance of a new builder.
    *

@@ -35,12 +35,6 @@ public class NetHttpTransportTest extends TestCase {
   private static final String[] METHODS =
       {"GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"};
 
-  @Deprecated
-  public void testSupportsHead() throws Exception {
-    NetHttpTransport transport = new NetHttpTransport();
-    assertTrue(transport.supportsHead());
-  }
-
   public void testExecute_mock() throws Exception {
     for (String method : METHODS) {
       boolean isPutOrPost = method.equals("PUT") || method.equals("POST");

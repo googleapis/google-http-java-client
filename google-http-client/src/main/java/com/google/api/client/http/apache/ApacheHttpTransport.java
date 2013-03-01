@@ -222,54 +222,6 @@ public final class ApacheHttpTransport extends HttpTransport {
     return new ApacheHttpRequest(httpClient, requestBase);
   }
 
-  @Deprecated
-  @Override
-  public boolean supportsHead() {
-    return true;
-  }
-
-  @Deprecated
-  @Override
-  public boolean supportsPatch() {
-    return true;
-  }
-
-  @Deprecated
-  @Override
-  public ApacheHttpRequest buildDeleteRequest(String url) {
-    return buildRequest("DELETE", url);
-  }
-
-  @Deprecated
-  @Override
-  public ApacheHttpRequest buildGetRequest(String url) {
-    return buildRequest("GET", url);
-  }
-
-  @Deprecated
-  @Override
-  public ApacheHttpRequest buildHeadRequest(String url) {
-    return buildRequest("HEAD", url);
-  }
-
-  @Deprecated
-  @Override
-  public ApacheHttpRequest buildPatchRequest(String url) {
-    return buildRequest("PATCH", url);
-  }
-
-  @Deprecated
-  @Override
-  public ApacheHttpRequest buildPostRequest(String url) {
-    return buildRequest("POST", url);
-  }
-
-  @Deprecated
-  @Override
-  public ApacheHttpRequest buildPutRequest(String url) {
-    return buildRequest("PUT", url);
-  }
-
   /**
    * Shuts down the connection manager and releases allocated resources. This includes closing all
    * connections, whether they are currently used or not.

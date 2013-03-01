@@ -215,7 +215,7 @@ public class JsonHttpClientTest extends TestCase {
     final String testUriTemplate = "uri/template";
     HttpTransport transport = new MockHttpTransport() {
         @Override
-      public LowLevelHttpRequest buildGetRequest(final String url) {
+      public LowLevelHttpRequest buildRequest(String method, final String url) {
         return new MockLowLevelHttpRequest() {
             @Override
           public LowLevelHttpResponse execute() {
@@ -239,7 +239,7 @@ public class JsonHttpClientTest extends TestCase {
     final String testUriTemplate = "uri/template";
     HttpTransport transport = new MockHttpTransport() {
         @Override
-      public LowLevelHttpRequest buildGetRequest(final String url) {
+      public LowLevelHttpRequest buildRequest(String method, final String url) {
         return new MockLowLevelHttpRequest() {
             @Override
           public LowLevelHttpResponse execute() {

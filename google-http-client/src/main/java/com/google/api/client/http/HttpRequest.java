@@ -927,22 +927,7 @@ public final class HttpRequest {
       }
       // build low-level HTTP request
       String urlString = url.build();
-      LowLevelHttpRequest lowLevelHttpRequest;
-      if (requestMethod.equals(HttpMethods.DELETE)) {
-        lowLevelHttpRequest = transport.buildDeleteRequest(urlString);
-      } else if (requestMethod.equals(HttpMethods.GET)) {
-        lowLevelHttpRequest = transport.buildGetRequest(urlString);
-      } else if (requestMethod.equals(HttpMethods.HEAD)) {
-        lowLevelHttpRequest = transport.buildHeadRequest(urlString);
-      } else if (requestMethod.equals("PATCH")) {
-        lowLevelHttpRequest = transport.buildPatchRequest(urlString);
-      } else if (requestMethod.equals(HttpMethods.POST)) {
-        lowLevelHttpRequest = transport.buildPostRequest(urlString);
-      } else if (requestMethod.equals(HttpMethods.PUT)) {
-        lowLevelHttpRequest = transport.buildPutRequest(urlString);
-      } else {
-        lowLevelHttpRequest = transport.buildRequest(requestMethod, urlString);
-      }
+      LowLevelHttpRequest lowLevelHttpRequest = transport.buildRequest(requestMethod, urlString);
       Logger logger = HttpTransport.LOGGER;
       boolean loggable = loggingEnabled && logger.isLoggable(Level.CONFIG);
       StringBuilder logbuf = null;
