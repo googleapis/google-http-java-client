@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MessageCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="messagecollection.xsd">
+
+  <Plugin>
+    <ShortDescription>FindBugs Google API's Client library plugin</ShortDescription>
+    <Details>Provides detectors for Google APIs Client library.</Details>
+  </Plugin>
+
+  <Detector class="com.google.api.client.findbugs.ExperimentalDetector">
+    <Details>Finds instances of Experimental annotation.</Details>
+  </Detector>
+
+  <BugPattern type="EXPERIMENTAL_CLASS_USAGE">
+    <ShortDescription>Usage of an &#64;Experimental class
+    </ShortDescription>
+    <LongDescription>Usage of an Experimental class {3} in {2}
+    </LongDescription>
+    <Details>
+<![CDATA[
+<p>Library should not use APIs annotated with Experimental. 
+See <a href="http://javadoc.google-http-java-client.googlecode.com/hg/1.15.0-rc/com/api/client/util/Experimental.java">@Experimental</a> for more details.
+</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="EXPERIMENTAL_METHOD_USAGE">
+    <ShortDescription>Usage of an &#64;Experimental method
+    </ShortDescription>
+    <LongDescription>Usage of an Experimental method {3} in {2}
+    </LongDescription>
+    <Details>
+<![CDATA[
+<p>Library should not use APIs annotated with Experimental. 
+See <a href="http://javadoc.google-http-java-client.googlecode.com/hg/1.15.0-rc/com/api/client/util/Experimental.java">@Experimental</a> for more details.
+</p>
+]]>
+    </Details>
+  </BugPattern>
+  <BugPattern type="EXPERIMENTAL_FIELD_USAGE">
+    <ShortDescription>Usage of an &#64;Experimental field
+    </ShortDescription>
+    <LongDescription>Usage of an Experimental field {3} in {2}
+    </LongDescription>
+    <Details>
+<![CDATA[
+<p>Library should not use APIs annotated with Experimental. 
+See <a href="http://javadoc.google-http-java-client.googlecode.com/hg/1.15.0-rc/com/api/client/util/Experimental.java">@Experimental</a> for more details.
+</p>
+]]>
+    </Details>
+  </BugPattern>
+
+  <BugCode abbrev="GAEU">Usage of Google APIs Client library Experimental
+    Annotation</BugCode>
+</MessageCollection>

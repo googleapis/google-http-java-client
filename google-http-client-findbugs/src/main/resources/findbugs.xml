@@ -1,0 +1,12 @@
+<FindbugsPlugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="findbugsplugin.xsd" pluginid="com.google.api.client.findbugs"
+  provider="Google APIs Client Library" website="https://code.google.com/p/google-http-java-client/">
+
+  <Detector class="com.google.api.client.findbugs.ExperimentalDetector"
+    speed="fast"
+    reports="EXPERIMENTAL_CLASS_USAGE,EXPERIMENTAL_METHOD_USAGE,EXPERIMENTAL_FIELD_USAGE" />
+  <BugPattern type="EXPERIMENTAL_CLASS_USAGE" abbrev="GAEU" category="BAD_PRACTICICE" />
+  <BugPattern type="EXPERIMENTAL_METHOD_USAGE" abbrev="GAEU"
+    category="BAD_PRACTICICE" />
+  <BugPattern type="EXPERIMENTAL_FIELD_USAGE" abbrev="GAEU" category="BAD_PRACTICICE" />
+</FindbugsPlugin>

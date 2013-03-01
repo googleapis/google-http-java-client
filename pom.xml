@@ -69,6 +69,7 @@
     <module>google-http-client-gson</module>
     <module>google-http-client-jackson</module>
     <module>google-http-client-jackson2</module>
+    <module>google-http-client-findbugs</module>
     <module>google-http-client-test</module>
   </modules>
 
@@ -167,6 +168,11 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-jackson2</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-findbugs</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
