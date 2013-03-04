@@ -22,7 +22,8 @@ import java.util.TreeSet;
  * Static utility methods pertaining to {@link Set} instances.
  *
  * <p>
- * NOTE: this is a copy of a subset of Guava's {@link com.google.common.collect.Sets}.
+ * NOTE: this is a copy of a subset of Guava's {@link com.google.common.collect.Sets}. The
+ * implementation must match as closely as possible to Guava's implementation.
  * </p>
  *
  * @since 1.14

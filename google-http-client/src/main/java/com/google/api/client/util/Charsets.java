@@ -21,7 +21,8 @@ import java.nio.charset.Charset;
  * be supported by all Java platform implementations.
  *
  * <p>
- * NOTE: this is a copy of a subset of Guava's {@link com.google.common.base.Charsets}.
+ * NOTE: this is a copy of a subset of Guava's {@link com.google.common.base.Charsets}. The
+ * implementation must match as closely as possible to Guava's implementation.
  * </p>
  *
  * @since 1.14
