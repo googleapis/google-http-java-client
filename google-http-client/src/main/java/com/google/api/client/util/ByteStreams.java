@@ -14,8 +14,6 @@
 
 package com.google.api.client.util;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,11 +40,10 @@ public final class ByteStreams {
    * @param from the input stream to read from
    * @param to the output stream to write to
    * @return the number of bytes copied
-   * @throws IOException if an I/O error occurs
    */
   public static long copy(InputStream from, OutputStream to) throws IOException {
-    checkNotNull(from);
-    checkNotNull(to);
+    Preconditions.checkNotNull(from);
+    Preconditions.checkNotNull(to);
     byte[] buf = new byte[BUF_SIZE];
     long total = 0;
     while (true) {
@@ -142,6 +139,51 @@ public final class ByteStreams {
       left -= skipped;
       return skipped;
     }
+  }
+
+  /**
+   * Reads some bytes from an input stream and stores them into the buffer array {@code b}.
+   *
+   * <p>
+   * This method blocks until {@code len} bytes of input data have been read into the array, or end
+   * of file is detected. The number of bytes read is returned, possibly zero. Does not close the
+   * stream.
+   * </p>
+   *
+   * <p>
+   * A caller can detect EOF if the number of bytes read is less than {@code len}. All subsequent
+   * calls on the same stream will return zero.
+   * </p>
+   *
+   * <p>
+   * If {@code b} is null, a {@code NullPointerException} is thrown. If {@code off} is negative, or
+   * {@code len} is negative, or {@code off+len} is greater than the length of the array {@code b},
+   * then an {@code IndexOutOfBoundsException} is thrown. If {@code len} is zero, then no bytes are
+   * read. Otherwise, the first byte read is stored into element {@code b[off]}, the next one into
+   * {@code b[off+1]}, and so on. The number of bytes read is, at most, equal to {@code len}.
+   * </p>
+   *
+   * @param in the input stream to read from
+   * @param b the buffer into which the data is read
+   * @param off an int specifying the offset into the data
+   * @param len an int specifying the number of bytes to read
+   * @return the number of bytes read
+   */
+  public static int read(InputStream in, byte[] b, int off, int len) throws IOException {
+    Preconditions.checkNotNull(in);
+    Preconditions.checkNotNull(b);
+    if (len < 0) {
+      throw new IndexOutOfBoundsException("len is negative");
+    }
+    int total = 0;
+    while (total < len) {
+      int result = in.read(b, off + total, len - total);
+      if (result == -1) {
+        break;
+      }
+      total += result;
+    }
+    return total;
   }
 
   private ByteStreams() {
