@@ -44,7 +44,7 @@ import java.io.IOException;
   public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
     return transport.createRequestFactory(new HttpRequestInitializer() {
 
-      @Override
+      {@literal @}Override
       public void initialize(HttpRequest request) {
         request.setResponseInterceptor(new TimerResponseInterceptor());
       }
