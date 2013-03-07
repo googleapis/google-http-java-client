@@ -385,6 +385,7 @@
                 <link>http://commons.apache.org/proper/commons-codec/javadocs/api-release</link>
               </links>
               <doctitle>Google HTTP Client Library for Java ${project.version}</doctitle>
+              <excludePackageNames>com.google.api.client.findbugs</excludePackageNames>
               <groups>
                 <group>
                   <title>google-http-client</title>
