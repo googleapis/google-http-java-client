@@ -14,8 +14,6 @@
 
 package com.google.api.client.util;
 
-import com.google.api.client.http.BackOffPolicy;
-
 import java.io.IOException;
 
 /**
@@ -66,7 +64,7 @@ import java.io.IOException;
    7             5.692              [2.846,  8.538]
    8             8.538              [4.269, 12.807]
    9            12.807              [6.403, 19.210]
-   10           19.210              {@link BackOffPolicy#STOP}
+   10           19.210              {@link BackOff#STOP}
  * </pre>
  *
  * <p>
