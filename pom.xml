@@ -441,14 +441,15 @@
         <artifactId>findbugs-maven-plugin</artifactId>
         <configuration>
           <excludeFilterFile>${basedir}/../findbugs-exclude.xml</excludeFilterFile>
-          <!-- Add google-http-client-findbugs plugin only after it was built -->
-          <!--<plugins>
+          <!-- First time you compile you must use -Dfindbugs.skip=true due to
+               plugin not installed yet. -->
+          <plugins>
             <plugin>
               <groupId>com.google.http-client</groupId>
               <artifactId>google-http-client-findbugs</artifactId>
               <version>${project.version}</version>
             </plugin>
-          </plugins>-->
+          </plugins>
         </configuration>
         <executions>
           <execution>
