@@ -14,10 +14,15 @@
 
 package com.google.api.client.xml.atom;
 
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.util.Charsets;
+import com.google.api.client.util.Lists;
 import com.google.api.client.util.Preconditions;
+import com.google.api.client.util.escape.PercentEscaper;
 import com.google.api.client.xml.Xml;
+
+import java.util.Arrays;
 
 /**
  * @since 1.0
@@ -39,6 +44,10 @@ public final class Atom {
    */
   public static final String MEDIA_TYPE =
       new HttpMediaType("application/atom+xml").setCharsetParameter(Charsets.UTF_8).build();
+
+  /** Escaper for the {@code Slug} header. */
+  private static final PercentEscaper SLUG_ESCAPER =
+      new PercentEscaper(" !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~", false);
 
   static final class StopAtAtomEntry extends Xml.CustomizeParser {
 
@@ -62,5 +71,19 @@ public final class Atom {
     Preconditions.checkArgument(contentType != null); // for backwards compatibility
     Preconditions.checkArgument(HttpMediaType.equalsIgnoreParameters(MEDIA_TYPE, contentType),
         "Wrong content type: expected <" + MEDIA_TYPE + "> but got <%s>", contentType);
+  }
+
+  /**
+   * Sets the {@code "Slug"} header, properly escaping the header value. See <a
+   * href="http://tools.ietf.org/html/rfc5023#section-9.7">The Slug Header</a>.
+   *
+   * @since 1.14
+   */
+  public static void setSlugHeader(HttpHeaders headers, String value) {
+    if (value == null) {
+      headers.remove("Slug");
+    } else {
+      headers.set("Slug", Lists.newArrayList(Arrays.asList(SLUG_ESCAPER.escape(value))));
+    }
   }
 }
