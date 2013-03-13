@@ -18,8 +18,8 @@ package com.google.api.client.util;
  * Nano clock which can be used to measure elapsed time in nanoseconds.
  *
  * <p>
- * The default system implementation can be accessed at {@link NanoClock#SYSTEM}. Primarily used for
- * testing.
+ * The default system implementation can be accessed at {@link #SYSTEM}. Alternative implementations
+ * may be used for testing.
  * </p>
  *
  * @since 1.14

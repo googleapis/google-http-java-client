@@ -14,8 +14,8 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.client.util.NanoClock;
-import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
 
@@ -79,75 +79,35 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
   /**
    * The default initial interval value in milliseconds (0.5 seconds).
    */
-  public static final int DEFAULT_INITIAL_INTERVAL_MILLIS = 500;
+  public static final int DEFAULT_INITIAL_INTERVAL_MILLIS =
+      ExponentialBackOff.DEFAULT_INITIAL_INTERVAL_MILLIS;
 
   /**
    * The default randomization factor (0.5 which results in a random period ranging between 50%
    * below and 50% above the retry interval).
    */
-  public static final double DEFAULT_RANDOMIZATION_FACTOR = 0.5;
+  public static final double DEFAULT_RANDOMIZATION_FACTOR =
+      ExponentialBackOff.DEFAULT_RANDOMIZATION_FACTOR;
 
   /**
    * The default multiplier value (1.5 which is 50% increase per back off).
    */
-  public static final double DEFAULT_MULTIPLIER = 1.5;
+  public static final double DEFAULT_MULTIPLIER = ExponentialBackOff.DEFAULT_MULTIPLIER;
 
   /**
    * The default maximum back off time in milliseconds (1 minute).
    */
-  public static final int DEFAULT_MAX_INTERVAL_MILLIS = 60000;
+  public static final int DEFAULT_MAX_INTERVAL_MILLIS =
+      ExponentialBackOff.DEFAULT_MAX_INTERVAL_MILLIS;
 
   /**
    * The default maximum elapsed time in milliseconds (15 minutes).
    */
-  public static final int DEFAULT_MAX_ELAPSED_TIME_MILLIS = 900000;
+  public static final int DEFAULT_MAX_ELAPSED_TIME_MILLIS =
+      ExponentialBackOff.DEFAULT_MAX_ELAPSED_TIME_MILLIS;
 
-  /**
-   * The current retry interval in milliseconds.
-   */
-  private int currentIntervalMillis;
-
-  /**
-   * The initial retry interval in milliseconds.
-   */
-  private final int initialIntervalMillis;
-
-  /**
-   * The randomization factor to use for creating a range around the retry interval.
-   *
-   * <p>
-   * A randomization factor of 0.5 results in a random period ranging between 50% below and 50%
-   * above the retry interval.
-   * </p>
-   */
-  private final double randomizationFactor;
-
-  /**
-   * The value to multiply the current interval with for each retry attempt.
-   */
-  private final double multiplier;
-
-  /**
-   * The maximum value of the back off period in milliseconds. Once the retry interval reaches this
-   * value it stops increasing.
-   */
-  private final int maxIntervalMillis;
-
-  /**
-   * The system time in nanoseconds. It is calculated when an ExponentialBackOffPolicy instance is
-   * created and is reset when {@link #reset()} is called.
-   */
-  long startTimeNanos;
-
-  /**
-   * The maximum elapsed time after instantiating {@link ExponentialBackOffPolicy} or calling
-   * {@link #reset()} after which {@link #getNextBackOffMillis()} returns {@link BackOffPolicy#STOP}
-   * .
-   */
-  private final int maxElapsedTimeMillis;
-
-  /** Nano clock. */
-  private final NanoClock nanoClock;
+  /** Exponential backoff. */
+  private final ExponentialBackOff exponentialBackOff;
 
   /**
    * Creates an instance of ExponentialBackOffPolicy using default values. To override the defaults
@@ -170,18 +130,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
    * @since 1.14
    */
   protected ExponentialBackOffPolicy(Builder builder) {
-    initialIntervalMillis = builder.initialIntervalMillis;
-    randomizationFactor = builder.randomizationFactor;
-    multiplier = builder.multiplier;
-    maxIntervalMillis = builder.maxIntervalMillis;
-    maxElapsedTimeMillis = builder.maxElapsedTimeMillis;
-    nanoClock = builder.nanoClock;
-    Preconditions.checkArgument(initialIntervalMillis > 0);
-    Preconditions.checkArgument(0 <= randomizationFactor && randomizationFactor < 1);
-    Preconditions.checkArgument(multiplier >= 1);
-    Preconditions.checkArgument(maxIntervalMillis >= initialIntervalMillis);
-    Preconditions.checkArgument(maxElapsedTimeMillis > 0);
-    reset();
+    exponentialBackOff = builder.exponentialBackOffBuilder.build();
   }
 
   /**
@@ -211,8 +160,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
    * Sets the interval back to the initial retry interval and restarts the timer.
    */
   public final void reset() {
-    currentIntervalMillis = initialIntervalMillis;
-    startTimeNanos = nanoClock.nanoTime();
+    exponentialBackOff.reset();
   }
 
   /**
@@ -232,37 +180,14 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
    *         more retries should be made
    */
   public long getNextBackOffMillis() throws IOException {
-    // Make sure we have not gone over the maximum elapsed time.
-    if (getElapsedTimeMillis() > maxElapsedTimeMillis) {
-      return STOP;
-    }
-    int randomizedInterval =
-        getRandomValueFromInterval(randomizationFactor, Math.random(), currentIntervalMillis);
-    incrementCurrentInterval();
-    return randomizedInterval;
-  }
-
-  /**
-   * Returns a random value from the interval [randomizationFactor * currentInterval,
-   * randomizationFactor * currentInterval].
-   */
-  static int getRandomValueFromInterval(double randomizationFactor, double random,
-      int currentIntervalMillis) {
-    double delta = randomizationFactor * currentIntervalMillis;
-    double minInterval = currentIntervalMillis - delta;
-    double maxInterval = currentIntervalMillis + delta;
-    // Get a random value from the range [minInterval, maxInterval].
-    // The formula used below has a +1 because if the minInterval is 1 and the maxInterval is 3 then
-    // we want a 33% chance for selecting either 1, 2 or 3.
-    int randomValue = (int) (minInterval + (random * (maxInterval - minInterval + 1)));
-    return randomValue;
+    return exponentialBackOff.nextBackOffMillis();
   }
 
   /**
    * Returns the initial retry interval in milliseconds.
    */
   public final int getInitialIntervalMillis() {
-    return initialIntervalMillis;
+    return exponentialBackOff.getInitialIntervalMillis();
   }
 
   /**
@@ -274,21 +199,21 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
    * </p>
    */
   public final double getRandomizationFactor() {
-    return randomizationFactor;
+    return exponentialBackOff.getRandomizationFactor();
   }
 
   /**
    * Returns the current retry interval in milliseconds.
    */
   public final int getCurrentIntervalMillis() {
-    return currentIntervalMillis;
+    return exponentialBackOff.getCurrentIntervalMillis();
   }
 
   /**
    * Returns the value to multiply the current interval with for each retry attempt.
    */
   public final double getMultiplier() {
-    return multiplier;
+    return exponentialBackOff.getMultiplier();
   }
 
   /**
@@ -296,7 +221,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
    * reaches this value it stops increasing.
    */
   public final int getMaxIntervalMillis() {
-    return maxIntervalMillis;
+    return exponentialBackOff.getMaxIntervalMillis();
   }
 
   /**
@@ -309,7 +234,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
    * </p>
    */
   public final int getMaxElapsedTimeMillis() {
-    return maxElapsedTimeMillis;
+    return exponentialBackOff.getMaxElapsedTimeMillis();
   }
 
   /**
@@ -321,19 +246,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
    * </p>
    */
   public final long getElapsedTimeMillis() {
-    return (nanoClock.nanoTime() - startTimeNanos) / 1000000;
-  }
-
-  /**
-   * Increments the current interval by multiplying it with the multiplier.
-   */
-  private void incrementCurrentInterval() {
-    // Check for overflow, if overflow is detected set the current interval to the max interval.
-    if (currentIntervalMillis >= maxIntervalMillis / multiplier) {
-      currentIntervalMillis = maxIntervalMillis;
-    } else {
-      currentIntervalMillis *= multiplier;
-    }
+    return exponentialBackOff.getElapsedTimeMillis();
   }
 
   /**
@@ -354,41 +267,8 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
    */
   public static class Builder {
 
-    /**
-     * The initial retry interval in milliseconds.
-     */
-    int initialIntervalMillis = DEFAULT_INITIAL_INTERVAL_MILLIS;
-
-    /**
-     * The randomization factor to use for creating a range around the retry interval.
-     *
-     * <p>
-     * A randomization factor of 0.5 results in a random period ranging between 50% below and 50%
-     * above the retry interval.
-     * </p>
-     */
-    double randomizationFactor = DEFAULT_RANDOMIZATION_FACTOR;
-
-    /**
-     * The value to multiply the current interval with for each retry attempt.
-     */
-    double multiplier = DEFAULT_MULTIPLIER;
-
-    /**
-     * The maximum value of the back off period in milliseconds. Once the retry interval reaches
-     * this value it stops increasing.
-     */
-    int maxIntervalMillis = DEFAULT_MAX_INTERVAL_MILLIS;
-
-    /**
-     * The maximum elapsed time in milliseconds after instantiating {@link ExponentialBackOffPolicy}
-     * or calling {@link #reset()} after which {@link #getNextBackOffMillis()} returns
-     * {@link BackOffPolicy#STOP}.
-     */
-    int maxElapsedTimeMillis = DEFAULT_MAX_ELAPSED_TIME_MILLIS;
-
-    /** Nano clock. */
-    NanoClock nanoClock = NanoClock.SYSTEM;
+    /** Exponential back-off builder. */
+    final ExponentialBackOff.Builder exponentialBackOffBuilder = new ExponentialBackOff.Builder();
 
     protected Builder() {
     }
@@ -403,7 +283,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
      * {@link #DEFAULT_INITIAL_INTERVAL_MILLIS}.
      */
     public final int getInitialIntervalMillis() {
-      return initialIntervalMillis;
+      return exponentialBackOffBuilder.getInitialIntervalMillis();
     }
 
     /**
@@ -416,7 +296,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
      * </p>
      */
     public Builder setInitialIntervalMillis(int initialIntervalMillis) {
-      this.initialIntervalMillis = initialIntervalMillis;
+      exponentialBackOffBuilder.setInitialIntervalMillis(initialIntervalMillis);
       return this;
     }
 
@@ -435,7 +315,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
      * </p>
      */
     public final double getRandomizationFactor() {
-      return randomizationFactor;
+      return exponentialBackOffBuilder.getRandomizationFactor();
     }
 
     /**
@@ -454,7 +334,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
      * </p>
      */
     public Builder setRandomizationFactor(double randomizationFactor) {
-      this.randomizationFactor = randomizationFactor;
+      exponentialBackOffBuilder.setRandomizationFactor(randomizationFactor);
       return this;
     }
 
@@ -463,7 +343,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
      * value is {@link #DEFAULT_MULTIPLIER}.
      */
     public final double getMultiplier() {
-      return multiplier;
+      return exponentialBackOffBuilder.getMultiplier();
     }
 
     /**
@@ -476,7 +356,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
      * </p>
      */
     public Builder setMultiplier(double multiplier) {
-      this.multiplier = multiplier;
+      exponentialBackOffBuilder.setMultiplier(multiplier);
       return this;
     }
 
@@ -486,7 +366,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
      * {@link #DEFAULT_MAX_INTERVAL_MILLIS}. Must be {@code >= initialInterval}.
      */
     public final int getMaxIntervalMillis() {
-      return maxIntervalMillis;
+      return exponentialBackOffBuilder.getMaxIntervalMillis();
     }
 
     /**
@@ -500,7 +380,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
      * </p>
      */
     public Builder setMaxIntervalMillis(int maxIntervalMillis) {
-      this.maxIntervalMillis = maxIntervalMillis;
+      exponentialBackOffBuilder.setMaxIntervalMillis(maxIntervalMillis);
       return this;
     }
 
@@ -515,7 +395,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
      * </p>
      */
     public final int getMaxElapsedTimeMillis() {
-      return maxElapsedTimeMillis;
+      return exponentialBackOffBuilder.getMaxElapsedTimeMillis();
     }
 
     /**
@@ -534,7 +414,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
      * </p>
      */
     public Builder setMaxElapsedTimeMillis(int maxElapsedTimeMillis) {
-      this.maxElapsedTimeMillis = maxElapsedTimeMillis;
+      exponentialBackOffBuilder.setMaxElapsedTimeMillis(maxElapsedTimeMillis);
       return this;
     }
 
@@ -544,7 +424,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
      * @since 1.14
      */
     public final NanoClock getNanoClock() {
-      return nanoClock;
+      return exponentialBackOffBuilder.getNanoClock();
     }
 
     /**
@@ -558,7 +438,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
      * @since 1.14
      */
     public Builder setNanoClock(NanoClock nanoClock) {
-      this.nanoClock = Preconditions.checkNotNull(nanoClock);
+      exponentialBackOffBuilder.setNanoClock(nanoClock);
       return this;
     }
   }

@@ -19,6 +19,7 @@ import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingStreamingContent;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Preconditions;
+import com.google.api.client.util.Sleeper;
 import com.google.api.client.util.StreamingContent;
 import com.google.api.client.util.StringUtils;
 
@@ -205,6 +206,9 @@ public final class HttpRequest {
    * </p>
    */
   private boolean suppressUserAgentSuffix;
+
+  /** Sleeper. */
+  private Sleeper sleeper = Sleeper.DEFAULT;
 
   /**
    * @param transport HTTP transport
@@ -909,7 +913,7 @@ public final class HttpRequest {
    */
   @SuppressWarnings("deprecation")
   public HttpResponse execute() throws IOException {
-    boolean retrySupported = false;
+    boolean retryRequest = false;
     Preconditions.checkArgument(numRetries >= 0);
     int retriesRemaining = numRetries;
     if (backOffPolicy != null) {
@@ -1072,7 +1076,7 @@ public final class HttpRequest {
 
       // We need to make sure our content type can support retry
       // null content is inherently able to be retried
-      retrySupported = contentRetrySupported && retriesRemaining > 0;
+      retryRequest = contentRetrySupported && retriesRemaining > 0;
 
       // execute
       lowLevelHttpRequest.setTimeout(connectTimeout, readTimeout);
@@ -1103,41 +1107,42 @@ public final class HttpRequest {
       try {
         if (response != null && !response.isSuccessStatusCode()) {
           boolean errorHandled = false;
-          boolean redirectRequest = false;
-          boolean backOffRetry = false;
           if (unsuccessfulResponseHandler != null) {
             // Even if we don't have the potential to retry, we might want to run the
             // handler to fix conditions (like expired tokens) that might cause us
             // trouble on our next request
             errorHandled =
-                unsuccessfulResponseHandler.handleResponse(this, response, retrySupported);
+                unsuccessfulResponseHandler.handleResponse(this, response, retryRequest);
           }
           if (!errorHandled) {
             if (handleRedirect(response.getStatusCode(), response.getHeaders())) {
               // The unsuccessful request's error could not be handled and it is a redirect request.
-              redirectRequest = true;
-            } else if (retrySupported && backOffPolicy != null
+              errorHandled = true;
+            } else if (retryRequest && backOffPolicy != null
                 && backOffPolicy.isBackOffRequired(response.getStatusCode())) {
               // The unsuccessful request's error could not be handled and should be backed off
               // before retrying
               long backOffTime = backOffPolicy.getNextBackOffMillis();
               if (backOffTime != BackOffPolicy.STOP) {
-                sleep(backOffTime);
-                backOffRetry = true;
+                try {
+                  sleeper.sleep(backOffTime);
+                } catch (InterruptedException exception) {
+                  // ignore
+                }
+                errorHandled = true;
               }
             }
           }
           // A retry is required if the error was successfully handled or if it is a redirect
-          // request
-          // or if the back off policy determined a retry is necessary.
-          retrySupported &= (errorHandled || redirectRequest || backOffRetry);
+          // request or if the back off policy determined a retry is necessary.
+          retryRequest &= errorHandled;
           // need to close the response stream before retrying a request
-          if (retrySupported) {
+          if (retryRequest) {
             response.ignore();
           }
         } else {
           // Retry is not required for a successful status code unless the response is null.
-          retrySupported &= (response == null);
+          retryRequest &= (response == null);
         }
         // Once there are no more retries remaining, this will be -1
         // Count redirects as retries, we want a finite limit of redirects.
@@ -1149,7 +1154,7 @@ public final class HttpRequest {
           response.disconnect();
         }
       }
-    } while (retrySupported);
+    } while (retryRequest);
 
     if (response == null) {
       // Retries did not help resolve the execute exception, re-throw it.
@@ -1240,21 +1245,6 @@ public final class HttpRequest {
   }
 
   /**
-   * An exception safe sleep where if the sleeping is interrupted the exception is ignored.
-   *
-   * @param millis to sleep
-   */
-  private void sleep(long millis) {
-    try {
-      // TODO(rmistry): Provide a way to mock out Thread.sleep to check that sleep gets called with
-      // expected values.
-      Thread.sleep(millis);
-    } catch (InterruptedException e) {
-      // Ignore.
-    }
-  }
-
-  /**
    * Returns the normalized media type without parameters of the form {@code type "/" subtype"} as
    * specified in <a href="http://tools.ietf.org/html/rfc2616#section-3.7">Media Types</a>.
    *
@@ -1273,5 +1263,24 @@ public final class HttpRequest {
     }
     int semicolon = mediaType.indexOf(';');
     return semicolon == -1 ? mediaType : mediaType.substring(0, semicolon);
+  }
+
+  /**
+   * Returns the sleeper.
+   *
+   * @since 1.15
+   */
+  public Sleeper getSleeper() {
+    return sleeper;
+  }
+
+  /**
+   * Sets the sleeper.
+   *
+   * @since 1.15
+   */
+  public HttpRequest setSleeper(Sleeper sleeper) {
+    this.sleeper = Preconditions.checkNotNull(sleeper);
+    return this;
   }
 }
