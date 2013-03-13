@@ -14,12 +14,14 @@
 
 package com.google.api.client.xml;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
 
 import java.util.concurrent.ConcurrentMap;
 
 /**
+ * {@link Experimental} <br/>
  * Generic XML data that stores all unknown key name/value pairs.
  *
  * <p>
@@ -38,6 +40,7 @@ import java.util.concurrent.ConcurrentMap;
  * @since 1.0
  * @author Yaniv Inbar
  */
+@Experimental
 public class GenericXml extends GenericData implements Cloneable {
 
   /**

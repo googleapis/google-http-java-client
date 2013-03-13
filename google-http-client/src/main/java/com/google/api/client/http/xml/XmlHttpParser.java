@@ -16,6 +16,7 @@ package com.google.api.client.http.xml;
 
 import com.google.api.client.http.HttpParser;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
 import com.google.api.client.xml.Xml;
@@ -50,6 +51,7 @@ import java.io.InputStream;
  * @deprecated (scheduled to be removed in 1.14) Use {@link XmlObjectParser} instead.
  */
 @Deprecated
+@Experimental
 public class XmlHttpParser implements HttpParser {
 
   /** {@code "application/xml"} content type. */
@@ -124,6 +126,7 @@ public class XmlHttpParser implements HttpParser {
   }
 
   /**
+   * {@link Experimental} <br/>
    * Builder for {@link XmlHttpParser}.
    *
    * <p>
@@ -132,6 +135,7 @@ public class XmlHttpParser implements HttpParser {
    *
    * @since 1.5
    */
+  @Experimental
   public static class Builder {
 
     /** Content type or {@code null} for none. */

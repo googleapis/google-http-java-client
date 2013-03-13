@@ -16,13 +16,16 @@ package com.google.api.client.xml.atom;
 
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.util.Charsets;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.xml.Xml;
 
 /**
+ * {@link Experimental} <br/>
  * @since 1.0
  * @author Yaniv Inbar
  */
+@Experimental
 public final class Atom {
 
   /** Atom namespace. */

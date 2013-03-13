@@ -15,13 +15,16 @@
 package com.google.api.client.testing.http;
 
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.util.Experimental;
 
 /**
+ * {@link Experimental} <br/>
  * Utilities and constants related to testing the HTTP library.
  *
  * @author Yaniv Inbar
  * @since 1.6
  */
+@Experimental
 public final class HttpTesting {
 
   /** A simple string URL for testing of value {@code "http://google.com/"}. */

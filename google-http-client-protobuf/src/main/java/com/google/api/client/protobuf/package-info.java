@@ -13,16 +13,12 @@
  */
 
 /**
+ * {@link com.google.api.client.util.Experimental} <br/>
  * Utilities for the <a href="http://code.google.com/p/protobuf/">Protocol Buffer</a> format.
- *
- * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
- * </p>
  *
  * @since 1.5
  * @author Yaniv Inbar
  */
-
+@com.google.api.client.util.Experimental
 package com.google.api.client.protobuf;
 

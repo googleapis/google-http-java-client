@@ -14,6 +14,8 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Experimental;
+
 import java.io.IOException;
 
 
@@ -88,6 +90,7 @@ public final class HttpRequestFactory {
    *             {@link #buildRequest(String, GenericUrl, HttpContent)} instead
    */
   @Deprecated
+  @Experimental
   public HttpRequest buildRequest(HttpMethod method, GenericUrl url, HttpContent content)
       throws IOException {
     return buildRequest(method.toString(), url, content);

@@ -14,6 +14,8 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Experimental;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -38,6 +40,7 @@ public class EmptyContent implements HttpContent {
   }
 
   @Deprecated
+  @Experimental
   public String getEncoding() {
     return null;
   }

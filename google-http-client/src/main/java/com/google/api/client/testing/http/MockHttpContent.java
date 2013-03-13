@@ -16,12 +16,14 @@ package com.google.api.client.testing.http;
 
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpEncoding;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * {@link Experimental} <br/>
  * Mock for {@link HttpContent}.
  *
  * <p>
@@ -31,6 +33,7 @@ import java.io.OutputStream;
  * @author Yaniv Inbar
  * @since 1.3
  */
+@Experimental
 public class MockHttpContent implements HttpContent {
 
   /** HTTP content encoding or {@code null} by default. */

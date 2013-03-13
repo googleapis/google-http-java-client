@@ -14,6 +14,8 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Experimental;
+
 /**
  * HTTP request method.
  *
@@ -24,6 +26,7 @@ package com.google.api.client.http;
  *             restrict it to a small set of HTTP methods.
  */
 @Deprecated
+@Experimental
 public enum HttpMethod {
   DELETE, GET, HEAD, PATCH, PUT, POST
 }

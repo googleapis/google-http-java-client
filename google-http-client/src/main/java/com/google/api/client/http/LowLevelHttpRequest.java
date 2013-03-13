@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.StreamingContent;
 
 import java.io.IOException;
@@ -72,6 +73,7 @@ public abstract class LowLevelHttpRequest {
    *             {@link #setStreamingContent(StreamingContent)} instead.
    */
   @Deprecated
+  @Experimental
   public void setContent(HttpContent content) throws IOException {
   }
 

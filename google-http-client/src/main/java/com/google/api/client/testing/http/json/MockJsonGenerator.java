@@ -16,12 +16,14 @@ package com.google.api.client.testing.http.json;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
+import com.google.api.client.util.Experimental;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
+ * {@link Experimental} <br/>
  * Mock for {@link JsonGenerator}.
  *
  * <p>
@@ -31,6 +33,7 @@ import java.math.BigInteger;
  * @author rmistry@google.com (Ravi Mistry)
  * @since 1.11
  */
+@Experimental
 public class MockJsonGenerator extends JsonGenerator {
 
   private final JsonFactory factory;

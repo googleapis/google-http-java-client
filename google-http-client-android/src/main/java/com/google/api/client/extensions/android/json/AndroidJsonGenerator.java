@@ -16,6 +16,7 @@ package com.google.api.client.extensions.android.json;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
+import com.google.api.client.util.Experimental;
 
 import android.annotation.TargetApi;
 import android.util.JsonWriter;
@@ -25,6 +26,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
+ * {@link Experimental} <br/>
  * Low-level JSON serializer implementation based on GSON.
  *
  * <p>
@@ -34,6 +36,7 @@ import java.math.BigInteger;
  * @author Yaniv Inbar
  */
 @TargetApi(11)
+@Experimental
 class AndroidJsonGenerator extends JsonGenerator {
   private final JsonWriter writer;
   private final AndroidJsonFactory factory;

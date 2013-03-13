@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 
 import java.io.File;
@@ -82,6 +83,7 @@ public final class FileContent extends AbstractInputStreamContent {
 
   @Override
   @Deprecated
+  @Experimental
   public FileContent setEncoding(String encoding) {
     return (FileContent) super.setEncoding(encoding);
   }

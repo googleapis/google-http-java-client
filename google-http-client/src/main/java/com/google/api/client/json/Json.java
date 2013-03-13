@@ -16,6 +16,7 @@ package com.google.api.client.json;
 
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.util.Charsets;
+import com.google.api.client.util.Experimental;
 
 /**
  * JSON utilities.
@@ -29,6 +30,7 @@ public class Json {
    * @deprecated (scheduled to be removed in 1.14) Use {@link #MEDIA_TYPE} instead.
    */
   @Deprecated
+  @Experimental
   public static final String CONTENT_TYPE = "application/json";
 
   /**

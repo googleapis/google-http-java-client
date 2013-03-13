@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingStreamingContent;
 import com.google.api.client.util.ObjectParser;
@@ -138,6 +139,7 @@ public final class HttpRequest {
    * {@link HttpMethod}.
    */
   @Deprecated
+  @Experimental
   private HttpMethod method;
 
   /** HTTP request method or {@code null} for none. */
@@ -163,6 +165,7 @@ public final class HttpRequest {
 
   /** Map from normalized content type to HTTP parser. */
   @Deprecated
+  @Experimental
   private final Map<String, HttpParser> contentTypeToParserMap = new HashMap<String, HttpParser>();
 
   /** Parser used to parse responses. */
@@ -173,6 +176,7 @@ public final class HttpRequest {
 
   /** Whether to enable gzip compression of HTTP content ({@code false} by default). */
   @Deprecated
+  @Experimental
   private boolean enableGZipContent;
 
   /** The {@link BackOffPolicy} to use between retry attempts or {@code null} for none. */
@@ -228,6 +232,7 @@ public final class HttpRequest {
    * @deprecated (scheduled to be removed in 1.14) Use {@link #getRequestMethod()} instead
    */
   @Deprecated
+  @Experimental
   public HttpMethod getMethod() {
     return method;
   }
@@ -239,6 +244,7 @@ public final class HttpRequest {
    * @deprecated (scheduled to be removed in 1.14) Use {@link #setRequestMethod} instead
    */
   @Deprecated
+  @Experimental
   public HttpRequest setMethod(HttpMethod method) {
     return setRequestMethod(method.toString());
   }
@@ -347,6 +353,7 @@ public final class HttpRequest {
    * @deprecated (scheduled to be removed in 1.15) Use {@link #getEncoding()} instead.
    */
   @Deprecated
+  @Experimental
   public boolean getEnableGZipContent() {
     return enableGZipContent;
   }
@@ -383,6 +390,7 @@ public final class HttpRequest {
    *             {@link GZipEncoding} instead.
    */
   @Deprecated
+  @Experimental
   public HttpRequest setEnableGZipContent(boolean enableGZipContent) {
     this.enableGZipContent = enableGZipContent;
     return this;
@@ -727,6 +735,7 @@ public final class HttpRequest {
    * @deprecated (scheduled to be removed in 1.14) Use {@link #setParser(ObjectParser)} instead.
    */
   @Deprecated
+  @Experimental
   public void addParser(HttpParser parser) {
     String contentType = normalizeMediaType(parser.getContentType());
     contentTypeToParserMap.put(contentType, parser);
@@ -757,6 +766,7 @@ public final class HttpRequest {
    * @deprecated (scheduled to be removed in 1.14) Use {@link #getParser()} instead.
    */
   @Deprecated
+  @Experimental
   public final HttpParser getParser(String contentType) {
     contentType = normalizeMediaType(contentType);
     return contentTypeToParserMap.get(contentType);
@@ -1256,6 +1266,7 @@ public final class HttpRequest {
    *             {@link HttpMediaType#equalsIgnoreParameters(HttpMediaType)} instead
    */
   @Deprecated
+  @Experimental
   public static String normalizeMediaType(String mediaType) {
     if (mediaType == null) {
       return null;

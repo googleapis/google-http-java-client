@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
@@ -61,6 +62,7 @@ import java.util.List;
  * @deprecated (scheduled to be removed in 1.15) Use {@link MultipartContent} instead.
  */
 @Deprecated
+@Experimental
 public final class MultipartRelatedContent extends AbstractHttpContent {
   /**
    * Collection of HTTP content parts.

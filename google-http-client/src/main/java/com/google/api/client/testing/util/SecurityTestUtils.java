@@ -14,6 +14,7 @@
 
 package com.google.api.client.testing.util;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.SecurityUtils;
 
 import java.security.GeneralSecurityException;
@@ -25,11 +26,13 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 /**
+ * {@link Experimental} <br/>
  * Utilities and constants related to testing the library {@code util} package.
  *
  * @since 1.14
  * @author Yaniv Inbar
  */
+@Experimental
 public final class SecurityTestUtils {
 
   private static final byte[] ENCODED_PRIVATE_KEY = {48, -126, 2, 118, 2, 1, 0, 48, 13, 6, 9, 42,

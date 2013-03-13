@@ -23,6 +23,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Strings;
 
@@ -31,6 +32,7 @@ import java.io.InputStream;
 import java.util.logging.Logger;
 
 /**
+ * {@link Experimental} <br/>
  * JSON HTTP Client.
  *
  * <p>
@@ -42,6 +44,7 @@ import java.util.logging.Logger;
  * @deprecated (scheduled to be removed in 1.14) Use {@link HttpTransport} instead.
  */
 @Deprecated
+@Experimental
 public class JsonHttpClient {
 
   static final Logger LOGGER = Logger.getLogger(JsonHttpClient.class.getName());
@@ -532,6 +535,7 @@ public class JsonHttpClient {
    * @deprecated (scheduled to be removed in 1.14) Use {@link HttpTransport} instead.
    */
   @Deprecated
+  @Experimental
   public static class Builder {
 
     /** The transport to use for requests. */

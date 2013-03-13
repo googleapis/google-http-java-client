@@ -17,10 +17,12 @@ package com.google.api.client.testing.http;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
+import com.google.api.client.util.Experimental;
 
 import java.io.IOException;
 
 /**
+ * {@link Experimental} <br/>
  * Mock for {@link HttpUnsuccessfulResponseHandler}.
  *
  * <p>
@@ -30,6 +32,7 @@ import java.io.IOException;
  * @author Ravi Mistry
  * @since 1.6
  */
+@Experimental
 public class MockHttpUnsuccessfulResponseHandler implements HttpUnsuccessfulResponseHandler {
 
   private boolean isCalled;

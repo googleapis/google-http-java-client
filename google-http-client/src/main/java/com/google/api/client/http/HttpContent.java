@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.StreamingContent;
 
 import java.io.IOException;
@@ -40,6 +41,7 @@ public interface HttpContent extends StreamingContent {
    * @deprecated (scheduled to be removed in 1.15) Use {@link HttpEncoding} instead
    */
   @Deprecated
+  @Experimental
   String getEncoding();
 
   /** Returns the content type or {@code null} for none. */

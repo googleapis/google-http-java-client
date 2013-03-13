@@ -14,6 +14,7 @@
 
 package com.google.api.client.testing.http.apache;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 
 import org.apache.http.ConnectionReuseStrategy;
@@ -41,6 +42,7 @@ import org.apache.http.protocol.HttpRequestExecutor;
 import java.io.IOException;
 
 /**
+ * {@link Experimental} <br/>
  * Mock for {@link HttpClient} that does not actually make any network calls.
  *
  * <p>
@@ -50,6 +52,7 @@ import java.io.IOException;
  * @since 1.14
  * @author Yaniv Inbar
  */
+@Experimental
 public class MockHttpClient extends DefaultHttpClient {
 
   /** HTTP response code to use. */
@@ -63,7 +66,7 @@ public class MockHttpClient extends DefaultHttpClient {
       AuthenticationHandler targetAuthHandler, AuthenticationHandler proxyAuthHandler,
       UserTokenHandler stateHandler, HttpParams params) {
     return new RequestDirector() {
-
+      @Experimental
       public HttpResponse execute(HttpHost target, HttpRequest request, HttpContext context)
           throws HttpException, IOException {
         return new BasicHttpResponse(HttpVersion.HTTP_1_1, responseCode, null);

@@ -21,6 +21,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
@@ -48,6 +49,7 @@ import java.io.InputStream;
  * @deprecated (scheduled to be removed in 1.14) Use {@link JsonObjectParser} instead.
  */
 @Deprecated
+@Experimental
 public class JsonHttpParser implements HttpParser {
 
   /** Content type. */
@@ -137,6 +139,7 @@ public class JsonHttpParser implements HttpParser {
   }
 
   /**
+   * {@link Experimental} <br/>
    * Builder for {@link JsonHttpParser}.
    *
    * <p>
@@ -145,6 +148,7 @@ public class JsonHttpParser implements HttpParser {
    *
    * @since 1.5
    */
+  @Experimental
   public static class Builder {
 
     /** Content type or {@code null} for none. */

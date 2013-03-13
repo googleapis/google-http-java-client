@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 
 import java.io.InputStream;
@@ -98,6 +99,7 @@ public final class InputStreamContent extends AbstractInputStreamContent {
 
   @Override
   @Deprecated
+  @Experimental
   public InputStreamContent setEncoding(String encoding) {
     return (InputStreamContent) super.setEncoding(encoding);
   }

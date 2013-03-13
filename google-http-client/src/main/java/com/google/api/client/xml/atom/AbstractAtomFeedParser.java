@@ -14,6 +14,7 @@
 
 package com.google.api.client.xml.atom;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
 import com.google.api.client.xml.Xml;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * {@link Experimental} <br/>
  * Abstract base class for an Atom feed parser when the feed type is known in advance.
  *
  * <p>
@@ -36,6 +38,7 @@ import java.io.InputStream;
  * @since 1.0
  * @author Yaniv Inbar
  */
+@Experimental
 public abstract class AbstractAtomFeedParser<T> {
 
   /** Whether the feed has been parsed. */

@@ -17,6 +17,7 @@ package com.google.api.client.http.protobuf;
 import com.google.api.client.http.AbstractHttpContent;
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.protobuf.ProtocolBuffers;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 import com.google.protobuf.MessageLite;
 
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * {@link Experimental} <br/>
  * Serializes of a protocol buffer message to HTTP content.
  *
  * <p>
@@ -46,6 +48,7 @@ import java.io.OutputStream;
  * @since 1.5
  * @author Yaniv Inbar
  */
+@Experimental
 public class ProtoHttpContent extends AbstractHttpContent {
 
   /** Message to serialize. */

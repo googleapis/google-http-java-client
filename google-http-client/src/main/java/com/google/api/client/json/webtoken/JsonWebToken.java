@@ -15,6 +15,7 @@
 package com.google.api.client.json.webtoken;
 
 import com.google.api.client.json.GenericJson;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Objects;
 import com.google.api.client.util.Preconditions;
@@ -23,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * {@link Experimental} <br/>
  * <a href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06">JSON Web Token (JWT)</a>.
  *
  * <p>
@@ -32,6 +34,7 @@ import java.util.List;
  * @since 1.14 (since 1.7 as com.google.api.client.auth.jsontoken.JsonWebToken)
  * @author Yaniv Inbar
  */
+@Experimental
 public class JsonWebToken {
 
   /** Header. */

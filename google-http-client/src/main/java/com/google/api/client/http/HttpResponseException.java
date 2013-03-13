@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
 
@@ -91,6 +92,7 @@ public class HttpResponseException extends IOException {
    *             instead
    */
   @Deprecated
+  @Experimental
   public HttpResponseException(HttpResponse response, String message) {
     super(message);
     statusCode = response.getStatusCode();

@@ -13,15 +13,11 @@
  */
 
 /**
+ * {@link com.google.api.client.util.Experimental} <br/>
  * Utilities for Android.
- *
- * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
- * </p>
  *
  * @since 1.11
  * @author Yaniv Inbar
  */
+@com.google.api.client.util.Experimental
 package com.google.api.client.extensions.android;
-

@@ -14,6 +14,7 @@
 
 package com.google.api.client.testing.util;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Lists;
 
 import java.util.List;
@@ -21,11 +22,13 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 /**
+ * {@link Experimental} <br/>
  * Logging handler that stores log records.
  *
  * @author Yaniv Inbar
  * @since 1.14
  */
+@Experimental
 public class LogRecordingHandler extends Handler {
 
   /** Stored records. */

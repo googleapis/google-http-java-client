@@ -21,6 +21,7 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.UriTemplate;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Preconditions;
 
@@ -40,6 +41,7 @@ import java.io.OutputStream;
  * @deprecated (scheduled to be removed in 1.14) Use {@link HttpRequest} instead.
  */
 @Deprecated
+@Experimental
 public class JsonHttpRequest extends GenericData {
 
   private final JsonHttpClient client;

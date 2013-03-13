@@ -14,16 +14,19 @@
 
 package com.google.api.client.extensions.android;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 
 import android.os.Build;
 
 /**
+ * {@link Experimental} <br/>
  * Utilities for Android.
  *
  * @since 1.11
  * @author Yaniv Inbar
  */
+@Experimental
 public class AndroidUtils {
 
   /**

@@ -15,6 +15,7 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.ByteStreams;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.IOUtils;
 
 import java.io.IOException;
@@ -46,6 +47,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
 
   /** Content encoding (for example {@code "gzip"}) or {@code null} for none. */
   @Deprecated
+  @Experimental
   private String encoding;
 
   /**
@@ -78,6 +80,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
   }
 
   @Deprecated
+  @Experimental
   public String getEncoding() {
     return encoding;
   }
@@ -104,6 +107,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    * @deprecated (scheduled to be removed in 1.15) Use {@link HttpEncoding} instead.
    */
   @Deprecated
+  @Experimental
   public AbstractInputStreamContent setEncoding(String encoding) {
     this.encoding = encoding;
     return this;
@@ -160,6 +164,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    *             {@link IOUtils#copy(InputStream, OutputStream)} instead
    */
   @Deprecated
+  @Experimental
   public static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
     IOUtils.copy(inputStream, outputStream);
   }
@@ -192,6 +197,7 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    *             {@link IOUtils#copy(InputStream, OutputStream, boolean)} instead
    */
   @Deprecated
+  @Experimental
   public static void copy(
       InputStream inputStream, OutputStream outputStream, boolean closeInputStream)
       throws IOException {

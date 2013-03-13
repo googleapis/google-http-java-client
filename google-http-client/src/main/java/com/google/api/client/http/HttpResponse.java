@@ -15,6 +15,7 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Charsets;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingInputStream;
 import com.google.api.client.util.Preconditions;
@@ -450,6 +451,7 @@ public final class HttpResponse {
    *             {@link HttpRequest#getParser()} instead
    */
   @Deprecated
+  @Experimental
   public HttpParser getParser() {
     return request.getParser(contentType);
   }

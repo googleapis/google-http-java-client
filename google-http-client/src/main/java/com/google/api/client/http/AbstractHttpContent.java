@@ -15,6 +15,7 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Charsets;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.StreamingContent;
 
@@ -58,6 +59,7 @@ public abstract class AbstractHttpContent implements HttpContent {
 
   /** Default implementation returns {@code null}, but subclasses may override. */
   @Deprecated
+  @Experimental
   public String getEncoding() {
     return null;
   }

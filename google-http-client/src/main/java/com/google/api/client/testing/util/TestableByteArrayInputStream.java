@@ -14,15 +14,19 @@
 
 package com.google.api.client.testing.util;
 
+import com.google.api.client.util.Experimental;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
+ * {@link Experimental} <br/>
  * Testable extension for a byte array input stream.
  *
  * @author Yaniv Inbar
  * @since 1.14
  */
+@Experimental
 public class TestableByteArrayInputStream extends ByteArrayInputStream {
 
   /** Whether the input stream has been closed. */

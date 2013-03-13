@@ -14,6 +14,7 @@
 
 package com.google.api.client.xml;
 
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
@@ -28,6 +29,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 /**
+ * {@link Experimental} <br/>
  * XML HTTP parser into an data class of key/value pairs.
  *
  * <p>
@@ -47,6 +49,7 @@ import java.nio.charset.Charset;
  * @since 1.10
  * @author Matthias Linder (mlinder)
  */
+@Experimental
 public class XmlObjectParser implements ObjectParser {
   /** XML namespace dictionary. */
   private final XmlNamespaceDictionary namespaceDictionary;
