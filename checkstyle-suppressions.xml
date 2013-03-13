@@ -11,4 +11,7 @@
   <!-- Don't check JavaDoc on tests in com.google.api.testing.json. -->
   <suppress checks="JavadocType" files="com/google/api/client/testing/json/.*Test.java"/>
 
+  <!-- Don't check JavaDoc on package-info. -->
+  <suppress checks="JavadocStyleCheck" files="package-info.java"/>
+
 </suppressions>

@@ -22,6 +22,8 @@ import com.google.api.client.xml.Xml;
 
 /**
  * {@link Experimental} <br/>
+ * Atom Utilities.
+ *
  * @since 1.0
  * @author Yaniv Inbar
  */
