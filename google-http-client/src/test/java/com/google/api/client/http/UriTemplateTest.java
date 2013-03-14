@@ -110,11 +110,11 @@ public class UriTemplateTest extends TestCase {
       {"{/d}", "/red,green,blue"},
       {"{/d*}", "/red/green/blue"},
       {"{;d}", ";d=red,green,blue"},
-      {"{;d*}", ";red;green;blue"},
+      {"{;d*}", ";d=red;d=green;d=blue"},
       {"{?d}", "?d=red,green,blue"},
-      {"{?d*}", "?red&green&blue"},
+      {"{?d*}", "?d=red&d=green&d=blue"},
       {"{&d}", "&d=red,green,blue"},
-      {"{&d*}", "&red&green&blue"},
+      {"{&d*}", "&d=red&d=green&d=blue"},
   };
 
   public void testExpandTemplates_explodeIterator() {
@@ -237,8 +237,8 @@ public class UriTemplateTest extends TestCase {
     requestMap.put("unused1", "unused param");
     requestMap.put("unused2", "unused=param");
     assertEquals(
-        "foo/xyz/red/green/blue&red&green&blue&map=semi,%3B,dot,.,comma,%2CONE?unused1=unused%20"
-        + "param&unused2=unused%3Dparam",
+        "foo/xyz/red/green/blue&iterable=red&iterable=green&iterable=blue&map=semi,%3B,dot,.,comma"
+        + ",%2CONE?unused1=unused%20param&unused2=unused%3Dparam",
         UriTemplate.expand("foo/{abc}{/iterator*}{&iterable*}{&map}{&enum}", requestMap, true));
     // Assert the map has not changed.
     assertEquals(7, requestMap.size());

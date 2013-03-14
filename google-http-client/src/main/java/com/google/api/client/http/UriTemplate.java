@@ -29,7 +29,7 @@ import java.util.Map;
  * Expands URI Templates.
  *
  * This Class supports Level 1 templates and all Level 4 composite templates as described in:
- * <a href="http://tools.ietf.org/html/draft-gregorio-uritemplate-07">URI Template</a>.
+ * <a href="http://tools.ietf.org/html/rfc6570">RFC 6570</a>.
  *
  * Specifically, for the variables:
  * var := "value"
@@ -40,36 +40,36 @@ import java.util.Map;
  * {var}     ->   value
  * {list}    ->   red,green,blue
  * {list*}   ->   red,green,blue
- * {key}     ->   semi,%3B,dot,.,comma,%2C
- * {key*}    ->   semi=%3B,dot=.,comma=%2C
+ * {keys}    ->   semi,%3B,dot,.,comma,%2C
+ * {keys*}   ->   semi=%3B,dot=.,comma=%2C
  * {+list}   ->   red,green,blue
  * {+list*}  ->   red,green,blue
- * {+key}    ->   semi,;,dot,.,comma,,
- * {+key*}   ->   semi=;,dot=.,comma=,
+ * {+keys}   ->   semi,;,dot,.,comma,,
+ * {+keys*}  ->   semi=;,dot=.,comma=,
  * {#list}   ->   #red,green,blue
  * {#list*}  ->   #red,green,blue
- * {#key}    ->   #semi,;,dot,.,comma,,
- * {#key*}   ->   #semi=;,dot=.,comma=,
+ * {#keys}   ->   #semi,;,dot,.,comma,,
+ * {#keys*}  ->   #semi=;,dot=.,comma=,
  * X{.list}  ->   X.red,green,blue
  * X{.list*} ->   X.red.green.blue
- * X{.key} -  >   X.semi,%3B,dot,.,comma,%2C
- * X{.key*}  ->   X.semi=%3B.dot=..comma=%2C
+ * X{.keys}  ->   X.semi,%3B,dot,.,comma,%2C
+ * X{.keys*} ->   X.semi=%3B.dot=..comma=%2C
  * {/list}   ->   /red,green,blue
  * {/list*}  ->   /red/green/blue
- * {/key}    ->   /semi,%3B,dot,.,comma,%2C
- * {/key*}   ->   /semi=%3B/dot=./comma=%2C
+ * {/keys}   ->   /semi,%3B,dot,.,comma,%2C
+ * {/keys*}  ->   /semi=%3B/dot=./comma=%2C
  * {;list}   ->   ;list=red,green,blue
- * {;list*}  ->   ;red;green;blue
- * {;key}    ->   ;keys=semi,%3B,dot,.,comma,%2C
- * {;key*}   ->   ;semi=%3B;dot=.;comma=%2C
+ * {;list*}  ->   ;list=red;list=green;list=blue
+ * {;keys}   ->   ;keys=semi,%3B,dot,.,comma,%2C
+ * {;keys*}  ->   ;semi=%3B;dot=.;comma=%2C
  * {?list}   ->   ?list=red,green,blue
- * {?list*}  ->   ?red&green&blue
- * {?key}    ->   ?keys=semi,%3B,dot,.,comma,%2C
- * {?key*}   ->   ?semi=%3B&dot=.&comma=%2C
+ * {?list*}  ->   ?list=red&list=green&list=blue
+ * {?keys}   ->   ?keys=semi,%3B,dot,.,comma,%2C
+ * {?keys*}  ->   ?semi=%3B&dot=.&comma=%2C
  * {&list}   ->   &list=red,green,blue
- * {&list*}  ->   &red&green&blue
- * {&key}    ->   &keys=semi,%3B,dot,.,comma,%2C
- * {&key*}   ->   &semi=%3B&dot=.&comma=%2C
+ * {&list*}  ->   &list=red&list=green&list=blue
+ * {&keys}   ->   &keys=semi,%3B,dot,.,comma,%2C
+ * {&keys*}  ->   &semi=%3B&dot=.&comma=%2C
  *
  * @since 1.6
  * @author Ravi Mistry
@@ -226,7 +226,7 @@ public class UriTemplate {
    *
    * <p>
    * Supports Level 1 templates and all Level 4 composite templates as described in:
-   * <a href="http://tools.ietf.org/html/draft-gregorio-uritemplate-07">URI Template</a>.
+   * <a href="http://tools.ietf.org/html/rfc6570">RFC 6570</a>.
    * </p>
    *
    * @param baseUrl The base URL which the URI component is relative to.
@@ -260,7 +260,7 @@ public class UriTemplate {
    *
    * <p>
    * Supports Level 1 templates and all Level 4 composite templates as described in:
-   * <a href="http://tools.ietf.org/html/draft-gregorio-uritemplate-07">URI Template</a>.
+   * <a href="http://tools.ietf.org/html/rfc6570">RFC 6570</a>.
    * </p>
    *
    * @param pathUri URI component. It may contain one or more sequences of the form "{name}", where
@@ -371,6 +371,10 @@ public class UriTemplate {
       }
     }
     while (iterator.hasNext()) {
+      if (containsExplodeModifier && compositeOutput.requiresVarAssignment()) {
+        retBuf.append(CharEscapers.escapeUriPath(varName));
+        retBuf.append("=");
+      }
       retBuf.append(compositeOutput.getEncodedValue(iterator.next().toString()));
       if (iterator.hasNext()) {
         retBuf.append(joiner);
