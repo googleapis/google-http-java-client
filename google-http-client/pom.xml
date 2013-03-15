@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.14.0-beta</version>
+    <version>1.14.1-beta-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client</artifactId>
