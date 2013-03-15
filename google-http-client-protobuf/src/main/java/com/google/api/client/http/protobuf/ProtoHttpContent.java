@@ -54,9 +54,6 @@ public class ProtoHttpContent extends AbstractHttpContent {
   /** Message to serialize. */
   private final MessageLite message;
 
-  /** Content type or {@code null} for none. */
-  private String type = ProtocolBuffers.CONTENT_TYPE;
-
   /**
    * @param message message to serialize
    */
@@ -70,11 +67,6 @@ public class ProtoHttpContent extends AbstractHttpContent {
     return message.getSerializedSize();
   }
 
-  @Override
-  public String getType() {
-    return type;
-  }
-
   public void writeTo(OutputStream out) throws IOException {
     message.writeTo(out);
     out.flush();
@@ -86,10 +78,11 @@ public class ProtoHttpContent extends AbstractHttpContent {
    * <p>
    * Default value is {@link ProtocolBuffers#CONTENT_TYPE}.
    * </p>
+   * @deprecated (scheduled to be removed in 1.16) Use {@link #setMediaType(HttpMediaType)} instead.
    */
+  @Deprecated
   public ProtoHttpContent setType(String type) {
-    this.type = type;
-    return this;
+    return setMediaType(type == null ? null : new HttpMediaType(type));
   }
 
   /** Returns the message to serialize. */
@@ -99,7 +92,6 @@ public class ProtoHttpContent extends AbstractHttpContent {
 
   @Override
   public ProtoHttpContent setMediaType(HttpMediaType mediaType) {
-    super.setMediaType(mediaType);
-    return this;
+    return (ProtoHttpContent) super.setMediaType(mediaType);
   }
 }
