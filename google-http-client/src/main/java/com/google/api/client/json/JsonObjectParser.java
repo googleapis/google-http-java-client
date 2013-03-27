@@ -84,7 +84,7 @@ public class JsonObjectParser implements ObjectParser {
   public Object parseAndClose(InputStream in, Charset charset, Type dataType) throws IOException {
     JsonParser parser = jsonFactory.createJsonParser(in, charset);
     initializeParser(parser);
-    return parser.parse(dataType, true, null);
+    return parser.parse(dataType, true);
   }
 
   @SuppressWarnings("unchecked")
@@ -95,7 +95,7 @@ public class JsonObjectParser implements ObjectParser {
   public Object parseAndClose(Reader reader, Type dataType) throws IOException {
     JsonParser parser = jsonFactory.createJsonParser(reader);
     initializeParser(parser);
-    return parser.parse(dataType, true, null);
+    return parser.parse(dataType, true);
   }
 
   /** Returns the JSON factory. */

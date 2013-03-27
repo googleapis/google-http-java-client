@@ -76,7 +76,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser = newFactory().createJsonParser(EMPTY);
     parser.nextToken();
     try {
-      parser.parseAndClose(HashMap.class, null);
+      parser.parseAndClose(HashMap.class);
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
@@ -89,14 +89,14 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser = newFactory().createJsonParser(EMPTY_OBJECT);
     parser.nextToken();
     @SuppressWarnings("unchecked")
-    HashMap<String, Object> map = parser.parseAndClose(HashMap.class, null);
+    HashMap<String, Object> map = parser.parseAndClose(HashMap.class);
     assertTrue(map.isEmpty());
   }
 
   public void testParse_emptyGenericJson() throws Exception {
     JsonParser parser = newFactory().createJsonParser(EMPTY_OBJECT);
     parser.nextToken();
-    GenericJson json = parser.parseAndClose(GenericJson.class, null);
+    GenericJson json = parser.parseAndClose(GenericJson.class);
     assertTrue(json.isEmpty());
   }
 
@@ -108,7 +108,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     parser.nextToken();
     // current token is now end_object
     @SuppressWarnings("unchecked")
-    HashMap<String, Object> result = parser.parseAndClose(HashMap.class, null);
+    HashMap<String, Object> result = parser.parseAndClose(HashMap.class);
     assertEquals(EMPTY_OBJECT, factory.toString(result));
     // check types and values
     assertTrue(result.isEmpty());
@@ -119,7 +119,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
       "{\"entries\":[" + "{\"title\":\"foo\"}," + "{\"title\":\"bar\"}]}";
 
   public void testParseEntry() throws Exception {
-    Entry entry = newFactory().createJsonParser(JSON_ENTRY).parseAndClose(Entry.class, null);
+    Entry entry = newFactory().createJsonParser(JSON_ENTRY).parseAndClose(Entry.class);
     assertEquals("foo", entry.title);
   }
 
@@ -130,7 +130,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     parser.nextToken();
     parser.nextToken();
     // current token is now field_name
-    Entry result = parser.parseAndClose(Entry.class, null);
+    Entry result = parser.parseAndClose(Entry.class);
     assertEquals(JSON_ENTRY, factory.toString(result));
     // check types and values
     assertEquals("foo", result.title);
@@ -139,7 +139,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   public void testParseFeed() throws Exception {
     JsonParser parser = newFactory().createJsonParser(JSON_FEED);
     parser.nextToken();
-    Feed feed = parser.parseAndClose(Feed.class, null);
+    Feed feed = parser.parseAndClose(Feed.class);
     Iterator<Entry> iterator = feed.entries.iterator();
     assertEquals("foo", iterator.next().title);
     assertEquals("bar", iterator.next().title);
@@ -150,7 +150,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   public void testParseEntryAsMap() throws Exception {
     JsonParser parser = newFactory().createJsonParser(JSON_ENTRY);
     parser.nextToken();
-    HashMap<String, Object> map = parser.parseAndClose(HashMap.class, null);
+    HashMap<String, Object> map = parser.parseAndClose(HashMap.class);
     assertEquals("foo", map.remove("title"));
     assertTrue(map.isEmpty());
   }
@@ -281,7 +281,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   public void testParse() throws Exception {
     JsonParser parser = newFactory().createJsonParser(CONTAINED_MAP);
     parser.nextToken();
-    A a = parser.parse(A.class, null);
+    A a = parser.parse(A.class);
     assertEquals(ImmutableMap.of("title", "foo"), a.map);
   }
 
@@ -401,18 +401,18 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     // number types
     parser = factory.createJsonParser(NUMBER_TYPES);
     parser.nextToken();
-    NumberTypes result = parser.parse(NumberTypes.class, null);
+    NumberTypes result = parser.parse(NumberTypes.class);
     assertEquals(NUMBER_TYPES, factory.toString(result));
     // number types as string
     parser = factory.createJsonParser(NUMBER_TYPES_AS_STRING);
     parser.nextToken();
-    NumberTypesAsString resultAsString = parser.parse(NumberTypesAsString.class, null);
+    NumberTypesAsString resultAsString = parser.parse(NumberTypesAsString.class);
     assertEquals(NUMBER_TYPES_AS_STRING, factory.toString(resultAsString));
     // number types with @JsonString
     try {
       parser = factory.createJsonParser(NUMBER_TYPES_AS_STRING);
       parser.nextToken();
-      parser.parse(NumberTypes.class, null);
+      parser.parse(NumberTypes.class);
       fail("expected IllegalArgumentException");
     } catch (IllegalArgumentException e) {
       // expected
@@ -421,7 +421,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     try {
       parser = factory.createJsonParser(NUMBER_TYPES);
       parser.nextToken();
-      parser.parse(NumberTypesAsString.class, null);
+      parser.parse(NumberTypesAsString.class);
       fail("expected IllegalArgumentException");
     } catch (IllegalArgumentException e) {
       // expected
@@ -467,7 +467,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser;
     parser = factory.createJsonParser(ANY_TYPE);
     parser.nextToken();
-    AnyType result = parser.parse(AnyType.class, null);
+    AnyType result = parser.parse(AnyType.class);
     assertEquals(ANY_TYPE, factory.toString(result));
   }
 
@@ -489,7 +489,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser;
     parser = factory.createJsonParser(ARRAY_TYPE);
     parser.nextToken();
-    ArrayType result = parser.parse(ArrayType.class, null);
+    ArrayType result = parser.parse(ArrayType.class);
     assertEquals(ARRAY_TYPE, factory.toString(result));
     // check types and values
     int[] arr = result.arr;
@@ -521,7 +521,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser;
     parser = factory.createJsonParser(COLLECTION_TYPE);
     parser.nextToken();
-    CollectionOfCollectionType result = parser.parse(CollectionOfCollectionType.class, null);
+    CollectionOfCollectionType result = parser.parse(CollectionOfCollectionType.class);
     assertEquals(COLLECTION_TYPE, factory.toString(result));
     // check that it is actually a linked list
     LinkedList<LinkedList<String>> arr = result.arr;
@@ -543,7 +543,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser;
     parser = factory.createJsonParser(MAP_TYPE);
     parser.nextToken();
-    MapOfMapType result = parser.parse(MapOfMapType.class, null);
+    MapOfMapType result = parser.parse(MapOfMapType.class);
     // serialize
     assertEquals(MAP_TYPE, factory.toString(result));
     // check parsed result
@@ -565,7 +565,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     parser.nextToken();
     @SuppressWarnings("unchecked")
     HashMap<String, ArrayList<ArrayMap<String, ArrayMap<String, BigDecimal>>>> result =
-        parser.parse(HashMap.class, null);
+        parser.parse(HashMap.class);
     // serialize
     assertEquals(MAP_TYPE, factory.toString(result));
     // check parsed result
@@ -602,7 +602,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser;
     parser = factory.createJsonParser(WILDCARD_TYPE);
     parser.nextToken();
-    WildCardTypes result = parser.parse(WildCardTypes.class, null);
+    WildCardTypes result = parser.parse(WildCardTypes.class);
     // serialize
     assertEquals(WILDCARD_TYPE, factory.toString(result));
     // check parsed result
@@ -678,7 +678,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser;
     parser = factory.createJsonParser(INTEGER_TYPE_VARIABLE_TYPE);
     parser.nextToken();
-    IntegerTypeVariableType result = parser.parse(IntegerTypeVariableType.class, null);
+    IntegerTypeVariableType result = parser.parse(IntegerTypeVariableType.class);
     // serialize
     assertEquals(INTEGER_TYPE_VARIABLE_TYPE, factory.toString(result));
     // check parsed result
@@ -714,7 +714,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser;
     parser = factory.createJsonParser(INT_ARRAY_TYPE_VARIABLE_TYPE);
     parser.nextToken();
-    IntArrayTypeVariableType result = parser.parse(IntArrayTypeVariableType.class, null);
+    IntArrayTypeVariableType result = parser.parse(IntArrayTypeVariableType.class);
     // serialize
     assertEquals(INT_ARRAY_TYPE_VARIABLE_TYPE, factory.toString(result));
     // check parsed result
@@ -750,7 +750,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser;
     parser = factory.createJsonParser(DOUBLE_LIST_TYPE_VARIABLE_TYPE);
     parser.nextToken();
-    DoubleListTypeVariableType result = parser.parse(DoubleListTypeVariableType.class, null);
+    DoubleListTypeVariableType result = parser.parse(DoubleListTypeVariableType.class);
     // serialize
     assertEquals(DOUBLE_LIST_TYPE_VARIABLE_TYPE, factory.toString(result));
     // check parsed result
@@ -788,7 +788,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser;
     parser = factory.createJsonParser(FLOAT_MAP_TYPE_VARIABLE_TYPE);
     parser.nextToken();
-    FloatMapTypeVariableType result = parser.parse(FloatMapTypeVariableType.class, null);
+    FloatMapTypeVariableType result = parser.parse(FloatMapTypeVariableType.class);
     // serialize
     assertEquals(FLOAT_MAP_TYPE_VARIABLE_TYPE, factory.toString(result));
     // check parsed result
@@ -831,7 +831,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser;
     parser = factory.createJsonParser(INTEGER_TYPE_VARIABLE_TYPE);
     parser.nextToken();
-    TreeMap<String, Object> result = parser.parse(TreeMap.class, null);
+    TreeMap<String, Object> result = parser.parse(TreeMap.class);
     // serialize
     assertEquals(INTEGER_TYPE_VARIABLE_TYPE, factory.toString(result));
     // check parsed result
@@ -869,7 +869,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser;
     parser = factory.createJsonParser(NULL_VALUE);
     parser.nextToken();
-    StringNullValue result = parser.parse(StringNullValue.class, null);
+    StringNullValue result = parser.parse(StringNullValue.class);
     // serialize
     assertEquals(NULL_VALUE, factory.toString(result));
     // check parsed result
@@ -913,7 +913,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser;
     parser = factory.createJsonParser(ENUM_VALUE);
     parser.nextToken();
-    EnumValue result = parser.parse(EnumValue.class, null);
+    EnumValue result = parser.parse(EnumValue.class);
     // serialize
     assertEquals(ENUM_VALUE, factory.toString(result));
     // check parsed result
@@ -948,7 +948,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser;
     parser = factory.createJsonParser(TYPE_VARS);
     parser.nextToken();
-    TypeVariablesPassedAround result = parser.parse(TypeVariablesPassedAround.class, null);
+    TypeVariablesPassedAround result = parser.parse(TypeVariablesPassedAround.class);
     // serialize
     assertEquals(TYPE_VARS, factory.toString(result));
     // check parsed result
@@ -963,7 +963,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser;
     parser = factory.createJsonParser(STRING_ARRAY);
     parser.nextToken();
-    String[] result = parser.parse(String[].class, null);
+    String[] result = parser.parse(String[].class);
     assertEquals(STRING_ARRAY, factory.toString(result));
     // check types and values
     assertTrue(Arrays.equals(new String[] {"a", "b", "c"}, result));
@@ -976,7 +976,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser parser;
     parser = factory.createJsonParser(INT_ARRAY);
     parser.nextToken();
-    int[] result = parser.parse(int[].class, null);
+    int[] result = parser.parse(int[].class);
     assertEquals(INT_ARRAY, factory.toString(result));
     // check types and values
     assertTrue(Arrays.equals(new int[] {1, 2, 3}, result));
@@ -986,7 +986,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
 
   public void testParser_emptyArray() throws Exception {
     JsonFactory factory = newFactory();
-    String[] result = factory.createJsonParser(EMPTY_ARRAY).parse(String[].class, null);
+    String[] result = factory.createJsonParser(EMPTY_ARRAY).parse(String[].class);
     assertEquals(EMPTY_ARRAY, factory.toString(result));
     // check types and values
     assertEquals(0, result.length);
@@ -999,7 +999,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     parser.nextToken();
     parser.nextToken();
     // token is now end_array
-    String[] result = parser.parse(String[].class, null);
+    String[] result = parser.parse(String[].class);
     assertEquals(EMPTY_ARRAY, factory.toString(result));
     // check types and values
     assertEquals(0, result.length);
@@ -1009,7 +1009,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
 
   public void testParser_num() throws Exception {
     JsonFactory factory = newFactory();
-    int result = factory.createJsonParser(NUMBER_TOP_VALUE).parse(int.class, null);
+    int result = factory.createJsonParser(NUMBER_TOP_VALUE).parse(int.class);
     assertEquals(NUMBER_TOP_VALUE, factory.toString(result));
     // check types and values
     assertEquals(1, result);
@@ -1019,7 +1019,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
 
   public void testParser_string() throws Exception {
     JsonFactory factory = newFactory();
-    String result = factory.createJsonParser(STRING_TOP_VALUE).parse(String.class, null);
+    String result = factory.createJsonParser(STRING_TOP_VALUE).parse(String.class);
     assertEquals(STRING_TOP_VALUE, factory.toString(result));
     // check types and values
     assertEquals("a", result);
@@ -1029,7 +1029,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
 
   public void testParser_null() throws Exception {
     JsonFactory factory = newFactory();
-    String result = factory.createJsonParser(NULL_TOP_VALUE).parse(String.class, null);
+    String result = factory.createJsonParser(NULL_TOP_VALUE).parse(String.class);
     assertEquals(NULL_TOP_VALUE, factory.toString(result));
     // check types and values
     assertTrue(Data.isNull(result));
@@ -1039,7 +1039,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
 
   public void testParser_bool() throws Exception {
     JsonFactory factory = newFactory();
-    boolean result = factory.createJsonParser(BOOL_TOP_VALUE).parse(boolean.class, null);
+    boolean result = factory.createJsonParser(BOOL_TOP_VALUE).parse(boolean.class);
     assertEquals(BOOL_TOP_VALUE, factory.toString(result));
     // check types and values
     assertTrue(result);
@@ -1225,7 +1225,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser jp =
         newFactory().createJsonParser(new ByteArrayInputStream(jsonData), Charsets.UTF_8);
     Type myType = Integer[].class;
-    Integer[] array = (Integer[]) jp.parse(myType, true, null);
+    Integer[] array = (Integer[]) jp.parse(myType, true);
     assertNotNull(array);
     assertEquals((Integer) 123, array[0]);
     assertEquals((Integer) 456, array[1]);
@@ -1244,7 +1244,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonParser jp =
         newFactory().createJsonParser(new ByteArrayInputStream(jsonData), Charsets.UTF_8);
     Type myType = TestClass.class;
-    TestClass instance = (TestClass) jp.parse(myType, true, null);
+    TestClass instance = (TestClass) jp.parse(myType, true);
     assertNotNull(instance);
     assertEquals(123, instance.foo);
   }
@@ -1253,7 +1253,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     byte[] jsonData = Charsets.UTF_8.encode("{ \"foo\": 123 }").array();
     JsonParser jp = newFactory().createJsonParser(new ByteArrayInputStream(jsonData), null);
     Type myType = TestClass.class;
-    TestClass instance = (TestClass) jp.parse(myType, true, null);
+    TestClass instance = (TestClass) jp.parse(myType, true);
     assertNotNull(instance);
     assertEquals(123, instance.foo);
   }
@@ -1302,7 +1302,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     // number types
     parser = factory.createJsonParser(EXTENDS_JSON);
     parser.nextToken();
-    ExtendsGenericJson result = parser.parse(ExtendsGenericJson.class, null);
+    ExtendsGenericJson result = parser.parse(ExtendsGenericJson.class);
     assertEquals(EXTENDS_JSON, factory.toString(result));
   }
 

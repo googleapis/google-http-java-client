@@ -175,7 +175,7 @@ public abstract class JsonFactory {
 
   /**
    * Parses a string value as a JSON object, array, or value into a new instance of the given
-   * destination class using {@link JsonParser#parse(Class, CustomizeJsonParser)}.
+   * destination class using {@link JsonParser#parse(Class)}.
    *
    * @param value JSON string value
    * @param destinationClass destination class that has an accessible default constructor to use to
@@ -184,13 +184,16 @@ public abstract class JsonFactory {
    * @since 1.4
    */
   public final <T> T fromString(String value, Class<T> destinationClass) throws IOException {
-    return createJsonParser(value).parse(destinationClass, null);
+    return createJsonParser(value).parse(destinationClass);
   }
 
   /**
    * Parse and close an input stream as a JSON object, array, or value into a new instance of the
-   * given destination class using {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}.
+   * given destination class using {@link JsonParser#parseAndClose(Class)}.
+   *
+   * <p>
    * Tries to detect the charset of the input stream automatically.
+   * </p>
    *
    * @param inputStream JSON value in an input stream
    * @param destinationClass destination class that has an accessible default constructor to use to
@@ -200,12 +203,12 @@ public abstract class JsonFactory {
    */
   public final <T> T fromInputStream(InputStream inputStream, Class<T> destinationClass)
       throws IOException {
-    return createJsonParser(inputStream).parseAndClose(destinationClass, null);
+    return createJsonParser(inputStream).parseAndClose(destinationClass);
   }
 
   /**
    * Parse and close an input stream as a JSON object, array, or value into a new instance of the
-   * given destination class using {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}.
+   * given destination class using {@link JsonParser#parseAndClose(Class)}.
    *
    * @param inputStream JSON value in an input stream
    * @param charset Charset in which the stream is encoded
@@ -216,12 +219,12 @@ public abstract class JsonFactory {
    */
   public final <T> T fromInputStream(
       InputStream inputStream, Charset charset, Class<T> destinationClass) throws IOException {
-    return createJsonParser(inputStream, charset).parseAndClose(destinationClass, null);
+    return createJsonParser(inputStream, charset).parseAndClose(destinationClass);
   }
 
   /**
    * Parse and close a reader as a JSON object, array, or value into a new instance of the given
-   * destination class using {@link JsonParser#parseAndClose(Class, CustomizeJsonParser)}.
+   * destination class using {@link JsonParser#parseAndClose(Class)}.
    *
    * @param reader JSON value in a reader
    * @param destinationClass destination class that has an accessible default constructor to use to
@@ -230,6 +233,6 @@ public abstract class JsonFactory {
    * @since 1.7
    */
   public final <T> T fromReader(Reader reader, Class<T> destinationClass) throws IOException {
-    return createJsonParser(reader).parseAndClose(destinationClass, null);
+    return createJsonParser(reader).parseAndClose(destinationClass);
   }
 }

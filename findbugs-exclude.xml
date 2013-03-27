@@ -78,4 +78,8 @@
     <Bug pattern="EXPERIMENTAL_CLASS_USAGE,EXPERIMENTAL_METHOD_USAGE"/>
     <Class name="com.google.api.client.http.HttpResponse"/>
   </And>
+  <And>
+    <Bug pattern="EXPERIMENTAL_CLASS_USAGE,EXPERIMENTAL_METHOD_USAGE"/>
+    <Class name="com.google.api.client.json.JsonParser"/>
+  </And>
 </FindBugsFilter>

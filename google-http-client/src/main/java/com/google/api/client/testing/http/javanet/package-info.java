@@ -16,7 +16,6 @@
  * {@link com.google.api.client.util.Experimental} <br/>
  * Testing utilities used for writing tests based on the {@code java.net} package.
  *
- *
  * @since 1.11
  * @author Yaniv Inbar
  */

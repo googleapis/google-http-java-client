@@ -16,11 +16,6 @@
  * Low-level implementation of the JSON parser library based on the <a
  * href="http://wiki.fasterxml.com/JacksonHome">Jackson</a> JSON library.
  *
- * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
- * </p>
- *
  * @since 1.3
  * @author Yaniv Inbar
  */

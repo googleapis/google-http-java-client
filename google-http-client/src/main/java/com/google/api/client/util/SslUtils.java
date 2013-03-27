@@ -112,6 +112,7 @@ public final class SslUtils {
   }
 
   /**
+   * {@link Experimental} <br/>
    * Returns an SSL context in which all X.509 certificates are trusted.
    *
    * <p>
@@ -119,6 +120,7 @@ public final class SslUtils {
    * testing environments.
    * </p>
    */
+  @Experimental
   public static SSLContext trustAllSSLContext() throws GeneralSecurityException {
     TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
 
@@ -140,6 +142,7 @@ public final class SslUtils {
   }
 
   /**
+   * {@link Experimental} <br/>
    * Returns a verifier that trusts all host names.
    *
    * <p>
@@ -147,6 +150,7 @@ public final class SslUtils {
    * environments.
    * </p>
    */
+  @Experimental
   public static HostnameVerifier trustAllHostnameVerifier() {
     return new HostnameVerifier() {
 

@@ -1176,12 +1176,14 @@ public final class HttpRequest {
   }
 
   /**
+   * {@link Experimental} <br/>
    * Executes this request asynchronously in a single separate thread using the supplied executor.
    *
    * @param executor executor to run the asynchronous request
    * @return future for accessing the HTTP response
    * @since 1.13
    */
+  @Experimental
   public Future<HttpResponse> executeAsync(Executor executor) {
     FutureTask<HttpResponse> future = new FutureTask<HttpResponse>(new Callable<HttpResponse>() {
 
@@ -1194,12 +1196,14 @@ public final class HttpRequest {
   }
 
   /**
+   * {@link Experimental} <br/>
    * Executes this request asynchronously using {@link #executeAsync(Executor)} in a single separate
    * thread using {@link Executors#newSingleThreadExecutor()}.
    *
    * @return A future for accessing the results of the asynchronous request.
    * @since 1.13
    */
+  @Experimental
   public Future<HttpResponse> executeAsync() {
     return executeAsync(Executors.newSingleThreadExecutor());
   }

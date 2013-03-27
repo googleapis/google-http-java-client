@@ -16,6 +16,7 @@ package com.google.api.client.json;
 
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.Data;
+import com.google.api.client.util.Experimental;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Preconditions;
@@ -116,15 +117,31 @@ public abstract class JsonParser {
   public abstract BigDecimal getDecimalValue() throws IOException;
 
   /**
+   * Parse a JSON object, array, or value into a new instance of the given destination class, and
+   * then closes the parser.
+   *
+   * @param <T> destination class
+   * @param destinationClass destination class that has a public default constructor to use to
+   *        create a new instance
+   * @return new instance of the parsed destination class
+   * @since 1.15
+   */
+  public final <T> T parseAndClose(Class<T> destinationClass) throws IOException {
+    return parseAndClose(destinationClass, null);
+  }
+
+  /**
+   * {@link Experimental} <br/>
    * Parse a JSON object, array, or value into a new instance of the given destination class using
    * {@link JsonParser#parse(Class, CustomizeJsonParser)}, and then closes the parser.
    *
-   * @param <T> destination class type
+   * @param <T> destination class
    * @param destinationClass destination class that has a public default constructor to use to
    *        create a new instance
    * @param customizeParser optional parser customizer or {@code null} for none
    * @return new instance of the parsed destination class
    */
+  @Experimental
   public final <T> T parseAndClose(Class<T> destinationClass, CustomizeJsonParser customizeParser)
       throws IOException {
     try {
@@ -136,6 +153,7 @@ public abstract class JsonParser {
 
   /**
    * Skips the values of all keys in the current object until it finds the given key.
+   *
    * <p>
    * Before this method is called, the parser must either point to the start or end of a JSON object
    * or to a field name. After this method ends, the current token will either be the
@@ -151,6 +169,7 @@ public abstract class JsonParser {
 
   /**
    * Skips the values of all keys in the current object until it finds one of the given keys.
+   *
    * <p>
    * Before this method is called, the parser must either point to the start or end of a JSON object
    * or to a field name. After this method ends, the current token will either be the
@@ -190,6 +209,7 @@ public abstract class JsonParser {
   /**
    * Starts parsing an object or array by making sure the parser points to an object field name,
    * first array value or end of object or array.
+   *
    * <p>
    * If the parser is at the start of input, {@link #nextToken()} is called. The current token must
    * then be {@link JsonToken#START_OBJECT}, {@link JsonToken#END_OBJECT},
@@ -218,7 +238,25 @@ public abstract class JsonParser {
 
   /**
    * Parse a JSON Object from the given JSON parser -- which is closed after parsing completes --
+   * into the given destination object.
+   *
+   * <p>
+   * Before this method is called, the parser must either point to the start or end of a JSON object
+   * or to a field name.
+   * </p>
+   *
+   * @param destination destination object
+   * @since 1.15
+   */
+  public final void parseAndClose(Object destination) throws IOException {
+    parseAndClose(destination, null);
+  }
+
+  /**
+   * {@link Experimental} <br/>
+   * Parse a JSON Object from the given JSON parser -- which is closed after parsing completes --
    * into the given destination object, optionally using the given parser customizer.
+   *
    * <p>
    * Before this method is called, the parser must either point to the start or end of a JSON object
    * or to a field name.
@@ -227,6 +265,7 @@ public abstract class JsonParser {
    * @param destination destination object
    * @param customizeParser optional parser customizer or {@code null} for none
    */
+  @Experimental
   public final void parseAndClose(Object destination, CustomizeJsonParser customizeParser)
       throws IOException {
     try {
@@ -237,20 +276,42 @@ public abstract class JsonParser {
   }
 
   /**
-   * Parse a JSON object, array, or value into a new instance of the given destination class,
-   * optionally using the given parser customizer.
+   * Parse a JSON object, array, or value into a new instance of the given destination class.
+   *
    * <p>
    * If it parses an object, after this method ends, the current token will be the object's ending
    * {@link JsonToken#END_OBJECT}. If it parses an array, after this method ends, the current token
    * will be the array's ending {@link JsonToken#END_ARRAY}.
    * </p>
    *
-   * @param <T> destination class type
+   * @param <T> destination class
+   * @param destinationClass destination class that has a public default constructor to use to
+   *        create a new instance
+   * @return new instance of the parsed destination class
+   * @since 1.15
+   */
+  public final <T> T parse(Class<T> destinationClass) throws IOException {
+    return parse(destinationClass, null);
+  }
+
+  /**
+   * {@link Experimental} <br/>
+   * Parse a JSON object, array, or value into a new instance of the given destination class,
+   * optionally using the given parser customizer.
+   *
+   * <p>
+   * If it parses an object, after this method ends, the current token will be the object's ending
+   * {@link JsonToken#END_OBJECT}. If it parses an array, after this method ends, the current token
+   * will be the array's ending {@link JsonToken#END_ARRAY}.
+   * </p>
+   *
+   * @param <T> destination class
    * @param destinationClass destination class that has a public default constructor to use to
    *        create a new instance
    * @param customizeParser optional parser customizer or {@code null} for none
    * @return new instance of the parsed destination class
    */
+  @Experimental
   public final <T> T parse(Class<T> destinationClass, CustomizeJsonParser customizeParser)
       throws IOException {
     startParsing();
@@ -260,8 +321,28 @@ public abstract class JsonParser {
   }
 
   /**
+   * Parse a JSON object, array, or value into a new instance of the given destination class.
+   *
+   * <p>
+   * If it parses an object, after this method ends, the current token will be the object's ending
+   * {@link JsonToken#END_OBJECT}. If it parses an array, after this method ends, the current token
+   * will be the array's ending {@link JsonToken#END_ARRAY}.
+   * </p>
+   *
+   * @param dataType Type into which the JSON should be parsed
+   * @param close {@code true} if {@link #close()} should be called after parsing
+   * @return new instance of the parsed dataType
+   * @since 1.15
+   */
+  public Object parse(Type dataType, boolean close) throws IOException {
+    return parse(dataType, close, null);
+  }
+
+  /**
+   * {@link Experimental} <br/>
    * Parse a JSON object, array, or value into a new instance of the given destination class,
    * optionally using the given parser customizer.
+   *
    * <p>
    * If it parses an object, after this method ends, the current token will be the object's ending
    * {@link JsonToken#END_OBJECT}. If it parses an array, after this method ends, the current token
@@ -274,6 +355,7 @@ public abstract class JsonParser {
    * @return new instance of the parsed dataType
    * @since 1.10
    */
+  @Experimental
   public Object parse(Type dataType, boolean close, CustomizeJsonParser customizeParser)
       throws IOException {
     try {
@@ -287,8 +369,26 @@ public abstract class JsonParser {
   }
 
   /**
+   * Parse a JSON object from the given JSON parser into the given destination object.
+   *
+   * <p>
+   * Before this method is called, the parser must either point to the start or end of a JSON object
+   * or to a field name. After this method ends, the current token will be the
+   * {@link JsonToken#END_OBJECT} of the current object.
+   * </p>
+   *
+   * @param destination destination object
+   * @since 1.15
+   */
+  public final void parse(Object destination) throws IOException {
+    parse(destination, null);
+  }
+
+  /**
+   * {@link Experimental} <br/>
    * Parse a JSON object from the given JSON parser into the given destination object, optionally
    * using the given parser customizer.
+   *
    * <p>
    * Before this method is called, the parser must either point to the start or end of a JSON object
    * or to a field name. After this method ends, the current token will be the
@@ -298,6 +398,7 @@ public abstract class JsonParser {
    * @param destination destination object
    * @param customizeParser optional parser customizer or {@code null} for none
    */
+  @Experimental
   public final void parse(Object destination, CustomizeJsonParser customizeParser)
       throws IOException {
     ArrayList<Type> context = new ArrayList<Type>();
@@ -360,6 +461,22 @@ public abstract class JsonParser {
 
   /**
    * Parse a JSON Array from the given JSON parser (which is closed after parsing completes) into
+   * the given destination collection.
+   *
+   * @param destinationCollectionClass class of destination collection (must have a public default
+   *        constructor)
+   * @param destinationItemClass class of destination collection item (must have a public default
+   *        constructor)
+   * @since 1.15
+   */
+  public final <T> Collection<T> parseArrayAndClose(
+      Class<?> destinationCollectionClass, Class<T> destinationItemClass) throws IOException {
+    return parseArrayAndClose(destinationCollectionClass, destinationItemClass, null);
+  }
+
+  /**
+   * {@link Experimental} <br/>
+   * Parse a JSON Array from the given JSON parser (which is closed after parsing completes) into
    * the given destination collection, optionally using the given parser customizer.
    *
    * @param destinationCollectionClass class of destination collection (must have a public default
@@ -368,6 +485,7 @@ public abstract class JsonParser {
    *        constructor)
    * @param customizeParser optional parser customizer or {@code null} for none
    */
+  @Experimental
   public final <T> Collection<T> parseArrayAndClose(Class<?> destinationCollectionClass,
       Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws IOException {
     try {
@@ -379,6 +497,22 @@ public abstract class JsonParser {
 
   /**
    * Parse a JSON Array from the given JSON parser (which is closed after parsing completes) into
+   * the given destination collection.
+   *
+   * @param destinationCollection destination collection
+   * @param destinationItemClass class of destination collection item (must have a public default
+   *        constructor)
+   * @since 1.15
+   */
+  public final <T> void parseArrayAndClose(
+      Collection<? super T> destinationCollection, Class<T> destinationItemClass)
+      throws IOException {
+    parseArrayAndClose(destinationCollection, destinationItemClass, null);
+  }
+
+  /**
+   * {@link Experimental} <br/>
+   * Parse a JSON Array from the given JSON parser (which is closed after parsing completes) into
    * the given destination collection, optionally using the given parser customizer.
    *
    * @param destinationCollection destination collection
@@ -386,6 +520,7 @@ public abstract class JsonParser {
    *        constructor)
    * @param customizeParser optional parser customizer or {@code null} for none
    */
+  @Experimental
   public final <T> void parseArrayAndClose(Collection<? super T> destinationCollection,
       Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws IOException {
     try {
@@ -396,6 +531,21 @@ public abstract class JsonParser {
   }
 
   /**
+   * Parse a JSON Array from the given JSON parser into the given destination collection.
+   *
+   * @param destinationCollectionClass class of destination collection (must have a public default
+   *        constructor)
+   * @param destinationItemClass class of destination collection item (must have a public default
+   *        constructor)
+   * @since 1.15
+   */
+  public final <T> Collection<T> parseArray(
+      Class<?> destinationCollectionClass, Class<T> destinationItemClass) throws IOException {
+    return parseArray(destinationCollectionClass, destinationItemClass, null);
+  }
+
+  /**
+   * {@link Experimental} <br/>
    * Parse a JSON Array from the given JSON parser into the given destination collection, optionally
    * using the given parser customizer.
    *
@@ -405,6 +555,7 @@ public abstract class JsonParser {
    *        constructor)
    * @param customizeParser optional parser customizer or {@code null} for none
    */
+  @Experimental
   public final <T> Collection<T> parseArray(Class<?> destinationCollectionClass,
       Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws IOException {
     @SuppressWarnings("unchecked")
@@ -415,6 +566,21 @@ public abstract class JsonParser {
   }
 
   /**
+   * Parse a JSON Array from the given JSON parser into the given destination collection.
+   *
+   * @param destinationCollection destination collection
+   * @param destinationItemClass class of destination collection item (must have a public default
+   *        constructor)
+   * @since 1.15
+   */
+  public final <T> void parseArray(
+      Collection<? super T> destinationCollection, Class<T> destinationItemClass)
+      throws IOException {
+    parseArray(destinationCollection, destinationItemClass, null);
+  }
+
+  /**
+   * {@link Experimental} <br/>
    * Parse a JSON Array from the given JSON parser into the given destination collection, optionally
    * using the given parser customizer.
    *
@@ -423,6 +589,7 @@ public abstract class JsonParser {
    *        constructor)
    * @param customizeParser optional parser customizer or {@code null} for none
    */
+  @Experimental
   public final <T> void parseArray(Collection<? super T> destinationCollection,
       Class<T> destinationItemClass, CustomizeJsonParser customizeParser) throws IOException {
     parseArray(

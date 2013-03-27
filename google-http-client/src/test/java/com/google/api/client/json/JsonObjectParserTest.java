@@ -50,7 +50,7 @@ public class JsonObjectParserTest extends TestCase {
     Integer[] parsed = new Integer[1];
 
     JsonParser mockJsonParser = mock(JsonParser.class);
-    when(mockJsonParser.parse(type, true, null)).thenReturn(parsed);
+    when(mockJsonParser.parse(type, true)).thenReturn(parsed);
 
     JsonFactory mockJsonFactory = mock(JsonFactory.class);
     when(mockJsonFactory.createJsonParser(in, utf8)).thenReturn(mockJsonParser);
@@ -66,7 +66,7 @@ public class JsonObjectParserTest extends TestCase {
     Integer[] parsed = new Integer[1];
 
     JsonParser mockJsonParser = mock(JsonParser.class);
-    when(mockJsonParser.parse(type, true, null)).thenReturn(parsed);
+    when(mockJsonParser.parse(type, true)).thenReturn(parsed);
 
     JsonFactory mockJsonFactory = mock(JsonFactory.class);
     when(mockJsonFactory.createJsonParser(in)).thenReturn(mockJsonParser);

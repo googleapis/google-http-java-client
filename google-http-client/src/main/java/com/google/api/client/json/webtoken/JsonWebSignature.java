@@ -75,10 +75,12 @@ public class JsonWebSignature extends JsonWebToken {
   }
 
   /**
+   * {@link Experimental} <br/>
    * Header as specified in <a
    * href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-08#section-4.1">Reserved
    * Header Parameter Names</a>.
    */
+  @Experimental
   public static class Header extends JsonWebToken.Header {
 
     /**

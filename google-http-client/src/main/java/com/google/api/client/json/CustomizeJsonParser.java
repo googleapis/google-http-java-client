@@ -14,10 +14,13 @@
 
 package com.google.api.client.json;
 
+import com.google.api.client.util.Experimental;
+
 import java.lang.reflect.Field;
 import java.util.Collection;
 
 /**
+ * {@link Experimental} <br/>
  * Customizes the behavior of a JSON parser.
  *
  * <p>
@@ -33,6 +36,7 @@ import java.util.Collection;
  * @since 1.0
  * @author Yaniv Inbar
  */
+@Experimental
 public class CustomizeJsonParser {
 
   /**

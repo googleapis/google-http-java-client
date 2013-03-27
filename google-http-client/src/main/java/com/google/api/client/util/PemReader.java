@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * {@link Experimental} <br/>
  * PEM file reader.
  *
  * <p>
@@ -51,6 +52,7 @@ import java.util.regex.Pattern;
  * @since 1.14
  * @author Yaniv Inbar
  */
+@Experimental
 public final class PemReader {
 
   private static final Pattern BEGIN_PATTERN = Pattern.compile("-----BEGIN ([A-Z ]+)-----");

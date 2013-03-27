@@ -53,9 +53,11 @@ public class JsonWebToken {
   }
 
   /**
+   * {@link Experimental} <br/>
    * Header as specified in <a
    * href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06#section-5">JWT Header</a>.
    */
+  @Experimental
   public static class Header extends GenericJson {
 
     /** Type header parameter used to declare the type of this object or {@code null} for none. */
@@ -125,10 +127,12 @@ public class JsonWebToken {
   }
 
   /**
+   * {@link Experimental} <br/>
    * Payload as specified in <a
    * href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06#section-4.1">Reserved Claim
    * Names</a>.
    */
+  @Experimental
   public static class Payload extends GenericJson {
 
     /**

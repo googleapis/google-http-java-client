@@ -16,11 +16,6 @@
  * Subset of HTTP 1.1 needed from the specification in <a
  * href="http://tools.ietf.org/html/rfc2616">RFC 2616: Hypertext Transfer Protocol -- HTTP/1.1</a>.
  *
- * <p>
- * <b>Warning: this package is experimental, and its content may be changed in incompatible ways or
- * possibly entirely removed in a future version of the library</b>
- * </p>
- *
  * @since 1.0
  * @author Yaniv Inbar
  */

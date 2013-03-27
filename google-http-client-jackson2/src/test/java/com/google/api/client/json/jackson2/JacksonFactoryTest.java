@@ -68,6 +68,6 @@ public class JacksonFactoryTest extends AbstractJsonFactoryTest {
     byte[] jsonData = Charsets.UTF_8.encode("123").array();
     JsonParser jp =
         newFactory().createJsonParser(new ByteArrayInputStream(jsonData), Charsets.UTF_8);
-    assertEquals(123, jp.parse(Integer.class, true, null));
+    assertEquals(123, jp.parse(Integer.class, true));
   }
 }
