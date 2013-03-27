@@ -15,7 +15,6 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Charsets;
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingInputStream;
 import com.google.api.client.util.Preconditions;
@@ -444,19 +443,6 @@ public final class HttpResponse {
   }
 
   /**
-   * Returns the HTTP response content parser to use for the content type of this HTTP response or
-   * {@code null} for none.
-   *
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #getRequest()}.
-   *             {@link HttpRequest#getParser()} instead
-   */
-  @Deprecated
-  @Experimental
-  public HttpParser getParser() {
-    return request.getParser(contentType);
-  }
-
-  /**
    * Parses the content of the HTTP response from {@link #getContent()} and reads it into a data
    * class of key/value pairs using the parser returned by {@link HttpRequest#getParser()}.
    *
@@ -465,23 +451,12 @@ public final class HttpResponse {
    * </p>
    *
    * @return parsed data class or {@code null} for no content
-   * @throws IllegalArgumentException if no parser is defined for the given content type
    */
-  @SuppressWarnings("deprecation")
   public <T> T parseAs(Class<T> dataClass) throws IOException {
     if (!hasMessageBody()) {
       return null;
     }
-    if (request.getParser() != null) {
-      return request.getParser().parseAndClose(getContent(), getContentCharset(), dataClass);
-    }
-    // Otherwise fall back to the deprecated implementation
-    HttpParser parser = getParser();
-    if (parser != null) {
-      return parser.parse(this, dataClass);
-    }
-    // compatible with 1.14 behavior
-    throw new NullPointerException();
+    return request.getParser().parseAndClose(getContent(), getContentCharset(), dataClass);
   }
 
   /**

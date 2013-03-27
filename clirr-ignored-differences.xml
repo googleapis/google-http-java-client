@@ -2,9 +2,124 @@
 <!-- see http://mojo.codehaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
 
 <differences>
+  <!-- 7002 (method removed): className, method -->
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/AbstractHttpContent</className>
+    <method>java.lang.String getEncoding()</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/AbstractInputStreamContent</className>
+    <method>void copy(java.io.InputStream, java.io.OutputStream)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/AbstractInputStreamContent</className>
+    <method>void copy(java.io.InputStream, java.io.OutputStream, boolean)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/AbstractInputStreamContent</className>
+    <method>java.lang.String getEncoding()</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/AbstractInputStreamContent</className>
+    <method>com.google.api.client.http.AbstractInputStreamContent setEncoding(java.lang.String)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/ByteArrayContent</className>
+    <method>com.google.api.client.http.ByteArrayContent setEncoding(java.lang.String)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/ByteArrayContent</className>
+    <method>com.google.api.client.http.AbstractInputStreamContent setEncoding(java.lang.String)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/EmptyContent</className>
+    <method>java.lang.String getEncoding()</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/FileContent</className>
+    <method>com.google.api.client.http.FileContent setEncoding(java.lang.String)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/FileContent</className>
+    <method>com.google.api.client.http.AbstractInputStreamContent setEncoding(java.lang.String)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/HttpContent</className>
+    <method>java.lang.String getEncoding()</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/HttpRequest</className>
+    <method>boolean getEnableGZipContent()</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/HttpRequest</className>
+    <method>com.google.api.client.http.HttpRequest setEnableGZipContent(boolean)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/HttpResponseException</className>
+    <method>HttpResponseException(com.google.api.client.http.HttpResponse, java.lang.String)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/InputStreamContent</className>
+    <method>com.google.api.client.http.InputStreamContent setEncoding(java.lang.String)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/InputStreamContent</className>
+    <method>com.google.api.client.http.AbstractInputStreamContent setEncoding(java.lang.String)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/LowLevelHttpRequest</className>
+    <method>void setContent(com.google.api.client.http.HttpContent)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/testing/http/MockHttpContent</className>
+    <method>java.lang.String getEncoding()</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/testing/http/MockHttpContent</className>
+    <method>com.google.api.client.testing.http.MockHttpContent setEncoding(java.lang.String)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/testing/http/MockHttpTransport</className>
+    <method>MockHttpTransport(java.util.Set)</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/testing/http/MockLowLevelHttpRequest</className>
+    <method>com.google.api.client.http.HttpContent getContent()</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/testing/http/MockLowLevelHttpRequest</className>
+    <method>void setContent(com.google.api.client.http.HttpContent)</method>
+  </difference>
   <!-- 8001 (Class removed): className -->
   <difference>
     <differenceType>8001</differenceType>
     <className>com/google/api/client/repackaged/**</className>
+  </difference>
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/api/client/http/MultipartRelatedContent</className>
   </difference>
 </differences>

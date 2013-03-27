@@ -330,13 +330,6 @@ public class Data {
    * {@link BigDecimal}, {@link Boolean}, and {@link DateTime}.
    * </p>
    *
-   * <p>
-   * Upgrade warning: in prior version 1.13, types
-   * {@code com.google.common.primitives.UnsignedInteger} and
-   * {@code com.google.common.primitives.UnsignedLong} were considered primitive, but starting in
-   * version 1.14 they are no longer be considered primitive.
-   * </p>
-   *
    * @param type type or {@code null} for {@code false} result
    * @return whether it is a primitive
    */
@@ -386,13 +379,6 @@ public class Data {
    *
    * <p>
    * Note that this may not be the right behavior for some use cases.
-   * </p>
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.13, types
-   * {@code com.google.common.primitives.UnsignedInteger} and {code
-   * com.google.common.primitives.UnsignedLong} were parsed, but starting in version 1.14 they are
-   * no longer be considered primitive and an exception will be thrown.
    * </p>
    *
    * @param type primitive type or {@code null} to parse as a string

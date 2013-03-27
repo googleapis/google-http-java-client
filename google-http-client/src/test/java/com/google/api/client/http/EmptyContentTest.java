@@ -27,11 +27,9 @@ import java.io.IOException;
  */
 public class EmptyContentTest extends TestCase {
 
-  @SuppressWarnings("deprecation")
   public void test() throws IOException {
     EmptyContent content = new EmptyContent();
     assertEquals(0L, content.getLength());
-    assertNull(content.getEncoding());
     assertNull(content.getType());
     assertTrue(content.retrySupported());
     ByteArrayOutputStream out = new ByteArrayOutputStream();

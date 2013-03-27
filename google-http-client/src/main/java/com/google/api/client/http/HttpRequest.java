@@ -24,9 +24,6 @@ import com.google.api.client.util.StreamingContent;
 import com.google.api.client.util.StringUtils;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -135,14 +132,6 @@ public final class HttpRequest {
   /** HTTP transport. */
   private final HttpTransport transport;
 
-  /**
-   * HTTP request method or {@code null} for none or if request method is not one of the values in
-   * {@link HttpMethod}.
-   */
-  @Deprecated
-  @Experimental
-  private HttpMethod method;
-
   /** HTTP request method or {@code null} for none. */
   private String requestMethod;
 
@@ -164,21 +153,11 @@ public final class HttpRequest {
   /** HTTP response interceptor or {@code null} for none. */
   private HttpResponseInterceptor responseInterceptor;
 
-  /** Map from normalized content type to HTTP parser. */
-  @Deprecated
-  @Experimental
-  private final Map<String, HttpParser> contentTypeToParserMap = new HashMap<String, HttpParser>();
-
   /** Parser used to parse responses. */
   private ObjectParser objectParser;
 
   /** HTTP content encoding or {@code null} for none. */
   private HttpEncoding encoding;
-
-  /** Whether to enable gzip compression of HTTP content ({@code false} by default). */
-  @Deprecated
-  @Experimental
-  private boolean enableGZipContent;
 
   /** The {@link BackOffPolicy} to use between retry attempts or {@code null} for none. */
   private BackOffPolicy backOffPolicy;
@@ -229,31 +208,6 @@ public final class HttpRequest {
   }
 
   /**
-   * Returns the HTTP request method or {@code null} for none or if request method is not one of the
-   * values in {@link HttpMethod}.
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #getRequestMethod()} instead
-   */
-  @Deprecated
-  @Experimental
-  public HttpMethod getMethod() {
-    return method;
-  }
-
-  /**
-   * Sets the HTTP request method.
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #setRequestMethod} instead
-   */
-  @Deprecated
-  @Experimental
-  public HttpRequest setMethod(HttpMethod method) {
-    return setRequestMethod(method.toString());
-  }
-
-  /**
    * Returns the HTTP request method or {@code null} for none.
    *
    * @since 1.12
@@ -267,29 +221,9 @@ public final class HttpRequest {
    *
    * @since 1.12
    */
-  @SuppressWarnings("deprecation")
   public HttpRequest setRequestMethod(String requestMethod) {
     Preconditions.checkArgument(requestMethod == null || HttpMediaType.matchesToken(requestMethod));
     this.requestMethod = requestMethod;
-    method = null;
-    if (HttpMethods.DELETE.equals(requestMethod)) {
-      method = HttpMethod.DELETE;
-    }
-    if (HttpMethods.GET.equals(requestMethod)) {
-      method = HttpMethod.GET;
-    }
-    if (HttpMethods.HEAD.equals(requestMethod)) {
-      method = HttpMethod.HEAD;
-    }
-    if ("PATCH".equals(requestMethod)) {
-      method = HttpMethod.PATCH;
-    }
-    if (HttpMethods.POST.equals(requestMethod)) {
-      method = HttpMethod.POST;
-    }
-    if (HttpMethods.PUT.equals(requestMethod)) {
-      method = HttpMethod.PUT;
-    }
     return this;
   }
 
@@ -347,56 +281,6 @@ public final class HttpRequest {
    */
   public HttpRequest setEncoding(HttpEncoding encoding) {
     this.encoding = encoding;
-    return this;
-  }
-
-  /**
-   * Returns whether to enable gzip compression of HTTP content.
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #getEncoding()} instead.
-   */
-  @Deprecated
-  @Experimental
-  public boolean getEnableGZipContent() {
-    return enableGZipContent;
-  }
-
-  /**
-   * Returns whether to enable gzip compression of HTTP content.
-   *
-   * <p>
-   * By default it is {@code false}.
-   * </p>
-   *
-   * <p>
-   * To avoid the overhead of GZip compression for small content, one may want to set this to
-   * {@code true} only for {@link HttpContent#getLength()} above a certain limit. For example:
-   * </p>
-   *
-   * <pre>
-  public static class MyInterceptor implements HttpExecuteInterceptor {
-    public void intercept(HttpRequest request) throws IOException {
-      if (request.getContent() != null && request.getContent().getLength() >= 256) {
-        request.setEnableGZipContent(true);
-      }
-    }
-  }
-   * </pre>
-   *
-   * <p>
-   * Warning: this will override any encoding for the request set in
-   * {@link #setEncoding(HttpEncoding)}
-   * </p>
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #setEncoding(HttpEncoding)} with
-   *             {@link GZipEncoding} instead.
-   */
-  @Deprecated
-  @Experimental
-  public HttpRequest setEnableGZipContent(boolean enableGZipContent) {
-    this.enableGZipContent = enableGZipContent;
     return this;
   }
 
@@ -725,27 +609,6 @@ public final class HttpRequest {
   }
 
   /**
-   * Adds an HTTP response content parser.
-   * <p>
-   * If there is already a previous parser defined for this new parser (as defined by
-   * {@link #getParser(String)} then the previous parser will be removed.
-   * </p>
-   *
-   * <p>
-   * Any parser set by calling {@link #setParser(ObjectParser)} will be preferred over this parser.
-   * </p>
-   *
-   * @since 1.4
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #setParser(ObjectParser)} instead.
-   */
-  @Deprecated
-  @Experimental
-  public void addParser(HttpParser parser) {
-    String contentType = normalizeMediaType(parser.getContentType());
-    contentTypeToParserMap.put(contentType, parser);
-  }
-
-  /**
    * Sets the {@link ObjectParser} used to parse the response to this request or {@code null} for
    * none.
    *
@@ -758,22 +621,6 @@ public final class HttpRequest {
   public HttpRequest setParser(ObjectParser parser) {
     this.objectParser = parser;
     return this;
-  }
-
-  /**
-   * Returns the HTTP response content parser to use for the given content type or {@code null} if
-   * none is defined.
-   *
-   * @param contentType content type or {@code null} for {@code null} result
-   * @return HTTP response content parser or {@code null} for {@code null} input
-   * @since 1.4
-   * @deprecated (scheduled to be removed in 1.14) Use {@link #getParser()} instead.
-   */
-  @Deprecated
-  @Experimental
-  public final HttpParser getParser(String contentType) {
-    contentType = normalizeMediaType(contentType);
-    return contentTypeToParserMap.get(contentType);
   }
 
   /**
@@ -911,7 +758,6 @@ public final class HttpRequest {
    *         {@link #getThrowExceptionOnExecuteError()} is {@code true})
    * @see HttpResponse#isSuccessStatusCode()
    */
-  @SuppressWarnings("deprecation")
   public HttpResponse execute() throws IOException {
     boolean retryRequest = false;
     Preconditions.checkArgument(numRetries >= 0);
@@ -990,14 +836,8 @@ public final class HttpRequest {
               streamingContent, HttpTransport.LOGGER, Level.CONFIG, contentLoggingLimit);
         }
         // encoding
-        String underlyingEncoding = content.getEncoding();
-        if (enableGZipContent) {
-          Preconditions.checkArgument(encoding == null || encoding instanceof GZipEncoding);
-          setEncoding(new GZipEncoding());
-        }
-        if (encoding == null || underlyingEncoding != null) {
-          Preconditions.checkArgument(encoding == null || underlyingEncoding == null);
-          contentEncoding = underlyingEncoding;
+        if (encoding == null) {
+          contentEncoding = null;
           contentLength = content.getLength();
         } else {
           contentEncoding = encoding.getName();
@@ -1013,14 +853,6 @@ public final class HttpRequest {
               curlbuf.append(" -H '" + header + "'");
             }
           }
-          if (underlyingEncoding != null) {
-            // do not use the gzip encoding as the content won't be logged as gzip
-            String header = "Content-Encoding: " + underlyingEncoding;
-            logbuf.append(header).append(StringUtils.LINE_SEPARATOR);
-            if (curlbuf != null) {
-              curlbuf.append(" -H '" + header + "'");
-            }
-          }
           if (contentLength >= 0) {
             String header = "Content-Length: " + contentLength;
             logbuf.append(header).append(StringUtils.LINE_SEPARATOR);
@@ -1030,31 +862,6 @@ public final class HttpRequest {
         if (curlbuf != null) {
           curlbuf.append(" -d '@-'");
         }
-        // temporarily pass an HttpContent to LowLevelHttpRequest for backwards compatibility
-        final StreamingContent streamingContent2 = streamingContent;
-        lowLevelHttpRequest.setContent(new HttpContent() {
-
-          public void writeTo(OutputStream out) throws IOException {
-            streamingContent2.writeTo(out);
-          }
-
-          @Deprecated
-          public String getEncoding() {
-            return contentEncoding;
-          }
-
-          public long getLength() throws IOException {
-            return contentLength;
-          }
-
-          public String getType() {
-            return contentType;
-          }
-
-          public boolean retrySupported() {
-            return contentRetrySupported;
-          }
-        });
         // send content information to low-level HTTP request
         lowLevelHttpRequest.setContentType(contentType);
         lowLevelHttpRequest.setContentEncoding(contentEncoding);
@@ -1218,11 +1025,6 @@ public final class HttpRequest {
    * {@code "If-*"} request headers.
    * </p>
    *
-   * <p>
-   * Upgrade warning: in prior version 1.13 all request headers were retained, but starting with
-   * version 1.14 it now removes the {@code "Authorization"} and all {@code "If-*"} request headers.
-   * </p>
-   *
    * @return whether the redirect was successful
    * @since 1.11
    */
@@ -1246,27 +1048,6 @@ public final class HttpRequest {
       return true;
     }
     return false;
-  }
-
-  /**
-   * Returns the normalized media type without parameters of the form {@code type "/" subtype"} as
-   * specified in <a href="http://tools.ietf.org/html/rfc2616#section-3.7">Media Types</a>.
-   *
-   * @param mediaType unnormalized media type with possible parameters or {@code null} for
-   *        {@code null} result
-   * @return normalized media type without parameters or {@code null} for {@code null} input
-   * @since 1.4
-   * @deprecated (scheduled to be removed in 1.14) Use
-   *             {@link HttpMediaType#equalsIgnoreParameters(HttpMediaType)} instead
-   */
-  @Deprecated
-  @Experimental
-  public static String normalizeMediaType(String mediaType) {
-    if (mediaType == null) {
-      return null;
-    }
-    int semicolon = mediaType.indexOf(';');
-    return semicolon == -1 ? mediaType : mediaType.substring(0, semicolon);
   }
 
   /**

@@ -14,7 +14,6 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
 
@@ -67,38 +66,6 @@ public class HttpResponseException extends IOException {
    */
   public HttpResponseException(HttpResponse response) {
     this(new Builder(response));
-  }
-
-  /**
-   * Constructor that allows an alternative detail message to be used.
-   *
-   * <p>
-   * Callers of this constructor should call {@link HttpResponse#disconnect} after
-   * {@link HttpResponseException} is instantiated. Example usage:
-   * </p>
-   *
-   * <pre>
-     try {
-       throw new HttpResponseException(response, message);
-     } finally {
-       response.disconnect();
-     }
-   * </pre>
-   *
-   * @param response HTTP response
-   * @param message detail message to use or {@code null} for none
-   * @since 1.6
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #HttpResponseException(Builder)}
-   *             instead
-   */
-  @Deprecated
-  @Experimental
-  public HttpResponseException(HttpResponse response, String message) {
-    super(message);
-    statusCode = response.getStatusCode();
-    statusMessage = response.getStatusMessage();
-    headers = response.getHeaders();
-    content = null;
   }
 
   /**

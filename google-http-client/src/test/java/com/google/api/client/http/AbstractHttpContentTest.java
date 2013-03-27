@@ -57,12 +57,6 @@ public class AbstractHttpContentTest extends TestCase {
 
   }
 
-  @Deprecated
-  public void testGetEncoding() {
-    AbstractHttpContent content = new TestHttpContent(true, 0);
-    assertNull(content.getEncoding());
-  }
-
   public void testRetrySupported() {
     AbstractHttpContent content = new TestHttpContent(true, 0);
     assertTrue(content.retrySupported());

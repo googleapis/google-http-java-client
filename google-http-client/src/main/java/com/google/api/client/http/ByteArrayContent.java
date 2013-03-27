@@ -14,7 +14,6 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
 
@@ -118,13 +117,6 @@ public final class ByteArrayContent extends AbstractInputStreamContent {
   @Override
   public InputStream getInputStream() {
     return new ByteArrayInputStream(byteArray, offset, length);
-  }
-
-  @Deprecated
-  @Experimental
-  @Override
-  public ByteArrayContent setEncoding(String encoding) {
-    return (ByteArrayContent) super.setEncoding(encoding);
   }
 
   @Override

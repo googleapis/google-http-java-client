@@ -14,7 +14,6 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.json.Json;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockHttpUnsuccessfulResponseHandler;
@@ -730,55 +729,6 @@ public class HttpRequestTest extends TestCase {
     assertEquals(ImmutableList.of("b"), lowLevelRequest.getHeaderValues("a"));
     assertEquals(ImmutableList.of("VALUE"), lowLevelRequest.getHeaderValues("value"));
     assertEquals(ImmutableList.of("other"), lowLevelRequest.getHeaderValues("othervalue"));
-  }
-
-  @SuppressWarnings("deprecation")
-  public void testNormalizeMediaType() {
-    assertEquals(Json.CONTENT_TYPE, HttpRequest.normalizeMediaType(Json.CONTENT_TYPE));
-    assertEquals("text/html", HttpRequest.normalizeMediaType("text/html; charset=ISO-8859-4"));
-  }
-
-  @Deprecated
-  public void testEnabledGZipContent() throws Exception {
-    class MyTransport extends MockHttpTransport {
-
-      boolean expectGZip;
-
-      @Override
-      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
-        return new MockLowLevelHttpRequest() {
-
-          @Override
-          public LowLevelHttpResponse execute() throws IOException {
-            if (expectGZip) {
-              assertEquals(HttpEncodingStreamingContent.class, getStreamingContent().getClass());
-              assertEquals("gzip", getContentEncoding());
-            } else {
-              assertFalse(
-                  getStreamingContent().getClass().equals(HttpEncodingStreamingContent.class));
-              assertNull(getContentEncoding());
-            }
-            char[] content = new char[300];
-            Arrays.fill(content, ' ');
-            assertEquals(new String(content), getContentAsString());
-            return super.execute();
-          }
-        };
-      }
-    }
-    MyTransport transport = new MyTransport();
-    byte[] content = new byte[300];
-    Arrays.fill(content, (byte) ' ');
-    HttpRequest request = transport.createRequestFactory().buildPostRequest(
-        HttpTesting.SIMPLE_GENERIC_URL, new ByteArrayContent(
-            new HttpMediaType("text/plain").setCharsetParameter(Charsets.UTF_8).build(), content));
-    assertFalse(request.getEnableGZipContent());
-    request.execute();
-    assertFalse(request.getEnableGZipContent());
-    request.execute();
-    request.setEnableGZipContent(true);
-    transport.expectGZip = true;
-    request.execute();
   }
 
   public void testGZipEncoding() throws Exception {

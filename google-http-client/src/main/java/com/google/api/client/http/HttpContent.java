@@ -14,7 +14,6 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.StreamingContent;
 
 import java.io.IOException;
@@ -35,15 +34,6 @@ public interface HttpContent extends StreamingContent {
   /** Returns the content length or less than zero if not known. */
   long getLength() throws IOException;
 
-  /**
-   * Returns the content encoding (for example {@code "gzip"}) or {@code null} for none.
-   *
-   * @deprecated (scheduled to be removed in 1.15) Use {@link HttpEncoding} instead
-   */
-  @Deprecated
-  @Experimental
-  String getEncoding();
-
   /** Returns the content type or {@code null} for none. */
   String getType();
 
@@ -54,13 +44,5 @@ public interface HttpContent extends StreamingContent {
    */
   boolean retrySupported();
 
-  /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.13 the implementation of this method was allowed to close
-   * the stream, but starting with 1.14 closing the stream is no longer allowed.
-   * </p>
-   */
   void writeTo(OutputStream out) throws IOException;
 }

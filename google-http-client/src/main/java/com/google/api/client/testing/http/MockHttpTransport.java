@@ -36,7 +36,6 @@ import java.util.Set;
  * @since 1.3
  */
 @Experimental
-@SuppressWarnings({"javadoc", "deprecation"})
 public class MockHttpTransport extends HttpTransport {
 
   /** Supported HTTP methods or {@code null} to specify that all methods are supported. */
@@ -54,31 +53,11 @@ public class MockHttpTransport extends HttpTransport {
     supportedMethods = builder.supportedMethods;
   }
 
-  /**
-   * @param supportedMethods supported HTTP methods or {@code null} to specify that all methods are
-   *        supported
-   *
-   * @since 1.12
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #MockHttpTransport(Builder)}
-   */
-  @Deprecated
-  protected MockHttpTransport(Set<String> supportedMethods) {
-    this.supportedMethods = supportedMethods;
-  }
-
   @Override
   public boolean supportsMethod(String method) throws IOException {
     return supportedMethods == null || supportedMethods.contains(method);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.13 this method was protected, but starting with version
-   * 1.14 this method is public.
-   * </p>
-   */
   @Override
   public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
     Preconditions.checkArgument(supportsMethod(method), "HTTP method %s not supported", method);

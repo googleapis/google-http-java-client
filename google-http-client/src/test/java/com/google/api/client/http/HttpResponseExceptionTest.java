@@ -51,16 +51,6 @@ public class HttpResponseExceptionTest extends TestCase {
     assertTrue(headers == e.getHeaders());
   }
 
-  @Deprecated
-  public void testConstructorWithMessage() throws Exception {
-    HttpTransport transport = new MockHttpTransport();
-    HttpRequest request =
-        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
-    HttpResponse response = request.execute();
-    HttpResponseException e = new HttpResponseException(response, "foo");
-    assertEquals("foo", e.getMessage());
-  }
-
   public void testBuilder() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     Builder builder = new HttpResponseException.Builder(9, "statusMessage", headers).setMessage(
@@ -148,7 +138,6 @@ public class HttpResponseExceptionTest extends TestCase {
     }
   }
 
-  @SuppressWarnings("deprecation")
   public void testComputeMessage() throws Exception {
     HttpTransport transport = new MockHttpTransport() {
       @Override

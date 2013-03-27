@@ -36,12 +36,6 @@ import java.util.Map;
  * thread-safe.
  * </p>
  *
- * <p>
- * Upgrade warning: in prior version 1.13 there were methods {@code writeNumber(UnsignedInteger)}
- * and {@code writeNumber(UnsignedLong)}, but starting in version 1.14 they were removed. Instead
- * use {@link #writeNumber(long)} and {@link #writeNumber(BigInteger)}.
- * </p>
- *
  * @since 1.3
  * @author Yaniv Inbar
  */

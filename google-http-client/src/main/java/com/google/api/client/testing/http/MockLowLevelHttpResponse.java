@@ -20,7 +20,6 @@ import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -70,10 +69,6 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   /**
    * Adds a header to the response.
    *
-   * <p>
-   * Upgrade warning: in prior version 1.13 this method was void, but starting with version 1.14 it
-   * now returns this instance.
-   * </p>
    * @param name header name
    * @param value header value
    */
@@ -89,11 +84,6 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
    * <p>
    * If the input string is {@code null}, it will set the content to {@code null}. Else, it will use
    * {@link TestableByteArrayInputStream} with the UTF-8 encoded string content.
-   * </p>
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.13 it used {@link ByteArrayInputStream}, but starting with
-   * version 1.14 it uses the subclass {@link TestableByteArrayInputStream}.
    * </p>
    *
    * @param stringContent content string or {@code null} for none

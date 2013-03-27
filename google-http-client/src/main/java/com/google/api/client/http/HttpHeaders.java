@@ -966,11 +966,6 @@ public class HttpHeaders extends GenericData {
   /**
    * Puts all headers of the {@link LowLevelHttpResponse} into this {@link HttpHeaders} object.
    *
-   * <p>
-   * Upgrade warning: in prior version 1.13 it did not clear the headers before parsing the
-   * response, but starting in version 1.14 it does clear the headers first.
-   * </p>
-   *
    * @param response Response from which the headers are copied
    * @param logger {@link StringBuilder} to which logging output is added or {@code null} to disable
    *        logging

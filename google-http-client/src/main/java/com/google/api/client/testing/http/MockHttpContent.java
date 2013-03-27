@@ -15,7 +15,6 @@
 package com.google.api.client.testing.http;
 
 import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpEncoding;
 import com.google.api.client.util.Experimental;
 import com.google.api.client.util.Preconditions;
 
@@ -36,10 +35,6 @@ import java.io.OutputStream;
 @Experimental
 public class MockHttpContent implements HttpContent {
 
-  /** HTTP content encoding or {@code null} by default. */
-  @Deprecated
-  private String encoding;
-
   /** HTTP content length or {@code -1} by default. */
   private long length = -1;
 
@@ -48,11 +43,6 @@ public class MockHttpContent implements HttpContent {
 
   /** HTTP content or an empty byte array by default. */
   private byte[] content = new byte[0];
-
-  @Deprecated
-  public String getEncoding() {
-    return encoding;
-  }
 
   public long getLength() throws IOException {
     return length;
@@ -91,18 +81,6 @@ public class MockHttpContent implements HttpContent {
    */
   public MockHttpContent setContent(byte[] content) {
     this.content = Preconditions.checkNotNull(content);
-    return this;
-  }
-
-  /**
-   * Sets the HTTP content encoding or {@code null} for none.
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.15) Use {@link HttpEncoding} instead.
-   */
-  @Deprecated
-  public MockHttpContent setEncoding(String encoding) {
-    this.encoding = encoding;
     return this;
   }
 

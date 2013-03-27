@@ -14,7 +14,6 @@
 
 package com.google.api.client.testing.http;
 
-import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
@@ -50,10 +49,6 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
 
   /** Request URL or {@code null} for none. */
   private String url;
-
-  /** HTTP content or {@code null} for none. */
-  @Deprecated
-  private HttpContent content;
 
   /** Map of lowercase header name to values. */
   private final Map<String, List<String>> headersMap = new HashMap<String, List<String>>();
@@ -94,12 +89,6 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
     return response;
   }
 
-  @Override
-  @Deprecated
-  public void setContent(HttpContent content) throws IOException {
-    this.content = content;
-  }
-
   /**
    * Returns the request URL or {@code null} for none.
    *
@@ -115,11 +104,6 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
    * <p>
    * Note that unlike this method, {@link #getFirstHeaderValue(String)} and
    * {@link #getHeaderValues(String)} are not case sensitive with respect to the input header name.
-   * </p>
-   *
-   * <p>
-   * Upgrade warning: in prior version 1.13 the keys could be in any case, but starting with version
-   * 1.14, the keys will all be lowercase.
    * </p>
    *
    * @since 1.5
@@ -158,19 +142,6 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
   public MockLowLevelHttpRequest setUrl(String url) {
     this.url = url;
     return this;
-  }
-
-  /**
-   * Returns the HTTP content or {@code null} for none.
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #getContentLength()},
-   *             {@link #getContentEncoding()}, {@link #getContentType()}, or
-   *             {@link #getStreamingContent()} instead.
-   */
-  @Deprecated
-  public HttpContent getContent() {
-    return content;
   }
 
   /**

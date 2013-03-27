@@ -77,7 +77,6 @@ public class HttpHeadersTest extends TestCase {
     E otherValue;
   }
 
-  @SuppressWarnings("deprecation")
   public void testSerializeHeaders() throws Exception {
     // custom headers
     MyHeaders myHeaders = new MyHeaders();

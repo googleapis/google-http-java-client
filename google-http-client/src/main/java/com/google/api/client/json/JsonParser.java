@@ -43,12 +43,6 @@ import java.util.Set;
  * thread-safe.
  * </p>
  *
- * <p>
- * Upgrade warning: in prior version 1.13 there were methods {@code getUnsignedIntegerValue()} and
- * {@code getUnsignedLongValue()}, but starting in version 1.14 they were removed. Instead use
- * {@link #getLongValue()} and {@link #getBigIntegerValue()}.
- * </p>
- *
  * @since 1.3
  * @author Yaniv Inbar
  */

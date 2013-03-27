@@ -14,8 +14,6 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Experimental;
-
 import java.io.IOException;
 
 
@@ -77,23 +75,6 @@ public final class HttpRequestFactory {
    */
   public HttpRequestInitializer getInitializer() {
     return initializer;
-  }
-
-  /**
-   * Builds a request for the given HTTP method, URL, and content.
-   *
-   * @param method HTTP request method
-   * @param url HTTP request URL or {@code null} for none
-   * @param content HTTP request content or {@code null} for none
-   * @return new HTTP request
-   * @deprecated (scheduled to be removed in 1.14) Use
-   *             {@link #buildRequest(String, GenericUrl, HttpContent)} instead
-   */
-  @Deprecated
-  @Experimental
-  public HttpRequest buildRequest(HttpMethod method, GenericUrl url, HttpContent content)
-      throws IOException {
-    return buildRequest(method.toString(), url, content);
   }
 
   /**

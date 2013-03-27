@@ -15,7 +15,6 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.ByteStreams;
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.IOUtils;
 
 import java.io.IOException;
@@ -44,11 +43,6 @@ public abstract class AbstractInputStreamContent implements HttpContent {
 
   /** Content type or {@code null} for none. */
   private String type;
-
-  /** Content encoding (for example {@code "gzip"}) or {@code null} for none. */
-  @Deprecated
-  @Experimental
-  private String encoding;
 
   /**
    * Whether the input stream should be closed at the end of {@link #writeTo}. Default is
@@ -79,12 +73,6 @@ public abstract class AbstractInputStreamContent implements HttpContent {
     out.flush();
   }
 
-  @Deprecated
-  @Experimental
-  public String getEncoding() {
-    return encoding;
-  }
-
   public String getType() {
     return type;
   }
@@ -97,20 +85,6 @@ public abstract class AbstractInputStreamContent implements HttpContent {
    */
   public final boolean getCloseInputStream() {
     return closeInputStream;
-  }
-
-  /**
-   * Sets the content encoding (for example {@code "gzip"}) or {@code null} for none. Subclasses
-   * should override by calling super.
-   *
-   * @since 1.5
-   * @deprecated (scheduled to be removed in 1.15) Use {@link HttpEncoding} instead.
-   */
-  @Deprecated
-  @Experimental
-  public AbstractInputStreamContent setEncoding(String encoding) {
-    this.encoding = encoding;
-    return this;
   }
 
   /**
@@ -132,75 +106,5 @@ public abstract class AbstractInputStreamContent implements HttpContent {
   public AbstractInputStreamContent setCloseInputStream(boolean closeInputStream) {
     this.closeInputStream = closeInputStream;
     return this;
-  }
-
-  /**
-   * Writes the content provided by the given source input stream into the given destination output
-   * stream.
-   *
-   * <p>
-   * The input stream is guaranteed to be closed at the end of this method.
-   * </p>
-   *
-   * <p>
-   * Sample use:
-   * </p>
-   *
-   * <pre>
-  static void downloadMedia(HttpResponse response, File file)
-      throws IOException {
-    FileOutputStream out = new FileOutputStream(file);
-    try {
-      AbstractInputStreamContent.copy(response.getContent(), out);
-    } finally {
-      out.close();
-    }
-  }
-   * </pre>
-   *
-   * @param inputStream source input stream
-   * @param outputStream destination output stream
-   * @deprecated (scheduled to be removed in 1.15) Use
-   *             {@link IOUtils#copy(InputStream, OutputStream)} instead
-   */
-  @Deprecated
-  @Experimental
-  public static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
-    IOUtils.copy(inputStream, outputStream);
-  }
-
-  /**
-   * Writes the content provided by the given source input stream into the given destination output
-   * stream.
-   *
-   * <p>
-   * Sample use:
-   * </p>
-   *
-   * <pre>
-  static void downloadMedia(HttpResponse response, File file)
-      throws IOException {
-    FileOutputStream out = new FileOutputStream(file);
-    try {
-      AbstractInputStreamContent.copy(response.getContent(), out, true);
-    } finally {
-      out.close();
-    }
-  }
-   * </pre>
-   *
-   * @param inputStream source input stream
-   * @param outputStream destination output stream
-   * @param closeInputStream whether the input stream should be closed at the end of this method
-   * @since 1.7
-   * @deprecated (scheduled to be removed in 1.15) Use
-   *             {@link IOUtils#copy(InputStream, OutputStream, boolean)} instead
-   */
-  @Deprecated
-  @Experimental
-  public static void copy(
-      InputStream inputStream, OutputStream outputStream, boolean closeInputStream)
-      throws IOException {
-    IOUtils.copy(inputStream, outputStream, closeInputStream);
   }
 }

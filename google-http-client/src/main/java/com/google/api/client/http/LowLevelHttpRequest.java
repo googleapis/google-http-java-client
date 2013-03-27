@@ -14,7 +14,6 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.StreamingContent;
 
 import java.io.IOException;
@@ -61,21 +60,6 @@ public abstract class LowLevelHttpRequest {
    * @param value header value
    */
   public abstract void addHeader(String name, String value) throws IOException;
-
-  /**
-   * Sets the HTTP request content.
-   *
-   * <p>Default implementation does nothing.</p>
-   *
-   * @throws IOException I/O exception
-   * @deprecated (scheduled to be removed in 1.15) Use {@link #setContentLength(long)},
-   *             {@link #setContentEncoding(String)}, {@link #setContentType(String)}, and
-   *             {@link #setStreamingContent(StreamingContent)} instead.
-   */
-  @Deprecated
-  @Experimental
-  public void setContent(HttpContent content) throws IOException {
-  }
 
   /**
    * Sets the content length or less than zero if not known.
