@@ -14,7 +14,7 @@
 
 package com.google.api.client.findbugs;
 
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
@@ -27,34 +27,34 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 
 /**
- * Findbugs plugin detector which detects usage of {@link Experimental} in your code.
+ * Findbugs plugin detector which detects usage of {@link Beta} in your code.
  *
  * @author Eyal Peled
  */
-public class ExperimentalDetector extends OpcodeStackDetector {
+public class BetaDetector extends OpcodeStackDetector {
 
-  /** Experimental annotation "signature". */
-  private static final String EXPERIMENTAL_ANNOTATION = "Lcom/google/api/client/util/Experimental;";
-
-  /**
-   * A message indicating there is a usage of a method annotated with Experimental annotation.
-   */
-  private static final String EXPERIMENTAL_METHOD_USAGE = "EXPERIMENTAL_METHOD_USAGE";
+  /** Beta annotation "signature". */
+  private static final String BETA_ANNOTATION = "Lcom/google/api/client/util/Beta;";
 
   /**
-   * A message indicating there is a usage of a field annotated with Experimental annotation.
+   * A message indicating there is a usage of a method annotated with Beta annotation.
    */
-  private static final String EXPERIMENTAL_FIELD_USAGE = "EXPERIMENTAL_FIELD_USAGE";
+  private static final String BETA_METHOD_USAGE = "BETA_METHOD_USAGE";
 
   /**
-   * A message indicating there is a usage of a class annotated with Experimental annotation.
+   * A message indicating there is a usage of a field annotated with Beta annotation.
    */
-  private static final String EXPERIMENTAL_CLASS_USAGE = "EXPERIMENTAL_CLASS_USAGE";
+  private static final String BETA_FIELD_USAGE = "BETA_FIELD_USAGE";
+
+  /**
+   * A message indicating there is a usage of a class annotated with Beta annotation.
+   */
+  private static final String BETA_CLASS_USAGE = "BETA_CLASS_USAGE";
 
   /** The bug reporter is used to report errors. */
   private final BugReporter bugReporter;
 
-  public ExperimentalDetector(BugReporter bugReporter) {
+  public BetaDetector(BugReporter bugReporter) {
     this.bugReporter = bugReporter;
   }
 
@@ -90,7 +90,7 @@ public class ExperimentalDetector extends OpcodeStackDetector {
       case LDC2_W:
         // Class usage
         if (getConstantRefOperand() instanceof ConstantClass) {
-          // report bug in case it's google api @Experimental class
+          // report bug in case it's google api @Beta class
           checkClass();
         }
         break;
@@ -100,10 +100,10 @@ public class ExperimentalDetector extends OpcodeStackDetector {
     }
   }
 
-  /** Returns true if the given annotations contain {@link Experimental}. */
-  private static boolean isExperimental(AnnotationEntry[] annotationEntries) {
+  /** Returns true if the given annotations contain {@link Beta}. */
+  private static boolean isBeta(AnnotationEntry[] annotationEntries) {
     for (AnnotationEntry annotation : annotationEntries) {
-      if (EXPERIMENTAL_ANNOTATION.equals(annotation.getAnnotationType())) {
+      if (BETA_ANNOTATION.equals(annotation.getAnnotationType())) {
         return true;
       }
     }
@@ -112,15 +112,15 @@ public class ExperimentalDetector extends OpcodeStackDetector {
 
   /**
    * Returns {@link JavaClass} for the current operand only if it's a Google APIs Client library
-   * class, it's not {@link Experimental} and it doesn't appear in other {@link Experimental}
-   * section. Otherwise returns {@code null}.
+   * class, it's not {@link Beta} and it doesn't appear in other {@link Beta} section. Otherwise
+   * returns {@code null}.
    *
    * <p>
-   * Reports a bug in case the class is {@link Experimental}.
+   * Reports a bug in case the class is {@link Beta}.
    * </p>
    */
   private JavaClass checkClass() {
-    // TODO(peleyal): check if caching the experimental state of every class could improve
+    // TODO(peleyal): check if caching the beta state of every class could improve
     // performance on large projects
 
     try {
@@ -130,20 +130,20 @@ public class ExperimentalDetector extends OpcodeStackDetector {
         return null;
       }
 
-      // suppress errors when declaring fields inside a class (e.g. declaration of Experimental
-      // field in Experimental class)
+      // suppress errors when declaring fields inside a class (e.g. declaration of Beta
+      // field in Beta class)
       if (javaClass.getClassName().equals(getDottedClassName())) {
         return null;
       }
 
-      // suppress errors if the container class or method is experimental
-      if (isExperimental(getThisClass().getAnnotationEntries())
-          || (getMethod() != null && isExperimental(getMethod().getAnnotationEntries()))) {
+      // suppress errors if the container class or method is beta
+      if (isBeta(getThisClass().getAnnotationEntries())
+          || (getMethod() != null && isBeta(getMethod().getAnnotationEntries()))) {
         return null;
       }
 
-      if (isExperimental(javaClass.getAnnotationEntries())) {
-        bugReporter.reportBug(createBugInstance(EXPERIMENTAL_CLASS_USAGE).addClass(javaClass));
+      if (isBeta(javaClass.getAnnotationEntries())) {
+        bugReporter.reportBug(createBugInstance(BETA_CLASS_USAGE).addClass(javaClass));
         return null;
       }
 
@@ -165,7 +165,7 @@ public class ExperimentalDetector extends OpcodeStackDetector {
   }
 
   /**
-   * Reports bug in case the method defined by the given name and signature is {@link Experimental}.
+   * Reports bug in case the method defined by the given name and signature is {@link Beta}.
    *
    * <p>
    * The method is searched in current class and all super classses as well.
@@ -180,10 +180,9 @@ public class ExperimentalDetector extends OpcodeStackDetector {
     for (JavaClass current = javaClass; current != null; current = getSuperclass(current)) {
       for (Method method : current.getMethods()) {
         if (methodName.equals(method.getName()) && signature.equals(method.getSignature())) {
-          // method has been found - check if it's experimental
-          if (isExperimental(method.getAnnotationEntries())) {
-            bugReporter.reportBug(
-                createBugInstance(EXPERIMENTAL_METHOD_USAGE).addCalledMethod(this));
+          // method has been found - check if it's beta
+          if (isBeta(method.getAnnotationEntries())) {
+            bugReporter.reportBug(createBugInstance(BETA_METHOD_USAGE).addCalledMethod(this));
           }
           return;
         }
@@ -196,7 +195,7 @@ public class ExperimentalDetector extends OpcodeStackDetector {
   }
 
   /**
-   * Reports bug in case the field defined by the given name is {@link Experimental}.
+   * Reports bug in case the field defined by the given name is {@link Beta}.
    *
    * <p>
    * The field is searched in current class and all super classses as well.
@@ -211,10 +210,9 @@ public class ExperimentalDetector extends OpcodeStackDetector {
     for (JavaClass current = javaClass; current != null; current = getSuperclass(current)) {
       for (Field field : current.getFields()) {
         if (fieldName.equals(field.getName())) {
-          // field has been found - check if it's experimental
-          if (isExperimental(field.getAnnotationEntries())) {
-            bugReporter.reportBug(
-                createBugInstance(EXPERIMENTAL_FIELD_USAGE).addReferencedField(this));
+          // field has been found - check if it's beta
+          if (isBeta(field.getAnnotationEntries())) {
+            bugReporter.reportBug(createBugInstance(BETA_FIELD_USAGE).addReferencedField(this));
           }
           return;
         }

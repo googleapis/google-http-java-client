@@ -14,12 +14,12 @@
 
 package com.google.api.client.json.rpc2;
 
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * JSON-RPC 2.0 request object.
  *
  * <p>
@@ -29,7 +29,7 @@ import com.google.api.client.util.Key;
  * @since 1.0
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class JsonRpcRequest extends GenericData {
 
   /** Version of the JSON-RPC protocol which is {@code "2.0"}. */

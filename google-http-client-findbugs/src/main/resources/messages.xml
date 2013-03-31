@@ -7,50 +7,50 @@
     <Details>Provides detectors for Google APIs Client library.</Details>
   </Plugin>
 
-  <Detector class="com.google.api.client.findbugs.ExperimentalDetector">
-    <Details>Finds instances of Experimental annotation.</Details>
+  <Detector class="com.google.api.client.findbugs.BetaDetector">
+    <Details>Finds instances of Beta annotation.</Details>
   </Detector>
 
-  <BugPattern type="EXPERIMENTAL_CLASS_USAGE">
-    <ShortDescription>Usage of an &#64;Experimental class
+  <BugPattern type="BETA_CLASS_USAGE">
+    <ShortDescription>Usage of a &#64;Beta class
     </ShortDescription>
-    <LongDescription>Usage of an Experimental class {3} in {2}
+    <LongDescription>Usage of a Beta class {3} in {2}
     </LongDescription>
     <Details>
 <![CDATA[
-<p>Library should not use APIs annotated with Experimental. 
-See <a href="http://javadoc.google-http-java-client.googlecode.com/hg/1.15.0-rc/com/api/client/util/Experimental.java">@Experimental</a> for more details.
+<p>Library should not use APIs annotated with Beta. 
+See <a href="http://javadoc.google-http-java-client.googlecode.com/hg/1.15.0-rc/com/api/client/util/Beta.java">@Beta</a> for more details.
 </p>
 ]]>
     </Details>
   </BugPattern>
-  <BugPattern type="EXPERIMENTAL_METHOD_USAGE">
-    <ShortDescription>Usage of an &#64;Experimental method
+  <BugPattern type="BETA_METHOD_USAGE">
+    <ShortDescription>Usage of a &#64;Beta method
     </ShortDescription>
-    <LongDescription>Usage of an Experimental method {3} in {2}
+    <LongDescription>Usage of a Beta method {3} in {2}
     </LongDescription>
     <Details>
 <![CDATA[
-<p>Library should not use APIs annotated with Experimental. 
-See <a href="http://javadoc.google-http-java-client.googlecode.com/hg/1.15.0-rc/com/api/client/util/Experimental.java">@Experimental</a> for more details.
+<p>Library should not use APIs annotated with Beta. 
+See <a href="http://javadoc.google-http-java-client.googlecode.com/hg/1.15.0-rc/com/api/client/util/Beta.java">@Beta</a> for more details.
 </p>
 ]]>
     </Details>
   </BugPattern>
-  <BugPattern type="EXPERIMENTAL_FIELD_USAGE">
-    <ShortDescription>Usage of an &#64;Experimental field
+  <BugPattern type="BETA_FIELD_USAGE">
+    <ShortDescription>Usage of a &#64;Beta field
     </ShortDescription>
-    <LongDescription>Usage of an Experimental field {3} in {2}
+    <LongDescription>Usage of a Beta field {3} in {2}
     </LongDescription>
     <Details>
 <![CDATA[
-<p>Library should not use APIs annotated with Experimental. 
-See <a href="http://javadoc.google-http-java-client.googlecode.com/hg/1.15.0-rc/com/api/client/util/Experimental.java">@Experimental</a> for more details.
+<p>Library should not use APIs annotated with Beta. 
+See <a href="http://javadoc.google-http-java-client.googlecode.com/hg/1.15.0-rc/com/api/client/util/Beta.java">@Beta</a> for more details.
 </p>
 ]]>
     </Details>
   </BugPattern>
 
-  <BugCode abbrev="GAEU">Usage of Google APIs Client library Experimental
+  <BugCode abbrev="GABU">Usage of Google APIs Client library Beta
     Annotation</BugCode>
 </MessageCollection>

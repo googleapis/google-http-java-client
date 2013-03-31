@@ -15,7 +15,7 @@
 package com.google.api.client.json.webtoken;
 
 import com.google.api.client.json.GenericJson;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Objects;
 import com.google.api.client.util.Preconditions;
@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * <a href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06">JSON Web Token (JWT)</a>.
  *
  * <p>
@@ -34,7 +34,7 @@ import java.util.List;
  * @since 1.14 (since 1.7 as com.google.api.client.auth.jsontoken.JsonWebToken)
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class JsonWebToken {
 
   /** Header. */
@@ -53,11 +53,11 @@ public class JsonWebToken {
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Header as specified in <a
    * href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06#section-5">JWT Header</a>.
    */
-  @Experimental
+  @Beta
   public static class Header extends GenericJson {
 
     /** Type header parameter used to declare the type of this object or {@code null} for none. */
@@ -127,12 +127,12 @@ public class JsonWebToken {
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Payload as specified in <a
    * href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06#section-4.1">Reserved Claim
    * Names</a>.
    */
-  @Experimental
+  @Beta
   public static class Payload extends GenericJson {
 
     /**

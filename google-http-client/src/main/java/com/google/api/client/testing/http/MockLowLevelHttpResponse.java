@@ -16,7 +16,7 @@ package com.google.api.client.testing.http;
 
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.testing.util.TestableByteArrayInputStream;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
 
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Mock for {@link LowLevelHttpResponse}.
  *
  * <p>
@@ -36,7 +36,7 @@ import java.util.List;
  * @author Yaniv Inbar
  * @since 1.3
  */
-@Experimental
+@Beta
 public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
 
   /** Input stream content of HTTP response or {@code null} by default. */

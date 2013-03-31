@@ -16,7 +16,7 @@ package com.google.api.client.http.xml.atom;
 
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.xml.AbstractXmlHttpContent;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.xml.XmlNamespaceDictionary;
 import com.google.api.client.xml.atom.Atom;
@@ -26,7 +26,7 @@ import org.xmlpull.v1.XmlSerializer;
 import java.io.IOException;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Serializes Atom XML HTTP content based on the data key/value mapping object for an Atom entry.
  *
  * <p>
@@ -56,7 +56,7 @@ import java.io.IOException;
  * @since 1.4
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class AtomContent extends AbstractXmlHttpContent {
 
   /** {@code true} for an Atom entry or {@code false} for an Atom feed. */

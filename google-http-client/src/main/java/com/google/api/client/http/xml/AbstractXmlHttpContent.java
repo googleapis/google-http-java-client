@@ -16,7 +16,7 @@ package com.google.api.client.http.xml;
 
 import com.google.api.client.http.AbstractHttpContent;
 import com.google.api.client.http.HttpMediaType;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.xml.Xml;
 import com.google.api.client.xml.XmlNamespaceDictionary;
@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Abstract serializer for XML HTTP content based on the data key/value mapping object for an item.
  *
  * <p>
@@ -37,7 +37,7 @@ import java.io.OutputStream;
  * @since 1.0
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public abstract class AbstractXmlHttpContent extends AbstractHttpContent {
 
   /**

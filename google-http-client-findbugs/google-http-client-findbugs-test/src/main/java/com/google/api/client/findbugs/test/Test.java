@@ -14,42 +14,42 @@
 
 package com.google.api.client.findbugs.test;
 
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 
-/** A Test class which uses {@link Experimental} code. */
+/** A Test class which uses {@link Beta} code. */
 public class Test {
 
   public static void test() {
     // When using google-http-client-findbugs plugin - Error usage of a class [CLASS_NAME], which
-    // annotated a Experimental
-    ExperimentalClass exp = new ExperimentalClass();
+    // annotated a Beta
+    BetaClass exp = new BetaClass();
 
     exp.method();
-    exp.experimentalMethod();
+    exp.betaMethod();
 
     exp.field = 10;
-    exp.experimentalField = 10;
+    exp.betaField = 10;
 
-    ClassWithExperimentalField classField = new ClassWithExperimentalField();
+    ClassWithBetaField classField = new ClassWithBetaField();
     // When using google-http-client-findbugs plugin - Error usage of a field [FIELD_NAME], which
-    // annotated as Experimental
-    int n = ClassWithExperimentalField.experimetnalStaticField;
-    n = classField.experimentalField;
-    classField.experimentalField = 20;
+    // annotated as Beta
+    int n = ClassWithBetaField.betaStaticField;
+    n = classField.betaField;
+    classField.betaField = 20;
 
     // Won't produce errors
-    n = ClassWithExperimentalField.staticField;
+    n = ClassWithBetaField.staticField;
     n = classField.field;
     classField.field = 20;
 
-    ClassWithExperimentalMethod classMethod = new ClassWithExperimentalMethod();
+    ClassWithBetaMethod classMethod = new ClassWithBetaMethod();
     // When using google-http-client-findbugs plugin - Error usage of a field [METHOD_NAME], which
-    // annotated as Experimental
-    ClassWithExperimentalMethod.staticExperimentalMethod();
-    classMethod.experimentalMethod();
+    // annotated as Beta
+    ClassWithBetaMethod.staticBetaMethod();
+    classMethod.betaMethod();
 
     // Won't produce errors
-    ClassWithExperimentalMethod.staticMethod();
+    ClassWithBetaMethod.staticMethod();
     classMethod.method();
   }
 }

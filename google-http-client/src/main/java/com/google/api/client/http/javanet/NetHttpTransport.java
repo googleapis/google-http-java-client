@@ -16,7 +16,7 @@ package com.google.api.client.http.javanet;
 
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.SslUtils;
@@ -239,7 +239,7 @@ public final class NetHttpTransport extends HttpTransport {
     }
 
     /**
-     * {@link Experimental} <br/>
+     * {@link Beta} <br/>
      * Disables validating server SSL certificates by setting the SSL socket factory using
      * {@link SslUtils#trustAllSSLContext()} for the SSL context and
      * {@link SslUtils#trustAllHostnameVerifier()} for the host name verifier.
@@ -249,7 +249,7 @@ public final class NetHttpTransport extends HttpTransport {
      * environments.
      * </p>
      */
-    @Experimental
+    @Beta
     public Builder doNotValidateCertificate() throws GeneralSecurityException {
       hostnameVerifier = SslUtils.trustAllHostnameVerifier();
       sslSocketFactory = SslUtils.trustAllSSLContext().getSocketFactory();

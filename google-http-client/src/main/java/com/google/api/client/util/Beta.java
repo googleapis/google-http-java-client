@@ -19,10 +19,10 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation to indicate that a public API (class, method or field) is experimental.
+ * Use this annotation to indicate that a public API (class, method or field) is beta.
  *
  * <p>
- * Experimental API is subject to incompatible changes or removal in the future. It may also mean
+ * Beta API is subject to incompatible changes or removal in the future. It may also mean
  * that the server features it depends on are potentially subject to breakage at any time.
  * </p>
  *
@@ -32,13 +32,13 @@ import java.lang.annotation.Target;
  * </p>
  *
  * <p>
- * To provide a smoother upgrade path when we make incompatible changes to experimental API,
- * whenever possible we try to deprecate the old experimental API in the first minor release, and
+ * To provide a smoother upgrade path when we make incompatible changes to beta API,
+ * whenever possible we try to deprecate the old beta API in the first minor release, and
  * then remove it in the second minor release.
  * </p>
  *
  * <p>
- * It is generally inadvisable for other non-experimental libraries to use experimental API from
+ * It is generally inadvisable for other non-beta libraries to use beta API from
  * this library. The problem is that other libraries don't have control over the version of this
  * library being used in client applications, and if the wrong version of this library is used, it
  * has the potential to break client applications.
@@ -55,6 +55,6 @@ import java.lang.annotation.Target;
     ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
     ElementType.TYPE, ElementType.PACKAGE})
 @Documented
-public @interface Experimental {
+public @interface Beta {
 
 }

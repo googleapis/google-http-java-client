@@ -15,14 +15,14 @@
 package com.google.api.client.testing.http;
 
 import com.google.api.client.http.HttpContent;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Mock for {@link HttpContent}.
  *
  * <p>
@@ -32,7 +32,7 @@ import java.io.OutputStream;
  * @author Yaniv Inbar
  * @since 1.3
  */
-@Experimental
+@Beta
 public class MockHttpContent implements HttpContent {
 
   /** HTTP content length or {@code -1} by default. */

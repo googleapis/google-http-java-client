@@ -18,8 +18,8 @@ import com.google.api.client.extensions.android.AndroidUtils;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Charsets;
-import com.google.api.client.util.Experimental;
 
 import android.annotation.TargetApi;
 import android.util.JsonReader;
@@ -35,7 +35,7 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Low-level JSON library implementation based on GSON.
  *
  * <p>
@@ -51,7 +51,7 @@ import java.nio.charset.Charset;
  * @author Yaniv Inbar
  */
 @TargetApi(11)
-@Experimental
+@Beta
 public class AndroidJsonFactory extends JsonFactory {
 
   // TODO(yanivi): figure out how to run unit tests based on Android platform

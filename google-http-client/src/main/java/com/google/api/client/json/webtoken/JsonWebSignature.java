@@ -16,7 +16,7 @@ package com.google.api.client.json.webtoken;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Base64;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
@@ -30,7 +30,7 @@ import java.security.PublicKey;
 import java.security.Signature;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * <a href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-08">JSON Web Signature
  * (JWS)</a>.
  *
@@ -52,7 +52,7 @@ import java.security.Signature;
  * @since 1.14 (since 1.7 as com.google.api.client.auth.jsontoken.JsonWebSignature)
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class JsonWebSignature extends JsonWebToken {
 
   /** Bytes of the signature. */
@@ -75,12 +75,12 @@ public class JsonWebSignature extends JsonWebToken {
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Header as specified in <a
    * href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-08#section-4.1">Reserved
    * Header Parameter Names</a>.
    */
-  @Experimental
+  @Beta
   public static class Header extends JsonWebToken.Header {
 
     /**
@@ -371,14 +371,14 @@ public class JsonWebSignature extends JsonWebToken {
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * JWS parser.
    *
    * <p>
    * Implementation is not thread-safe.
    * </p>
    */
-  @Experimental
+  @Beta
   public static final class Parser {
 
     /** JSON factory. */

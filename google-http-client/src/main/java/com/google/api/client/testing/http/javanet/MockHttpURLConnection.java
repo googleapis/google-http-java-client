@@ -14,7 +14,7 @@
 
 package com.google.api.client.testing.http.javanet;
 
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 
 import java.io.ByteArrayOutputStream;
@@ -25,7 +25,7 @@ import java.net.URL;
 import java.net.UnknownServiceException;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Mock for {@link HttpURLConnection}.
  *
  * <p>
@@ -35,7 +35,7 @@ import java.net.UnknownServiceException;
  * @since 1.11
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class MockHttpURLConnection extends HttpURLConnection {
 
   /** Whether {@link #doOutput} was called. */

@@ -14,11 +14,11 @@
 
 package com.google.api.client.testing.util;
 
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Sleeper;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Mock for {@link Sleeper}.
  *
  * <p>
@@ -28,7 +28,7 @@ import com.google.api.client.util.Sleeper;
  * @author Yaniv Inbar
  * @since 1.15
  */
-@Experimental
+@Beta
 public class MockSleeper implements Sleeper {
 
   /** Number of times {@link #sleep(long)} was called. */

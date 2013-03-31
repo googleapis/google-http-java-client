@@ -16,10 +16,10 @@ package com.google.api.client.xml;
 
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.util.ArrayValueMap;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Charsets;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.Data;
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
@@ -39,13 +39,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * XML utilities.
  *
  * @since 1.0
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class Xml {
   /**
    * {@code "application/xml; charset=utf-8"} media type used as a default for XML parsing.

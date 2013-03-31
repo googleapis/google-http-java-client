@@ -14,9 +14,9 @@
 
 package com.google.api.client.xml;
 
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.DateTime;
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
@@ -34,7 +34,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Thread-safe XML namespace dictionary that provides a one-to-one map of namespace alias to URI.
  *
  * <p>
@@ -63,7 +63,7 @@ import java.util.TreeSet;
  * @since 1.0
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public final class XmlNamespaceDictionary {
 
   /**
@@ -316,7 +316,7 @@ public final class XmlNamespaceDictionary {
     return result;
   }
 
-  @Experimental
+  @Beta
   class ElementSerializer {
     private final boolean errorOnUnknown;
     Object textValue = null;

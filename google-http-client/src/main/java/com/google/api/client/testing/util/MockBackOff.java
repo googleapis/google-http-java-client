@@ -15,13 +15,13 @@
 package com.google.api.client.testing.util;
 
 import com.google.api.client.util.BackOff;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Mock for {@link BackOff} that always returns a fixed number.
  *
  * <p>
@@ -31,7 +31,7 @@ import java.io.IOException;
  * @author Yaniv Inbar
  * @since 1.15
  */
-@Experimental
+@Beta
 public class MockBackOff implements BackOff {
 
   /** Fixed back-off milliseconds. */

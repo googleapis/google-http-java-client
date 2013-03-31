@@ -14,13 +14,13 @@
 
 package com.google.api.client.testing.http;
 
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
-import com.google.api.client.util.Experimental;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * A thread-safe fixed time implementation of the Clock to be used for unit testing.
  *
  * <p>
@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @since 1.9
  * @author mlinder@google.com (Matthias Linder)
  */
-@Experimental
+@Beta
 public class FixedClock implements Clock {
   private AtomicLong currentTime;
 

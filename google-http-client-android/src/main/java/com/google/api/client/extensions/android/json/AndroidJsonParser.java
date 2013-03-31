@@ -17,7 +17,7 @@ package com.google.api.client.extensions.android.json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 
 import android.annotation.TargetApi;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Low-level JSON serializer implementation based on GSON.
  *
  * <p>
@@ -41,7 +41,7 @@ import java.util.List;
  * @author Yaniv Inbar
  */
 @TargetApi(11)
-@Experimental
+@Beta
 class AndroidJsonParser extends JsonParser {
   private final JsonReader reader;
   private final AndroidJsonFactory factory;

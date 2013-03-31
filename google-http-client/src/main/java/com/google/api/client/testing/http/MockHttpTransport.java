@@ -16,7 +16,7 @@ package com.google.api.client.testing.http;
 
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpRequest;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Mock for {@link HttpTransport}.
  *
  * <p>
@@ -35,7 +35,7 @@ import java.util.Set;
  * @author Yaniv Inbar
  * @since 1.3
  */
-@Experimental
+@Beta
 public class MockHttpTransport extends HttpTransport {
 
   /** Supported HTTP methods or {@code null} to specify that all methods are supported. */
@@ -82,7 +82,7 @@ public class MockHttpTransport extends HttpTransport {
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Builder for {@link MockHttpTransport}.
    *
    * <p>
@@ -91,7 +91,7 @@ public class MockHttpTransport extends HttpTransport {
    *
    * @since 1.5
    */
-  @Experimental
+  @Beta
   public static class Builder {
 
     /** Supported HTTP methods or {@code null} to specify that all methods are supported. */

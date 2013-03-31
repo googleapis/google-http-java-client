@@ -14,26 +14,33 @@
 
 package com.google.api.client.findbugs.test;
 
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 
-/** A class which contains {@link Experimental} fields. */
-public class ClassWithExperimentalField {
+/** A class which annotated as {@link Beta}. */
+@Beta
+public class BetaClass {
 
-  @Experimental
-  public int experimentalField;
-  public int field;
-
-  @Experimental
-  public static final int experimetnalStaticField = 10;
-  public static final int staticField = 20;
-
-  public ClassWithExperimentalField() {
-    experimentalField = 1;
-    field = 2;
+  public void method() {
   }
+
+  @Beta
+  public void betaMethod() {
+    BetaClass2 exp2 = new BetaClass2();
+    exp2.foo();
+  }
+
+  public BetaClass() {
+    field = 1;
+    betaField = 2;
+  }
+
+  int field;
+
+  @Beta
+  int betaField;
 
   @Override
   public String toString() {
-    return "Field: " + field + ", Experimental Field: " + experimentalField;
+    return "Field: " + field + ", Beta Field: " + betaField;
   }
 }

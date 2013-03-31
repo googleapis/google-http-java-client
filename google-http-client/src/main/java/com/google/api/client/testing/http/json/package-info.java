@@ -13,12 +13,12 @@
  */
 
 /**
- * {@link com.google.api.client.util.Experimental} <br/>
+ * {@link com.google.api.client.util.Beta} <br/>
  * Testing utilities used for writing tests based on this library.
  *
  * @since 1.11
  * @author rmistry@google.com (Ravi Mistry)
  */
-@com.google.api.client.util.Experimental
+@com.google.api.client.util.Beta
 package com.google.api.client.testing.http.json;
 

@@ -17,8 +17,8 @@ package com.google.api.client.testing.http;
 import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Charsets;
-import com.google.api.client.util.Experimental;
 import com.google.api.client.util.IOUtils;
 
 import java.io.ByteArrayInputStream;
@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Mock for {@link LowLevelHttpRequest}.
  *
  * <p>
@@ -44,7 +44,7 @@ import java.util.zip.GZIPInputStream;
  * @author Yaniv Inbar
  * @since 1.3
  */
-@Experimental
+@Beta
 public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
 
   /** Request URL or {@code null} for none. */

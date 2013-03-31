@@ -14,7 +14,7 @@
 
 package com.google.api.client.protobuf;
 
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.ObjectParser;
 import com.google.protobuf.MessageLite;
 
@@ -25,7 +25,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Parses protocol buffer HTTP response content into a protocol buffer message.
  *
  * <p>
@@ -43,7 +43,7 @@ import java.nio.charset.Charset;
  * @author Matthias Linder (mlinder)
  * @since 1.10
  */
-@Experimental
+@Beta
 public class ProtoObjectParser implements ObjectParser {
 
   @SuppressWarnings("unchecked")

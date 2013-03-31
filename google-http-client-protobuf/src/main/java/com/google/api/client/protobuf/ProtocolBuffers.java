@@ -14,7 +14,7 @@
 
 package com.google.api.client.protobuf;
 
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Throwables;
 import com.google.protobuf.MessageLite;
 
@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Utilities for protocol buffers.
  *
  * <p>
@@ -36,7 +36,7 @@ import java.lang.reflect.Method;
  * @since 1.5
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class ProtocolBuffers {
 
   /** {@code "application/x-protobuf"} content type. */

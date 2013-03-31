@@ -13,7 +13,7 @@
  */
 
 /**
- * {@link com.google.api.client.util.Experimental} <br/>
+ * {@link com.google.api.client.util.Beta} <br/>
  * <a href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06">JSON Web Token (JWT)</a>
  * and <a href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-08">JSON Web Signature
  * (JWS)</a>.
@@ -21,6 +21,6 @@
  * @since 1.14 (since 1.7 as com.google.api.client.auth.jsontoken)
  * @author Yaniv Inbar
  */
-@com.google.api.client.util.Experimental
+@com.google.api.client.util.Beta
 package com.google.api.client.json.webtoken;
 

@@ -17,14 +17,14 @@ package com.google.api.client.testing.http.json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Mock for {@link JsonParser}.
  *
  * <p>
@@ -34,7 +34,7 @@ import java.math.BigInteger;
  * @author rmistry@google.com (Ravi Mistry)
  * @since 1.11
  */
-@Experimental
+@Beta
 public class MockJsonParser extends JsonParser {
 
   private final JsonFactory factory;

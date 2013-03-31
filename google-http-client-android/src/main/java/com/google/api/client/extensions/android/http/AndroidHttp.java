@@ -18,18 +18,18 @@ import com.google.api.client.extensions.android.AndroidUtils;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 
 import java.net.HttpURLConnection;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Utilities for Android HTTP transport.
  *
  * @since 1.11
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public class AndroidHttp {
 
   /**

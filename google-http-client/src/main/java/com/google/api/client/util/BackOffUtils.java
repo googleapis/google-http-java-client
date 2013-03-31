@@ -17,13 +17,13 @@ package com.google.api.client.util;
 import java.io.IOException;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Utilities for {@link BackOff}.
  *
  * @since 1.15
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public final class BackOffUtils {
 
   /**

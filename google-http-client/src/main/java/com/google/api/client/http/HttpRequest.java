@@ -14,7 +14,7 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingStreamingContent;
 import com.google.api.client.util.ObjectParser;
@@ -983,14 +983,14 @@ public final class HttpRequest {
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Executes this request asynchronously in a single separate thread using the supplied executor.
    *
    * @param executor executor to run the asynchronous request
    * @return future for accessing the HTTP response
    * @since 1.13
    */
-  @Experimental
+  @Beta
   public Future<HttpResponse> executeAsync(Executor executor) {
     FutureTask<HttpResponse> future = new FutureTask<HttpResponse>(new Callable<HttpResponse>() {
 
@@ -1003,14 +1003,14 @@ public final class HttpRequest {
   }
 
   /**
-   * {@link Experimental} <br/>
+   * {@link Beta} <br/>
    * Executes this request asynchronously using {@link #executeAsync(Executor)} in a single separate
    * thread using {@link Executors#newSingleThreadExecutor()}.
    *
    * @return A future for accessing the results of the asynchronous request.
    * @since 1.13
    */
-  @Experimental
+  @Beta
   public Future<HttpResponse> executeAsync() {
     return executeAsync(Executors.newSingleThreadExecutor());
   }

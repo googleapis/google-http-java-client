@@ -14,19 +14,19 @@
 
 package com.google.api.client.testing.util;
 
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Testable extension for a byte array output stream.
  *
  * @author Yaniv Inbar
  * @since 1.14
  */
-@Experimental
+@Beta
 public class TestableByteArrayOutputStream extends ByteArrayOutputStream {
 
   /** Whether the output stream has been closed. */

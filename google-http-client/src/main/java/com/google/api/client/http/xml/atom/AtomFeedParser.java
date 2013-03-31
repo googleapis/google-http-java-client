@@ -15,7 +15,7 @@
 package com.google.api.client.http.xml.atom;
 
 import com.google.api.client.http.HttpResponse;
-import com.google.api.client.util.Experimental;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
 import com.google.api.client.xml.Xml;
@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * {@link Experimental} <br/>
+ * {@link Beta} <br/>
  * Atom feed pull parser when the Atom entry class is known in advance.
  *
  * <p>
@@ -42,7 +42,7 @@ import java.io.InputStream;
  * @since 1.4
  * @author Yaniv Inbar
  */
-@Experimental
+@Beta
 public final class AtomFeedParser<T, E> extends AbstractAtomFeedParser<T> {
 
   /** Atom entry class to parse. */
