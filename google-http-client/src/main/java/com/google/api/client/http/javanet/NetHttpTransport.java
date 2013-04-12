@@ -48,6 +48,16 @@ import javax.net.ssl.SSLSocketFactory;
  * </p>
  *
  * <p>
+ * We honor the default global caching behavior. To change the default behavior use
+ * {@link HttpURLConnection#setDefaultUseCaches(boolean)}.
+ * </p>
+ *
+ * <p>
+ * Upgrade warning: in prior version 1.14 caching was always disabled, but starting with version
+ * 1.15 we honor the default global caching behavior.
+ * </p>
+ *
+ * <p>
  * Implementation is thread-safe. For maximum efficiency, applications should use a single
  * globally-shared instance of the HTTP transport.
  * </p>

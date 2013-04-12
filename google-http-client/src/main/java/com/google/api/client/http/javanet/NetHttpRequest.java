@@ -34,7 +34,6 @@ final class NetHttpRequest extends LowLevelHttpRequest {
    */
   NetHttpRequest(HttpURLConnection connection) {
     this.connection = connection;
-    connection.setUseCaches(false);
     connection.setInstanceFollowRedirects(false);
   }
 
