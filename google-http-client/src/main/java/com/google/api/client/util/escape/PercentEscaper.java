@@ -20,8 +20,9 @@ package com.google.api.client.util.escape;
  * construction.
  *
  * <p>
- * For details on escaping URIs for use in web pages, see section 2.4 of <a
- * href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986</a>.
+ * For details on escaping URIs for use in web pages, see <a
+ * href="http://tools.ietf.org/html/rfc3986#section-2.4">RFC 3986 - section 2.4</a> and <a
+ * href="http://tools.ietf.org/html/rfc3986#appendix-A">RFC 3986 - appendix A</a>
  *
  * <p>
  * When encoding a String, the following rules apply:
@@ -50,8 +51,9 @@ package com.google.api.client.util.escape;
  *
  * <p>
  * <b>Note</b>: This escaper produces uppercase hexadecimal sequences. From <a
- * href="http://www.ietf.org/rfc/rfc3986.txt">RFC 3986</a>:<br> <i>"URI producers and normalizers
- * should use uppercase hexadecimal digits for all percent-encodings."</i>
+ * href="http://tools.ietf.org/html/rfc3986">RFC 3986</a>:<br>
+ * <i>"URI producers and normalizers should use uppercase hexadecimal digits for all
+ * percent-encodings."</i>
  *
  * @since 1.0
  */
@@ -67,6 +69,15 @@ public class PercentEscaper extends UnicodeEscaper {
    * other parts of the URI.
    */
   public static final String SAFEPATHCHARS_URLENCODER = "-_.!~*'()@:$&,;=";
+
+  /**
+   * A string of characters that do not need to be encoded when used in URI user info part, as
+   * specified in RFC 3986. Note that some of these characters do need to be escaped when used in
+   * other parts of the URI.
+   *
+   * @since 1.15
+   */
+  public static final String SAFEUSERINFOCHARS_URLENCODER = "-_.!~*'():$&,;=";
 
   /**
    * A string of characters that do not need to be encoded when used in URI query strings, as

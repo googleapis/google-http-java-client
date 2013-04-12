@@ -50,6 +50,12 @@ import java.util.Set;
  * </p>
  *
  * <p>
+ * Upgrade warning: in prior version 1.14 the user info part in the URL was dropped, but starting
+ * with version 1.15 this URL class contains the user info, and it can be retrieved or set with
+ * {@link #getUserInfo} and {@link #setUserInfo}.
+ * </p>
+ *
+ * <p>
  * Implementation is not thread-safe.
  * </p>
  *
@@ -66,6 +72,9 @@ public class GenericUrl extends GenericData {
 
   /** Host, for example {@code "www.google.com"}. */
   private String host;
+
+  /** User info or {@code null} for none, for example {@code "username:password"}. */
+  private String userInfo;
 
   /** Port number or {@code -1} if undefined, for example {@code 443}. */
   private int port = -1;
@@ -118,8 +127,9 @@ public class GenericUrl extends GenericData {
         uri.getHost(),
         uri.getPort(),
         uri.getRawPath(),
-        uri.getFragment(),
-        uri.getRawQuery());
+        uri.getRawFragment(),
+        uri.getRawQuery(),
+        uri.getRawUserInfo());
   }
 
   /**
@@ -135,7 +145,8 @@ public class GenericUrl extends GenericData {
         url.getPort(),
         url.getPath(),
         url.getRef(),
-        url.getQuery());
+        url.getQuery(),
+        url.getUserInfo());
   }
 
   private GenericUrl(String scheme,
@@ -143,15 +154,17 @@ public class GenericUrl extends GenericData {
       int port,
       String path,
       String fragment,
-      String query) {
+      String query,
+      String userInfo) {
     this.scheme = scheme.toLowerCase();
     this.host = host;
     this.port = port;
     this.pathParts = toPathParts(path);
-    this.fragment = fragment;
+    this.fragment = fragment != null ? CharEscapers.decodeUri(fragment) : null;
     if (query != null) {
       UrlEncodedParser.parse(query, this);
     }
+    this.userInfo = userInfo != null ? CharEscapers.decodeUri(userInfo) : null;
   }
 
   @Override
@@ -229,6 +242,24 @@ public class GenericUrl extends GenericData {
   }
 
   /**
+   * Returns the user info or {@code null} for none, for example {@code "username:password"}.
+   *
+   * @since 1.15
+   */
+  public final String getUserInfo() {
+    return userInfo;
+  }
+
+  /**
+   * Sets the user info or {@code null} for none, for example {@code "username:password"}.
+   *
+   * @since 1.15
+   */
+  public final void setUserInfo(String userInfo) {
+    this.userInfo = userInfo;
+  }
+
+  /**
    * Returns the port number or {@code -1} if undefined, for example {@code 443}.
    *
    * @since 1.5
@@ -238,7 +269,7 @@ public class GenericUrl extends GenericData {
   }
 
   /**
-   * Returns the port number or {@code -1} if undefined, for example {@code 443}.
+   * Sets the port number, for example {@code 443}.
    *
    * @since 1.5
    */
@@ -248,7 +279,7 @@ public class GenericUrl extends GenericData {
   }
 
   /**
-   * Sets the decoded path component by parts with each part separated by a {@code '/'} or
+   * Returns the decoded path component by parts with each part separated by a {@code '/'} or
    * {@code null} for none.
    *
    * @since 1.5
@@ -311,14 +342,17 @@ public class GenericUrl extends GenericData {
    * {@code "http://example.com"}.
    * </p>
    *
-   * @return scheme://host[:port]
+   * @return scheme://[user-info@]host[:port]
    * @since 1.9
    */
   public final String buildAuthority() {
-    // scheme, host, port
+    // scheme, [user info], host, [port]
     StringBuilder buf = new StringBuilder();
     buf.append(Preconditions.checkNotNull(scheme));
     buf.append("://");
+    if (userInfo != null) {
+      buf.append(CharEscapers.escapeUriUserInfo(userInfo)).append('@');
+    }
     buf.append(Preconditions.checkNotNull(host));
     int port = this.port;
     if (port != -1) {

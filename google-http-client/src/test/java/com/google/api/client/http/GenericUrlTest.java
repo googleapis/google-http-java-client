@@ -67,6 +67,11 @@ public class GenericUrlTest extends TestCase {
     assertEquals(NO_PATH, url.build());
   }
 
+  public void testBuild_noUserInfo() {
+    GenericUrl url = new GenericUrl(NO_PATH);
+    assertNull(url.getUserInfo());
+  }
+
   public void testBuild_noScheme() {
     GenericUrl url = new GenericUrl();
     try {
@@ -153,12 +158,16 @@ public class GenericUrlTest extends TestCase {
   }
 
   private static String FULL =
-      "https://www.google.com:223/m8/feeds/contacts/someone=%23%25&%20%3F%3Co%3E%7B%7D@gmail.com/"
+      "https://user:%3Cpa&$w%40rd%3E@www.google.com:223/m8/feeds/contacts/"
+      + "someone=%23%25&%20%3F%3Co%3E%7B%7D@gmail.com/"
       + "full?" + "foo=bar&" + "alt=json&" + "max-results=3&" + "prettyprint=true&"
-      + "q=Go%3D%23/%25%26%20?%3Co%3Egle#DOWNLOADING";
+      + "q=Go%3D%23/%25%26%20?%3Co%3Egle#%3CD@WNL:ADING%3E";
 
   private static List<String> FULL_PARTS =
       Arrays.asList("", "m8", "feeds", "contacts", "someone=#%& ?<o>{}@gmail.com", "full");
+
+  private static String USER_INFO = "user:<pa&$w@rd>";
+  private static String FRAGMENT = "<D@WNL:ADING>";
 
   public void testBuild_full() {
     TestUrl url = new TestUrl();
@@ -170,7 +179,8 @@ public class GenericUrlTest extends TestCase {
         .set("max-results", 3).set("prettyprint", true).set("q", "Go=#/%& ?<o>gle");
     url.foo = "bar";
     url.hidden = "invisible";
-    url.setFragment("DOWNLOADING");
+    url.setFragment(FRAGMENT);
+    url.setUserInfo(USER_INFO);
     assertEquals(FULL, url.build());
   }
 
@@ -216,7 +226,8 @@ public class GenericUrlTest extends TestCase {
     assertEquals("true", url.getFirst("prettyprint"));
     assertEquals("Go=#/%& ?<o>gle", url.getFirst("q"));
     assertEquals("bar", url.getFirst("foo"));
-    assertEquals("DOWNLOADING", url.getFragment());
+    assertEquals(FRAGMENT, url.getFragment());
+    assertEquals(USER_INFO, url.getUserInfo());
   }
 
   public static class FieldTypesUrl extends GenericUrl {
@@ -365,6 +376,14 @@ public class GenericUrlTest extends TestCase {
     url.setHost("example.com");
     url.setPort(1234);
     assertEquals("http://example.com:1234", url.buildAuthority());
+  }
+
+  public void testBuildAuthority_withUserInfo() {
+    GenericUrl url = new GenericUrl();
+    url.setScheme("http");
+    url.setHost("www.example.com");
+    url.setUserInfo("first.last:pa@@");
+    assertEquals("http://first.last:pa%40%40@www.example.com", url.buildAuthority());
   }
 
   public void testBuildRelativeUrl_empty() {
