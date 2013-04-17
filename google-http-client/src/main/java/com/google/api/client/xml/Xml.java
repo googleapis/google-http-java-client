@@ -185,8 +185,8 @@ public class Xml {
 
     /**
      * Returns whether to stop parsing when reaching the end tag of an XML element after it has been
-     * processed. Only called if the element is actually being processed. By default, returns {@code
-     * false}, but subclasses may override.
+     * processed. Only called if the element is actually being processed. By default, returns
+     * {@code false}, but subclasses may override.
      *
      * @param namespace XML element's namespace URI
      * @param localName XML element's local name
@@ -277,6 +277,7 @@ public class Xml {
     Field field;
     ArrayValueMap arrayValueMap = new ArrayValueMap(destination);
     boolean isStopped = false;
+    // TODO(yanivi): support Void type as "ignore" element/attribute
     main: while (true) {
       int event = parser.next();
       switch (event) {
@@ -416,9 +417,8 @@ public class Xml {
               // TODO(yanivi): some duplicate code here; isolate into reusable methods
               FieldInfo fieldInfo = FieldInfo.of(field);
               Object elementValue = null;
-              Type subFieldType =
-                  isArray ? Types.getArrayComponentType(fieldType) : Types.getIterableParameter(
-                      fieldType);
+              Type subFieldType = isArray
+                  ? Types.getArrayComponentType(fieldType) : Types.getIterableParameter(fieldType);
               Class<?> rawArrayComponentType =
                   Types.getRawArrayComponentType(context, subFieldType);
               subFieldType = Data.resolveWildcardTypeOrTypeVariable(context, subFieldType);
@@ -436,9 +436,9 @@ public class Xml {
                 if (subFieldType != null) {
                   context.add(subFieldType);
                 }
-                Type subValueType =
-                    subFieldType != null && Map.class.isAssignableFrom(subFieldClass)
-                        ? Types.getMapValueParameter(subFieldType) : null;
+                Type subValueType = subFieldType != null
+                    && Map.class.isAssignableFrom(subFieldClass) ? Types.getMapValueParameter(
+                    subFieldType) : null;
                 subValueType = Data.resolveWildcardTypeOrTypeVariable(context, subValueType);
                 isStopped = parseElementInternal(parser,
                     context,

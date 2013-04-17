@@ -44,6 +44,10 @@ public class UrlEncodedParserTest extends TestCase {
   }
 
   public static class Simple {
+
+    @Key
+    Void v;
+
     @Key
     String a;
 
@@ -74,8 +78,7 @@ public class UrlEncodedParserTest extends TestCase {
 
     @Override
     public String toString() {
-      return Objects
-          .toStringHelper(this)
+      return Objects.toStringHelper(this)
           .add("a", a)
           .add("b", b)
           .add("c", c)
@@ -84,7 +87,6 @@ public class UrlEncodedParserTest extends TestCase {
           .add("o", o)
           .toString();
     }
-
   }
 
   public static class Generic extends GenericData {
@@ -111,7 +113,8 @@ public class UrlEncodedParserTest extends TestCase {
 
   public void testParse_simple() {
     Simple actual = new Simple();
-    UrlEncodedParser.parse("q=1&a=x&b=y&c=z&q=2&undeclared=0&o=object&r=a1&r=a2", actual);
+    UrlEncodedParser.parse(
+        "v=ignore&v=ignore2&q=1&a=x&b=y&c=z&q=2&undeclared=0&o=object&r=a1&r=a2", actual);
     Simple expected = new Simple();
     expected.a = "x";
     expected.b = "y";
@@ -120,6 +123,7 @@ public class UrlEncodedParserTest extends TestCase {
     expected.r = new String[] {"a1", "a2"};
     expected.o = new ArrayList<String>(Arrays.asList("object"));
     assertEquals(expected, actual);
+    assertNull(expected.v);
   }
 
   public void testParse_generic() {

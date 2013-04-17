@@ -234,9 +234,8 @@ public class HttpHeadersTest extends TestCase {
   }
 
   public void testParseAge() throws Exception {
-    MockLowLevelHttpResponse httpResponse = new MockLowLevelHttpResponse()
-        .setHeaderNames(Arrays.asList("Age"))
-        .setHeaderValues(Arrays.asList("3456"));
+    MockLowLevelHttpResponse httpResponse = new MockLowLevelHttpResponse().setHeaderNames(
+        Arrays.asList("Age")).setHeaderValues(Arrays.asList("3456"));
 
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.fromHttpResponse(httpResponse, null);
@@ -285,5 +284,21 @@ public class HttpHeadersTest extends TestCase {
     headers.fromHttpResponse(new MockLowLevelHttpResponse().setHeaderNames(Arrays.asList("Foo"))
         .setHeaderValues(Arrays.asList("newvalue")), null);
     assertEquals(Arrays.asList("newvalue"), headers.get("Foo"));
+  }
+
+  public static class V extends HttpHeaders {
+    @Key
+    Void v;
+    @Key
+    String s;
+  }
+
+  public void testFromHttpResponse_void(String value) throws Exception {
+    MockLowLevelHttpResponse httpResponse = new MockLowLevelHttpResponse().setHeaderNames(
+        Arrays.asList("v", "v", "s")).setHeaderValues(Arrays.asList("ignore", "ignore2", "svalue"));
+    V v = new V();
+    v.fromHttpResponse(httpResponse, null);
+    assertNull(v.v);
+    assertEquals("svalue", v.s);
   }
 }

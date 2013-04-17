@@ -1366,4 +1366,32 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     content.writeTo(out);
     assertEquals(SIMPLE_WRAPPED, out.toString("UTF-8"));
   }
+
+  public static class V {
+    @Key
+    Void v;
+    @Key
+    String s;
+  }
+
+  public void testParse_void() throws Exception {
+    subtestParse_void(null);
+    subtestParse_void("\"a\"");
+    subtestParse_void("null");
+    subtestParse_void("true");
+    subtestParse_void("false");
+    subtestParse_void("123");
+    subtestParse_void("123.456");
+    subtestParse_void("[1]");
+    subtestParse_void("{\"v\":\"ignored\"}");
+  }
+
+  public void subtestParse_void(String value) throws Exception {
+    JsonFactory factory = newFactory();
+    String inputString = "{" + (value == null ? "" : "\"v\":" + value + ",") + "\"s\":\"svalue\"}";
+    V v = factory.fromString(inputString, V.class);
+    assertNull(v.v);
+    assertEquals("svalue", v.s);
+    assertNull(factory.fromString(inputString, Void.class));
+  }
 }

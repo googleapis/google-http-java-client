@@ -677,6 +677,11 @@ public abstract class JsonParser {
       contextStringBuilder.append("]");
     }
     String contextString = contextStringBuilder.toString();
+    // Void means skip
+    if (valueClass == Void.class) {
+      skipChildren();
+      return null;
+    }
     // switch on token type
     switch (token) {
       case START_ARRAY:

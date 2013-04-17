@@ -212,11 +212,11 @@ public class DataTest extends TestCase {
     assertEquals(new Double(Double.MAX_VALUE),
         Data.parsePrimitiveValue(double.class, String.valueOf(Double.MAX_VALUE)));
     BigInteger bigint = BigInteger.valueOf(Long.MAX_VALUE);
-    assertEquals(bigint,
-        Data.parsePrimitiveValue(BigInteger.class, String.valueOf(Long.MAX_VALUE)));
+    assertEquals(
+        bigint, Data.parsePrimitiveValue(BigInteger.class, String.valueOf(Long.MAX_VALUE)));
     BigDecimal bigdec = BigDecimal.valueOf(Double.MAX_VALUE);
-    assertEquals(bigdec,
-        Data.parsePrimitiveValue(BigDecimal.class, String.valueOf(Double.MAX_VALUE)));
+    assertEquals(
+        bigdec, Data.parsePrimitiveValue(BigDecimal.class, String.valueOf(Double.MAX_VALUE)));
     DateTime now = new DateTime(new Date());
     assertEquals(now, Data.parsePrimitiveValue(DateTime.class, now.toStringRfc3339()));
     try {
@@ -225,6 +225,7 @@ public class DataTest extends TestCase {
     } catch (IllegalArgumentException e) {
       // expected
     }
+    assertNull(Data.parsePrimitiveValue(Void.class, "abc"));
   }
 
   static class Resolve<X, T extends Number> {
@@ -278,8 +279,8 @@ public class DataTest extends TestCase {
         Object.class, resolveWildcardTypeOrTypeVariable(new Object().getClass(), xTypeVar));
     assertEquals(Boolean.class, Types.getArrayComponentType(
         resolveWildcardTypeOrTypeVariable(new ArrayResolve().getClass(), xTypeVar)));
-    assertEquals(Collection.class,
-        Types.getRawClass((ParameterizedType) resolveWildcardTypeOrTypeVariable(
+    assertEquals(
+        Collection.class, Types.getRawClass((ParameterizedType) resolveWildcardTypeOrTypeVariable(
             new ParameterizedResolve().getClass(), xTypeVar)));
     assertEquals(Number.class, resolveWildcardTypeOrTypeVariable(
         new MedXResolve<Integer, Integer>().getClass(), xTypeVar));
