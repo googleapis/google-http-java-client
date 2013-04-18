@@ -872,8 +872,9 @@ public final class HttpRequest {
       if (loggable) {
         logger.config(logbuf.toString());
         if (curlbuf != null) {
-          curlbuf.append(" -- ");
-          curlbuf.append(urlString);
+          curlbuf.append(" -- '");
+          curlbuf.append(urlString.replaceAll("\'", "'\"'\"'"));
+          curlbuf.append("'");
           if (streamingContent != null) {
             curlbuf.append(" << $$$");
           }

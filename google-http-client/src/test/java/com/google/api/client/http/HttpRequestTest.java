@@ -19,6 +19,7 @@ import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockHttpUnsuccessfulResponseHandler;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
+import com.google.api.client.testing.util.LogRecordingHandler;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.LoggingStreamingContent;
 import com.google.api.client.util.StringUtils;
@@ -41,6 +42,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
 
 /**
  * Tests {@link HttpRequest}.
@@ -950,5 +952,23 @@ public class HttpRequestTest extends TestCase {
     HttpResponse resp = request.execute();
     assertEquals(200, resp.getStatusCode());
     assertEquals(2, fakeTransport.lowLevelExecCalls);
+  }
+
+  public void testExecute_curlLogger() throws Exception {
+    LogRecordingHandler recorder = new LogRecordingHandler();
+    HttpTransport.LOGGER.setLevel(Level.CONFIG);
+    HttpTransport.LOGGER.addHandler(recorder);
+    new MockHttpTransport().createRequestFactory()
+        .buildGetRequest(new GenericUrl("http://google.com/#q=a'b'c")).execute();
+    boolean found = false;
+    for (String message : recorder.messages()) {
+      if (message.startsWith("curl")) {
+        found = true;
+        assertEquals("curl -v --compressed -H 'Accept-Encoding: gzip' -H 'User-Agent: "
+            + HttpRequest.USER_AGENT_SUFFIX + "' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c'",
+            message);
+      }
+    }
+    assertTrue(found);
   }
 }
