@@ -15,10 +15,12 @@
 package com.google.api.client.extensions.appengine.http;
 
 import com.google.api.client.http.HttpMethods;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Preconditions;
 import com.google.appengine.api.urlfetch.FetchOptions;
 import com.google.appengine.api.urlfetch.HTTPMethod;
+import com.google.appengine.api.urlfetch.HTTPResponse;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -42,6 +44,13 @@ import java.util.Arrays;
  * currently a serious bug in how HTTP headers are processed in the App Engine implementation of
  * {@link HttpURLConnection}, which we are able to avoid using this implementation. Therefore, this
  * is the recommended transport to use on App Engine.
+ * </p>
+ *
+ * <p>
+ * Upgrade warning: in prior version 1.14 duplicate response headers in
+ * {@link HttpResponse#getHeaders()} were combined into a single string value using
+ * {@link HTTPResponse#getHeaders()} but starting in version 1.15 such headers are now "uncombined"
+ * into a list of strings using {@link HTTPResponse#getHeadersUncombined()}.
  * </p>
  *
  * @since 1.10
@@ -78,14 +87,14 @@ public final class UrlFetchTransport extends HttpTransport {
    * </p>
    */
   public UrlFetchTransport() {
-    this(CertificateValidationBehavior.DEFAULT);
+    this(new Builder());
   }
 
   /**
-   * @param certificateValidationBehavior certificate validation behavior
+   * @param builder builder
    */
-  UrlFetchTransport(CertificateValidationBehavior certificateValidationBehavior) {
-    this.certificateValidationBehavior = Preconditions.checkNotNull(certificateValidationBehavior);
+  UrlFetchTransport(Builder builder) {
+    certificateValidationBehavior = builder.certificateValidationBehavior;
   }
 
   @Override
@@ -136,7 +145,7 @@ public final class UrlFetchTransport extends HttpTransport {
   public static final class Builder {
 
     /** Certificate validation behavior. */
-    private CertificateValidationBehavior certificateValidationBehavior =
+    CertificateValidationBehavior certificateValidationBehavior =
         CertificateValidationBehavior.DEFAULT;
 
     /**
@@ -173,7 +182,7 @@ public final class UrlFetchTransport extends HttpTransport {
 
     /** Returns a new instance of {@link UrlFetchTransport} based on the options. */
     public UrlFetchTransport build() {
-      return new UrlFetchTransport(certificateValidationBehavior);
+      return new UrlFetchTransport(this);
     }
   }
 }

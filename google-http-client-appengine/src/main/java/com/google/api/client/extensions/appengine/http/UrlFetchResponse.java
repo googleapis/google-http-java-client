@@ -33,12 +33,9 @@ final class UrlFetchResponse extends LowLevelHttpResponse {
 
   UrlFetchResponse(HTTPResponse fetchResponse) {
     this.fetchResponse = fetchResponse;
-    for (HTTPHeader header : fetchResponse.getHeaders()) {
+    for (HTTPHeader header : fetchResponse.getHeadersUncombined()) {
       String name = header.getName();
       String value = header.getValue();
-      // Note: URLFetch will merge any duplicate headers with the same key and join their values
-      // using ", " as separator. However, ", " is also common inside values, such as in Expires or
-      // Set-Cookie headers.
       if (name != null && value != null) {
         headerNames.add(name);
         headerValues.add(value);

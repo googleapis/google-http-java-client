@@ -46,9 +46,8 @@ final class UrlFetchRequest extends LowLevelHttpRequest {
 
   @Override
   public void setTimeout(int connectTimeout, int readTimeout) {
-    request.getFetchOptions().setDeadline(
-        connectTimeout == 0 || readTimeout == 0 ? Double.MAX_VALUE : (connectTimeout + readTimeout)
-            / 1000.0);
+    request.getFetchOptions().setDeadline(connectTimeout == 0 || readTimeout == 0
+        ? Double.MAX_VALUE : (connectTimeout + readTimeout) / 1000.0);
   }
 
   @Override
