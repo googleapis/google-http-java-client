@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.http-client</groupId>
   <artifactId>google-http-client-findbugs-test</artifactId>
-  <version>1.15.0-beta-SNAPSHOT</version>
+  <version>1.15.0-rc-SNAPSHOT</version>
   <name>Findbugs Google API Client Library plugin test.</name>
   <packaging>jar</packaging>
   <build>

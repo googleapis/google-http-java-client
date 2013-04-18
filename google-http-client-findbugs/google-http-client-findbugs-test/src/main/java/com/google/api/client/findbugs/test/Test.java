@@ -33,6 +33,7 @@ public class Test {
     ClassWithBetaField classField = new ClassWithBetaField();
     // When using google-http-client-findbugs plugin - Error usage of a field [FIELD_NAME], which
     // annotated as Beta
+    @SuppressWarnings("unused")
     int n = ClassWithBetaField.betaStaticField;
     n = classField.betaField;
     classField.betaField = 20;
