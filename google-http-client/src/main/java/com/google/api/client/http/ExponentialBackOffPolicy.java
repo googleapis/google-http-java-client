@@ -14,12 +14,14 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.client.util.NanoClock;
 
 import java.io.IOException;
 
 /**
+ * {@link Beta} <br/>
  * Implementation of {@link BackOffPolicy} that increases the back off period for each retry attempt
  * using a randomization function that grows exponentially.
  *
@@ -73,7 +75,12 @@ import java.io.IOException;
  *
  * @since 1.7
  * @author Ravi Mistry
+ * @deprecated (scheduled to be removed in the 1.16). Use
+ *             {@link HttpBackOffUnsuccessfulResponseHandler} with {@link ExponentialBackOff}
+ *             instead.
  */
+@Beta
+@Deprecated
 public class ExponentialBackOffPolicy implements BackOffPolicy {
 
   /**
@@ -257,6 +264,7 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
   }
 
   /**
+   * {@link Beta} <br/>
    * Builder for {@link ExponentialBackOffPolicy}.
    *
    * <p>
@@ -265,6 +273,8 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
    *
    * @since 1.7
    */
+  @Beta
+  @Deprecated
   public static class Builder {
 
     /** Exponential back-off builder. */

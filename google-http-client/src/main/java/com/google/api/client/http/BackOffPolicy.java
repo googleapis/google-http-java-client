@@ -14,14 +14,21 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Beta;
+
 import java.io.IOException;
 
 /**
+ * {@link Beta} <br/>
  * Strategy interface to control back off between retry attempts.
  *
  * @since 1.7
  * @author Ravi Mistry
+ * @deprecated (scheduled to be removed in the 1.16). Use
+ *             {@link HttpBackOffUnsuccessfulResponseHandler} instead.
  */
+@Deprecated
+@Beta
 public interface BackOffPolicy {
 
   /**
@@ -52,13 +59,13 @@ public interface BackOffPolicy {
    * This method should be used as follows:
    *
    * <pre>
-   *   long backoffTime = backoffPolicy.getNextBackoffMs();
-   *   if (backoffTime == BackoffPolicy.STOP) {
-   *     // Stop retrying.
-   *   } else {
-   *     // Retry after backoffTime.
-   *   }
-   * </pre>
+   *  long backoffTime = backoffPolicy.getNextBackoffMs();
+   *  if (backoffTime == BackoffPolicy.STOP) {
+   *    // Stop retrying.
+   *  } else {
+   *    // Retry after backoffTime.
+   *  }
+   *</pre>
    *
    * @return the number of milliseconds to wait when backing off requests, or {@link #STOP} if no
    *         more retries should be made

@@ -150,6 +150,10 @@ public final class HttpRequest {
   /** HTTP unsuccessful (non-2XX) response handler or {@code null} for none. */
   private HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler;
 
+  /** HTTP I/O exception handler or {@code null} for none. */
+  @Beta
+  private HttpIOExceptionHandler ioExceptionHandler;
+
   /** HTTP response interceptor or {@code null} for none. */
   private HttpResponseInterceptor responseInterceptor;
 
@@ -159,7 +163,11 @@ public final class HttpRequest {
   /** HTTP content encoding or {@code null} for none. */
   private HttpEncoding encoding;
 
-  /** The {@link BackOffPolicy} to use between retry attempts or {@code null} for none. */
+  /**
+   * The {@link BackOffPolicy} to use between retry attempts or {@code null} for none.
+   */
+  @Deprecated
+  @Beta
   private BackOffPolicy backOffPolicy;
 
   /** Whether to automatically follow redirects ({@code true} by default). */
@@ -175,6 +183,8 @@ public final class HttpRequest {
    * Whether to retry the request if an {@link IOException} is encountered in
    * {@link LowLevelHttpRequest#execute()}.
    */
+  @Deprecated
+  @Beta
   private boolean retryOnExecuteIOException = false;
 
   /**
@@ -285,19 +295,31 @@ public final class HttpRequest {
   }
 
   /**
+   * {@link Beta} <br/>
    * Returns the {@link BackOffPolicy} to use between retry attempts or {@code null} for none.
    *
    * @since 1.7
+   * @deprecated (scheduled to be removed in the 1.16).
+   *             {@link #setUnsuccessfulResponseHandler(HttpUnsuccessfulResponseHandler)} with a new
+   *             {@link HttpBackOffUnsuccessfulResponseHandler} instead.
    */
+  @Deprecated
+  @Beta
   public BackOffPolicy getBackOffPolicy() {
     return backOffPolicy;
   }
 
   /**
+   * {@link Beta} <br/>
    * Sets the {@link BackOffPolicy} to use between retry attempts or {@code null} for none.
    *
    * @since 1.7
+   * @deprecated (scheduled to be removed in the 1.16). Use
+   *             {@link #setUnsuccessfulResponseHandler(HttpUnsuccessfulResponseHandler)} with a new
+   *             {@link HttpBackOffUnsuccessfulResponseHandler} instead.
    */
+  @Deprecated
+  @Beta
   public HttpRequest setBackOffPolicy(BackOffPolicy backOffPolicy) {
     this.backOffPolicy = backOffPolicy;
     return this;
@@ -551,13 +573,36 @@ public final class HttpRequest {
   }
 
   /**
-   * Returns the HTTP unsuccessful (non-2XX) response handler or {@code null} for none.
+   * Sets the HTTP unsuccessful (non-2XX) response handler or {@code null} for none.
    *
    * @since 1.5
    */
   public HttpRequest setUnsuccessfulResponseHandler(
       HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler) {
     this.unsuccessfulResponseHandler = unsuccessfulResponseHandler;
+    return this;
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Returns the HTTP I/O exception handler or {@code null} for none.
+   *
+   * @since 1.15
+   */
+  @Beta
+  public HttpIOExceptionHandler getIOExceptionHandler() {
+    return ioExceptionHandler;
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Sets the HTTP I/O exception handler or {@code null} for none.
+   *
+   * @since 1.15
+   */
+  @Beta
+  public HttpRequest setIOExceptionHandler(HttpIOExceptionHandler ioExceptionHandler) {
+    this.ioExceptionHandler = ioExceptionHandler;
     return this;
   }
 
@@ -571,7 +616,7 @@ public final class HttpRequest {
   }
 
   /**
-   * Returns the HTTP response interceptor or {@code null} for none.
+   * Sets the HTTP response interceptor or {@code null} for none.
    *
    * @since 1.13
    */
@@ -681,16 +726,22 @@ public final class HttpRequest {
   }
 
   /**
+   * {@link Beta} <br/>
    * Returns whether to retry the request if an {@link IOException} is encountered in
    * {@link LowLevelHttpRequest#execute()}.
    *
    * @since 1.9
+   * @deprecated (scheduled to be removed in 1.16) Use
+   *             {@link #setIOExceptionHandler(HttpIOExceptionHandler)} instead.
    */
+  @Deprecated
+  @Beta
   public boolean getRetryOnExecuteIOException() {
     return retryOnExecuteIOException;
   }
 
   /**
+   * {@link Beta} <br/>
    * Sets whether to retry the request if an {@link IOException} is encountered in
    * {@link LowLevelHttpRequest#execute()}.
    *
@@ -699,7 +750,11 @@ public final class HttpRequest {
    * </p>
    *
    * @since 1.9
+   * @deprecated (scheduled to be removed in 1.16) Use
+   *             {@link #setIOExceptionHandler(HttpIOExceptionHandler)} instead.
    */
+  @Deprecated
+  @Beta
   public HttpRequest setRetryOnExecuteIOException(boolean retryOnExecuteIOException) {
     this.retryOnExecuteIOException = retryOnExecuteIOException;
     return this;
@@ -730,13 +785,25 @@ public final class HttpRequest {
 
   /**
    * Execute the HTTP request and returns the HTTP response.
+   *
    * <p>
    * Note that regardless of the returned status code, the HTTP response content has not been parsed
    * yet, and must be parsed by the calling code.
+   * </p>
+   *
+   * <p>
+   * Note that when calling to this method twice or more, the state of this HTTP request object
+   * isn't cleared, so the request will continue where it was left. For example, the state of the
+   * {@link HttpUnsuccessfulResponseHandler} attached to this HTTP request will remain the same as
+   * it was left after last execute.
+   * </p>
+   *
    * <p>
    * Almost all details of the request and response are logged if {@link Level#CONFIG} is loggable.
    * The only exception is the value of the {@code Authorization} header which is only logged if
    * {@link Level#ALL} is loggable.
+   * </p>
+   *
    * <p>
    * Callers should call {@link HttpResponse#disconnect} when the returned HTTP response object is
    * no longer needed. However, {@link HttpResponse#disconnect} does not have to be called if the
@@ -758,6 +825,7 @@ public final class HttpRequest {
    *         {@link #getThrowExceptionOnExecuteError()} is {@code true})
    * @see HttpResponse#isSuccessStatusCode()
    */
+  @SuppressWarnings("deprecation")
   public HttpResponse execute() throws IOException {
     boolean retryRequest = false;
     Preconditions.checkArgument(numRetries >= 0);
@@ -901,7 +969,9 @@ public final class HttpRequest {
           }
         }
       } catch (IOException e) {
-        if (!retryOnExecuteIOException) {
+        if (!retryOnExecuteIOException
+            && (ioExceptionHandler == null ||
+            !ioExceptionHandler.handleIOException(this, retryRequest))) {
           throw e;
         }
         // Save the exception in case the retries do not work and we need to re-throw it later.
@@ -919,8 +989,7 @@ public final class HttpRequest {
             // Even if we don't have the potential to retry, we might want to run the
             // handler to fix conditions (like expired tokens) that might cause us
             // trouble on our next request
-            errorHandled =
-                unsuccessfulResponseHandler.handleResponse(this, response, retryRequest);
+            errorHandled = unsuccessfulResponseHandler.handleResponse(this, response, retryRequest);
           }
           if (!errorHandled) {
             if (handleRedirect(response.getStatusCode(), response.getHeaders())) {
@@ -1061,7 +1130,7 @@ public final class HttpRequest {
   }
 
   /**
-   * Sets the sleeper.
+   * Sets the sleeper. The default value is {@link Sleeper#DEFAULT}.
    *
    * @since 1.15
    */

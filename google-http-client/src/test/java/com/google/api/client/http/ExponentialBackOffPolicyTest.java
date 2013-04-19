@@ -23,6 +23,7 @@ import junit.framework.TestCase;
  *
  * @author Ravi Mistry
  */
+@Deprecated
 public class ExponentialBackOffPolicyTest extends TestCase {
 
   public ExponentialBackOffPolicyTest(String name) {

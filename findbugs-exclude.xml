@@ -74,4 +74,8 @@
     <!-- Usage of a &#64;Beta class or method -->
     <Class name="com.google.api.client.json.JsonParser"/>
   </And>
+  <And>
+    <Bug pattern="BETA_CLASS_USAGE,BETA_METHOD_USAGE"/>
+    <Class name="com.google.api.client.http.HttpRequest"/>
+  </And>
 </FindBugsFilter>
