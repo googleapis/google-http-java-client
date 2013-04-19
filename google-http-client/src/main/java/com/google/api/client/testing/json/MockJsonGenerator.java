@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Google Inc.
+ * Copyright (c) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.testing.http.json;
+package com.google.api.client.testing.json;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
@@ -31,11 +31,8 @@ import java.math.BigInteger;
  * </p>
  *
  * @author rmistry@google.com (Ravi Mistry)
- * @since 1.11
- * @deprecated (scheduled to be removed in 1.16) Use
- *             {@link com.google.api.client.testing.json.MockJsonGenerator}
+ * @since 1.15 (since 1.11 as com.google.api.client.testing.http.json.MockJsonGenerator)
  */
-@Deprecated
 @Beta
 public class MockJsonGenerator extends JsonGenerator {
 

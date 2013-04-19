@@ -308,7 +308,6 @@ public abstract class JsonParser {
   @Beta
   public final <T> T parse(Class<T> destinationClass, CustomizeJsonParser customizeParser)
       throws IOException {
-    startParsing();
     @SuppressWarnings("unchecked")
     T result = (T) parse(destinationClass, false, customizeParser);
     return result;
@@ -353,7 +352,9 @@ public abstract class JsonParser {
   public Object parse(Type dataType, boolean close, CustomizeJsonParser customizeParser)
       throws IOException {
     try {
-      startParsing();
+      if (!Void.class.equals(dataType)) {
+        startParsing();
+      }
       return parseValue(null, dataType, new ArrayList<Type>(), null, customizeParser);
     } finally {
       if (close) {

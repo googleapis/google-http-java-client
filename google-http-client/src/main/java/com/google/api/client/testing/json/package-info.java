@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Google Inc.
+ * Copyright (c) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -16,10 +16,9 @@
  * {@link com.google.api.client.util.Beta} <br/>
  * Testing utilities used for writing tests based on this library.
  *
- * @since 1.11
+ * @since 1.15 (since 1.11 as com.google.api.client.testing.http.json)
  * @author rmistry@google.com (Ravi Mistry)
  */
-@Deprecated
 @com.google.api.client.util.Beta
-package com.google.api.client.testing.http.json;
+package com.google.api.client.testing.json;
 
