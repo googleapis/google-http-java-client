@@ -14,7 +14,7 @@
 package com.google.api.client.extensions.android.json;
 
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.testing.json.AbstractJsonFactoryTest;
+import com.google.api.client.test.json.AbstractJsonFactoryTest;
 
 import java.util.ArrayList;
 

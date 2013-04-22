@@ -122,4 +122,8 @@
     <differenceType>8001</differenceType>
     <className>com/google/api/client/http/MultipartRelatedContent</className>
   </difference>
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/api/client/testing/json/**</className>
+  </difference>
 </differences>
