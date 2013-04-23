@@ -466,8 +466,6 @@
         <artifactId>findbugs-maven-plugin</artifactId>
         <configuration>
           <excludeFilterFile>${basedir}/../findbugs-exclude.xml</excludeFilterFile>
-          <!-- First time you compile you must use -Dfindbugs.skip=true due to
-               plugin not installed yet. -->
           <plugins>
             <plugin>
               <groupId>com.google.http-client</groupId>
@@ -476,13 +474,6 @@
             </plugin>
           </plugins>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
