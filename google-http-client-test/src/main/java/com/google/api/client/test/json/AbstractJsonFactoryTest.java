@@ -1394,4 +1394,50 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     assertEquals("svalue", v.s);
     assertNull(factory.fromString(inputString, Void.class));
   }
+
+  public static class BooleanTypes {
+    @Key
+    Boolean boolObj;
+    @Key
+    boolean bool;
+  }
+
+  public static final String BOOLEAN_TYPE_EMPTY = "{}";
+  public static final String BOOLEAN_TYPE_EMPTY_OUTPUT = "{\"bool\":false}";
+  public static final String BOOLEAN_TYPE_TRUE = "{\"bool\":true,\"boolObj\":true}";
+  public static final String BOOLEAN_TYPE_FALSE = "{\"bool\":false,\"boolObj\":false}";
+  public static final String BOOLEAN_TYPE_NULL = "{\"boolObj\":null}";
+  public static final String BOOLEAN_TYPE_NULL_OUTPUT = "{\"bool\":false,\"boolObj\":null}";
+  public static final String BOOLEAN_TYPE_WRONG = "{\"boolObj\":{}}";
+
+  public void testParse_boolean() throws Exception {
+    JsonFactory factory = newFactory();
+    BooleanTypes parsed;
+    // empty
+    parsed = factory.fromString(BOOLEAN_TYPE_EMPTY, BooleanTypes.class);
+    assertFalse(parsed.bool);
+    assertNull(parsed.boolObj);
+    assertEquals(BOOLEAN_TYPE_EMPTY_OUTPUT, factory.toString(parsed));
+    // true
+    parsed = factory.fromString(BOOLEAN_TYPE_TRUE, BooleanTypes.class);
+    assertTrue(parsed.bool);
+    assertTrue(parsed.boolObj.booleanValue() && !Data.isNull(parsed.boolObj));
+    assertEquals(BOOLEAN_TYPE_TRUE, factory.toString(parsed));
+    // false
+    parsed = factory.fromString(BOOLEAN_TYPE_FALSE, BooleanTypes.class);
+    assertFalse(parsed.bool);
+    assertTrue(!parsed.boolObj.booleanValue() && !Data.isNull(parsed.boolObj));
+    assertEquals(BOOLEAN_TYPE_FALSE, factory.toString(parsed));
+    // null
+    parsed = factory.fromString(BOOLEAN_TYPE_NULL, BooleanTypes.class);
+    assertFalse(parsed.bool);
+    assertTrue(Data.isNull(parsed.boolObj));
+    assertEquals(BOOLEAN_TYPE_NULL_OUTPUT, factory.toString(parsed));
+    // wrong
+    try {
+      factory.fromString(BOOLEAN_TYPE_WRONG, BooleanTypes.class);
+      fail("expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+    }
+  }
 }

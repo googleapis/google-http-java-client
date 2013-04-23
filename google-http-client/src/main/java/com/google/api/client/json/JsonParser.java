@@ -659,13 +659,140 @@ public abstract class JsonParser {
     if (valueType instanceof ParameterizedType) {
       valueClass = Types.getRawClass((ParameterizedType) valueType);
     }
+    // Void means skip
+    if (valueClass == Void.class) {
+      skipChildren();
+      return null;
+    }
     // value type is now null, class, parameterized type, or generic array type
     JsonToken token = getCurrentToken();
-    // build context string
-    String currentName = getCurrentName();
-    StringBuilder contextStringBuilder = new StringBuilder();
-    if (currentName != null || fieldContext != null) {
-      contextStringBuilder.append(" [");
+    try {
+      switch (getCurrentToken()) {
+        case START_ARRAY:
+        case END_ARRAY:
+          boolean isArray = Types.isArray(valueType);
+          Preconditions.checkArgument(valueType == null || isArray || valueClass != null
+              && Types.isAssignableToOrFrom(valueClass, Collection.class),
+              "expected collection or array type but got %s", valueType);
+          Collection<Object> collectionValue = null;
+          if (customizeParser != null && fieldContext != null) {
+            collectionValue = customizeParser.newInstanceForArray(destination, fieldContext);
+          }
+          if (collectionValue == null) {
+            collectionValue = Data.newCollectionInstance(valueType);
+          }
+          Type subType = null;
+          if (isArray) {
+            subType = Types.getArrayComponentType(valueType);
+          } else if (valueClass != null && Iterable.class.isAssignableFrom(valueClass)) {
+            subType = Types.getIterableParameter(valueType);
+          }
+          subType = Data.resolveWildcardTypeOrTypeVariable(context, subType);
+          parseArray(fieldContext, collectionValue, subType, context, customizeParser);
+          if (isArray) {
+            return Types.toArray(collectionValue, Types.getRawArrayComponentType(context, subType));
+          }
+          return collectionValue;
+        case FIELD_NAME:
+        case START_OBJECT:
+        case END_OBJECT:
+          Preconditions.checkArgument(
+              !Types.isArray(valueType), "expected object or map type but got %s", valueType);
+          Object newInstance = null;
+          if (valueClass != null && customizeParser != null) {
+            newInstance = customizeParser.newInstanceForObject(destination, valueClass);
+          }
+          boolean isMap = valueClass != null && Types.isAssignableToOrFrom(valueClass, Map.class);
+          if (newInstance == null) {
+            // check if it is a map to avoid ClassCastException to Map
+            if (isMap || valueClass == null) {
+              newInstance = Data.newMapInstance(valueClass);
+            } else {
+              newInstance = Types.newInstance(valueClass);
+            }
+          }
+          int contextSize = context.size();
+          if (valueType != null) {
+            context.add(valueType);
+          }
+          if (isMap && !GenericData.class.isAssignableFrom(valueClass)) {
+            Type subValueType = Map.class.isAssignableFrom(valueClass)
+                ? Types.getMapValueParameter(valueType) : null;
+            if (subValueType != null) {
+              @SuppressWarnings("unchecked")
+              Map<String, Object> destinationMap = (Map<String, Object>) newInstance;
+              parseMap(fieldContext, destinationMap, subValueType, context, customizeParser);
+              return newInstance;
+            }
+          }
+          parse(context, newInstance, customizeParser);
+          if (valueType != null) {
+            context.remove(contextSize);
+          }
+          return newInstance;
+        case VALUE_TRUE:
+        case VALUE_FALSE:
+          Preconditions.checkArgument(valueType == null || valueClass == boolean.class
+              || valueClass != null && valueClass.isAssignableFrom(Boolean.class),
+              "expected type Boolean or boolean but got %s", valueType);
+          return token == JsonToken.VALUE_TRUE ? Boolean.TRUE : Boolean.FALSE;
+        case VALUE_NUMBER_FLOAT:
+        case VALUE_NUMBER_INT:
+          Preconditions.checkArgument(
+              fieldContext == null || fieldContext.getAnnotation(JsonString.class) == null,
+              "number type formatted as a JSON number cannot use @JsonString annotation");
+          if (valueClass == null || valueClass.isAssignableFrom(BigDecimal.class)) {
+            return getDecimalValue();
+          }
+          if (valueClass == BigInteger.class) {
+            return getBigIntegerValue();
+          }
+          if (valueClass == Double.class || valueClass == double.class) {
+            return getDoubleValue();
+          }
+          if (valueClass == Long.class || valueClass == long.class) {
+            return getLongValue();
+          }
+          if (valueClass == Float.class || valueClass == float.class) {
+            return getFloatValue();
+          }
+          if (valueClass == Integer.class || valueClass == int.class) {
+            return getIntValue();
+          }
+          if (valueClass == Short.class || valueClass == short.class) {
+            return getShortValue();
+          }
+          if (valueClass == Byte.class || valueClass == byte.class) {
+            return getByteValue();
+          }
+          throw new IllegalArgumentException("expected numeric type but got " + valueType);
+        case VALUE_STRING:
+          Preconditions.checkArgument(valueClass == null
+              || !Number.class.isAssignableFrom(valueClass) || fieldContext != null
+              && fieldContext.getAnnotation(JsonString.class) != null,
+              "number field formatted as a JSON string must use the @JsonString annotation");
+          // TODO(yanivi): "special" values like Double.POSITIVE_INFINITY?
+          return Data.parsePrimitiveValue(valueType, getText());
+        case VALUE_NULL:
+          Preconditions.checkArgument(valueClass == null || !valueClass.isPrimitive(),
+              "primitive number field but found a JSON null");
+          if (valueClass != null
+              && 0 != (valueClass.getModifiers() & (Modifier.ABSTRACT | Modifier.INTERFACE))) {
+            if (Types.isAssignableToOrFrom(valueClass, Collection.class)) {
+              return Data.nullOf(Data.newCollectionInstance(valueType).getClass());
+            }
+            if (Types.isAssignableToOrFrom(valueClass, Map.class)) {
+              return Data.nullOf(Data.newMapInstance(valueClass).getClass());
+            }
+          }
+          return Data.nullOf(Types.getRawArrayComponentType(context, valueType));
+        default:
+          throw new IllegalArgumentException("unexpected JSON node type: " + token);
+      }
+    } catch (IllegalArgumentException e) {
+      // build context string
+      StringBuilder contextStringBuilder = new StringBuilder();
+      String currentName = getCurrentName();
       if (currentName != null) {
         contextStringBuilder.append("key ").append(currentName);
       }
@@ -675,142 +802,7 @@ public abstract class JsonParser {
         }
         contextStringBuilder.append("field ").append(fieldContext);
       }
-      contextStringBuilder.append("]");
-    }
-    String contextString = contextStringBuilder.toString();
-    // Void means skip
-    if (valueClass == Void.class) {
-      skipChildren();
-      return null;
-    }
-    // switch on token type
-    switch (token) {
-      case START_ARRAY:
-      case END_ARRAY:
-        boolean isArray = Types.isArray(valueType);
-        Preconditions.checkArgument(valueType == null || isArray || valueClass != null
-            && Types.isAssignableToOrFrom(valueClass, Collection.class),
-            "expected collection or array type but got %s%s", valueType, contextString);
-        Collection<Object> collectionValue = null;
-        if (customizeParser != null && fieldContext != null) {
-          collectionValue = customizeParser.newInstanceForArray(destination, fieldContext);
-        }
-        if (collectionValue == null) {
-          collectionValue = Data.newCollectionInstance(valueType);
-        }
-        Type subType = null;
-        if (isArray) {
-          subType = Types.getArrayComponentType(valueType);
-        } else if (valueClass != null && Iterable.class.isAssignableFrom(valueClass)) {
-          subType = Types.getIterableParameter(valueType);
-        }
-        subType = Data.resolveWildcardTypeOrTypeVariable(context, subType);
-        parseArray(fieldContext, collectionValue, subType, context, customizeParser);
-        if (isArray) {
-          return Types.toArray(collectionValue, Types.getRawArrayComponentType(context, subType));
-        }
-        return collectionValue;
-      case FIELD_NAME:
-      case START_OBJECT:
-      case END_OBJECT:
-        Preconditions.checkArgument(!Types.isArray(valueType),
-            "expected object or map type but got %s%s", valueType, contextString);
-        Object newInstance = null;
-        if (valueClass != null && customizeParser != null) {
-          newInstance = customizeParser.newInstanceForObject(destination, valueClass);
-        }
-        boolean isMap = valueClass != null && Types.isAssignableToOrFrom(valueClass, Map.class);
-        if (newInstance == null) {
-          // check if it is a map to avoid ClassCastException to Map
-          if (isMap || valueClass == null) {
-            newInstance = Data.newMapInstance(valueClass);
-          } else {
-            newInstance = Types.newInstance(valueClass);
-          }
-        }
-        int contextSize = context.size();
-        if (valueType != null) {
-          context.add(valueType);
-        }
-        if (isMap && !GenericData.class.isAssignableFrom(valueClass)) {
-          Type subValueType =
-              Map.class.isAssignableFrom(valueClass) ? Types.getMapValueParameter(valueType) : null;
-          if (subValueType != null) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> destinationMap = (Map<String, Object>) newInstance;
-            parseMap(fieldContext, destinationMap, subValueType, context, customizeParser);
-            return newInstance;
-          }
-        }
-        parse(context, newInstance, customizeParser);
-        if (valueType != null) {
-          context.remove(contextSize);
-        }
-        return newInstance;
-      case VALUE_TRUE:
-      case VALUE_FALSE:
-        Preconditions.checkArgument(valueType == null || valueClass == boolean.class
-            || valueClass != null && valueClass.isAssignableFrom(Boolean.class),
-            "expected type Boolean or boolean but got %s%s", valueType, contextString);
-        return token == JsonToken.VALUE_TRUE ? Boolean.TRUE : Boolean.FALSE;
-      case VALUE_NUMBER_FLOAT:
-      case VALUE_NUMBER_INT:
-        Preconditions.checkArgument(
-            fieldContext == null || fieldContext.getAnnotation(JsonString.class) == null,
-            "number type formatted as a JSON number cannot use @JsonString annotation%s",
-            contextString);
-        if (valueClass == null || valueClass.isAssignableFrom(BigDecimal.class)) {
-          return getDecimalValue();
-        }
-        if (valueClass == BigInteger.class) {
-          return getBigIntegerValue();
-        }
-        if (valueClass == Double.class || valueClass == double.class) {
-          return getDoubleValue();
-        }
-        if (valueClass == Long.class || valueClass == long.class) {
-          return getLongValue();
-        }
-        if (valueClass == Float.class || valueClass == float.class) {
-          return getFloatValue();
-        }
-        if (valueClass == Integer.class || valueClass == int.class) {
-          return getIntValue();
-        }
-        if (valueClass == Short.class || valueClass == short.class) {
-          return getShortValue();
-        }
-        if (valueClass == Byte.class || valueClass == byte.class) {
-          return getByteValue();
-        }
-        throw new IllegalArgumentException(
-            "expected numeric type but got " + valueType + contextString);
-      case VALUE_STRING:
-        Preconditions.checkArgument(valueClass == null || !Number.class.isAssignableFrom(valueClass)
-            || fieldContext != null && fieldContext.getAnnotation(JsonString.class) != null,
-            "number field formatted as a JSON string must use the @JsonString annotation%s",
-            contextString);
-        // TODO(yanivi): "special" values like Double.POSITIVE_INFINITY?
-        try {
-          return Data.parsePrimitiveValue(valueType, getText());
-        } catch (IllegalArgumentException e) {
-          throw new IllegalArgumentException(contextString, e);
-        }
-      case VALUE_NULL:
-        Preconditions.checkArgument(valueClass == null || !valueClass.isPrimitive(),
-            "primitive number field but found a JSON null%s", contextString);
-        if (valueClass != null
-            && 0 != (valueClass.getModifiers() & (Modifier.ABSTRACT | Modifier.INTERFACE))) {
-          if (Types.isAssignableToOrFrom(valueClass, Collection.class)) {
-            return Data.nullOf(Data.newCollectionInstance(valueType).getClass());
-          }
-          if (Types.isAssignableToOrFrom(valueClass, Map.class)) {
-            return Data.nullOf(Data.newMapInstance(valueClass).getClass());
-          }
-        }
-        return Data.nullOf(Types.getRawArrayComponentType(context, valueType));
-      default:
-        throw new IllegalArgumentException("unexpected JSON node type: " + token + contextString);
+      throw new IllegalArgumentException(contextStringBuilder.toString(), e);
     }
   }
 }
