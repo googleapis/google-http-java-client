@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.testing.json;
+package com.google.api.client.test.json;
 
 import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.GenericJson;

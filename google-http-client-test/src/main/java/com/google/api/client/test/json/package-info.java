@@ -18,5 +18,5 @@
  * @author Ravi Mistry
  */
 
-package com.google.api.client.testing.json;
+package com.google.api.client.test.json;
 

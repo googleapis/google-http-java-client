@@ -16,7 +16,7 @@ package com.google.api.client.json.jackson2;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
-import com.google.api.client.testing.json.AbstractJsonFactoryTest;
+import com.google.api.client.test.json.AbstractJsonFactoryTest;
 import com.google.api.client.util.StringUtils;
 import com.google.common.base.Charsets;
 
