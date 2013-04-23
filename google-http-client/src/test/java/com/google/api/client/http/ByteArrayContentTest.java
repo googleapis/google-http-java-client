@@ -40,18 +40,21 @@ public class ByteArrayContentTest extends TestCase {
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
+      assertEquals("offset -1, length 2, array length 3", e.getMessage());
     }
     try {
       new ByteArrayContent(null, FOO, 2, 2);
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
+      assertEquals("offset 2, length 2, array length 3", e.getMessage());
     }
     try {
       new ByteArrayContent(null, FOO, 3, 1);
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
+      assertEquals("offset 3, length 1, array length 3", e.getMessage());
     }
   }
 

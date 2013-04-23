@@ -78,7 +78,8 @@ public final class ByteArrayContent extends AbstractInputStreamContent {
   public ByteArrayContent(String type, byte[] array, int offset, int length) {
     super(type);
     this.byteArray = Preconditions.checkNotNull(array);
-    Preconditions.checkArgument(offset >= 0 && length >= 0 && offset + length <= array.length);
+    Preconditions.checkArgument(offset >= 0 && length >= 0 && offset + length <= array.length,
+        "offset %s, length %s, array length %s", offset, length, array.length);
     this.offset = offset;
     this.length = length;
   }
