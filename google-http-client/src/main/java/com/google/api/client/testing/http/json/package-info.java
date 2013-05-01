@@ -16,6 +16,11 @@
  * {@link com.google.api.client.util.Beta} <br/>
  * Testing utilities used for writing tests based on this library.
  *
+ * <p>
+ * Deprecated: (scheduled to be removed in 1.16) Use {link
+ * com.google.api.client.testing.json} instead.
+ * </p>
+ *
  * @since 1.11
  * @author rmistry@google.com (Ravi Mistry)
  */
