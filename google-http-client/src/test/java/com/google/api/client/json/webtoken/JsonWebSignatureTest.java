@@ -14,7 +14,7 @@
 
 package com.google.api.client.json.webtoken;
 
-import com.google.api.client.testing.http.json.MockJsonFactory;
+import com.google.api.client.testing.json.MockJsonFactory;
 import com.google.api.client.testing.util.SecurityTestUtils;
 
 import junit.framework.TestCase;
