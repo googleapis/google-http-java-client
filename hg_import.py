@@ -24,6 +24,8 @@ file_name_re = re.compile('^Index: (\S+)$')
 deleted_re = re.compile('^deleted file mode \S+$')
 fp = re.compile('^rename from (\S+)$')
 tp = re.compile('^rename to (\S+)$')
+fcp = re.compile('^copy from (\S+)$')
+tcp = re.compile('^copy to (\S+)$')
 hg_cmd = 'hg'
 
 if len(sys.argv) == 1:
@@ -56,5 +58,14 @@ for line in webFile.readlines():
   if m:
     hg_to = m.group(1)
     subprocess.check_call([hg_cmd, 'mv', '-f', hg_from, hg_to])
+  # detect copied file
+  m = fcp.search(line)
+  if m:
+    hg_from = m.group(1)
+  m = tcp.search(line)
+  if m:
+    hg_to = m.group(1)
+    subprocess.check_call([hg_cmd, 'cp', hg_from, hg_to])
+    subprocess.check_call([hg_cmd, 'revert', '--no-backup', hg_from])
 webFile.close()
 
