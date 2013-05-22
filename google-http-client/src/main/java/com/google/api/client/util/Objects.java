@@ -120,6 +120,11 @@ public final class Objects {
       wrapped.add(name, value);
       return this;
     }
+
+    @Override
+    public String toString() {
+      return wrapped.toString();
+    }
   }
 
   private Objects() {
