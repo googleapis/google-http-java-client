@@ -92,9 +92,10 @@ public final class HttpRequest {
   private HttpHeaders responseHeaders = new HttpHeaders();
 
   /**
-   * Set the number of retries that will be allowed to execute as the result of an
-   * {@link HttpUnsuccessfulResponseHandler} before being terminated or {@code 0} to not retry
-   * requests. The default value is {@code 10}.
+   * The number of retries that will be allowed to execute before the request will be terminated or
+   * {@code 0} to not retry requests. Retries occur as a result of either
+   * {@link HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler} which handles
+   * abnormal HTTP response or the I/O exception.
    */
   private int numRetries = 10;
 
@@ -626,9 +627,11 @@ public final class HttpRequest {
   }
 
   /**
-   * Returns the number of retries that will be allowed to execute as the result of an
-   * {@link HttpUnsuccessfulResponseHandler} before being terminated or {@code 0} to not retry
-   * requests.
+   * Returns the number of retries that will be allowed to execute before the request will be
+   * terminated or {@code 0} to not retry requests. Retries occur as a result of either
+   * {@link HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler} which handles
+   * abnormal HTTP response or the I/O exception.
+   *
    *
    * @since 1.5
    */
@@ -637,9 +640,10 @@ public final class HttpRequest {
   }
 
   /**
-   * Returns the number of retries that will be allowed to execute as the result of an
-   * {@link HttpUnsuccessfulResponseHandler} before being terminated or {@code 0} to not retry
-   * requests.
+   * Sets the number of retries that will be allowed to execute before the request will be
+   * terminated or {@code 0} to not retry requests. Retries occur as a result of either
+   * {@link HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler} which handles
+   * abnormal HTTP response or the I/O exception.
    *
    * <p>
    * The default value is {@code 10}.
@@ -969,9 +973,8 @@ public final class HttpRequest {
           }
         }
       } catch (IOException e) {
-        if (!retryOnExecuteIOException
-            && (ioExceptionHandler == null ||
-            !ioExceptionHandler.handleIOException(this, retryRequest))) {
+        if (!retryOnExecuteIOException && (ioExceptionHandler == null
+            || !ioExceptionHandler.handleIOException(this, retryRequest))) {
           throw e;
         }
         // Save the exception in case the retries do not work and we need to re-throw it later.
