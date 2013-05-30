@@ -36,9 +36,15 @@ if not os.path.exists('.hg'):
   print 'must be run from the root directory of the hg workspace'
   sys.exit(1)
 
-url = sys.argv[1]
+if '-f' == sys.argv[1]:
+  i = 2
+  force = ['-f']
+else:
+  i = 1
+  force = []
+url = sys.argv[i]
 
-subprocess.check_call([hg_cmd, 'import', '--no-commit', url])
+subprocess.check_call([hg_cmd, 'import'] + force + ['--no-commit', url])
 webFile = urllib.urlopen(url)
 for line in webFile.readlines():
   # detect file name
