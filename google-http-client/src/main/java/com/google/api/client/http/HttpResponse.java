@@ -123,7 +123,7 @@ public final class HttpResponse {
     this.response = response;
     contentEncoding = response.getContentEncoding();
     int code = response.getStatusCode();
-    statusCode = code;
+    statusCode = code < 0 ? 0 : code;
     String message = response.getReasonPhrase();
     statusMessage = message;
     Logger logger = HttpTransport.LOGGER;
@@ -136,7 +136,7 @@ public final class HttpResponse {
       if (statusLine != null) {
         logbuf.append(statusLine);
       } else {
-        logbuf.append(code);
+        logbuf.append(statusCode);
         if (message != null) {
           logbuf.append(' ').append(message);
         }

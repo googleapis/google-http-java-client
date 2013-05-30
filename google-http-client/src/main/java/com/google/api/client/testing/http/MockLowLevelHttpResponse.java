@@ -147,7 +147,8 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
 
   @Override
   public String getStatusLine() {
-    StringBuilder buf = new StringBuilder(statusCode);
+    StringBuilder buf = new StringBuilder();
+    buf.append(statusCode);
     if (reasonPhrase != null) {
       buf.append(reasonPhrase);
     }
@@ -256,7 +257,6 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
    */
   public MockLowLevelHttpResponse setStatusCode(int statusCode) {
     this.statusCode = statusCode;
-    Preconditions.checkArgument(statusCode >= 0);
     return this;
   }
 

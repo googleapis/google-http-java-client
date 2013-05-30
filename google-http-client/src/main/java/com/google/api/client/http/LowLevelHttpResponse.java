@@ -54,7 +54,14 @@ public abstract class LowLevelHttpResponse {
   /** Returns the response status line or {@code null} for none. */
   public abstract String getStatusLine() throws IOException;
 
-  /** Returns the response status code or {@code 0} for none. */
+  /**
+   * Returns the response status code or {@code <=0} for none.
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.14 it could not return a negative number, but starting with
+   * version 1.15 it may.
+   * </p>
+   */
   public abstract int getStatusCode() throws IOException;
 
   /** Returns the HTTP reason phrase or {@code null} for none. */

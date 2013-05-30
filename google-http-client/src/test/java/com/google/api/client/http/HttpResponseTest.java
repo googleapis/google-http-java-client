@@ -98,6 +98,37 @@ public class HttpResponseTest extends TestCase {
     assertEquals(SAMPLE2, response.parseAsString());
   }
 
+  public void testStatusCode_negative_dontThrowException() throws Exception {
+    subtestStatusCode_negative(false);
+  }
+
+  public void testStatusCode_negative_throwException() throws Exception {
+    subtestStatusCode_negative(true);
+  }
+
+  private void subtestStatusCode_negative(boolean throwExceptionOnExecuteError) throws Exception {
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+        return new MockLowLevelHttpRequest().setResponse(
+            new MockLowLevelHttpResponse().setStatusCode(-1));
+      }
+    };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setThrowExceptionOnExecuteError(throwExceptionOnExecuteError);
+    try {
+      // HttpResponse converts a negative status code to zero
+      HttpResponse response = request.execute();
+      assertEquals(0, response.getStatusCode());
+      assertFalse(throwExceptionOnExecuteError);
+    } catch (HttpResponseException e) {
+      // exception should be thrown only if throwExceptionOnExecuteError is true
+      assertTrue(throwExceptionOnExecuteError);
+      assertEquals(0, e.getStatusCode());
+    }
+  }
+
   public static class MyHeaders extends HttpHeaders {
 
     @Key
