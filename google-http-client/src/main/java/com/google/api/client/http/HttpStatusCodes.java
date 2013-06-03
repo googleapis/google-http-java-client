@@ -63,6 +63,13 @@ public class HttpStatusCodes {
   /** Status code for an internal server error. */
   public static final int STATUS_CODE_SERVER_ERROR = 500;
 
+  /**
+   * Status code for a bad gateway.
+   *
+   * @since 1.16
+   */
+  public static final int STATUS_CODE_BAD_GATEWAY = 502;
+
   /** Status code for a service that is unavailable on the server. */
   public static final int STATUS_CODE_SERVICE_UNAVAILABLE = 503;
 
