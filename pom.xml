@@ -481,14 +481,9 @@
         <configuration>
           <comparisonVersion>1.15.0-rc</comparisonVersion>
           <ignoredDifferencesFile>${basedir}/../clirr-ignored-differences.xml</ignoredDifferencesFile>
+          <failOnError>false</failOnError>
+          <logResults>true</logResults>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
