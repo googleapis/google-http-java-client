@@ -23,6 +23,7 @@ import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonString;
 import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.ArrayMap;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.NullValue;
@@ -60,6 +61,7 @@ import java.util.TreeMap;
  *
  * @author Yaniv Inbar
  */
+@Beta
 public abstract class AbstractJsonFactoryTest extends TestCase {
 
   public AbstractJsonFactoryTest(String name) {
