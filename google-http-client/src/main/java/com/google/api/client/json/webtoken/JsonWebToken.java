@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * {@link Beta} <br/>
- * <a href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06">JSON Web Token (JWT)</a>.
+ * <a href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-08">JSON Web Token (JWT)</a>.
  *
  * <p>
  * Implementation is not thread-safe.
@@ -55,7 +55,7 @@ public class JsonWebToken {
   /**
    * {@link Beta} <br/>
    * Header as specified in <a
-   * href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06#section-5">JWT Header</a>.
+   * href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-08#section-5">JWT Header</a>.
    */
   @Beta
   public static class Header extends GenericJson {
@@ -129,7 +129,7 @@ public class JsonWebToken {
   /**
    * {@link Beta} <br/>
    * Payload as specified in <a
-   * href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-06#section-4.1">Reserved Claim
+   * href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-08#section-4.1">Reserved Claim
    * Names</a>.
    */
   @Beta

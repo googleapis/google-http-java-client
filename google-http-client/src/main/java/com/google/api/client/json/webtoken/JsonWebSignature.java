@@ -28,10 +28,11 @@ import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.util.List;
 
 /**
  * {@link Beta} <br/>
- * <a href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-08">JSON Web Signature
+ * <a href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-11">JSON Web Signature
  * (JWS)</a>.
  *
  * <p>
@@ -77,7 +78,7 @@ public class JsonWebSignature extends JsonWebToken {
   /**
    * {@link Beta} <br/>
    * Header as specified in <a
-   * href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-08#section-4.1">Reserved
+   * href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-11#section-4.1">Reserved
    * Header Parameter Names</a>.
    */
   @Beta
@@ -135,6 +136,13 @@ public class JsonWebSignature extends JsonWebToken {
      */
     @Key("x5c")
     private String x509Certificate;
+
+    /**
+     * Array listing the header parameter names that define extensions that are used in the JWS
+     * header that MUST be understood and processed or {@code null} for none.
+     */
+    @Key("crit")
+    private List<String> critical;
 
     @Override
     public Header setType(String type) {
@@ -304,6 +312,32 @@ public class JsonWebSignature extends JsonWebToken {
       return this;
     }
 
+    /**
+     * Returns the array listing the header parameter names that define extensions that are used in
+     * the JWS header that MUST be understood and processed or {@code null} for none.
+     *
+     * @since 1.16
+     */
+    public final List<String> getCritical() {
+      return critical;
+    }
+
+    /**
+     * Sets the array listing the header parameter names that define extensions that are used in the
+     * JWS header that MUST be understood and processed or {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     *
+     * @since 1.16
+     */
+    public Header setCritical(List<String> critical) {
+      this.critical = critical;
+      return this;
+    }
+
     @Override
     public Header set(String fieldName, Object value) {
       return (Header) super.set(fieldName, value);
@@ -455,7 +489,7 @@ public class JsonWebSignature extends JsonWebToken {
   /**
    * Signs a given JWS header and payload based on the given private key using RSA and SHA-256 as
    * described in <a
-   * href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-08#appendix-A.2">JWS using
+   * href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-11#appendix-A.2">JWS using
    * RSA SHA-256</a>.
    *
    * @param privateKey private key
