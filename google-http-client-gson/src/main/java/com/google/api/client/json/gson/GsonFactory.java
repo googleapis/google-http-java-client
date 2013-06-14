@@ -17,6 +17,7 @@ package com.google.api.client.json.gson;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Charsets;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -42,6 +43,23 @@ import java.nio.charset.Charset;
  * @author Yaniv Inbar
  */
 public class GsonFactory extends JsonFactory {
+
+  /**
+   * {@link Beta} <br/>
+   * Returns a global thread-safe instance.
+   *
+   * @since 1.16
+   */
+  @Beta
+  public static GsonFactory getDefaultInstance() {
+    return InstanceHolder.INSTANCE;
+  }
+
+  /** Holder for the result of {@link #getDefaultInstance()}. */
+  @Beta
+  static class InstanceHolder {
+    static final GsonFactory INSTANCE = new GsonFactory();
+  }
 
   @Override
   public JsonParser createJsonParser(InputStream in) {

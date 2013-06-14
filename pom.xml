@@ -80,6 +80,7 @@
     <module>google-http-client-gson</module>
     <module>google-http-client-jackson</module>
     <module>google-http-client-jackson2</module>
+    <module>google-http-client-jdo</module>
     <module>google-http-client-findbugs</module>
     <module>google-http-client-test</module>
   </modules>
@@ -114,6 +115,16 @@
       <dependency>
         <groupId>com.google.appengine</groupId>
         <artifactId>appengine-api-1.0-sdk</artifactId>
+        <version>${project.appengine.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-testing</artifactId>
+        <version>${project.appengine.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-api-stubs</artifactId>
         <version>${project.appengine.version}</version>
       </dependency>
       <dependency>
@@ -183,6 +194,11 @@
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-jdo</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-findbugs</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -195,6 +211,31 @@
         <groupId>org.mockito</groupId>
         <artifactId>mockito-all</artifactId>
         <version>1.9.0</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.jdo</groupId>
+        <artifactId>jdo2-api</artifactId>
+        <version>${project.jdo2-api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-core</artifactId>
+        <version>3.2.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-api-jdo</artifactId>
+        <version>3.2.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-rdbms</artifactId>
+        <version>3.2.1</version>
+      </dependency>
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>5.1.18</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -386,6 +427,11 @@
             </lifecycleMappingMetadata>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.datanucleus</groupId>
+          <artifactId>maven-datanucleus-plugin</artifactId>
+          <version>2.2.1</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -438,6 +484,10 @@
                 <group>
                   <title>google-http-client-jackson2</title>
                   <packages>com.google.api.client.json.jackson2.*</packages>
+                </group>
+                <group>
+                  <title>google-http-client-jdo</title>
+                  <packages>com.google.api.client.json.jdo.*</packages>
                 </group>
               </groups>
               <windowtitle>google-http-java-client ${project.version}</windowtitle>
@@ -499,5 +549,6 @@
     <project.commons-logging.version>1.1.1</project.commons-logging.version>
     <project.httpclient.version>4.0.1</project.httpclient.version>
     <project.httpcore.version>4.0.1</project.httpcore.version>
+    <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
   </properties>
 </project>
