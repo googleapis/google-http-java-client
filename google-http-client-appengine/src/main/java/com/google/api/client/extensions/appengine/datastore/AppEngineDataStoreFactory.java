@@ -53,6 +53,10 @@ import java.util.concurrent.locks.ReentrantLock;
  * Engine Data Store API.
  *
  * <p>
+ * For convenience, a default global instance is provided in {@link #getDefaultInstance()}.
+ * </p>
+ *
+ * <p>
  * By default, it uses the Memcache API as an in-memory data cache. To disable it, call
  * {@link Builder#setDisableMemcache(boolean)}. The Memcache is only read to check if a key already
  * has a value inside {@link DataStore#get(String)}. The values in the Memcache are updated in the

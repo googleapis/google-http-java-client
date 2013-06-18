@@ -24,6 +24,10 @@ import java.io.Serializable;
  * {@link Beta} <br/>
  * Thread-safe in-memory implementation of a data store factory.
  *
+ * <p>
+ * For convenience, a default global instance is provided in {@link #getDefaultInstance()}.
+ * </p>
+ *
  * @since 1.16
  * @author Yaniv Inbar
  */
