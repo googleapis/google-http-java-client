@@ -787,6 +787,15 @@ public class HttpHeaders extends GenericData {
   }
 
   /**
+   * Returns all {@code "WWW-Authenticate"} headers or {@code null} for none.
+   *
+   * @since 1.16
+   */
+  public final List<String> getAuthenticateAsList() {
+    return authenticate;
+  }
+
+  /**
    * Sets the {@code "WWW-Authenticate"} header or {@code null} for none.
    *
    * <p>
