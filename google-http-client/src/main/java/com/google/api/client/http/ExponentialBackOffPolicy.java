@@ -75,9 +75,8 @@ import java.io.IOException;
  *
  * @since 1.7
  * @author Ravi Mistry
- * @deprecated (scheduled to be removed in the 1.16). Use
- *             {@link HttpBackOffUnsuccessfulResponseHandler} with {@link ExponentialBackOff}
- *             instead.
+ * @deprecated (scheduled to be removed in 1.17). Use {@link HttpBackOffUnsuccessfulResponseHandler}
+ *             with {@link ExponentialBackOff} instead.
  */
 @Beta
 @Deprecated

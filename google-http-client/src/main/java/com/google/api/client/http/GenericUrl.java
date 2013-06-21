@@ -50,12 +50,6 @@ import java.util.Set;
  * </p>
  *
  * <p>
- * Upgrade warning: in prior version 1.14 the user info part in the URL was dropped, but starting
- * with version 1.15 this URL class contains the user info, and it can be retrieved or set with
- * {@link #getUserInfo} and {@link #setUserInfo}.
- * </p>
- *
- * <p>
  * Implementation is not thread-safe.
  * </p>
  *

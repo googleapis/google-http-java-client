@@ -33,12 +33,10 @@ import java.io.OutputStream;
  * </p>
  *
  * <pre>
- * <code>
   static HttpRequest buildPostRequest(
       HttpRequestFactory requestFactory, GenericUrl url, MessageLite message) throws IOException {
     return requestFactory.buildPostRequest(url, new ProtoHttpContent(message));
   }
- * </code>
  * </pre>
  *
  * <p>
@@ -70,19 +68,6 @@ public class ProtoHttpContent extends AbstractHttpContent {
   public void writeTo(OutputStream out) throws IOException {
     message.writeTo(out);
     out.flush();
-  }
-
-  /**
-   * Sets the content type or {@code null} for none.
-   *
-   * <p>
-   * Default value is {@link ProtocolBuffers#CONTENT_TYPE}.
-   * </p>
-   * @deprecated (scheduled to be removed in 1.16) Use {@link #setMediaType(HttpMediaType)} instead.
-   */
-  @Deprecated
-  public ProtoHttpContent setType(String type) {
-    return setMediaType(type == null ? null : new HttpMediaType(type));
   }
 
   /** Returns the message to serialize. */

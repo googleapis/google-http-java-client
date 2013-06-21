@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- see http://mojo.codehaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
-
 <differences>
+  <!-- 7002 (method removed): className, method -->
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/protobuf/ProtoHttpContent</className>
+    <method>com.google.api.client.http.protobuf.ProtoHttpContent setType(java.lang.String)</method>
+  </difference>
   <!-- 8001 (Class removed): className -->
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/api/client/testing/http/json/*</className>
+  </difference>
   <difference>
     <differenceType>8001</differenceType>
     <className>com/google/api/client/repackaged/**</className>

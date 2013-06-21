@@ -15,12 +15,10 @@
 package com.google.api.client.extensions.appengine.http;
 
 import com.google.api.client.http.HttpMethods;
-import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Preconditions;
 import com.google.appengine.api.urlfetch.FetchOptions;
 import com.google.appengine.api.urlfetch.HTTPMethod;
-import com.google.appengine.api.urlfetch.HTTPResponse;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -44,13 +42,6 @@ import java.util.Arrays;
  * currently a serious bug in how HTTP headers are processed in the App Engine implementation of
  * {@link HttpURLConnection}, which we are able to avoid using this implementation. Therefore, this
  * is the recommended transport to use on App Engine.
- * </p>
- *
- * <p>
- * Upgrade warning: in prior version 1.14 duplicate response headers in
- * {@link HttpResponse#getHeaders()} were combined into a single string value using
- * {@link HTTPResponse#getHeaders()} but starting in version 1.15 such headers are now "uncombined"
- * into a list of strings using {@link HTTPResponse#getHeadersUncombined()}.
  * </p>
  *
  * @since 1.10

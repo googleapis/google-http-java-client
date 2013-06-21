@@ -383,11 +383,6 @@ public class Data {
    * Note that this may not be the right behavior for some use cases.
    * </p>
    *
-   * <p>
-   * Upgrade warning: in prior version 1.14 {@link Void} was not a legal input, but starting with
-   * version 1.15 it is now supported and returns {@code null}.
-   * </p>
-   *
    * @param type primitive type or {@code null} to parse as a string
    * @param stringValue string value to parse or {@code null} for {@code null} result
    * @return parsed object or {@code null} for {@code null} input

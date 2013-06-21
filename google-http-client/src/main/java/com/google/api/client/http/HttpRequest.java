@@ -300,7 +300,7 @@ public final class HttpRequest {
    * Returns the {@link BackOffPolicy} to use between retry attempts or {@code null} for none.
    *
    * @since 1.7
-   * @deprecated (scheduled to be removed in the 1.16).
+   * @deprecated (scheduled to be removed in 1.17).
    *             {@link #setUnsuccessfulResponseHandler(HttpUnsuccessfulResponseHandler)} with a new
    *             {@link HttpBackOffUnsuccessfulResponseHandler} instead.
    */
@@ -315,7 +315,7 @@ public final class HttpRequest {
    * Sets the {@link BackOffPolicy} to use between retry attempts or {@code null} for none.
    *
    * @since 1.7
-   * @deprecated (scheduled to be removed in the 1.16). Use
+   * @deprecated (scheduled to be removed in 1.17). Use
    *             {@link #setUnsuccessfulResponseHandler(HttpUnsuccessfulResponseHandler)} with a new
    *             {@link HttpBackOffUnsuccessfulResponseHandler} instead.
    */
@@ -735,7 +735,7 @@ public final class HttpRequest {
    * {@link LowLevelHttpRequest#execute()}.
    *
    * @since 1.9
-   * @deprecated (scheduled to be removed in 1.16) Use
+   * @deprecated (scheduled to be removed in 1.17) Use
    *             {@link #setIOExceptionHandler(HttpIOExceptionHandler)} instead.
    */
   @Deprecated
@@ -754,7 +754,7 @@ public final class HttpRequest {
    * </p>
    *
    * @since 1.9
-   * @deprecated (scheduled to be removed in 1.16) Use
+   * @deprecated (scheduled to be removed in 1.17) Use
    *             {@link #setIOExceptionHandler(HttpIOExceptionHandler)} instead.
    */
   @Deprecated
