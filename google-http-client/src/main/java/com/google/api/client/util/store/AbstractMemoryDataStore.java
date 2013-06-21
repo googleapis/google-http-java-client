@@ -25,8 +25,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -46,7 +46,7 @@ class AbstractMemoryDataStore<V extends Serializable> extends AbstractDataStore<
   private final Lock lock = new ReentrantLock();
 
   /** Data store map from the key to the value. */
-  Map<String, byte[]> keyValueMap = Maps.newHashMap();
+  HashMap<String, byte[]> keyValueMap = Maps.newHashMap();
 
   /**
    * @param dataStoreFactory data store factory
