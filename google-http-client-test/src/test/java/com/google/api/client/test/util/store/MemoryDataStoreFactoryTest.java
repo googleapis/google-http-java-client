@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.test.util;
+package com.google.api.client.test.util.store;
 
 import com.google.api.client.test.util.store.AbstractDataStoreFactoryTest;
 import com.google.api.client.util.store.DataStoreFactory;
