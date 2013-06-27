@@ -202,4 +202,18 @@ public final class ClassInfo {
     names = nameSet.isEmpty() ? Collections.<String>emptyList() : Collections.unmodifiableList(
         new ArrayList<String>(nameSet));
   }
+
+  /**
+   * Returns an unmodifiable collection of the {@code FieldInfo}s for this class, without any
+   * guarantee of order.
+   *
+   * <p>
+   * If you need sorted order, instead use {@link #getNames()} with {@link #getFieldInfo(String)}.
+   * </p>
+   *
+   * @since 1.16
+   */
+  public Collection<FieldInfo> getFieldInfos() {
+    return Collections.unmodifiableCollection(nameToFieldInfoMap.values());
+  }
 }

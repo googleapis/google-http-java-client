@@ -14,12 +14,14 @@
 
 package com.google.api.client.json;
 
+import com.google.api.client.json.JsonPolymorphicTypeMap.TypeDef;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Preconditions;
+import com.google.api.client.util.Sets;
 import com.google.api.client.util.Types;
 
 import java.io.IOException;
@@ -32,8 +34,12 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Abstract low-level JSON parser.
@@ -47,6 +53,16 @@ import java.util.Set;
  * @author Yaniv Inbar
  */
 public abstract class JsonParser {
+
+  /**
+   * Maps a polymorphic {@link Class} to its {@link Field} with the {@link JsonPolymorphicTypeMap}
+   * annotation, or {@code null} if there is no field with that annotation.
+   */
+  private static WeakHashMap<Class<?>, Field> cachedTypemapFields =
+      new WeakHashMap<Class<?>, Field>();
+
+  /** Lock on the {@code cachedTypemapFields}. */
+  private static final Lock lock = new ReentrantLock();
 
   /** Returns the JSON factory from which this generator was created. */
   public abstract JsonFactory getFactory();
@@ -355,7 +371,7 @@ public abstract class JsonParser {
       if (!Void.class.equals(dataType)) {
         startParsing();
       }
-      return parseValue(null, dataType, new ArrayList<Type>(), null, customizeParser);
+      return parseValue(null, dataType, new ArrayList<Type>(), null, customizeParser, true);
     } finally {
       if (close) {
         close();
@@ -401,6 +417,14 @@ public abstract class JsonParser {
     parse(context, destination, customizeParser);
   }
 
+  /**
+   * Parses the next field from the given JSON parser into the given destination object.
+   *
+   * @param context destination context stack (possibly empty)
+   * @param destination destination object instance or {@code null} for none (for example empty
+   *        context stack)
+   * @param customizeParser optional parser customizer or {@code null} for none
+   */
   private void parse(
       ArrayList<Type> context, Object destination, CustomizeJsonParser customizeParser)
       throws IOException {
@@ -435,14 +459,18 @@ public abstract class JsonParser {
         Field field = fieldInfo.getField();
         int contextSize = context.size();
         context.add(field.getGenericType());
-        Object fieldValue =
-            parseValue(field, fieldInfo.getGenericType(), context, destination, customizeParser);
+        Object fieldValue = parseValue(field,
+            fieldInfo.getGenericType(),
+            context,
+            destination,
+            customizeParser,
+            true);
         context.remove(contextSize);
         fieldInfo.setValue(destination, fieldValue);
       } else if (isGenericData) {
         // store unknown field in generic JSON
         GenericData object = (GenericData) destination;
-        object.set(key, parseValue(null, null, context, destination, customizeParser));
+        object.set(key, parseValue(null, null, context, destination, customizeParser, true));
       } else {
         // unrecognized field, skip value
         if (customizeParser != null) {
@@ -607,8 +635,12 @@ public abstract class JsonParser {
     JsonToken curToken = startParsingObjectOrArray();
     while (curToken != JsonToken.END_ARRAY) {
       @SuppressWarnings("unchecked")
-      T parsedValue = (T) parseValue(
-          fieldContext, destinationItemType, context, destinationCollection, customizeParser);
+      T parsedValue = (T) parseValue(fieldContext,
+          destinationItemType,
+          context,
+          destinationCollection,
+          customizeParser,
+          true);
       destinationCollection.add(parsedValue);
       curToken = nextToken();
     }
@@ -634,7 +666,8 @@ public abstract class JsonParser {
       if (customizeParser != null && customizeParser.stopAt(destinationMap, key)) {
         return;
       }
-      Object value = parseValue(fieldContext, valueType, context, destinationMap, customizeParser);
+      Object value =
+          parseValue(fieldContext, valueType, context, destinationMap, customizeParser, true);
       destinationMap.put(key, value);
       curToken = nextToken();
     }
@@ -649,10 +682,16 @@ public abstract class JsonParser {
    * @param destination destination object instance or {@code null} for none (for example empty
    *        context stack)
    * @param customizeParser customize parser or {@code null} for none
+   * @param handlePolymorphic whether or not to check for polymorphic schema
    * @return parsed value
    */
-  private final Object parseValue(Field fieldContext, Type valueType, ArrayList<Type> context,
-      Object destination, CustomizeJsonParser customizeParser) throws IOException {
+  private final Object parseValue(Field fieldContext,
+      Type valueType,
+      ArrayList<Type> context,
+      Object destination,
+      CustomizeJsonParser customizeParser,
+      boolean handlePolymorphic) throws IOException {
+
     valueType = Data.resolveWildcardTypeOrTypeVariable(context, valueType);
     // resolve a parameterized type to a class
     Class<?> valueClass = valueType instanceof Class<?> ? (Class<?>) valueType : null;
@@ -698,12 +737,16 @@ public abstract class JsonParser {
         case END_OBJECT:
           Preconditions.checkArgument(
               !Types.isArray(valueType), "expected object or map type but got %s", valueType);
+          // Check if we're parsing into a polymorphic datatype.
+          Field typemapField = handlePolymorphic ? getCachedTypemapFieldFor(valueClass) : null;
           Object newInstance = null;
           if (valueClass != null && customizeParser != null) {
             newInstance = customizeParser.newInstanceForObject(destination, valueClass);
           }
           boolean isMap = valueClass != null && Types.isAssignableToOrFrom(valueClass, Map.class);
-          if (newInstance == null) {
+          if (typemapField != null) {
+            newInstance = new GenericJson();
+          } else if (newInstance == null) {
             // check if it is a map to avoid ClassCastException to Map
             if (isMap || valueClass == null) {
               newInstance = Data.newMapInstance(valueClass);
@@ -729,7 +772,30 @@ public abstract class JsonParser {
           if (valueType != null) {
             context.remove(contextSize);
           }
-          return newInstance;
+          if (typemapField == null) {
+            return newInstance;
+          }
+
+          // Get the correct type out of the naively parsed data.
+          Object typeValueObject = ((GenericJson) newInstance).get(typemapField.getName());
+          Preconditions.checkArgument(
+              typeValueObject != null, "No value specified for @JsonPolymorphicTypeMap field");
+          String typeValue = typeValueObject.toString();
+          JsonPolymorphicTypeMap typeMap = typemapField.getAnnotation(JsonPolymorphicTypeMap.class);
+          Class<?> typeClass = null;
+          for (TypeDef typeDefinition : typeMap.typeDefinitions()) {
+            if (typeDefinition.key().equals(typeValue)) {
+              typeClass = typeDefinition.ref();
+              break;
+            }
+          }
+          Preconditions.checkArgument(
+              typeClass != null, "No TypeDef annotation found with key: " + typeValue);
+          JsonFactory factory = getFactory();
+          // TODO(ngmiceli): Avoid having to parse JSON content twice. Optimize when type is first.
+          JsonParser parser = factory.createJsonParser(factory.toString(newInstance));
+          parser.startParsing();
+          return parser.parseValue(fieldContext, typeClass, context, null, null, false);
         case VALUE_TRUE:
         case VALUE_FALSE:
           Preconditions.checkArgument(valueType == null || valueClass == boolean.class
@@ -803,6 +869,62 @@ public abstract class JsonParser {
         contextStringBuilder.append("field ").append(fieldContext);
       }
       throw new IllegalArgumentException(contextStringBuilder.toString(), e);
+    }
+  }
+
+  /**
+   * Finds the {@link Field} on the given {@link Class} that has the {@link JsonPolymorphicTypeMap}
+   * annotation, or {@code null} if there is none.
+   *
+   * <p>
+   * The class must contain exactly zero or one {@link JsonPolymorphicTypeMap} annotation.
+   * </p>
+   *
+   * @param key The {@link Class} to search in, or {@code null}
+   * @return The {@link Field} with the {@link JsonPolymorphicTypeMap} annotation, or {@code null}
+   *         either if there is none or if the key is {@code null}
+   */
+  private static Field getCachedTypemapFieldFor(Class<?> key) {
+    if (key == null) {
+      return null;
+    }
+    lock.lock();
+    try {
+      // Must use containsKey because we do store null values for when the class has no
+      // JsonPolymorphicTypeMap field.
+      if (cachedTypemapFields.containsKey(key)) {
+        return cachedTypemapFields.get(key);
+      }
+      // Find the field that determines the type and cache it.
+      Field value = null;
+      Collection<FieldInfo> fieldInfos = ClassInfo.of(key).getFieldInfos();
+      for (FieldInfo fieldInfo : fieldInfos) {
+        Field field = fieldInfo.getField();
+        JsonPolymorphicTypeMap typemapAnnotation =
+            field.getAnnotation(JsonPolymorphicTypeMap.class);
+        if (typemapAnnotation != null) {
+          Preconditions.checkArgument(value == null,
+              "Class contains more than one field with @JsonPolymorphicTypeMap annotation: %s",
+              key);
+          Preconditions.checkArgument(Data.isPrimitive(field.getType()),
+              "Field which has the @JsonPolymorphicTypeMap, %s, is not a supported type: %s", key,
+              field.getType());
+          value = field;
+          // Check for duplicate typeDef keys
+          TypeDef[] typeDefs = typemapAnnotation.typeDefinitions();
+          HashSet<String> typeDefKeys = Sets.newHashSet();
+          Preconditions.checkArgument(
+              typeDefs.length > 0, "@JsonPolymorphicTypeMap must have at least one @TypeDef");
+          for (TypeDef typeDef : typeDefs) {
+            Preconditions.checkArgument(typeDefKeys.add(typeDef.key()),
+                "Class contains two @TypeDef annotations with identical key: %s", typeDef.key());
+          }
+        }
+      }
+      cachedTypemapFields.put(key, value);
+      return value;
+    } finally {
+      lock.unlock();
     }
   }
 }

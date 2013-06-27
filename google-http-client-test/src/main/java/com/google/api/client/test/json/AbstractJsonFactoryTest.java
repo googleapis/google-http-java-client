@@ -20,10 +20,11 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.JsonParser;
+import com.google.api.client.json.JsonPolymorphicTypeMap;
+import com.google.api.client.json.JsonPolymorphicTypeMap.TypeDef;
 import com.google.api.client.json.JsonString;
 import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.ArrayMap;
-import com.google.api.client.util.Beta;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.NullValue;
@@ -61,7 +62,6 @@ import java.util.TreeMap;
  *
  * @author Yaniv Inbar
  */
-@Beta
 public abstract class AbstractJsonFactoryTest extends TestCase {
 
   public AbstractJsonFactoryTest(String name) {
@@ -1442,4 +1442,405 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     } catch (IllegalArgumentException e) {
     }
   }
+
+  public abstract static class Animal {
+    @Key
+    public String name;
+    @Key("legCount")
+    public int numberOfLegs;
+    @Key
+    @JsonPolymorphicTypeMap(typeDefinitions = {@TypeDef(key = "dog", ref = Dog.class),
+        @TypeDef(key = "bug", ref = Centipede.class), @TypeDef(key = "human", ref = Human.class),
+        @TypeDef(key = "dogwithfamily", ref = DogWithFamily.class),
+        @TypeDef(key = "human with pets", ref = HumanWithPets.class)})
+    public String type;
+  }
+
+  public static class Dog extends Animal {
+    @Key
+    public int tricksKnown;
+  }
+
+  public static class Centipede extends Animal {
+    @Key("bodyColor")
+    public String color;
+  }
+
+  // Test regular heterogeneous schema cases:
+  public static final String DOG =
+      "{\"legCount\":4,\"name\":\"Fido\",\"tricksKnown\":3,\"type\":\"dog\"}";
+  public static final String CENTIPEDE =
+      "{\"bodyColor\":\"green\",\"legCount\":68,\"name\":\"Mr. Icky\",\"type\":\"bug\"}";
+
+  // Test heterogeneous scheme optimized case where the type is the first value:
+  public static final String DOG_OPTIMIZED =
+      "{\"type\":\"dog\",\"name\":\"Fido\",\"legCount\":4,\"tricksKnown\":3}";
+  public static final String CENTIPEDE_OPTIMIZED =
+      "{\"type\":\"bug\",\"bodyColor\":\"green\",\"name\":\"Mr. Icky\",\"legCount\":68}";
+
+  // Test heterogeneous scheme with additional, unused information:
+  public static final String DOG_EXTRA_INFO =
+      "{\"name\":\"Fido\",\"legCount\":4,\"unusedInfo\":\"this is not being used!\","
+      + "\"tricksKnown\":3,\"type\":\"dog\",\"unused\":{\"foo\":200}}";
+  public static final String CENTIPEDE_EXTRA_INFO =
+      "{\"unused\":0, \"bodyColor\":\"green\",\"name\":\"Mr. Icky\",\"legCount\":68,\"type\":"
+      + "\"bug\"}";
+
+  public void testParser_heterogeneousSchemata() throws Exception {
+    testParser_heterogeneousSchemata_Helper(DOG, CENTIPEDE);
+    // TODO(ngmiceli): Test that this uses the optimized flow (once implemented)
+    testParser_heterogeneousSchemata_Helper(DOG_OPTIMIZED, CENTIPEDE_OPTIMIZED);
+    testParser_heterogeneousSchemata_Helper(DOG_EXTRA_INFO, CENTIPEDE_EXTRA_INFO);
+  }
+
+  private void testParser_heterogeneousSchemata_Helper(String dogJson, String centipedeJson)
+      throws Exception {
+    // Test for Dog
+    JsonFactory factory = newFactory();
+    JsonParser parser;
+    parser = factory.createJsonParser(dogJson);
+    Animal dog = parser.parse(Animal.class);
+    // Always outputs keys in alphabetical order
+    assertEquals(DOG, factory.toString(dog));
+    assertEquals(Dog.class, dog.getClass());
+    assertEquals("Fido", dog.name);
+    assertEquals("dog", dog.type);
+    assertEquals(4, dog.numberOfLegs);
+    assertEquals(3, ((Dog) dog).tricksKnown);
+
+    // Test for Centipede
+    parser = factory.createJsonParser(centipedeJson);
+    parser.nextToken();
+    Animal centipede = parser.parse(Animal.class);
+    // Always outputs keys in alphabetical order
+    assertEquals(CENTIPEDE, factory.toString(centipede));
+    assertEquals(Centipede.class, centipede.getClass());
+    assertEquals("Mr. Icky", centipede.name);
+    assertEquals("bug", centipede.type);
+    assertEquals(68, centipede.numberOfLegs);
+    assertEquals("green", ((Centipede) centipede).color);
+  }
+
+  public static final String ANIMAL_WITHOUT_TYPE = "{\"legCount\":3,\"name\":\"Confused\"}";
+
+  public void testParser_heterogeneousSchema_missingType() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonParser parser;
+    parser = factory.createJsonParser(ANIMAL_WITHOUT_TYPE);
+    try {
+      parser.parse(Animal.class);
+    } catch (IllegalArgumentException e) {
+      return; // expected
+    }
+    fail("IllegalArgumentException expected on heterogeneous schema without type field specified");
+  }
+
+  public static class Human extends Animal {
+    @Key
+    public Dog bestFriend;
+  }
+
+  // Test a subclass with an additional object in it.
+  public static final String HUMAN =
+      "{\"bestFriend\":" + DOG + ",\"legCount\":2,\"name\":\"Joe\",\"type\":\"human\"}";
+
+  public void testParser_heterogeneousSchema_withObject() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonParser parser = factory.createJsonParser(HUMAN);
+    Animal human = parser.parse(Animal.class);
+    assertEquals(HUMAN, factory.toString(human));
+    Dog dog = ((Human) human).bestFriend;
+    assertEquals(DOG, factory.toString(dog));
+    assertEquals(Dog.class, dog.getClass());
+    assertEquals("Fido", dog.name);
+    assertEquals("dog", dog.type);
+    assertEquals(4, dog.numberOfLegs);
+    assertEquals(3, dog.tricksKnown);
+    assertEquals("Joe", human.name);
+    assertEquals(2, human.numberOfLegs);
+    assertEquals("human", human.type);
+  }
+
+  public static class AnimalGenericJson extends GenericJson {
+    @Key
+    public String name;
+    @Key("legCount")
+    public int numberOfLegs;
+    @Key
+    @JsonPolymorphicTypeMap(typeDefinitions = {@TypeDef(key = "dog", ref = DogGenericJson.class)})
+    public String type;
+  }
+
+  public static class DogGenericJson extends AnimalGenericJson {
+    @Key
+    public int tricksKnown;
+  }
+
+  public static final String DOG_EXTRA_INFO_ORDERED =
+      "{\"legCount\":4,\"name\":\"Fido\",\"tricksKnown\":3,\"type\":\"dog\","
+      + "\"unusedInfo\":\"this is not being used!\",\"unused\":{\"foo\":200}}";
+
+  @SuppressWarnings("unchecked")
+  public void testParser_heterogeneousSchema_genericJson() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonParser parser = factory.createJsonParser(DOG_EXTRA_INFO);
+    AnimalGenericJson dog = parser.parse(AnimalGenericJson.class);
+    assertEquals(DOG_EXTRA_INFO_ORDERED, factory.toString(dog));
+    assertEquals(DogGenericJson.class, dog.getClass());
+    assertEquals("Fido", dog.name);
+    assertEquals("dog", dog.type);
+    assertEquals(4, dog.numberOfLegs);
+    assertEquals(3, ((DogGenericJson) dog).tricksKnown);
+    assertEquals("this is not being used!", dog.get("unusedInfo"));
+    BigDecimal foo = ((BigDecimal) ((ArrayMap<String, Object>) dog.get("unused")).get("foo"));
+    assertEquals(200, foo.intValue());
+  }
+
+  public static final String DOG_WITH_FAMILY = "{\"children\":[" + DOG + "," + CENTIPEDE
+      + "],\"legCount\":4,\"name\":\"Bob\",\"nicknames\":[\"Fluffy\",\"Hey, you\"],"
+      + "\"tricksKnown\":10,\"type\":\"dogwithfamily\"}";
+
+  public static class DogWithFamily extends Dog {
+    @Key
+    public String[] nicknames;
+    @Key
+    public Animal[] children;
+  }
+
+  public void testParser_heterogeneousSchema_withArrays() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonParser parser = factory.createJsonParser(DOG_WITH_FAMILY);
+    Animal dog = parser.parse(DogWithFamily.class);
+    assertEquals(DOG_WITH_FAMILY, factory.toString(dog));
+    assertEquals(DogWithFamily.class, dog.getClass());
+    assertEquals("Bob", dog.name);
+    assertEquals("dogwithfamily", dog.type);
+    assertEquals(4, dog.numberOfLegs);
+    assertEquals(10, ((DogWithFamily) dog).tricksKnown);
+    String[] nicknames = {"Fluffy", "Hey, you"};
+    assertTrue(Arrays.equals(nicknames, ((DogWithFamily) dog).nicknames));
+    Animal child = ((DogWithFamily) dog).children[0];
+    assertEquals("Fido", child.name);
+    assertEquals(3, ((Dog) child).tricksKnown);
+    Animal child2 = ((DogWithFamily) dog).children[1];
+    assertEquals("Mr. Icky", child2.name);
+    assertEquals(68, ((Centipede) child2).numberOfLegs);
+  }
+
+  public static final String DOG_WITH_NO_FAMILY = "{\"legCount\":4,\"type\":\"dogwithfamily\"}";
+  public static final String DOG_WITH_NO_FAMILY_PARSED =
+      "{\"legCount\":4,\"tricksKnown\":0,\"type\":\"dogwithfamily\"}";
+
+  public void testParser_heterogeneousSchema_withNullArrays() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonParser parser = factory.createJsonParser(DOG_WITH_NO_FAMILY);
+    Animal dog = parser.parse(DogWithFamily.class);
+    assertEquals(DogWithFamily.class, dog.getClass());
+    assertEquals(DOG_WITH_NO_FAMILY_PARSED, factory.toString(dog));
+    assertEquals(4, dog.numberOfLegs);
+    assertEquals(0, ((Dog) dog).tricksKnown);
+    assertEquals(null, dog.name);
+    assertEquals(null, ((DogWithFamily) dog).nicknames);
+    assertEquals(null, ((DogWithFamily) dog).children);
+  }
+
+  public static class PolymorphicWithMultipleAnnotations {
+    @Key
+    String a;
+    @Key
+    @JsonPolymorphicTypeMap(typeDefinitions = {@TypeDef(key = "dog", ref = Dog.class)})
+    String b;
+    @Key
+    String c;
+    @Key
+    @JsonPolymorphicTypeMap(typeDefinitions = {@TypeDef(key = "bug", ref = Centipede.class)})
+    String d;
+  }
+
+  public static final String MULTIPLE_ANNOTATIONS_JSON =
+      "{\"a\":\"foo\",\"b\":\"dog\",\"c\":\"bar\",\"d\":\"bug\"}";
+
+  public void testParser_polymorphicClass_tooManyAnnotations() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonParser parser = factory.createJsonParser(MULTIPLE_ANNOTATIONS_JSON);
+    try {
+      parser.parse(PolymorphicWithMultipleAnnotations.class);
+    } catch (IllegalArgumentException e) {
+      return; // expected
+    }
+    fail("Expected IllegalArgumentException on class with multiple @JsonPolymorphicTypeMap"
+        + " annotations.");
+  }
+
+  public static class PolymorphicWithNumericType {
+    @Key
+    @JsonPolymorphicTypeMap(typeDefinitions = {
+        @TypeDef(key = "1", ref = NumericTypedSubclass1.class),
+        @TypeDef(key = "2", ref = NumericTypedSubclass2.class)})
+    Integer type;
+  }
+
+  public static class NumericTypedSubclass1 extends PolymorphicWithNumericType {
+  }
+  public static class NumericTypedSubclass2 extends PolymorphicWithNumericType {
+  }
+
+  public static final String POLYMORPHIC_NUMERIC_TYPE_1 = "{\"foo\":\"bar\",\"type\":1}";
+  public static final String POLYMORPHIC_NUMERIC_TYPE_2 = "{\"foo\":\"bar\",\"type\":2}";
+
+  public void testParser_heterogeneousSchema_numericType() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonParser parser = factory.createJsonParser(POLYMORPHIC_NUMERIC_TYPE_1);
+    PolymorphicWithNumericType t1 = parser.parse(PolymorphicWithNumericType.class);
+    assertEquals(NumericTypedSubclass1.class, t1.getClass());
+
+    factory = newFactory();
+    parser = factory.createJsonParser(POLYMORPHIC_NUMERIC_TYPE_2);
+    PolymorphicWithNumericType t2 = parser.parse(PolymorphicWithNumericType.class);
+    assertEquals(NumericTypedSubclass2.class, t2.getClass());
+  }
+
+  public static class PolymorphicWithNumericValueType {
+    @Key
+    @JsonPolymorphicTypeMap(typeDefinitions = {
+        @TypeDef(key = "1", ref = NumericValueTypedSubclass1.class),
+        @TypeDef(key = "2", ref = NumericValueTypedSubclass2.class)})
+    int type;
+  }
+
+  public static class NumericValueTypedSubclass1 extends PolymorphicWithNumericValueType {
+  }
+  public static class NumericValueTypedSubclass2 extends PolymorphicWithNumericValueType {
+  }
+
+  public static final String POLYMORPHIC_NUMERIC_UNSPECIFIED_TYPE = "{\"foo\":\"bar\"}";
+
+  public void testParser_heterogeneousSchema_numericValueType() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonParser parser = factory.createJsonParser(POLYMORPHIC_NUMERIC_TYPE_1);
+    PolymorphicWithNumericValueType t1 = parser.parse(PolymorphicWithNumericValueType.class);
+    assertEquals(NumericValueTypedSubclass1.class, t1.getClass());
+
+    factory = newFactory();
+    parser = factory.createJsonParser(POLYMORPHIC_NUMERIC_TYPE_2);
+    PolymorphicWithNumericValueType t2 = parser.parse(PolymorphicWithNumericValueType.class);
+    assertEquals(NumericValueTypedSubclass2.class, t2.getClass());
+
+    factory = newFactory();
+    parser = factory.createJsonParser(POLYMORPHIC_NUMERIC_UNSPECIFIED_TYPE);
+    try {
+      parser.parse(PolymorphicWithNumericValueType.class);
+    } catch (IllegalArgumentException e) {
+      return; // expected
+    }
+    fail("IllegalArgumentException expected on heterogeneous schema without type field specified");
+  }
+
+  public static class PolymorphicWithIllegalValueType {
+    @Key
+    @JsonPolymorphicTypeMap(typeDefinitions = {
+        @TypeDef(key = "foo", ref = Object.class), @TypeDef(key = "bar", ref = Object.class)})
+    Object type;
+  }
+
+  public void testParser_heterogeneousSchema_illegalValueType() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonParser parser = factory.createJsonParser(POLYMORPHIC_NUMERIC_TYPE_1);
+    try {
+      parser.parse(PolymorphicWithIllegalValueType.class);
+    } catch (IllegalArgumentException e) {
+      return; // expected
+    }
+    fail("Expected IllegalArgumentException on class with illegal @JsonPolymorphicTypeMap type");
+  }
+
+
+  public static class PolymorphicWithDuplicateTypeKeys {
+    @Key
+    @JsonPolymorphicTypeMap(typeDefinitions = {
+        @TypeDef(key = "foo", ref = Object.class), @TypeDef(key = "foo", ref = Object.class)})
+    String type;
+  }
+
+  public void testParser_polymorphicClass_duplicateTypeKeys() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonParser parser = factory.createJsonParser(EMPTY_OBJECT);
+    try {
+      parser.parse(PolymorphicWithDuplicateTypeKeys.class);
+    } catch (IllegalArgumentException e) {
+      return; // expected
+    }
+    fail("Expected IllegalArgumentException on class with duplicate typeDef keys");
+  }
+
+  public static final String POLYMORPHIC_WITH_UNKNOWN_KEY =
+      "{\"legCount\":4,\"name\":\"Fido\",\"tricksKnown\":3,\"type\":\"unknown\"}";
+
+  public void testParser_polymorphicClass_noMatchingTypeKey() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonParser parser = factory.createJsonParser(POLYMORPHIC_WITH_UNKNOWN_KEY);
+    try {
+      parser.parse(Animal.class);
+    } catch (IllegalArgumentException e) {
+      return; // expected
+    }
+    fail("Expected IllegalArgumentException when provided with unknown typeDef key");
+  }
+
+  public static class PolymorphicSelfReferencing {
+    @Key
+    @JsonPolymorphicTypeMap(
+        typeDefinitions = {@TypeDef(key = "self", ref = PolymorphicSelfReferencing.class)})
+    String type;
+    @Key
+    String info;
+  }
+
+  public static final String POLYMORPHIC_SELF_REFERENCING = "{\"info\":\"blah\",\"type\":\"self\"}";
+
+  public void testParser_polymorphicClass_selfReferencing() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonParser parser = factory.createJsonParser(POLYMORPHIC_SELF_REFERENCING);
+    PolymorphicSelfReferencing p = parser.parse(PolymorphicSelfReferencing.class);
+    assertEquals(PolymorphicSelfReferencing.class, p.getClass());
+    assertEquals(POLYMORPHIC_SELF_REFERENCING, factory.toString(p));
+    assertEquals("self", p.type);
+    assertEquals("blah", p.info);
+  }
+
+  public static class HumanWithPets extends Human {
+    @Key
+    Map<String, Animal> pets;
+  }
+
+  public static final String HUMAN_WITH_PETS = "{\"bestFriend\":" + DOG
+      + ",\"legCount\":2,\"name\":\"Joe\",\"pets\":{\"first\":" + CENTIPEDE
+      + ",\"second\":{\"type\":\"dog\"}},\"type\":\"human with pets\",\"unused\":\"foo\"}";
+
+  public static final String HUMAN_WITH_PETS_PARSED = "{\"bestFriend\":" + DOG
+      + ",\"legCount\":2,\"name\":\"Joe\",\"pets\":{\"first\":" + CENTIPEDE
+      + ",\"second\":{\"legCount\":0,\"tricksKnown\":0,\"type\":\"dog\"}},"
+      + "\"type\":\"human with pets\"}";
+
+  public void testParser_polymorphicClass_mapOfPolymorphicClasses() throws Exception {
+    JsonFactory factory = newFactory();
+    JsonParser parser = factory.createJsonParser(HUMAN_WITH_PETS);
+    Animal human = parser.parse(Animal.class);
+    assertEquals(HumanWithPets.class, human.getClass());
+    assertEquals(HUMAN_WITH_PETS_PARSED, factory.toString(human));
+    assertEquals(2, human.numberOfLegs);
+    assertEquals("human with pets", human.type);
+    HumanWithPets humanWithPets = (HumanWithPets) human;
+    assertEquals("Fido", humanWithPets.bestFriend.name);
+    assertEquals(3, humanWithPets.bestFriend.tricksKnown);
+    assertEquals("Mr. Icky", humanWithPets.pets.get("first").name);
+    assertEquals("bug", humanWithPets.pets.get("first").type);
+    assertEquals(68, humanWithPets.pets.get("first").numberOfLegs);
+    assertEquals("green", ((Centipede) humanWithPets.pets.get("first")).color);
+    assertEquals("dog", humanWithPets.pets.get("second").type);
+    assertEquals(0, ((Dog) humanWithPets.pets.get("second")).tricksKnown);
+    assertEquals(2, humanWithPets.pets.size());
+  }
+
+
 }
