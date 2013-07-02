@@ -178,7 +178,9 @@ public class IOUtils {
     try {
       return (S) new ObjectInputStream(inputStream).readObject();
     } catch (ClassNotFoundException exception) {
-      throw new IOException("Failed to deserialize object", exception);
+      IOException ioe = new IOException("Failed to deserialize object");
+      ioe.initCause(exception);
+      throw ioe;
     } finally {
       inputStream.close();
     }

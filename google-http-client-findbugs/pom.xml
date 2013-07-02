@@ -23,6 +23,15 @@
           </execution>
         </executions>
       </plugin>
+      <!--The animal-sniffer plugin crashes on FindBugs on the icu4j:2.6.1
+          dependency-->
+      <plugin>
+         <groupId>org.codehaus.mojo</groupId>
+         <artifactId>animal-sniffer-maven-plugin</artifactId>
+         <configuration>
+           <skip>true</skip>
+         </configuration>
+      </plugin>
     </plugins>
   </build>
   <dependencies>
