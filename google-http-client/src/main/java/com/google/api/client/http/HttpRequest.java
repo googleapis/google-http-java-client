@@ -49,7 +49,7 @@ public final class HttpRequest {
    *
    * @since 1.8
    */
-  public static final String VERSION = "1.16.0-rc-SNAPSHOT";
+  public static final String VERSION = "1.17.0-rc-SNAPSHOT";
 
   /**
    * User agent suffix for all requests.
