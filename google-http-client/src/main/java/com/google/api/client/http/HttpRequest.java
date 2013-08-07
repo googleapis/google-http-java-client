@@ -968,7 +968,7 @@ public final class HttpRequest {
           response = new HttpResponse(this, lowLevelHttpResponse);
           responseConstructed = true;
         } finally {
-          if (!responseConstructed) {
+          if (!responseConstructed && lowLevelHttpResponse.getContent() != null) {
             lowLevelHttpResponse.getContent().close();
           }
         }

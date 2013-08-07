@@ -37,4 +37,24 @@ public class NetHttpResponseTest extends TestCase {
     assertEquals(expectedCode, new NetHttpResponse(
         new MockHttpURLConnection(null).setResponseCode(responseCode)).getStatusCode());
   }
+
+  public void testGetContent() throws IOException {
+    subtestGetContent(0);
+    subtestGetContent(200);
+    subtestGetContent(304);
+    subtestGetContent(307);
+    subtestGetContent(404);
+    subtestGetContent(503);
+  }
+
+  public void subtestGetContent(int responseCode) throws IOException {
+    NetHttpResponse response =
+        new NetHttpResponse(new MockHttpURLConnection(null).setResponseCode(responseCode));
+    int bytes = response.getContent().read(new byte[100]);
+    if (responseCode < 400) {
+      assertEquals(MockHttpURLConnection.INPUT_BUF.length, bytes);
+    } else {
+      assertEquals(MockHttpURLConnection.ERROR_BUF.length, bytes);
+    }
+  }
 }

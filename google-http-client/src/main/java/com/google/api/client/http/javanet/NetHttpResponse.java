@@ -14,7 +14,6 @@
 
 package com.google.api.client.http.javanet;
 
-import com.google.api.client.http.HttpStatusCodes;
 import com.google.api.client.http.LowLevelHttpResponse;
 
 import java.io.IOException;
@@ -57,11 +56,34 @@ final class NetHttpResponse extends LowLevelHttpResponse {
     return responseCode;
   }
 
+  /**
+   * {@inheritDoc}
+   *
+   * <p>
+   * Returns {@link HttpURLConnection#getInputStream} when it doesn't throw {@link IOException},
+   * otherwise it returns {@link HttpURLConnection#getErrorStream}.
+   * </p>
+   *
+   * <p>
+   * Upgrade warning: in prior version 1.15 {@link #getContent()} returned
+   * {@link HttpURLConnection#getInputStream} only when the status code was successful. Starting
+   * with version 1.16 it returns {@link HttpURLConnection#getInputStream} when it doesn't throw
+   * {@link IOException}, otherwise it returns {@link HttpURLConnection#getErrorStream}
+   * </p>
+   */
   @Override
   public InputStream getContent() throws IOException {
-    HttpURLConnection connection = this.connection;
-    return HttpStatusCodes.isSuccess(responseCode)
-        ? connection.getInputStream() : connection.getErrorStream();
+    try {
+      return connection.getInputStream();
+    } catch (IOException ioe) {
+      InputStream stream = connection.getErrorStream();
+      // if the stream is not null then the error was set on the error stream, otherwise we should
+      // just rethrow the I/O exception.
+      if (stream == null) {
+        throw ioe;
+      }
+      return stream;
+    }
   }
 
   @Override

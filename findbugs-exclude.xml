@@ -78,4 +78,9 @@
     <Bug pattern="BETA_CLASS_USAGE,BETA_METHOD_USAGE"/>
     <Class name="com.google.api.client.http.HttpRequest"/>
   </And>
+  <And>
+    <Bug pattern="MS_PKGPROTECT"/>
+    <!-- Field should be package protected -->
+    <Class name="com.google.api.client.testing.http.javanet.MockHttpURLConnection"/>
+  </And>
 </FindBugsFilter>

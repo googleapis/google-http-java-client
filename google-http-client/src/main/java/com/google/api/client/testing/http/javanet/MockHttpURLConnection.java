@@ -17,8 +17,10 @@ package com.google.api.client.testing.http.javanet;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -46,6 +48,24 @@ public class MockHttpURLConnection extends HttpURLConnection {
    * {@link #getOutputStream()} is called.
    */
   private OutputStream outputStream = new ByteArrayOutputStream(0);
+
+  /**
+   * The input byte array which represents the content when the status code is less then
+   * {@code 400}.
+   */
+  public static final byte[] INPUT_BUF = new byte[1];
+
+  /**
+   * The error byte array which represents the content when the status code is greater or equal to
+   * {@code 400}.
+   */
+  public static final byte[] ERROR_BUF = new byte[5];
+
+  /** The input stream. */
+  private InputStream inputStream = new ByteArrayInputStream(INPUT_BUF);
+
+  /** The error stream. */
+  private InputStream errorStream = new ByteArrayInputStream(ERROR_BUF);
 
   /**
    * @param u the URL or {@code null} for none
@@ -108,5 +128,18 @@ public class MockHttpURLConnection extends HttpURLConnection {
     Preconditions.checkArgument(responseCode >= -1);
     this.responseCode = responseCode;
     return this;
+  }
+
+  @Override
+  public InputStream getInputStream() throws IOException {
+    if (responseCode < 400) {
+      return inputStream;
+    }
+    throw new IOException();
+  }
+
+  @Override
+  public InputStream getErrorStream() {
+    return errorStream;
   }
 }
