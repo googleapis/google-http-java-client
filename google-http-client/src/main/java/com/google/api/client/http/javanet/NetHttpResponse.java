@@ -65,9 +65,9 @@ final class NetHttpResponse extends LowLevelHttpResponse {
    * </p>
    *
    * <p>
-   * Upgrade warning: in prior version 1.15 {@link #getContent()} returned
+   * Upgrade warning: in prior version 1.16 {@link #getContent()} returned
    * {@link HttpURLConnection#getInputStream} only when the status code was successful. Starting
-   * with version 1.16 it returns {@link HttpURLConnection#getInputStream} when it doesn't throw
+   * with version 1.17 it returns {@link HttpURLConnection#getInputStream} when it doesn't throw
    * {@link IOException}, otherwise it returns {@link HttpURLConnection#getErrorStream}
    * </p>
    */
