@@ -5,6 +5,7 @@
 	<classpathentry kind="lib" path="libs/google-http-client-gson-${project.version}.jar" sourcepath="libs-sources/google-http-client-gson-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-http-client-jackson-${project.version}.jar" sourcepath="libs-sources/google-http-client-jackson-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/google-http-client-jackson2-${project.version}.jar" sourcepath="libs-sources/google-http-client-jackson2-${project.version}-sources.jar"/>
+	<classpathentry kind="lib" path="libs/google-http-client-jdo-${project.version}.jar" sourcepath="libs-sources/google-http-client-jdo-${project.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/commons-logging-${project.commons-logging.version}.jar" sourcepath="libs-sources/commons-logging-${project.commons-logging.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/gson-${project.gson.version}.jar" sourcepath="libs-sources/gson-${project.gson.version}-sources.jar"/>
 	<classpathentry kind="lib" path="libs/httpclient-${project.httpclient.version}.jar" sourcepath="libs-sources/httpclient-${project.httpclient.version}-sources.jar"/>

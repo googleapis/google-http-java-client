@@ -476,7 +476,7 @@
                 </group>
                 <group>
                   <title>google-http-client-protobuf</title>
-                  <packages>com.google.api.client.protobuf*</packages>
+                  <packages>com.google.api.client.protobuf*:com.google.api.client.http.protobuf*</packages>
                 </group>
                 <group>
                   <title>google-http-client-gson</title>
@@ -492,7 +492,7 @@
                 </group>
                 <group>
                   <title>google-http-client-jdo</title>
-                  <packages>com.google.api.client.json.jdo.*</packages>
+                  <packages>com.google.api.client.extensions.jdo*</packages>
                 </group>
               </groups>
               <windowtitle>google-http-java-client ${project.version}</windowtitle>
