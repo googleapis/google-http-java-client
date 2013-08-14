@@ -45,6 +45,10 @@
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-jdo</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-xml</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

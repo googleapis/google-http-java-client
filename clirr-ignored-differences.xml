@@ -4,6 +4,10 @@
   <!-- 8001 (Class removed): className -->
   <difference>
     <differenceType>8001</differenceType>
+    <className>com/google/api/client/**/xml/**</className>
+  </difference>
+  <difference>
+    <differenceType>8001</differenceType>
     <className>com/google/api/client/repackaged/**</className>
   </difference>
 </differences>

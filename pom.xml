@@ -81,6 +81,7 @@
     <module>google-http-client-jackson</module>
     <module>google-http-client-jackson2</module>
     <module>google-http-client-jdo</module>
+    <module>google-http-client-xml</module>
     <module>google-http-client-findbugs</module>
     <module>google-http-client-test</module>
   </modules>
@@ -195,6 +196,11 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-jdo</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-xml</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -464,7 +470,7 @@
               <groups>
                 <group>
                   <title>google-http-client</title>
-                  <packages>com.google.api.client.http*:com.google.api.client.json*:com.google.api.client.testing*:com.google.api.client.util*:com.google.api.client.xml*</packages>
+                  <packages>com.google.api.client.http*:com.google.api.client.json*:com.google.api.client.testing*:com.google.api.client.util*</packages>
                 </group>
                 <group>
                   <title>google-http-client-appengine</title>
@@ -493,6 +499,10 @@
                 <group>
                   <title>google-http-client-jdo</title>
                   <packages>com.google.api.client.extensions.jdo*</packages>
+                </group>
+                <group>
+                  <title>google-http-client-xml</title>
+                  <packages>com.google.api.client.xml*:com.google.api.client.http.xml*</packages>
                 </group>
               </groups>
               <windowtitle>google-http-java-client ${project.version}</windowtitle>

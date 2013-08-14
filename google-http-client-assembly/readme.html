@@ -46,6 +46,8 @@
       href='dependencies/google-http-client-jackson2-dependencies.html'>google-http-client-jackson2-dependencies.html</a></li>
     <li>google-http-client-jdo: <a
       href='dependencies/google-http-client-jdo-dependencies.html'>google-http-client-jdo-dependencies.html</a></li>
+    <li>google-http-client-xml: <a
+      href='dependencies/google-http-client-xml-dependencies.html'>google-http-client-xml-dependencies.html</a></li>
   </ul>
 
   <h3>Maven Usage</h3>
@@ -106,6 +108,11 @@
       </ul>
     </li>
     <li>jdo2-api-${project.jdo2-api.version}.jar (when using JDO)</li>
+    <li>google-http-client-xml-${project.version}.jar (when using XML)
+      <ul>
+        <li>xpp3-${project.xpp3.version}.jar (when NOT on Android)</li>
+      </ul>
+    </li>
   </ul>
 
   <h3>Android Dependencies</h3>
@@ -128,7 +135,6 @@
   a newer compatible version:
   <ul>
     <li>google-http-client-appengine-${project.version}.jar</li>
-    <li>xpp3-${project.xpp3.version}.jar</li>
   </ul>
   Please see the
   <a
@@ -143,7 +149,6 @@
     <li>commons-logging-${project.commons-logging.version}.jar</li>
     <li>httpclient-${project.httpclient.version}.jar</li>
     <li>httpcore-${project.httpcore.version}.jar</li>
-    <li>xpp3-${project.xpp3.version}.jar</li>
   </ul>
 
 </body>
