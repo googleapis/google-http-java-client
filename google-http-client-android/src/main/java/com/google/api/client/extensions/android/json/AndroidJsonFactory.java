@@ -54,6 +54,20 @@ import java.nio.charset.Charset;
 @Beta
 public class AndroidJsonFactory extends JsonFactory {
 
+  /**
+   * Returns a global thread-safe instance.
+   *
+   * @since 1.17
+   */
+  public static AndroidJsonFactory getDefaultInstance() {
+    return InstanceHolder.INSTANCE;
+  }
+
+  /** Holder for the result of {@link #getDefaultInstance()}. */
+  static class InstanceHolder {
+    static final AndroidJsonFactory INSTANCE = new AndroidJsonFactory();
+  }
+
   // TODO(yanivi): figure out how to run unit tests based on Android platform
 
   public AndroidJsonFactory() {
