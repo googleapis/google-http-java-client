@@ -64,6 +64,7 @@ public class AndroidJsonFactory extends JsonFactory {
   }
 
   /** Holder for the result of {@link #getDefaultInstance()}. */
+  @Beta
   static class InstanceHolder {
     static final AndroidJsonFactory INSTANCE = new AndroidJsonFactory();
   }

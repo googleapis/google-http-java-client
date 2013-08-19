@@ -24,6 +24,7 @@ import com.google.api.client.util.StreamingContent;
 import com.google.api.client.util.StringUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -968,8 +969,11 @@ public final class HttpRequest {
           response = new HttpResponse(this, lowLevelHttpResponse);
           responseConstructed = true;
         } finally {
-          if (!responseConstructed && lowLevelHttpResponse.getContent() != null) {
-            lowLevelHttpResponse.getContent().close();
+          if (!responseConstructed) {
+            InputStream lowLevelContent = lowLevelHttpResponse.getContent();
+            if (lowLevelContent != null) {
+              lowLevelContent.close();
+            }
           }
         }
       } catch (IOException e) {
