@@ -16,6 +16,7 @@ package com.google.api.client.extensions.appengine.http;
 
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.appengine.api.urlfetch.FetchOptions;
 import com.google.appengine.api.urlfetch.HTTPMethod;
@@ -86,6 +87,23 @@ public final class UrlFetchTransport extends HttpTransport {
    */
   UrlFetchTransport(Builder builder) {
     certificateValidationBehavior = builder.certificateValidationBehavior;
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Returns a global thread-safe instance.
+   *
+   * @since 1.17
+   */
+  @Beta
+  public static UrlFetchTransport getDefaultInstance() {
+    return InstanceHolder.INSTANCE;
+  }
+
+  /** Holder for the result of {@link #getDefaultInstance()}. */
+  @Beta
+  static class InstanceHolder {
+    static final UrlFetchTransport INSTANCE = new UrlFetchTransport();
   }
 
   @Override
