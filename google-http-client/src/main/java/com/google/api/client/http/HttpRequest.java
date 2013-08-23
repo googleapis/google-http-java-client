@@ -1102,6 +1102,12 @@ public final class HttpRequest {
    * {@code "If-*"} request headers.
    * </p>
    *
+   * <p>
+   * Upgrade warning: When handling a status code of 303, {@link #handleRedirect(int, HttpHeaders)}
+   * now correctly removes any content from the body of the new request, as GET requests should not
+   * have content. It did not do this in prior version 1.16.
+   * </p>
+   *
    * @return whether the redirect was successful
    * @since 1.11
    */
@@ -1114,6 +1120,8 @@ public final class HttpRequest {
       // on 303 change method to GET
       if (statusCode == HttpStatusCodes.STATUS_CODE_SEE_OTHER) {
         setRequestMethod(HttpMethods.GET);
+        // GET requests do not support non-zero content length
+        setContent(null);
       }
       // remove Authorization and If-* headers
       headers.setAuthorization((String) null);

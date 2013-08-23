@@ -19,10 +19,10 @@ import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockHttpUnsuccessfulResponseHandler;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
+import com.google.api.client.testing.util.LogRecordingHandler;
 import com.google.api.client.testing.util.MockBackOff;
 import com.google.api.client.testing.util.MockSleeper;
 import com.google.api.client.util.BackOff;
-import com.google.api.client.testing.util.LogRecordingHandler;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.LoggingStreamingContent;
 import com.google.api.client.util.StringUtils;
@@ -319,6 +319,8 @@ public class HttpRequestTest extends TestCase {
     Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
     // Assert that the method in the request was changed to a GET due to the 303.
     Assert.assertEquals(HttpMethods.GET, request.getRequestMethod());
+    // Assert that the content is null, since GET requests don't support non-zero content-length
+    Assert.assertNull(request.getContent());
   }
 
   public void testInfiniteRedirects() throws Exception {
