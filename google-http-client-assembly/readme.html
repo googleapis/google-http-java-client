@@ -95,19 +95,24 @@
         <li>gson-${project.gson.version}.jar</li>
       </ul>
     </li>
-    <li>google-http-client-jackson-${project.version}.jar (when using
-      Jackson)
-      <ul>
-        <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
-      </ul>
-    </li>
     <li>google-http-client-jackson2-${project.version}.jar (when using
       Jackson 2)
       <ul>
         <li>jackson-core-${project.jackson-core2.version}.jar</li>
       </ul>
     </li>
-    <li>jdo2-api-${project.jdo2-api.version}.jar (when using JDO)</li>
+      <li>google-http-client-jackson-${project.version}.jar (for backwards
+        compatability when using Jackson 1)
+        <ul>
+          <li>jackson-core-asl-${project.jackson-core-asl.version}.jar</li>
+        </ul>
+      </li>
+    </li>
+    <li>google-http-client-jdo-${project.version}.jar (when using JDO)
+      <ul>
+        <li>jdo2-api-${project.jdo2-api.version}.jar</li>
+      </ul>
+    </li>
     <li>google-http-client-xml-${project.version}.jar (when using XML)
       <ul>
         <li>xpp3-${project.xpp3.version}.jar (when NOT on Android)</li>
