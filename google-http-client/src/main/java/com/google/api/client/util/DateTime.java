@@ -263,7 +263,7 @@ public final class DateTime implements Serializable {
   }
 
   /**
-   * Parses an RFC 3339 date/time value.
+   * Parses an RFC3339 date/time value.
    *
    * <p>
    * Upgrade warning: in prior version 1.17, this method required milliseconds to be exactly 3
