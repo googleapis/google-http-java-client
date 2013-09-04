@@ -20,6 +20,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Immutable representation of a date with an optional time and an optional time zone based on <a
@@ -37,6 +39,12 @@ public final class DateTime implements Serializable {
   private static final long serialVersionUID = 1L;
 
   private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
+
+  /** Regular expression for parsing RFC3339 date/times. */
+  private static final Pattern RFC3339_PATTERN = Pattern.compile(
+      "^(\\d{4})-(\\d{2})-(\\d{2})" // yyyy-MM-dd
+      + "([Tt](\\d{2}):(\\d{2}):(\\d{2})(\\.\\d+)?)?" // 'T'HH:mm:ss.milliseconds
+      + "([Zz]|([+-])(\\d{2}):(\\d{2}))?"); // 'Z' or time zone shift HH:mm following '+' or '-'
 
   /**
    * Date/time value expressed as the number of ms since the Unix epoch.
@@ -123,12 +131,22 @@ public final class DateTime implements Serializable {
    * Instantiates {@link DateTime} from an <a href='http://tools.ietf.org/html/rfc3339'>RFC 3339</a>
    * date/time value.
    *
+   * <p>
+   * Upgrade warning: in prior version 1.17, this method required milliseconds to be exactly 3
+   * digits (if included), and did not throw an exception for all types of invalid input values, but
+   * starting in version 1.18, the parsing done by this method has become more strict to enforce
+   * that only valid RFC3339 strings are entered, and if not, it throws a
+   * {@link NumberFormatException}. Also, in accordance with the RFC3339 standard, any number of
+   * milliseconds digits is now allowed.
+   * </p>
+   *
    * @param value an <a href='http://tools.ietf.org/html/rfc3339'>RFC 3339</a> date/time value.
    * @since 1.11
    */
   public DateTime(String value) {
-    // TODO(rmistry): Move the implementation of parseRfc3339 into this constructor. Implementation
-    // of parseRfc3339 can then do "return new DateTime(str);".
+    // Note, the following refactoring is being considered: Move the implementation of parseRfc3339
+    // into this constructor. Implementation of parseRfc3339 can then do
+    // "return new DateTime(str);".
     DateTime dateTime = parseRfc3339(value);
     this.dateOnly = dateTime.dateOnly;
     this.value = dateTime.value;
@@ -248,58 +266,75 @@ public final class DateTime implements Serializable {
    * Parses an RFC 3339 date/time value.
    *
    * <p>
+   * Upgrade warning: in prior version 1.17, this method required milliseconds to be exactly 3
+   * digits (if included), and did not throw an exception for all types of invalid input values, but
+   * starting in version 1.18, the parsing done by this method has become more strict to enforce
+   * that only valid RFC3339 strings are entered, and if not, it throws a
+   * {@link NumberFormatException}. Also, in accordance with the RFC3339 standard, any number of
+   * milliseconds digits is now allowed.
+   * </p>
+   *
+   * <p>
    * For the date-only case, the time zone is ignored and the hourOfDay, minute, second, and
    * millisecond parameters are set to zero.
    * </p>
+   *
+   * @param str Date/time string in RFC3339 format
+   * @throws NumberFormatException if {@code str} doesn't match the RFC3339 standard format; an
+   *         exception is thrown if {@code str} doesn't match {@code RFC3339_REGEX} or if it
+   *         contains a time zone shift but no time.
    */
   public static DateTime parseRfc3339(String str) throws NumberFormatException {
-    try {
-      int year = Integer.parseInt(str.substring(0, 4));
-      int month = Integer.parseInt(str.substring(5, 7)) - 1;
-      int day = Integer.parseInt(str.substring(8, 10));
-      int tzIndex;
-      int length = str.length();
-      boolean dateOnly = length <= 10 || Character.toUpperCase(str.charAt(10)) != 'T';
-      int hourOfDay = 0;
-      int minute = 0;
-      int second = 0;
-      int milliseconds = 0;
-      Integer tzShiftInteger = null;
-      if (dateOnly) {
-        tzIndex = Integer.MAX_VALUE;
-      } else {
-        hourOfDay = Integer.parseInt(str.substring(11, 13));
-        minute = Integer.parseInt(str.substring(14, 16));
-        second = Integer.parseInt(str.substring(17, 19));
-        if (str.charAt(19) == '.') {
-          milliseconds = Integer.parseInt(str.substring(20, 23));
-          tzIndex = 23;
-        } else {
-          tzIndex = 19;
-        }
-      }
-      Calendar dateTime = new GregorianCalendar(GMT);
-      dateTime.set(year, month, day, hourOfDay, minute, second);
-      dateTime.set(Calendar.MILLISECOND, milliseconds);
-      long value = dateTime.getTimeInMillis();
-      if (length > tzIndex) {
-        int tzShift;
-        if (Character.toUpperCase(str.charAt(tzIndex)) == 'Z') {
-          tzShift = 0;
-        } else {
-          tzShift = Integer.parseInt(str.substring(tzIndex + 1, tzIndex + 3)) * 60
-              + Integer.parseInt(str.substring(tzIndex + 4, tzIndex + 6));
-          if (str.charAt(tzIndex) == '-') {
-            tzShift = -tzShift;
-          }
-          value -= tzShift * 60000L;
-        }
-        tzShiftInteger = tzShift;
-      }
-      return new DateTime(dateOnly, value, tzShiftInteger);
-    } catch (StringIndexOutOfBoundsException e) {
+    Matcher matcher = RFC3339_PATTERN.matcher(str);
+    if (!matcher.matches()) {
       throw new NumberFormatException("Invalid date/time format: " + str);
     }
+
+    int year = Integer.parseInt(matcher.group(1)); // yyyy
+    int month = Integer.parseInt(matcher.group(2)) - 1; // MM
+    int day = Integer.parseInt(matcher.group(3)); // dd
+    boolean isTimeGiven = matcher.group(4) != null; // 'T'HH:mm:ss.milliseconds
+    String tzShiftRegexGroup = matcher.group(9); // 'Z', or time zone shift HH:mm following '+'/'-'
+    boolean isTzShiftGiven = tzShiftRegexGroup != null;
+    int hourOfDay = 0;
+    int minute = 0;
+    int second = 0;
+    int milliseconds = 0;
+    Integer tzShiftInteger = null;
+
+    if (isTzShiftGiven && !isTimeGiven) {
+      throw new NumberFormatException("Invalid date/time format, cannot specify time zone shift" +
+            " without specifying time: " + str);
+    }
+
+    if (isTimeGiven) {
+      hourOfDay = Integer.parseInt(matcher.group(5)); // HH
+      minute = Integer.parseInt(matcher.group(6)); // mm
+      second = Integer.parseInt(matcher.group(7)); // ss
+      if (matcher.group(8) != null) { // contains .milliseconds?
+        milliseconds = Integer.parseInt(matcher.group(8).substring(1)); // milliseconds
+      }
+    }
+    Calendar dateTime = new GregorianCalendar(GMT);
+    dateTime.set(year, month, day, hourOfDay, minute, second);
+    dateTime.set(Calendar.MILLISECOND, milliseconds);
+    long value = dateTime.getTimeInMillis();
+
+    if (isTimeGiven && isTzShiftGiven) {
+      int tzShift;
+      if (Character.toUpperCase(tzShiftRegexGroup.charAt(0)) == 'Z') {
+        tzShift = 0;
+      } else {
+        tzShift = Integer.parseInt(matcher.group(11)) * 60 // time zone shift HH
+            + Integer.parseInt(matcher.group(12)); // time zone shift mm
+        if (matcher.group(10).charAt(0) == '-') { // time zone shift + or -
+          tzShift = -tzShift;
+        }
+        value -= tzShift * 60000L; // e.g. if 1 hour ahead of UTC, subtract an hour to get UTC time
+      }
+      tzShiftInteger = tzShift;
+    }
+    return new DateTime(!isTimeGiven, value, tzShiftInteger);
   }
 
   /** Appends a zero-padded number to a string builder. */

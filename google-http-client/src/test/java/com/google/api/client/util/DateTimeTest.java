@@ -26,11 +26,23 @@ import java.util.TimeZone;
  */
 public class DateTimeTest extends TestCase {
 
+  private TimeZone originalTimeZone;
+
   public DateTimeTest() {
   }
 
   public DateTimeTest(String testName) {
     super(testName);
+  }
+
+  @Override
+  protected void setUp() throws Exception {
+    originalTimeZone = TimeZone.getDefault();
+  }
+
+  @Override
+  protected void tearDown() throws Exception {
+    TimeZone.setDefault(originalTimeZone);
   }
 
   public void testToStringRfc3339() {
@@ -95,12 +107,20 @@ public class DateTimeTest extends TestCase {
   public void testParseRfc3339() {
     expectExceptionForParseRfc3339("");
     expectExceptionForParseRfc3339("abc");
+    expectExceptionForParseRfc3339("2013-01-01 09:00:02");
+    expectExceptionForParseRfc3339("2013-01-01T"); // missing time
+    expectExceptionForParseRfc3339("1937--3-55T12:00:27+00:20"); // invalid month
+    expectExceptionForParseRfc3339("2013-01-01Z"); // can't have time zone shift without time
+
     DateTime value = DateTime.parseRfc3339("2007-06-01");
     assertTrue(value.isDateOnly());
     value = DateTime.parseRfc3339("2007-06-01T10:11:30.057");
     assertFalse(value.isDateOnly());
     value = DateTime.parseRfc3339("2007-06-01T10:11:30Z");
     assertEquals(0, value.getValue() % 100);
+    value = DateTime.parseRfc3339("1997-01-01T12:00:27.87+00:20");
+    assertFalse(value.isDateOnly());
+    assertEquals(87, value.getValue() % 1000); // check milliseconds
 
     value = new DateTime("2007-06-01");
     assertTrue(value.isDateOnly());
@@ -108,6 +128,14 @@ public class DateTimeTest extends TestCase {
     assertFalse(value.isDateOnly());
     value = new DateTime("2007-06-01T10:11:30Z");
     assertEquals(0, value.getValue() % 100);
+
+    // From the RFC3339 Standard
+    assertEquals(DateTime.parseRfc3339("1996-12-19T16:39:57-08:00").getValue(),
+        DateTime.parseRfc3339("1996-12-20T00:39:57Z").getValue()); // from Section 5.8 Examples
+    assertEquals(DateTime.parseRfc3339("1990-12-31T23:59:60Z").getValue(),
+        DateTime.parseRfc3339("1990-12-31T15:59:60-08:00").getValue()); // from Section 5.8 Examples
+    assertEquals(DateTime.parseRfc3339("2007-06-01t18:50:00-04:00").getValue(),
+        DateTime.parseRfc3339("2007-06-01t22:50:00Z").getValue()); // from Section 4.2 Local Offsets
   }
 
   private void expectExceptionForParseRfc3339(String input) {
