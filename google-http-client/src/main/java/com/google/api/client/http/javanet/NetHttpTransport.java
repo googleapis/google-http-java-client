@@ -91,6 +91,23 @@ public final class NetHttpTransport extends HttpTransport {
   private final HostnameVerifier hostnameVerifier;
 
   /**
+   * {@link Beta} <br/>
+   * Returns a global thread-safe instance.
+   *
+   * @since 1.18
+   */
+  @Beta
+  public static NetHttpTransport getDefaultInstance() {
+    return InstanceHolder.INSTANCE;
+  }
+
+  /** Holder for the result of {@link #getDefaultInstance()}. */
+  @Beta
+  static class InstanceHolder {
+    static final NetHttpTransport INSTANCE = new NetHttpTransport();
+  }
+
+  /**
    * Constructor with the default behavior.
    *
    * <p>
