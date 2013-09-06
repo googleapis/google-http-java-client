@@ -76,13 +76,7 @@ final class NetHttpResponse extends LowLevelHttpResponse {
     try {
       return connection.getInputStream();
     } catch (IOException ioe) {
-      InputStream stream = connection.getErrorStream();
-      // if the stream is not null then the error was set on the error stream, otherwise we should
-      // just rethrow the I/O exception.
-      if (stream == null) {
-        throw ioe;
-      }
-      return stream;
+      return connection.getErrorStream();
     }
   }
 

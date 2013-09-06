@@ -50,7 +50,7 @@ public final class HttpRequest {
    *
    * @since 1.8
    */
-  public static final String VERSION = "1.17.0-rc-SNAPSHOT";
+  public static final String VERSION = "1.18.0-rc-SNAPSHOT";
 
   /**
    * User agent suffix for all requests.
@@ -301,7 +301,7 @@ public final class HttpRequest {
    * Returns the {@link BackOffPolicy} to use between retry attempts or {@code null} for none.
    *
    * @since 1.7
-   * @deprecated (scheduled to be removed in 1.17).
+   * @deprecated (scheduled to be removed in 1.18).
    *             {@link #setUnsuccessfulResponseHandler(HttpUnsuccessfulResponseHandler)} with a new
    *             {@link HttpBackOffUnsuccessfulResponseHandler} instead.
    */
@@ -316,7 +316,7 @@ public final class HttpRequest {
    * Sets the {@link BackOffPolicy} to use between retry attempts or {@code null} for none.
    *
    * @since 1.7
-   * @deprecated (scheduled to be removed in 1.17). Use
+   * @deprecated (scheduled to be removed in 1.18). Use
    *             {@link #setUnsuccessfulResponseHandler(HttpUnsuccessfulResponseHandler)} with a new
    *             {@link HttpBackOffUnsuccessfulResponseHandler} instead.
    */
@@ -736,7 +736,7 @@ public final class HttpRequest {
    * {@link LowLevelHttpRequest#execute()}.
    *
    * @since 1.9
-   * @deprecated (scheduled to be removed in 1.17) Use
+   * @deprecated (scheduled to be removed in 1.18) Use
    *             {@link #setIOExceptionHandler(HttpIOExceptionHandler)} instead.
    */
   @Deprecated
@@ -755,7 +755,7 @@ public final class HttpRequest {
    * </p>
    *
    * @since 1.9
-   * @deprecated (scheduled to be removed in 1.17) Use
+   * @deprecated (scheduled to be removed in 1.18) Use
    *             {@link #setIOExceptionHandler(HttpIOExceptionHandler)} instead.
    */
   @Deprecated
@@ -1102,6 +1102,12 @@ public final class HttpRequest {
    * {@code "If-*"} request headers.
    * </p>
    *
+   * <p>
+   * Upgrade warning: When handling a status code of 303, {@link #handleRedirect(int, HttpHeaders)}
+   * now correctly removes any content from the body of the new request, as GET requests should not
+   * have content. It did not do this in prior version 1.16.
+   * </p>
+   *
    * @return whether the redirect was successful
    * @since 1.11
    */
@@ -1114,6 +1120,8 @@ public final class HttpRequest {
       // on 303 change method to GET
       if (statusCode == HttpStatusCodes.STATUS_CODE_SEE_OTHER) {
         setRequestMethod(HttpMethods.GET);
+        // GET requests do not support non-zero content length
+        setContent(null);
       }
       // remove Authorization and If-* headers
       headers.setAuthorization((String) null);
