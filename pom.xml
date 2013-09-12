@@ -472,6 +472,7 @@
               </links>
               <doctitle>Google HTTP Client Library for Java ${project.version}</doctitle>
               <excludePackageNames>com.google.api.client.findbugs:com.google.api.client.test</excludePackageNames>
+              <overview>${basedir}/overview.html</overview>
               <groups>
                 <group>
                   <title>google-http-client</title>
