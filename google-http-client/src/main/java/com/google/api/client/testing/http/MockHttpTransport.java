@@ -41,6 +41,13 @@ public class MockHttpTransport extends HttpTransport {
   /** Supported HTTP methods or {@code null} to specify that all methods are supported. */
   private Set<String> supportedMethods;
 
+  /**
+   * The {@link MockLowLevelHttpRequest} to be returned by {@link #buildRequest}. If
+   * this field is {@code null}, {@link #buildRequest} will create a new instance
+   * from its arguments.
+   * */
+  private MockLowLevelHttpRequest lowLevelHttpRequest;
+
   public MockHttpTransport() {
   }
 
@@ -51,6 +58,7 @@ public class MockHttpTransport extends HttpTransport {
    */
   protected MockHttpTransport(Builder builder) {
     supportedMethods = builder.supportedMethods;
+    lowLevelHttpRequest = builder.lowLevelHttpRequest;
   }
 
   @Override
@@ -61,7 +69,9 @@ public class MockHttpTransport extends HttpTransport {
   @Override
   public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
     Preconditions.checkArgument(supportsMethod(method), "HTTP method %s not supported", method);
-    return new MockLowLevelHttpRequest(url);
+    return lowLevelHttpRequest == null
+        ? new MockLowLevelHttpRequest(url)
+        : lowLevelHttpRequest;
   }
 
   /**
@@ -70,6 +80,16 @@ public class MockHttpTransport extends HttpTransport {
    */
   public final Set<String> getSupportedMethods() {
     return supportedMethods == null ? null : Collections.unmodifiableSet(supportedMethods);
+  }
+
+  /**
+   * Returns the {@link MockLowLevelHttpRequest} that is associated with this {@link Builder},
+   * or {@code null} if no such instance exists.
+   *
+   * @since 1.18
+   */
+  public final MockLowLevelHttpRequest getLowLevelHttpRequest() {
+    return lowLevelHttpRequest;
   }
 
   /**
@@ -97,6 +117,13 @@ public class MockHttpTransport extends HttpTransport {
     /** Supported HTTP methods or {@code null} to specify that all methods are supported. */
     Set<String> supportedMethods;
 
+    /**
+     * The {@link MockLowLevelHttpRequest} to be returned by {@link #buildRequest}. If
+     * this field is {@code null}, {@link #buildRequest} will create a new instance
+     * from its arguments.
+     * */
+    MockLowLevelHttpRequest lowLevelHttpRequest;
+
     protected Builder() {
     }
 
@@ -118,6 +145,28 @@ public class MockHttpTransport extends HttpTransport {
     public final Builder setSupportedMethods(Set<String> supportedMethods) {
       this.supportedMethods = supportedMethods;
       return this;
+    }
+
+    /**
+     * Sets the {@link MockLowLevelHttpRequest} that will be returned by {@link #buildRequest}, if
+     * non-{@code null}. If {@code null}, {@link #buildRequest} will create a new
+     * {@link MockLowLevelHttpRequest} arguments.
+     *
+     * @since 1.18
+     */
+    public final Builder setLowLevelHttpRequest(MockLowLevelHttpRequest lowLevelHttpRequest) {
+      this.lowLevelHttpRequest = lowLevelHttpRequest;
+      return this;
+    }
+
+    /**
+     * Returns the {@link MockLowLevelHttpRequest} that is associated with this {@link Builder},
+     * or {@code null} if no such instance exists.
+     *
+     * @since 1.18
+     */
+    public final MockLowLevelHttpRequest getLowLevelHttpRequest() {
+      return lowLevelHttpRequest;
     }
   }
 }
