@@ -12,24 +12,25 @@
  * the License.
  */
 
-package com.google.api.client.http;
+package com.google.api.client.http.json;
 
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 
 /**
- * HTTP context which contains the transport layer, the Json factory and the user agent header which
- * are going to be used in the different requests.
+ * HTTP JSON context which contains the transport layer, the JSON factory and the user agent header
+ * which are going to be used in the different requests.
  *
- * @author ngmiceli@google.com (Nick Miceli)
- * @author peleyal@google.com (Eyal Peled)
+ * @author Nick Miceli
+ * @author Eyal Peled
  * @since 1.18
  */
-public interface HttpContext {
+public interface HttpJsonContext {
 
   /** Returns the transport layer. */
   HttpTransport getTransport();
 
-  /** Returns the Json factory. */
+  /** Returns the JSON factory. */
   JsonFactory getJsonFactory();
 
   /** Returns the user-agent header which is going to be used in every HTTP request. */

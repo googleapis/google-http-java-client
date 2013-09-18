@@ -104,7 +104,6 @@ public final class ApacheHttpTransport extends HttpTransport {
     static final ApacheHttpTransport INSTANCE = new ApacheHttpTransport();
   }
 
-
   /**
    * Constructor that uses {@link #newDefaultHttpClient()} for the Apache HTTP client.
    *
