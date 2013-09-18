@@ -88,6 +88,24 @@ public final class ApacheHttpTransport extends HttpTransport {
   private final HttpClient httpClient;
 
   /**
+   * {@link Beta} <br/>
+   * Returns a global thread-safe instance.
+   *
+   * @since 1.18
+   */
+  @Beta
+  public static ApacheHttpTransport getDefaultInstance() {
+    return InstanceHolder.INSTANCE;
+  }
+
+  /** Holder for the result of {@link #getDefaultInstance()}. */
+  @Beta
+  static class InstanceHolder {
+    static final ApacheHttpTransport INSTANCE = new ApacheHttpTransport();
+  }
+
+
+  /**
    * Constructor that uses {@link #newDefaultHttpClient()} for the Apache HTTP client.
    *
    * <p>

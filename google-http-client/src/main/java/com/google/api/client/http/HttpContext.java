@@ -17,15 +17,21 @@ package com.google.api.client.http;
 import com.google.api.client.json.JsonFactory;
 
 /**
- * @author ngmiceli@google.com (Your Name Here)
+ * HTTP context which contains the transport layer, the Json factory and the user agent header which
+ * are going to be used in the different requests.
  *
+ * @author ngmiceli@google.com (Nick Miceli)
+ * @author peleyal@google.com (Eyal Peled)
+ * @since 1.18
  */
-public interface ApplicationContext {
+public interface HttpContext {
 
+  /** Returns the transport layer. */
   HttpTransport getTransport();
 
+  /** Returns the Json factory. */
   JsonFactory getJsonFactory();
 
-  String getApplicationName();
-
+  /** Returns the user-agent header which is going to be used in every HTTP request. */
+  String getUserAgent();
 }
