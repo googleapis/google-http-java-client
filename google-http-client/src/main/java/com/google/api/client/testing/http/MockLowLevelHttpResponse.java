@@ -89,14 +89,42 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
    * @param stringContent content string or {@code null} for none
    */
   public MockLowLevelHttpResponse setContent(String stringContent) {
-    if (stringContent == null) {
-      content = null;
-      setContentLength(0);
-    } else {
-      byte[] bytes = StringUtils.getBytesUtf8(stringContent);
-      content = new TestableByteArrayInputStream(bytes);
-      setContentLength(bytes.length);
+    return stringContent == null
+        ? setZeroContent()
+        : setContent(StringUtils.getBytesUtf8(stringContent));
+  }
+
+  /**
+   * Sets the response content to the given byte array.
+   *
+   * @param byteContent content byte array, or {@code null} for none.
+   *
+   * <p>
+   * If the byte array is {@code null}, the method invokes {@link #setZeroContent}.
+   * Otherwise, {@code byteContent} is wrapped in a {@link TestableByteArrayInputStream}
+   * and becomes this {@link MockLowLevelHttpResponse}'s contents.
+   * </p>
+   *
+   * @since 1.18
+   */
+  public MockLowLevelHttpResponse setContent(byte[] byteContent) {
+    if (byteContent == null) {
+      return setZeroContent();
     }
+    content = new TestableByteArrayInputStream(byteContent);
+    setContentLength(byteContent.length);
+    return this;
+  }
+
+  /**
+   * Sets the content to {@code null} and the content length to 0. Note that
+   * the result will have a content length header whose value is 0.
+   *
+   * @since 1.18
+   */
+  public MockLowLevelHttpResponse setZeroContent() {
+    content = null;
+    setContentLength(0);
     return this;
   }
 
