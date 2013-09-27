@@ -99,14 +99,19 @@ public class GenericUrl extends GenericData {
    * </p>
    *
    * <p>
-   * Any {@link URISyntaxException} is wrapped in an {@link IllegalArgumentException}.
+   * Any {@link MalformedURLException} is wrapped in an {@link IllegalArgumentException}.
    * </p>
+   *
+   * <p>Upgrade warning: starting in version 1.18 this parses the encodedUrl using
+   * new URL(encodedUrl). In previous versions it used new URI(encodedUrl).
+   * In particular, this means that only a limited set of schemes are allowed such as "http" and
+   * "https", but that parsing is compliant with, at least, RFC 3986.</p>
    *
    * @param encodedUrl encoded URL, including any existing query parameters that should be parsed
    * @throws IllegalArgumentException if URL has a syntax error
    */
   public GenericUrl(String encodedUrl) {
-    this(toURI(encodedUrl));
+    this(parseURL(encodedUrl));
   }
 
   /**
@@ -408,11 +413,7 @@ public class GenericUrl extends GenericData {
    * @since 1.14
    */
   public final URL toURL() {
-    try {
-      return new URL(build());
-    } catch (MalformedURLException e) {
-      throw new IllegalArgumentException(e);
-    }
+    return parseURL(build());
   }
 
   /**
@@ -616,6 +617,24 @@ public class GenericUrl extends GenericData {
     try {
       return new URI(encodedUrl);
     } catch (URISyntaxException e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
+
+  /**
+   * Returns the URI for the given encoded URL.
+   *
+   * <p>
+   * Any {@link MalformedURLException} is wrapped in an {@link IllegalArgumentException}.
+   * </p>
+   *
+   * @param encodedUrl encoded URL
+   * @return URL
+   */
+  private static URL parseURL(String encodedUrl) {
+    try {
+      return new URL(encodedUrl);
+    } catch (MalformedURLException e) {
       throw new IllegalArgumentException(e);
     }
   }
