@@ -22,6 +22,7 @@ import com.google.common.collect.Sets;
 import junit.framework.TestCase;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -54,6 +55,11 @@ public abstract class AbstractDataStoreFactoryTest extends TestCase {
     assertTrue(stringTyped.values().isEmpty());
     boolTyped.clear();
     assertTrue(boolTyped.values().isEmpty());
+  }
+
+  private static void assertContentsAnyOrder(Collection<?> c, Object... elts) {
+    assertEquals(Sets.newHashSet(c),
+                 Sets.newHashSet(Arrays.asList(elts)));
   }
 
   public void testId() throws Exception {
@@ -127,7 +133,7 @@ public abstract class AbstractDataStoreFactoryTest extends TestCase {
     stringTyped.set("k", "new");
     stringTyped.set("k2", "other");
     // check values
-    assertEquals(Arrays.asList("new", "other"), stringTyped.values());
+    assertContentsAnyOrder(stringTyped.values(), "new", "other");
     // delete one
     stringTyped.delete("k");
     assertNull(stringTyped.get("k"));

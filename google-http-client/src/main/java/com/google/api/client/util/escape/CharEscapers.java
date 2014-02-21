@@ -31,6 +31,9 @@ public final class CharEscapers {
   private static final Escaper URI_PATH_ESCAPER =
       new PercentEscaper(PercentEscaper.SAFEPATHCHARS_URLENCODER, false);
 
+  private static final Escaper URI_RESERVED_ESCAPER =
+      new PercentEscaper(PercentEscaper.SAFE_PLUS_RESERVED_CHARS_URLENCODER, false);
+
   private static final Escaper URI_USERINFO_ESCAPER =
       new PercentEscaper(PercentEscaper.SAFEUSERINFOCHARS_URLENCODER, false);
 
@@ -122,6 +125,15 @@ public final class CharEscapers {
    */
   public static String escapeUriPath(String value) {
     return URI_PATH_ESCAPER.escape(value);
+  }
+
+  /**
+   * Escapes a URI path but retains all reserved characters, including all general delimiters.
+   * That is the same as {@link #escapeUriPath(String)} except that it keeps '?', '+', and '/'
+   * unescaped.
+   */
+  public static String escapeUriPathWithoutReserved(String value) {
+    return URI_RESERVED_ESCAPER.escape(value);
   }
 
   /**

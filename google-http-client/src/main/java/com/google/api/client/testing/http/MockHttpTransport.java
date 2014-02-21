@@ -48,6 +48,14 @@ public class MockHttpTransport extends HttpTransport {
    * */
   private MockLowLevelHttpRequest lowLevelHttpRequest;
 
+  /**
+   * The {@link MockLowLevelHttpResponse} to be returned when this {@link MockHttpTransport}
+   * executes the associated request. Note that this field is ignored if the caller provided
+   * a non-{@code null} {@link MockLowLevelHttpRequest} with this {@link MockHttpTransport}
+   * was built.
+   */
+  private MockLowLevelHttpResponse lowLevelHttpResponse;
+
   public MockHttpTransport() {
   }
 
@@ -59,6 +67,7 @@ public class MockHttpTransport extends HttpTransport {
   protected MockHttpTransport(Builder builder) {
     supportedMethods = builder.supportedMethods;
     lowLevelHttpRequest = builder.lowLevelHttpRequest;
+    lowLevelHttpResponse = builder.lowLevelHttpResponse;
   }
 
   @Override
@@ -69,9 +78,14 @@ public class MockHttpTransport extends HttpTransport {
   @Override
   public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
     Preconditions.checkArgument(supportsMethod(method), "HTTP method %s not supported", method);
-    return lowLevelHttpRequest == null
-        ? new MockLowLevelHttpRequest(url)
-        : lowLevelHttpRequest;
+    if (lowLevelHttpRequest != null) {
+      return lowLevelHttpRequest;
+    }
+    MockLowLevelHttpRequest request = new MockLowLevelHttpRequest(url);
+    if (lowLevelHttpResponse != null) {
+      request.setResponse(lowLevelHttpResponse);
+    }
+    return request;
   }
 
   /**
@@ -95,8 +109,13 @@ public class MockHttpTransport extends HttpTransport {
   /**
    * Returns an instance of a new builder.
    *
+   * <p>
+   * @deprecated (to be removed in the future) Use {@link Builder#Builder()} instead.
+   * </p>
+   *
    * @since 1.5
    */
+  @Deprecated
   public static Builder builder() {
     return new Builder();
   }
@@ -124,7 +143,20 @@ public class MockHttpTransport extends HttpTransport {
      * */
     MockLowLevelHttpRequest lowLevelHttpRequest;
 
-    protected Builder() {
+    /**
+     * The {@link MockLowLevelHttpResponse} that should be the result of the
+     * {@link MockLowLevelHttpRequest} to be returned by {@link #buildRequest}. Note
+     * that this field is ignored if the caller provides a {@link MockLowLevelHttpRequest}
+     * via {@link #setLowLevelHttpRequest}.
+     */
+    MockLowLevelHttpResponse lowLevelHttpResponse;
+
+    /**
+     * Constructs a new {@link Builder}. Note that this constructor was {@code protected}
+     * in version 1.17 and its predecessors, and was made {@code public} in version
+     * 1.18.
+     */
+    public Builder() {
     }
 
     /** Builds a new instance of {@link MockHttpTransport}. */
@@ -152,9 +184,14 @@ public class MockHttpTransport extends HttpTransport {
      * non-{@code null}. If {@code null}, {@link #buildRequest} will create a new
      * {@link MockLowLevelHttpRequest} arguments.
      *
+     * <p>Note that the user can set a low level HTTP Request only if a low level HTTP response
+     * has not been set on this instance.
+     *
      * @since 1.18
      */
     public final Builder setLowLevelHttpRequest(MockLowLevelHttpRequest lowLevelHttpRequest) {
+      Preconditions.checkState(lowLevelHttpResponse == null,
+          "Cannnot set a low level HTTP request when a low level HTTP response has been set.");
       this.lowLevelHttpRequest = lowLevelHttpRequest;
       return this;
     }
@@ -167,6 +204,36 @@ public class MockHttpTransport extends HttpTransport {
      */
     public final MockLowLevelHttpRequest getLowLevelHttpRequest() {
       return lowLevelHttpRequest;
+    }
+
+
+    /**
+     * Sets the {@link MockLowLevelHttpResponse} that will be the result when the
+     * {@link MockLowLevelHttpRequest} returned by {@link #buildRequest} is executed.
+     * Note that the response can be set only the caller has not provided a
+     * {@link MockLowLevelHttpRequest} via {@link #setLowLevelHttpRequest}.
+     *
+     * @throws IllegalStateException if the caller has already set a {@link LowLevelHttpRequest}
+     * in this instance
+     *
+     * @since 1.18
+     */
+    public final Builder setLowLevelHttpResponse(MockLowLevelHttpResponse lowLevelHttpResponse) {
+      Preconditions.checkState(lowLevelHttpRequest == null,
+          "Cannot set a low level HTTP response when a low level HTTP request has been set.");
+      this.lowLevelHttpResponse = lowLevelHttpResponse;
+      return this;
+    }
+
+
+    /**
+     * Returns the {@link MockLowLevelHttpResponse} that is associated with this {@link Builder},
+     * or {@code null} if no such instance exists.
+     *
+     * @since 1.18
+     */
+    MockLowLevelHttpResponse getLowLevelHttpResponse() {
+      return this.lowLevelHttpResponse;
     }
   }
 }

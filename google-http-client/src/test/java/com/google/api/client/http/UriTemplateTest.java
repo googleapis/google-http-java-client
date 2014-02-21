@@ -265,4 +265,14 @@ public class UriTemplateTest extends TestCase {
     assertEquals("http://test3/xyz/123/bar/", UriTemplate.expand("https://test/base/path/",
         "http://test3/{abc}/{def}/bar/", requestMap, true));
   }
+
+  public void testExpandNonReservedNonComposite() {
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
+    requestMap.put("abc", "xyz");
+    requestMap.put("def", "a/b?c");
+    assertEquals("foo/xyz/bar/a%2Fb%3Fc",
+        UriTemplate.expand("foo/{abc}/bar/{def}", requestMap, false));
+    assertEquals("foo/xyz/bar/a/b?c",
+        UriTemplate.expand("foo/{abc}/bar/{+def}", requestMap, false));
+  }
 }

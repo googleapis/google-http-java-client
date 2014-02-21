@@ -189,6 +189,10 @@ public class UriTemplate {
       }
       return encodedValue;
     }
+
+    boolean getReservedExpansion() {
+      return reservedExpansion;
+    }
   }
 
   static CompositeOutput getCompositeOutput(String propertyName) {
@@ -329,7 +333,11 @@ public class UriTemplate {
         value = getMapPropertyValue(varName, map, containsExplodeModifier, compositeOutput);
       } else {
         // For everything else...
-        value = CharEscapers.escapeUriPath(value.toString());
+        if (compositeOutput.getReservedExpansion()) {
+          value = CharEscapers.escapeUriPathWithoutReserved(value.toString());
+        } else {
+          value = CharEscapers.escapeUriPath(value.toString());
+        }
       }
       pathBuf.append(value);
     }
