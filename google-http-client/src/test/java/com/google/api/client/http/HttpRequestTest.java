@@ -85,7 +85,7 @@ public class HttpRequestTest extends TestCase {
     }
     for (String method : OTHER_METHODS) {
       transport =
-          MockHttpTransport.builder().setSupportedMethods(ImmutableSet.<String>of()).build();
+          new MockHttpTransport.Builder().setSupportedMethods(ImmutableSet.<String>of()).build();
       request = transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
       request.setRequestMethod(method);
       try {
@@ -93,7 +93,8 @@ public class HttpRequestTest extends TestCase {
         fail("expected IllegalArgumentException");
       } catch (IllegalArgumentException e) {
       }
-      transport = MockHttpTransport.builder().setSupportedMethods(ImmutableSet.of(method)).build();
+      transport =
+          new MockHttpTransport.Builder().setSupportedMethods(ImmutableSet.of(method)).build();
       request = transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
       request.setRequestMethod(method);
       request.execute();
