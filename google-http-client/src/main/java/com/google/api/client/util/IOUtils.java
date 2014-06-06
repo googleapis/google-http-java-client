@@ -118,13 +118,11 @@ public class IOUtils {
   }
 
   /**
-   * {@link Beta} <br/>
    * Serializes the given object value to a newly allocated byte array.
    *
    * @param value object value to serialize
    * @since 1.16
    */
-  @Beta
   public static byte[] serialize(Object value) throws IOException {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     serialize(value, out);
@@ -132,14 +130,12 @@ public class IOUtils {
   }
 
   /**
-   * {@link Beta} <br/>
    * Serializes the given object value to an output stream, and close the output stream.
    *
    * @param value object value to serialize
    * @param outputStream output stream to serialize into
    * @since 1.16
    */
-  @Beta
   public static void serialize(Object value, OutputStream outputStream) throws IOException {
     try {
       new ObjectOutputStream(outputStream).writeObject(value);
@@ -149,14 +145,12 @@ public class IOUtils {
   }
 
   /**
-   * {@link Beta} <br/>
    * Deserializes the given byte array into to a newly allocated object.
    *
    * @param bytes byte array to deserialize or {@code null} for {@code null} result
    * @return new allocated object or {@code null} for {@code null} input
    * @since 1.16
    */
-  @Beta
   public static <S extends Serializable> S deserialize(byte[] bytes) throws IOException {
     if (bytes == null) {
       return null;
@@ -165,14 +159,12 @@ public class IOUtils {
   }
 
   /**
-   * {@link Beta} <br/>
    * Deserializes the given input stream into to a newly allocated object, and close the input
    * stream.
    *
    * @param inputStream input stream to deserialize
    * @since 1.16
    */
-  @Beta
   @SuppressWarnings("unchecked")
   public static <S extends Serializable> S deserialize(InputStream inputStream) throws IOException {
     try {
@@ -187,12 +179,10 @@ public class IOUtils {
   }
 
   /**
-   * {@link Beta} <br/>
    * Returns whether the given file is a symbolic link.
    *
    * @since 1.16
    */
-  @Beta
   public static boolean isSymbolicLink(File file) throws IOException {
     // first try using Java 7
     try {

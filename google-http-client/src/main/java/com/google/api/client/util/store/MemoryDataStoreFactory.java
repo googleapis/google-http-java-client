@@ -15,13 +15,11 @@
 package com.google.api.client.util.store;
 
 
-import com.google.api.client.util.Beta;
 
 import java.io.IOException;
 import java.io.Serializable;
 
 /**
- * {@link Beta} <br/>
  * Thread-safe in-memory implementation of a data store factory.
  *
  * <p>
@@ -31,7 +29,6 @@ import java.io.Serializable;
  * @since 1.16
  * @author Yaniv Inbar
  */
-@Beta
 public class MemoryDataStoreFactory extends AbstractDataStoreFactory {
 
   @Override
@@ -45,12 +42,10 @@ public class MemoryDataStoreFactory extends AbstractDataStoreFactory {
   }
 
   /** Holder for the result of {@link #getDefaultInstance()}. */
-  @Beta
   static class InstanceHolder {
     static final MemoryDataStoreFactory INSTANCE = new MemoryDataStoreFactory();
   }
 
-  @Beta
   static class MemoryDataStore<V extends Serializable> extends AbstractMemoryDataStore<V> {
 
     MemoryDataStore(MemoryDataStoreFactory dataStore, String id) {

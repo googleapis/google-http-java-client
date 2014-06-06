@@ -14,7 +14,6 @@
 
 package com.google.api.client.util.store;
 
-import com.google.api.client.util.Beta;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Maps;
 import com.google.api.client.util.Throwables;
@@ -29,7 +28,6 @@ import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
 /**
- * {@link Beta} <br/>
  * Thread-safe file implementation of a credential store.
  *
  * <p>
@@ -41,7 +39,6 @@ import java.util.logging.Logger;
  * @since 1.16
  * @author Yaniv Inbar
  */
-@Beta
 public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
   private static final Logger LOGGER = Logger.getLogger(FileDataStoreFactory.class.getName());
@@ -82,7 +79,6 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
    *
    * @param <V> serializable type of the mapped value
    */
-  @Beta
   static class FileDataStore<V extends Serializable> extends AbstractMemoryDataStore<V> {
 
     /** File to store data. */

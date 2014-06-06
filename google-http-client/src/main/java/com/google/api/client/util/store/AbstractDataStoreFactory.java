@@ -14,7 +14,6 @@
 
 package com.google.api.client.util.store;
 
-import com.google.api.client.util.Beta;
 import com.google.api.client.util.Maps;
 import com.google.api.client.util.Preconditions;
 
@@ -26,13 +25,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
 
 /**
- * {@link Beta} <br/>
  * Abstract data store factory implementation.
  *
  * @author Yaniv Inbar
  * @since 1.16
  */
-@Beta
 public abstract class AbstractDataStoreFactory implements DataStoreFactory {
 
   /** Lock on access to the data store map. */

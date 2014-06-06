@@ -14,13 +14,11 @@
 
 package com.google.api.client.util.store;
 
-import com.google.api.client.util.Beta;
 
 import java.io.IOException;
 import java.io.Serializable;
 
 /**
- * {@link Beta} <br/>
  * Factory for a store that manages serializable data, where the key is a string and the value is a
  * {@link Serializable} object.
  *
@@ -43,7 +41,6 @@ import java.io.Serializable;
  * @author Yaniv Inbar
  * @since 1.16
  */
-@Beta
 public interface DataStoreFactory {
 
   /**

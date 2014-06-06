@@ -15,7 +15,6 @@
 package com.google.api.client.extensions.jdo;
 
 import com.google.api.client.extensions.jdo.JdoDataStoreFactory.PrivateUtils.ComposedIdKey;
-import com.google.api.client.util.Beta;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Lists;
 import com.google.api.client.util.Preconditions;
@@ -43,13 +42,11 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
 /**
- * {@link Beta} <br/>
  * Thread-safe JDO implementation of a data store factory.
  *
  * @since 1.16
  * @author Yaniv Inbar
  */
-@Beta
 public class JdoDataStoreFactory extends AbstractDataStoreFactory {
 
   /** Persistence manager factory. */
@@ -64,7 +61,6 @@ public class JdoDataStoreFactory extends AbstractDataStoreFactory {
     return new JdoDataStore<V>(this, persistenceManagerFactory, id);
   }
 
-  @Beta
   static class JdoDataStore<V extends Serializable> extends AbstractDataStore<V> {
 
     /** Lock on storing, loading and deleting a credential. */
@@ -286,7 +282,6 @@ public class JdoDataStoreFactory extends AbstractDataStoreFactory {
   /**
    * JDO value class that contains the key-value pair, as well as the data store ID.
    */
-  @Beta
   @PersistenceCapable(objectIdClass = ComposedIdKey.class)
   static class JdoValue {
 

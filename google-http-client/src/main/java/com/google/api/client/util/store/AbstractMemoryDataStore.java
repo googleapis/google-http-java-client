@@ -14,7 +14,6 @@
 
 package com.google.api.client.util.store;
 
-import com.google.api.client.util.Beta;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Lists;
 import com.google.api.client.util.Maps;
@@ -32,14 +31,12 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * {@link Beta} <br/>
  * Abstract, thread-safe, in-memory implementation of a data store factory.
  *
  * @param <V> serializable type of the mapped value
  *
  * @author Yaniv Inbar
  */
-@Beta
 class AbstractMemoryDataStore<V extends Serializable> extends AbstractDataStore<V> {
 
   /** Lock on access to the store. */
