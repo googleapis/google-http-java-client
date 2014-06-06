@@ -14,18 +14,15 @@
 
 package com.google.api.client.util.store;
 
-import com.google.api.client.util.Beta;
 
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
  * Utilities for data stores.
  *
  * @author Yaniv Inbar
  * @since 1.16
  */
-@Beta
 public final class DataStoreUtils {
 
   /**

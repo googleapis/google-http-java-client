@@ -14,7 +14,6 @@
 
 package com.google.api.client.extensions.appengine.datastore;
 
-import com.google.api.client.util.Beta;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Lists;
 import com.google.api.client.util.Maps;
@@ -48,7 +47,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * {@link Beta} <br/>
  * Thread-safe Google App Engine implementation of a data store factory that directly uses the App
  * Engine Data Store API.
  *
@@ -68,7 +66,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * @since 1.16
  * @author Yaniv Inbar
  */
-@Beta
 public class AppEngineDataStoreFactory extends AbstractDataStoreFactory {
 
   /** Whether to disable the memcache (which is enabled by default). */
@@ -108,12 +105,10 @@ public class AppEngineDataStoreFactory extends AbstractDataStoreFactory {
   }
 
   /** Holder for the result of {@link #getDefaultInstance()}. */
-  @Beta
   static class InstanceHolder {
     static final AppEngineDataStoreFactory INSTANCE = new AppEngineDataStoreFactory();
   }
 
-  @Beta
   static class AppEngineDataStore<V extends Serializable> extends AbstractDataStore<V> {
 
     /** Lock on access to the store. */
@@ -299,7 +294,6 @@ public class AppEngineDataStoreFactory extends AbstractDataStoreFactory {
   }
 
   /**
-   * {@link Beta} <br/>
    * App Engine data store factory builder.
    *
    * <p>
@@ -308,7 +302,6 @@ public class AppEngineDataStoreFactory extends AbstractDataStoreFactory {
    *
    * @since 1.16
    */
-  @Beta
   public static class Builder {
 
     /** Whether to disable the memcache. */

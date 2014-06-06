@@ -14,7 +14,6 @@
 
 package com.google.api.client.util.store;
 
-import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
@@ -23,7 +22,6 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * {@link Beta} <br/>
  * Abstract data store implementation.
  *
  * @param <V> serializable type of the mapped value
@@ -31,7 +29,6 @@ import java.util.Set;
  * @author Yaniv Inbar
  * @since 1.16
  */
-@Beta
 public abstract class AbstractDataStore<V extends Serializable> implements DataStore<V> {
 
   /** Data store factory. */

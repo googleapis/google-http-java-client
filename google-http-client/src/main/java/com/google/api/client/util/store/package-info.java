@@ -13,12 +13,10 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
  * Utilities to store serializable data.
  *
  * @since 1.16
  * @author Yaniv Inbar
  */
-@com.google.api.client.util.Beta
 package com.google.api.client.util.store;
 

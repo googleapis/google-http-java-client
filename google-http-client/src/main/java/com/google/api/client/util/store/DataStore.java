@@ -14,7 +14,6 @@
 
 package com.google.api.client.util.store;
 
-import com.google.api.client.util.Beta;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -22,7 +21,6 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * {@link Beta} <br/>
  * Stores and manages serializable data of a specific type, where the key is a string and the value
  * is a {@link Serializable} object.
  *
@@ -35,7 +33,6 @@ import java.util.Set;
  * @author Yaniv Inbar
  * @since 1.16
  */
-@Beta
 public interface DataStore<V extends Serializable> {
 
   /** Returns the data store factory. */

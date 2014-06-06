@@ -13,12 +13,10 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
  * Support for the App Engine data store.
  *
  * @since 1.15
  * @author Yaniv Inbar
  */
-@com.google.api.client.util.Beta
 package com.google.api.client.extensions.appengine.datastore;
 
