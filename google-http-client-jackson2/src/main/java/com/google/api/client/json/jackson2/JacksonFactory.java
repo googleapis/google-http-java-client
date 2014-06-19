@@ -18,7 +18,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
-import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 
 import java.io.IOException;
@@ -52,18 +51,15 @@ public final class JacksonFactory extends JsonFactory {
   }
 
   /**
-   * {@link Beta} <br/>
    * Returns a global thread-safe instance.
    *
    * @since 1.16
    */
-  @Beta
   public static JacksonFactory getDefaultInstance() {
     return InstanceHolder.INSTANCE;
   }
 
   /** Holder for the result of {@link #getDefaultInstance()}. */
-  @Beta
   static class InstanceHolder {
     static final JacksonFactory INSTANCE = new JacksonFactory();
   }
