@@ -21,6 +21,5 @@
  * @since 1.14 (since 1.7 as com.google.api.client.auth.jsontoken)
  * @author Yaniv Inbar
  */
-@com.google.api.client.util.Beta
 package com.google.api.client.json.webtoken;
 
