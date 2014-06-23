@@ -137,14 +137,14 @@ public abstract class AbstractDataStoreFactoryTest extends TestCase {
     // delete one
     stringTyped.delete("k");
     assertNull(stringTyped.get("k"));
-    assertEquals(Arrays.asList("other"), stringTyped.values());
+    assertContentsAnyOrder(stringTyped.values(), "other");
     stringTyped.delete("k2");
     // boolean
     stringTyped.set("k", "v");
     assertTrue(boolTyped.values().isEmpty());
     boolTyped.set("k", true);
-    assertEquals(Arrays.asList("v"), stringTyped.values());
-    assertEquals(Arrays.asList(true), boolTyped.values());
+    assertContentsAnyOrder(stringTyped.values(), "v");
+    assertContentsAnyOrder(boolTyped.values(), true);
   }
 
   public void testKeySet() throws Exception {

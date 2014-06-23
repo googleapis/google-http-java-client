@@ -43,6 +43,11 @@ public class HttpMediaTypeTest extends TestCase {
     assertEquals("main/sub; aaa=1; bbb=\";/ \"", m.build());
   }
 
+  public void testBuild_json() {
+    HttpMediaType m = new HttpMediaType("application/json").setCharsetParameter(Charsets.UTF_8);
+    assertEquals("application/json; charset=UTF-8", m.build());
+  }
+
   public void testBuild_multipartSpec() {
     HttpMediaType m = new HttpMediaType("main", "sub");
     m.setParameter("bbb", "foo=/bar");

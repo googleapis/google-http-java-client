@@ -324,6 +324,9 @@ public class Types {
 
   private static Type getActualParameterAtPosition(Type type, Class<?> superClass, int position) {
     ParameterizedType parameterizedType = Types.getSuperParameterizedType(type, superClass);
+    if (parameterizedType == null) {
+      return null;
+    }
     Type valueType = parameterizedType.getActualTypeArguments()[position];
     // this is normally a type variable, except in the case where the class of iterableType is
     // superClass, e.g. Iterable<String>

@@ -42,11 +42,18 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Abstract low-level JSON parser.
+ * Abstract low-level JSON parser. See
+ * <a href="https://code.google.com/p/google-http-java-client/wiki/JSON">
+ * https://code.google.com/p/google-http-java-client/wiki/JSON</a>
  *
  * <p>
  * Implementation has no fields and therefore thread-safe, but sub-classes are not necessarily
  * thread-safe.
+ * </p>
+ * <p>
+ * <p>
+ * If a JSON map is encountered while using a destination class of type Map, then an
+ * {@link ArrayMap} is used by default for the parsed values.
  * </p>
  *
  * @since 1.3
@@ -436,6 +443,8 @@ public abstract class JsonParser {
     ClassInfo classInfo = ClassInfo.of(destinationClass);
     boolean isGenericData = GenericData.class.isAssignableFrom(destinationClass);
     if (!isGenericData && Map.class.isAssignableFrom(destinationClass)) {
+      // The destination class is not a sub-class of GenericData but is of Map, so parse data
+      // using parseMap.
       @SuppressWarnings("unchecked")
       Map<String, Object> destinationMap = (Map<String, Object>) destination;
       parseMap(null, destinationMap, Types.getMapValueParameter(destinationClass), context,
@@ -472,7 +481,7 @@ public abstract class JsonParser {
         GenericData object = (GenericData) destination;
         object.set(key, parseValue(null, null, context, destination, customizeParser, true));
       } else {
-        // unrecognized field, skip value
+        // unrecognized field, skip value.
         if (customizeParser != null) {
           customizeParser.handleUnrecognizedKey(destination, key);
         }

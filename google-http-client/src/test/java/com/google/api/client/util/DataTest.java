@@ -89,7 +89,7 @@ public class DataTest extends TestCase {
     assertFalse(Data.isNull((byte) 0));
     assertFalse(Data.isNull((short) 0));
     assertFalse(Data.isNull(0));
-    assertFalse(Data.isNull(0l));
+    assertFalse(Data.isNull(0L));
     assertFalse(Data.isNull((float) 0));
     assertFalse(Data.isNull((double) 0));
     assertFalse(Data.isNull(BigDecimal.ZERO));
