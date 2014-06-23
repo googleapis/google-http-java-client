@@ -14,9 +14,6 @@
 
 package com.google.api.client.json;
 
-import com.google.api.client.http.HttpMediaType;
-import com.google.api.client.util.Charsets;
-
 /**
  * JSON utilities.
  *
@@ -29,11 +26,11 @@ public class Json {
    * {@code "application/json; charset=utf-8"} media type used as a default for JSON parsing.
    *
    * <p>
-   * Use {@link HttpMediaType#equalsIgnoreParameters} for comparing media types.
+   * Use {@link com.google.api.client.http.HttpMediaType#equalsIgnoreParameters} for comparing
+   * media types.
    * </p>
    *
    * @since 1.10
    */
-  public static final String MEDIA_TYPE =
-      new HttpMediaType("application/json").setCharsetParameter(Charsets.UTF_8).build();
+  public static final String MEDIA_TYPE = "application/json; charset=UTF-8";
 }
