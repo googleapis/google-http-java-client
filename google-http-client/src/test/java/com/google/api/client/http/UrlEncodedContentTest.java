@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -41,7 +42,7 @@ public class UrlEncodedContentTest extends TestCase {
     subtestWriteTo(
         "multi=a&multi=b&multi=c", ArrayMap.of("multi", new String[] {"a", "b", "c"}));
     // https://code.google.com/p/google-http-java-client/issues/detail?id=202
-    final Map<String, String> params = new HashMap<String, String>();
+    final Map<String, String> params = new LinkedHashMap<String, String>();
     params.put("username", "un");
     params.put("password", "password123;{}");
     subtestWriteTo("username=un&password=password123%3B%7B%7D", params);

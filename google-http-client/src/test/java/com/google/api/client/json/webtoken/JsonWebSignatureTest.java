@@ -15,11 +15,15 @@
 package com.google.api.client.json.webtoken;
 
 import com.google.api.client.testing.json.MockJsonFactory;
+import com.google.api.client.testing.json.webtoken.TestCertificates;
 import com.google.api.client.testing.util.SecurityTestUtils;
 
 import junit.framework.TestCase;
 
+import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
+
+import javax.net.ssl.X509TrustManager;
 
 /**
  * Tests {@link JsonWebSignature}.
@@ -40,5 +44,21 @@ public class JsonWebSignatureTest extends TestCase {
         "..kDmKaHNYByLmqAi9ROeLcFmZM7W_emsceKvDZiEGAo-ineCunC6_Nb0HEpAuzIidV-LYTMHS3BvI49KFz9gi6hI3"
         + "ZndDL5EzplpFJo1ZclVk1_hLn94P2OTAkZ4ydsTfus6Bl98EbCkInpF_2t5Fr8OaHxCZCDdDU7W5DSnOsx4",
         JsonWebSignature.signUsingRsaSha256(privateKey, new MockJsonFactory(), header, payload));
+  }
+
+  private X509Certificate verifyX509WithCaCert(TestCertificates.CertData caCert) throws Exception {
+    JsonWebSignature signature = TestCertificates.getJsonWebSignature();
+    X509TrustManager trustManager = caCert.getTrustManager();
+    return signature.verifySignature(trustManager);
+  }
+
+  public void testVerifyX509() throws Exception {
+    X509Certificate signatureCert = verifyX509WithCaCert(TestCertificates.CA_CERT);
+    assertNotNull(signatureCert);
+    assertTrue(signatureCert.getSubjectDN().getName().startsWith("CN=foo.bar.com"));
+  }
+
+  public void testVerifyX509WrongCa() throws Exception {
+    assertNull(verifyX509WithCaCert(TestCertificates.BOGUS_CA_CERT));
   }
 }

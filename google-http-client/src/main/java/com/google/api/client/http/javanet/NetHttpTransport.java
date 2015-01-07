@@ -26,7 +26,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.cert.CertificateFactory;
@@ -77,12 +76,8 @@ public final class NetHttpTransport extends HttpTransport {
     Arrays.sort(SUPPORTED_METHODS);
   }
 
-  /**
-   * HTTP proxy or {@code null} to use the proxy settings from <a
-   * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
-   * properties</a>.
-   */
-  private final Proxy proxy;
+  /** Factory to produce connections from {@link URL}s */
+  private final ConnectionFactory connectionFactory;
 
   /** SSL socket factory or {@code null} for the default. */
   private final SSLSocketFactory sslSocketFactory;
@@ -98,7 +93,7 @@ public final class NetHttpTransport extends HttpTransport {
    * </p>
    */
   public NetHttpTransport() {
-    this(null, null, null);
+    this((ConnectionFactory) null, null, null);
   }
 
   /**
@@ -110,7 +105,20 @@ public final class NetHttpTransport extends HttpTransport {
    */
   NetHttpTransport(
       Proxy proxy, SSLSocketFactory sslSocketFactory, HostnameVerifier hostnameVerifier) {
-    this.proxy = proxy;
+    this(new DefaultConnectionFactory(proxy), sslSocketFactory, hostnameVerifier);
+  }
+
+  /**
+   * @param connectionFactory factory to produce connections from {@link URL}s; if {@code null} then
+   *        {@link DefaultConnectionFactory} is used
+   * @param sslSocketFactory SSL socket factory or {@code null} for the default
+   * @param hostnameVerifier host name verifier or {@code null} for the default
+   * @since 1.20
+   */
+  NetHttpTransport(ConnectionFactory connectionFactory,
+      SSLSocketFactory sslSocketFactory, HostnameVerifier hostnameVerifier) {
+    this.connectionFactory =
+        connectionFactory == null ? new DefaultConnectionFactory() : connectionFactory;
     this.sslSocketFactory = sslSocketFactory;
     this.hostnameVerifier = hostnameVerifier;
   }
@@ -125,8 +133,7 @@ public final class NetHttpTransport extends HttpTransport {
     Preconditions.checkArgument(supportsMethod(method), "HTTP method %s not supported", method);
     // connection with proxy settings
     URL connUrl = new URL(url);
-    URLConnection conn = proxy == null ? connUrl.openConnection() : connUrl.openConnection(proxy);
-    HttpURLConnection connection = (HttpURLConnection) conn;
+    HttpURLConnection connection = connectionFactory.openConnection(connUrl);
     connection.setRequestMethod(method);
     // SSL settings
     if (connection instanceof HttpsURLConnection) {
@@ -166,6 +173,12 @@ public final class NetHttpTransport extends HttpTransport {
     private Proxy proxy;
 
     /**
+     * {@link ConnectionFactory} or {@code null} to use a DefaultConnectionFactory. This value is
+     * only used if proxy is unset.
+     */
+    private ConnectionFactory connectionFactory;
+
+    /**
      * Sets the HTTP proxy or {@code null} to use the proxy settings from <a
      * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
      * properties</a>.
@@ -180,6 +193,22 @@ public final class NetHttpTransport extends HttpTransport {
      */
     public Builder setProxy(Proxy proxy) {
       this.proxy = proxy;
+      return this;
+    }
+
+    /**
+     * Sets the {@link ConnectionFactory} or {@code null} to use a {@link DefaultConnectionFactory}.
+     * <b>This value is ignored if the {@link #setProxy} has been called with a non-null value.</b>
+     *
+     * <p>
+     * If you wish to use a {@link Proxy}, it should be included in your {@link ConnectionFactory}
+     * implementation.
+     * </p>
+     *
+     * @since 1.20
+     */
+    public Builder setConnectionFactory(ConnectionFactory connectionFactory) {
+      this.connectionFactory = connectionFactory;
       return this;
     }
 
@@ -285,7 +314,9 @@ public final class NetHttpTransport extends HttpTransport {
 
     /** Returns a new instance of {@link NetHttpTransport} based on the options. */
     public NetHttpTransport build() {
-      return new NetHttpTransport(proxy, sslSocketFactory, hostnameVerifier);
+      return proxy == null
+          ? new NetHttpTransport(connectionFactory, sslSocketFactory, hostnameVerifier)
+          : new NetHttpTransport(proxy, sslSocketFactory, hostnameVerifier);
     }
   }
 }

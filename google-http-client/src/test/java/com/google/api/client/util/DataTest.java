@@ -55,7 +55,7 @@ public class DataTest extends TestCase {
     assertEquals("[[[[Ljava.lang.String;", Data.nullOf(String[][][][].class).getClass().getName());
     assertEquals("[[[I", Data.nullOf(int[][][].class).getClass().getName());
     assertNotNull(Data.nullOf(Object.class));
-    assertEquals(Data.nullOf(Object.class), Data.nullOf(Object.class));
+    assertEquals(Data.<Object>nullOf(Object.class), Data.<Object>nullOf(Object.class));
     assertFalse(Data.nullOf(String.class).equals(Data.nullOf(Object.class)));
     try {
       Data.nullOf(int.class);

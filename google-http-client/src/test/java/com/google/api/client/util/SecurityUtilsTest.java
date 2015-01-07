@@ -14,15 +14,21 @@
 
 package com.google.api.client.util;
 
+import com.google.api.client.testing.json.webtoken.TestCertificates;
 import com.google.api.client.testing.util.SecurityTestUtils;
 
 import junit.framework.TestCase;
+
 import org.junit.Assert;
 
-import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.security.PrivateKey;
 import java.security.Signature;
+import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
+import java.util.ArrayList;
+
+import javax.net.ssl.X509TrustManager;
 
 /**
  * Tests {@link SecurityUtils}.
@@ -74,9 +80,41 @@ public class SecurityUtilsTest extends TestCase {
 
   private static final byte[] CONTENT_BYTES = StringUtils.getBytesUtf8("hello world");
 
+  private static final String SECRET_P12_BASE64 =
+      "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"
+      + "YAqwa61lyj/OG90CAgQA";
+
   public void testLoadPrivateKeyFromKeyStore() throws Exception {
-    InputStream stream =
-        getClass().getClassLoader().getResourceAsStream("com/google/api/client/util/secret.p12");
+    byte[] secretP12 = Base64.decodeBase64(SECRET_P12_BASE64);
+    ByteArrayInputStream stream = new ByteArrayInputStream(secretP12);
     PrivateKey privateKey = SecurityUtils.loadPrivateKeyFromKeyStore(
         SecurityUtils.getPkcs12KeyStore(), stream, "notasecret", "privateKey", "notasecret");
     assertEquals("RSA", privateKey.getAlgorithm());
@@ -96,5 +134,28 @@ public class SecurityUtilsTest extends TestCase {
     Signature signatureAlgorithm = SecurityUtils.getSha256WithRsaSignatureAlgorithm();
     RSAPublicKey publicKey = SecurityTestUtils.newRsaPublicKey();
     assertTrue(SecurityUtils.verify(signatureAlgorithm, publicKey, SIGNED, CONTENT_BYTES));
+  }
+
+  public X509Certificate verifyX509(TestCertificates.CertData caCert) throws Exception {
+    Signature signatureAlgorithm = SecurityUtils.getSha256WithRsaSignatureAlgorithm();
+    String jwsSignature = TestCertificates.JWS_SIGNATURE;
+    int separator = jwsSignature.lastIndexOf('.');
+    String data = jwsSignature.substring(0, separator);
+    String signatureBase64 = jwsSignature.substring(separator + 1);
+    byte[] signature = Base64.decodeBase64(signatureBase64);
+    X509TrustManager trustManager = caCert.getTrustManager();
+    ArrayList<String> certChain = new ArrayList<String>();
+    certChain.add(TestCertificates.FOO_BAR_COM_CERT.getBase64Der());
+    certChain.add(TestCertificates.CA_CERT.getBase64Der());
+    return SecurityUtils.verify(signatureAlgorithm, trustManager, certChain, signature,
+        data.getBytes("UTF-8"));
+  }
+
+  public void testVerifyX509() throws Exception {
+    assertNotNull(verifyX509(TestCertificates.CA_CERT));
+  }
+
+  public void testVerifyX509WrongCa() throws Exception {
+    assertNull(verifyX509(TestCertificates.BOGUS_CA_CERT));
   }
 }
