@@ -1206,4 +1206,33 @@ public class HttpRequestTest extends TestCase {
     }
     assertTrue(found);
   }
+
+  public void testExecute_curlLoggerWithContentEncoding() throws Exception {
+    LogRecordingHandler recorder = new LogRecordingHandler();
+    HttpTransport.LOGGER.setLevel(Level.CONFIG);
+    HttpTransport.LOGGER.addHandler(recorder);
+
+    String contentValue = "hello";
+    byte[] bytes = StringUtils.getBytesUtf8(contentValue);
+    InputStreamContent content = new InputStreamContent(
+        new HttpMediaType("text/plain").setCharsetParameter(Charsets.UTF_8).build(),
+        new ByteArrayInputStream(bytes));
+
+    new MockHttpTransport().createRequestFactory()
+        .buildPostRequest(new GenericUrl("http://google.com/#q=a'b'c"), content)
+        .setEncoding(new GZipEncoding()).execute();
+
+    boolean found = false;
+    final String expectedCurlLog = "curl -v --compressed -X POST -H 'Accept-Encoding: gzip' "
+        + "-H 'User-Agent: " + HttpRequest.USER_AGENT_SUFFIX
+        + "' -H 'Content-Type: text/plain; charset=UTF-8' -H 'Content-Encoding: gzip' "
+        + "-d '@-' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c' << $$$";
+    for (String message : recorder.messages()) {
+      if (message.startsWith("curl")) {
+        found = true;
+        assertEquals(expectedCurlLog, message);
+      }
+    }
+    assertTrue(found);
+  }
 }

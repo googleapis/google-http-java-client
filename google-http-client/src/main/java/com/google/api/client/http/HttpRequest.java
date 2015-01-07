@@ -926,6 +926,13 @@ public final class HttpRequest {
               curlbuf.append(" -H '" + header + "'");
             }
           }
+          if (contentEncoding != null) {
+            String header = "Content-Encoding: " + contentEncoding;
+            logbuf.append(header).append(StringUtils.LINE_SEPARATOR);
+            if (curlbuf != null) {
+              curlbuf.append(" -H '" + header + "'");
+            }
+          }
           if (contentLength >= 0) {
             String header = "Content-Length: " + contentLength;
             logbuf.append(header).append(StringUtils.LINE_SEPARATOR);

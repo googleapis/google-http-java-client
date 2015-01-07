@@ -16,6 +16,7 @@ package com.google.api.client.json.webtoken;
 
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.util.Base64;
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
@@ -24,10 +25,19 @@ import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * <a href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-11">JSON Web Signature
@@ -128,9 +138,11 @@ public class JsonWebSignature extends JsonWebToken {
      * X.509 certificate chain header parameter contains the X.509 public key certificate or
      * certificate chain corresponding to the key used to digitally sign the JWS or {@code null} for
      * none.
+     *
+     * @since 1.19.1.
      */
     @Key("x5c")
-    private String x509Certificate;
+    private List<String> x509Certificates;
 
     /**
      * Array listing the header parameter names that define extensions that are used in the JWS
@@ -285,11 +297,48 @@ public class JsonWebSignature extends JsonWebToken {
 
     /**
      * Returns the X.509 certificate chain header parameter contains the X.509 public key
+     * certificate or corresponding to the key used to digitally sign the JWS or {@code null} for
+     * none.
+     *
+     * <p>@deprecated Since release 1.19.1, replaced by {@link #getX509Certificates()}.
+     */
+    @Deprecated
+    public final String getX509Certificate() {
+      if (x509Certificates == null || x509Certificates.isEmpty()) {
+        return null;
+      }
+      return x509Certificates.get(0);
+    }
+
+    /**
+     * Returns the X.509 certificate chain header parameter contains the X.509 public key
      * certificate or certificate chain corresponding to the key used to digitally sign the JWS or
      * {@code null} for none.
+     *
+     * @since 1.19.1.
      */
-    public final String getX509Certificate() {
-      return x509Certificate;
+    public final List<String> getX509Certificates() {
+      return x509Certificates;
+    }
+
+    /**
+     * Sets the X.509 certificate chain header parameter contains the X.509 public key certificate
+     * corresponding to the key used to digitally sign the JWS or {@code null} for none.
+     *
+     * <p>
+     * Overriding is only supported for the purpose of calling the super implementation and changing
+     * the return type, but nothing else.
+     * </p>
+     *
+     * <p>@deprecated Since release 1.19.1, replaced by
+     * {@link #setX509Certificates(List x509Certificates)}.
+     */
+    @Deprecated
+    public Header setX509Certificate(String x509Certificate) {
+      ArrayList<String> x509Certificates = new ArrayList<String>();
+      x509Certificates.add(x509Certificate);
+      this.x509Certificates = x509Certificates;
+      return this;
     }
 
     /**
@@ -301,9 +350,11 @@ public class JsonWebSignature extends JsonWebToken {
      * Overriding is only supported for the purpose of calling the super implementation and changing
      * the return type, but nothing else.
      * </p>
+     *
+     * @since 1.19.1.
      */
-    public Header setX509Certificate(String x509Certificate) {
-      this.x509Certificate = x509Certificate;
+    public Header setX509Certificates(List<String> x509Certificates) {
+      this.x509Certificates = x509Certificates;
       return this;
     }
 
@@ -370,6 +421,91 @@ public class JsonWebSignature extends JsonWebToken {
       return false;
     }
     return SecurityUtils.verify(signatureAlg, publicKey, signatureBytes, signedContentBytes);
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Verifies the signature of the content using the certificate chain embedded in the signature.
+   *
+   * <p>
+   * Currently only {@code "RS256"} algorithm is verified, but others may be added in the future.
+   * For any other algorithm it returns {@code null}.
+   * </p>
+   *
+   * <p>
+   * The leaf certificate of the certificate chain must be an SSL server certificate.
+   * </p>
+   *
+   * @param trustManager Trust manager used to verify the X509 certificate chain embedded in this
+   *        message.
+   * @return The signature certificate if the signature could be verified, null otherwise.
+   * @throws GeneralSecurityException
+   * @since 1.19.1.
+   */
+  @Beta
+  public final X509Certificate verifySignature(X509TrustManager trustManager)
+      throws GeneralSecurityException {
+    List<String> x509Certificates = getHeader().getX509Certificates();
+    if (x509Certificates == null || x509Certificates.isEmpty()) {
+      return null;
+    }
+    String algorithm = getHeader().getAlgorithm();
+    Signature signatureAlg = null;
+    if ("RS256".equals(algorithm)) {
+      signatureAlg = SecurityUtils.getSha256WithRsaSignatureAlgorithm();
+    } else {
+      return null;
+    }
+    return SecurityUtils.verify(signatureAlg, trustManager, x509Certificates, signatureBytes,
+        signedContentBytes);
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Verifies the signature of the content using the certificate chain embedded in the signature.
+   *
+   * <p>
+   * Currently only {@code "RS256"} algorithm is verified, but others may be added in the future.
+   * For any other algorithm it returns {@code null}.
+   * </p>
+   *
+   * <p>
+   * The certificate chain is verified using the system default trust manager.
+   * </p>
+   *
+   * <p>
+   * The leaf certificate of the certificate chain must be an SSL server certificate.
+   * </p>
+   *
+   * @return The signature certificate if the signature could be verified, null otherwise.
+   * @throws GeneralSecurityException
+   * @since 1.19.1.
+   */
+  @Beta
+  public final X509Certificate verifySignature() throws GeneralSecurityException {
+    X509TrustManager trustManager = getDefaultX509TrustManager();
+    if (trustManager == null) {
+      return null;
+    }
+    return verifySignature(trustManager);
+  }
+
+  private static X509TrustManager getDefaultX509TrustManager() {
+    try {
+      TrustManagerFactory factory =
+          TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+      factory.init((KeyStore) null);
+      for (TrustManager manager : factory.getTrustManagers()) {
+        if (manager instanceof X509TrustManager) {
+          return (X509TrustManager) manager;
+        }
+      }
+      return null;
+    } catch (NoSuchAlgorithmException e) {
+      return null;
+    } catch (KeyStoreException e) {
+      return null;
+    }
   }
 
   /** Returns the modifiable array of bytes of the signature. */

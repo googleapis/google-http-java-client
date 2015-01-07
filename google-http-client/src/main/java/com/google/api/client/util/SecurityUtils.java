@@ -14,6 +14,7 @@
 
 package com.google.api.client.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
@@ -29,6 +30,10 @@ import java.security.SignatureException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.List;
+
+import javax.net.ssl.X509TrustManager;
 
 /**
  * Utilities related to Java security.
@@ -157,6 +162,54 @@ public final class SecurityUtils {
     signatureAlgorithm.initVerify(publicKey);
     signatureAlgorithm.update(contentBytes);
     return signatureAlgorithm.verify(signatureBytes);
+  }
+
+  /**
+   * Verifies the signature of signed content based on a certificate chain.
+   *
+   * @param signatureAlgorithm signature algorithm
+   * @param trustManager trust manager used to verify the certificate chain
+   * @param certChainBase64 Certificate chain used for verification. The certificates must be base64
+   *        encoded DER, the leaf certificate must be the first element.
+   * @param signatureBytes signature bytes
+   * @param contentBytes content bytes
+   * @return The signature certificate if the signature could be verified, null otherwise.
+   * @since 1.19.1.
+   */
+  public static X509Certificate verify(Signature signatureAlgorithm, X509TrustManager trustManager,
+      List<String> certChainBase64, byte[] signatureBytes, byte[] contentBytes)
+      throws InvalidKeyException, SignatureException {
+    CertificateFactory certificateFactory;
+    try {
+      certificateFactory = getX509CertificateFactory();
+    } catch (CertificateException e) {
+      return null;
+    }
+    X509Certificate[] certificates = new X509Certificate[certChainBase64.size()];
+    int currentCert = 0;
+    for (String certBase64 : certChainBase64) {
+      byte[] certDer = Base64.decodeBase64(certBase64);
+      ByteArrayInputStream bis = new ByteArrayInputStream(certDer);
+      try {
+        Certificate cert = certificateFactory.generateCertificate(bis);
+        if (!(cert instanceof X509Certificate)) {
+          return null;
+        }
+        certificates[currentCert++] = (X509Certificate) cert;
+      } catch (CertificateException e) {
+        return null;
+      }
+    }
+    try {
+      trustManager.checkServerTrusted(certificates, "RSA");
+    } catch (CertificateException e) {
+      return null;
+    }
+    PublicKey pubKey = certificates[0].getPublicKey();
+    if (verify(signatureAlgorithm, pubKey, signatureBytes, contentBytes)) {
+      return certificates[0];
+    }
+    return null;
   }
 
   /** Returns the X.509 certificate factory. */
