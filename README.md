@@ -17,12 +17,12 @@ The following related projects  are built on the Google HTTP Client Library for 
 This is an open-source library, and [contributions](https://code.google.com/p/google-http-java-client/wiki/BecomingAContributor) are welcome.
 
 ## Documentation
-  - [Developer's Guide](https://code.google.com/p/google-http-java-client/wiki/DeveloperGuide)
-  - [Setup Instructions](https://code.google.com/p/google-http-java-client/wiki/Setup)
+  - [Developer's Guide](https://developers.google.com/api-client-library/java/google-http-java-client/)
+  - [Setup Instructions](https://developers.google.com/api-client-library/java/google-http-java-client/setup)
   - [JavaDoc](http://javadoc.google-http-java-client.googlecode.com/hg/index.html)
-  - [Release Notes](https://code.google.com/p/google-http-java-client/wiki/ReleaseNotes)
-  - [Support (Questions, Bugs)](https://code.google.com/p/google-http-java-client/wiki/Support)
-  
+  - [Release Notes](https://developers.google.com/api-client-library/java/google-http-java-client/release-notes)
+  - [Support (Questions, Bugs)](https://developers.google.com/api-client-library/java/google-http-java-client/support)
+
 ## Links
   - Blogs
     - [Announcements](http://google-http-java-client.blogspot.com/)
