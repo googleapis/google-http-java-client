@@ -1,0 +1,75 @@
+<html>
+<title>dailymotion-simple-cmdline-sample</title>
+<body>
+<h2>Instructions for the Dailymotion Command-Line Sample</h2>
+
+<h3>Browse Online</h3>
+
+<ul>
+  <li><a
+    href="http://code.google.com/p/google-http-java-client/source/browse?repo=samples#hg/dailymotion-simple-cmdline-sample">Browse
+  Source</a>, or main file <a
+    href="http://code.google.com/p/google-http-java-client/source/browse/dailymotion-simple-cmdline-sample/src/main/java/com/google/api/services/samples/dailymotion/cmdline/simple/DailyMotionSample.java?repo=samples">DailyMotionSample.java</a></li>
+</ul>
+
+<h3>Checkout Instructions</h3>
+
+<p><b>Prerequisites:</b> install <a href="http://java.com">Java 6</a>, <a
+  href="http://mercurial.selenic.com/">Mercurial</a> and <a
+  href="http://maven.apache.org/download.html">Maven</a>. You may need to set
+your <code>JAVA_HOME</code>.</p>
+
+<pre><code>cd <i>[someDirectory]</i>
+hg clone https://code.google.com/p/google-http-java-client.samples/ google-http-java-client-samples
+cd google-http-java-client-samples/dailymotion-simple-cmdline-sample
+mvn compile
+mvn -q exec:java</code></pre>
+
+<h3>Setup Project in Eclipse 3.5/3.6</h3>
+
+<p><b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
+the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>, and the <a
+  href="http://m2eclipse.sonatype.org/installing-m2eclipse.html">Maven
+plugin</a>.</p>
+
+<ul>
+  <li>Setup Eclipse Preferences
+  <ul>
+    <li>Window &gt; Preferences... (or on Mac, Eclipse &gt; Preferences...)</li>
+    <li>Select Maven
+    <ul>
+      <li>check on "Download Artifact Sources"</li>
+      <li>check on "Download Artifact JavaDoc"</li>
+    </ul>
+    </li>
+  </ul>
+  </li>
+  <li>Import <code>dailymotion-simple-cmdline-sample</code> project
+  <ul>
+    <li>File &gt; Import...</li>
+    <li>Select "General &gt; Existing Project into Workspace" and click
+    "Next"</li>
+    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-http-java-client-samples/dailymotion-simple-cmdline-sample</code>
+    and click "Next"</li>
+    <li>Click "Finish"</li>
+  </ul>
+  </li>
+  <li>Run
+  <ul>
+    <li>Right-click on project dailymotion-simple-cmdline-sample</li>
+    <li>Run As &gt; Java Application</li>
+    <li>If asked, type "DailyMotionSample" and click OK</li>
+    <li>To enabled logging:
+    <ul>
+      <li>Run &gt; Run Configurations...</li>
+      <li>Click on "Java Application &gt; DailyMotionSample"</li>
+      <li>VM arguments: <code>-Djava.util.logging.config.file=${project_loc}/logging.properties</code></li>
+      <li>Click "Run"</li>
+    </ul>
+    </li>
+  </ul>
+  </li>
+</ul>
+
+</body>
+</html>
