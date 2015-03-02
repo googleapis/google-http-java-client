@@ -13,7 +13,7 @@
   <packaging>pom</packaging>
   <name>Parent for the Google HTTP Client Library for Java</name>
 
-  <url>http://code.google.com/p/google-http-java-client/</url>
+  <url>https://github.com/google/google-http-java-client</url>
 
   <issueManagement>
     <system>GitHub</system>
