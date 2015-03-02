@@ -16,8 +16,8 @@
   <url>http://code.google.com/p/google-http-java-client/</url>
 
   <issueManagement>
-    <system>code.google.com</system>
-    <url>http://code.google.com/p/google-http-java-client/issues/list</url>
+    <system>GitHub</system>
+    <url>https://github.com/google/google-http-java-client/issues</url>
   </issueManagement>
 
   <inceptionYear>2011</inceptionYear>
@@ -27,9 +27,9 @@
   </prerequisites>
 
   <scm>
-    <connection>scm:hg:https://code.google.com/p/google-http-java-client/</connection>
-    <developerConnection>scm:hg:https://code.google.com/p/google-http-java-client/</developerConnection>
-    <url>http://code.google.com/p/google-http-java-client/source/browse/</url>
+    <connection>scm:git:https://github.com/google/google-http-java-client.git</connection>
+    <developerConnection>scm:git:git@github.com:google/google-http-java-client.git</developerConnection>
+    <url>https://github.com/google/google-http-java-client</url>
   </scm>
 
   <organization>
