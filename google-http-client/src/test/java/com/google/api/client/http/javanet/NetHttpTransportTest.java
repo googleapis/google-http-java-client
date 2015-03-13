@@ -21,7 +21,9 @@ import com.google.api.client.util.StringUtils;
 
 import junit.framework.TestCase;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -59,6 +61,7 @@ public class NetHttpTransportTest extends TestCase {
     }
   }
 
+
   public void testExecute_methodUnchanged() throws Exception {
     for (String method : METHODS) {
       HttpURLConnection connection =
@@ -73,6 +76,58 @@ public class NetHttpTransportTest extends TestCase {
       }
       assertEquals(method, connection.getRequestMethod());
     }
+  }
+
+  public void testAbruptTerminationIsNoticedWithContentLength() throws Exception {
+    String incompleteBody = ""
+        + "Fixed size body test.\r\n"
+        + "Incomplete response.";
+    byte[] buf = StringUtils.getBytesUtf8(incompleteBody);
+    MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL))
+        .setResponseCode(200)
+        .addHeader("Content-Length", "205")
+        .setInputStream(new ByteArrayInputStream(buf));
+    connection.setRequestMethod("GET");
+    NetHttpRequest request = new NetHttpRequest(connection);
+    setContent(request, null, "");
+    NetHttpResponse response = (NetHttpResponse) (request.execute());
+
+    InputStream in = response.getContent();
+    boolean thrown = false;
+    try {
+      while (in.read() != -1) {
+        // This space is intentionally left blank.
+      }
+    } catch (IOException ioe) {
+      thrown = true;
+    }
+    assertTrue(thrown);
+  }
+
+  public void testAbruptTerminationIsNoticedWithContentLengthWithReadToBuf() throws Exception {
+    String incompleteBody = ""
+        + "Fixed size body test.\r\n"
+        + "Incomplete response.";
+    byte[] buf = StringUtils.getBytesUtf8(incompleteBody);
+    MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL))
+        .setResponseCode(200)
+        .addHeader("Content-Length", "205")
+        .setInputStream(new ByteArrayInputStream(buf));
+    connection.setRequestMethod("GET");
+    NetHttpRequest request = new NetHttpRequest(connection);
+    setContent(request, null, "");
+    NetHttpResponse response = (NetHttpResponse) (request.execute());
+
+    InputStream in = response.getContent();
+    boolean thrown = false;
+    try {
+      while (in.read(new byte[100]) != -1) {
+        // This space is intentionally left blank.
+      }
+    } catch (IOException ioe) {
+      thrown = true;
+    }
+    assertTrue(thrown);
   }
 
   private void setContent(NetHttpRequest request, String type, String value) throws Exception {
