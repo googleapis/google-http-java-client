@@ -15,10 +15,14 @@
 package com.google.api.client.http.javanet;
 
 import com.google.api.client.testing.http.javanet.MockHttpURLConnection;
+import com.google.api.client.util.StringUtils;
 
 import junit.framework.TestCase;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 
 /**
  * Tests {@link NetHttpResponse}.
@@ -26,6 +30,9 @@ import java.io.IOException;
  * @author Yaniv Inbar
  */
 public class NetHttpResponseTest extends TestCase {
+
+  private static final String VALID_RESPONSE = "This is a valid response.";
+  private static final String ERROR_RESPONSE = "This is an error response.";
 
   public void testGetStatusCode() throws IOException {
     subtestGetStatusCode(0, -1);
@@ -45,16 +52,48 @@ public class NetHttpResponseTest extends TestCase {
     subtestGetContent(307);
     subtestGetContent(404);
     subtestGetContent(503);
+
+    subtestGetContentWithShortRead(0);
+    subtestGetContentWithShortRead(200);
+    subtestGetContentWithShortRead(304);
+    subtestGetContentWithShortRead(307);
+    subtestGetContentWithShortRead(404);
+    subtestGetContentWithShortRead(503);
   }
 
   public void subtestGetContent(int responseCode) throws IOException {
     NetHttpResponse response =
-        new NetHttpResponse(new MockHttpURLConnection(null).setResponseCode(responseCode));
-    int bytes = response.getContent().read(new byte[100]);
+        new NetHttpResponse(new MockHttpURLConnection(null).setResponseCode(responseCode)
+            .setInputStream(new ByteArrayInputStream(StringUtils.getBytesUtf8(VALID_RESPONSE)))
+            .setErrorStream(new ByteArrayInputStream(StringUtils.getBytesUtf8(ERROR_RESPONSE))));
+    InputStream is = response.getContent();
+    byte[] buf = new byte[100];
+    int bytes = 0, n = 0;
+    while ((n = is.read(buf)) != -1) {
+      bytes += n;
+    }
     if (responseCode < 400) {
-      assertEquals(MockHttpURLConnection.INPUT_BUF.length, bytes);
+      assertEquals(VALID_RESPONSE, new String(buf, 0, bytes, Charset.forName("UTF-8")));
     } else {
-      assertEquals(MockHttpURLConnection.ERROR_BUF.length, bytes);
+      assertEquals(ERROR_RESPONSE, new String(buf, 0, bytes, Charset.forName("UTF-8")));
+    }
+  }
+
+  public void subtestGetContentWithShortRead(int responseCode) throws IOException {
+    NetHttpResponse response =
+        new NetHttpResponse(new MockHttpURLConnection(null).setResponseCode(responseCode)
+            .setInputStream(new ByteArrayInputStream(StringUtils.getBytesUtf8(VALID_RESPONSE)))
+            .setErrorStream(new ByteArrayInputStream(StringUtils.getBytesUtf8(ERROR_RESPONSE))));
+    InputStream is = response.getContent();
+    byte[] buf = new byte[100];
+    int bytes = 0, b = 0;
+    while ((b = is.read()) != -1) {
+      buf[bytes++] = (byte) b;
+    }
+    if (responseCode < 400) {
+      assertEquals(VALID_RESPONSE, new String(buf, 0, bytes, Charset.forName("UTF-8")));
+    } else {
+      assertEquals(ERROR_RESPONSE, new String(buf, 0, bytes, Charset.forName("UTF-8")));
     }
   }
 }
