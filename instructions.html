@@ -18,16 +18,14 @@
   href="http://maven.apache.org/download.html">Maven</a>. You may need to set
 your <code>JAVA_HOME</code>.</p>
 
-<pre><code>hg clone https://google-api-java-client.googlecode.com/hg/ google-api-java-client
+<pre><code>git clone https://github.com/google/google-http-java-client.git
 cd google-api-java-client
 mvn install</code></pre>
 
-There are two named branches:
+There are a few named branches:
 <ul>
-  <li>The "default" branch has the stable 1.4 library. This is the default
-  branch that is checked out with the instructions above.</li>
-  <li>The "dev" branch has the development 1.5 library. To switch to this
-  branch, run: <pre><code>hg update dev
+  <li>The "master" branch has the development of the next release. To switch to this
+  branch, run: <pre><code>git checkout master
 mvn clean install</code></pre></li>
 </ul>
 

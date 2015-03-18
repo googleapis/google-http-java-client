@@ -19,7 +19,7 @@ This is an open-source library, and [contributions](https://code.google.com/p/go
 ## Documentation
   - [Developer's Guide](https://developers.google.com/api-client-library/java/google-http-java-client/)
   - [Setup Instructions](https://developers.google.com/api-client-library/java/google-http-java-client/setup)
-  - [JavaDoc](http://javadoc.google-http-java-client.googlecode.com/hg/index.html)
+  - [JavaDoc](https://developers.google.com/api-client-library/java/google-http-java-client/reference/index)
   - [Release Notes](https://developers.google.com/api-client-library/java/google-http-java-client/release-notes)
   - [Support (Questions, Bugs)](https://developers.google.com/api-client-library/java/google-http-java-client/support)
 
