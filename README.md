@@ -14,7 +14,7 @@ The following related projects  are built on the Google HTTP Client Library for 
   - [Google OAuth Client Library for Java](https://github.com/google/google-oauth-java-client), for the OAuth 2.0 and OAuth 1.0a authorization standards.
   - [Google APIs Client Library for Java](https://github.com/google/google-api-java-client), for access to Google APIs.
 
-This is an open-source library, and [contributions](https://code.google.com/p/google-http-java-client/wiki/BecomingAContributor) are welcome.
+This is an open-source library, and [contributions](https://developers.google.com/api-client-library/java/google-http-java-client/contribute) are welcome.
 
 ## Documentation
   - [Developer's Guide](https://developers.google.com/api-client-library/java/google-http-java-client/)
