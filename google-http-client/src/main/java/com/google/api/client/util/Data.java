@@ -398,7 +398,7 @@ public class Data {
           || primitiveClass.isAssignableFrom(String.class)) {
         return stringValue;
       }
-      // The following primite types doesn't allow spaces
+      // The following primitive types doesn't allow spaces
       stringValue = stringValue.trim();
       if (primitiveClass == Character.class || primitiveClass == char.class) {
         if (stringValue.length() != 1) {
