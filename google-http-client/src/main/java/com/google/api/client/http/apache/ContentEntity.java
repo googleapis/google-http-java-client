@@ -17,6 +17,7 @@ package com.google.api.client.http.apache;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StreamingContent;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.entity.AbstractHttpEntity;
 
 import java.io.IOException;
@@ -52,7 +53,7 @@ final class ContentEntity extends AbstractHttpEntity {
   }
 
   public boolean isRepeatable() {
-    return false;
+    return streamingContent instanceof HttpEntity && ((HttpEntity)streamingContent).isRepeatable();
   }
 
   public boolean isStreaming() {
