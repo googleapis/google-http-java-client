@@ -91,21 +91,25 @@ public class MultipartContent extends AbstractHttpContent {
           headers.setContentLength(contentLength);
         }
       }
-      // write separator
+      // write multipart-body from RFC 1521 §7.2.1
+      // write encapsulation
+      // write delimiter
       writer.write(TWO_DASHES);
       writer.write(boundary);
       writer.write(NEWLINE);
-      // write headers
+      // write body-part; message from RFC 822 §4.1
+      // write message fields
       HttpHeaders.serializeHeadersForMultipartRequests(headers, null, null, writer);
-      // write content
       if (streamingContent != null) {
         writer.write(NEWLINE);
         writer.flush();
+        // write message text/body
         streamingContent.writeTo(out);
-        writer.write(NEWLINE);
       }
+      // terminate encapsulation
+      writer.write(NEWLINE);
     }
-    // write end separator
+    // write close-delimiter
     writer.write(TWO_DASHES);
     writer.write(boundary);
     writer.write(TWO_DASHES);
