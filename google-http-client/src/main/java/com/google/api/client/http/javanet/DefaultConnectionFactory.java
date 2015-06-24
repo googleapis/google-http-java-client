@@ -26,7 +26,7 @@ public class DefaultConnectionFactory implements ConnectionFactory {
     this.proxy = proxy;
   }
 
-  @Override
+
   public HttpURLConnection openConnection(URL url) throws IOException {
     return (HttpURLConnection) (proxy == null ? url.openConnection() : url.openConnection(proxy));
   }

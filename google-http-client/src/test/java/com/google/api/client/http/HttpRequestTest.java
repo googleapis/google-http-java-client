@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -110,6 +111,32 @@ public class HttpRequestTest extends TestCase {
     public void execute(Runnable command) {
       this.runnable = command;
     }
+  }
+
+  static class MockHttpResponseCallback implements HttpResponseCallback{
+    private boolean onComplete = false,
+        onSuccess = false,
+        onFailure = false,
+        onInterrupted = false;
+    public synchronized void reset(){
+      onComplete = onSuccess = onFailure = onInterrupted = false;
+    }
+    public synchronized void onComplete() {
+      onComplete = true;
+    }
+    public synchronized void onSuccess(HttpResponse response) {
+      onSuccess = true;
+    }
+    public synchronized void onFailure(Throwable throwable) {
+      onFailure = true;
+    }
+    public synchronized void onInterrupted() {
+      onInterrupted = true;
+    }
+    public synchronized boolean getOnComplete() { return onComplete; }
+    public synchronized boolean getOnSuccess() { return onSuccess; }
+    public synchronized boolean getOnFailure() { return onFailure; }
+    public synchronized boolean getOnInterrupted() { return onInterrupted;}
   }
 
   @Deprecated
@@ -1143,6 +1170,29 @@ public class HttpRequestTest extends TestCase {
     mockExecutor.actuallyRun();
     assertTrue(futureResponse.isDone());
     assertNotNull(futureResponse.get(10, TimeUnit.MILLISECONDS));
+  }
+
+  public void testExecuteAsyncWithCallback() throws Exception {
+    Executor executor = Executors.newSingleThreadExecutor();
+    HttpTransport transport = new MockHttpTransport();
+    MockHttpResponseCallback mockCallback = new MockHttpResponseCallback();
+
+    HttpRequest request = null;
+    request = transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+
+    mockCallback.reset();
+    request.executeAsync(executor, mockCallback).get(5, TimeUnit.SECONDS);
+    assertTrue(mockCallback.getOnComplete());
+    assertTrue(mockCallback.getOnSuccess());
+    assertFalse(mockCallback.getOnFailure());
+    assertFalse(mockCallback.getOnInterrupted());
+
+    mockCallback.reset();
+    request = transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.executeAsync(executor, mockCallback).cancel(false);
+    assertTrue(mockCallback.getOnComplete());
+    assertTrue(mockCallback.getOnInterrupted());
+
   }
 
   public void testExecute_redirects() throws Exception {

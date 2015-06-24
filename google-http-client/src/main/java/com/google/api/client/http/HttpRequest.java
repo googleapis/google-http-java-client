@@ -26,10 +26,15 @@ import com.google.api.client.util.StringUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -190,6 +195,14 @@ public final class HttpRequest {
   private boolean retryOnExecuteIOException = false;
 
   /**
+   * The default executor service for computing code in asynchronous fashion.
+   * It will be used when callers call {@link #executeAsync(HttpResponseCallback)} without passing
+   * their executor as a parameter.
+   */
+  @Beta
+  private Executor defaultRequestExecutor = Executors.newCachedThreadPool();
+
+  /**
    * Whether to not add the suffix {@link #USER_AGENT_SUFFIX} to the User-Agent header.
    *
    * <p>
@@ -208,6 +221,26 @@ public final class HttpRequest {
   HttpRequest(HttpTransport transport, String requestMethod) {
     this.transport = transport;
     setRequestMethod(requestMethod);
+
+    /* Shutdown hook for request executor if applicable */
+    Runtime.getRuntime().addShutdownHook(new Thread(){
+      @Override public void run(){
+        try {
+          if(HttpRequest.this.getDefaultRequestExecutor() != null &&
+              (HttpRequest.this.getDefaultRequestExecutor() instanceof ExecutorService)){
+            ExecutorService es = (ExecutorService)HttpRequest.this.getDefaultRequestExecutor();
+            if(!es.isTerminated()){
+              /* send a shutdown request to ExecutorService */
+              es.shutdown();
+              /* wait running tasks to be completed for at most 60 seconds before terminating */
+              es.awaitTermination(60, TimeUnit.SECONDS);
+            }
+          }
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    });
   }
 
   /**
@@ -789,6 +822,24 @@ public final class HttpRequest {
   }
 
   /**
+   * Returns whether to get the default {@link Executor} for {@link #executeAsync(HttpResponseCallback)}
+   * @return the defaultRequestExecutor
+   * @since 1.21
+   */
+  public Executor getDefaultRequestExecutor() {
+    return defaultRequestExecutor;
+  }
+
+  /**
+   * Sets whether to use different default {@link Executor} from the default {@link ThreadPoolExecutor}
+   * @param defaultRequestExecutor
+   * @since 1.21
+   */
+  public void setDefaultRequestExecutor(Executor defaultRequestExecutor) {
+    this.defaultRequestExecutor = defaultRequestExecutor;
+  }
+
+  /**
    * Execute the HTTP request and returns the HTTP response.
    *
    * <p>
@@ -1064,6 +1115,64 @@ public final class HttpRequest {
       }
     }
     return response;
+  }
+
+  /**
+   * {@link Beta} <br/>
+   *
+   * Executes this request asynchronously in a separate thread using the supplied executor.
+   *
+   * @param executor executor to run the asynchronous request
+   * @param callback the callback object for handling asynchronous events
+   * @return {@link FutureTask} callers should not call {@link FutureTask#get()}
+   *        on this object as it will be handled by callback methods but callers may call
+   *        {@link FutureTask#cancel(boolean)} to try canceling the submitted task.
+   * @since 1.21
+   */
+  @Beta
+  public FutureTask<HttpResponse> executeAsync(Executor executor, final HttpResponseCallback callback) {
+    FutureTask<HttpResponse> futureTask = new FutureTask<HttpResponse>(new Callable<HttpResponse>() {
+      public HttpResponse call() throws Exception {
+        HttpResponse response = execute();
+        callback.onSuccess(response);
+        return response;
+      }
+    }){
+      /* (non-Javadoc)
+       * @see java.util.concurrent.FutureTask#done()
+       */
+      @Override
+      protected void done() {
+        super.done();
+        try {
+          callback.onComplete();
+          get();
+        } catch (ExecutionException e){
+          callback.onFailure(e.getCause());
+        } catch (CancellationException e){
+          callback.onInterrupted();
+        } catch (Exception e){
+          /* user exception throwing from onComplete*/
+          callback.onFailure(e);
+        }
+      }
+    };
+
+    executor.execute(futureTask);
+
+    return futureTask;
+  }
+
+  /**
+   * {@link Beta} <br/>
+   * Executes this request asynchronously using default {@link ExecutorService}
+   *
+   * @return A future for accessing the results of the asynchronous request.
+   * @since 1.21
+   */
+  @Beta
+  public FutureTask<HttpResponse> executeAsync(HttpResponseCallback callback) {
+    return executeAsync(getDefaultRequestExecutor(), callback);
   }
 
   /**
