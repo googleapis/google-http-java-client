@@ -15,7 +15,7 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Beta;
-import com.google.api.client.util.IOUtils;
+import com.google.api.client.util.ByteArrayStreamingContent;
 import com.google.api.client.util.LoggingStreamingContent;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Preconditions;
@@ -23,6 +23,7 @@ import com.google.api.client.util.Sleeper;
 import com.google.api.client.util.StreamingContent;
 import com.google.api.client.util.StringUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Callable;
@@ -63,6 +64,11 @@ public final class HttpRequest {
    * @since 1.4
    */
   public static final String USER_AGENT_SUFFIX = "Google-HTTP-Java-Client/" + VERSION + " (gzip)";
+
+  /**
+   * The maximum temp buffer size to use when encoding content in order to avoid encoding twice.
+   */
+  private static final long ENCODED_CONTENT_BUFFER_SIZE_LIMIT = 32 * 1024;
 
   /**
    * HTTP request execute interceptor to intercept the start of {@link #execute()} (before executing
@@ -912,10 +918,21 @@ public final class HttpRequest {
         if (encoding == null) {
           contentEncoding = null;
           contentLength = content.getLength();
+        } else if (!contentRetrySupported) {
+          contentEncoding = encoding.getName();
+          contentLength = -1;
         } else {
           contentEncoding = encoding.getName();
-          streamingContent = new HttpEncodingStreamingContent(streamingContent, encoding);
-          contentLength = contentRetrySupported ? IOUtils.computeLength(streamingContent) : -1;
+          final ByteArrayOutputStream encoded = new ByteArrayOutputStream();
+          final SizingOutputStream sizer = new SizingOutputStream(
+              encoded, ENCODED_CONTENT_BUFFER_SIZE_LIMIT);
+          encoding.encode(streamingContent, sizer);
+          if (sizer.isOversized()) {
+            streamingContent = new HttpEncodingStreamingContent(streamingContent, encoding);
+          } else {
+            streamingContent = new ByteArrayStreamingContent(encoded.toByteArray());
+          }
+          contentLength = sizer.count;
         }
         // append content headers to log buffer
         if (loggable) {

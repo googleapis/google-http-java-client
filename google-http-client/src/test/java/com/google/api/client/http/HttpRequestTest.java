@@ -980,12 +980,9 @@ public class HttpRequestTest extends TestCase {
           @Override
           public LowLevelHttpResponse execute() throws IOException {
             if (expectGZip) {
-              assertEquals(HttpEncodingStreamingContent.class, getStreamingContent().getClass());
               assertEquals("gzip", getContentEncoding());
               assertEquals(25, getContentLength());
             } else {
-              assertFalse(
-                  getStreamingContent().getClass().equals(HttpEncodingStreamingContent.class));
               assertNull(getContentEncoding());
               assertEquals(300, getContentLength());
             }
