@@ -116,6 +116,22 @@ public class DataTest extends TestCase {
     assertEquals(map, Data.clone(map));
   }
 
+  public void testClone_ArraysAsList() {
+    List<Object> orig = Arrays.<Object>asList("a", "b", "c", new ArrayList<Object>());
+    List<Object> result = Data.clone(orig);
+    assertTrue(orig != result);
+    assertEquals(orig, result);
+    assertTrue(orig.get(3) != result.get(3));
+
+    List list = Data.clone(Arrays.asList(new String[] {"a", "b", "c"}));
+    try {
+      list.set(0, new Object());
+      fail("Cloned list should be backed by String[], not Object[]");
+    } catch (ArrayStoreException e) {
+      // expected
+    }
+  }
+
   public void testNewCollectionInstance() throws Exception {
     assertEquals(ArrayList.class, Data.newCollectionInstance(null).getClass());
     assertEquals(ArrayList.class, Data.newCollectionInstance(String[].class).getClass());

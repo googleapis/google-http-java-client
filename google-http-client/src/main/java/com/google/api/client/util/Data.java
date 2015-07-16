@@ -23,6 +23,7 @@ import java.lang.reflect.WildcardType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -216,6 +217,14 @@ public class Data {
       copy = (T) Array.newInstance(dataClass.getComponentType(), Array.getLength(data));
     } else if (data instanceof ArrayMap<?, ?>) {
       copy = (T) ((ArrayMap<?, ?>) data).clone();
+    } else if ("java.util.Arrays$ArrayList".equals(dataClass.getName())) {
+      // Arrays$ArrayList does not have a zero-arg constructor, so it has to handled specially.
+      // Although it appears as an Object[], arrayCopy shares the same type as the array originally
+      // passed to Arrays.asList() because Arrays$ArrayList uses clone() to create it.
+      Object[] arrayCopy = ((List<?>) data).toArray();
+      deepCopy(arrayCopy, arrayCopy);
+      copy = (T) Arrays.asList(arrayCopy);
+      return copy;
     } else {
       copy = (T) Types.newInstance(dataClass);
     }
