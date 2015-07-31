@@ -1,6 +1,24 @@
+sudo: false
+
 language: java
+
+notifications:
+  email: false
+
+env:
+  global:
+    - PROTO_VERSION=2.4.1
+    - PATH="/tmp/proto$PROTO_VERSION/bin:$PATH"
+
 jdk:
   - oraclejdk8
   - oraclejdk7
   - openjdk7
   - openjdk6
+
+before_install:
+  - .buildscript/build-proto.sh $PROTO_VERSION
+
+cache:
+  directories:
+    - /tmp/proto$PROTO_VERSION
