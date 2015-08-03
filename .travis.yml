@@ -7,7 +7,8 @@ notifications:
 
 env:
   global:
-    - PATH="/tmp/proto2.4.1/bin:$PATH"
+    - PROTO_VERSION=2.4.1
+    - PATH="/tmp/proto$PROTO_VERSION/bin:$PATH"
 
 jdk:
   - oraclejdk8
@@ -16,8 +17,8 @@ jdk:
   - openjdk6
 
 before_install:
-  - .buildscript/build-proto.sh 2.4.1
+  - .buildscript/build-proto.sh $PROTO_VERSION
 
 cache:
   directories:
-    - /tmp/proto2.4.1
+    - /tmp/proto$PROTO_VERSION
