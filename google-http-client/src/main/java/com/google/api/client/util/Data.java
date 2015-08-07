@@ -219,8 +219,8 @@ public class Data {
       copy = (T) ((ArrayMap<?, ?>) data).clone();
     } else if ("java.util.Arrays$ArrayList".equals(dataClass.getName())) {
       // Arrays$ArrayList does not have a zero-arg constructor, so it has to handled specially.
-      // Although it appears as an Object[], arrayCopy shares the same type as the array originally
-      // passed to Arrays.asList() because Arrays$ArrayList uses clone() to create it.
+      // Arrays.asList(x).toArray() may or may not have the same runtime type as x.
+      // https://bugs.openjdk.java.net/browse/JDK-6260652
       Object[] arrayCopy = ((List<?>) data).toArray();
       deepCopy(arrayCopy, arrayCopy);
       copy = (T) Arrays.asList(arrayCopy);
