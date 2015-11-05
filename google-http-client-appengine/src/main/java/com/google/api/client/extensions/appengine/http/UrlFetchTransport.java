@@ -62,7 +62,8 @@ public final class UrlFetchTransport extends HttpTransport {
    * order.
    */
   private static final String[] SUPPORTED_METHODS =
-      {HttpMethods.DELETE, HttpMethods.GET, HttpMethods.HEAD, HttpMethods.POST, HttpMethods.PUT};
+      {HttpMethods.DELETE, HttpMethods.GET, HttpMethods.HEAD, HttpMethods.POST,
+         HttpMethods.PUT, HttpMethods.PATCH};
   static {
     Arrays.sort(SUPPORTED_METHODS);
   }
@@ -119,6 +120,8 @@ public final class UrlFetchTransport extends HttpTransport {
       httpMethod = HTTPMethod.HEAD;
     } else if (method.equals(HttpMethods.POST)) {
       httpMethod = HTTPMethod.POST;
+    } else if (method.equals(HttpMethods.PATCH)) {
+      httpMethod = HTTPMethod.PATCH;
     } else {
       httpMethod = HTTPMethod.PUT;
     }
