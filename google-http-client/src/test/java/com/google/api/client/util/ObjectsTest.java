@@ -22,18 +22,30 @@ import junit.framework.TestCase;
  * @author Yaniv Inbar
  */
 public class ObjectsTest extends TestCase {
-
-  class A {
-    String hello = "world";
-
-    @Override
-    public String toString() {
-      return Objects.toStringHelper(this).add("hello", hello).toString();
-    }
-  }
-
   public void testToStringHelper() {
-    A a = new A();
-    assertEquals("A{hello=world}", a.toString());
+    String toTest = Objects.toStringHelper(new TestClass()).add("hello", "world").toString();
+    assertEquals("TestClass{hello=world}", toTest);
   }
+
+  public void testConstructor_innerClass() {
+    String toTest = Objects.toStringHelper(new TestClass()).toString();
+    assertEquals("TestClass{}", toTest);
+  }
+
+  public void testToString_oneIntegerField() {
+    String toTest = Objects.toStringHelper(new TestClass())
+        .add("field1", new Integer(42))
+        .toString();
+    assertEquals("TestClass{field1=42}", toTest);
+  }
+
+  public void testToStringOmitNullValues_oneField() {
+    String toTest = Objects.toStringHelper(new TestClass())
+        .omitNullValues()
+        .add("field1", null)
+        .toString();
+    assertEquals("TestClass{}", toTest);
+  }
+
+  private static class TestClass {}
 }
