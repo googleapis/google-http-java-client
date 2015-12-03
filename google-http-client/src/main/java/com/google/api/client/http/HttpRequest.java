@@ -898,7 +898,7 @@ public final class HttpRequest {
 
       // content
       StreamingContent streamingContent = content;
-      final boolean contentRetrySupported = streamingContent == null || content.retrySupported();
+      final boolean contentRetrySupported = streamingContent == null;
       if (streamingContent != null) {
         final String contentEncoding;
         final long contentLength;

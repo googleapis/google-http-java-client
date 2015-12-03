@@ -61,4 +61,9 @@ public class ByteArrayStreamingContent implements StreamingContent {
     out.write(byteArray, offset, length);
     out.flush();
   }
+
+  public boolean retrySupported()
+  {
+    return true;
+  }
 }
