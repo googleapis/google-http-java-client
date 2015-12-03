@@ -16,6 +16,8 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.Preconditions;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -72,10 +74,6 @@ public final class InputStreamContent extends AbstractInputStreamContent {
     return length;
   }
 
-  public boolean retrySupported() {
-    return retrySupported;
-  }
-
   /**
    * Sets whether or not retry is supported. Defaults to {@code false}.
    *
@@ -118,5 +116,10 @@ public final class InputStreamContent extends AbstractInputStreamContent {
   public InputStreamContent setLength(long length) {
     this.length = length;
     return this;
+  }
+
+  public boolean retrySupported()
+  {
+    return this.retrySupported;
   }
 }

@@ -69,4 +69,9 @@ public final class LoggingStreamingContent implements StreamingContent {
     }
     out.flush();
   }
+
+  public boolean retrySupported()
+  {
+    return false;
+  }
 }

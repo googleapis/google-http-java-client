@@ -89,4 +89,5 @@ public final class FileContent extends AbstractInputStreamContent {
   public FileContent setCloseInputStream(boolean closeInputStream) {
     return (FileContent) super.setCloseInputStream(closeInputStream);
   }
+
 }

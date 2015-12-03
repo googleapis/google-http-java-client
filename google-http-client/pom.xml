@@ -94,7 +94,7 @@
                     <exclude name="META-INF/maven/**"/>
                   </zipfileset>
                 </jar>
-                <move file="target/scrubbed.jar" tofile="target/google-http-client-${project.version}.jar"/>
+                <move file="target/scrubbed.jar" tofile="target/google-http-client-${project.version}-scrubbed.jar"/>
               </target>
             </configuration>
           </execution>
