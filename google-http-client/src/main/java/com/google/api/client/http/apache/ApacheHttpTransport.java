@@ -73,84 +73,8 @@ import org.apache.http.params.HttpProtocolParams;
  * @author Yaniv Inbar
  * @since 1.0
  */
-<<<<<<< HEAD
 public final class ApacheHttpTransport extends HttpTransport
 {
-=======
-public final class ApacheHttpTransport extends HttpTransport {
-
-  /** Apache HTTP client. */
-  private final HttpClient httpClient;
-
-  /**
-   * Constructor that uses {@link #newDefaultHttpClient()} for the Apache HTTP client.
-   *
-   * <p>
-   * Use {@link Builder} to modify HTTP client options.
-   * </p>
-   *
-   * @since 1.3
-   */
-  public ApacheHttpTransport() {
-    this(newDefaultHttpClient());
-  }
-
-  /**
-   * Constructor that allows an alternative Apache HTTP client to be used.
-   *
-   * <p>
-   * Note that a few settings are overridden:
-   * </p>
-   * <ul>
-   * <li>HTTP version is set to 1.1 using {@link HttpProtocolParams#setVersion} with
-   * {@link HttpVersion#HTTP_1_1}.</li>
-   * <li>Redirects are disabled using {@link ClientPNames#HANDLE_REDIRECTS}.</li>
-   * <li>{@link ConnManagerParams#setTimeout} and {@link HttpConnectionParams#setConnectionTimeout}
-   * are set on each request based on {@link HttpRequest#getConnectTimeout()}.</li>
-   * <li>{@link HttpConnectionParams#setSoTimeout} is set on each request based on
-   * {@link HttpRequest#getReadTimeout()}.</li>
-   * </ul>
-   *
-   * <p>
-   * Use {@link Builder} for a more user-friendly way to modify the HTTP client options.
-   * </p>
-   *
-   * @param httpClient Apache HTTP client to use
-   *
-   * @since 1.6
-   */
-  public ApacheHttpTransport(HttpClient httpClient) {
-    this.httpClient = httpClient;
-  }
-
-  /**
-   * Creates a new instance of the Apache HTTP client that is used by the
-   * {@link #ApacheHttpTransport()} constructor.
-   *
-   * <p>
-   * Use this constructor if you want to customize the default Apache HTTP client. Settings:
-   * </p>
-   * <ul>
-   * <li>The client connection manager is set to {@link ThreadSafeClientConnManager}.</li>
-   * <li>The socket buffer size is set to 8192 using
-   * {@link HttpConnectionParams#setSocketBufferSize}.</li>
-   * <li><The retry mechanism is turned off by setting
-   * {@code new DefaultHttpRequestRetryHandler(0, false)}.</li>
-   * <li>The route planner uses {@link ProxySelectorRoutePlanner} with
-   * {@link ProxySelector#getDefault()}, which uses the proxy settings from <a
-   * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
-   * properties</a>.</li>
-   * </ul>
-   *
-   * @return new instance of the Apache HTTP client
-   * @since 1.6
-   */
-  public static DefaultHttpClient newDefaultHttpClient() {
-    return newDefaultHttpClient(
-        SSLSocketFactory.getSocketFactory(), newDefaultHttpParams(), ProxySelector.getDefault());
-  }
->>>>>>> origin/master
-
     /**
      * Creates a new instance of the Apache HTTP client that is used by the
      * {@link #ApacheHttpTransport()} constructor.
