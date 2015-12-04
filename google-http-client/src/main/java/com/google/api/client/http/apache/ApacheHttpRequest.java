@@ -69,6 +69,7 @@ final class ApacheHttpRequest extends LowLevelHttpRequest
             entity.setContentType(getContentType());
             ((HttpEntityEnclosingRequest) request).setEntity(entity);
         }
+
         return new ApacheHttpResponse(request, httpClient.execute(request));
     }
 }
