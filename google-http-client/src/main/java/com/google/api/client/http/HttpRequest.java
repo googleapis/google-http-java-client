@@ -65,6 +65,15 @@ public final class HttpRequest {
   public static final String USER_AGENT_SUFFIX = "Google-HTTP-Java-Client/" + VERSION + " (gzip)";
 
   /**
+   * The default number of retries that will be allowed to execute before the request will be
+   * terminated.
+   *
+   * @see #getNumberOfRetries
+   * @since 1.22
+   */
+  public static final int DEFAULT_NUMBER_OF_RETRIES = 10;
+
+  /**
    * HTTP request execute interceptor to intercept the start of {@link #execute()} (before executing
    * the HTTP request) or {@code null} for none.
    */
@@ -98,7 +107,7 @@ public final class HttpRequest {
    * {@link HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler} which handles
    * abnormal HTTP response or the I/O exception.
    */
-  private int numRetries = 10;
+  private int numRetries = DEFAULT_NUMBER_OF_RETRIES;
 
   /**
    * Determines the limit to the content size that will be logged during {@link #execute()}.
@@ -647,7 +656,7 @@ public final class HttpRequest {
    * abnormal HTTP response or the I/O exception.
    *
    * <p>
-   * The default value is {@code 10}.
+   * The default value is {@link #DEFAULT_NUMBER_OF_RETRIES}.
    * </p>
    *
    * @since 1.5
