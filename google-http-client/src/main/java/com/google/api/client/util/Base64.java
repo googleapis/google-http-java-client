@@ -17,8 +17,7 @@ package com.google.api.client.util;
 import com.google.common.io.BaseEncoding;
 
 /**
- * Proxy for base 64 encoding/decoding which matches the Base64 interface in Apache Commons (for
- * historical reasons).
+ * Proxy for Guava's {@link BaseEncoding#base64()} and {@link BaseEncoding#base64Url()}.
  *
  * @author Yaniv Inbar
  * @since 1.8
@@ -31,12 +30,13 @@ public class Base64 {
    * @param binaryData binary data to encode or {@code null} for {@code null} result
    * @return byte[] containing Base64 characters in their UTF-8 representation or {@code null} for
    * {@code null} input
+   * @see Base64#encodeBase64String(byte[])
    */
   public static byte[] encodeBase64(byte[] binaryData) {
     if (binaryData == null) {
       return null;
     }
-    return BaseEncoding.base64().encode(binaryData).getBytes();
+    return StringUtils.getBytesUtf8(encodeBase64String(binaryData));
   }
 
   /**
@@ -44,6 +44,7 @@ public class Base64 {
    *
    * @param binaryData binary data to encode or {@code null} for {@code null} result
    * @return String containing Base64 characters or {@code null} for {@code null} input
+   * @see BaseEncoding#encode(byte[])
    */
   public static String encodeBase64String(byte[] binaryData) {
     if (binaryData == null) {
@@ -59,12 +60,13 @@ public class Base64 {
    * @param binaryData binary data to encode or {@code null} for {@code null} result
    * @return byte[] containing Base64 characters in their UTF-8 representation or {@code null} for
    * {@code null} input
+   * @see Base64#encodeBase64URLSafeString(byte[])
    */
   public static byte[] encodeBase64URLSafe(byte[] binaryData) {
     if (binaryData == null) {
       return null;
     }
-    return BaseEncoding.base64Url().omitPadding().encode(binaryData).getBytes();
+    return StringUtils.getBytesUtf8(encodeBase64URLSafeString(binaryData));
   }
 
   /**
@@ -73,6 +75,7 @@ public class Base64 {
    *
    * @param binaryData binary data to encode or {@code null} for {@code null} result
    * @return String containing Base64 characters or {@code null} for {@code null} input
+   * @see BaseEncoding#encode(byte[])
    */
   public static String encodeBase64URLSafeString(byte[] binaryData) {
     if (binaryData == null) {
@@ -86,12 +89,13 @@ public class Base64 {
    *
    * @param base64Data Byte array containing Base64 data or {@code null} for {@code null} result
    * @return Array containing decoded data or {@code null} for {@code null} input
+   * @see Base64#decodeBase64(java.lang.String)
    */
   public static byte[] decodeBase64(byte[] base64Data) {
     if (base64Data == null) {
       return null;
     }
-    return decodeBase64(new String(base64Data));
+    return decodeBase64(StringUtils.newStringUtf8(base64Data));
   }
 
   /**
@@ -104,7 +108,6 @@ public class Base64 {
     if (base64String == null) {
       return null;
     }
-
     try {
       return BaseEncoding.base64().decode(base64String);
     } catch (IllegalArgumentException e) {
