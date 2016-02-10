@@ -313,6 +313,9 @@ public final class DateTime implements Serializable {
       second = Integer.parseInt(matcher.group(7)); // ss
       if (matcher.group(8) != null) { // contains .milliseconds?
         milliseconds = Integer.parseInt(matcher.group(8).substring(1)); // milliseconds
+        // The number of digits after the dot may not be 3. Need to renormalize.
+        int fractionDigits = matcher.group(8).substring(1).length() - 3;
+        milliseconds = (int) ((float) milliseconds / Math.pow(10, fractionDigits));
       }
     }
     Calendar dateTime = new GregorianCalendar(GMT);

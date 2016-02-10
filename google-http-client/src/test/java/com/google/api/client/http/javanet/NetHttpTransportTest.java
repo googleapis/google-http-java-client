@@ -63,17 +63,16 @@ public class NetHttpTransportTest extends TestCase {
 
 
   public void testExecute_methodUnchanged() throws Exception {
+    String body = "Arbitrary body";
+    byte[] buf = StringUtils.getBytesUtf8(body);
     for (String method : METHODS) {
-      HttpURLConnection connection =
-          (HttpURLConnection) new URL("http://www.google.com").openConnection();
+      HttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL))
+          .setResponseCode(200)
+          .setInputStream(new ByteArrayInputStream(buf));
       connection.setRequestMethod(method);
       NetHttpRequest request = new NetHttpRequest(connection);
       setContent(request, "text/html", "");
-      try {
-        request.execute().getContent().close();
-      } catch (IOException e) {
-        // expected when not connected to network
-      }
+      request.execute().getContent().close();
       assertEquals(method, connection.getRequestMethod());
     }
   }

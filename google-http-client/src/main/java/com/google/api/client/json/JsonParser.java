@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -842,11 +843,19 @@ public abstract class JsonParser {
           }
           throw new IllegalArgumentException("expected numeric type but got " + valueType);
         case VALUE_STRING:
-          Preconditions.checkArgument(valueClass == null
+          //TODO(user): Maybe refactor this method in multiple mini-methods for readability?
+          String text = getText().trim().toLowerCase(Locale.US);
+          // If we are expecting a Float / Double and the Text is NaN (case insensitive)
+          // Then: Accept, even if the Annotation is JsonString.
+          // Otherwise: Check that the Annotation is not JsonString.
+          if (!(((valueClass == float.class || valueClass == Float.class)
+               || (valueClass == double.class || valueClass == Double.class))
+               && (text.equals("nan") || text.equals("infinity") || text.equals("-infinity")))) {
+            Preconditions.checkArgument(valueClass == null
               || !Number.class.isAssignableFrom(valueClass) || fieldContext != null
               && fieldContext.getAnnotation(JsonString.class) != null,
               "number field formatted as a JSON string must use the @JsonString annotation");
-          // TODO(yanivi): "special" values like Double.POSITIVE_INFINITY?
+          }
           return Data.parsePrimitiveValue(valueType, getText());
         case VALUE_NULL:
           Preconditions.checkArgument(valueClass == null || !valueClass.isPrimitive(),
