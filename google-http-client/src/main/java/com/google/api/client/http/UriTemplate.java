@@ -20,7 +20,6 @@ import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -303,7 +302,7 @@ public class UriTemplate {
       String templates = pathUri.substring(next + 1, close);
       CompositeOutput compositeOutput = getCompositeOutput(templates);
       ListIterator<String> templateIterator =
-          ImmutableList.copyOf(Splitter.on(',').split(templates)).listIterator();
+          Splitter.on(',').splitToList(templates).listIterator();
       boolean isFirstParameter = true;
       while (templateIterator.hasNext()) {
         String template = templateIterator.next();
