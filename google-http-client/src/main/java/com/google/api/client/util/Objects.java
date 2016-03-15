@@ -17,10 +17,6 @@ package com.google.api.client.util;
 /**
  * Helper functions that can operate on any {@code Object}.
  *
- * <p>
- * NOTE: proxy for the Guava implementation of {@link com.google.common.base.Objects}.
- * </p>
- *
  * @since 1.14
  * @author Yaniv Inbar
  */
@@ -85,20 +81,22 @@ public final class Objects {
    *        class name
    */
   public static ToStringHelper toStringHelper(Object self) {
-    return new ToStringHelper(com.google.common.base.Objects.toStringHelper(self));
+    return new ToStringHelper(self.getClass().getSimpleName());
   }
 
+  // TODO(ejona): Swap to wrapping MoreObjects.ToStringHelper once depending on Guava 18.
   /** Support class for {@link Objects#toStringHelper}. */
   public static final class ToStringHelper {
-
-    /** Wrapped object. */
-    private final com.google.common.base.Objects.ToStringHelper wrapped;
+    private final String className;
+    private ValueHolder holderHead = new ValueHolder();
+    private ValueHolder holderTail = holderHead;
+    private boolean omitNullValues;
 
     /**
      * @param wrapped wrapped object
      */
-    ToStringHelper(com.google.common.base.Objects.ToStringHelper wrapped) {
-      this.wrapped = wrapped;
+    ToStringHelper(String className) {
+      this.className = className;
     }
 
     /**
@@ -107,7 +105,7 @@ public final class Objects {
      * methods, is not significant.
      */
     public ToStringHelper omitNullValues() {
-      wrapped.omitNullValues();
+      omitNullValues = true;
       return this;
     }
 
@@ -117,13 +115,48 @@ public final class Objects {
      * called, in which case this name/value pair will not be added.
      */
     public ToStringHelper add(String name, Object value) {
-      wrapped.add(name, value);
-      return this;
+      return addHolder(name, value);
     }
 
     @Override
     public String toString() {
-      return wrapped.toString();
+      // create a copy to keep it consistent in case value changes
+      boolean omitNullValuesSnapshot = omitNullValues;
+      String nextSeparator = "";
+      StringBuilder builder = new StringBuilder(32).append(className).append('{');
+      for (ValueHolder valueHolder = holderHead.next;
+          valueHolder != null;
+          valueHolder = valueHolder.next) {
+        if (!omitNullValuesSnapshot || valueHolder.value != null) {
+          builder.append(nextSeparator);
+          nextSeparator = ", ";
+
+          if (valueHolder.name != null) {
+            builder.append(valueHolder.name).append('=');
+          }
+          builder.append(valueHolder.value);
+        }
+      }
+      return builder.append('}').toString();
+    }
+
+    private ValueHolder addHolder() {
+      ValueHolder valueHolder = new ValueHolder();
+      holderTail = holderTail.next = valueHolder;
+      return valueHolder;
+    }
+
+    private ToStringHelper addHolder(String name, Object value) {
+      ValueHolder valueHolder = addHolder();
+      valueHolder.value = value;
+      valueHolder.name = Preconditions.checkNotNull(name);
+      return this;
+    }
+
+    private static final class ValueHolder {
+      String name;
+      Object value;
+      ValueHolder next;
     }
   }
 
