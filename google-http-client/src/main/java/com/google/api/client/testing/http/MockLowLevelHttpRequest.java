@@ -172,7 +172,7 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
     String contentType = getContentType();
     HttpMediaType mediaType = contentType != null ? new HttpMediaType(contentType) : null;
     Charset charset = mediaType == null || mediaType.getCharsetParameter() == null
-        ? Charsets.ISO_8859_1 : mediaType.getCharsetParameter();
+        ? Charsets.UTF_8 : mediaType.getCharsetParameter();
     return out.toString(charset.name());
   }
 

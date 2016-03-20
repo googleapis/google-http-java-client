@@ -518,12 +518,12 @@ public final class HttpResponse {
 
   /**
    * Returns the {@link Charset} specified in the Content-Type of this response or the
-   * {@code "ISO-8859-1"} charset as a default.
+   * {@code "UTF-8"} charset as a default.
    *
    * @since 1.10
    * */
   public Charset getContentCharset() {
     return mediaType == null || mediaType.getCharsetParameter() == null
-        ? Charsets.ISO_8859_1 : mediaType.getCharsetParameter();
+        ? Charsets.UTF_8 : mediaType.getCharsetParameter();
   }
 }
