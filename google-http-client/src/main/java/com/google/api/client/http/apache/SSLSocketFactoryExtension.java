@@ -14,8 +14,6 @@
 
 package com.google.api.client.http.apache;
 
-import org.apache.http.conn.ssl.SSLSocketFactory;
-
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -24,9 +22,9 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
-
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 
 /**
  * Implementation of SSL socket factory that extends Apache's implementation to provide

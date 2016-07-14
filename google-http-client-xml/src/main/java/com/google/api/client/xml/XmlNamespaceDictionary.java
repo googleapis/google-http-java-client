@@ -20,9 +20,6 @@ import com.google.api.client.util.DateTime;
 import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
-
-import org.xmlpull.v1.XmlSerializer;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -32,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import org.xmlpull.v1.XmlSerializer;
 
 /**
  * {@link Beta} <br/>
