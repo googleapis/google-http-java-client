@@ -18,12 +18,10 @@ import com.google.api.client.util.Beta;
 import com.google.api.client.util.store.DataStore;
 import com.google.api.client.util.store.DataStoreFactory;
 import com.google.common.collect.Sets;
-
-import junit.framework.TestCase;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link DataStoreFactory}.

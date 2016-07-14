@@ -14,15 +14,13 @@
 
 package com.google.api.client.extensions.android.json;
 
+import android.annotation.TargetApi;
+import android.util.JsonReader;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
-
-import android.annotation.TargetApi;
-import android.util.JsonReader;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.math.BigDecimal;

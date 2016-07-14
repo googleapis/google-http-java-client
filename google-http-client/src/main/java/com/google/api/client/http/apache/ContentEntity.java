@@ -16,12 +16,10 @@ package com.google.api.client.http.apache;
 
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StreamingContent;
-
-import org.apache.http.entity.AbstractHttpEntity;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import org.apache.http.entity.AbstractHttpEntity;
 
 /**
  * @author Yaniv Inbar

@@ -15,15 +15,13 @@
 package com.google.api.client.http.apache;
 
 import com.google.api.client.http.LowLevelHttpResponse;
-
+import java.io.IOException;
+import java.io.InputStream;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpRequestBase;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 final class ApacheHttpResponse extends LowLevelHttpResponse {
 

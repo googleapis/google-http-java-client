@@ -14,10 +14,9 @@
 
 package com.google.api.client.extensions.android;
 
+import android.os.Build;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
-
-import android.os.Build;
 
 /**
  * {@link Beta} <br/>

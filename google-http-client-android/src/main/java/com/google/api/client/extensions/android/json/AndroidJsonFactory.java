@@ -14,17 +14,15 @@
 
 package com.google.api.client.extensions.android.json;
 
+import android.annotation.TargetApi;
+import android.util.JsonReader;
+import android.util.JsonWriter;
 import com.google.api.client.extensions.android.AndroidUtils;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Charsets;
-
-import android.annotation.TargetApi;
-import android.util.JsonReader;
-import android.util.JsonWriter;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
