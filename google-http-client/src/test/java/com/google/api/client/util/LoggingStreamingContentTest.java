@@ -15,13 +15,11 @@
 package com.google.api.client.util;
 
 import com.google.api.client.testing.util.LogRecordingHandler;
-
-import junit.framework.TestCase;
-
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link LoggingStreamingContent}.

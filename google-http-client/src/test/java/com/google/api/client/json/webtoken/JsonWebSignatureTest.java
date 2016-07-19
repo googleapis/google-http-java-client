@@ -17,13 +17,10 @@ package com.google.api.client.json.webtoken;
 import com.google.api.client.testing.json.MockJsonFactory;
 import com.google.api.client.testing.json.webtoken.TestCertificates;
 import com.google.api.client.testing.util.SecurityTestUtils;
-
-import junit.framework.TestCase;
-
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
-
 import javax.net.ssl.X509TrustManager;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link JsonWebSignature}.

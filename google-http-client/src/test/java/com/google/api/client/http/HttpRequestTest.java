@@ -31,10 +31,6 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -46,6 +42,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
+import junit.framework.Assert;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link HttpRequest}.
