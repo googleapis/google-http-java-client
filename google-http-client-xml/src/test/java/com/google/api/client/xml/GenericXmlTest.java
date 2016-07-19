@@ -15,13 +15,10 @@
 package com.google.api.client.xml;
 
 import com.google.api.client.util.ArrayMap;
-
-import org.xmlpull.v1.XmlPullParser;
-
-import junit.framework.TestCase;
-
 import java.io.StringReader;
 import java.util.Collection;
+import junit.framework.TestCase;
+import org.xmlpull.v1.XmlPullParser;
 
 /**
  * Tests {@link GenericXml}.

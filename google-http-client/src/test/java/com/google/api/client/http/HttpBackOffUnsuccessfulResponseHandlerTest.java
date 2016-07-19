@@ -18,10 +18,8 @@ import com.google.api.client.http.HttpBackOffUnsuccessfulResponseHandler.BackOff
 import com.google.api.client.testing.util.MockBackOff;
 import com.google.api.client.testing.util.MockSleeper;
 import com.google.api.client.util.BackOff;
-
-import junit.framework.TestCase;
-
 import java.io.IOException;
+import junit.framework.TestCase;
 
 /**
  * Test {@link HttpBackOffUnsuccessfulResponseHandler}.

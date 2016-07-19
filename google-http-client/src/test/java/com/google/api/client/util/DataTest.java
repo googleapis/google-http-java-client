@@ -14,8 +14,6 @@
 
 package com.google.api.client.util;
 
-import junit.framework.TestCase;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -40,6 +38,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentMap;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link Data}.

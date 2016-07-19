@@ -16,13 +16,11 @@ package com.google.api.client.http.javanet;
 
 import com.google.api.client.testing.http.javanet.MockHttpURLConnection;
 import com.google.api.client.util.StringUtils;
-
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link NetHttpResponse}.

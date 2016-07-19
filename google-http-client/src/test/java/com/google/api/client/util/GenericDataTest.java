@@ -15,11 +15,9 @@
 package com.google.api.client.util;
 
 import com.google.api.client.util.GenericData.Flags;
-
+import java.util.EnumSet;
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
-import java.util.EnumSet;
 
 /**
  * Tests {@link GenericData}.

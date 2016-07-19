@@ -17,13 +17,11 @@ package com.google.api.client.http;
 import com.google.api.client.util.Value;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import junit.framework.TestCase;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link UriTemplate}.

@@ -14,9 +14,8 @@
 
 package com.google.api.client.protobuf;
 
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link ProtocolBuffers}.

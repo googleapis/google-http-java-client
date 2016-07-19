@@ -17,13 +17,11 @@ package com.google.api.client.xml;
 import com.google.api.client.util.Key;
 import com.google.api.client.xml.atom.Atom;
 import com.google.common.collect.ImmutableMap;
-
-import junit.framework.TestCase;
-import org.xmlpull.v1.XmlSerializer;
-
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.TreeSet;
+import junit.framework.TestCase;
+import org.xmlpull.v1.XmlSerializer;
 
 /**
  * Tests {@link XmlNamespaceDictionary}.
