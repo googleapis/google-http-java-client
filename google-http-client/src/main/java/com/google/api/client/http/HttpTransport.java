@@ -52,8 +52,10 @@ import java.util.logging.Logger;
  * </li>
  * <li>Other Java environments
  * <ul>
+ * <li>{@code com.google.api.client.googleapis.javanet.GoogleNetHttpTransport} is included in
+ * google-api-cient 1.22.0, so easy to include.</li>
  * <li>{@code com.google.api.client.javanet.NetHttpTransport} is based on the HttpURLConnection
- * built into the Java SDK, so it is normally the preferred choice.</li>
+ * built into the Java SDK, so it used to be the preferred choice.</li>
  * <li>{@code com.google.api.client.apache.ApacheHttpTransport} is a good choice for users of the
  * Apache HTTP Client, especially if you need some of the configuration options available in that
  * library.</li>
