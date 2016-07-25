@@ -14,11 +14,10 @@
 
 package com.google.api.client.util;
 
-import junit.framework.TestCase;
-import org.junit.Assert;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import junit.framework.TestCase;
+import org.junit.Assert;
 
 /**
  * Tests {@link PemReader}.
