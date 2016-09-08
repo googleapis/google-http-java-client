@@ -75,12 +75,10 @@ final class NetHttpRequest extends LowLevelHttpRequest {
           connection.setChunkedStreamingMode(0);
         }
         OutputStream out = connection.getOutputStream();
-        IOException thrown = null;
+        boolean threw = true;
         try {
           getStreamingContent().writeTo(out);
-        } catch(IOException exception) {
-          thrown = exception;
-          throw exception;
+          threw = false;
         } finally {
           try {
             out.close();
@@ -88,7 +86,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
             // When writeTo() throws an exception, chances are that the close call will also fail.
             // In such case, swallow exception from close call so that the underlying cause can
             // propagate.
-            if (thrown == null) {
+            if (!threw) {
               throw exception;
             }
           }
