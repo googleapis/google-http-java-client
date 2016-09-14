@@ -68,6 +68,9 @@ public class HttpStatusCodes {
   
   /** Status code for a request that could not be completed due to a resource conflict. */
   public static final int STATUS_CODE_CONFLICT = 409;
+  
+  /** Status code for a request for which one of the conditions it was made under has failed. */
+  public static final int STATUS_CODE_PRECONDITION_FAILED = 412;
 
   /** Status code for an internal server error. */
   public static final int STATUS_CODE_SERVER_ERROR = 500;
