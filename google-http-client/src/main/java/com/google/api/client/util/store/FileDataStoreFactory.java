@@ -17,6 +17,8 @@ package com.google.api.client.util.store;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Maps;
 import com.google.api.client.util.Throwables;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,7 +27,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.logging.Logger;
 
 /**
  * Thread-safe file implementation of a credential store.
@@ -41,7 +42,7 @@ import java.util.logging.Logger;
  */
 public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
-  private static final Logger LOGGER = Logger.getLogger(FileDataStoreFactory.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(FileDataStoreFactory.class);
 
   /** Directory to store data. */
   private final File dataDirectory;
@@ -131,12 +132,12 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
       if (!(Boolean) setReadable.invoke(file, false, false)
           || !(Boolean) setWritable.invoke(file, false, false)
           || !(Boolean) setExecutable.invoke(file, false, false)) {
-        LOGGER.warning("unable to change permissions for everybody: " + file);
+        LOGGER.warn("unable to change permissions for everybody: " + file);
       }
       if (!(Boolean) setReadable.invoke(file, true, true)
           || !(Boolean) setWritable.invoke(file, true, true)
           || !(Boolean) setExecutable.invoke(file, true, true)) {
-        LOGGER.warning("unable to change permissions for owner: " + file);
+        LOGGER.warn("unable to change permissions for owner: " + file);
       }
     } catch (InvocationTargetException exception) {
       Throwable cause = exception.getCause();
@@ -144,7 +145,7 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
       // shouldn't reach this point, but just in case...
       throw new RuntimeException(cause);
     } catch (NoSuchMethodException exception) {
-      LOGGER.warning("Unable to set permissions for " + file
+      LOGGER.warn("Unable to set permissions for " + file
           + ", likely because you are running a version of Java prior to 1.6");
     } catch (SecurityException exception) {
       // ignored

@@ -14,14 +14,20 @@
 
 package com.google.api.client.util;
 
-import com.google.api.client.testing.util.LogRecordingHandler;
-
 import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
+import uk.org.lidalia.slf4jtest.LoggingEvent;
+import uk.org.lidalia.slf4jtest.TestLogger;
+import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 
 /**
  * Tests {@link LoggingStreamingContent}.
@@ -30,69 +36,114 @@ import java.util.logging.Logger;
  */
 public class LoggingStreamingContentTest extends TestCase {
 
-  static final Logger LOGGER = Logger.getLogger(LoggingStreamingContentTest.class.getName());
+  static final Logger LOGGER = LoggerFactory.getLogger(LoggingStreamingContentTest.class);
+
+  // For capturing slf4j logs.
+  private TestLogger logInterceptor;
 
   private static final byte[] SAMPLE_UTF8 =
       new byte[] {49, 50, 51, -41, -103, -41, -96, -41, -103, -41, -111};
   private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
 
+  @Before
+  public void setUp() {
+    logInterceptor = TestLoggerFactory.getTestLogger(LoggingStreamingContentTest.class);
+    logInterceptor.clearAll();
+  }
+
+  @After
+  public void clearLoggers() {
+    TestLoggerFactory.clear();
+  }
+
   /**
    * Test method for {@link LoggingStreamingContent#writeTo(java.io.OutputStream)}.
    */
   public void testWriteTo() throws Exception {
+    logInterceptor.clear();
     LoggingStreamingContent logContent = new LoggingStreamingContent(
-        new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, Integer.MAX_VALUE);
+        new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.TRACE, Integer.MAX_VALUE);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    LOGGER.setLevel(Level.CONFIG);
-    LogRecordingHandler recorder = new LogRecordingHandler();
-    LOGGER.addHandler(recorder);
     logContent.writeTo(out);
     out.close();
-    assertEquals(Arrays.asList("Total: 11 bytes", SAMPLE), recorder.messages());
+
+    List<String> actualMessages = new ArrayList<String>();
+
+    for (LoggingEvent loggingEvent : logInterceptor.getAllLoggingEvents()) {
+      actualMessages.add(loggingEvent.getMessage());
+    }
+
+    assertEquals(Arrays.asList("Total: 11 bytes", SAMPLE), actualMessages);
   }
 
   public void testContentLoggingLimit() throws Exception {
-    LOGGER.setLevel(Level.CONFIG);
-
     // Set the content logging limit to be equal to the length of the content.
-    LogRecordingHandler recorder = new LogRecordingHandler();
-    LOGGER.addHandler(recorder);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     LoggingStreamingContent logContent = new LoggingStreamingContent(
-        new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, SAMPLE_UTF8.length);
+        new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.TRACE, SAMPLE_UTF8.length);
     logContent.writeTo(out);
-    assertEquals(Arrays.asList("Total: 11 bytes", SAMPLE), recorder.messages());
+
+    List<String> actualMessages = new ArrayList<String>();
+
+    for (LoggingEvent loggingEvent : logInterceptor.getAllLoggingEvents()) {
+      actualMessages.add(loggingEvent.getMessage());
+    }
+
+    assertEquals(Arrays.asList("Total: 11 bytes", SAMPLE), actualMessages);
+
+    logInterceptor.clearAll();
 
     // Set the content logging limit to be less than the length of the content.
-    recorder = new LogRecordingHandler();
-    LOGGER.addHandler(recorder);
     logContent = new LoggingStreamingContent(
-        new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, SAMPLE_UTF8.length - 1);
+        new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.TRACE, SAMPLE_UTF8.length - 1);
     logContent.writeTo(new ByteArrayOutputStream());
+
+    actualMessages = new ArrayList<String>();
+
+    for (LoggingEvent loggingEvent : logInterceptor.getLoggingEvents()) {
+      actualMessages.add(loggingEvent.getMessage());
+    }
+
     assertEquals(
         Arrays.asList("Total: 11 bytes (logging first 10 bytes)", "123\u05D9\u05e0\u05D9\ufffd"),
-        recorder.messages());
+        actualMessages);
+
+    logInterceptor.clearAll();
 
     // Set the content logging limit to 0 to disable content logging.
-    recorder = new LogRecordingHandler();
-    LOGGER.addHandler(recorder);
     logContent = new LoggingStreamingContent(
-        new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, 0);
+        new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.TRACE, 0);
     logContent.writeTo(new ByteArrayOutputStream());
-    assertEquals(Arrays.asList("Total: 11 bytes"), recorder.messages());
+
+    actualMessages = new ArrayList<String>();
+
+    for (LoggingEvent loggingEvent : logInterceptor.getAllLoggingEvents()) {
+      actualMessages.add(loggingEvent.getMessage());
+    }
+
+    assertEquals(Arrays.asList("Total: 11 bytes"), actualMessages);
+
+    logInterceptor.clearAll();
 
     // writeTo should behave as expected even if content length is specified to be -1.
-    recorder = new LogRecordingHandler();
-    LOGGER.addHandler(recorder);
     logContent = new LoggingStreamingContent(
-        new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, SAMPLE_UTF8.length);
+        new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.TRACE, SAMPLE_UTF8.length);
     logContent.writeTo(new ByteArrayOutputStream());
-    assertEquals(Arrays.asList("Total: 11 bytes", SAMPLE), recorder.messages());
+
+    actualMessages = new ArrayList<String>();
+
+    for (LoggingEvent loggingEvent : logInterceptor.getAllLoggingEvents()) {
+      actualMessages.add(loggingEvent.getMessage());
+    }
+
+    assertEquals(Arrays.asList("Total: 11 bytes", SAMPLE), actualMessages);
+
+    logInterceptor.clearAll();
 
     // Assert that an exception is thrown if content logging limit < 0.
     try {
       logContent = new LoggingStreamingContent(
-          new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, -1);
+          new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.TRACE, -1);
       logContent.writeTo(new ByteArrayOutputStream());
       fail("Expected: " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {

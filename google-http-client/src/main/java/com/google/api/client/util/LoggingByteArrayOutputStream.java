@@ -14,11 +14,12 @@
 
 package com.google.api.client.util;
 
+import org.slf4j.Logger;
+import org.slf4j.event.Level;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Thread-safe byte array output stream that logs what was written to it when the stream is closed.
@@ -102,12 +103,11 @@ public class LoggingByteArrayOutputStream extends ByteArrayOutputStream {
           LoggingByteArrayOutputStream.appendBytes(buf, count);
           buf.append(")");
         }
-        logger.config(buf.toString());
+        logger.trace(buf.toString());
         // log response content
         if (count != 0) {
           // strip out some unprintable control chars
-          logger.log(loggingLevel,
-              toString("UTF-8").replaceAll("[\\x00-\\x09\\x0B\\x0C\\x0E-\\x1F\\x7F]", " "));
+          logger.info(toString("UTF-8").replaceAll("[\\x00-\\x09\\x0B\\x0C\\x0E-\\x1F\\x7F]", " "));
         }
       }
       closed = true;

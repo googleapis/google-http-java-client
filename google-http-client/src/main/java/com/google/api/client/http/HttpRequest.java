@@ -22,6 +22,8 @@ import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Sleeper;
 import com.google.api.client.util.StreamingContent;
 import com.google.api.client.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.event.Level;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,8 +32,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * HTTP request.
@@ -813,9 +813,9 @@ public final class HttpRequest {
    * </p>
    *
    * <p>
-   * Almost all details of the request and response are logged if {@link Level#CONFIG} is loggable.
+   * Almost all details of the request and response are logged if {@link Level#TRACE} is loggable.
    * The only exception is the value of the {@code Authorization} header which is only logged if
-   * {@link Level#ALL} is loggable.
+   * {@link Level#TRACE} is loggable.
    * </p>
    *
    * <p>
@@ -871,7 +871,7 @@ public final class HttpRequest {
       String urlString = url.build();
       LowLevelHttpRequest lowLevelHttpRequest = transport.buildRequest(requestMethod, urlString);
       Logger logger = HttpTransport.LOGGER;
-      boolean loggable = loggingEnabled && logger.isLoggable(Level.CONFIG);
+      boolean loggable = loggingEnabled && logger.isTraceEnabled();
       StringBuilder logbuf = null;
       StringBuilder curlbuf = null;
       // log method and URL
@@ -915,7 +915,7 @@ public final class HttpRequest {
         // log content
         if (loggable) {
           streamingContent = new LoggingStreamingContent(
-              streamingContent, HttpTransport.LOGGER, Level.CONFIG, contentLoggingLimit);
+              streamingContent, HttpTransport.LOGGER, Level.TRACE, contentLoggingLimit);
         }
         // encoding
         if (encoding == null) {
@@ -959,7 +959,7 @@ public final class HttpRequest {
       }
       // log from buffer
       if (loggable) {
-        logger.config(logbuf.toString());
+        logger.trace(logbuf.toString());
         if (curlbuf != null) {
           curlbuf.append(" -- '");
           curlbuf.append(urlString.replaceAll("\'", "'\"'\"'"));
@@ -967,7 +967,7 @@ public final class HttpRequest {
           if (streamingContent != null) {
             curlbuf.append(" << $$$");
           }
-          logger.config(curlbuf.toString());
+          logger.trace(curlbuf.toString());
         }
       }
 
@@ -999,7 +999,7 @@ public final class HttpRequest {
         }
         // Save the exception in case the retries do not work and we need to re-throw it later.
         executeException = e;
-        logger.log(Level.WARNING, "exception thrown while executing request", e);
+        logger.warn("exception thrown while executing request", e);
       }
 
       // Flag used to indicate if an exception is thrown before the response has completed

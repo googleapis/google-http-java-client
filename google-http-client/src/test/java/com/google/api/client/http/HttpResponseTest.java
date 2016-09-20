@@ -19,18 +19,23 @@ import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
-import com.google.api.client.testing.util.LogRecordingHandler;
 import com.google.api.client.testing.util.TestableByteArrayInputStream;
 import com.google.api.client.util.Key;
 
 import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import uk.org.lidalia.slf4jtest.LoggingEvent;
+import uk.org.lidalia.slf4jtest.TestLogger;
+import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.logging.Level;
+import java.util.List;
 
 /**
  * Tests {@link HttpResponse}.
@@ -39,11 +44,25 @@ import java.util.logging.Level;
  */
 public class HttpResponseTest extends TestCase {
 
+  // For capturing slf4j logs.
+  private TestLogger logger;
+
   public HttpResponseTest() {
   }
 
   public HttpResponseTest(String name) {
     super(name);
+  }
+
+  @Before
+  public void setUp() {
+    logger = TestLoggerFactory.getTestLogger(HttpTransport.class);
+    logger.clearAll();
+  }
+
+  @After
+  public void clearLoggers() {
+    TestLoggerFactory.clear();
   }
 
   public void testParseAsString_none() throws Exception {
@@ -351,6 +370,7 @@ public class HttpResponseTest extends TestCase {
 
   public void subtestContentLoggingLimit(final String content, int contentLoggingLimit,
       boolean loggingEnabled, String... expectedMessages) throws Exception {
+
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildRequest(String method, final String url) throws IOException {
@@ -365,7 +385,6 @@ public class HttpResponseTest extends TestCase {
         };
       }
     };
-    HttpTransport.LOGGER.setLevel(Level.CONFIG);
 
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
@@ -374,10 +393,19 @@ public class HttpResponseTest extends TestCase {
     assertEquals(loggingEnabled, response.isLoggingEnabled());
 
     response.setContentLoggingLimit(contentLoggingLimit);
-    LogRecordingHandler recorder = new LogRecordingHandler();
-    HttpTransport.LOGGER.addHandler(recorder);
+
+    // Have to clear this to 'simulate' a logging interceptor being injected at the right time...
+    logger.clear();
+
     response.parseAsString();
-    assertEquals(Arrays.asList(expectedMessages), recorder.messages());
+
+    List<String> actualMessages = new ArrayList<String>();
+
+    for (LoggingEvent loggingEvent : logger.getLoggingEvents()) {
+      actualMessages.add(loggingEvent.getMessage());
+    }
+
+    assertEquals(Arrays.asList(expectedMessages), actualMessages);
   }
 
   public void testGetContent_gzipNoContent() throws IOException {

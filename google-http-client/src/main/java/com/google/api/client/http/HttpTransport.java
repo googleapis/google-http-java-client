@@ -14,9 +14,11 @@
 
 package com.google.api.client.http;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.logging.Logger;
 
 /**
  * Thread-safe abstract HTTP transport.
@@ -78,7 +80,7 @@ import java.util.logging.Logger;
  */
 public abstract class HttpTransport {
 
-  static final Logger LOGGER = Logger.getLogger(HttpTransport.class.getName());
+  static final Logger LOGGER = LoggerFactory.getLogger(HttpTransport.class);
 
   /**
    * All valid request methods as specified in {@link #supportsMethod(String)}, sorted in ascending

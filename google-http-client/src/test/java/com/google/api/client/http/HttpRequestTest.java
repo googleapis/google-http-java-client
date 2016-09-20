@@ -19,7 +19,6 @@ import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockHttpUnsuccessfulResponseHandler;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
-import com.google.api.client.testing.util.LogRecordingHandler;
 import com.google.api.client.testing.util.MockBackOff;
 import com.google.api.client.testing.util.MockSleeper;
 import com.google.api.client.util.BackOff;
@@ -34,6 +33,11 @@ import com.google.common.collect.Lists;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import uk.org.lidalia.slf4jtest.LoggingEvent;
+import uk.org.lidalia.slf4jtest.TestLogger;
+import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -45,7 +49,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
 
 /**
  * Tests {@link HttpRequest}.
@@ -59,20 +62,22 @@ public class HttpRequestTest extends TestCase {
   private static final Set<String> OTHER_METHODS =
       ImmutableSet.of(HttpMethods.HEAD, HttpMethods.PATCH);
 
+  // For capturing slf4j logs.
+  private TestLogger logger;
+
   public HttpRequestTest(String name) {
     super(name);
   }
 
-  @Override
+  @Before
   public void setUp() {
-    // suppress logging warnings to the console
-    HttpTransport.LOGGER.setLevel(java.util.logging.Level.SEVERE);
+    logger = TestLoggerFactory.getTestLogger(HttpTransport.class);
+    logger.clearAll();
   }
 
-  @Override
-  public void tearDown() {
-    // back to the standard logging level for console
-    HttpTransport.LOGGER.setLevel(java.util.logging.Level.WARNING);
+  @After
+  public void clearLoggers() {
+    TestLoggerFactory.clear();
   }
 
   public void testNotSupportedByDefault() throws Exception {
@@ -1034,8 +1039,6 @@ public class HttpRequestTest extends TestCase {
       }
     }
     MyTransport transport = new MyTransport();
-    // Set the logging level.
-    HttpTransport.LOGGER.setLevel(java.util.logging.Level.CONFIG);
     // Create content of length 300.
     byte[] content = new byte[300];
     Arrays.fill(content, (byte) ' ');
@@ -1190,27 +1193,21 @@ public class HttpRequestTest extends TestCase {
   }
 
   public void testExecute_curlLogger() throws Exception {
-    LogRecordingHandler recorder = new LogRecordingHandler();
-    HttpTransport.LOGGER.setLevel(Level.CONFIG);
-    HttpTransport.LOGGER.addHandler(recorder);
     new MockHttpTransport().createRequestFactory()
         .buildGetRequest(new GenericUrl("http://google.com/#q=a'b'c")).execute();
     boolean found = false;
-    for (String message : recorder.messages()) {
-      if (message.startsWith("curl")) {
+    for (LoggingEvent loggingEvent : logger.getLoggingEvents()) {
+      if (loggingEvent.getMessage().startsWith("curl")) {
         found = true;
         assertEquals("curl -v --compressed -H 'Accept-Encoding: gzip' -H 'User-Agent: "
             + HttpRequest.USER_AGENT_SUFFIX + "' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c'",
-            message);
+            loggingEvent.getMessage());
       }
     }
     assertTrue(found);
   }
 
   public void testExecute_curlLoggerWithContentEncoding() throws Exception {
-    LogRecordingHandler recorder = new LogRecordingHandler();
-    HttpTransport.LOGGER.setLevel(Level.CONFIG);
-    HttpTransport.LOGGER.addHandler(recorder);
 
     String contentValue = "hello";
     byte[] bytes = StringUtils.getBytesUtf8(contentValue);
@@ -1227,10 +1224,10 @@ public class HttpRequestTest extends TestCase {
         + "-H 'User-Agent: " + HttpRequest.USER_AGENT_SUFFIX
         + "' -H 'Content-Type: text/plain; charset=UTF-8' -H 'Content-Encoding: gzip' "
         + "-d '@-' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c' << $$$";
-    for (String message : recorder.messages()) {
-      if (message.startsWith("curl")) {
+    for (LoggingEvent loggingEvent : logger.getLoggingEvents()) {
+      if (loggingEvent.getMessage().startsWith("curl")) {
         found = true;
-        assertEquals(expectedCurlLog, message);
+        assertEquals(expectedCurlLog, loggingEvent.getMessage());
       }
     }
     assertTrue(found);
