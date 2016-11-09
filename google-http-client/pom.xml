@@ -137,5 +137,14 @@
       <artifactId>commons-codec</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>uk.org.lidalia</groupId>
+      <artifactId>slf4j-test</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

@@ -25,6 +25,7 @@ import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.Throwables;
 import com.google.api.client.util.Types;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -37,8 +38,6 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Stores HTTP headers used in an HTTP request or response, as defined in <a
@@ -868,7 +867,7 @@ public class HttpHeaders extends GenericData {
     // log header
     String loggedStringValue = stringValue;
     if (("Authorization".equalsIgnoreCase(name) || "Cookie".equalsIgnoreCase(name))
-        && (logger == null || !logger.isLoggable(Level.ALL))) {
+        && (logger == null || !logger.isTraceEnabled())) {
       loggedStringValue = "<Not Logged>";
     }
     if (logbuf != null) {

@@ -19,6 +19,8 @@ import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingInputStream;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.event.Level;
 
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
@@ -27,8 +29,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -127,7 +127,7 @@ public final class HttpResponse {
     String message = response.getReasonPhrase();
     statusMessage = message;
     Logger logger = HttpTransport.LOGGER;
-    boolean loggable = loggingEnabled && logger.isLoggable(Level.CONFIG);
+    boolean loggable = loggingEnabled && logger.isTraceEnabled();
     StringBuilder logbuf = null;
     if (loggable) {
       logbuf = new StringBuilder();
@@ -158,7 +158,7 @@ public final class HttpResponse {
 
     // log from buffer
     if (loggable) {
-      logger.config(logbuf.toString());
+      logger.trace(logbuf.toString());
     }
   }
 
@@ -364,9 +364,9 @@ public final class HttpResponse {
           }
           // logging (wrap content with LoggingInputStream)
           Logger logger = HttpTransport.LOGGER;
-          if (loggingEnabled && logger.isLoggable(Level.CONFIG)) {
+          if (loggingEnabled && logger.isTraceEnabled()) {
             lowLevelResponseContent = new LoggingInputStream(
-                lowLevelResponseContent, logger, Level.CONFIG, contentLoggingLimit);
+                lowLevelResponseContent, logger, Level.TRACE, contentLoggingLimit);
           }
           content = lowLevelResponseContent;
           contentProcessed = true;

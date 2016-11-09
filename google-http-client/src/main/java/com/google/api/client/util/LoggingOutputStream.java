@@ -15,11 +15,12 @@
 package com.google.api.client.util;
 
 
+import org.slf4j.Logger;
+import org.slf4j.event.Level;
+
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Thread-safe output stream wrapper that forwards all writes to a given output stream, while

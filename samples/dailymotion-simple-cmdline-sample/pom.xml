@@ -25,12 +25,6 @@
         </executions>
         <configuration>
           <mainClass>com.google.api.services.samples.dailymotion.cmdline.simple.DailyMotionSample</mainClass>
-          <systemProperties>
-            <systemProperty>
-              <key>java.util.logging.config.file</key>
-              <value>logging.properties</value>
-            </systemProperty>
-          </systemProperties>
         </configuration>
       </plugin>
       <plugin>
@@ -84,6 +78,10 @@
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-jackson2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
     </dependency>
   </dependencies>
   <properties>
