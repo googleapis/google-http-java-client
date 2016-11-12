@@ -51,6 +51,11 @@ public final class HttpEncodingStreamingContent implements StreamingContent {
     encoding.encode(content, out);
   }
 
+  public boolean retrySupported()
+  {
+    return this.content instanceof HttpContent && ((HttpContent) this.content).retrySupported();
+  }
+
   /** Returns the streaming content. */
   public StreamingContent getContent() {
     return content;
