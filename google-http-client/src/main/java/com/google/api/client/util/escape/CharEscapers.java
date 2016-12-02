@@ -15,6 +15,8 @@
 package com.google.api.client.util.escape;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
 
 /**
@@ -92,6 +94,28 @@ public final class CharEscapers {
       return URLDecoder.decode(uri, "UTF-8");
     } catch (UnsupportedEncodingException e) {
       // UTF-8 encoding guaranteed to be supported by JVM
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
+   * Percent-decodes a US-ASCII string into a Unicode string. UTF-8 encoding is used to determine
+   * what characters are represented by any consecutive sequences of the form "%<i>XX</i>".
+   * Returns the raw path component of this URI.
+   *
+   * <p>
+   * This does not replace each occurrence of '+'. So this method can be used for
+   * non application/x-www-form-urlencoded strings such as host and path.
+   * </p>
+   *
+   * @param uri a percent-encoded US-ASCII string
+   * @return a Unicode string
+   *
+   */
+  public static String decodeUriPath(String uri) {
+    try {
+      return new URI(uri).getPath();
+    } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }
   }
