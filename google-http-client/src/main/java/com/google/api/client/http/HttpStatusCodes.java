@@ -51,6 +51,9 @@ public class HttpStatusCodes {
   /** Status code for a resource that has temporarily moved to a new URI. */
   public static final int STATUS_CODE_TEMPORARY_REDIRECT = 307;
 
+  /** Status code for a request that could not be understood by the server. */
+  public static final int STATUS_CODE_BAD_REQUEST = 400;
+
   /** Status code for a request that requires user authentication. */
   public static final int STATUS_CODE_UNAUTHORIZED = 401;
 
