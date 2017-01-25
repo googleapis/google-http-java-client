@@ -126,11 +126,6 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.osgi.core</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
       <groupId>com.google.android</groupId>
       <artifactId>android</artifactId>
       <version>1.5_r4</version>
