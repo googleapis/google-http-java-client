@@ -26,6 +26,9 @@ public class HttpStatusCodes {
   /** Status code for a successful request. */
   public static final int STATUS_CODE_OK = 200;
 
+  /** Status code for a successful request that has been fulfilled to create a new resource. */
+  public static final int STATUS_CODE_CREATED = 201;
+
   /**
    * Status code for a successful request with no content information.
    *
