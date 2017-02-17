@@ -74,7 +74,14 @@ public final class Throwables {
    * @param throwable throwable (may be {@code null})
    */
   public static void propagateIfPossible(Throwable throwable) {
-    com.google.common.base.Throwables.propagateIfPossible(throwable);
+    if (throwable != null) {
+      if (throwable instanceof RuntimeException) {
+        throw (RuntimeException) throwable;
+      }
+      if (throwable instanceof Error) {
+        throw (Error) throwable;
+      }
+    }
   }
 
   /**
