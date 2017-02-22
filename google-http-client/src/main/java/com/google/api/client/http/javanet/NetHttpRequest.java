@@ -63,7 +63,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
       }
       long contentLength = getContentLength();
       if (contentLength >= 0) {
-        addHeader("Content-Length", Long.toString(contentLength));
+        connection.setRequestProperty("Content-Length", Long.toString(contentLength));
       }
       String requestMethod = connection.getRequestMethod();
       if ("POST".equals(requestMethod) || "PUT".equals(requestMethod)) {
