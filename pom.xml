@@ -169,6 +169,11 @@
         <version>${project.guava.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava-testlib-jdk5</artifactId>
+        <version>${project.guava.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.google.code.findbugs</groupId>
         <artifactId>jsr305</artifactId>
         <version>${project.jsr305.version}</version>
