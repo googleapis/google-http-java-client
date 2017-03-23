@@ -42,7 +42,7 @@
       </plugin>
       <!-- Use jarjar to include a private copy of Apache Commons Codec library
            to avoid a runtime dependency conflict with Android which includes
-           an older version of that library, as well as Guava JDK5. -->
+           an older version of that library, as well as Guava. -->
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>jarjar-maven-plugin</artifactId>
@@ -55,7 +55,7 @@
             <configuration>
               <includes>
                 <include>commons-codec:commons-codec</include>
-                <include>com.google.guava:guava-jdk5</include>
+                <include>com.google.guava:guava</include>
               </includes>
               <rules>
                 <rule>
@@ -115,7 +115,7 @@
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
-      <artifactId>guava-jdk5</artifactId>
+      <artifactId>guava</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
