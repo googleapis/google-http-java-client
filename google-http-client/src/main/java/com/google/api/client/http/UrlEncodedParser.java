@@ -196,8 +196,13 @@ public class UrlEncodedParser implements ObjectParser {
           }
           break;
         case '=':
-          // finished with name, now read value
-          readingName = false;
+          if (readingName) {
+            // finished with name, now read value
+            readingName = false;
+          } else {
+            // '=' is in the value
+            valueWriter.write(read);
+          }
           break;
         default:
           // read one more character

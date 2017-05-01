@@ -112,9 +112,9 @@ public class UrlEncodedParserTest extends TestCase {
   public void testParse_simple() {
     Simple actual = new Simple();
     UrlEncodedParser.parse(
-        "v=ignore&v=ignore2&q=1&a=x&b=y&c=z&q=2&undeclared=0&o=object&r=a1&r=a2", actual);
+        "v=ignore&v=ignore2&q=1&a=x=&b=y&c=z&q=2&undeclared=0&o=object&r=a1&r=a2", actual);
     Simple expected = new Simple();
-    expected.a = "x";
+    expected.a = "x=";
     expected.b = "y";
     expected.c = "z";
     expected.q = new ArrayList<String>(Arrays.asList("1", "2"));
