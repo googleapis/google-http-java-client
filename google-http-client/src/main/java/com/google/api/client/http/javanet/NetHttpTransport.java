@@ -20,17 +20,16 @@ import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.SslUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.cert.CertificateFactory;
 import java.util.Arrays;
-
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -60,6 +59,12 @@ import javax.net.ssl.SSLSocketFactory;
  * @author Yaniv Inbar
  */
 public final class NetHttpTransport extends HttpTransport {
+  private static Proxy defaultProxy() {
+    return new Proxy(
+        Proxy.Type.HTTP, new InetSocketAddress(
+          System.getProperties().getProperty("https.proxyHost"),
+          Integer.parseInt(System.getProperties().getProperty("https.proxyPort"))));
+  }
 
   /**
    * All valid request methods as specified in {@link HttpURLConnection#setRequestMethod}, sorted in
@@ -118,9 +123,19 @@ public final class NetHttpTransport extends HttpTransport {
   NetHttpTransport(ConnectionFactory connectionFactory,
       SSLSocketFactory sslSocketFactory, HostnameVerifier hostnameVerifier) {
     this.connectionFactory =
-        connectionFactory == null ? new DefaultConnectionFactory() : connectionFactory;
+        getConnectionFactory(connectionFactory);
     this.sslSocketFactory = sslSocketFactory;
     this.hostnameVerifier = hostnameVerifier;
+  }
+
+  private ConnectionFactory getConnectionFactory(ConnectionFactory connectionFactory) {
+    if (connectionFactory == null) {
+      if (System.getProperties().getProperty("com.api.client.should_use_proxy") != null) {
+        return new DefaultConnectionFactory(defaultProxy());
+      }
+      return new DefaultConnectionFactory();
+    }
+    return connectionFactory;
   }
 
   @Override
@@ -314,9 +329,12 @@ public final class NetHttpTransport extends HttpTransport {
 
     /** Returns a new instance of {@link NetHttpTransport} based on the options. */
     public NetHttpTransport build() {
-      return proxy == null
+      if (System.getProperties().getProperty("com.google.api.client.should_use_proxy") != null) {
+        setProxy(defaultProxy());
+      }
+      return this.proxy == null
           ? new NetHttpTransport(connectionFactory, sslSocketFactory, hostnameVerifier)
-          : new NetHttpTransport(proxy, sslSocketFactory, hostnameVerifier);
+          : new NetHttpTransport(this.proxy, sslSocketFactory, hostnameVerifier);
     }
   }
 }
