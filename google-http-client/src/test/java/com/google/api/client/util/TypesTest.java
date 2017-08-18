@@ -18,9 +18,6 @@ package com.google.api.client.util;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
-
-import junit.framework.TestCase;
-
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -36,6 +33,7 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.TreeMap;
 import java.util.Vector;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link Types}.

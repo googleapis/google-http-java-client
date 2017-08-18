@@ -16,15 +16,13 @@ package com.google.api.client.xml;
 
 import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.Key;
-
-import junit.framework.TestCase;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlSerializer;
-
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Map;
+import junit.framework.TestCase;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlSerializer;
 
 /**
  * Tests {@link Xml}.

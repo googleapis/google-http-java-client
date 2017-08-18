@@ -29,6 +29,7 @@ import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.SslUtils;
+
 import org.apache.http.HttpHost;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;

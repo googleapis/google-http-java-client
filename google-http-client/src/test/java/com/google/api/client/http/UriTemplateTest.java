@@ -17,13 +17,11 @@ package com.google.api.client.http;
 import com.google.api.client.util.Value;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import junit.framework.TestCase;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link UriTemplate}.
@@ -238,7 +236,7 @@ public class UriTemplateTest extends TestCase {
     requestMap.put("unused2", "unused=param");
     assertEquals(
         "foo/xyz/red/green/blue&iterable=red&iterable=green&iterable=blue&map=semi,%3B,dot,.,comma"
-        + ",%2CONE?unused1=unused%20param&unused2=unused%3Dparam",
+        + ",%2C&enum=ONE?unused1=unused%20param&unused2=unused%3Dparam",
         UriTemplate.expand("foo/{abc}{/iterator*}{&iterable*}{&map}{&enum}", requestMap, true));
     // Assert the map has not changed.
     assertEquals(7, requestMap.size());
@@ -274,5 +272,34 @@ public class UriTemplateTest extends TestCase {
         UriTemplate.expand("foo/{abc}/bar/{def}", requestMap, false));
     assertEquals("foo/xyz/bar/a/b?c",
         UriTemplate.expand("foo/{abc}/bar/{+def}", requestMap, false));
+  }
+
+  public void testExpandSeveralTemplates() {
+      SortedMap<String, Object> map = Maps.newTreeMap();
+      map.put("id", "a");
+      map.put("uid", "b");
+
+      assertEquals("?id=a&uid=b", UriTemplate.expand("{?id,uid}", map, false));
+  }
+
+  public void testExpandSeveralTemplatesUnusedParameterInMiddle() {
+    SortedMap<String, Object> map = Maps.newTreeMap();
+    map.put("id", "a");
+    map.put("uid", "b");
+
+    assertEquals("?id=a&uid=b", UriTemplate.expand("{?id,foo,bar,uid}", map, false));
+  }
+
+  public void testExpandSeveralTemplatesFirstParameterUnused() {
+    SortedMap<String, Object> map = Maps.newTreeMap();
+    map.put("id", "a");
+    map.put("uid", "b");
+
+    assertEquals("?id=a&uid=b", UriTemplate.expand("{?foo,id,uid}", map, false));
+  }
+
+  public void testExpandSeveralTemplatesNoParametersUsed() {
+    SortedMap<String, Object> map = Maps.newTreeMap();
+    assertEquals("", UriTemplate.expand("{?id,uid}", map, false));
   }
 }

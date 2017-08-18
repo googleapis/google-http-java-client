@@ -13,10 +13,8 @@
 package com.google.api.client.http.apache;
 
 import com.google.api.client.util.Preconditions;
-
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-
 import java.net.URI;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 
 /**
  * HTTP extension method.

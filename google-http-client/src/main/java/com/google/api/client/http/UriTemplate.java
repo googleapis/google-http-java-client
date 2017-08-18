@@ -19,10 +19,12 @@ import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
+import com.google.common.base.Splitter;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.ListIterator;
 import java.util.Map;
 
 /**
@@ -37,39 +39,40 @@ import java.util.Map;
  * keys := [("semi", ";"),("dot", "."),("comma", ",")]
  *
  * The following templates results in the following expansions:
- * {var}     ->   value
- * {list}    ->   red,green,blue
- * {list*}   ->   red,green,blue
- * {keys}    ->   semi,%3B,dot,.,comma,%2C
- * {keys*}   ->   semi=%3B,dot=.,comma=%2C
- * {+list}   ->   red,green,blue
- * {+list*}  ->   red,green,blue
- * {+keys}   ->   semi,;,dot,.,comma,,
- * {+keys*}  ->   semi=;,dot=.,comma=,
- * {#list}   ->   #red,green,blue
- * {#list*}  ->   #red,green,blue
- * {#keys}   ->   #semi,;,dot,.,comma,,
- * {#keys*}  ->   #semi=;,dot=.,comma=,
- * X{.list}  ->   X.red,green,blue
- * X{.list*} ->   X.red.green.blue
- * X{.keys}  ->   X.semi,%3B,dot,.,comma,%2C
- * X{.keys*} ->   X.semi=%3B.dot=..comma=%2C
- * {/list}   ->   /red,green,blue
- * {/list*}  ->   /red/green/blue
- * {/keys}   ->   /semi,%3B,dot,.,comma,%2C
- * {/keys*}  ->   /semi=%3B/dot=./comma=%2C
- * {;list}   ->   ;list=red,green,blue
- * {;list*}  ->   ;list=red;list=green;list=blue
- * {;keys}   ->   ;keys=semi,%3B,dot,.,comma,%2C
- * {;keys*}  ->   ;semi=%3B;dot=.;comma=%2C
- * {?list}   ->   ?list=red,green,blue
- * {?list*}  ->   ?list=red&list=green&list=blue
- * {?keys}   ->   ?keys=semi,%3B,dot,.,comma,%2C
- * {?keys*}  ->   ?semi=%3B&dot=.&comma=%2C
- * {&list}   ->   &list=red,green,blue
- * {&list*}  ->   &list=red&list=green&list=blue
- * {&keys}   ->   &keys=semi,%3B,dot,.,comma,%2C
- * {&keys*}  ->   &semi=%3B&dot=.&comma=%2C
+ * {var}       ->   value
+ * {list}      ->   red,green,blue
+ * {list*}     ->   red,green,blue
+ * {keys}      ->   semi,%3B,dot,.,comma,%2C
+ * {keys*}     ->   semi=%3B,dot=.,comma=%2C
+ * {+list}     ->   red,green,blue
+ * {+list*}    ->   red,green,blue
+ * {+keys}     ->   semi,;,dot,.,comma,,
+ * {+keys*}    ->   semi=;,dot=.,comma=,
+ * {#list}     ->   #red,green,blue
+ * {#list*}    ->   #red,green,blue
+ * {#keys}     ->   #semi,;,dot,.,comma,,
+ * {#keys*}    ->   #semi=;,dot=.,comma=,
+ * X{.list}    ->   X.red,green,blue
+ * X{.list*}   ->   X.red.green.blue
+ * X{.keys}    ->   X.semi,%3B,dot,.,comma,%2C
+ * X{.keys*}   ->   X.semi=%3B.dot=..comma=%2C
+ * {/list}     ->   /red,green,blue
+ * {/list*}    ->   /red/green/blue
+ * {/keys}     ->   /semi,%3B,dot,.,comma,%2C
+ * {/keys*}    ->   /semi=%3B/dot=./comma=%2C
+ * {;list}     ->   ;list=red,green,blue
+ * {;list*}    ->   ;list=red;list=green;list=blue
+ * {;keys}     ->   ;keys=semi,%3B,dot,.,comma,%2C
+ * {;keys*}    ->   ;semi=%3B;dot=.;comma=%2C
+ * {?list}     ->   ?list=red,green,blue
+ * {?list*}    ->   ?list=red&list=green&list=blue
+ * {?keys}     ->   ?keys=semi,%3B,dot,.,comma,%2C
+ * {?keys*}    ->   ?semi=%3B&dot=.&comma=%2C
+ * {&list}     ->   &list=red,green,blue
+ * {&list*}    ->   &list=red&list=green&list=blue
+ * {&keys}     ->   &keys=semi,%3B,dot,.,comma,%2C
+ * {&keys*}    ->   &semi=%3B&dot=.&comma=%2C
+ * {?var,list} ->   ?var=value&list=red,green,blue
  *
  * @since 1.6
  * @author Ravi Mistry
@@ -294,52 +297,71 @@ public class UriTemplate {
       }
       pathBuf.append(pathUri.substring(cur, next));
       int close = pathUri.indexOf('}', next + 2);
-      String template = pathUri.substring(next + 1, close);
       cur = close + 1;
 
-      boolean containsExplodeModifier = template.endsWith("*");
-      CompositeOutput compositeOutput = getCompositeOutput(template);
+      String templates = pathUri.substring(next + 1, close);
+      CompositeOutput compositeOutput = getCompositeOutput(templates);
+      ListIterator<String> templateIterator =
+          Splitter.on(',').splitToList(templates).listIterator();
+      boolean isFirstParameter = true;
+      while (templateIterator.hasNext()) {
+        String template = templateIterator.next();
+        boolean containsExplodeModifier = template.endsWith("*");
 
-      int varNameStartIndex = compositeOutput.getVarNameStartIndex();
-      int varNameEndIndex = template.length();
-      if (containsExplodeModifier) {
-        // The expression contains an explode modifier '*' at the end, update end index.
-        varNameEndIndex = varNameEndIndex - 1;
-      }
-      // Now get varName devoid of any prefixes and explode modifiers.
-      String varName = template.substring(varNameStartIndex, varNameEndIndex);
-
-      Object value = variableMap.remove(varName);
-      if (value == null) {
-        // The value for this variable is undefined. continue with the next template.
-        continue;
-      }
-      if (value instanceof Iterator<?>) {
-        // Get the list property value.
-        Iterator<?> iterator = (Iterator<?>) value;
-        value = getListPropertyValue(varName, iterator, containsExplodeModifier, compositeOutput);
-      } else if (value instanceof Iterable<?> || value.getClass().isArray()) {
-       // Get the list property value.
-        Iterator<?> iterator = Types.iterableOf(value).iterator();
-        value = getListPropertyValue(varName, iterator, containsExplodeModifier, compositeOutput);
-      } else if (value.getClass().isEnum()) {
-        String name = FieldInfo.of((Enum<?>) value).getName();
-        if (name != null) {
-          value = CharEscapers.escapeUriPath(name);
+        int varNameStartIndex = templateIterator.nextIndex() == 1
+            ? compositeOutput.getVarNameStartIndex() : 0;
+        int varNameEndIndex = template.length();
+        if (containsExplodeModifier) {
+          // The expression contains an explode modifier '*' at the end, update end index.
+          varNameEndIndex = varNameEndIndex - 1;
         }
-      } else if (!Data.isValueOfPrimitiveType(value)) {
-        // Parse the value as a key/value map.
-        Map<String, Object> map = getMap(value);
-        value = getMapPropertyValue(varName, map, containsExplodeModifier, compositeOutput);
-      } else {
-        // For everything else...
-        if (compositeOutput.getReservedExpansion()) {
-          value = CharEscapers.escapeUriPathWithoutReserved(value.toString());
+        // Now get varName devoid of any prefixes and explode modifiers.
+        String varName = template.substring(varNameStartIndex, varNameEndIndex);
+
+        Object value = variableMap.remove(varName);
+        if (value == null) {
+          // The value for this variable is undefined. continue with the next template.
+          continue;
+        }
+        if (!isFirstParameter) {
+          pathBuf.append(compositeOutput.getExplodeJoiner());
         } else {
-          value = CharEscapers.escapeUriPath(value.toString());
+          pathBuf.append(compositeOutput.getOutputPrefix());
+          isFirstParameter = false;
         }
+        if (value instanceof Iterator<?>) {
+          // Get the list property value.
+          Iterator<?> iterator = (Iterator<?>) value;
+          value = getListPropertyValue(varName, iterator, containsExplodeModifier, compositeOutput);
+        } else if (value instanceof Iterable<?> || value.getClass().isArray()) {
+          // Get the list property value.
+          Iterator<?> iterator = Types.iterableOf(value).iterator();
+          value = getListPropertyValue(varName, iterator, containsExplodeModifier, compositeOutput);
+        } else if (value.getClass().isEnum()) {
+          String name = FieldInfo.of((Enum<?>) value).getName();
+          if (name != null) {
+            if (compositeOutput.requiresVarAssignment()) {
+              value = String.format("%s=%s", varName, value);
+            }
+            value = CharEscapers.escapeUriPath(value.toString());
+          }
+        } else if (!Data.isValueOfPrimitiveType(value)) {
+          // Parse the value as a key/value map.
+          Map<String, Object> map = getMap(value);
+          value = getMapPropertyValue(varName, map, containsExplodeModifier, compositeOutput);
+        } else {
+          // For everything else...
+          if (compositeOutput.requiresVarAssignment()) {
+            value = String.format("%s=%s", varName, value);
+          }
+          if (compositeOutput.getReservedExpansion()) {
+            value = CharEscapers.escapeUriPathWithoutReserved(value.toString());
+          } else {
+            value = CharEscapers.escapeUriPath(value.toString());
+          }
+        }
+        pathBuf.append(value);
       }
-      pathBuf.append(value);
     }
     if (addUnusedParamsAsQueryParams) {
       // Add the parameters remaining in the variableMap as query parameters.
@@ -367,7 +389,6 @@ public class UriTemplate {
       return "";
     }
     StringBuilder retBuf = new StringBuilder();
-    retBuf.append(compositeOutput.getOutputPrefix());
     String joiner;
     if (containsExplodeModifier) {
       joiner = compositeOutput.getExplodeJoiner();
@@ -410,7 +431,6 @@ public class UriTemplate {
       return "";
     }
     StringBuilder retBuf = new StringBuilder();
-    retBuf.append(compositeOutput.getOutputPrefix());
     String joiner;
     String mapElementsJoiner;
     if (containsExplodeModifier) {

@@ -17,17 +17,15 @@ package com.google.api.client.http;
 import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
+import com.google.api.client.util.Objects;
 import com.google.api.client.util.Value;
-import com.google.common.base.Objects;
-
-import junit.framework.TestCase;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link UrlEncodedParser}.

@@ -15,7 +15,7 @@
 package com.google.api.client.http;
 
 import com.google.common.base.Charsets;
-
+import com.google.common.testing.EqualsTester;
 import junit.framework.TestCase;
 
 /**
@@ -184,10 +184,10 @@ public class HttpMediaTypeTest extends TestCase {
   }
 
   public void testEquals() {
-    assertEquals(true, new HttpMediaType("foo/bar").equals(new HttpMediaType("foo/bar")));
-    assertEquals(true, new HttpMediaType("foo/bar; a=c").equals(new HttpMediaType("foo/bar; a=c")));
-    assertEquals(false, new HttpMediaType("foo/bar; bar=bar").equals(new HttpMediaType("foo/bar")));
-    assertEquals(false, new HttpMediaType("foo/bar").equals(null));
-    assertEquals(false, new HttpMediaType("foo/bar").equals(new Integer(5)));
+    new EqualsTester()
+        .addEqualityGroup(new HttpMediaType("foo/bar"), new HttpMediaType("foo/bar"))
+        .addEqualityGroup(new HttpMediaType("foo/bar; a=c"), new HttpMediaType("foo/bar; a=c"))
+        .addEqualityGroup(new HttpMediaType("foo/bar; bar=bar"))
+        .testEquals();
   }
 }

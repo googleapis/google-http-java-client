@@ -14,10 +14,9 @@
 
 package com.google.api.client.util;
 
-import junit.framework.TestCase;
-
 import java.util.Date;
 import java.util.TimeZone;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link DateTime}.

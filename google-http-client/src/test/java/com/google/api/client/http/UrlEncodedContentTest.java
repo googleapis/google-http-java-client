@@ -17,15 +17,13 @@ package com.google.api.client.http;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.util.ArrayMap;
-
-import junit.framework.TestCase;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link UrlEncodedContent}.

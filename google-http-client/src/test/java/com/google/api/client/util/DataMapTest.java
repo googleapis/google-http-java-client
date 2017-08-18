@@ -16,11 +16,9 @@ package com.google.api.client.util;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
-import junit.framework.TestCase;
-
 import java.util.Iterator;
 import java.util.Map;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link DataMap}.

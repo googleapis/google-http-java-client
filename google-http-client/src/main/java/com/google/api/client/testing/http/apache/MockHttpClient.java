@@ -16,7 +16,7 @@ package com.google.api.client.testing.http.apache;
 
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
-
+import java.io.IOException;
 import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
@@ -38,8 +38,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpProcessor;
 import org.apache.http.protocol.HttpRequestExecutor;
-
-import java.io.IOException;
 
 /**
  * {@link Beta} <br/>
