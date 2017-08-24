@@ -78,6 +78,12 @@ public class HttpStatusCodes {
   /** Status code for a request for which one of the conditions it was made under has failed. */
   public static final int STATUS_CODE_PRECONDITION_FAILED = 412;
 
+  /**
+   * Status code for a request for which the content-type and the request's syntax were correct but
+   * server was not able to process entity.
+   */
+  public static final int STATUS_CODE_UNPROCESSABLE_ENTITY = 422;
+
   /** Status code for an internal server error. */
   public static final int STATUS_CODE_SERVER_ERROR = 500;
 
