@@ -75,12 +75,7 @@ public final class Throwables {
    */
   public static void propagateIfPossible(Throwable throwable) {
     if (throwable != null) {
-      if (throwable instanceof RuntimeException) {
-        throw (RuntimeException) throwable;
-      }
-      if (throwable instanceof Error) {
-        throw (Error) throwable;
-      }
+      com.google.common.base.Throwables.throwIfUnchecked(throwable);
     }
   }
 
