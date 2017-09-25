@@ -16,6 +16,9 @@ package com.google.api.client.util;
 
 import junit.framework.TestCase;
 
+import java.util.Iterator;
+import java.util.Map;
+
 /**
  * Tests {@link ArrayMap}.
  *
@@ -99,5 +102,53 @@ public class ArrayMapTest extends TestCase {
       fail("expected ArrayIndexOutOfBoundsException");
     } catch (IndexOutOfBoundsException e) {
     }
+  }
+
+  public void testIteratorRemove1() {
+    ArrayMap<String, String> map = new ArrayMap<String, String>();
+    map.put("a", "a");
+    map.put("b", "b");
+    map.put("c", "c");
+    Iterator<Map.Entry<String,String>> iter = map.entrySet().iterator();
+    while (iter.hasNext()) {
+        Map.Entry<String,String> entry = iter.next();
+        if(!"all".equalsIgnoreCase(entry.getKey())){
+            iter.remove();
+        }
+    }
+    assertEquals(0, map.size());
+  }
+
+  public void testIteratorRemove2() {
+    ArrayMap<String, String> map = new ArrayMap<String, String>();
+    map.put("a", "a");
+    map.put("b", "b");
+    map.put("c", "c");
+    Iterator<Map.Entry<String,String>> iter = map.entrySet().iterator();
+    while (iter.hasNext()) {
+        Map.Entry<String,String> entry = iter.next();
+        if("b".equalsIgnoreCase(entry.getKey())){
+            iter.remove();
+        }
+    }
+    assertEquals(2, map.size());
+    assertEquals("a", map.get("a"));
+    assertEquals("c", map.get("c"));
+  }
+
+  public void testIteratorRemove3() {
+    ArrayMap<String, String> map = new ArrayMap<String, String>();
+    map.put("a", "a");
+    map.put("b", "b");
+    map.put("c", "c");
+    Iterator<Map.Entry<String,String>> iter = map.entrySet().iterator();
+    while (iter.hasNext()) {
+        Map.Entry<String,String> entry = iter.next();
+        if(!"b".equalsIgnoreCase(entry.getKey())){
+            iter.remove();
+        }
+    }
+    assertEquals(1, map.size());
+    assertEquals("b", map.get("b"));
   }
 }
