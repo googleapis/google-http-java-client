@@ -36,10 +36,12 @@ public class Base64 {
    * @param binaryData binary data to encode or {@code null} for {@code null} result
    * @return byte[] containing Base64 characters in their UTF-8 representation or {@code null} for
    *         {@code null} input
-   * @see org.apache.commons.codec.binary.Base64#encodeBase64(byte[])
    */
   public static byte[] encodeBase64(byte[] binaryData) {
-    return org.apache.commons.codec.binary.Base64.encodeBase64(binaryData);
+    if(binaryData == null){
+      return null;
+    }
+    return com.google.common.io.BaseEncoding.base64().encode(binaryData).getBytes();
   }
 
   /**
@@ -47,12 +49,13 @@ public class Base64 {
    *
    * @param binaryData binary data to encode or {@code null} for {@code null} result
    * @return String containing Base64 characters or {@code null} for {@code null} input
-   * @see org.apache.commons.codec.binary.Base64#encodeBase64String(byte[])
    */
   public static String encodeBase64String(byte[] binaryData) {
-    return org.apache.commons.codec.binary.Base64.encodeBase64String(binaryData);
+    if(binaryData == null){
+      return null;
+    }
+    return com.google.common.io.BaseEncoding.base64().encode(binaryData);
   }
-
 
   /**
    * Encodes binary data using a URL-safe variation of the base64 algorithm but does not chunk the
@@ -61,10 +64,13 @@ public class Base64 {
    * @param binaryData binary data to encode or {@code null} for {@code null} result
    * @return byte[] containing Base64 characters in their UTF-8 representation or {@code null} for
    *         {@code null} input
-   * @see org.apache.commons.codec.binary.Base64#encodeBase64URLSafe(byte[])
    */
   public static byte[] encodeBase64URLSafe(byte[] binaryData) {
-    return org.apache.commons.codec.binary.Base64.encodeBase64URLSafe(binaryData);
+    if(binaryData == null){
+      return null;
+    }
+
+    return com.google.common.io.BaseEncoding.base64Url().omitPadding().encode(binaryData).getBytes();
   }
 
   /**
@@ -73,10 +79,13 @@ public class Base64 {
    *
    * @param binaryData binary data to encode or {@code null} for {@code null} result
    * @return String containing Base64 characters or {@code null} for {@code null} input
-   * @see org.apache.commons.codec.binary.Base64#encodeBase64URLSafeString(byte[])
    */
   public static String encodeBase64URLSafeString(byte[] binaryData) {
-    return org.apache.commons.codec.binary.Base64.encodeBase64URLSafeString(binaryData);
+    if(binaryData == null){
+      return null;
+    }
+
+    return com.google.common.io.BaseEncoding.base64Url().omitPadding().encode(binaryData);
   }
 
   /**
@@ -84,10 +93,12 @@ public class Base64 {
    *
    * @param base64Data Byte array containing Base64 data or {@code null} for {@code null} result
    * @return Array containing decoded data or {@code null} for {@code null} input
-   * @see org.apache.commons.codec.binary.Base64#decodeBase64(byte[])
    */
   public static byte[] decodeBase64(byte[] base64Data) {
-    return org.apache.commons.codec.binary.Base64.decodeBase64(base64Data);
+    if(base64Data == null){
+      return null;
+    }
+    return decodeBase64(new String(base64Data));
   }
 
   /**
@@ -95,12 +106,16 @@ public class Base64 {
    *
    * @param base64String String containing Base64 data or {@code null} for {@code null} result
    * @return Array containing decoded data or {@code null} for {@code null} input
-   * @see org.apache.commons.codec.binary.Base64#decodeBase64(String)
    */
   public static byte[] decodeBase64(String base64String) {
-    return org.apache.commons.codec.binary.Base64.decodeBase64(base64String);
-  }
+    if(base64String == null){
+      return null;
+    }
 
-  private Base64() {
+    try {
+      return com.google.common.io.BaseEncoding.base64().decode(base64String);
+    } catch(IllegalArgumentException e){
+      return com.google.common.io.BaseEncoding.base64Url().omitPadding().decode(base64String);
+    }
   }
 }
