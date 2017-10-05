@@ -19,39 +19,41 @@ import java.util.Arrays;
 
 /**
  * Tests {@link Base64}.
+ *
  * @author mwhisenhunt@google.com (Matt Whisenhunt)
  */
 public class Base64Test extends TestCase {
 
-    public void testEmptyValue() {
-        byte[] emptyValue = new byte[0];
+  public void testEmptyValue() {
+    byte[] emptyValue = new byte[0];
 
-        assertEquals(Base64.encodeBase64(emptyValue).length, 0);
-        assertEquals(Base64.encodeBase64String(emptyValue).length(), 0);
-        assertEquals(Base64.encodeBase64URLSafe(emptyValue).length, 0);
-        assertEquals(Base64.encodeBase64URLSafeString(emptyValue).length(), 0);
-        assertEquals(Base64.decodeBase64(emptyValue).length, 0);
-        assertEquals(Base64.decodeBase64(emptyValue).length, 0);
-    }
+    assertEquals(Base64.encodeBase64(emptyValue).length, 0);
+    assertEquals(Base64.encodeBase64String(emptyValue).length(), 0);
+    assertEquals(Base64.encodeBase64URLSafe(emptyValue).length, 0);
+    assertEquals(Base64.encodeBase64URLSafeString(emptyValue).length(), 0);
+    assertEquals(Base64.decodeBase64(emptyValue).length, 0);
+    assertEquals(Base64.decodeBase64(emptyValue).length, 0);
+  }
 
-    public void testNulls() {
-        assertNull(Base64.encodeBase64(null));
-        assertNull(Base64.encodeBase64String(null));
-        assertNull(Base64.encodeBase64URLSafe(null));
-        assertNull(Base64.encodeBase64URLSafeString(null));
-        assertNull(Base64.decodeBase64((byte[]) null));
-        assertNull(Base64.decodeBase64((String) null));
-    }
+  public void testNulls() {
+    assertNull(Base64.encodeBase64(null));
+    assertNull(Base64.encodeBase64String(null));
+    assertNull(Base64.encodeBase64URLSafe(null));
+    assertNull(Base64.encodeBase64URLSafeString(null));
+    assertNull(Base64.decodeBase64((byte[]) null));
+    assertNull(Base64.decodeBase64((String) null));
+  }
 
-    public void testEncode() {
-        assertEquals("Zm9vYmFy", new String(Base64.encodeBase64("foobar".getBytes())));
-        assertEquals("Zm9vYmFy", Base64.encodeBase64String("foobar".getBytes()));
+  public void testEncode() {
+    assertEquals("Zm9vYmFy", new String(Base64.encodeBase64("foobar".getBytes())));
+    assertEquals("Zm9vYmFy", Base64.encodeBase64String("foobar".getBytes()));
 
-        assertEquals("Zm9vYmFy", new String(Base64.encodeBase64URLSafe("foobar".getBytes())));
-        assertEquals("Zm9vYmFy", Base64.encodeBase64URLSafeString("foobar".getBytes()));
-    }
+    assertEquals("Zm9vYmFy", new String(Base64.encodeBase64URLSafe("foobar".getBytes())));
+    assertEquals("Zm9vYmFy", Base64.encodeBase64URLSafeString("foobar".getBytes()));
+  }
 
-    public void testDecode() {
-        assertEquals("foobar", new String(Base64.decodeBase64(Base64.encodeBase64("foobar".getBytes()))));
-    }
+  public void testDecode() {
+    String value = new String(Base64.decodeBase64(Base64.encodeBase64("foobar".getBytes())));
+    assertEquals("foobar", value);
+  }
 }

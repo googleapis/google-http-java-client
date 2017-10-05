@@ -14,19 +14,13 @@
 
 package com.google.api.client.util;
 
+import com.google.common.io.BaseEncoding;
+
 /**
- * Proxy for version 1.6 (or newer) of the Apache Commons Codec
- * {@link org.apache.commons.codec.binary.Base64} implementation.
+ * Convenient and now anachronistic proxy to 3rd party Base64 codec.
  *
- * <p>
- * This is needed in order to support platforms like Android which already include an older version
- * of the Apache Commons Codec (Android includes version 1.3). To avoid a dependency library
- * conflict, this library includes a reduced private copy of version 1.6 (or newer) of the Apache
- * Commons Codec (using a tool like jarjar).
- * </p>
- *
- * @since 1.8
  * @author Yaniv Inbar
+ * @since 1.8
  */
 public class Base64 {
 
@@ -35,13 +29,13 @@ public class Base64 {
    *
    * @param binaryData binary data to encode or {@code null} for {@code null} result
    * @return byte[] containing Base64 characters in their UTF-8 representation or {@code null} for
-   *         {@code null} input
+   * {@code null} input
    */
   public static byte[] encodeBase64(byte[] binaryData) {
-    if(binaryData == null){
+    if (binaryData == null) {
       return null;
     }
-    return com.google.common.io.BaseEncoding.base64().encode(binaryData).getBytes();
+    return BaseEncoding.base64().encode(binaryData).getBytes();
   }
 
   /**
@@ -51,10 +45,10 @@ public class Base64 {
    * @return String containing Base64 characters or {@code null} for {@code null} input
    */
   public static String encodeBase64String(byte[] binaryData) {
-    if(binaryData == null){
+    if (binaryData == null) {
       return null;
     }
-    return com.google.common.io.BaseEncoding.base64().encode(binaryData);
+    return BaseEncoding.base64().encode(binaryData);
   }
 
   /**
@@ -63,14 +57,13 @@ public class Base64 {
    *
    * @param binaryData binary data to encode or {@code null} for {@code null} result
    * @return byte[] containing Base64 characters in their UTF-8 representation or {@code null} for
-   *         {@code null} input
+   * {@code null} input
    */
   public static byte[] encodeBase64URLSafe(byte[] binaryData) {
-    if(binaryData == null){
+    if (binaryData == null) {
       return null;
     }
-
-    return com.google.common.io.BaseEncoding.base64Url().omitPadding().encode(binaryData).getBytes();
+    return BaseEncoding.base64Url().omitPadding().encode(binaryData).getBytes();
   }
 
   /**
@@ -81,11 +74,10 @@ public class Base64 {
    * @return String containing Base64 characters or {@code null} for {@code null} input
    */
   public static String encodeBase64URLSafeString(byte[] binaryData) {
-    if(binaryData == null){
+    if (binaryData == null) {
       return null;
     }
-
-    return com.google.common.io.BaseEncoding.base64Url().omitPadding().encode(binaryData);
+    return BaseEncoding.base64Url().omitPadding().encode(binaryData);
   }
 
   /**
@@ -95,7 +87,7 @@ public class Base64 {
    * @return Array containing decoded data or {@code null} for {@code null} input
    */
   public static byte[] decodeBase64(byte[] base64Data) {
-    if(base64Data == null){
+    if (base64Data == null) {
       return null;
     }
     return decodeBase64(new String(base64Data));
@@ -108,14 +100,14 @@ public class Base64 {
    * @return Array containing decoded data or {@code null} for {@code null} input
    */
   public static byte[] decodeBase64(String base64String) {
-    if(base64String == null){
+    if (base64String == null) {
       return null;
     }
 
     try {
-      return com.google.common.io.BaseEncoding.base64().decode(base64String);
-    } catch(IllegalArgumentException e){
-      return com.google.common.io.BaseEncoding.base64Url().omitPadding().decode(base64String);
+      return BaseEncoding.base64().decode(base64String);
+    } catch (IllegalArgumentException e) {
+      return BaseEncoding.base64Url().omitPadding().decode(base64String);
     }
   }
 }
