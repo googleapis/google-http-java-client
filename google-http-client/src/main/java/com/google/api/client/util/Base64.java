@@ -17,7 +17,8 @@ package com.google.api.client.util;
 import com.google.common.io.BaseEncoding;
 
 /**
- * Convenient and now anachronistic proxy to 3rd party Base64 codec.
+ * Proxy for base 64 encoding/decoding which matches the Base64 interface in Apache Commons (for
+ * historical reasons).
  *
  * @author Yaniv Inbar
  * @since 1.8
