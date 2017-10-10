@@ -50,14 +50,13 @@ import org.apache.http.protocol.HttpRequestExecutor;
  * @since 1.14
  * @author Yaniv Inbar
  */
-@Deprecated
+@Beta
 public class MockHttpClient extends DefaultHttpClient {
 
   /** HTTP response code to use. */
   int responseCode;
 
   @Override
-  @Deprecated
   protected RequestDirector createClientRequestDirector(HttpRequestExecutor requestExec,
       ClientConnectionManager conman, ConnectionReuseStrategy reustrat,
       ConnectionKeepAliveStrategy kastrat, HttpRoutePlanner rouplan, HttpProcessor httpProcessor,
@@ -74,13 +73,11 @@ public class MockHttpClient extends DefaultHttpClient {
   }
 
   /** Returns the HTTP response code to use. */
-  @Deprecated
   public final int getResponseCode() {
     return responseCode;
   }
 
   /** Sets the HTTP response code to use. */
-  @Deprecated
   public MockHttpClient setResponseCode(int responseCode) {
     Preconditions.checkArgument(responseCode >= 0);
     this.responseCode = responseCode;
