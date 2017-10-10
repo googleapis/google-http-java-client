@@ -80,7 +80,7 @@
     <module>google-http-client-gson</module>
     <module>google-http-client-jackson</module>
     <module>google-http-client-jackson2</module>
-    <module>google-http-client-jdo</module>
+    <module>google-http-client-jdo</module> 
     <module>google-http-client-xml</module>
     <module>google-http-client-findbugs</module>
     <module>google-http-client-test</module>
@@ -617,8 +617,8 @@
     <project.guava.version>17.0</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.commons-logging.version>1.1.1</project.commons-logging.version>
-    <project.httpclient.version>4.0.1</project.httpclient.version>
-    <project.httpcore.version>4.0.1</project.httpcore.version>
+    <project.httpclient.version>4.5.3</project.httpclient.version>
+    <!-- <project.httpcore.version>4.0.1</project.httpcore.version> -->
     <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
   </properties>
 </project>
