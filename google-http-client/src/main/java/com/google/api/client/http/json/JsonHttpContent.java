@@ -82,6 +82,11 @@ public class JsonHttpContent extends AbstractHttpContent {
     generator.flush();
   }
 
+  public boolean retrySupported()
+  {
+    return true;
+  }
+
   @Override
   public JsonHttpContent setMediaType(HttpMediaType mediaType) {
     super.setMediaType(mediaType);
