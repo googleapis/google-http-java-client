@@ -18,6 +18,7 @@ import com.google.api.client.util.ByteArrayStreamingContent;
 import com.google.api.client.util.StringUtils;
 
 import junit.framework.TestCase;
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -53,7 +54,7 @@ public class ApacheHttpTransportTest extends TestCase {
 
   public void testRequestsWithContent() throws Exception {
     HttpClient mockClient = mock(HttpClient.class);
-    org.apache.http.HttpResponse mockResponse = mock(org.apache.http.HttpResponse.class);
+    HttpResponse mockResponse = mock(HttpResponse.class);
     when(mockClient.execute(any(HttpUriRequest.class))).thenReturn(mockResponse);
 
     ApacheHttpTransport transport = new ApacheHttpTransport(mockClient);
