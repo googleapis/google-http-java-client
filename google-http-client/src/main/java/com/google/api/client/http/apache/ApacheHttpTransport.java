@@ -123,9 +123,6 @@ public final class ApacheHttpTransport extends HttpTransport {
    */
   public ApacheHttpTransport(HttpClient httpClient) {
     this.httpClient = httpClient;
-    HttpParams params = httpClient.getParams();
-    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-    params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
   }
 
   /**
@@ -164,6 +161,8 @@ public final class ApacheHttpTransport extends HttpTransport {
     HttpConnectionParams.setSocketBufferSize(params, 8192);
     ConnManagerParams.setMaxTotalConnections(params, 200);
     ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(20));
+    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+    params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
     return params;
   }
 
@@ -278,7 +277,7 @@ public final class ApacheHttpTransport extends HttpTransport {
      * </p>
      *
      * <pre>
-       setProxy(new HttpHost("127.0.0.1", 8080))
+     setProxy(new HttpHost("127.0.0.1", 8080))
      * </pre>
      */
     public Builder setProxy(HttpHost proxy) {
@@ -314,7 +313,7 @@ public final class ApacheHttpTransport extends HttpTransport {
      * </p>
      *
      * <pre>
-    trustCertificatesFromJavaKeyStore(new FileInputStream("certs.jks"), "password");
+     trustCertificatesFromJavaKeyStore(new FileInputStream("certs.jks"), "password");
      * </pre>
      *
      * @param keyStoreStream input stream to the key store (closed at the end of this method in a
@@ -338,7 +337,7 @@ public final class ApacheHttpTransport extends HttpTransport {
      * </p>
      *
      * <pre>
-    trustCertificatesFromStream(new FileInputStream("certs.pem"));
+     trustCertificatesFromStream(new FileInputStream("certs.pem"));
      * </pre>
      *
      * @param certificateStream certificate stream
