@@ -123,6 +123,12 @@ public final class ApacheHttpTransport extends HttpTransport {
    */
   public ApacheHttpTransport(HttpClient httpClient) {
     this.httpClient = httpClient;
+    HttpParams params = httpClient.getParams();
+    if (params == null) {
+      params = newDefaultHttpClient().getParams();
+    }
+    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+    params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
   }
 
   /**
@@ -161,8 +167,6 @@ public final class ApacheHttpTransport extends HttpTransport {
     HttpConnectionParams.setSocketBufferSize(params, 8192);
     ConnManagerParams.setMaxTotalConnections(params, 200);
     ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(20));
-    HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-    params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
     return params;
   }
 
