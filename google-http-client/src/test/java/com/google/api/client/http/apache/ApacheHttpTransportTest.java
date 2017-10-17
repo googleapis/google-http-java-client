@@ -48,6 +48,11 @@ public class ApacheHttpTransportTest extends TestCase {
     checkHttpClient(httpClient);
   }
 
+  public void testApacheHttpTransportWithParam() {
+    ApacheHttpTransport transport = new ApacheHttpTransport(new DefaultHttpClient());
+    checkHttpClient(transport.getHttpClient());
+  }
+
   public void testNewDefaultHttpClient() {
     checkDefaultHttpClient(ApacheHttpTransport.newDefaultHttpClient());
   }
