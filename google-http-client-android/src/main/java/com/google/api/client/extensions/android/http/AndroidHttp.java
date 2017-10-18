@@ -32,6 +32,8 @@ import java.net.HttpURLConnection;
 @Beta
 public class AndroidHttp {
 
+   final static int GINGERBREAD = 9 ; 
+  
   /**
    * Returns a new thread-safe HTTP transport instance that is compatible with Android SDKs prior to
    * Gingerbread.
@@ -51,7 +53,7 @@ public class AndroidHttp {
    * </p>
    */
   public static HttpTransport newCompatibleTransport() {
-    return AndroidUtils.isMinimumSdkLevel(9) ? new NetHttpTransport() : new ApacheHttpTransport();
+    return AndroidUtils.isMinimumSdkLevel(GINGERBREAD) ? new NetHttpTransport() : new ApacheHttpTransport();
   }
 
   private AndroidHttp() {
