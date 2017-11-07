@@ -37,13 +37,13 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Yaniv Inbar
  */
-class AbstractMemoryDataStore<V extends Serializable> extends AbstractDataStore<V> {
+public class AbstractMemoryDataStore<V extends Serializable> extends AbstractDataStore<V> {
 
   /** Lock on access to the store. */
   private final Lock lock = new ReentrantLock();
 
   /** Data store map from the key to the value. */
-  HashMap<String, byte[]> keyValueMap = Maps.newHashMap();
+  protected HashMap<String, byte[]> keyValueMap = Maps.newHashMap();
 
   /**
    * @param dataStoreFactory data store factory
@@ -182,7 +182,7 @@ class AbstractMemoryDataStore<V extends Serializable> extends AbstractDataStore<
    * {@link #clear()}.
    */
   @SuppressWarnings("unused")
-  void save() throws IOException {
+  public void save() throws IOException {
   }
 
   @Override
