@@ -999,7 +999,9 @@ public final class HttpRequest {
         }
         // Save the exception in case the retries do not work and we need to re-throw it later.
         executeException = e;
-        logger.log(Level.WARNING, "exception thrown while executing request", e);
+        if (loggable) {
+          logger.log(Level.WARNING, "exception thrown while executing request", e);
+        }
       }
 
       // Flag used to indicate if an exception is thrown before the response has completed
