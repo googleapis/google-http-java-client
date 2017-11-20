@@ -109,12 +109,12 @@ public class ArrayMapTest extends TestCase {
     map.put("a", "a");
     map.put("b", "b");
     map.put("c", "c");
-    Iterator<Map.Entry<String,String>> iter = map.entrySet().iterator();
+    Iterator<Map.Entry<String, String>> iter = map.entrySet().iterator();
     while (iter.hasNext()) {
-        Map.Entry<String,String> entry = iter.next();
-        if(!"all".equalsIgnoreCase(entry.getKey())){
-            iter.remove();
-        }
+      Map.Entry<String, String> entry = iter.next();
+      if (!"all".equalsIgnoreCase(entry.getKey())) {
+        iter.remove();
+      }
     }
     assertEquals(0, map.size());
   }
@@ -124,12 +124,12 @@ public class ArrayMapTest extends TestCase {
     map.put("a", "a");
     map.put("b", "b");
     map.put("c", "c");
-    Iterator<Map.Entry<String,String>> iter = map.entrySet().iterator();
+    Iterator<Map.Entry<String, String>> iter = map.entrySet().iterator();
     while (iter.hasNext()) {
-        Map.Entry<String,String> entry = iter.next();
-        if("b".equalsIgnoreCase(entry.getKey())){
-            iter.remove();
-        }
+      Map.Entry<String, String> entry = iter.next();
+      if ("b".equalsIgnoreCase(entry.getKey())) {
+        iter.remove();
+      }
     }
     assertEquals(2, map.size());
     assertEquals("a", map.get("a"));
@@ -141,12 +141,12 @@ public class ArrayMapTest extends TestCase {
     map.put("a", "a");
     map.put("b", "b");
     map.put("c", "c");
-    Iterator<Map.Entry<String,String>> iter = map.entrySet().iterator();
+    Iterator<Map.Entry<String, String>> iter = map.entrySet().iterator();
     while (iter.hasNext()) {
-        Map.Entry<String,String> entry = iter.next();
-        if(!"b".equalsIgnoreCase(entry.getKey())){
-            iter.remove();
-        }
+      Map.Entry<String, String> entry = iter.next();
+      if (!"b".equalsIgnoreCase(entry.getKey())) {
+        iter.remove();
+      }
     }
     assertEquals(1, map.size());
     assertEquals("b", map.get("b"));
