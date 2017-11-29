@@ -81,6 +81,8 @@ public final class NetHttpTransport extends HttpTransport {
     Arrays.sort(SUPPORTED_METHODS);
   }
 
+  private static final String SHOULD_USE_PROXY_FLAG = "com.google.api.client.should_use_proxy";
+
   /** Factory to produce connections from {@link URL}s */
   private final ConnectionFactory connectionFactory;
 
@@ -130,7 +132,7 @@ public final class NetHttpTransport extends HttpTransport {
 
   private ConnectionFactory getConnectionFactory(ConnectionFactory connectionFactory) {
     if (connectionFactory == null) {
-      if (System.getProperty("com.api.client.should_use_proxy") != null) {
+      if (System.getProperty(SHOULD_USE_PROXY_FLAG) != null) {
         return new DefaultConnectionFactory(defaultProxy());
       }
       return new DefaultConnectionFactory();
@@ -329,7 +331,7 @@ public final class NetHttpTransport extends HttpTransport {
 
     /** Returns a new instance of {@link NetHttpTransport} based on the options. */
     public NetHttpTransport build() {
-      if (System.getProperty("com.google.api.client.should_use_proxy") != null) {
+      if (System.getProperty(SHOULD_USE_PROXY_FLAG) != null) {
         setProxy(defaultProxy());
       }
       return this.proxy == null
