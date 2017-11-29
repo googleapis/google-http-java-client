@@ -130,7 +130,7 @@ public final class NetHttpTransport extends HttpTransport {
 
   private ConnectionFactory getConnectionFactory(ConnectionFactory connectionFactory) {
     if (connectionFactory == null) {
-      if (System.getProperties().getProperty("com.api.client.should_use_proxy") != null) {
+      if (System.getProperties().getProperty("com.google.api.client.should_use_proxy") != null) {
         return new DefaultConnectionFactory(defaultProxy());
       }
       return new DefaultConnectionFactory();
