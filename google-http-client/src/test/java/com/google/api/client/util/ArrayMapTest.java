@@ -100,4 +100,13 @@ public class ArrayMapTest extends TestCase {
     } catch (IndexOutOfBoundsException e) {
     }
   }
+
+  public void testHashCode() {
+    ArrayMap<String, Integer> map = ArrayMap.of();
+    map.set(0, "a", null);
+    map.set(1, null, 1);
+    map.set(2, null, null);
+
+    assertTrue(map.hashCode() > 0);
+  }
 }
