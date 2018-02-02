@@ -25,11 +25,14 @@ import com.google.api.client.util.StreamingContent;
 import com.google.api.client.util.StringUtils;
 
 import io.opencensus.common.Scope;
+import io.opencensus.trace.Annotation;
+import io.opencensus.trace.AttributeValue;
 import io.opencensus.trace.Span;
 import io.opencensus.trace.Tracer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -866,8 +869,15 @@ public final class HttpRequest {
         .spanBuilder(OpenCensusUtils.SPAN_NAME_HTTP_REQUEST_EXECUTE)
         .setRecordEvents(OpenCensusUtils.isRecordEvent())
         .startSpan();
+    long idGenerator = 0L;
+
     do {
-      span.addAnnotation("retry #" + (numRetries - retriesRemaining));
+      span.addAnnotation(
+          Annotation.fromDescriptionAndAttributes(
+              "retry",
+              Collections.<String, AttributeValue>singletonMap(
+                  "number of retry",
+                  AttributeValue.longAttributeValue(numRetries - retriesRemaining))));
       // Cleanup any unneeded response from a previous iteration
       if (response != null) {
         response.ignore();
@@ -911,7 +921,7 @@ public final class HttpRequest {
           headers.setUserAgent(originalUserAgent + " " + USER_AGENT_SUFFIX);
         }
       }
-      OpenCensusUtils.propagateTracingContext(span, headers);
+      OpenCensusUtils.propagateTracingContext(span.getContext(), headers);
 
       // headers
       HttpHeaders.serializeHeaders(headers, logbuf, curlbuf, logger, lowLevelHttpRequest);
@@ -994,11 +1004,13 @@ public final class HttpRequest {
       lowLevelHttpRequest.setTimeout(connectTimeout, readTimeout);
       // switch tracing scope to current span
       Scope ws = tracer.withSpan(span);
-      OpenCensusUtils.recordSentMessageEvent(span, lowLevelHttpRequest.getContentLength());
+      OpenCensusUtils.recordSentMessageEvent(
+          span, idGenerator++, lowLevelHttpRequest.getContentLength());
       try {
         LowLevelHttpResponse lowLevelHttpResponse = lowLevelHttpRequest.execute();
         if (lowLevelHttpResponse != null) {
-          OpenCensusUtils.recordReceivedMessageEvent(span, lowLevelHttpResponse.getContentLength());
+          OpenCensusUtils.recordReceivedMessageEvent(
+              span, idGenerator++, lowLevelHttpResponse.getContentLength());
         }
         // Flag used to indicate if an exception is thrown before the response is constructed.
         boolean responseConstructed = false;
