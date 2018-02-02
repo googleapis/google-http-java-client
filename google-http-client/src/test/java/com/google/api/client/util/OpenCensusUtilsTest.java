@@ -23,7 +23,6 @@ import static org.mockito.Mockito.verify;
 import com.google.api.client.http.HttpHeaders;
 
 import io.opencensus.trace.EndSpanOptions;
-import io.opencensus.trace.AttributeValue;
 import io.opencensus.trace.NetworkEvent;
 import io.opencensus.trace.Span;
 import io.opencensus.trace.SpanId;
