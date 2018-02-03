@@ -869,14 +869,15 @@ public final class HttpRequest {
         .spanBuilder(OpenCensusUtils.SPAN_NAME_HTTP_REQUEST_EXECUTE)
         .setRecordEvents(OpenCensusUtils.isRecordEvent())
         .startSpan();
-    long idGenerator = 0L;
+    long sentIdGenerator = 0L;
+    long recvIdGenerator = 0L;
 
     do {
       span.addAnnotation(
           Annotation.fromDescriptionAndAttributes(
               "retry",
               Collections.<String, AttributeValue>singletonMap(
-                  "number of retry",
+                  "number",
                   AttributeValue.longAttributeValue(numRetries - retriesRemaining))));
       // Cleanup any unneeded response from a previous iteration
       if (response != null) {
@@ -1005,12 +1006,12 @@ public final class HttpRequest {
       // switch tracing scope to current span
       Scope ws = tracer.withSpan(span);
       OpenCensusUtils.recordSentMessageEvent(
-          span, idGenerator++, lowLevelHttpRequest.getContentLength());
+          span, sentIdGenerator++, lowLevelHttpRequest.getContentLength());
       try {
         LowLevelHttpResponse lowLevelHttpResponse = lowLevelHttpRequest.execute();
         if (lowLevelHttpResponse != null) {
           OpenCensusUtils.recordReceivedMessageEvent(
-              span, idGenerator++, lowLevelHttpResponse.getContentLength());
+              span, recvIdGenerator++, lowLevelHttpResponse.getContentLength());
         }
         // Flag used to indicate if an exception is thrown before the response is constructed.
         boolean responseConstructed = false;
