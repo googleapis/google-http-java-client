@@ -607,6 +607,8 @@
     </plugins>
   </build>
   <properties>
+	<maven.compiler.source>1.5</maven.compiler.source>
+    <maven.compiler.target>1.5</maven.compiler.target>
     <project.appengine.version>1.7.7</project.appengine.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.jsr305.version>3.0.2</project.jsr305.version>
