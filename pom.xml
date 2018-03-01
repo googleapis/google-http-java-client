@@ -124,6 +124,11 @@
         <version>${project.jackson-core2.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${project.jackson-core2.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
         <version>${project.gson.version}</version>
