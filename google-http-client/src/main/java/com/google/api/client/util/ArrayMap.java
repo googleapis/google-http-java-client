@@ -418,7 +418,9 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
 
     @Override
     public int hashCode() {
-      return getKey().hashCode() ^ getValue().hashCode();
+      K key = getKey();
+      V value = getValue();
+      return (key != null ? key.hashCode() : 0) ^ (value != null ? value.hashCode() : 0);
     }
 
     @Override

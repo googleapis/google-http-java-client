@@ -8,4 +8,3 @@ notifications:
 jdk:
   - oraclejdk8
   - openjdk7
-  - openjdk6

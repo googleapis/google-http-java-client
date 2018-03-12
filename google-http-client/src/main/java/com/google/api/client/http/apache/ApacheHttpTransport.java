@@ -124,6 +124,9 @@ public final class ApacheHttpTransport extends HttpTransport {
   public ApacheHttpTransport(HttpClient httpClient) {
     this.httpClient = httpClient;
     HttpParams params = httpClient.getParams();
+    if (params == null) {
+      params = newDefaultHttpClient().getParams();
+    }
     HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
     params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
   }

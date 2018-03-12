@@ -104,6 +104,15 @@ public class ArrayMapTest extends TestCase {
     }
   }
 
+  public void testHashCode() {
+    ArrayMap<String, Integer> map = ArrayMap.of();
+    map.set(0, "a", null);
+    map.set(1, null, 1);
+    map.set(2, null, null);
+
+    assertTrue(map.hashCode() > 0);
+  }
+
   public void testIteratorRemove1() {
     ArrayMap<String, String> map = new ArrayMap<String, String>();
     map.put("a", "a");

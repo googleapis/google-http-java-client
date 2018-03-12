@@ -100,6 +100,28 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>  
+            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+          </archive> 
+        </configuration>
+      </plugin> 
+      <plugin>   
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>2.5.4</version>
+        <executions>
+          <execution>
+            <id>bundle-manifest</id>
+            <phase>process-classes</phase>
+            <goals>    
+              <goal>manifest</goal>
+            </goals>   
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
   <dependencies>
@@ -115,12 +137,12 @@
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
-      <artifactId>guava-jdk5</artifactId>
+      <artifactId>guava</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
-      <artifactId>guava-testlib-jdk5</artifactId>
+      <artifactId>guava-testlib</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -141,6 +163,16 @@
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.opencensus</groupId>
+      <artifactId>opencensus-api</artifactId>
+      <version>0.11.1</version>
+    </dependency>
+    <dependency>
+      <groupId>io.opencensus</groupId>
+      <artifactId>opencensus-contrib-http-util</artifactId>
+      <version>0.11.1</version>
     </dependency>
   </dependencies>
 </project>
