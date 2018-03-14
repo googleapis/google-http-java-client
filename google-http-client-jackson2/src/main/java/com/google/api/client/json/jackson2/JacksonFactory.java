@@ -38,16 +38,18 @@ import java.nio.charset.Charset;
  * @since 1.11
  * @author Yaniv Inbar
  */
-public final class JacksonFactory extends JsonFactory {
+public class JacksonFactory extends JsonFactory {
 
   /** JSON factory. */
-  private final com.fasterxml.jackson.core.JsonFactory factory =
+  protected com.fasterxml.jackson.core.JsonFactory factory =
       new com.fasterxml.jackson.core.JsonFactory();
   {
     // don't auto-close JSON content in order to ensure consistent behavior across JSON factories
     // TODO(rmistry): Should we disable the JsonGenerator.Feature.AUTO_CLOSE_TARGET feature?
     factory.configure(
         com.fasterxml.jackson.core.JsonGenerator.Feature.AUTO_CLOSE_JSON_CONTENT, false);
+		factory.configure(
+				com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
   }
 
   /**
