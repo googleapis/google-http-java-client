@@ -19,7 +19,6 @@ import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Preconditions;
 import com.google.gson.stream.JsonReader;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -74,26 +73,26 @@ class GsonParser extends JsonParser {
   @Override
   public byte getByteValue() {
     checkNumber();
-    return Byte.valueOf(currentText);
+    return Byte.parseByte(currentText);
   }
 
   @Override
   public short getShortValue() {
     checkNumber();
-    return Short.valueOf(currentText);
+    return Short.parseShort(currentText);
   }
 
 
   @Override
   public int getIntValue() {
     checkNumber();
-    return Integer.valueOf(currentText);
+    return Integer.parseInt(currentText);
   }
 
   @Override
   public float getFloatValue() {
     checkNumber();
-    return Float.valueOf(currentText);
+    return Float.parseFloat(currentText);
   }
 
   @Override
@@ -111,13 +110,13 @@ class GsonParser extends JsonParser {
   @Override
   public double getDoubleValue() {
     checkNumber();
-    return Double.valueOf(currentText);
+    return Double.parseDouble(currentText);
   }
 
   @Override
   public long getLongValue() {
     checkNumber();
-    return Long.valueOf(currentText);
+    return Long.parseLong(currentText);
   }
 
   private void checkNumber() {
