@@ -81,11 +81,11 @@ public class MockHttpTransport extends HttpTransport {
     if (lowLevelHttpRequest != null) {
       return lowLevelHttpRequest;
     }
-    MockLowLevelHttpRequest request = new MockLowLevelHttpRequest(url);
+    lowLevelHttpRequest = new MockLowLevelHttpRequest(url);
     if (lowLevelHttpResponse != null) {
-      request.setResponse(lowLevelHttpResponse);
+      lowLevelHttpRequest.setResponse(lowLevelHttpResponse);
     }
-    return request;
+    return lowLevelHttpRequest;
   }
 
   /**
