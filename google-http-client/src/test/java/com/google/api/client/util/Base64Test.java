@@ -15,8 +15,6 @@ package com.google.api.client.util;
 
 import junit.framework.TestCase;
 
-import java.util.Arrays;
-
 /**
  * Tests {@link Base64}.
  *

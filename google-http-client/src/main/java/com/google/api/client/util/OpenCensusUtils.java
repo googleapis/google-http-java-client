@@ -38,8 +38,8 @@ import javax.annotation.Nullable;
 /**
  * Utilities for Census monitoring and tracing.
  *
- * @since 1.24
  * @author Hailong Wen
+ * @since 1.24
  */
 public class OpenCensusUtils {
 
@@ -52,8 +52,8 @@ public class OpenCensusUtils {
       "Sent." + HttpRequest.class.getName() + ".execute";
 
   /**
-   * OpenCensus tracing component.
-   * When no OpenCensus implementation is provided, it will return a no-op tracer.
+   * OpenCensus tracing component. When no OpenCensus implementation is provided, it will return a
+   * no-op tracer.
    */
   private static Tracer tracer = Tracing.getTracer();
 
@@ -189,8 +189,8 @@ public class OpenCensusUtils {
   }
 
   /**
-   * Records a new message event which contains the size of the request content.
-   * Note that the size represents the message size in application layer, i.e., content-length.
+   * Records a new message event which contains the size of the request content. Note that the size
+   * represents the message size in application layer, i.e., content-length.
    *
    * @param span The {@code span} in which the send event occurs.
    * @param id The id for the message, It is unique within an {@link HttpRequest}.
@@ -201,8 +201,8 @@ public class OpenCensusUtils {
   }
 
   /**
-   * Records a new message event which contains the size of the response content.
-   * Note that the size represents the message size in application layer, i.e., content-length.
+   * Records a new message event which contains the size of the response content. Note that the size
+   * represents the message size in application layer, i.e., content-length.
    *
    * @param span The {@code span} in which the receive event occurs.
    * @param id The id for the message. It is unique within an {@link HttpRequest}.
@@ -213,9 +213,8 @@ public class OpenCensusUtils {
   }
 
   /**
-   * Records a message event of a certain {@link NetowrkEvent.Type}.
-   * This method is package protected since {@link NetworkEvent} might be deprecated in future
-   * releases.
+   * Records a message event of a certain {@link NetowrkEvent.Type}. This method is package
+   * protected since {@link NetworkEvent} might be deprecated in future releases.
    *
    * @param span The {@code span} in which the event occurs.
    * @param id The id for the message.
@@ -225,7 +224,9 @@ public class OpenCensusUtils {
   @VisibleForTesting
   static void recordMessageEvent(Span span, long id, long size, Type eventType) {
     Preconditions.checkArgument(span != null, "span should not be null.");
-    if (size < 0) size = 0;
+    if (size < 0) {
+      size = 0;
+    }
     NetworkEvent event = NetworkEvent
         .builder(eventType, id)
         .setUncompressedMessageSize(size)

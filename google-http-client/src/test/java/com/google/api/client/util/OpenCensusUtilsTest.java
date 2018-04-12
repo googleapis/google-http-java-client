@@ -21,12 +21,11 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.verify;
 
 import com.google.api.client.http.HttpHeaders;
-
 import io.opencensus.trace.EndSpanOptions;
 import io.opencensus.trace.NetworkEvent;
 import io.opencensus.trace.Span;
-import io.opencensus.trace.SpanId;
 import io.opencensus.trace.SpanContext;
+import io.opencensus.trace.SpanId;
 import io.opencensus.trace.Status;
 import io.opencensus.trace.TraceId;
 import io.opencensus.trace.TraceOptions;
@@ -171,7 +170,8 @@ public class OpenCensusUtilsTest {
 
   @Test
   public void testGetEndSpanOptionsPreconditionFailed() {
-    EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.FAILED_PRECONDITION).build();
+    EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.FAILED_PRECONDITION)
+        .build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(412));
   }
 
