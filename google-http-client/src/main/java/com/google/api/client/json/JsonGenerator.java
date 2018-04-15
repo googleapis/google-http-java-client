@@ -139,7 +139,8 @@ public abstract class JsonGenerator {
       writeBoolean((Boolean) value);
     } else if (value instanceof DateTime) {
       writeString(((DateTime) value).toStringRfc3339());
-    } else if (value instanceof Iterable<?> || valueClass.isArray()) {
+    } else if ((value instanceof Iterable<?> || valueClass.isArray()) && 
+               !(value instanceof Map<?, ?>) && !(value instanceof GenericData)) {
       writeStartArray();
       for (Object o : Types.iterableOf(value)) {
         serialize(isJsonString, o);
