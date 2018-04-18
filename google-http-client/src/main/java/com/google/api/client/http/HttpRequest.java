@@ -18,7 +18,6 @@ import com.google.api.client.util.Beta;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingStreamingContent;
 import com.google.api.client.util.ObjectParser;
-import com.google.api.client.util.OpenCensusUtils;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Sleeper;
 import com.google.api.client.util.StreamingContent;
