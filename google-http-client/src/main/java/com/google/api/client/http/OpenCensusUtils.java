@@ -41,7 +41,7 @@ import javax.annotation.Nullable;
  */
 public class OpenCensusUtils {
 
-  private static final Logger LOGGER = Logger.getLogger(OpenCensusUtils.class.getName());
+  private static final Logger logger = Logger.getLogger(OpenCensusUtils.class.getName());
 
   /**
    * Span name for tracing {@link HttpRequest#execute()}.
@@ -242,7 +242,7 @@ public class OpenCensusUtils {
         }
       };
     } catch (Exception e) {
-      LOGGER.log(
+      logger.log(
           Level.WARNING, "Cannot initialize default OpenCensus HTTP propagation text format.", e);
     }
 
@@ -250,7 +250,7 @@ public class OpenCensusUtils {
       Tracing.getExportComponent().getSampledSpanStore().registerSpanNamesForCollection(
           Collections.<String>singletonList(SPAN_NAME_HTTP_REQUEST_EXECUTE));
     } catch (Exception e) {
-      LOGGER.log(
+      logger.log(
           Level.WARNING, "Cannot register default OpenCensus span names for collection.", e);
     }
   }
