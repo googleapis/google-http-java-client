@@ -218,7 +218,7 @@ public final class HttpRequest {
   private Sleeper sleeper = Sleeper.DEFAULT;
 
   /** OpenCensus tracing component. */
-  private Tracer tracer = OpenCensusUtils.getTracer();
+  private final Tracer tracer = OpenCensusUtils.getTracer();
 
   /**
    * @param transport HTTP transport

@@ -74,26 +74,11 @@ final class NetHttpRequest extends LowLevelHttpRequest {
         } else {
           connection.setChunkedStreamingMode(0);
         }
-        OutputStream out = connection.getOutputStream();
-        boolean threw = true;
-        try {
+
+        try (OutputStream out = connection.getOutputStream()) {
           getStreamingContent().writeTo(out);
-          threw = false;
-        } finally {
-          try {
-            out.close();
-          } catch (IOException exception) {
-            // When writeTo() throws an exception, chances are that the close call will also fail.
-            // In such case, swallow exception from close call so that the underlying cause can
-            // propagate.
-            if (!threw) {
-              throw exception;
-            }
-          }
         }
       } else {
-        // cannot call setDoOutput(true) because it would change a GET method to POST
-        // for HEAD, OPTIONS, DELETE, or TRACE it would throw an exceptions
         Preconditions.checkArgument(
             contentLength == 0, "%s with non-zero content length is not supported", requestMethod);
       }
