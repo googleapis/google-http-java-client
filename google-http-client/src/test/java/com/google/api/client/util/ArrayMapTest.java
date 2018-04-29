@@ -107,6 +107,6 @@ public class ArrayMapTest extends TestCase {
     map.set(1, null, 1);
     map.set(2, null, null);
 
-    assertTrue(map.hashCode() > 0);
+    assertTrue(map.hashCode() != 0);
   }
 }

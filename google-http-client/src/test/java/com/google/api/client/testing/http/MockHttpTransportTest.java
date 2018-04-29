@@ -42,4 +42,3 @@ public final class MockHttpTransportTest extends TestCase {
     assertThat(actualRequest.getHeaders().get("foo")).containsExactly("bar");
   }
 }
-

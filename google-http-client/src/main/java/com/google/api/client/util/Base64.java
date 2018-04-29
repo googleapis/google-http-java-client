@@ -14,6 +14,8 @@
 
 package com.google.api.client.util;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.google.common.io.BaseEncoding;
 
 /**
@@ -36,7 +38,7 @@ public class Base64 {
     if (binaryData == null) {
       return null;
     }
-    return BaseEncoding.base64().encode(binaryData).getBytes();
+    return BaseEncoding.base64().encode(binaryData).getBytes(UTF_8);
   }
 
   /**
@@ -64,7 +66,7 @@ public class Base64 {
     if (binaryData == null) {
       return null;
     }
-    return BaseEncoding.base64Url().omitPadding().encode(binaryData).getBytes();
+    return BaseEncoding.base64Url().omitPadding().encode(binaryData).getBytes(UTF_8);
   }
 
   /**
@@ -91,7 +93,7 @@ public class Base64 {
     if (base64Data == null) {
       return null;
     }
-    return decodeBase64(new String(base64Data));
+    return decodeBase64(new String(base64Data, UTF_8));
   }
 
   /**

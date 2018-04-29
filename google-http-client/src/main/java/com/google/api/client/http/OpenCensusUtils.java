@@ -53,7 +53,7 @@ public class OpenCensusUtils {
    * OpenCensus tracing component. When no OpenCensus implementation is provided, it will return a
    * no-op tracer.
    */
-  private static Tracer tracer = Tracing.getTracer();
+  private static final Tracer tracer = Tracing.getTracer();
 
   /**
    * Whether spans should be recorded locally. Defaults to true.
@@ -72,7 +72,7 @@ public class OpenCensusUtils {
    */
   @Nullable
   @VisibleForTesting
-  static volatile TextFormat.Setter propagationTextFormatSetter = null;
+  static volatile TextFormat.Setter<HttpHeaders> propagationTextFormatSetter = null;
 
   /**
    * Sets the {@link TextFormat} used in context propagation.
@@ -96,7 +96,8 @@ public class OpenCensusUtils {
    *
    * @param textFormatSetter the {@code TextFormat.Setter} for the text format.
    */
-  public static void setPropagationTextFormatSetter(@Nullable TextFormat.Setter textFormatSetter) {
+  public static void setPropagationTextFormatSetter(
+      @Nullable TextFormat.Setter<HttpHeaders> textFormatSetter) {
     propagationTextFormatSetter = textFormatSetter;
   }
 
