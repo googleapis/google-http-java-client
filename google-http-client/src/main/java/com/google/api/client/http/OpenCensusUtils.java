@@ -96,7 +96,8 @@ public class OpenCensusUtils {
    *
    * @param textFormatSetter the {@code TextFormat.Setter} for the text format.
    */
-  public static void setPropagationTextFormatSetter(@Nullable TextFormat.Setter<HttpHeaders> textFormatSetter) {
+  public static void setPropagationTextFormatSetter(
+      @Nullable TextFormat.Setter<HttpHeaders> textFormatSetter) {
     propagationTextFormatSetter = textFormatSetter;
   }
 

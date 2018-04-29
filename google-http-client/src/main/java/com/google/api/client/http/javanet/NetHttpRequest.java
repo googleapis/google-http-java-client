@@ -83,7 +83,8 @@ final class NetHttpRequest extends LowLevelHttpRequest {
             contentLength == 0, "%s with non-zero content length is not supported", requestMethod);
       }
     }
-    // connect
+
+    // Connect.
     boolean successfulConnection = false;
     try {
       connection.connect();

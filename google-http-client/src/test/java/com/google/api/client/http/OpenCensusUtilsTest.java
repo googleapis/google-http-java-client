@@ -57,7 +57,8 @@ public class OpenCensusUtilsTest {
   @Mock TextFormat.Setter<HttpHeaders> mockTextFormatSetter;
   @Mock Span mockSpan;
   TextFormat originTextFormat = OpenCensusUtils.propagationTextFormat;
-  TextFormat.Setter<HttpHeaders> originTextFormatSetter = OpenCensusUtils.propagationTextFormatSetter;
+  TextFormat.Setter<HttpHeaders> originTextFormatSetter =
+      OpenCensusUtils.propagationTextFormatSetter;
   HttpHeaders headers = new HttpHeaders();
   Tracer tracer = OpenCensusUtils.getTracer();
   Random random = new Random(1234);
