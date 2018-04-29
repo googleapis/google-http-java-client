@@ -250,24 +250,25 @@
         <version>1.9.0</version>
       </dependency>
       <dependency>
-        <groupId>javax.jdo</groupId>
-        <artifactId>jdo2-api</artifactId>
-        <version>${project.jdo2-api.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.datanucleus</groupId>
         <artifactId>datanucleus-core</artifactId>
-        <version>3.2.2</version>
+        <!-- version 5.0 and above are built for java 52.0 (Java SE 8), which doesn't compile against jdk7 -->
+        <version>4.1.17</version>
       </dependency>
       <dependency>
         <groupId>org.datanucleus</groupId>
         <artifactId>datanucleus-api-jdo</artifactId>
-        <version>3.2.1</version>
+        <version>4.2.4</version>
+      </dependency>
+      <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>javax.jdo</artifactId>
+        <version>3.2.0-m3</version>
       </dependency>
       <dependency>
         <groupId>org.datanucleus</groupId>
         <artifactId>datanucleus-rdbms</artifactId>
-        <version>3.2.1</version>
+        <version>5.1.9</version>
       </dependency>
       <dependency>
         <groupId>mysql</groupId>
@@ -397,7 +398,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>animal-sniffer-maven-plugin</artifactId>
-          <version>1.9</version>
+          <version>1.16</version>
         </plugin>
         <plugin>
           <groupId>org.sonatype.plugins</groupId>
@@ -476,8 +477,8 @@
         </plugin>
         <plugin>
           <groupId>org.datanucleus</groupId>
-          <artifactId>maven-datanucleus-plugin</artifactId>
-          <version>2.2.1</version>
+          <artifactId>datanucleus-maven-plugin</artifactId>
+          <version>4.0.5</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -624,6 +625,5 @@
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.commons-logging.version>1.1.1</project.commons-logging.version>
     <project.httpclient.version>4.5.3</project.httpclient.version>
-    <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
   </properties>
 </project>
