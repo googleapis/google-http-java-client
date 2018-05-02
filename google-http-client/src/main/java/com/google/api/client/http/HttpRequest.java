@@ -201,6 +201,9 @@ public final class HttpRequest {
   /** Sleeper. */
   private Sleeper sleeper = Sleeper.DEFAULT;
 
+  /** Whether to pass authorization headers in following redirects ({@code true} by default). */
+  private boolean passAuthHeaderInRedirects = true;
+
   /**
    * @param transport HTTP transport
    * @param requestMethod HTTP request method or {@code null} for none
@@ -1130,8 +1133,12 @@ public final class HttpRequest {
         // GET requests do not support non-zero content length
         setContent(null);
       }
-      // remove Authorization and If-* headers
-      headers.setAuthorization((String) null);
+      // remove Authorization header if it is not allowed to pass
+      if (!this.passAuthHeaderInRedirects) {
+        headers.setAuthorization((String) null);
+      }
+
+      // remove If-* headers
       headers.setIfMatch((String) null);
       headers.setIfNoneMatch((String) null);
       headers.setIfModifiedSince((String) null);
@@ -1159,5 +1166,24 @@ public final class HttpRequest {
   public HttpRequest setSleeper(Sleeper sleeper) {
     this.sleeper = Preconditions.checkNotNull(sleeper);
     return this;
+  }
+
+  /**
+   * Sets whether to pass authorization header to the redirected request.
+   *
+   * <p>
+   * The default value is {@code true}.
+   * </p>
+   *
+   */
+  public void setPassAuthHeaderInRedirects(boolean passAuthHeaderInRedirects) {
+    this.passAuthHeaderInRedirects = passAuthHeaderInRedirects;
+  }
+
+  /**
+   * Returns whether authorization will be passed in redirected requests.
+   */
+  public boolean getPassAuthHeaderInRedirects() {
+    return passAuthHeaderInRedirects;
   }
 }
