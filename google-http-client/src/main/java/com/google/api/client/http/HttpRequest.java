@@ -1003,6 +1003,7 @@ public final class HttpRequest {
       // execute
       lowLevelHttpRequest.setTimeout(connectTimeout, readTimeout);
       // switch tracing scope to current span
+      @SuppressWarnings("MustBeClosedChecker")
       Scope ws = tracer.withSpan(span);
       OpenCensusUtils.recordSentMessageEvent(
           span, sentIdGenerator++, lowLevelHttpRequest.getContentLength());
