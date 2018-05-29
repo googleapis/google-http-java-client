@@ -22,7 +22,6 @@
           <links>
             <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
             <link>http://docs.guava-libraries.googlecode.com/git-history/v13.0.1/javadoc</link>
-            <link>http://commons.apache.org/proper/commons-codec/javadocs/api-release</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
@@ -40,9 +39,7 @@
           </execution>
         </executions>
       </plugin>
-      <!-- Use jarjar to include a private copy of Apache Commons Codec library
-           to avoid a runtime dependency conflict with Android which includes
-           an older version of that library, as well as Guava JDK5. -->
+      <!-- Use jarjar to include a private copy of Guava JDK5. -->
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>jarjar-maven-plugin</artifactId>
@@ -54,14 +51,9 @@
             </goals>
             <configuration>
               <includes>
-                <include>commons-codec:commons-codec</include>
                 <include>com.google.guava:guava-jdk5</include>
               </includes>
               <rules>
-                <rule>
-                  <pattern>org.apache.commons.codec.**</pattern>
-                  <result>com.google.api.client.repackaged.org.apache.commons.codec.@1</result>
-                </rule>
                 <rule>
                   <pattern>com.google.common.**</pattern>
                   <result>com.google.api.client.repackaged.com.google.common.@1</result>
@@ -70,32 +62,6 @@
                   <pattern>com.google.api.client.**</pattern>
                 </keep>
               </rules>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <!-- Remove extraneous files from the jarjar'ed Apache Commons Codec
-               Library. -->
-          <execution>
-            <id>scrub</id>
-            <phase>package</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <target>
-                <jar destfile="target/scrubbed.jar" filesetmanifest="merge">
-                  <zipfileset src="target/google-http-client-${project.version}.jar">
-                    <exclude name="**/org/apache/commons/codec/language/bm/*.txt"/>
-                    <exclude name="META-INF/*.txt"/>
-                    <exclude name="META-INF/maven/**"/>
-                  </zipfileset>
-                </jar>
-                <move file="target/scrubbed.jar" tofile="target/google-http-client-${project.version}.jar"/>
-              </target>
             </configuration>
           </execution>
         </executions>
@@ -163,11 +129,6 @@
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-codec</groupId>
-      <artifactId>commons-codec</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.opencensus</groupId>

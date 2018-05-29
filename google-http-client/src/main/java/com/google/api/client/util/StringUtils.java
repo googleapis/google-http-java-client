@@ -20,14 +20,6 @@ import java.io.UnsupportedEncodingException;
 /**
  * Utilities for strings.
  *
- * <p>
- * Some of these methods are a proxy for version 1.6 (or newer) of the Apache Commons Codec
- * {@link StringUtils} implementation. This is needed in order to support platforms like Android
- * which already include an older version of the Apache Commons Codec (Android includes version
- * 1.3). To avoid a dependency library conflict, this library includes a reduced private copy of
- * version 1.6 (or newer) of the Apache Commons Codec (using a tool like jarjar).
- * </p>
- *
  * @since 1.8
  * @author Yaniv Inbar
  */
@@ -50,11 +42,15 @@ public class StringUtils {
    *         according the the Java specification.
    * @see <a href="http://download.oracle.com/javase/1.5.0/docs/api/java/nio/charset/Charset.html"
    *      >Standard charsets</a>
-   * @see org.apache.commons.codec.binary.StringUtils#getBytesUtf8(String)
+   * @see String#getBytes(String)
    * @since 1.8
    */
   public static byte[] getBytesUtf8(String string) {
-    return org.apache.commons.codec.binary.StringUtils.getBytesUtf8(string);
+    try {
+      return string.getBytes("UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new IllegalStateException();
+    }
   }
 
   /**
@@ -66,11 +62,15 @@ public class StringUtils {
    *         charset, or <code>null</code> if the input byte array was <code>null</code>.
    * @throws IllegalStateException Thrown when a {@link UnsupportedEncodingException} is caught,
    *         which should never happen since the charset is required.
-   * @see org.apache.commons.codec.binary.StringUtils#newStringUtf8(byte[])
+   * @see String#String(byte[], String)
    * @since 1.8
    */
   public static String newStringUtf8(byte[] bytes) {
-    return org.apache.commons.codec.binary.StringUtils.newStringUtf8(bytes);
+    try {
+      return new String(bytes, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new IllegalStateException();
+    }
   }
 
   private StringUtils() {
