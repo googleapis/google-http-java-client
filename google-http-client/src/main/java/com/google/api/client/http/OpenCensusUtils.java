@@ -19,8 +19,8 @@ import com.google.common.annotations.VisibleForTesting;
 
 import io.opencensus.contrib.http.util.HttpPropagationUtil;
 import io.opencensus.trace.EndSpanOptions;
-import io.opencensus.trace.NetworkEvent;
-import io.opencensus.trace.NetworkEvent.Type;
+import io.opencensus.trace.MessageEvent;
+import io.opencensus.trace.MessageEvent.Type;
 import io.opencensus.trace.Span;
 import io.opencensus.trace.SpanContext;
 import io.opencensus.trace.Status;
@@ -207,12 +207,12 @@ public class OpenCensusUtils {
    * @param size Size of the response.
    */
   public static void recordReceivedMessageEvent(Span span, long id, long size) {
-    recordMessageEvent(span, id, size, Type.RECV);
+    recordMessageEvent(span, id, size, Type.RECEIVED);
   }
 
   /**
-   * Records a message event of a certain {@link NetowrkEvent.Type}. This method is package
-   * protected since {@link NetworkEvent} might be deprecated in future releases.
+   * Records a message event of a certain {@link MessageEvent.Type}. This method is package
+   * protected since {@link MessageEvent} might be deprecated in future releases.
    *
    * @param span The {@code span} in which the event occurs.
    * @param id The id for the message.
@@ -225,11 +225,11 @@ public class OpenCensusUtils {
     if (size < 0) {
       size = 0;
     }
-    NetworkEvent event = NetworkEvent
+    MessageEvent event = MessageEvent
         .builder(eventType, id)
         .setUncompressedMessageSize(size)
         .build();
-    span.addNetworkEvent(event);
+    span.addMessageEvent(event);
   }
 
   static {
