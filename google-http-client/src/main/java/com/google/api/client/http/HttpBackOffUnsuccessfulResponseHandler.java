@@ -28,8 +28,8 @@ import java.io.IOException;
  *
  * <p>
  * It is designed to work with only one {@link HttpRequest} at a time. As a result you MUST create a
- * new instance of {@link HttpBackOffIOExceptionHandler} with a new instance of {@link BackOff} for
- * each instance of {@link HttpRequest}.
+ * new instance of {@link HttpBackOffUnsuccessfulResponseHandler} with a new instance of
+ * {@link BackOff} for each instance of {@link HttpRequest}.
  * </p>
  *
  * <p>

@@ -15,10 +15,9 @@
 package com.google.api.client.http;
 
 
-import junit.framework.TestCase;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link EmptyContent}.

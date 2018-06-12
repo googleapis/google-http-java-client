@@ -14,10 +14,9 @@
 
 package com.google.api.client.util;
 
-import junit.framework.TestCase;
-
 import java.io.File;
 import java.io.IOException;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link IOUtils}.
@@ -57,6 +56,9 @@ public class IOUtilsTest extends TestCase {
       // ignore because ln command may not be defined
       return;
     }
-    assertTrue(IOUtils.isSymbolicLink(file2));
+    // multiple versions of jdk6 cannot detect the symbolic link. Consider support best-effort on
+    // jdk6
+    boolean jdk6 = System.getProperty("java.version").startsWith("1.6.0_");
+    assertTrue(IOUtils.isSymbolicLink(file2) || jdk6);
   }
 }

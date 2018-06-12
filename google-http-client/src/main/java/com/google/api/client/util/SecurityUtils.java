@@ -161,7 +161,12 @@ public final class SecurityUtils {
       throws InvalidKeyException, SignatureException {
     signatureAlgorithm.initVerify(publicKey);
     signatureAlgorithm.update(contentBytes);
-    return signatureAlgorithm.verify(signatureBytes);
+    // SignatureException may be thrown if we are tring the wrong key.
+    try {
+      return signatureAlgorithm.verify(signatureBytes);
+    } catch (SignatureException e) {
+      return false;
+    }
   }
 
   /**

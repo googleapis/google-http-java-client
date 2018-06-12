@@ -22,15 +22,13 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.testing.util.LogRecordingHandler;
 import com.google.api.client.testing.util.TestableByteArrayInputStream;
 import com.google.api.client.util.Key;
-
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.logging.Level;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link HttpResponse}.

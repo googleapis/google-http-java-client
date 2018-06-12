@@ -15,10 +15,6 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Key;
-
-import junit.framework.TestCase;
-import org.junit.Assert;
-
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,6 +24,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import junit.framework.TestCase;
+import org.junit.Assert;
 
 /**
  * Tests {@link GenericUrl}.

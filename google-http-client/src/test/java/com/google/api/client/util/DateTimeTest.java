@@ -14,10 +14,9 @@
 
 package com.google.api.client.util;
 
-import junit.framework.TestCase;
-
 import java.util.Date;
 import java.util.TimeZone;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link DateTime}.
@@ -120,7 +119,7 @@ public class DateTimeTest extends TestCase {
     assertEquals(0, value.getValue() % 100);
     value = DateTime.parseRfc3339("1997-01-01T12:00:27.87+00:20");
     assertFalse(value.isDateOnly());
-    assertEquals(87, value.getValue() % 1000); // check milliseconds
+    assertEquals(870, value.getValue() % 1000); // check milliseconds
 
     value = new DateTime("2007-06-01");
     assertTrue(value.isDateOnly());
@@ -136,6 +135,22 @@ public class DateTimeTest extends TestCase {
         DateTime.parseRfc3339("1990-12-31T15:59:60-08:00").getValue()); // from Section 5.8 Examples
     assertEquals(DateTime.parseRfc3339("2007-06-01t18:50:00-04:00").getValue(),
         DateTime.parseRfc3339("2007-06-01t22:50:00Z").getValue()); // from Section 4.2 Local Offsets
+  }
+
+  public void testParseAndFormatRfc3339() {
+    // .12 becomes .120
+    String input = "1996-12-19T16:39:57.12-08:00";
+    String expected = "1996-12-19T16:39:57.120-08:00";
+    DateTime dt = DateTime.parseRfc3339(input);
+    String output = dt.toStringRfc3339();
+    assertEquals(expected, output);
+
+    // Truncated to milliseconds.
+    input    = "1996-12-19T16:39:57.123456789-08:00";
+    expected = "1996-12-19T16:39:57.123-08:00";
+    dt = DateTime.parseRfc3339(input);
+    output = dt.toStringRfc3339();
+    assertEquals(expected, output);
   }
 
   private void expectExceptionForParseRfc3339(String input) {

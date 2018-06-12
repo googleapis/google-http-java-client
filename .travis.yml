@@ -1,6 +1,11 @@
+sudo: false
+
 language: java
+
+notifications:
+  email: false
+
 jdk:
   - oraclejdk8
-  - oraclejdk7
   - openjdk7
   - openjdk6

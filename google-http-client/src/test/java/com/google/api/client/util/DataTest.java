@@ -14,8 +14,6 @@
 
 package com.google.api.client.util;
 
-import junit.framework.TestCase;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -40,6 +38,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentMap;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link Data}.
@@ -114,6 +113,23 @@ public class DataTest extends TestCase {
     ArrayMap<String, Integer> map = ArrayMap.of();
     map.add("a", 1);
     assertEquals(map, Data.clone(map));
+  }
+
+  public void testClone_ArraysAsList() {
+    {
+      List<Object> orig = Arrays.<Object>asList("a", "b", "c", new ArrayList<Object>());
+      List<Object> result = Data.clone(orig);
+      assertTrue(orig != result);
+      assertEquals(orig, result);
+      assertTrue(orig.get(3) != result.get(3));
+    }
+
+    {
+      List<String> orig = Arrays.asList(new String[] {"a", "b", "c"});
+      List<String> result = Data.clone(orig);
+      assertTrue(orig != result);
+      assertEquals(orig, result);
+    }
   }
 
   public void testNewCollectionInstance() throws Exception {

@@ -16,9 +16,6 @@ package com.google.api.client.testing.http.javanet;
 
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.util.StringUtils;
-
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +23,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link MockHttpURLConnection}.

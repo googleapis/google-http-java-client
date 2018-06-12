@@ -16,19 +16,15 @@ package com.google.api.client.util;
 
 import com.google.api.client.testing.json.webtoken.TestCertificates;
 import com.google.api.client.testing.util.SecurityTestUtils;
-
-import junit.framework.TestCase;
-
-import org.junit.Assert;
-
 import java.io.ByteArrayInputStream;
 import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
-
 import javax.net.ssl.X509TrustManager;
+import junit.framework.TestCase;
+import org.junit.Assert;
 
 /**
  * Tests {@link SecurityUtils}.

@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.google.http-client</groupId>
   <artifactId>google-http-client-parent</artifactId>
-  <version>1.20.0</version>
+  <version>1.23.0</version>
   <packaging>pom</packaging>
   <name>Parent for the Google HTTP Client Library for Java</name>
 
@@ -88,6 +88,24 @@
     <module>samples/googleplus-simple-cmdline-sample</module>
   </modules>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>protoc-plugin</id>
+      <url>https://dl.bintray.com/sergei-ivanov/maven/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <!--
     If you change the version of a dependency, make sure to update the javadoc
     links if required, and any javadoc links of your dependency in the oauth and
@@ -148,6 +166,11 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava-jdk5</artifactId>
+        <version>${project.guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava-testlib-jdk5</artifactId>
         <version>${project.guava.version}</version>
       </dependency>
       <dependency>
@@ -551,7 +574,7 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>clirr-maven-plugin</artifactId>
         <configuration>
-          <comparisonVersion>1.19.0</comparisonVersion>
+          <comparisonVersion>1.22.0</comparisonVersion>
           <ignoredDifferencesFile>${basedir}/../clirr-ignored-differences.xml</ignoredDifferencesFile>
           <logResults>true</logResults>
         </configuration>
@@ -590,8 +613,8 @@
     <project.gson.version>2.1</project.gson.version>
     <project.jackson-core-asl.version>1.9.11</project.jackson-core-asl.version>
     <project.jackson-core2.version>2.1.3</project.jackson-core2.version>
-    <project.protobuf-java.version>2.4.1</project.protobuf-java.version>
-    <project.guava.version>13.0</project.guava.version>
+    <project.protobuf-java.version>2.6.1</project.protobuf-java.version>
+    <project.guava.version>17.0</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.commons-logging.version>1.1.1</project.commons-logging.version>
     <project.httpclient.version>4.0.1</project.httpclient.version>

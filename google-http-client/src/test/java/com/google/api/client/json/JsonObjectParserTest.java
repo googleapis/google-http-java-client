@@ -18,15 +18,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.common.base.Charsets;
-
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import junit.framework.TestCase;
 
 /**
  * Tests for the {@link JsonObjectParser} class.

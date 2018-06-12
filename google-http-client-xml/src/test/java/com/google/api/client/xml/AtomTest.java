@@ -16,11 +16,9 @@ package com.google.api.client.xml;
 
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.xml.atom.Atom;
-
+import java.util.List;
 import junit.framework.TestCase;
 import org.junit.Assert;
-
-import java.util.List;
 
 /**
  * Tests {@link Atom}.

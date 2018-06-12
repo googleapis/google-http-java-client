@@ -16,10 +16,8 @@ package com.google.api.client.http;
 
 import com.google.api.client.json.Json;
 import com.google.api.client.util.StringUtils;
-
-import junit.framework.TestCase;
-
 import java.io.ByteArrayOutputStream;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link MultipartContent}.
