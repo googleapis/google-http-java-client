@@ -13,6 +13,7 @@
  */
 package com.google.api.client.util;
 
+import java.util.Arrays;
 import junit.framework.TestCase;
 
 /**
@@ -53,5 +54,11 @@ public class Base64Test extends TestCase {
   public void testDecode() {
     String value = new String(Base64.decodeBase64(Base64.encodeBase64("foobar".getBytes())));
     assertEquals("foobar", value);
+  }
+
+  public void testDecodeStripsCarriageReturnsAndNewlines() {
+    byte[] actual = Base64.decodeBase64("aGVsbG8gd29ybGQ=\r\n");
+    byte[] expected = "hello world".getBytes();
+    assertTrue(Arrays.equals(actual, expected));
   }
 }
