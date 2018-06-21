@@ -105,6 +105,9 @@ public class Base64 {
       return null;
     }
 
+    base64String = base64String.replace("\r", "");
+    base64String = base64String.replace("\n", "");
+
     try {
       return BaseEncoding.base64().decode(base64String);
     } catch (IllegalArgumentException e) {
