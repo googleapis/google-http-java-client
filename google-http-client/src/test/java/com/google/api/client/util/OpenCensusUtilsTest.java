@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.http;
+package com.google.api.client.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -21,7 +21,6 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.verify;
 
 import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.OpenCensusUtils;
 import io.opencensus.trace.EndSpanOptions;
 import io.opencensus.trace.NetworkEvent;
 import io.opencensus.trace.Span;

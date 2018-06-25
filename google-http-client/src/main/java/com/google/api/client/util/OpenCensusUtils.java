@@ -12,9 +12,11 @@
  * the License.
  */
 
-package com.google.api.client.http;
+package com.google.api.client.util;
 
-import com.google.api.client.util.Preconditions;
+import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.annotations.VisibleForTesting;
 
 import io.opencensus.contrib.http.util.HttpPropagationUtil;
