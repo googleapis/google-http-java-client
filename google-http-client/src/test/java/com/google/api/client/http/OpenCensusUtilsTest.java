@@ -20,17 +20,14 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.verify;
 
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.OpenCensusUtils;
 import io.opencensus.trace.EndSpanOptions;
-import io.opencensus.trace.NetworkEvent;
+import io.opencensus.trace.MessageEvent;
 import io.opencensus.trace.Span;
 import io.opencensus.trace.SpanContext;
 import io.opencensus.trace.SpanId;
 import io.opencensus.trace.Status;
 import io.opencensus.trace.TraceId;
 import io.opencensus.trace.TraceOptions;
-import io.opencensus.trace.Tracer;
 import io.opencensus.trace.propagation.TextFormat;
 import java.util.Random;
 import org.junit.After;
@@ -59,7 +56,6 @@ public class OpenCensusUtilsTest {
   TextFormat originTextFormat = OpenCensusUtils.propagationTextFormat;
   TextFormat.Setter originTextFormatSetter = OpenCensusUtils.propagationTextFormatSetter;
   HttpHeaders headers = new HttpHeaders();
-  Tracer tracer = OpenCensusUtils.getTracer();
   Random random = new Random(1234);
   SpanContext spanContext = SpanContext.create(
       TraceId.generateRandomId(random), SpanId.generateRandomId(random), TraceOptions.DEFAULT);
@@ -195,12 +191,12 @@ public class OpenCensusUtilsTest {
   public void testRecordMessageEventInNullSpan() {
     thrown.expect(IllegalArgumentException.class);
     thrown.expectMessage("span should not be null.");
-    OpenCensusUtils.recordMessageEvent(null, 0, 0, NetworkEvent.Type.SENT);
+    OpenCensusUtils.recordMessageEvent(null, 0, 0, MessageEvent.Type.SENT);
   }
 
   @Test
   public void testRecordMessageEvent() {
-    OpenCensusUtils.recordMessageEvent(mockSpan, 0, 0, NetworkEvent.Type.SENT);
-    verify(mockSpan).addNetworkEvent(isA(NetworkEvent.class));
+    OpenCensusUtils.recordMessageEvent(mockSpan, 0, 0, MessageEvent.Type.SENT);
+    verify(mockSpan).addMessageEvent(isA(MessageEvent.class));
   }
 }
