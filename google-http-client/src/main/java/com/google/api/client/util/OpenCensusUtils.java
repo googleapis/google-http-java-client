@@ -20,11 +20,11 @@ import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.annotations.VisibleForTesting;
 
 import io.opencensus.contrib.http.util.HttpPropagationUtil;
+import io.opencensus.trace.BlankSpan;
 import io.opencensus.trace.EndSpanOptions;
 import io.opencensus.trace.NetworkEvent;
 import io.opencensus.trace.NetworkEvent.Type;
 import io.opencensus.trace.Span;
-import io.opencensus.trace.SpanContext;
 import io.opencensus.trace.Status;
 import io.opencensus.trace.Tracer;
 import io.opencensus.trace.Tracing;
@@ -56,6 +56,11 @@ public class OpenCensusUtils {
    * no-op tracer.
    */
   private static Tracer tracer = Tracing.getTracer();
+
+  /**
+   * Sequence id generator for message event.
+   */
+  private static AtomicLong idGenerator = new AtomicLong();
 
   /**
    * Whether spans should be recorded locally. Defaults to true.
@@ -132,18 +137,18 @@ public class OpenCensusUtils {
   }
 
   /**
-   * Propagate information of a given tracing context. This information will be injected into HTTP
+   * Propagate information of current tracing context. This information will be injected into HTTP
    * header.
    *
-   * @param spanContext the spanContext to be propagated.
+   * @param span the span to be propagated.
    * @param headers the headers used in propagation.
    */
-  public static void propagateTracingContext(SpanContext spanContext, HttpHeaders headers) {
-    Preconditions.checkArgument(spanContext != null, "spanContext should not be null.");
+  public static void propagateTracingContext(Span span, HttpHeaders headers) {
+    Preconditions.checkArgument(span != null, "span should not be null.");
     Preconditions.checkArgument(headers != null, "headers should not be null.");
     if (propagationTextFormat != null && propagationTextFormatSetter != null) {
-      if (!spanContext.equals(SpanContext.INVALID)) {
-        propagationTextFormat.inject(spanContext, headers, propagationTextFormatSetter);
+      if (!span.equals(BlankSpan.INSTANCE)) {
+        propagationTextFormat.inject(span.getContext(), headers, propagationTextFormatSetter);
       }
     }
   }
@@ -193,11 +198,10 @@ public class OpenCensusUtils {
    * represents the message size in application layer, i.e., content-length.
    *
    * @param span The {@code span} in which the send event occurs.
-   * @param id The id for the message, It is unique within an {@link HttpRequest}.
    * @param size Size of the request.
    */
-  public static void recordSentMessageEvent(Span span, long id, long size) {
-    recordMessageEvent(span, id, size, Type.SENT);
+  public static void recordSentMessageEvent(Span span, long size) {
+    recordMessageEvent(span, size, Type.SENT);
   }
 
   /**
@@ -205,11 +209,10 @@ public class OpenCensusUtils {
    * represents the message size in application layer, i.e., content-length.
    *
    * @param span The {@code span} in which the receive event occurs.
-   * @param id The id for the message. It is unique within an {@link HttpRequest}.
    * @param size Size of the response.
    */
-  public static void recordReceivedMessageEvent(Span span, long id, long size) {
-    recordMessageEvent(span, id, size, Type.RECV);
+  public static void recordReceivedMessageEvent(Span span, long size) {
+    recordMessageEvent(span, size, Type.RECV);
   }
 
   /**
@@ -217,18 +220,17 @@ public class OpenCensusUtils {
    * protected since {@link NetworkEvent} might be deprecated in future releases.
    *
    * @param span The {@code span} in which the event occurs.
-   * @param id The id for the message.
    * @param size Size of the message.
    * @param eventType The {@code NetworkEvent.Type} of the message event.
    */
   @VisibleForTesting
-  static void recordMessageEvent(Span span, long id, long size, Type eventType) {
+  static void recordMessageEvent(Span span, long size, Type eventType) {
     Preconditions.checkArgument(span != null, "span should not be null.");
     if (size < 0) {
       size = 0;
     }
     NetworkEvent event = NetworkEvent
-        .builder(eventType, id)
+        .builder(eventType, idGenerator.getAndIncrement())
         .setUncompressedMessageSize(size)
         .build();
     span.addNetworkEvent(event);
