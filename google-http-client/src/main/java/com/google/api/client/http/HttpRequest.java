@@ -218,6 +218,9 @@ public final class HttpRequest {
   /** OpenCensus tracing component. */
   private Tracer tracer = OpenCensusUtils.getTracer();
 
+  /** Prefix for tracing span name. */
+  private static final String traceSpanNamePrefix = "Sent." + HttpRequest.class.getName() + ".";
+
   /**
    * @param transport HTTP transport
    * @param requestMethod HTTP request method or {@code null} for none
@@ -862,12 +865,9 @@ public final class HttpRequest {
     Preconditions.checkNotNull(requestMethod);
     Preconditions.checkNotNull(url);
 
-    Span span = tracer
-        .spanBuilder(OpenCensusUtils.SPAN_NAME_HTTP_REQUEST_EXECUTE)
-        .setRecordEvents(OpenCensusUtils.isRecordEvent())
-        .startSpan();
+    Span span = tracer.spanBuilder(traceSpanNamePrefix + "execute").startSpan();
     do {
-      span.addAnnotation("retry #" + (numRetries - retriesRemaining));
+      span.addAnnotation("retry #" + numRetries);
       // Cleanup any unneeded response from a previous iteration
       if (response != null) {
         response.ignore();
@@ -911,7 +911,7 @@ public final class HttpRequest {
           headers.setUserAgent(originalUserAgent + " " + USER_AGENT_SUFFIX);
         }
       }
-      OpenCensusUtils.propagateTracingContext(span, headers);
+      OpenCensusUtils.propagateTracingContext(headers);
 
       // headers
       HttpHeaders.serializeHeaders(headers, logbuf, curlbuf, logger, lowLevelHttpRequest);
@@ -995,12 +995,8 @@ public final class HttpRequest {
       // switch tracing scope to current span
       @SuppressWarnings("MustBeClosedChecker")
       Scope ws = tracer.withSpan(span);
-      OpenCensusUtils.recordSentMessageEvent(span, lowLevelHttpRequest.getContentLength());
       try {
         LowLevelHttpResponse lowLevelHttpResponse = lowLevelHttpRequest.execute();
-        if (lowLevelHttpResponse != null) {
-          OpenCensusUtils.recordReceivedMessageEvent(span, lowLevelHttpResponse.getContentLength());
-        }
         // Flag used to indicate if an exception is thrown before the response is constructed.
         boolean responseConstructed = false;
         try {

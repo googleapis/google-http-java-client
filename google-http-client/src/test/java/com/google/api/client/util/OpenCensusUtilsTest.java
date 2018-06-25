@@ -16,22 +16,18 @@ package com.google.api.client.util;
 
 import com.google.api.client.http.HttpHeaders;
 
-import io.opencensus.trace.BlankSpan;
+import io.opencensus.common.Scope;
 import io.opencensus.trace.EndSpanOptions;
-import io.opencensus.trace.Annotation;
-import io.opencensus.trace.AttributeValue;
-import io.opencensus.trace.Link;
-import io.opencensus.trace.NetworkEvent;
 import io.opencensus.trace.Span;
 import io.opencensus.trace.SpanContext;
 import io.opencensus.trace.Status;
 import io.opencensus.trace.Tracer;
 import io.opencensus.trace.propagation.TextFormat;
 import java.util.List;
-import java.util.Map;
 import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
 /**
  * Tests {@link OpenCensusUtils}.
@@ -40,11 +36,9 @@ import org.junit.Rule;
  */
 public class OpenCensusUtilsTest extends TestCase {
 
+  @Rule public ExpectedException thrown = ExpectedException.none();
   TextFormat mockTextFormat;
   TextFormat.Setter mockTextFormatSetter;
-  TextFormat originTextFormat;
-  TextFormat.Setter originTextFormatSetter;
-  Span mockSpan;
   HttpHeaders headers;
   Tracer tracer;
 
@@ -54,7 +48,7 @@ public class OpenCensusUtilsTest extends TestCase {
 
   @Override
   public void setUp() {
-    mockTextFormat = new TextFormat() {
+    TextFormat mockTextFormat = new TextFormat() {
       @Override
       public List<String> fields() {
         throw new UnsupportedOperationException("TextFormat.fields");
@@ -70,7 +64,7 @@ public class OpenCensusUtilsTest extends TestCase {
         throw new UnsupportedOperationException("TextFormat.extract");
       }
     };
-    mockTextFormatSetter = new TextFormat.Setter<HttpHeaders>() {
+    TextFormat.Setter mockTextFormatSetter = new TextFormat.Setter<HttpHeaders>() {
       @Override
       public void put(HttpHeaders carrier, String key, String value) {
         throw new UnsupportedOperationException("TextFormat.Setter.put");
@@ -78,33 +72,6 @@ public class OpenCensusUtilsTest extends TestCase {
     };
     headers = new HttpHeaders();
     tracer = OpenCensusUtils.getTracer();
-    mockSpan = new Span(tracer.getCurrentSpan().getContext(), null) {
-
-      @Override
-      public void addAnnotation(String description, Map<String, AttributeValue> attributes) {}
-
-      @Override
-      public void addAnnotation(Annotation annotation) {}
-
-      @Override
-      public void addNetworkEvent(NetworkEvent event) {
-        throw new UnsupportedOperationException("Span.addNetworkEvent");
-      }
-
-      @Override
-      public void addLink(Link link) {}
-
-      @Override
-      public void end(EndSpanOptions options) {}
-    };
-    originTextFormat = OpenCensusUtils.propagationTextFormat;
-    originTextFormatSetter = OpenCensusUtils.propagationTextFormatSetter;
-  }
-
-  @Override
-  public void tearDown() {
-    OpenCensusUtils.setPropagationTextFormat(originTextFormat);
-    OpenCensusUtils.setPropagationTextFormatSetter(originTextFormatSetter);
   }
 
   public void testInitializatoin() {
@@ -125,115 +92,108 @@ public class OpenCensusUtilsTest extends TestCase {
 
   public void testPropagateTracingContextInjection() {
     OpenCensusUtils.setPropagationTextFormat(mockTextFormat);
-    try {
-      OpenCensusUtils.propagateTracingContext(mockSpan, headers);
-      fail("expected " + UnsupportedOperationException.class);
-    } catch (UnsupportedOperationException e) {
-      assertEquals(e.getMessage(), "TextFormat.inject");
-    }
+    Span span = OpenCensusUtils.getTracer().spanBuilder("test").startSpan();
+    Scope scope = OpenCensusUtils.getTracer().withSpan(span);
+    thrown.expect(UnsupportedOperationException.class);
+    thrown.expectMessage("TextFormat.inject");
+    OpenCensusUtils.propagateTracingContext(headers);
+    scope.close();
+    span.end();
   }
 
   public void testPropagateTracingContextHeader() {
     OpenCensusUtils.setPropagationTextFormatSetter(mockTextFormatSetter);
-    try {
-      OpenCensusUtils.propagateTracingContext(mockSpan, headers);
-      fail("expected " + UnsupportedOperationException.class);
-    } catch (UnsupportedOperationException e) {
-      assertEquals(e.getMessage(), "TextFormat.Setter.put");
-    }
-  }
-
-  public void testPropagateTracingContextNullSpan() {
-    OpenCensusUtils.setPropagationTextFormat(mockTextFormat);
-    try {
-      OpenCensusUtils.propagateTracingContext(null, headers);
-      fail("expected " + IllegalArgumentException.class);
-    } catch (IllegalArgumentException e) {
-      assertEquals(e.getMessage(), "span should not be null.");
-    }
-  }
-
-  public void testPropagateTracingContextNullHeaders() {
-    OpenCensusUtils.setPropagationTextFormat(mockTextFormat);
-    try {
-      OpenCensusUtils.propagateTracingContext(mockSpan, null);
-      fail("expected " + IllegalArgumentException.class);
-    } catch (IllegalArgumentException e) {
-      assertEquals(e.getMessage(), "headers should not be null.");
-    }
+    Span span = OpenCensusUtils.getTracer().spanBuilder("test").startSpan();
+    Scope scope = OpenCensusUtils.getTracer().withSpan(span);
+    thrown.expect(UnsupportedOperationException.class);
+    thrown.expectMessage("TextFormat.Setter.put");
+    OpenCensusUtils.propagateTracingContext(headers);
+    scope.close();
+    span.end();
   }
 
   public void testPropagateTracingContextInvalidSpan() {
     OpenCensusUtils.setPropagationTextFormat(mockTextFormat);
     // No injection. No exceptions should be thrown.
-    OpenCensusUtils.propagateTracingContext(BlankSpan.INSTANCE, headers);
+    OpenCensusUtils.propagateTracingContext(headers);
   }
 
   public void testGetEndSpanOptionsNoResponse() {
-    EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.UNKNOWN).build();
+    EndSpanOptions expected =
+        EndSpanOptions.builder().setSampleToLocalSpanStore(true).setStatus(Status.UNKNOWN).build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(null));
   }
 
   public void testGetEndSpanOptionsSuccess() {
-    EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.OK).build();
+    EndSpanOptions expected =
+        EndSpanOptions.builder().setSampleToLocalSpanStore(true).setStatus(Status.OK).build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(200));
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(201));
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(202));
   }
 
   public void testGetEndSpanOptionsBadRequest() {
-    EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.INVALID_ARGUMENT).build();
+    EndSpanOptions expected = EndSpanOptions
+        .builder()
+        .setSampleToLocalSpanStore(true)
+        .setStatus(Status.INVALID_ARGUMENT)
+        .build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(400));
   }
 
   public void testGetEndSpanOptionsUnauthorized() {
-    EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.UNAUTHENTICATED).build();
+    EndSpanOptions expected = EndSpanOptions
+        .builder()
+        .setSampleToLocalSpanStore(true)
+        .setStatus(Status.UNAUTHENTICATED)
+        .build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(401));
   }
 
   public void testGetEndSpanOptionsForbidden() {
-    EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.PERMISSION_DENIED).build();
+    EndSpanOptions expected = EndSpanOptions
+        .builder()
+        .setSampleToLocalSpanStore(true)
+        .setStatus(Status.PERMISSION_DENIED)
+        .build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(403));
   }
 
   public void testGetEndSpanOptionsNotFound() {
-    EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.NOT_FOUND).build();
+    EndSpanOptions expected = EndSpanOptions
+        .builder()
+        .setSampleToLocalSpanStore(true)
+        .setStatus(Status.NOT_FOUND)
+        .build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(404));
   }
 
   public void testGetEndSpanOptionsPreconditionFailed() {
-    EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.FAILED_PRECONDITION).build();
+    EndSpanOptions expected = EndSpanOptions
+        .builder()
+        .setSampleToLocalSpanStore(true)
+        .setStatus(Status.FAILED_PRECONDITION)
+        .build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(412));
   }
 
   public void testGetEndSpanOptionsServerError() {
-    EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.UNAVAILABLE).build();
+    EndSpanOptions expected = EndSpanOptions
+        .builder()
+        .setSampleToLocalSpanStore(true)
+        .setStatus(Status.UNAVAILABLE)
+        .build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(500));
   }
 
   public void testGetEndSpanOptionsOther() {
-    EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.UNKNOWN).build();
+    EndSpanOptions expected = EndSpanOptions.builder()
+        .setSampleToLocalSpanStore(true)
+        .setStatus(Status.UNKNOWN)
+        .build();
     // test some random unsupported statuses
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(301));
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(402));
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(501));
-  }
-
-  public void testRecordMessageEventInNullSpan() {
-    try {
-      OpenCensusUtils.recordMessageEvent(null, 0, NetworkEvent.Type.SENT);
-      fail("expected " + IllegalArgumentException.class);
-    } catch (IllegalArgumentException e) {
-      assertEquals(e.getMessage(), "span should not be null.");
-    }
-  }
-
-  public void testRecordMessageEvent() {
-    try {
-      OpenCensusUtils.recordMessageEvent(mockSpan, 0, NetworkEvent.Type.SENT);
-      fail("expected " + UnsupportedOperationException.class);
-    } catch (UnsupportedOperationException e) {
-      assertEquals(e.getMessage(), "Span.addNetworkEvent");
-    }
   }
 }
