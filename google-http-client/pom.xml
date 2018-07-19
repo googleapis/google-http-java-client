@@ -169,5 +169,10 @@
       <artifactId>commons-codec</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.j2objc</groupId>
+      <artifactId>j2objc-annotations</artifactId>
+      <version>1.1</version>
+    </dependency>
   </dependencies>
 </project>
