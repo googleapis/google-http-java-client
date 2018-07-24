@@ -55,7 +55,7 @@
             <configuration>
               <includes>
                 <include>commons-codec:commons-codec</include>
-                <include>com.google.guava:guava-jdk5</include>
+                <include>com.google.guava:guava</include>
               </includes>
               <rules>
                 <rule>
