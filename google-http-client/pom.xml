@@ -66,9 +66,6 @@
                   <pattern>com.google.common.**</pattern>
                   <result>com.google.api.client.repackaged.com.google.common.@1</result>
                 </rule>
-                <keep>
-                  <pattern>com.google.api.client.**</pattern>
-                </keep>
               </rules>
             </configuration>
           </execution>
