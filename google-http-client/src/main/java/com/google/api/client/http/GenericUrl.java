@@ -182,7 +182,7 @@ public class GenericUrl extends GenericData {
     }
     GenericUrl other = (GenericUrl) obj;
     // TODO(yanivi): optimize?
-    return build().equals(other.toString());
+    return build().equals(other.build());
   }
 
   @Override
