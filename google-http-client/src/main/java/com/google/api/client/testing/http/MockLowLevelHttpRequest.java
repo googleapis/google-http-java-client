@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
@@ -75,7 +76,7 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
 
   @Override
   public void addHeader(String name, String value) throws IOException {
-    name = name.toLowerCase();
+    name = name.toLowerCase(Locale.US);
     List<String> values = headersMap.get(name);
     if (values == null) {
       values = new ArrayList<String>();
@@ -119,7 +120,7 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
    * @since 1.13
    */
   public String getFirstHeaderValue(String name) {
-    List<String> values = headersMap.get(name.toLowerCase());
+    List<String> values = headersMap.get(name.toLowerCase(Locale.US));
     return values == null ? null : values.get(0);
   }
 
@@ -130,7 +131,7 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
    * @since 1.13
    */
   public List<String> getHeaderValues(String name) {
-    List<String> values = headersMap.get(name.toLowerCase());
+    List<String> values = headersMap.get(name.toLowerCase(Locale.US));
     return values == null ? Collections.<String>emptyList() : Collections.unmodifiableList(values);
   }
 

@@ -18,6 +18,7 @@ import com.google.api.client.util.Preconditions;
 
 import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
@@ -200,7 +201,7 @@ public final class HttpMediaType {
     Preconditions.checkArgument(
         TOKEN_REGEX.matcher(name).matches(), "Name contains reserved characters");
     cachedBuildResult = null;
-    parameters.put(name.toLowerCase(), value);
+    parameters.put(name.toLowerCase(Locale.US), value);
     return this;
   }
 
@@ -210,7 +211,7 @@ public final class HttpMediaType {
    * @param name name of the parameter
    */
   public String getParameter(String name) {
-    return parameters.get(name.toLowerCase());
+    return parameters.get(name.toLowerCase(Locale.US));
   }
 
   /**
@@ -220,7 +221,7 @@ public final class HttpMediaType {
    */
   public HttpMediaType removeParameter(String name) {
     cachedBuildResult = null;
-    parameters.remove(name.toLowerCase());
+    parameters.remove(name.toLowerCase(Locale.US));
     return this;
   }
 
