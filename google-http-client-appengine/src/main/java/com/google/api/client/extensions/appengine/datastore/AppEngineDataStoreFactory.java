@@ -348,7 +348,7 @@ public class AppEngineDataStoreFactory extends AbstractDataStoreFactory {
 
     /** Returns a new App Engine data store factory instance. */
     public AppEngineDataStoreFactory build() {
-      return new AppEngineDataStoreFactory();
+      return new AppEngineDataStoreFactory(this);
     }
   }
 }
