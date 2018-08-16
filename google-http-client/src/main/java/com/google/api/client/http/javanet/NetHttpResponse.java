@@ -187,8 +187,8 @@ final class NetHttpResponse extends LowLevelHttpResponse {
     }
 
     @Override
-    public long skip(long n) throws IOException {
-      int n = in.skip(n);
+    public long skip(long len) throws IOException {
+      int n = in.skip(len);
       if (n == -1) {
         throwIfFalseEOF();
       } else {
