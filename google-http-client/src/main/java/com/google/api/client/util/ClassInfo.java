@@ -165,7 +165,7 @@ public final class ClassInfo {
     // name set has a special comparator to keep null first
     TreeSet<String> nameSet = new TreeSet<String>(new Comparator<String>() {
       public int compare(String s0, String s1) {
-        return s0 == s1 ? 0 : s0 == null ? -1 : s1 == null ? 1 : s0.compareTo(s1);
+        return Objects.equal(s0, s1) ? 0 : s0 == null ? -1 : s1 == null ? 1 : s0.compareTo(s1);
       }
     });
     // iterate over declared fields
