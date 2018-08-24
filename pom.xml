@@ -242,17 +242,17 @@
       <dependency>
         <groupId>org.datanucleus</groupId>
         <artifactId>datanucleus-core</artifactId>
-        <version>3.2.2</version>
+        <version>${project.datanucleus-core.version}</version>
       </dependency>
       <dependency>
         <groupId>org.datanucleus</groupId>
         <artifactId>datanucleus-api-jdo</artifactId>
-        <version>3.2.1</version>
+        <version>${project.datanucleus-api-jdo.version}</version>
       </dependency>
       <dependency>
         <groupId>org.datanucleus</groupId>
         <artifactId>datanucleus-rdbms</artifactId>
-        <version>3.2.1</version>
+        <version>${project.datanucleus-rdbms.version}</version>
       </dependency>
       <dependency>
         <groupId>mysql</groupId>
@@ -382,7 +382,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>clirr-maven-plugin</artifactId>
-          <version>2.6</version>
+          <version>2.7</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -402,7 +402,7 @@
         <plugin>
           <groupId>org.datanucleus</groupId>
           <artifactId>maven-datanucleus-plugin</artifactId>
-          <version>2.2.1</version>
+          <version>${project.datanucleus-maven-plugin.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -562,5 +562,9 @@
     <project.commons-logging.version>1.1.1</project.commons-logging.version>
     <project.httpclient.version>4.5.5</project.httpclient.version>
     <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
+    <project.datanucleus-core.version>3.2.2</project.datanucleus-core.version>
+    <project.datanucleus-api-jdo.version>3.2.1</project.datanucleus-api-jdo.version>
+    <project.datanucleus-rdbms.version>3.2.1</project.datanucleus-rdbms.version>
+    <project.datanucleus-maven-plugin.version>4.0.3</project.datanucleus-maven-plugin.version>
   </properties>
 </project>
