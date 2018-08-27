@@ -85,6 +85,9 @@ public class GenericUrl extends GenericData {
    */
   private List<String> pathParts;
 
+  /** The raw (encoded) path component or {@code null} for none. */
+  private String rawPath;
+
   /** Fragment component or {@code null} for none. */
   private String fragment;
 
@@ -159,7 +162,7 @@ public class GenericUrl extends GenericData {
     this.scheme = scheme.toLowerCase(Locale.US);
     this.host = host;
     this.port = port;
-    this.pathParts = toPathParts(path);
+    setRawPath(path);
     this.fragment = fragment != null ? CharEscapers.decodeUri(fragment) : null;
     if (query != null) {
       UrlEncodedParser.parse(query, this);
@@ -306,6 +309,9 @@ public class GenericUrl extends GenericData {
    */
   public void setPathParts(List<String> pathParts) {
     this.pathParts = pathParts;
+    StringBuilder sb = new StringBuilder();
+    appendRawPathFromParts(sb);
+    this.rawPath = sb.toString();
   }
 
   /**
@@ -374,8 +380,8 @@ public class GenericUrl extends GenericData {
    */
   public final String buildRelativeUrl() {
     StringBuilder buf = new StringBuilder();
-    if (pathParts != null) {
-      appendRawPathFromParts(buf);
+    if (rawPath != null) {
+      buf.append(rawPath);
     }
     addQueryParams(entrySet(), buf);
 
@@ -481,13 +487,7 @@ public class GenericUrl extends GenericData {
    *         {@link #pathParts} is {@code null}
    */
   public String getRawPath() {
-    List<String> pathParts = this.pathParts;
-    if (pathParts == null) {
-      return null;
-    }
-    StringBuilder buf = new StringBuilder();
-    appendRawPathFromParts(buf);
-    return buf.toString();
+    return rawPath;
   }
 
   /**
@@ -497,6 +497,7 @@ public class GenericUrl extends GenericData {
    */
   public void setRawPath(String encodedPath) {
     pathParts = toPathParts(encodedPath);
+    rawPath = encodedPath;
   }
 
   /**
@@ -514,11 +515,12 @@ public class GenericUrl extends GenericData {
     if (encodedPath != null && encodedPath.length() != 0) {
       List<String> appendedPathParts = toPathParts(encodedPath);
       if (pathParts == null || pathParts.isEmpty()) {
-        this.pathParts = appendedPathParts;
+        setPathParts(appendedPathParts);
       } else {
         int size = pathParts.size();
         pathParts.set(size - 1, pathParts.get(size - 1) + appendedPathParts.get(0));
         pathParts.addAll(appendedPathParts.subList(1, appendedPathParts.size()));
+        setPathParts(pathParts);
       }
     }
   }
@@ -548,7 +550,7 @@ public class GenericUrl extends GenericData {
       } else {
         sub = encodedPath.substring(cur);
       }
-      result.add(CharEscapers.decodeUri(sub));
+      result.add(CharEscapers.decodeUriPath(sub));
       cur = slash + 1;
     }
     return result;
