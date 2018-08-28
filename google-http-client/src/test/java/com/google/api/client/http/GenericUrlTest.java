@@ -591,13 +591,26 @@ public class GenericUrlTest extends TestCase {
     assertEquals(expectedResult, redirectedUrl.toString());
   }
 
-  public void testPlusPaths_notEscaped() {
+  public void testUnescapedPlusPaths() {
+    String input = "https://plus.google.com/+username/posts/postid";
+    GenericUrl url = new GenericUrl(input);
+    assertEquals("https://plus.google.com/+username/posts/postid", url.build());
+  }
+
+  public void testEscapedPlusPaths() {
     String input = "https://plus.google.com/%2Busername/posts/postid";
     GenericUrl url = new GenericUrl(input);
     assertEquals("https://plus.google.com/+username/posts/postid", url.build());
   }
 
-  public void testPathParts() {
+  public void testUnescapedPathParts() {
+    final GenericUrl genericUrl = new GenericUrl("http://foo.bar/path+with+plus");
+
+    assertEquals("/path+with+plus", genericUrl.getRawPath());
+    assertEquals(ImmutableList.of("", "path+with+plus"), genericUrl.getPathParts());
+  }
+
+  public void testEscapedPathParts() {
     final GenericUrl genericUrl = new GenericUrl("http://foo.bar/path%2Bwith%2Bplus");
 
     assertEquals("/path+with+plus", genericUrl.getRawPath());
