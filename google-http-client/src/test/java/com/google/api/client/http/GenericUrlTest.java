@@ -15,6 +15,7 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Key;
+import com.google.common.collect.ImmutableList;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -588,5 +589,18 @@ public class GenericUrlTest extends TestCase {
     GenericUrl gu = new GenericUrl(url);
     GenericUrl redirectedUrl = new GenericUrl(gu.toURL(relative));
     assertEquals(expectedResult, redirectedUrl.toString());
+  }
+
+  public void testPlusPaths_notEscaped() {
+    String input = "https://plus.google.com/%2Busername/posts/postid";
+    GenericUrl url = new GenericUrl(input);
+    assertEquals("https://plus.google.com/+username/posts/postid", url.build());
+  }
+
+  public void testPathParts() {
+    final GenericUrl genericUrl = new GenericUrl("http://foo.bar/path%2Bwith%2Bplus");
+
+    assertEquals("/path+with+plus", genericUrl.getRawPath());
+    assertEquals(ImmutableList.of("", "path+with+plus"), genericUrl.getPathParts());
   }
 }
