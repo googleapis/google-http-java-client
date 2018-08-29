@@ -94,4 +94,18 @@ public class NetHttpResponseTest extends TestCase {
       assertEquals(ERROR_RESPONSE, new String(buf, 0, bytes, Charset.forName("UTF-8")));
     }
   }
+
+  public void testSkippingBytes() throws IOException {
+    MockHttpURLConnection connection = new MockHttpURLConnection(null)
+        .setResponseCode(200)
+        .setInputStream(new ByteArrayInputStream(StringUtils.getBytesUtf8("0123456789")))
+        .addHeader("Content-Length", "10");
+    NetHttpResponse response = new NetHttpResponse(connection);
+    InputStream is = response.getContent();
+    // read 1 byte, then skip 9 (to EOF)
+    assertEquals('0', is.read());
+    assertEquals(9, is.skip(9));
+    // expect EOF, not an exception
+    assertEquals(-1, is.read());
+  }
 }
