@@ -186,6 +186,13 @@ final class NetHttpResponse extends LowLevelHttpResponse {
       return n;
     }
 
+    @Override
+    public long skip(long len) throws IOException {
+      long n = in.skip(len);
+      bytesRead += n;
+      return n;
+    }
+
     // Throws an IOException if gets an EOF in the middle of a response.
     private void throwIfFalseEOF() throws IOException {
       long contentLength = getContentLength();
