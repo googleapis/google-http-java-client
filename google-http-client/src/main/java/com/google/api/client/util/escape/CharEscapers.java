@@ -97,6 +97,26 @@ public final class CharEscapers {
   }
 
   /**
+   * Percent-decodes a US-ASCII string into a Unicode string. UTF-8 encoding is used to determine
+   * what characters are represented by any consecutive sequences of the form "%<i>XX</i>".
+   *
+   * <p>
+   * This allows '+' in the path.
+   * </p>
+   *
+   * @param uri a percent-encoded US-ASCII string
+   * @return a Unicode string
+   */
+  public static String decodeUriPath(String uri) {
+    try {
+      return URLDecoder.decode(uri.replace("+", "%2B"), "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      // UTF-8 encoding guaranteed to be supported by JVM
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
    * Escapes the string value so it can be safely included in URI path segments. For details on
    * escaping URIs, see <a href="http://tools.ietf.org/html/rfc3986#section-2.4">RFC 3986 - section
    * 2.4</a>.
