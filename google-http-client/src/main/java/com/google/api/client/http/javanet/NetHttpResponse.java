@@ -189,11 +189,7 @@ final class NetHttpResponse extends LowLevelHttpResponse {
     @Override
     public long skip(long len) throws IOException {
       long n = in.skip(len);
-      if (n == -1) {
-        throwIfFalseEOF();
-      } else {
-        bytesRead += n;
-      }
+      bytesRead += n;
       return n;
     }
 
