@@ -16,7 +16,7 @@
         <configuration>
           <links>
             <link>http://download.oracle.com/javase/6/docs/api/</link>
-            <link>http://code.google.com/appengine/docs/java/javadoc</link>
+            <link>https://cloud.google.com/appengine/docs/standard/java/javadoc/</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>

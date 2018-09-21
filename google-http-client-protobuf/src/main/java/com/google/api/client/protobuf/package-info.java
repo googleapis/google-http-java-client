@@ -14,7 +14,7 @@
 
 /**
  * {@link com.google.api.client.util.Beta} <br/>
- * Utilities for the <a href="http://code.google.com/p/protobuf/">Protocol Buffer</a> format.
+ * Utilities for the <a href="https://github.com/protocolbuffers/protobuf">Protocol Buffer</a> format.
  *
  * @since 1.5
  * @author Yaniv Inbar

@@ -26,7 +26,7 @@ import java.util.Arrays;
 
 /**
  * Thread-safe HTTP transport for Google App Engine based on <a
- * href="http://code.google.com/appengine/docs/java/urlfetch/">URL Fetch</a>.
+ * href="https://cloud.google.com/appengine/docs/standard/java/issue-requests">URL Fetch</a>.
  *
  * <p>
  * Implementation is thread-safe. For maximum efficiency, applications should use a single
