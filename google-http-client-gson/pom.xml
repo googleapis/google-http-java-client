@@ -16,8 +16,8 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links>
-            <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
-            <link>http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs</link>
+            <link>http://download.oracle.com/javase/6/docs/api/</link>
+            <link>https://www.javadoc.io/doc/com.google.code.gson/gson/${project.gson.version}</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
