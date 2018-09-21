@@ -40,11 +40,10 @@ are welcome.
 
 Java Version | Status
 ------------ | ------
-Java 7 | [![Kokoro CI](http://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java7.svg)](http://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java7.html)
-Java 8 | [![Kokoro CI](http://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java8.svg)](http://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java8.html)
-Java 10 | [![Kokoro CI](http://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java10.svg)](http://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java10.html)
+Java 7 | [![Kokoro CI](http://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java7.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java7.html)
+Java 8 | [![Kokoro CI](http://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java8.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java8.html)
+Java 10 | [![Kokoro CI](http://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java10.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java10.html)
 
 ## Links
 
-- [Announcements](http://google-http-java-client.blogspot.com/)
 - [Discuss](http://groups.google.com/group/google-http-java-client)
