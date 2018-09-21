@@ -151,7 +151,7 @@ class AndroidJsonParser extends JsonParser {
       }
     }
     // work around bug in GSON parser that it throws an EOFException for an empty document
-    // see http://code.google.com/p/google-gson/issues/detail?id=330
+    // see http://github.com/google/gson/issues/330
     android.util.JsonToken peek;
     try {
       peek = reader.peek();

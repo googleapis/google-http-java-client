@@ -44,8 +44,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Abstract low-level JSON parser. See
- * <a href="https://code.google.com/p/google-http-java-client/wiki/JSON">
- * https://code.google.com/p/google-http-java-client/wiki/JSON</a>
+ * <a href="https://developers.google.com/api-client-library/java/google-http-java-client/json">
+ * https://developers.google.com/api-client-library/java/google-http-java-client/json</a>
  *
  * <p>
  * Implementation has no fields and therefore thread-safe, but sub-classes are not necessarily

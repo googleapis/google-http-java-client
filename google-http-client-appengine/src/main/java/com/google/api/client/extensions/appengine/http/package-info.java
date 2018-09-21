@@ -14,7 +14,7 @@
 
 /**
  * HTTP Transport library for Google API's based on <a
- * href="http://code.google.com/appengine/docs/java/urlfetch/">URL Fetch in Google App Engine</a>.
+ * href="https://cloud.google.com/appengine/docs/standard/java/issue-requests">URL Fetch in Google App Engine</a>.
  *
  * @since 1.10
  * @author Yaniv Inbar

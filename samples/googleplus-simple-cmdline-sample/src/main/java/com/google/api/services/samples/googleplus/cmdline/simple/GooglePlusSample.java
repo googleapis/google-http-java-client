@@ -33,13 +33,13 @@ import java.util.List;
 
 /**
  * Simple example that demonstrates how to use <a
- * href="code.google.com/p/google-http-java-client/">Google HTTP Client Library for Java</a> with
+ * href="https://github.com/googleapis/google-http-java-client">Google HTTP Client Library for Java</a> with
  * the <a href="https://developers.google.com/+/api/">Google+ API</a>.
  *
  * <p>
  * Note that in the case of the Google+ API, there is a much better custom library built on top of
  * this HTTP library that is much easier to use and hides most of these details for you. See <a
- * href="http://code.google.com/p/google-api-java-client/wiki/APIs#Google+_API">Google+ API for
+ * href="https://developers.google.com/api-client-library/java/apis/plus/v1">Google+ API for
  * Java</a>.
  * </p>
  *
@@ -48,7 +48,7 @@ import java.util.List;
 public class GooglePlusSample {
 
   private static final String API_KEY =
-      "Enter API Key from https://code.google.com/apis/console/?api=plus into API_KEY";
+      "Enter API Key from https://console.cloud.google.com/apis/api/plus.googleapis.com/overview into API_KEY";
 
   private static final String USER_ID = "116899029375914044550";
   private static final int MAX_RESULTS = 3;

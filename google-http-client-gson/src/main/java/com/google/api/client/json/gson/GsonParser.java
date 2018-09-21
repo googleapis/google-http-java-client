@@ -146,7 +146,7 @@ class GsonParser extends JsonParser {
       }
     }
     // work around bug in GSON parser that it throws an EOFException for an empty document
-    // see http://code.google.com/p/google-gson/issues/detail?id=330
+    // see https://github.com/google/gson/issues/330
     com.google.gson.stream.JsonToken peek;
     try {
       peek = reader.peek();

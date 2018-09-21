@@ -13,23 +13,23 @@
   <packaging>pom</packaging>
   <name>Parent for the Google HTTP Client Library for Java</name>
 
-  <url>https://github.com/google/google-http-java-client</url>
+  <url>https://github.com/googleapis/google-http-java-client</url>
 
   <issueManagement>
     <system>GitHub</system>
-    <url>https://github.com/google/google-http-java-client/issues</url>
+    <url>https://github.com/googleapis/google-http-java-client/issues</url>
   </issueManagement>
 
   <inceptionYear>2011</inceptionYear>
 
   <prerequisites>
-    <maven>2.0.9</maven>
+    <maven>3.5.4</maven>
   </prerequisites>
 
   <scm>
-    <connection>scm:git:https://github.com/google/google-http-java-client.git</connection>
-    <developerConnection>scm:git:git@github.com:google/google-http-java-client.git</developerConnection>
-    <url>https://github.com/google/google-http-java-client</url>
+    <connection>scm:git:https://github.com/googleapis/google-http-java-client.git</connection>
+    <developerConnection>scm:git:git@github.com:googleapis/google-http-java-client.git</developerConnection>
+    <url>https://github.com/googleapis/google-http-java-client</url>
   </scm>
 
   <organization>
