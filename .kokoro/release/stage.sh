@@ -20,6 +20,8 @@ source $(dirname "$0")/common.sh
 setup_environment_secrets
 create_settings_xml_file "settings.xml"
 
+pushd $(dirname "$0")/../../
+
 mvn clean install deploy \
   --settings settings.xml \
   -DperformRelease=true \
