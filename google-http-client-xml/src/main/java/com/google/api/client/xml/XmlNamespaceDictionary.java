@@ -257,7 +257,7 @@ public final class XmlNamespaceDictionary {
             aliases.add(alias);
           }
           Class<?> valueClass = value.getClass();
-          if (!isAttribute && !Data.isPrimitive(valueClass)) {
+          if (!isAttribute && !Data.isPrimitive(valueClass)  && !valueClass.isEnum() ) {
             if (value instanceof Iterable<?> || valueClass.isArray()) {
               for (Object subValue : Types.iterableOf(value)) {
                 computeAliases(subValue, aliases);
@@ -266,6 +266,7 @@ public final class XmlNamespaceDictionary {
               computeAliases(value, aliases);
             }
           }
+
         }
       }
     }
@@ -328,6 +329,8 @@ public final class XmlNamespaceDictionary {
       Class<?> valueClass = elementValue.getClass();
       if (Data.isPrimitive(valueClass) && !Data.isNull(elementValue)) {
         textValue = elementValue;
+      } else if (valueClass.isEnum() && !Data.isNull(elementValue)){
+        textValue =  elementValue;
       } else {
         for (Map.Entry<String, Object> entry : Data.mapOf(elementValue).entrySet()) {
           Object fieldValue = entry.getValue();
