@@ -266,7 +266,6 @@ public final class XmlNamespaceDictionary {
               computeAliases(value, aliases);
             }
           }
-
         }
       }
     }

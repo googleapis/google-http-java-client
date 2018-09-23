@@ -329,7 +329,6 @@ public class Xml {
             if (fieldType instanceof ParameterizedType) {
               fieldClass = Types.getRawClass((ParameterizedType) fieldType);
             }
-
             boolean isArray = Types.isArray(fieldType);
             // text content
             boolean ignore = field == null && destinationMap == null && genericXml == null;
@@ -492,8 +491,7 @@ public class Xml {
                 }
                 collectionValue.add(elementValue);
               }
-            }
-            else {
+            } else {
               // not an array/iterable or a map, but we do have a field
               Object value = Types.newInstance(fieldClass);
               int contextSize = context.size();
@@ -508,9 +506,6 @@ public class Xml {
               setValue(value, field, destination, genericXml, destinationMap, fieldName);
             }
           }
-
-
-
           if (isStopped || parser.getEventType() == XmlPullParser.END_DOCUMENT) {
             isStopped = true;
             break main;
