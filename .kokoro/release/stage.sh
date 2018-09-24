@@ -24,10 +24,11 @@ create_settings_xml_file "settings.xml"
 
 mvn clean install deploy \
   --settings settings.xml \
-  -DperformRelease=true \
-  -Dgpg.executable=gpg \
-  -Dgpg.passphrase=${GPG_PASSPHRASE} \
-  -Dgpg.publicKeyring=${GPG_PUBKEYRING} \
-  -Dgpg.secretKeyring=${GPG_KEYRING}
+  -DperformRelease=true
+#  -DperformRelease=true \
+#  -Dgpg.executable=gpg \
+#  -Dgpg.passphrase=${GPG_PASSPHRASE} \
+#  -Dgpg.publicKeyring=${GPG_PUBKEYRING} \
+#  -Dgpg.secretKeyring=${GPG_KEYRING}
 
 
