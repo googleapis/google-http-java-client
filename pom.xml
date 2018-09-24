@@ -421,12 +421,12 @@
             <phase>site</phase>
             <configuration>
               <links>
-                <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
-                <link>http://cloud.google.com/appengine/docs/java/javadoc</link>
-                <link>http://jackson.codehaus.org/1.9.9/javadoc</link>
+                <link>https://download.oracle.com/javase/1.6.0/docs/api/</link>
+                <link>https://cloud.google.com/appengine/docs/java/javadoc</link>
+                <link>https://jar-download.com/artifacts/org.codehaus.jackson/jackson-core-asl/1.9.13/documentation</link>
                 <link>http://fasterxml.github.com/jackson-core/javadoc/2.0.5/</link>
-                <link>http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs</link>
-                <link>http://docs.guava-libraries.googlecode.com/git-history/v13.0.1/javadoc</link>
+                <link>https://google.github.io/gson/apidocs/</link>
+                <link>https://google.github.io/guava/releases/20.0/api/docs/</link>
                 <link>http://commons.apache.org/proper/commons-codec/javadocs/api-release</link>
               </links>
               <doctitle>Google HTTP Client Library for Java ${project.version}</doctitle>
