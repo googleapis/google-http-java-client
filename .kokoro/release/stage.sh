@@ -29,6 +29,7 @@ mvn clean install deploy \
   -Dgpg.passphrase=${GPG_PASSPHRASE} \
   -Dgpg.publicKeyring=${GPG_PUBKEYRING} \
   -Dgpg.secretKeyring=${GPG_KEYRING} \
-  -Dgpg.useagent=false
+  -Dgpg.useagent=false \
+  -X
 
 
