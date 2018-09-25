@@ -18,10 +18,11 @@ set -eo pipefail
 # Get secrets from keystore and set and environment variables
 setup_environment_secrets() {
   export GPG_PASSPHRASE=$(cat ${KOKORO_KEYSTORE_DIR}/70247_maven-gpg-passphrase)
-  export GPG_PUBKEYRING=${KOKORO_KEYSTORE_DIR}/70247_maven-gpg-pubkeyring
-  export GPG_KEYRING=${KOKORO_KEYSTORE_DIR}/70247_maven-gpg-keyring
+  export GPG_HOMEDIR=/gpg
+  mkdir $GPG_HOMEDIR
+  mv ${KOKORO_KEYSTORE_DIR}/70247_maven-gpg-pubkeyring $GPG_HOMEDIR/pubring.gpg
+  mv ${KOKORO_KEYSTORE_DIR}/70247_maven-gpg-keyring $GPG_HOMEDIR/secring.gpg
   export SONATYPE_USERNAME=$(cat ${KOKORO_KEYSTORE_DIR}/70247_sonatype-credentials | cut -f1 -d'|')
-  export SONATYPE_PASSWORD=$(cat ${KOKORO_KEYSTORE_DIR}/70247_sonatype-credentials | cut -f2 -d'|')
   export SONATYPE_PASSWORD=$(cat ${KOKORO_KEYSTORE_DIR}/70247_sonatype-credentials | cut -f2 -d'|')
 }
 
