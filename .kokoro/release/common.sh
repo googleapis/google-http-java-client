@@ -18,6 +18,7 @@ set -eo pipefail
 # Get secrets from keystore and set and environment variables
 setup_environment_secrets() {
   export GPG_PASSPHRASE=$(cat ${KOKORO_KEYSTORE_DIR}/70247_maven-gpg-passphrase)
+  export GPG_TTY=$(tty)
   export GPG_HOMEDIR=/gpg
   mkdir $GPG_HOMEDIR
   mv ${KOKORO_KEYSTORE_DIR}/70247_maven-gpg-pubkeyring $GPG_HOMEDIR/pubring.gpg

@@ -27,8 +27,6 @@ mvn clean install deploy \
   -DperformRelease=true \
   -Dgpg.executable=gpg \
   -Dgpg.passphrase=${GPG_PASSPHRASE} \
-  -Dgpg.homedir=${GPG_HOMEDIR} \
-  -Dgpg.useagent=false \
-  -X
+  -Dgpg.homedir=${GPG_HOMEDIR}
 
 
