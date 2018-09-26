@@ -18,9 +18,18 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.Preconditions;
 
+import com.google.api.client.util.StreamingContent;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author Yaniv Inbar
@@ -28,12 +37,14 @@ import java.net.HttpURLConnection;
 final class NetHttpRequest extends LowLevelHttpRequest {
 
   private final HttpURLConnection connection;
+  private int writeTimeout;
 
   /**
    * @param connection HTTP URL connection
    */
   NetHttpRequest(HttpURLConnection connection) {
     this.connection = connection;
+    this.writeTimeout = 0;
     connection.setInstanceFollowRedirects(false);
   }
 
@@ -49,7 +60,13 @@ final class NetHttpRequest extends LowLevelHttpRequest {
   }
 
   @Override
+  public void setWriteTimeout(int writeTimeout) throws IOException {
+    this.writeTimeout = writeTimeout;
+  }
+
+  @Override
   public LowLevelHttpResponse execute() throws IOException {
+    System.out.println("in execute");
     HttpURLConnection connection = this.connection;
     // write content
     if (getStreamingContent() != null) {
@@ -77,7 +94,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
         OutputStream out = connection.getOutputStream();
         boolean threw = true;
         try {
-          getStreamingContent().writeTo(out);
+          writeContentToOutputStream(out);
           threw = false;
         } finally {
           try {
@@ -101,13 +118,50 @@ final class NetHttpRequest extends LowLevelHttpRequest {
     // connect
     boolean successfulConnection = false;
     try {
+      System.out.println("before connect");
       connection.connect();
+      System.out.println("after connect");
       NetHttpResponse response = new NetHttpResponse(connection);
       successfulConnection = true;
       return response;
     } finally {
       if (!successfulConnection) {
         connection.disconnect();
+      }
+    }
+  }
+
+  private void writeContentToOutputStream(OutputStream out)
+      throws IOException {
+    if (writeTimeout == 0) {
+      // If no timeout set, do a plain write
+      getStreamingContent().writeTo(out);
+    } else {
+      // Use and executor service and futures to handle this
+      final OutputStream outputStream = out;
+      final StreamingContent content = getStreamingContent();
+      final Callable<Boolean> writeContent = new Callable() {
+        @Override
+        public Boolean call() throws IOException {
+          content.writeTo(outputStream);
+          return Boolean.TRUE;
+        }
+      };
+      final ExecutorService executor = Executors.newSingleThreadExecutor();
+      final Future future = executor.submit(new FutureTask<Boolean>(writeContent));
+      executor.shutdown();
+
+      try {
+        future.get(writeTimeout, TimeUnit.MILLISECONDS);
+      } catch (InterruptedException e) {
+        throw new IOException("Socket write interrupted", e);
+      } catch (ExecutionException e) {
+        throw new IOException("Exception in socket write", e);
+      } catch (TimeoutException e) {
+        throw new IOException("Socket write timed out", e);
+      }
+      if (!executor.isTerminated()) {
+        executor.shutdown();
       }
     }
   }

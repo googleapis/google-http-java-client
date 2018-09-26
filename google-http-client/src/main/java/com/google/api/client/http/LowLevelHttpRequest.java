@@ -159,6 +159,21 @@ public abstract class LowLevelHttpRequest {
   public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
   }
 
+  /**
+   * Sets the write timeout for POST/PUT requests.
+   *
+   * <p>
+   * Default implementation does nothing, but subclasses should normally override.
+   * </p>
+   *
+   * @param writeTimeout timeout in milliseconds to establish a connection or {@code 0} for an
+   *        infinite timeout
+   * @throws IOException I/O exception
+   * @since 1.26
+   */
+  public void setWriteTimeout(int writeTimeout) throws IOException {
+  }
+
   /** Executes the request and returns a low-level HTTP response object. */
   public abstract LowLevelHttpResponse execute() throws IOException;
 }
