@@ -158,6 +158,11 @@ public final class HttpRequest {
    */
   private int readTimeout = 20 * 1000;
 
+  /**
+   * Timeout in milliseconds to set POST/PUT data or {@code 0} for an infinite timeout.
+   */
+  private int writeTimeout = 0;
+
   /** HTTP unsuccessful (non-2XX) response handler or {@code null} for none. */
   private HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler;
 
@@ -490,6 +495,30 @@ public final class HttpRequest {
   public HttpRequest setReadTimeout(int readTimeout) {
     Preconditions.checkArgument(readTimeout >= 0);
     this.readTimeout = readTimeout;
+    return this;
+  }
+
+  /**
+   * Returns the timeout in milliseconds to send POST/PUT data or {@code 0} for an infinite timeout.
+   *
+   * <p>
+   * By default it is 0 (infinite).
+   * </p>
+   *
+   * @since 1.26
+   */
+  public int getWriteTimeout() {
+    return writeTimeout;
+  }
+
+  /**
+   * Sets the timeout in milliseconds to send POST/PUT data or {@code 0} for an infinite timeout.
+   *
+   * @since 1.26
+   */
+  public HttpRequest setWriteTimeout(int writeTimeout) {
+    Preconditions.checkArgument(writeTimeout >= 0);
+    this.writeTimeout = writeTimeout;
     return this;
   }
 
@@ -977,6 +1006,7 @@ public final class HttpRequest {
 
       // execute
       lowLevelHttpRequest.setTimeout(connectTimeout, readTimeout);
+      lowLevelHttpRequest.setWriteTimeout(writeTimeout);
       try {
         LowLevelHttpResponse lowLevelHttpResponse = lowLevelHttpRequest.execute();
         // Flag used to indicate if an exception is thrown before the response is constructed.
