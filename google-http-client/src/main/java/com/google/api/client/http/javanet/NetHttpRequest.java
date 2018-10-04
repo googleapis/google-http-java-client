@@ -66,7 +66,6 @@ final class NetHttpRequest extends LowLevelHttpRequest {
 
   @Override
   public LowLevelHttpResponse execute() throws IOException {
-    System.out.println("in execute");
     HttpURLConnection connection = this.connection;
     // write content
     if (getStreamingContent() != null) {
@@ -118,9 +117,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
     // connect
     boolean successfulConnection = false;
     try {
-      System.out.println("before connect");
       connection.connect();
-      System.out.println("after connect");
       NetHttpResponse response = new NetHttpResponse(connection);
       successfulConnection = true;
       return response;
