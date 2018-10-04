@@ -19,6 +19,7 @@ import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.Preconditions;
 
 import com.google.api.client.util.StreamingContent;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -64,8 +65,27 @@ final class NetHttpRequest extends LowLevelHttpRequest {
     this.writeTimeout = writeTimeout;
   }
 
+  interface OutputWriter {
+    void write(OutputStream outputStream, StreamingContent content) throws IOException;
+  }
+
+  static class DefaultOutputWriter implements OutputWriter {
+    @Override
+    public void write(OutputStream outputStream, final StreamingContent content)
+        throws IOException {
+      content.writeTo(outputStream);
+    }
+  }
+
+  private static OutputWriter DEFAULT_CONNECTION_WRITER = new DefaultOutputWriter();
+
   @Override
   public LowLevelHttpResponse execute() throws IOException {
+    return execute(DEFAULT_CONNECTION_WRITER);
+  }
+
+  @VisibleForTesting
+  LowLevelHttpResponse execute(final OutputWriter outputWriter) throws IOException {
     HttpURLConnection connection = this.connection;
     // write content
     if (getStreamingContent() != null) {
@@ -90,10 +110,12 @@ final class NetHttpRequest extends LowLevelHttpRequest {
         } else {
           connection.setChunkedStreamingMode(0);
         }
-        OutputStream out = connection.getOutputStream();
+        final OutputStream out = connection.getOutputStream();
+
         boolean threw = true;
         try {
-          writeContentToOutputStream(out);
+          writeContentToOutputStream(outputWriter, out);
+
           threw = false;
         } finally {
           try {
@@ -128,24 +150,23 @@ final class NetHttpRequest extends LowLevelHttpRequest {
     }
   }
 
-  private void writeContentToOutputStream(OutputStream out)
+  private void writeContentToOutputStream(final OutputWriter outputWriter, final OutputStream out)
       throws IOException {
     if (writeTimeout == 0) {
-      // If no timeout set, do a plain write
-      getStreamingContent().writeTo(out);
+      outputWriter.write(out, getStreamingContent());
     } else {
-      // Use and executor service and futures to handle this
-      final OutputStream outputStream = out;
+      // do it with timeout
       final StreamingContent content = getStreamingContent();
       final Callable<Boolean> writeContent = new Callable<Boolean>() {
         @Override
         public Boolean call() throws IOException {
-          content.writeTo(outputStream);
+          outputWriter.write(out, content);
           return Boolean.TRUE;
         }
       };
+
       final ExecutorService executor = Executors.newSingleThreadExecutor();
-      final Future future = executor.submit(new FutureTask<Boolean>(writeContent), null);
+      final Future<Boolean> future = executor.submit(new FutureTask<Boolean>(writeContent), null);
       executor.shutdown();
 
       try {
