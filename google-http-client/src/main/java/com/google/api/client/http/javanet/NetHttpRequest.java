@@ -145,7 +145,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
         }
       };
       final ExecutorService executor = Executors.newSingleThreadExecutor();
-      final Future<Boolean> future = executor.submit(new FutureTask<Boolean>(writeContent));
+      final Future future = executor.submit(new FutureTask<Boolean>(writeContent), null);
       executor.shutdown();
 
       try {
