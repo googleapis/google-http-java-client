@@ -137,7 +137,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
       // Use and executor service and futures to handle this
       final OutputStream outputStream = out;
       final StreamingContent content = getStreamingContent();
-      final Callable<Boolean> writeContent = new Callable() {
+      final Callable<Boolean> writeContent = new Callable<Boolean>() {
         @Override
         public Boolean call() throws IOException {
           content.writeTo(outputStream);
@@ -145,7 +145,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
         }
       };
       final ExecutorService executor = Executors.newSingleThreadExecutor();
-      final Future future = executor.submit(new FutureTask<Boolean>(writeContent));
+      final Future<Boolean> future = executor.submit(new FutureTask<Boolean>(writeContent));
       executor.shutdown();
 
       try {
