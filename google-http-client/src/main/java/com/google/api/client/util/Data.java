@@ -445,6 +445,10 @@ public class Data {
         return new BigDecimal(stringValue);
       }
       if (primitiveClass.isEnum()) {
+        if (!ClassInfo.of(primitiveClass).names.contains(stringValue)) {
+          throw new IllegalArgumentException(String.format("given enum name %s not part of " +
+              "enumeration", stringValue));
+        }
         @SuppressWarnings({"unchecked", "rawtypes"})
         Enum result = ClassInfo.of(primitiveClass).getFieldInfo(stringValue).<Enum>enumValue();
         return result;
