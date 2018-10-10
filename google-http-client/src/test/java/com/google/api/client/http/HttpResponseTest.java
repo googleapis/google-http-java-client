@@ -26,6 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.logging.Level;
 import junit.framework.TestCase;
@@ -343,8 +344,9 @@ public class HttpResponseTest extends TestCase {
     char[] a = new char[18000];
     Arrays.fill(a, 'x');
     String big = new String(a);
-    subtestContentLoggingLimit(big, Integer.MAX_VALUE, true, "Total: 18,000 bytes", big);
-    subtestContentLoggingLimit(big, 4, true, "Total: 18,000 bytes (logging first 4 bytes)", "xxxx");
+    String formated18kInteger = NumberFormat.getInstance().format(18000);
+    subtestContentLoggingLimit(big, Integer.MAX_VALUE, true, String.format("Total: %s bytes", formated18kInteger), big);
+    subtestContentLoggingLimit(big, 4, true, String.format("Total: %s bytes (logging first 4 bytes)", formated18kInteger), "xxxx");
   }
 
   public void subtestContentLoggingLimit(final String content, int contentLoggingLimit,
