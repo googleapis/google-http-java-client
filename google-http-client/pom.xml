@@ -4,14 +4,15 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.26.0-SNAPSHOT</version>
+    <version>1.26.0-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client</artifactId>
+  <version>1.26.0-SNAPSHOT</version><!-- {x-version-update:google-http-client:current} -->
   <name>Google HTTP Client Library for Java</name>
   <description>
     Google HTTP Client Library for Java. Functionality that works on all supported Java platforms,
-    including Java 5 (or higher) desktop (SE) and web (EE), Android, and Google App Engine.
+    including Java 6 (or higher) desktop (SE) and web (EE), Android, and Google App Engine.
   </description>
 
   <build>
