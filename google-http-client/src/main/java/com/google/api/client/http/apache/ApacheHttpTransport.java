@@ -35,7 +35,6 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpOptions;
-import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -210,8 +209,6 @@ public final class ApacheHttpTransport extends HttpTransport {
       requestBase = new HttpGet(url);
     } else if (method.equals(HttpMethods.HEAD)) {
       requestBase = new HttpHead(url);
-    } else if (method.equals(HttpMethods.PATCH)) {
-      requestBase = new HttpPatch(url);
     } else if (method.equals(HttpMethods.POST)) {
       requestBase = new HttpPost(url);
     } else if (method.equals(HttpMethods.PUT)) {
