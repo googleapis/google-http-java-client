@@ -73,8 +73,6 @@ public class ApacheHttpTransportTest extends TestCase {
     subtestUnsupportedRequestsWithContent(
         transport.buildRequest("HEAD", "http://www.test.url"), "HEAD");
 
-    // Test PATCH.
-    execute(transport.buildRequest("PATCH", "http://www.test.url"));
     // Test PUT.
     execute(transport.buildRequest("PUT", "http://www.test.url"));
     // Test POST.
