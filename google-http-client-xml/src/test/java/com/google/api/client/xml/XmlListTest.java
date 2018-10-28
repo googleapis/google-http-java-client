@@ -22,6 +22,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import org.junit.Test;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
@@ -50,6 +51,8 @@ public class XmlListTest {
       "=\"http://www.w3.org/2005/Atom\"><rep>1</rep><rep>2</rep></any>";
   private static final String MULTIPLE_ENUM_ELEMENT = "<?xml version=\"1.0\"?><any xmlns" +
       "=\"http://www.w3.org/2005/Atom\"><rep>ENUM_1</rep><rep>ENUM_2</rep></any>";
+  private static final String COLLECTION_OF_ARRAY = "<?xml version=\"1.0\"?><any xmlns" +
+      "=\"http://www.w3.org/2005/Atom\"><rep><a>a</a><b>b</b></rep><rep><c>c</c><d>d</d></rep></any>";
 
   /**
    * The purpose of this test is to map an XML with an array of Objects correctly.
@@ -294,6 +297,72 @@ public class XmlListTest {
     serializer.setOutput(out, "UTF-8");
     namespaceDictionary.serialize(serializer, "any", xml);
     assertEquals(MULTIPLE_ENUM_ELEMENT, out.toString());
+  }
+
+  /**
+   * The purpose is to have an Array of {@link java.lang.reflect.ParameterizedType} elements
+   */
+  @Test
+  public void testParseToArrayOfArrayMaps() throws Exception {
+    ArrayOfArrayMapsType xml = new ArrayOfArrayMapsType();
+    XmlPullParser parser = Xml.createParser();
+    parser.setInput(new StringReader(COLLECTION_OF_ARRAY));
+    XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
+    Xml.parseElement(parser, xml, namespaceDictionary, null);
+    // check type
+    assertEquals(2, xml.rep.length);
+    assertEquals("a", xml.rep[0].getValue(0));
+    assertEquals("a", xml.rep[0].getKey(0));
+    assertEquals("b", xml.rep[0].getValue(1));
+    assertEquals("b", xml.rep[0].getKey(1));
+    assertEquals("c", xml.rep[1].getValue(0));
+    assertEquals("c", xml.rep[1].getKey(0));
+    assertEquals("d", xml.rep[1].getValue(1));
+    assertEquals("d", xml.rep[1].getKey(1));
+    // serialize
+    XmlSerializer serializer = Xml.createSerializer();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    serializer.setOutput(out, "UTF-8");
+    namespaceDictionary.serialize(serializer, "any", xml);
+    assertEquals(COLLECTION_OF_ARRAY, out.toString());
+  }
+
+  /**
+   * The purpose is to have an Collection of {@link java.lang.reflect.ParameterizedType} elements
+   */
+  @Test
+  public void testParseToCollectionOfArrayMaps() throws Exception {
+    CollectionOfArrayMapsType xml = new CollectionOfArrayMapsType();
+    XmlPullParser parser = Xml.createParser();
+    parser.setInput(new StringReader(COLLECTION_OF_ARRAY));
+    XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
+    Xml.parseElement(parser, xml, namespaceDictionary, null);
+    // check type
+    assertEquals(2, xml.rep.size());
+    assertEquals("a", xml.rep.toArray(new ArrayMap[]{})[0].getValue(0));
+    assertEquals("a", xml.rep.toArray(new ArrayMap[]{})[0].getKey(0));
+    assertEquals("b", xml.rep.toArray(new ArrayMap[]{})[0].getValue(1));
+    assertEquals("b", xml.rep.toArray(new ArrayMap[]{})[0].getKey(1));
+    assertEquals("c", xml.rep.toArray(new ArrayMap[]{})[1].getValue(0));
+    assertEquals("c", xml.rep.toArray(new ArrayMap[]{})[1].getKey(0));
+    assertEquals("d", xml.rep.toArray(new ArrayMap[]{})[1].getValue(1));
+    assertEquals("d", xml.rep.toArray(new ArrayMap[]{})[1].getKey(1));
+    // serialize
+    XmlSerializer serializer = Xml.createSerializer();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    serializer.setOutput(out, "UTF-8");
+    namespaceDictionary.serialize(serializer, "any", xml);
+    assertEquals(COLLECTION_OF_ARRAY, out.toString());
+  }
+
+  public static class CollectionOfArrayMapsType {
+    @Key
+    public Collection<ArrayMap<String, String>> rep;
+  }
+
+  public static class ArrayOfArrayMapsType {
+    @Key
+    public ArrayMap<String, String>[] rep;
   }
 
   public static class ArrayWithClassType {
