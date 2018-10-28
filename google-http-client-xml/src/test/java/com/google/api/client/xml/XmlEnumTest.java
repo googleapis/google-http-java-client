@@ -1,3 +1,17 @@
+/*
+ * Copyright (c) 2011 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.google.api.client.xml;
 
 import static org.junit.Assert.assertEquals;
@@ -19,57 +33,18 @@ import com.google.api.client.util.Value;
  */
 public class XmlEnumTest {
 
-  public enum AnyEnum {
-    @Value ENUM_1,
-    @Value ENUM_2
-  }
-
-  public static class AnyType {
-    @Key("@attr")
-    public Object attr;
-    @Key
-    public Object elem;
-    @Key
-    public Object rep;
-    @Key("@anyEnum")
-    public XmlEnumTest.AnyEnum anyEnum;
-    @Key
-    public XmlEnumTest.AnyEnum anotherEnum;
-    @Key
-    public ValueType value;
-  }
-
-  public static class AnyTypeEnumElementOnly {
-    @Key
-    public XmlEnumTest.AnyEnum elementEnum;
-  }
-
-  public static class AnyTypeEnumAttributeOnly {
-    @Key("@attributeEnum")
-    public XmlEnumTest.AnyEnum attributeEnum;
-  }
-
-  public static class ValueType {
-    @Key("text()")
-    public XmlEnumTest.AnyEnum content;
-  }
-
-  private static final String XML =
-      "<?xml version=\"1.0\"?><any anyEnum=\"ENUM_1\" attr=\"value\" xmlns=\"http://www.w3.org/2005/Atom\">"
-          + "<anotherEnum>ENUM_2</anotherEnum><elem>content</elem><rep>rep1</rep><rep>rep2</rep><value>ENUM_1</value></any>";
-
-  private static final String XML_ENUM_ELEMENT_ONLY =
-      "<?xml version=\"1.0\"?><any xmlns=\"http://www.w3.org/2005/Atom\"><elementEnum>ENUM_2</elementEnum></any>";
-
-  private static final String XML_ENUM_ATTRIBUTE_ONLY =
-      "<?xml version=\"1.0\"?><any attributeEnum=\"ENUM_1\" xmlns=\"http://www.w3.org/2005/Atom\" />";
-
-  private static final String XML_ENUM_INCORRECT =
-      "<?xml version=\"1.0\"?><any xmlns=\"http://www.w3.org/2005/Atom\"><elementEnum>ENUM_3</elementEnum></any>";
-
-
-  private static final String XML_ENUM_ELEMENT_ONLY_NESTED =
-      "<?xml version=\"1.0\"?><any xmlns=\"http://www.w3.org/2005/Atom\"><elementEnum>ENUM_2<nested>something</nested></elementEnum></any>";
+  private static final String XML = "<?xml version=\"1.0\"?><any anyEnum=\"ENUM_1\" attr" +
+      "=\"value\" xmlns=\"http://www.w3.org/2005/Atom\"><anotherEnum>ENUM_2</anotherEnum" +
+      "><elem>content</elem><rep>rep1</rep><rep>rep2</rep><value>ENUM_1</value></any>";
+  private static final String XML_ENUM_ELEMENT_ONLY = "<?xml version=\"1.0\"?><any xmlns" +
+      "=\"http://www.w3.org/2005/Atom\"><elementEnum>ENUM_2</elementEnum></any>";
+  private static final String XML_ENUM_ATTRIBUTE_ONLY = "<?xml version=\"1.0\"?><any " +
+      "attributeEnum=\"ENUM_1\" xmlns=\"http://www.w3.org/2005/Atom\" />";
+  private static final String XML_ENUM_INCORRECT = "<?xml version=\"1.0\"?><any xmlns=\"http" +
+      "://www.w3.org/2005/Atom\"><elementEnum>ENUM_3</elementEnum></any>";
+  private static final String XML_ENUM_ELEMENT_ONLY_NESTED = "<?xml version=\"1.0\"?><any " +
+      "xmlns=\"http://www.w3.org/2005/Atom\"><elementEnum>ENUM_2<nested>something</nested" +
+      "></elementEnum></any>";
 
   @SuppressWarnings("cast")
   @Test
@@ -105,7 +80,6 @@ public class XmlEnumTest {
     assertEquals(XML_ENUM_ELEMENT_ONLY, testStandardXml(XML_ENUM_ELEMENT_ONLY));
   }
 
-
   /**
    * The purpose of this test is to parse an XML element to an objects's member variable, whereas
    * there are additional nested elements in the tag.
@@ -117,6 +91,7 @@ public class XmlEnumTest {
 
   /**
    * Private Method to handle standard parsing and mapping to {@link AnyTypeEnumElementOnly}
+   *
    * @param xmlString XML String that needs to be mapped to {@link AnyTypeEnumElementOnly}
    * @return Returns the serialized string of the XML Objects
    * @throws Exception
@@ -168,12 +143,47 @@ public class XmlEnumTest {
     XmlPullParser parser = Xml.createParser();
     parser.setInput(new StringReader(XML_ENUM_INCORRECT));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
-    try{
+    try {
       Xml.parseElement(parser, xml, namespaceDictionary, null);
       // fail test, if there is no exception
       fail();
-    } catch (final IllegalArgumentException e){
+    } catch (final IllegalArgumentException e) {
       assertEquals("given enum name ENUM_3 not part of enumeration", e.getMessage());
     }
+  }
+
+  public enum AnyEnum {
+    @Value ENUM_1,
+    @Value ENUM_2
+  }
+
+  public static class AnyType {
+    @Key("@attr")
+    public Object attr;
+    @Key
+    public Object elem;
+    @Key
+    public Object rep;
+    @Key("@anyEnum")
+    public XmlEnumTest.AnyEnum anyEnum;
+    @Key
+    public XmlEnumTest.AnyEnum anotherEnum;
+    @Key
+    public ValueType value;
+  }
+
+  public static class AnyTypeEnumElementOnly {
+    @Key
+    public XmlEnumTest.AnyEnum elementEnum;
+  }
+
+  public static class AnyTypeEnumAttributeOnly {
+    @Key("@attributeEnum")
+    public XmlEnumTest.AnyEnum attributeEnum;
+  }
+
+  public static class ValueType {
+    @Key("text()")
+    public XmlEnumTest.AnyEnum content;
   }
 }
