@@ -15,9 +15,9 @@
 package com.google.api.client.xml;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,7 +32,7 @@ import com.google.api.client.util.Key;
 /**
  * Tests {@link GenericXml}.
  *
- * Tests are copys from {@link XmlTest}, but the dedicated Objects are derived from {@link
+ * Tests are copies from {@link XmlTest}, but the dedicated Objects are derived from {@link
  * GenericXml}
  *
  * @author Yaniv Inbar
@@ -51,8 +51,8 @@ public class GenericXmlTest {
   private static final String SIMPLE_XML = "<any>test</any>";
   private static final String SIMPLE_XML_NUMERIC = "<any>1</any>";
   private static final String ANY_TYPE_XML = "<?xml version=\"1.0\"?><any attr=\"value\" " +
-      "xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><rep>rep1</rep><rep>rep2" +
-      "</rep><value>content</value></any>";
+      "xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><rep>rep1</rep><rep>rep2</rep" +
+      "><value>content</value></any>";
   private static final String ANY_TYPE_XML_PRIMITIVE_INT = "<?xml version=\"1.0\"?><any attr" +
       "=\"2\" xmlns=\"http://www.w3.org/2005/Atom\">1<intArray>1</intArray><intArray>2" +
       "</intArray></any>";
@@ -150,7 +150,7 @@ public class GenericXmlTest {
   }
 
   /**
-   * The purpose of this test is to try to map a {@link GenericXml} to the String element in the
+   * The purpose of this test is to map a {@link GenericXml} to the String element in the
    * Object.
    */
   @Test
@@ -160,10 +160,19 @@ public class GenericXmlTest {
     parser.setInput(new StringReader(SIMPLE_XML));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary().set("", "");
     Xml.parseElement(parser, xml, namespaceDictionary, null);
+    assertNotNull(xml);
+    assertEquals(1, xml.values().size());
+    assertEquals("test", xml.values().toArray()[0]);
+    // serialize
+    XmlSerializer serializer = Xml.createSerializer();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    serializer.setOutput(out, "UTF-8");
+    namespaceDictionary.serialize(serializer, "any", xml);
+    assertEquals("<?xml version=\"1.0\"?><any xmlns=\"\">test</any>", out.toString());
   }
 
   /**
-   * The purpose of this test is to try to map a {@link GenericXml} to the String element in the
+   * The purpose of this test is to map a {@link GenericXml} to the String element in the
    * Object.
    */
   @Test
@@ -173,20 +182,41 @@ public class GenericXmlTest {
     parser.setInput(new StringReader(SIMPLE_XML_NUMERIC));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary().set("", "");
     Xml.parseElement(parser, xml, namespaceDictionary, null);
+    assertNotNull(xml);
+    assertEquals(1, xml.values().size());
+    assertEquals(1, xml.values().toArray()[0]);
+    // serialize
+    XmlSerializer serializer = Xml.createSerializer();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    serializer.setOutput(out, "UTF-8");
+    namespaceDictionary.serialize(serializer, "any", xml);
+    assertEquals("<?xml version=\"1.0\"?><any xmlns=\"\">1</any>", out.toString());
   }
 
   /**
-   * The purpose of this test is to try to map a {@link GenericXml} to the String element in the
+   * The purpose of this test is to map a {@link GenericXml} to the String element in the
    * Object.
    */
   @SuppressWarnings("cast")
   @Test
   public void testParseToAnyType() throws Exception {
-    failTestNestedArray(ANY_TYPE_XML);
+    AnyTypeGeneric xml = new AnyTypeGeneric();
+    XmlPullParser parser = Xml.createParser();
+    parser.setInput(new StringReader(ANY_TYPE_XML));
+    XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
+    Xml.parseElement(parser, xml, namespaceDictionary, null);
+    assertNotNull(xml);
+    assertEquals(4, xml.values().size());
+    // serialize
+    XmlSerializer serializer = Xml.createSerializer();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    serializer.setOutput(out, "UTF-8");
+    namespaceDictionary.serialize(serializer, "any", xml);
+    assertEquals(ANY_TYPE_XML, out.toString());
   }
 
   /**
-   * The purpose of this test is to try to map a {@link GenericXml} to the String element in the
+   * The purpose of this test is to map a {@link GenericXml} to the String element in the
    * Object.
    */
   @SuppressWarnings("cast")
@@ -197,10 +227,20 @@ public class GenericXmlTest {
     parser.setInput(new StringReader(ANY_TYPE_XML));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     Xml.parseElement(parser, xml, namespaceDictionary, null);
+    assertNotNull(xml);
+    assertEquals(4, xml.values().size());
+    // serialize
+    XmlSerializer serializer = Xml.createSerializer();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    serializer.setOutput(out, "UTF-8");
+    namespaceDictionary.serialize(serializer, "any", xml);
+    assertEquals("<?xml version=\"1.0\"?><any attr=\"value\" xmlns=\"http://www.w3" +
+        ".org/2005/Atom\"><elem>content</elem><value>content</value><rep>rep1</rep><rep>rep2</rep" +
+        "></any>", out.toString());
   }
 
   /**
-   * The purpose of this test is to try to map a {@link GenericXml} to the String element in the
+   * The purpose of this test isto map a {@link GenericXml} to the String element in the
    * Object.
    */
   @SuppressWarnings("cast")
@@ -211,23 +251,18 @@ public class GenericXmlTest {
     parser.setInput(new StringReader(ANY_TYPE_XML));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     Xml.parseElement(parser, xml, namespaceDictionary, null);
+    assertNotNull(xml);
+    assertEquals(4, xml.values().size());
+    // serialize
+    XmlSerializer serializer = Xml.createSerializer();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    serializer.setOutput(out, "UTF-8");
+    namespaceDictionary.serialize(serializer, "any", xml);
+    assertEquals(ANY_TYPE_XML, out.toString());
   }
 
   /**
-   * The purpose of this test is to try to map a {@link GenericXml} to the String element in the
-   * Object.
-   */
-  @Test
-  public void testParseAnyTypeWithCustomParser() throws Exception {
-    AnyTypeGeneric xml = new AnyTypeGeneric();
-    XmlPullParser parser = Xml.createParser();
-    parser.setInput(new StringReader(ANY_TYPE_XML));
-    XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
-    Xml.parseElement(parser, xml, namespaceDictionary, null);
-  }
-
-  /**
-   * The purpose of this test is to try to map a {@link GenericXml} to the String element in the
+   * The purpose of this test is to map a {@link GenericXml} to the String element in the
    * Object. This will fail.
    */
   @Test
@@ -237,10 +272,18 @@ public class GenericXmlTest {
     parser.setInput(new StringReader(ANY_TYPE_XML_PRIMITIVE_INT));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     Xml.parseElement(parser, xml, namespaceDictionary, null);
+    assertNotNull(xml);
+    assertEquals(3, xml.values().size());
+    // serialize
+    XmlSerializer serializer = Xml.createSerializer();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    serializer.setOutput(out, "UTF-8");
+    namespaceDictionary.serialize(serializer, "any", xml);
+    assertEquals(ANY_TYPE_XML_PRIMITIVE_INT, out.toString());
   }
 
   /**
-   * The purpose of this test is to try to map a {@link GenericXml} to the String element in the
+   * The purpose of this test is to map a {@link GenericXml} to the String element in the
    * Object. This will fail.
    */
   @Test
@@ -250,6 +293,14 @@ public class GenericXmlTest {
     parser.setInput(new StringReader(ANY_TYPE_XML_PRIMITIVE_STR));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     Xml.parseElement(parser, xml, namespaceDictionary, null);
+    assertNotNull(xml);
+    assertEquals(3, xml.values().size());
+    // serialize
+    XmlSerializer serializer = Xml.createSerializer();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    serializer.setOutput(out, "UTF-8");
+    namespaceDictionary.serialize(serializer, "any", xml);
+    assertEquals(ANY_TYPE_XML_PRIMITIVE_STR, out.toString());
   }
 
   /**
@@ -262,24 +313,37 @@ public class GenericXmlTest {
     parser.setInput(new StringReader(ALL_TYPE));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary().set("", "");
     Xml.parseElement(parser, xml, namespaceDictionary, null);
+    assertNotNull(xml);
+    assertEquals(6, xml.values().size());
+    // serialize
+    XmlSerializer serializer = Xml.createSerializer();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    serializer.setOutput(out, "UTF-8");
+    namespaceDictionary.serialize(serializer, "any", xml);
+    assertEquals("<?xml version=\"1.0\"?><any xmlns=\"\"><integer /><str /><genericXml /><anyEnum" +
+        " /><stringArray /><integerCollection /></any>", out.toString());
   }
 
   /**
-   * The purpose of this test is to try to map a {@link GenericXml} to the String element in the
+   * The purpose of this test is to map a {@link GenericXml} to the String element in the
    * Object. This will fail.
    */
   @SuppressWarnings("cast")
   @Test
   public void testParseAnyTypeWithNestedElementArrayMap() throws Exception {
-    failTestNestedArray(ANY_TYPE_XML_NESTED_ARRAY);
-  }
-
-  private void failTestNestedArray(final String anyTypeXmlNestedArray) throws org.xmlpull.v1.XmlPullParserException, IOException {
     AnyTypeGeneric xml = new AnyTypeGeneric();
     XmlPullParser parser = Xml.createParser();
-    parser.setInput(new StringReader(anyTypeXmlNestedArray));
+    parser.setInput(new StringReader(ANY_TYPE_XML_NESTED_ARRAY));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     Xml.parseElement(parser, xml, namespaceDictionary, null);
+    assertNotNull(xml);
+    assertEquals(4, xml.values().size());
+    // serialize
+    XmlSerializer serializer = Xml.createSerializer();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    serializer.setOutput(out, "UTF-8");
+    namespaceDictionary.serialize(serializer, "any", xml);
+    assertEquals(ANY_TYPE_XML_NESTED_ARRAY, out.toString());
   }
 
   private static class AnyGenericType {

@@ -27,7 +27,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.xml.atom.AtomFeedParser;
 import com.google.api.client.util.Key;
@@ -82,11 +81,11 @@ public class AtomTest {
   }
 
   /**
-   * This tests parses a simple Atom Feed given as a constant. All element are evaluated, to see if
+   * This tests parses a simple Atom Feed given as a constant. All elements are evaluated, to see if
    * everything works fine. For parsing a dedicated {@link AtomFeedParser} is used.
    *
    * The purpose of this test is to test the {@link AtomFeedParser#parseFeed} and {@link
-   * AtomFeedParser#parseNextEntry} and see if the mapping of the XML element to the Entity classes
+   * AtomFeedParser#parseNextEntry} and see if the mapping of the XML element to the entity classes
    * is done correctly.
    */
   @SuppressWarnings("unchecked")
@@ -129,7 +128,7 @@ public class AtomTest {
   }
 
   /**
-   * Manuel tests of a constant String to see if the data structure can be parsed in the regular way
+   * Manuel tests of a constant string to see if the data structure can be parsed in the regular way
    * and get the same result.
    *
    * The purpose of this test is to evaluate, if the parsed elements are the same with the {@link
@@ -172,7 +171,7 @@ public class AtomTest {
    * Reading an XML ATOM Feed from a file and valid if all the {@link FeedEntry} are present. No
    * detailed evaluation of each element
    *
-   * The purpose of this tests is to read a bunch of elements which contain additional elements
+   * The purpose of this test is to read a bunch of elements which contain additional elements
    * (HTML in this case), that are not part of the {@link FeedEntry} and to see if there is an issue
    * if we parse some more entries.
    */
@@ -180,7 +179,7 @@ public class AtomTest {
   @Test
   public void testHeiseFeedParser() throws Exception {
     XmlPullParser parser = Xml.createParser();
-    final String read = readFile("heise-atom.xml");
+    String read = readFile("heise-atom.xml");
     parser.setInput(new StringReader(read));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     AbstractAtomFeedParser atomParser = new AtomFeedParser<Feed, FeedEntry>(namespaceDictionary,
@@ -200,25 +199,28 @@ public class AtomTest {
   /**
    * We need to method to read the file into a string
    *
-   * @param file File name in the resource folder that will be parsed
-   * @return Content of the File as String.
+   * @param file file name in the resource folder that will be parsed
+   * @return content of the File as String.
    * @throws IOException in case the file was not able to be parsed
    * @see <a href="https://goo.gl/CJ4v7Z">Stackoverflow</a>
    */
   private String readFile(String file) throws IOException {
-    ClassLoader classLoader = getClass().getClassLoader();
-    BufferedReader reader = new BufferedReader(new FileReader(classLoader.getResource(file)
-        .getFile()));
-    String line;
-    StringBuilder stringBuilder = new StringBuilder();
-
+    BufferedReader reader = null;
     try {
+      ClassLoader classLoader = getClass().getClassLoader();
+      reader = new BufferedReader(new FileReader(classLoader.getResource(file)
+          .getFile()));
+      String line;
+      StringBuilder stringBuilder = new StringBuilder();
+
       while ((line = reader.readLine()) != null) {
         stringBuilder.append(line);
       }
       return stringBuilder.toString();
     } finally {
-      reader.close();
+      if (reader != null) {
+        reader.close();
+      }
     }
   }
 

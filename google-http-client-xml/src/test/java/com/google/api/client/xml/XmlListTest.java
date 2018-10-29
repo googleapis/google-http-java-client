@@ -21,8 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import org.junit.Test;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
@@ -31,7 +29,7 @@ import com.google.api.client.util.Key;
 
 
 /**
- * Tests Lists of various datatypes parsed in {@link Xml}.
+ * Tests Lists of various data types parsed in {@link Xml}.
  *
  * @author Gerald Madlmayr
  */
@@ -55,7 +53,7 @@ public class XmlListTest {
       "=\"http://www.w3.org/2005/Atom\"><rep><a>a</a><b>b</b></rep><rep><c>c</c><d>d</d></rep></any>";
 
   /**
-   * The purpose of this test is to map an XML with an array of Objects correctly.
+   * The purpose of this test is to map an XML with an Array of {@link XmlTest.AnyType} objects.
    */
   @Test
   public void testParseArrayTypeWithClassType() throws Exception {

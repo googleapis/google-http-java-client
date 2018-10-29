@@ -21,7 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import org.junit.Test;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
@@ -31,7 +30,7 @@ import com.google.api.client.util.Key;
 /**
  * Tests List and Arrays of {@link GenericXml}.
  *
- * Tests are copys from {@link XmlListTest}, but the dedicated Objects are derived from {@link
+ * Tests are copies from {@link XmlListTest}, but the dedicated classes are derived from {@link
  * GenericXml}
  *
  *
@@ -50,8 +49,6 @@ public class GenericXmlListTest {
       "=\"http://www.w3.org/2005/Atom\"><rep>rep1</rep><rep>rep2</rep></any>";
   private static final String MULTIPLE_INTEGER_ELEMENT = "<?xml version=\"1.0\"?><any xmlns" +
       "=\"http://www.w3.org/2005/Atom\"><rep>1</rep><rep>2</rep></any>";
-  private static final String ARRAY_TYPE_WITH_PRIMITIVE = "<?xml version=\"1.0\"?><any xmlns" +
-      "=\"http://www.w3.org/2005/Atom\"><rep>1</rep><rep>2</rep></any>";
   private static final String ARRAY_TYPE_WITH_PRIMITIVE_ADDED_NESTED = "<?xml version=\"1.0" +
       "\"?><any xmlns=\"http://www.w3.org/2005/Atom\"><rep>1<nested>something</nested></rep" +
       "><rep>2</rep></any>";
@@ -61,7 +58,7 @@ public class GenericXmlListTest {
       "=\"http://www.w3.org/2005/Atom\"><rep><a>a</a><b>b</b></rep><rep><c>c</c><d>d</d></rep></any>";
 
   /**
-   * The purpose of this test is to map an XML with an array of Objects correctly.
+   * The purpose of this test is to map an XML with an Array of {@link XmlTest.AnyType} objects.
    */
   @Test
   public void testParseArrayTypeWithClassType() throws Exception {
@@ -96,6 +93,10 @@ public class GenericXmlListTest {
     assertEquals(MULTI_TYPE_WITH_CLASS_TYPE, out.toString());
   }
 
+  /**
+   * The purpose of this test is to map an XML with a {@link Collection} of {@link XmlTest.AnyType}
+   * objects.
+   */
   @Test
   public void testParseCollectionWithClassType() throws Exception {
     CollectionWithClassTypeGeneric xml = new CollectionWithClassTypeGeneric();
@@ -108,8 +109,6 @@ public class GenericXmlListTest {
     Collection<XmlTest.AnyType> rep = xml.rep;
     assertNotNull(rep);
     assertEquals(3, rep.size());
-
-
     // serialize
     XmlSerializer serializer = Xml.createSerializer();
     ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -118,6 +117,9 @@ public class GenericXmlListTest {
     assertEquals(MULTI_TYPE_WITH_CLASS_TYPE, out.toString());
   }
 
+  /**
+   * The purpose of this test is to map an XML with an Array of {@link XmlTest.AnyType} objects.
+   */
   @Test
   public void testParseMultiGenericWithClassType() throws Exception {
     MultiGenericWithClassType xml = new MultiGenericWithClassType();
@@ -126,7 +128,6 @@ public class GenericXmlListTest {
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     Xml.parseElement(parser, xml, namespaceDictionary, null);
     // check type
-
     GenericXml[] rep = xml.rep;
     assertNotNull(rep);
     assertEquals(3, rep.length);
@@ -142,7 +143,6 @@ public class GenericXmlListTest {
         .toArray(new ArrayList[]{})[0].get(0))).getKey(0));
     assertEquals("content3", ((ArrayMap<String, String>) (rep[2].values()
         .toArray(new ArrayList[]{})[0].get(0))).getValue(0));
-
     // serialize
     XmlSerializer serializer = Xml.createSerializer();
     ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -151,6 +151,9 @@ public class GenericXmlListTest {
     assertEquals(MULTI_TYPE_WITH_CLASS_TYPE, out.toString());
   }
 
+  /**
+   * The purpose of this test is to map an XML with an Array of {@link XmlTest.AnyType} objects.
+   */
   @Test
   public void testParseMultiGenericWithClassTypeGeneric() throws Exception {
     MultiGenericWithClassTypeGeneric xml = new MultiGenericWithClassTypeGeneric();
@@ -185,8 +188,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The purpose of this test is to map a given list of elements (Strings) to a {@link Collection}
-   * of Strings.
+   * The purpose of this test is to map an XML with a {@link Collection} of {@link String}.
    */
   @Test
   public void testParseCollectionTypeString() throws Exception {
@@ -208,7 +210,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The purpose of this test is to map a given list of elements (Strings) to a String-Array.
+   * The purpose of this test is to map an XML with an Array of {@link String} objects.
    */
   @Test
   public void testParseArrayTypeString() throws Exception {
@@ -230,8 +232,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The purpose of this test is to map a given list of elements (Strings) to a {@link Collection}
-   * of Strings.
+   * The purpose of this test is to map an XML with a {@link Collection} of {@link Integer} objects
    */
   @Test
   public void testParseCollectionTypeInteger() throws Exception {
@@ -253,7 +254,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The purpose of this test is to map a given list of elements (Strings) to a String-Array.
+   * The purpose of this test is to map an XML with an Array of {@link Integer} objects
    */
   @Test
   public void testParseArrayTypeInteger() throws Exception {
@@ -275,8 +276,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The purpose of this test is to map a given list of elements (int) to a {@link List} of
-   * Strings.
+   * The purpose of this test is to map an XML with an Array of int types
    */
   @Test
   public void testParseArrayTypeInt() throws Exception {
@@ -297,37 +297,9 @@ public class GenericXmlListTest {
     assertEquals(MULTIPLE_INTEGER_ELEMENT, out.toString());
   }
 
-  @Test
-  public void testParse_arrayTypeWithPrimitive() throws Exception {
-    assertEquals(ARRAY_TYPE_WITH_PRIMITIVE, testStandardXml(ARRAY_TYPE_WITH_PRIMITIVE));
-  }
-
-  @Test
-  public void testParse_arrayTypeWithPrimitiveWithNestedElement() throws Exception {
-    assertEquals(ARRAY_TYPE_WITH_PRIMITIVE,
-        testStandardXml(ARRAY_TYPE_WITH_PRIMITIVE_ADDED_NESTED));
-  }
-
-  private String testStandardXml(final String xmlString) throws Exception {
-    ArrayTypeIntGeneric xml = new ArrayTypeIntGeneric();
-    XmlPullParser parser = Xml.createParser();
-    parser.setInput(new StringReader(xmlString));
-    XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
-    Xml.parseElement(parser, xml, namespaceDictionary, null);
-    // check type
-    int[] rep = xml.rep;
-    assertNotNull(rep);
-    assertEquals(2, rep.length);
-    assertEquals(1, rep[0]);
-    assertEquals(2, rep[1]);
-    // serialize
-    XmlSerializer serializer = Xml.createSerializer();
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    serializer.setOutput(out, "UTF-8");
-    namespaceDictionary.serialize(serializer, "any", xml);
-    return out.toString();
-  }
-
+  /**
+   * The purpose of this test is to map an XML with a {@link Collection} of {@link Enum} objects
+   */
   @Test
   public void testParseCollectionTypeWithEnum() throws Exception {
     CollectionTypeEnumGeneric xml = new CollectionTypeEnumGeneric();
@@ -347,6 +319,9 @@ public class GenericXmlListTest {
     assertEquals(MULTIPLE_ENUM_ELEMENT, out.toString());
   }
 
+  /**
+   * The purpose of this test is to map an XML with a {@link Collection} of {@link Enum} objects
+   */
   @Test
   public void testParseArrayTypeWithEnum() throws Exception {
     ArrayTypeEnumGeneric xml = new ArrayTypeEnumGeneric();
@@ -365,7 +340,6 @@ public class GenericXmlListTest {
     namespaceDictionary.serialize(serializer, "any", xml);
     assertEquals(MULTIPLE_ENUM_ELEMENT, out.toString());
   }
-
 
   /**
    * The purpose is to have an Array of {@link java.lang.reflect.ParameterizedType} elements
