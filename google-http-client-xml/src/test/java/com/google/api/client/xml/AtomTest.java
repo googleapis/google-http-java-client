@@ -205,11 +205,10 @@ public class AtomTest {
    * @see <a href="https://goo.gl/CJ4v7Z">Stackoverflow</a>
    */
   private String readFile(String file) throws IOException {
-    BufferedReader reader = null;
+    ClassLoader classLoader = getClass().getClassLoader();
+    BufferedReader reader = new BufferedReader(new FileReader(classLoader.getResource(file)
+        .getFile()));
     try {
-      ClassLoader classLoader = getClass().getClassLoader();
-      reader = new BufferedReader(new FileReader(classLoader.getResource(file)
-          .getFile()));
       String line;
       StringBuilder stringBuilder = new StringBuilder();
 
