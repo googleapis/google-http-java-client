@@ -31,6 +31,10 @@ import com.google.api.client.util.Key;
 /**
  * Tests List and Arrays of {@link GenericXml}.
  *
+ * Tests are copys from {@link XmlListTest}, but the dedicated Objects are derived from {@link
+ * GenericXml}
+ *
+ *
  * @author Gerald Madlmayr
  */
 
@@ -181,7 +185,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The Purpose of this test is to map a given list of elements (Strings) to a {@link Collection}
+   * The purpose of this test is to map a given list of elements (Strings) to a {@link Collection}
    * of Strings.
    */
   @Test
@@ -204,7 +208,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The Purpose of this test is to map a given list of elements (Strings) to a String-Array.
+   * The purpose of this test is to map a given list of elements (Strings) to a String-Array.
    */
   @Test
   public void testParseArrayTypeString() throws Exception {
@@ -226,7 +230,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The Purpose of this test is to map a given list of elements (Strings) to a {@link Collection}
+   * The purpose of this test is to map a given list of elements (Strings) to a {@link Collection}
    * of Strings.
    */
   @Test
@@ -249,7 +253,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The Purpose of this test is to map a given list of elements (Strings) to a String-Array.
+   * The purpose of this test is to map a given list of elements (Strings) to a String-Array.
    */
   @Test
   public void testParseArrayTypeInteger() throws Exception {
@@ -271,7 +275,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The Purpose of this test is to map a given list of elements (int) to a {@link List} of
+   * The purpose of this test is to map a given list of elements (int) to a {@link List} of
    * Strings.
    */
   @Test
@@ -368,7 +372,7 @@ public class GenericXmlListTest {
    */
   @Test
   public void testParseToArrayOfArrayMaps() throws Exception {
-    ArrayOfArrayMapsType xml = new ArrayOfArrayMapsType();
+    ArrayOfArrayMapsTypeGeneric xml = new ArrayOfArrayMapsTypeGeneric();
     XmlPullParser parser = Xml.createParser();
     parser.setInput(new StringReader(COLLECTION_OF_ARRAY));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
@@ -392,11 +396,11 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The purpose is to have an Collection of {@link java.lang.reflect.ParameterizedType} elements
+   * The purpose is to have a Collection of {@link java.lang.reflect.ParameterizedType} elements
    */
   @Test
   public void testParseToCollectionOfArrayMaps() throws Exception {
-    CollectionOfArrayMapsType xml = new CollectionOfArrayMapsType();
+    CollectionOfArrayMapsTypeGeneric xml = new CollectionOfArrayMapsTypeGeneric();
     XmlPullParser parser = Xml.createParser();
     parser.setInput(new StringReader(COLLECTION_OF_ARRAY));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
@@ -419,68 +423,67 @@ public class GenericXmlListTest {
     assertEquals(COLLECTION_OF_ARRAY, out.toString());
   }
 
-  public static class CollectionOfArrayMapsType extends GenericXml {
+  private static class CollectionOfArrayMapsTypeGeneric extends GenericXml {
     @Key
     public Collection<ArrayMap<String, String>> rep;
   }
 
-  public static class ArrayOfArrayMapsType extends GenericXml {
+  private static class ArrayOfArrayMapsTypeGeneric extends GenericXml {
     @Key
     public ArrayMap<String, String>[] rep;
   }
 
-
-  public static class ArrayWithClassTypeGeneric extends GenericXml {
+  private static class ArrayWithClassTypeGeneric extends GenericXml {
     @Key
     public XmlTest.AnyType[] rep;
   }
 
-  public static class CollectionWithClassTypeGeneric extends GenericXml {
+  private static class CollectionWithClassTypeGeneric extends GenericXml {
     @Key
     public Collection<XmlTest.AnyType> rep;
   }
 
-  public static class MultiGenericWithClassType {
+  private static class MultiGenericWithClassType {
     @Key
     public GenericXml[] rep;
   }
 
-  public static class MultiGenericWithClassTypeGeneric extends GenericXml {
+  private static class MultiGenericWithClassTypeGeneric extends GenericXml {
     @Key
     public GenericXml[] rep;
   }
 
-  public static class CollectionTypeStringGeneric extends GenericXml {
+  private static class CollectionTypeStringGeneric extends GenericXml {
     @Key
     public Collection<String> rep;
   }
 
-  public static class ArrayTypeStringGeneric extends GenericXml {
+  private static class ArrayTypeStringGeneric extends GenericXml {
     @Key
     public String[] rep;
   }
 
-  public static class CollectionTypeIntegerGeneric extends GenericXml {
+  private static class CollectionTypeIntegerGeneric extends GenericXml {
     @Key
     public Collection<Integer> rep;
   }
 
-  public static class ArrayTypeIntegerGeneric extends GenericXml {
+  private static class ArrayTypeIntegerGeneric extends GenericXml {
     @Key
     public Integer[] rep;
   }
 
-  public static class ArrayTypeIntGeneric extends GenericXml {
+  private static class ArrayTypeIntGeneric extends GenericXml {
     @Key
     public int[] rep;
   }
 
-  public static class CollectionTypeEnumGeneric extends GenericXml {
+  private static class CollectionTypeEnumGeneric extends GenericXml {
     @Key
     public Collection<XmlEnumTest.AnyEnum> rep;
   }
 
-  public static class ArrayTypeEnumGeneric extends GenericXml {
+  private static class ArrayTypeEnumGeneric extends GenericXml {
     @Key
     public XmlEnumTest.AnyEnum[] rep;
   }

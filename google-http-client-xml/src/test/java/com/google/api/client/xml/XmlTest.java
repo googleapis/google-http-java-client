@@ -123,7 +123,7 @@ public class XmlTest {
   }
 
   /**
-   * Negative test to check for text without a start eleemtn
+   * Negative test to check for text without a start-element
    */
   @Test
   public void testWithTextFail() throws Exception {
@@ -142,7 +142,7 @@ public class XmlTest {
   }
 
   /**
-   * Negative test to check for messing end Element
+   * Negative test to check for missing end-element
    */
   @Test
   public void testWithMissingEndElementFail() throws Exception {
@@ -162,7 +162,7 @@ public class XmlTest {
   }
 
   /**
-   * Negative test with that start with a end element tag
+   * Negative test with that start with a end-element
    */
   @Test
   public void testWithEndElementStarting() throws Exception {
@@ -183,7 +183,6 @@ public class XmlTest {
   /**
    * Negative test with that start with a end element tag nested in an started element
    */
-
   @Test
   public void testWithEndElementNested() throws Exception {
     SimpleTypeString xml = new SimpleTypeString();
@@ -203,7 +202,6 @@ public class XmlTest {
   /**
    * Negative test that maps a string to an integer and causes an exception
    */
-
   @Test
   public void testFailMappingOfDataType() throws Exception {
     SimpleTypeNumeric xml = new SimpleTypeNumeric();
@@ -245,8 +243,8 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this tests it to test the {@link Key} Annotation for mapping of elements and
-   * attributes. The matched Objects misses some field that are present int the XML ('elem' is
+   * The purpose of this tests it to test the {@link Key} annotation for mapping of elements and
+   * attributes. The matched objects misses some field that are present int the XML ('elem' is
    * missing and therefore ignored).
    */
   @SuppressWarnings("cast")
@@ -272,7 +270,7 @@ public class XmlTest {
   /**
    * The purpose of this tests it to test the {@link Key} Annotation for mapping of elements and
    * attributes. The matched Objects has an additional field, that will not be used and stays {@code
-   * null}.}
+   * null}.
    */
   @SuppressWarnings("cast")
   @Test
@@ -334,8 +332,9 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test it to parse elements which will be mapped to a Java Primitive Type.
-   * Therefore ints are mapped to attributes, elements and element arrays.
+   * The purpose of this test it to parse elements which will be mapped to a
+   * {@link javax.lang.model.type.PrimitiveType} Therefore ints are mapped to attributes, elements
+   * and element arrays.
    */
   @Test
   public void testParseToAnyTypePrimitiveInt() throws Exception {
@@ -358,8 +357,9 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test it to parse elements which will be mapped to a Java Primitive Type.
-   * Therefore ints are mapped to attributes, elements and element arrays.
+   * The purpose of this test it to parse elements which will be mapped to a Java
+   * {@link javax.lang.model.type.PrimitiveType} Therefore ints are mapped to attributes, elements
+   * and element arrays.
    */
   @Test
   public void testParseToAnyTypeStringOnly() throws Exception {
@@ -381,6 +381,9 @@ public class XmlTest {
     assertEquals(ANY_TYPE_XML_PRIMITIVE_STR, out.toString());
   }
 
+  /**
+   * The purpose of this test is have nested elements with a namespace attribute
+   */
   @Test
   public void testParseOfNestedNs() throws Exception {
     XmlPullParser parser = Xml.createParser();
@@ -398,7 +401,7 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test is to map the Infinity values of both doubles and floats.
+   * The purpose of this test is to map the infinity values of both doubles and floats.
    */
   @Test
   public void testParseInfiniteValues() throws Exception {
@@ -419,9 +422,6 @@ public class XmlTest {
     namespaceDictionary.serialize(serializer, "any", xml);
     assertEquals(INF_TEST, out.toString());
   }
-
-
-  // Dedicated Testing of Namespaces in XML
 
   /**
    * The purpose of this test is to map multiple different data types in a single test, without
@@ -476,7 +476,6 @@ public class XmlTest {
    * The purpose of this tests is to map a completely unrelated XML to a given destination object.
    * (explorative)
    */
-
   @Test
   public void testParseIncorrectMapping() throws Exception {
     AnyType xml = new AnyType();
@@ -499,7 +498,7 @@ public class XmlTest {
   }
 
   /**
-   * Purpose of this test is to map the sub elements of an {@link ArrayMap} again to an {@link
+   * The purpose of this test is to map the sub elements of an {@link ArrayMap} again to an {@link
    * ArrayMap}.
    */
   @SuppressWarnings("cast")

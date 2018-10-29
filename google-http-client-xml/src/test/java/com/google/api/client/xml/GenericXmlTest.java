@@ -32,6 +32,9 @@ import com.google.api.client.util.Key;
 /**
  * Tests {@link GenericXml}.
  *
+ * Tests are copys from {@link XmlTest}, but the dedicated Objects are derived from {@link
+ * GenericXml}
+ *
  * @author Yaniv Inbar
  * @author Gerald Madlmayr
  */
@@ -50,8 +53,6 @@ public class GenericXmlTest {
   private static final String ANY_TYPE_XML = "<?xml version=\"1.0\"?><any attr=\"value\" " +
       "xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><rep>rep1</rep><rep>rep2" +
       "</rep><value>content</value></any>";
-  private static final String ANY_TYPE_MISSING_XML = "<?xml version=\"1.0\"?><any attr=\"value\" "
-      + "xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><value>content</value></any>";
   private static final String ANY_TYPE_XML_PRIMITIVE_INT = "<?xml version=\"1.0\"?><any attr" +
       "=\"2\" xmlns=\"http://www.w3.org/2005/Atom\">1<intArray>1</intArray><intArray>2" +
       "</intArray></any>";
@@ -150,7 +151,7 @@ public class GenericXmlTest {
 
   /**
    * The purpose of this test is to try to map a {@link GenericXml} to the String element in the
-   * Object. This will fail.
+   * Object.
    */
   @Test
   public void testParseSimpleTypeAsValueString() throws Exception {
@@ -163,7 +164,7 @@ public class GenericXmlTest {
 
   /**
    * The purpose of this test is to try to map a {@link GenericXml} to the String element in the
-   * Object. This will fail.
+   * Object.
    */
   @Test
   public void testParseSimpleTypeAsValueInteger() throws Exception {
@@ -176,7 +177,7 @@ public class GenericXmlTest {
 
   /**
    * The purpose of this test is to try to map a {@link GenericXml} to the String element in the
-   * Object. This will fail.
+   * Object.
    */
   @SuppressWarnings("cast")
   @Test
@@ -186,7 +187,7 @@ public class GenericXmlTest {
 
   /**
    * The purpose of this test is to try to map a {@link GenericXml} to the String element in the
-   * Object. This will fail.
+   * Object.
    */
   @SuppressWarnings("cast")
   @Test
@@ -200,7 +201,7 @@ public class GenericXmlTest {
 
   /**
    * The purpose of this test is to try to map a {@link GenericXml} to the String element in the
-   * Object. This will fail.
+   * Object.
    */
   @SuppressWarnings("cast")
   @Test
@@ -214,7 +215,7 @@ public class GenericXmlTest {
 
   /**
    * The purpose of this test is to try to map a {@link GenericXml} to the String element in the
-   * Object. This will fail.
+   * Object.
    */
   @Test
   public void testParseAnyTypeWithCustomParser() throws Exception {
@@ -281,32 +282,24 @@ public class GenericXmlTest {
     Xml.parseElement(parser, xml, namespaceDictionary, null);
   }
 
-  public static class AnyGenericType {
+  private static class AnyGenericType {
     @Key("@attr")
     public Object attr;
     @Key
     public GenericXml elem;
   }
 
-  /**
-   * ---------------------------------------------------------------------------------------------
-   * here we have the tests from {@link XmlTest}, but the dedicated Objects are derived from {@link
-   * GenericXml}
-   * ---------------------------------------------------------------------------------------------
-   */
-
-
-  public static class SimpleTypeStringGeneric extends GenericXml {
+  private static class SimpleTypeStringGeneric extends GenericXml {
     @Key("text()")
     public String value;
   }
 
-  public static class SimpleTypeNumericGeneric extends GenericXml {
+  private static class SimpleTypeNumericGeneric extends GenericXml {
     @Key("text()")
     public int value;
   }
 
-  public static class AnyTypeGeneric extends GenericXml {
+  private static class AnyTypeGeneric extends GenericXml {
     @Key("@attr")
     public Object attr;
     @Key
@@ -317,7 +310,7 @@ public class GenericXmlTest {
     public ValueTypeGeneric value;
   }
 
-  public static class AnyTypeMissingFieldGeneric extends GenericXml {
+  private static class AnyTypeMissingFieldGeneric extends GenericXml {
     @Key("@attr")
     public Object attr;
     @Key
@@ -326,7 +319,7 @@ public class GenericXmlTest {
     public ValueTypeGeneric value;
   }
 
-  public static class AnyTypeAdditionalFieldGeneric extends GenericXml {
+  private static class AnyTypeAdditionalFieldGeneric extends GenericXml {
     @Key("@attr")
     public Object attr;
     @Key
@@ -344,7 +337,7 @@ public class GenericXmlTest {
     public Object content;
   }
 
-  public static class AnyTypePrimitiveIntGeneric extends GenericXml {
+  private static class AnyTypePrimitiveIntGeneric extends GenericXml {
     @Key("text()")
     public int value;
     @Key("@attr")
@@ -353,7 +346,7 @@ public class GenericXmlTest {
     public int intArray[];
   }
 
-  public static class AnyTypePrimitiveStringGeneric extends GenericXml {
+  private static class AnyTypePrimitiveStringGeneric extends GenericXml {
     @Key("text()")
     public String value;
     @Key("@attr")

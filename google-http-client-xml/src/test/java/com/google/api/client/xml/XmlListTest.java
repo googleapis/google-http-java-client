@@ -90,6 +90,10 @@ public class XmlListTest {
     assertEquals(MULTI_TYPE_WITH_CLASS_TYPE, out.toString());
   }
 
+  /**
+   * The purpose of this test is to map an XML with a {@link Collection} of {@link XmlTest.AnyType}
+   * objects.
+   */
   @Test
   public void testParseCollectionWithClassType() throws Exception {
     CollectionWithClassType xml = new CollectionWithClassType();
@@ -113,8 +117,7 @@ public class XmlListTest {
   }
 
   /**
-   * The Purpose of this test is to map a given list of elements (Strings) to a {@link Collection}
-   * of Strings.
+   * The purpose of this test is to map an XML with a {@link Collection} of {@link String}.
    */
   @Test
   public void testParseCollectionTypeString() throws Exception {
@@ -136,7 +139,7 @@ public class XmlListTest {
   }
 
   /**
-   * The Purpose of this test is to map a given list of elements (Strings) to a String-Array.
+   * The purpose of this test is to map an XML with an Array of {@link String} objects.
    */
   @Test
   public void testParseArrayTypeString() throws Exception {
@@ -156,7 +159,10 @@ public class XmlListTest {
     namespaceDictionary.serialize(serializer, "any", xml);
     assertEquals(MULTIPLE_STRING_ELEMENT, out.toString());
   }
-
+  /**
+   * The purpose of this test is to map an XML with a sub element of a {@link Collection} of
+   * {@link String} objects.
+   */
   @Test
   public void testParseAnyTypeWithACollectionString() throws Exception {
     AnyTypeWithCollectionString xml = new AnyTypeWithCollectionString();
@@ -175,8 +181,7 @@ public class XmlListTest {
   }
 
   /**
-   * The Purpose of this test is to map a given list of elements (Strings) to a {@link Collection}
-   * of Strings.
+   * The purpose of this test is to map an XML with a {@link Collection} of {@link Integer} objects
    */
   @Test
   public void testParseCollectionTypeInteger() throws Exception {
@@ -198,7 +203,7 @@ public class XmlListTest {
   }
 
   /**
-   * The Purpose of this test is to map a given list of elements (Strings) to a String-Array.
+   * The purpose of this test is to map an XML with an Array of {@link Integer} objects
    */
   @Test
   public void testParseArrayTypeInteger() throws Exception {
@@ -220,8 +225,7 @@ public class XmlListTest {
   }
 
   /**
-   * The Purpose of this test is to map a given list of elements (int) to a {@link List} of
-   * Strings.
+   * The purpose of this test is to map an XML with an Array of int types
    */
   @Test
   public void testParseArrayTypeInt() throws Exception {
@@ -242,6 +246,9 @@ public class XmlListTest {
     assertEquals(MULTIPLE_INTEGER_ELEMENT, out.toString());
   }
 
+  /**
+   * The purpose of this test is to map an XML with a {@link Collection} of {@link Enum} objects
+   */
   @Test
   public void testParseCollectionTypeWithEnum() throws Exception {
     CollectionTypeEnum xml = new CollectionTypeEnum();
@@ -261,6 +268,9 @@ public class XmlListTest {
     assertEquals(MULTIPLE_ENUM_ELEMENT, out.toString());
   }
 
+  /**
+   * The purpose of this test is to map an XML with an Array of {@link Enum} objects
+   */
   @Test
   public void testParseArrayTypeWithEnum() throws Exception {
     ArrayTypeEnum xml = new ArrayTypeEnum();
@@ -272,25 +282,6 @@ public class XmlListTest {
     assertEquals(2, xml.rep.length);
     assertEquals(XmlEnumTest.AnyEnum.ENUM_1, xml.rep[0]);
     assertEquals(XmlEnumTest.AnyEnum.ENUM_2, xml.rep[1]);
-    // serialize
-    XmlSerializer serializer = Xml.createSerializer();
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    serializer.setOutput(out, "UTF-8");
-    namespaceDictionary.serialize(serializer, "any", xml);
-    assertEquals(MULTIPLE_ENUM_ELEMENT, out.toString());
-  }
-
-  @Test
-  public void testParseListTypeWithEnum() throws Exception {
-    ListTypeEnum xml = new ListTypeEnum();
-    XmlPullParser parser = Xml.createParser();
-    parser.setInput(new StringReader(MULTIPLE_ENUM_ELEMENT));
-    XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
-    Xml.parseElement(parser, xml, namespaceDictionary, null);
-    // check type
-    assertEquals(2, xml.rep.size());
-    assertEquals(XmlEnumTest.AnyEnum.ENUM_1, xml.rep.get(0));
-    assertEquals(XmlEnumTest.AnyEnum.ENUM_2, xml.rep.get(1));
     // serialize
     XmlSerializer serializer = Xml.createSerializer();
     ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -355,68 +346,67 @@ public class XmlListTest {
     assertEquals(COLLECTION_OF_ARRAY, out.toString());
   }
 
-  public static class CollectionOfArrayMapsType {
+  private static class CollectionOfArrayMapsType {
     @Key
     public Collection<ArrayMap<String, String>> rep;
   }
 
-  public static class ArrayOfArrayMapsType {
+  private static class ArrayOfArrayMapsType {
     @Key
     public ArrayMap<String, String>[] rep;
   }
 
-  public static class ArrayWithClassType {
+  private static class ArrayWithClassType {
     @Key
     public XmlTest.AnyType[] rep;
   }
 
-  public static class CollectionWithClassType {
+  private static class CollectionWithClassType {
     @Key
     public Collection<XmlTest.AnyType> rep;
   }
 
+  /**
+   * Needs to be public, this is referenced in another element.
+   */
   public static class CollectionTypeString {
     @Key
     public Collection<String> rep;
   }
 
-  public static class ArrayTypeString {
+  private static class ArrayTypeString {
     @Key
     public String[] rep;
   }
 
-  public static class AnyTypeWithCollectionString {
+  private static class AnyTypeWithCollectionString {
     @Key
     public CollectionTypeString coll;
   }
 
-  public static class CollectionTypeInteger {
+  private static class CollectionTypeInteger {
     @Key
     public Collection<Integer> rep;
   }
 
-  public static class ArrayTypeInteger {
+  private static class ArrayTypeInteger {
     @Key
     public Integer[] rep;
   }
 
-  public static class ArrayTypeInt {
+  private static class ArrayTypeInt {
     @Key
     public int[] rep;
   }
 
-  public static class CollectionTypeEnum {
+  private static class CollectionTypeEnum {
     @Key
     public Collection<XmlEnumTest.AnyEnum> rep;
   }
 
-  public static class ArrayTypeEnum {
+  private static class ArrayTypeEnum {
     @Key
     public XmlEnumTest.AnyEnum[] rep;
   }
 
-  public static class ListTypeEnum {
-    @Key
-    public List<XmlEnumTest.AnyEnum> rep;
-  }
 }

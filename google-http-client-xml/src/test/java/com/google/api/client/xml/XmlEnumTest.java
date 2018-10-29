@@ -48,7 +48,7 @@ public class XmlEnumTest {
 
   @SuppressWarnings("cast")
   @Test
-  public void testParse_anyType() throws Exception {
+  public void testParseAnyType() throws Exception {
     AnyType xml = new AnyType();
     XmlPullParser parser = Xml.createParser();
     parser.setInput(new StringReader(XML));
@@ -94,7 +94,7 @@ public class XmlEnumTest {
    *
    * @param xmlString XML String that needs to be mapped to {@link AnyTypeEnumElementOnly}
    * @return Returns the serialized string of the XML Objects
-   * @throws Exception
+   * @throws Exception Thrown if there as an issuing when processing the XML.
    */
   private String testStandardXml(final String xmlString) throws Exception {
     AnyTypeEnumElementOnly xml = new AnyTypeEnumElementOnly();
@@ -157,33 +157,36 @@ public class XmlEnumTest {
     @Value ENUM_2
   }
 
-  public static class AnyType {
+  private static class AnyType {
     @Key("@attr")
-    public Object attr;
+    private Object attr;
     @Key
-    public Object elem;
+    private Object elem;
     @Key
-    public Object rep;
+    private Object rep;
     @Key("@anyEnum")
-    public XmlEnumTest.AnyEnum anyEnum;
+    private XmlEnumTest.AnyEnum anyEnum;
     @Key
-    public XmlEnumTest.AnyEnum anotherEnum;
+    private XmlEnumTest.AnyEnum anotherEnum;
     @Key
-    public ValueType value;
+    private ValueType value;
   }
 
-  public static class AnyTypeEnumElementOnly {
+  private static class AnyTypeEnumElementOnly {
     @Key
-    public XmlEnumTest.AnyEnum elementEnum;
+    private XmlEnumTest.AnyEnum elementEnum;
   }
 
-  public static class AnyTypeEnumAttributeOnly {
+  private static class AnyTypeEnumAttributeOnly {
     @Key("@attributeEnum")
-    public XmlEnumTest.AnyEnum attributeEnum;
+    private AnyEnum attributeEnum;
   }
 
+  /**
+   * Needs to be public, this is referenced in another element.
+   */
   public static class ValueType {
     @Key("text()")
-    public XmlEnumTest.AnyEnum content;
+    private XmlEnumTest.AnyEnum content;
   }
 }

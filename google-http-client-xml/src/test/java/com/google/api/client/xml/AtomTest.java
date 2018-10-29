@@ -82,19 +82,16 @@ public class AtomTest {
   }
 
   /**
-   * This Tests parses a simple Atom Feed given as a Constant. All element are evaluated, to see if
-   * everything works fine. For Parsing a dedicated {@link AtomFeedParser} is used.
+   * This tests parses a simple Atom Feed given as a constant. All element are evaluated, to see if
+   * everything works fine. For parsing a dedicated {@link AtomFeedParser} is used.
    *
    * The purpose of this test is to test the {@link AtomFeedParser#parseFeed} and {@link
-   * AtomFeedParser#parseNextEntry} and see if the from the XML element to the Entity classes is
-   * done correctly.
-   *
-   * @throws XmlPullParserException in case XML parsing Fails
-   * @throws IOException            in case reading the string fails
+   * AtomFeedParser#parseNextEntry} and see if the mapping of the XML element to the Entity classes
+   * is done correctly.
    */
   @SuppressWarnings("unchecked")
   @Test
-  public void testAtomFeedParser() throws XmlPullParserException, IOException {
+  public void testAtomFeedParser() throws Exception {
     XmlPullParser parser = Xml.createParser();
     // Wired. Both, the InputStream for the FeedParser and the XPP need to be set (?)
     parser.setInput(new StringReader(SAMPLE_FEED));
@@ -132,18 +129,15 @@ public class AtomTest {
   }
 
   /**
-   * Manuel Tests of a Constant String to see if the data structure can be parsed in the regular way
+   * Manuel tests of a constant String to see if the data structure can be parsed in the regular way
    * and get the same result.
    *
    * The purpose of this test is to evaluate, if the parsed elements are the same with the {@link
    * AtomFeedParser}.
-   *
-   * @throws XmlPullParserException in case XML parsing Fails
-   * @throws IOException            in case reading the string fails
    */
   @SuppressWarnings("unchecked")
   @Test
-  public void testAtomFeedParserRegualar() throws XmlPullParserException, IOException {
+  public void testAtomFeedParserRegualar() throws Exception {
     Feed feed = new Feed();
     XmlPullParser parser = Xml.createParser();
     parser.setInput(new StringReader(SAMPLE_FEED));
@@ -178,16 +172,13 @@ public class AtomTest {
    * Reading an XML ATOM Feed from a file and valid if all the {@link FeedEntry} are present. No
    * detailed evaluation of each element
    *
-   * Purpose of this tests is to read a bunch of elements which contain additional elements (HTML in
-   * this case), that are not part of the {@link FeedEntry} and to see if there is an issue if we
-   * parse some more entries.
-   *
-   * @throws XmlPullParserException in case XML parsing Fails
-   * @throws IOException            in case reading the string fails
+   * The purpose of this tests is to read a bunch of elements which contain additional elements
+   * (HTML in this case), that are not part of the {@link FeedEntry} and to see if there is an issue
+   * if we parse some more entries.
    */
   @SuppressWarnings("unchecked")
   @Test
-  public void testHeiseFeedParser() throws IOException, XmlPullParserException {
+  public void testHeiseFeedParser() throws Exception {
     XmlPullParser parser = Xml.createParser();
     final String read = readFile("heise-atom.xml");
     parser.setInput(new StringReader(read));
@@ -250,7 +241,8 @@ public class AtomTest {
   }
 
   /**
-   * Author Element as part of the {@link Feed} Element to map the XML to
+   * Author Element as part of the {@link Feed} Element to map the XML to (as this is sub-element,
+   * this needs to be public)
    */
   public static class Author {
     @Key
@@ -258,7 +250,8 @@ public class AtomTest {
   }
 
   /**
-   * Link Element as part of the {@link Feed} Element to map the XML to
+   * Link Element as part of the {@link Feed} Element to map the XML to (as this is sub-element,
+   * this needs to be public)
    */
   public static class Link {
     @Key("@href")
@@ -266,7 +259,8 @@ public class AtomTest {
   }
 
   /**
-   * Entry Element to cover the Entries of a Atom {@link Feed}
+   * Entry Element to cover the Entries of a Atom {@link Feed}  (as this is sub-element,
+   * this needs to be public)
    */
   public static class FeedEntry {
     @Key
