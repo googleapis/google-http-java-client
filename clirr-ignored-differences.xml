@@ -23,6 +23,6 @@
   </difference>
   <difference>
     <differenceType>8001</differenceType>
-    <className>com/google/api/client/http/ExponentialBackOffPolicy</className>
+    <className>com/google/api/client/http/ExponentialBackOffPolicy*</className>
   </difference>
 </differences>
