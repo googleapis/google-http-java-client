@@ -232,7 +232,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The purpose of this test is to map an XML with a {@link Collection} of {@link Integer} objects
+   * The purpose of this test is to map an XML with a {@link Collection} of {@link Integer} objects.
    */
   @Test
   public void testParseCollectionTypeInteger() throws Exception {
@@ -254,7 +254,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The purpose of this test is to map an XML with an Array of {@link Integer} objects
+   * The purpose of this test is to map an XML with an Array of {@link Integer} objects.
    */
   @Test
   public void testParseArrayTypeInteger() throws Exception {
@@ -276,7 +276,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The purpose of this test is to map an XML with an Array of int types
+   * The purpose of this test is to map an XML with an Array of {@code int} types.
    */
   @Test
   public void testParseArrayTypeInt() throws Exception {
@@ -298,7 +298,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The purpose of this test is to map an XML with a {@link Collection} of {@link Enum} objects
+   * The purpose of this test is to map an XML with a {@link Collection} of {@link Enum} objects.
    */
   @Test
   public void testParseCollectionTypeWithEnum() throws Exception {
@@ -320,7 +320,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The purpose of this test is to map an XML with a {@link Collection} of {@link Enum} objects
+   * The purpose of this test is to map an XML with a {@link Collection} of {@link Enum} objects.
    */
   @Test
   public void testParseArrayTypeWithEnum() throws Exception {
@@ -342,7 +342,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The purpose is to have an Array of {@link java.lang.reflect.ParameterizedType} elements
+   * The purpose is to have an Array of {@link java.lang.reflect.ParameterizedType} elements.
    */
   @Test
   public void testParseToArrayOfArrayMaps() throws Exception {
@@ -370,7 +370,7 @@ public class GenericXmlListTest {
   }
 
   /**
-   * The purpose is to have a Collection of {@link java.lang.reflect.ParameterizedType} elements
+   * The purpose is to have a Collection of {@link java.lang.reflect.ParameterizedType} elements.
    */
   @Test
   public void testParseToCollectionOfArrayMaps() throws Exception {

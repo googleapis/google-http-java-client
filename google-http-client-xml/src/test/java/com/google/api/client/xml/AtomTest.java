@@ -272,8 +272,8 @@ public class AtomTest {
   }
 
   /**
-   * Author Element as part of the {@link Feed} Element to map the XML to (as this is sub-element,
-   * this needs to be public)
+   * Author Element as part of the {@link Feed} Element to map the XML to. As this is sub-element,
+   * this needs to be public.
    */
   public static class Author {
     @Key
@@ -281,8 +281,8 @@ public class AtomTest {
   }
 
   /**
-   * Link Element as part of the {@link Feed} Element to map the XML to (as this is sub-element,
-   * this needs to be public)
+   * Link Element as part of the {@link Feed} Element to map the XML to. As this is sub-element,
+   * this needs to be public.
    */
   public static class Link {
     @Key("@href")
@@ -290,8 +290,8 @@ public class AtomTest {
   }
 
   /**
-   * Entry Element to cover the Entries of a Atom {@link Feed}  (as this is sub-element,
-   * this needs to be public)
+   * Entry Element to cover the Entries of a Atom {@link Feed}. As this is sub-element,
+   * this needs to be public.
    */
   public static class FeedEntry {
     @Key

@@ -80,8 +80,8 @@ public class XmlTest {
       "><p>rep2</p></rep><rep><p>rep3</p><p>rep4</p></rep><value>content</value></any>";
 
   /**
-   * The purpose of this test is to map a single element to a single member variable of a
-   * destination object; in this case it is a string object; no namespace used.
+   * The purpose of this test is to map a single element to a single field of a
+   * destination object. In this case the object mapped is a {@link String}; no namespace used.
    */
   @Test
   public void testParseSimpleTypeAsValueString() throws Exception {
@@ -101,8 +101,8 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test is to map a single element to a single member variable of a
-   * destination object; in this is it is not an object but a primitive data type; no namespace
+   * The purpose of this test is to map a single element to a single field of a
+   * destination object. In this is it is not an object but a {@code int}. no namespace
    * used.
    */
   @Test
@@ -123,7 +123,7 @@ public class XmlTest {
   }
 
   /**
-   * Negative test to check for text without a start-element
+   * Negative test to check for text without a start-element.
    */
   @Test
   public void testWithTextFail() throws Exception {
@@ -142,7 +142,7 @@ public class XmlTest {
   }
 
   /**
-   * Negative test to check for missing end-element
+   * Negative test to check for missing end-element.
    */
   @Test
   public void testWithMissingEndElementFail() throws Exception {
@@ -162,7 +162,7 @@ public class XmlTest {
   }
 
   /**
-   * Negative test with that start with a end-element
+   * Negative test with that start with a end-element.
    */
   @Test
   public void testWithEndElementStarting() throws Exception {
@@ -181,7 +181,7 @@ public class XmlTest {
   }
 
   /**
-   * Negative test with that start with a end element tag nested in an started element
+   * Negative test with that start with a end element tag nested in an started element.
    */
   @Test
   public void testWithEndElementNested() throws Exception {
@@ -200,7 +200,7 @@ public class XmlTest {
   }
 
   /**
-   * Negative test that maps a string to an integer and causes an exception
+   * Negative test that maps a string to an integer and causes an exception.
    */
   @Test
   public void testFailMappingOfDataType() throws Exception {
@@ -219,7 +219,7 @@ public class XmlTest {
 
   /**
    * The purpose of this tests it to test the {@link Key} Annotation for mapping of elements and
-   * attributes. All elements/att are matched.
+   * attributes. All elements/attributes are matched.
    */
   @SuppressWarnings("cast")
   @Test
@@ -244,7 +244,7 @@ public class XmlTest {
 
   /**
    * The purpose of this tests it to test the {@link Key} annotation for mapping of elements and
-   * attributes. The matched objects misses some field that are present int the XML ('elem' is
+   * attributes. The matched object misses some field that are present int the XML ('elem' is
    * missing and therefore ignored).
    */
   @SuppressWarnings("cast")
@@ -269,7 +269,7 @@ public class XmlTest {
 
   /**
    * The purpose of this tests it to test the {@link Key} Annotation for mapping of elements and
-   * attributes. The matched Objects has an additional field, that will not be used and stays {@code
+   * attributes. The matched object has an additional field, that will not be used and stays {@code
    * null}.
    */
   @SuppressWarnings("cast")
@@ -308,8 +308,8 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test is to see, if parsing works with a {@link Xml.CustomizeParser} works.
-   * The XML will be mapped to {@link AnyType}
+   * The purpose of this test is to see, if parsing works with a {@link Xml.CustomizeParser}.
+   * The XML will be mapped to {@link AnyType}.
    */
   @Test
   public void testParseAnyTypeWithCustomParser() throws Exception {
@@ -333,8 +333,8 @@ public class XmlTest {
 
   /**
    * The purpose of this test it to parse elements which will be mapped to a
-   * {@link javax.lang.model.type.PrimitiveType} Therefore ints are mapped to attributes, elements
-   * and element arrays.
+   * {@link javax.lang.model.type.PrimitiveType}. Therefore {@code int}s are mapped to attributes,
+   * elements and element arrays.
    */
   @Test
   public void testParseToAnyTypePrimitiveInt() throws Exception {
@@ -358,8 +358,8 @@ public class XmlTest {
 
   /**
    * The purpose of this test it to parse elements which will be mapped to a Java
-   * {@link javax.lang.model.type.PrimitiveType} Therefore ints are mapped to attributes, elements
-   * and element arrays.
+   * {@link javax.lang.model.type.PrimitiveType}. Therefore {@code int}s are mapped to attributes,
+   * elements and element arrays.
    */
   @Test
   public void testParseToAnyTypeStringOnly() throws Exception {
@@ -382,7 +382,7 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test is have nested elements with a namespace attribute
+   * The purpose of this test is to map nested elements with a namespace attribute.
    */
   @Test
   public void testParseOfNestedNs() throws Exception {
@@ -401,7 +401,8 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test is to map the infinity values of both doubles and floats.
+   * The purpose of this test is to map the infinity values of both {@code doubles} and
+   * {@code floats}.
    */
   @Test
   public void testParseInfiniteValues() throws Exception {

@@ -73,7 +73,7 @@ public class XmlEnumTest {
   }
 
   /**
-   * The purpose of this test is to parse an XML element to an objects's member variable
+   * The purpose of this test is to parse an XML element to an objects's field.
    */
   @Test
   public void testParseToEnumElementType() throws Exception {
@@ -81,7 +81,7 @@ public class XmlEnumTest {
   }
 
   /**
-   * The purpose of this test is to parse an XML element to an objects's member variable, whereas
+   * The purpose of this test is to parse an XML element to an objects's field, whereas
    * there are additional nested elements in the tag.
    */
   @Test
@@ -93,8 +93,8 @@ public class XmlEnumTest {
    * Private Method to handle standard parsing and mapping to {@link AnyTypeEnumElementOnly}
    *
    * @param xmlString XML String that needs to be mapped to {@link AnyTypeEnumElementOnly}
-   * @return Returns the serialized string of the XML Objects
-   * @throws Exception Thrown if there as an issuing when processing the XML.
+   * @return returns the serialized string of the XML object
+   * @throws Exception thrown if there is an issue processing the XML
    */
   private String testStandardXml(final String xmlString) throws Exception {
     AnyTypeEnumElementOnly xml = new AnyTypeEnumElementOnly();
@@ -114,7 +114,7 @@ public class XmlEnumTest {
   }
 
   /**
-   * The purpose of this test is to parse an XML attribute to an objects's member variable
+   * The purpose of this test is to parse an XML attribute to an object's field
    */
   @Test
   public void testParse_enumAttributeType() throws Exception {
@@ -134,8 +134,8 @@ public class XmlEnumTest {
   }
 
   /**
-   * The purpose of this test is to parse an XML element to an objects's member variable, whereas
-   * the enumeration element does not exist.
+   * The purpose of this test is to parse an XML element to an object's field which is an
+   * enumeration, whereas the enumeration element does not exist.
    */
   @Test
   public void testParse_enumElementTypeIncorrect() throws Exception {

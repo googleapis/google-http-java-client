@@ -103,7 +103,7 @@ public class GenericXmlTest {
   }
 
   /**
-   * The purpose of this test is map a generic XML to an element inside a dedicated Element.
+   * The purpose of this test is map a generic XML to an element inside a dedicated element.
    */
   @SuppressWarnings("cast")
   @Test
@@ -151,7 +151,7 @@ public class GenericXmlTest {
 
   /**
    * The purpose of this test is to map a {@link GenericXml} to the String element in the
-   * Object.
+   * object.
    */
   @Test
   public void testParseSimpleTypeAsValueString() throws Exception {
@@ -173,7 +173,7 @@ public class GenericXmlTest {
 
   /**
    * The purpose of this test is to map a {@link GenericXml} to the String element in the
-   * Object.
+   * object.
    */
   @Test
   public void testParseSimpleTypeAsValueInteger() throws Exception {
@@ -195,7 +195,7 @@ public class GenericXmlTest {
 
   /**
    * The purpose of this test is to map a {@link GenericXml} to the String element in the
-   * Object.
+   * object.
    */
   @SuppressWarnings("cast")
   @Test
@@ -217,7 +217,7 @@ public class GenericXmlTest {
 
   /**
    * The purpose of this test is to map a {@link GenericXml} to the String element in the
-   * Object.
+   * object.
    */
   @SuppressWarnings("cast")
   @Test
@@ -241,7 +241,7 @@ public class GenericXmlTest {
 
   /**
    * The purpose of this test isto map a {@link GenericXml} to the String element in the
-   * Object.
+   * object.
    */
   @SuppressWarnings("cast")
   @Test
@@ -263,7 +263,7 @@ public class GenericXmlTest {
 
   /**
    * The purpose of this test is to map a {@link GenericXml} to the String element in the
-   * Object. This will fail.
+   * object.
    */
   @Test
   public void testParseToAnyTypePrimitiveInt() throws Exception {
@@ -284,7 +284,7 @@ public class GenericXmlTest {
 
   /**
    * The purpose of this test is to map a {@link GenericXml} to the String element in the
-   * Object. This will fail.
+   * object.
    */
   @Test
   public void testParseToAnyTypeStringOnly() throws Exception {
@@ -304,7 +304,8 @@ public class GenericXmlTest {
   }
 
   /**
-   * This test doesn't fail, as there is not single overlap between the XML and the Destination
+   * The purpose of this tests is to test the mapping of an XML to an object without any overlap. In
+   * this case all the objects are stored in the {@link GenericXml#values} field.
    */
   @Test
   public void testParseIncorrectMapping() throws Exception {
@@ -326,7 +327,7 @@ public class GenericXmlTest {
 
   /**
    * The purpose of this test is to map a {@link GenericXml} to the String element in the
-   * Object. This will fail.
+   * object.
    */
   @SuppressWarnings("cast")
   @Test
