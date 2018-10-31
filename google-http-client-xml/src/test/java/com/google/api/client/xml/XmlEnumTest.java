@@ -61,9 +61,9 @@ public class XmlEnumTest {
     assertTrue(xml.value.content instanceof XmlEnumTest.AnyEnum);
     assertTrue(xml.anyEnum instanceof XmlEnumTest.AnyEnum);
     assertTrue(xml.anotherEnum instanceof XmlEnumTest.AnyEnum);
-    assertTrue(xml.anyEnum.equals(AnyEnum.ENUM_1));
-    assertTrue(xml.anotherEnum.equals(AnyEnum.ENUM_2));
-    assertTrue(xml.value.content.equals(AnyEnum.ENUM_1));
+    assertEquals(xml.anyEnum, AnyEnum.ENUM_1);
+    assertEquals(xml.anotherEnum, AnyEnum.ENUM_2);
+    assertEquals(xml.value.content, AnyEnum.ENUM_1);
     // serialize
     XmlSerializer serializer = Xml.createSerializer();
     ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -90,11 +90,11 @@ public class XmlEnumTest {
   }
 
   /**
-   * Private Method to handle standard parsing and mapping to {@link AnyTypeEnumElementOnly}
+   * Private Method to handle standard parsing and mapping to {@link AnyTypeEnumElementOnly}.
    *
-   * @param xmlString XML String that needs to be mapped to {@link AnyTypeEnumElementOnly}
-   * @return returns the serialized string of the XML object
-   * @throws Exception thrown if there is an issue processing the XML
+   * @param xmlString XML String that needs to be mapped to {@link AnyTypeEnumElementOnly}.
+   * @return returns the serialized string of the XML object.
+   * @throws Exception thrown if there is an issue processing the XML.
    */
   private String testStandardXml(final String xmlString) throws Exception {
     AnyTypeEnumElementOnly xml = new AnyTypeEnumElementOnly();
@@ -114,7 +114,7 @@ public class XmlEnumTest {
   }
 
   /**
-   * The purpose of this test is to parse an XML attribute to an object's field
+   * The purpose of this test is to parse an XML attribute to an object's field.
    */
   @Test
   public void testParse_enumAttributeType() throws Exception {
