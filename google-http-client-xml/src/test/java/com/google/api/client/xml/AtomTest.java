@@ -19,9 +19,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.List;
 import org.junit.Assert;
@@ -177,9 +178,9 @@ public class AtomTest {
    */
   @SuppressWarnings("unchecked")
   @Test
-  public void testHeiseFeedParser() throws Exception {
+  public void testSampleFeedParser() throws Exception {
     XmlPullParser parser = Xml.createParser();
-    String read = readFile("heise-atom.xml");
+    String read = readFile("sample-atom.xml");
     parser.setInput(new StringReader(read));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     AbstractAtomFeedParser atomParser = new AtomFeedParser<Feed, FeedEntry>(namespaceDictionary,
@@ -187,13 +188,65 @@ public class AtomTest {
     Feed feed = (Feed) atomParser.parseFeed();
     assertNotNull(feed);
 
-    int counter = 0;
-    while (atomParser.parseNextEntry() != null) {
-      counter++;
-    }
+    // validate feed 1 -- Long Content
+    FeedEntry entry = (FeedEntry) atomParser.parseNextEntry();
+    assertNotNull(entry);
+    assertNotNull(entry.id);
+    assertNotNull(entry.title);
+    assertNotNull(entry.summary);
+    assertNotNull(entry.link);
+    assertNotNull(entry.updated);
+    assertNotNull(entry.content);
+    assertEquals(5000, entry.content.length());
+
+    // validate feed 2 -- Special Charts
+    entry = (FeedEntry) atomParser.parseNextEntry();
+    assertNotNull(entry);
+    assertNotNull(entry.id);
+    assertNotNull(entry.title);
+    assertNotNull(entry.summary);
+    assertNotNull(entry.link);
+    assertNotNull(entry.updated);
+    assertNotNull(entry.content);
+    assertEquals("aäb cde fgh ijk lmn oöpoöp tuü vwx yz AÄBC DEF GHI JKL MNO ÖPQ RST UÜV WXYZ " +
+            "!\"§ $%& /() =?* '<> #|; ²³~ @`´ ©«» ¼× {} aäb cde fgh ijk lmn oöp qrsß tuü vwx yz " +
+            "AÄBC DEF GHI JKL MNO", entry.content);
+
+    // validate feed 3 -- Missing Content
+    entry = (FeedEntry) atomParser.parseNextEntry();
+    assertNotNull(entry);
+    assertNotNull(entry.id);
+    assertNotNull(entry.title);
+    assertNotNull(entry.summary);
+    assertNotNull(entry.link);
+    assertNotNull(entry.updated);
+    assertNull(entry.content);
+
+    // validate feed 4 -- Missing Updated
+    entry = (FeedEntry) atomParser.parseNextEntry();
+    assertNotNull(entry);
+    assertNotNull(entry.id);
+    assertNotNull(entry.title);
+    assertNotNull(entry.summary);
+    assertNotNull(entry.link);
+    assertNull(entry.updated);
+    assertNotNull(entry.content);
+
+    // validate feed 5
+    entry = (FeedEntry) atomParser.parseNextEntry();
+    assertNotNull(entry);
+    assertNotNull(entry.id);
+    assertNotNull(entry.title);
+    assertNull(entry.summary);
+    assertNotNull(entry.link);
+    assertNotNull(entry.updated);
+    assertNotNull(entry.content);
+
+    // validate feed 6
+    entry = (FeedEntry) atomParser.parseNextEntry();
+    assertNull(entry);
 
     atomParser.close();
-    assertEquals(62, counter);
   }
 
   /**
@@ -206,8 +259,8 @@ public class AtomTest {
    */
   private String readFile(String file) throws IOException {
     ClassLoader classLoader = getClass().getClassLoader();
-    BufferedReader reader = new BufferedReader(new FileReader(classLoader.getResource(file)
-        .getFile()));
+    BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(classLoader.getResource(file)
+        .getFile()), "UTF-8"));
     try {
       String line;
       StringBuilder stringBuilder = new StringBuilder();
@@ -274,6 +327,8 @@ public class AtomTest {
     private String summary;
     @Key
     private String id;
+    @Key
+    private String content;
   }
 }
 
