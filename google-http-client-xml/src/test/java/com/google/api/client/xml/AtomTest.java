@@ -24,15 +24,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xmlpull.v1.XmlPullParser;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.xml.atom.AtomFeedParser;
+import com.google.api.client.util.Charsets;
 import com.google.api.client.util.Key;
 import com.google.api.client.xml.atom.AbstractAtomFeedParser;
 import com.google.api.client.xml.atom.Atom;
+import com.google.common.io.Resources;
 
 /**
  * Tests {@link Atom}.
@@ -180,7 +183,8 @@ public class AtomTest {
   @Test
   public void testSampleFeedParser() throws Exception {
     XmlPullParser parser = Xml.createParser();
-    String read = readFile("sample-atom.xml");
+    URL url = Resources.getResource("sample-atom.xml");
+    String read = Resources.toString(url, Charsets.UTF_8);
     parser.setInput(new StringReader(read));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     AbstractAtomFeedParser atomParser = new AtomFeedParser<Feed, FeedEntry>(namespaceDictionary,
@@ -247,33 +251,6 @@ public class AtomTest {
     assertNull(entry);
 
     atomParser.close();
-  }
-
-  /**
-   * We need to method to read the file into a string
-   *
-   * @param file file name in the resource folder that will be parsed
-   * @return content of the File as String.
-   * @throws IOException in case the file was not able to be parsed
-   * @see <a href="https://goo.gl/CJ4v7Z">Stackoverflow</a>
-   */
-  private String readFile(String file) throws IOException {
-    ClassLoader classLoader = getClass().getClassLoader();
-    BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(classLoader.getResource(file)
-        .getFile()), "UTF-8"));
-    try {
-      String line;
-      StringBuilder stringBuilder = new StringBuilder();
-
-      while ((line = reader.readLine()) != null) {
-        stringBuilder.append(line);
-      }
-      return stringBuilder.toString();
-    } finally {
-      if (reader != null) {
-        reader.close();
-      }
-    }
   }
 
   /**
