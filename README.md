@@ -42,7 +42,7 @@ Java Version | Status
 ------------ | ------
 Java 7 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java7.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java7.html)
 Java 8 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java8.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java8.html)
-Java 10 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java10.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java10.html)
+Java 11 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java11.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java11.html)
 
 ## Links
 
