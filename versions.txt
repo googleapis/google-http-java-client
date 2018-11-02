@@ -2,6 +2,7 @@
 # module:released-version:current-version
 
 google-http-client:1.26.0:1.26.1-SNAPSHOT
+google-http-client-bom:1.26.0:1.26.1-SNAPSHOT
 google-http-client-parent:1.26.0:1.26.1-SNAPSHOT
 google-http-client-android:1.26.0:1.26.1-SNAPSHOT
 google-http-client-android-test:1.26.0:1.26.1-SNAPSHOT
