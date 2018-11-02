@@ -85,7 +85,7 @@ public class AtomTest {
   }
 
   /**
-   * This tests parses a simple Atom Feed given as a constant. All elements are evaluated, to see if
+   * This tests parses a simple Atom Feed given as a constant. All elements are asserted, to see if
    * everything works fine. For parsing a dedicated {@link AtomFeedParser} is used.
    *
    * The purpose of this test is to test the {@link AtomFeedParser#parseFeed} and {@link
@@ -135,8 +135,8 @@ public class AtomTest {
    * Manuel tests of a constant string to see if the data structure can be parsed in the regular way
    * and get the same result.
    *
-   * The purpose of this test is to evaluate, if the parsed elements are the same with the {@link
-   * AtomFeedParser}.
+   * The purpose of this test is to assert, if the parsed elements are correctly parsed using a
+   * {@link AtomFeedParser}.
    */
   @SuppressWarnings("unchecked")
   @Test
@@ -172,8 +172,8 @@ public class AtomTest {
   }
 
   /**
-   * Reading an XML ATOM Feed from a file and valid if all the {@link FeedEntry} are present. No
-   * detailed evaluation of each element
+   * Read an XML ATOM Feed from a file to a string and assert if all the {@link FeedEntry}s are
+   * present. No detailed assertation of each element
    *
    * The purpose of this test is to read a bunch of elements which contain additional elements
    * (HTML in this case), that are not part of the {@link FeedEntry} and to see if there is an issue
