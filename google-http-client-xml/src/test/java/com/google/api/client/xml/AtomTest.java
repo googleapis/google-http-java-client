@@ -94,7 +94,7 @@ public class AtomTest {
    */
   @SuppressWarnings("unchecked")
   @Test
-  public void testAtomFeedParser() throws Exception {
+  public void testAtomFeedUsingCustomizedParser() throws Exception {
     XmlPullParser parser = Xml.createParser();
     // Wired. Both, the InputStream for the FeedParser and the XPP need to be set (?)
     parser.setInput(new StringReader(SAMPLE_FEED));
@@ -132,15 +132,15 @@ public class AtomTest {
   }
 
   /**
-   * Manuel tests of a constant string to see if the data structure can be parsed in the regular way
-   * and get the same result.
+   * Tests of a constant string to see if the data structure can be parsed using the standard
+   * method {@link Xml#parseElement}
    *
    * The purpose of this test is to assert, if the parsed elements are correctly parsed using a
    * {@link AtomFeedParser}.
    */
   @SuppressWarnings("unchecked")
   @Test
-  public void testAtomFeedParserRegualar() throws Exception {
+  public void testAtomFeedUsingStandardParser() throws Exception {
     Feed feed = new Feed();
     XmlPullParser parser = Xml.createParser();
     parser.setInput(new StringReader(SAMPLE_FEED));
