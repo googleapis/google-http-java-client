@@ -173,7 +173,7 @@ public class AtomTest {
 
   /**
    * Read an XML ATOM Feed from a file to a string and assert if all the {@link FeedEntry}s are
-   * present. No detailed assertation of each element
+   * present. No detailed assertion of each element
    *
    * The purpose of this test is to read a bunch of elements which contain additional elements
    * (HTML in this case), that are not part of the {@link FeedEntry} and to see if there is an issue
