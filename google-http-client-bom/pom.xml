@@ -110,6 +110,4 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
-  <!-- TODO(chingor): Add release stuff here -->
 </project>
