@@ -7,4 +7,22 @@
     <differenceType>8001</differenceType>
     <className>com/google/api/client/repackaged/**</className>
   </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/HttpRequest</className>
+    <method>com.google.api.client.http.BackOffPolicy getBackOffPolicy()</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/http/HttpRequest</className>
+    <method>com.google.api.client.http.HttpRequest setBackOffPolicy(com.google.api.client.http.BackOffPolicy)</method>
+  </difference>
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/api/client/http/BackOffPolicy</className>
+  </difference>
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/api/client/http/ExponentialBackOffPolicy*</className>
+  </difference>
 </differences>

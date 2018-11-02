@@ -120,7 +120,7 @@ public class ExponentialBackOff implements BackOff {
   private final int maxIntervalMillis;
 
   /**
-   * The system time in nanoseconds. It is calculated when an ExponentialBackOffPolicy instance is
+   * The system time in nanoseconds. It is calculated when an ExponentialBackOff instance is
    * created and is reset when {@link #reset()} is called.
    */
   long startTimeNanos;
@@ -135,7 +135,7 @@ public class ExponentialBackOff implements BackOff {
   private final NanoClock nanoClock;
 
   /**
-   * Creates an instance of ExponentialBackOffPolicy using default values.
+   * Creates an instance of ExponentialBackOff using default values.
    *
    * <p>
    * To override the defaults use {@link Builder}.
