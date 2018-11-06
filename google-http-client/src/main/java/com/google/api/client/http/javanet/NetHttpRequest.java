@@ -77,7 +77,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
     }
   }
 
-  private static OutputWriter DEFAULT_CONNECTION_WRITER = new DefaultOutputWriter();
+  private static final OutputWriter DEFAULT_CONNECTION_WRITER = new DefaultOutputWriter();
 
   @Override
   public LowLevelHttpResponse execute() throws IOException {
