@@ -22,6 +22,7 @@ import static org.junit.Assert.fail;
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.junit.Test;
 import org.xmlpull.v1.XmlPullParser;
@@ -221,7 +222,6 @@ public class XmlTest {
    * The purpose of this tests it to test the {@link Key} Annotation for mapping of elements and
    * attributes. All elements/attributes are matched.
    */
-  @SuppressWarnings("cast")
   @Test
   public void testParseToAnyType() throws Exception {
     AnyType xml = new AnyType();
@@ -232,7 +232,7 @@ public class XmlTest {
     assertTrue(xml.attr instanceof String);
     assertTrue(xml.elem.toString(), xml.elem instanceof ArrayList<?>);
     assertTrue(xml.rep.toString(), xml.rep instanceof ArrayList<?>);
-    assertTrue(xml.value instanceof ValueType);
+    assertNotNull(xml.value);
     assertTrue(xml.value.content instanceof String);
     // serialize
     XmlSerializer serializer = Xml.createSerializer();
@@ -247,7 +247,6 @@ public class XmlTest {
    * attributes. The matched object misses some field that are present int the XML ('elem' is
    * missing and therefore ignored).
    */
-  @SuppressWarnings("cast")
   @Test
   public void testParseToAnyTypeMissingField() throws Exception {
     AnyTypeMissingField xml = new AnyTypeMissingField();
@@ -257,7 +256,7 @@ public class XmlTest {
     Xml.parseElement(parser, xml, namespaceDictionary, null);
     assertTrue(xml.attr instanceof String);
     assertTrue(xml.elem.toString(), xml.elem instanceof ArrayList<?>);
-    assertTrue(xml.value instanceof ValueType);
+    assertNotNull(xml.value);
     assertTrue(xml.value.content instanceof String);
     // serialize
     XmlSerializer serializer = Xml.createSerializer();
@@ -272,7 +271,6 @@ public class XmlTest {
    * attributes. The matched object has an additional field, that will not be used and stays {@code
    * null}.
    */
-  @SuppressWarnings("cast")
   @Test
   public void testParseToAnyTypeAdditionalField() throws Exception {
     AnyTypeAdditionalField xml = new AnyTypeAdditionalField();
@@ -282,7 +280,7 @@ public class XmlTest {
     Xml.parseElement(parser, xml, namespaceDictionary, null);
     assertTrue(xml.attr instanceof String);
     assertTrue(xml.elem.toString(), xml.elem instanceof ArrayList<?>);
-    assertTrue(xml.value instanceof ValueType);
+    assertNotNull(xml.value);
     assertNull(xml.additionalField);
     assertTrue(xml.rep.toString(), xml.rep instanceof ArrayList<?>);
     assertTrue(xml.value.content instanceof String);
@@ -321,7 +319,7 @@ public class XmlTest {
     assertTrue(xml.attr instanceof String);
     assertTrue(xml.elem.toString(), xml.elem instanceof ArrayList<?>);
     assertTrue(xml.rep.toString(), xml.rep instanceof ArrayList<?>);
-    assertTrue(xml.value instanceof ValueType);
+    assertNotNull(xml.value);
     assertTrue(xml.value.content instanceof String);
     // serialize
     XmlSerializer serializer = Xml.createSerializer();
@@ -489,7 +487,6 @@ public class XmlTest {
     assertNull(xml.value);
     assertNull(xml.rep);
     assertNull(xml.rep);
-
     // serialize
     XmlSerializer serializer = Xml.createSerializer();
     ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -502,7 +499,6 @@ public class XmlTest {
    * The purpose of this test is to map the sub elements of an {@link ArrayMap} again to an {@link
    * ArrayMap}.
    */
-  @SuppressWarnings("cast")
   @Test
   public void testParseAnyTypeWithNestedElementArrayMap() throws Exception {
     AnyType xml = new AnyType();
@@ -513,14 +509,12 @@ public class XmlTest {
     assertTrue(xml.attr instanceof String);
     assertTrue(xml.elem.toString(), xml.elem instanceof ArrayList<?>);
     assertTrue(xml.rep.toString(), xml.rep instanceof ArrayList<?>);
-    assertTrue(xml.value instanceof ValueType);
+    assertNotNull(xml.value);
     assertTrue(xml.value.content instanceof String);
-    assertEquals(1, ((ArrayList<?>) xml.elem).size());
-    assertEquals(2, ((ArrayList<?>) xml.rep).size());
-    assertEquals(1, ((ArrayList<?>) xml.rep).toArray(new ArrayMap[]{})[0].size());
-    assertEquals(1, ((ArrayList<?>) xml.rep).toArray(new ArrayMap[]{})[1].size());
-
-
+    assertEquals(1, ((Collection<?>) xml.elem).size());
+    assertEquals(2, ((Collection<?>) xml.rep).size());
+    assertEquals(1, ((Collection<?>) xml.rep).toArray(new ArrayMap[]{})[0].size());
+    assertEquals(1, ((Collection<?>) xml.rep).toArray(new ArrayMap[]{})[1].size());
     assertEquals("rep1",
         ((ArrayList<?>) ((ArrayList<?>) xml.rep).toArray(new ArrayMap[]{})[0].get("p")).toArray(new ArrayMap[]{})[0].getValue(0));
     assertEquals("rep2",
@@ -592,7 +586,7 @@ public class XmlTest {
     @Key("@attr")
     public int attr;
     @Key
-    public int intArray[];
+    public int[] intArray;
   }
 
   public static class AnyTypePrimitiveString {
@@ -601,7 +595,7 @@ public class XmlTest {
     @Key("@attr")
     public String attr;
     @Key
-    public String strArray[];
+    public String[] strArray;
   }
 
   private static class AnyTypeInf {
@@ -629,6 +623,5 @@ public class XmlTest {
     @Key
     public List<Integer> integerCollection;
   }
-
 }
 

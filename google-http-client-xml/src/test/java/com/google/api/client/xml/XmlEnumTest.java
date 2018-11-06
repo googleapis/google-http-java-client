@@ -103,8 +103,8 @@ public class XmlEnumTest {
     parser.setInput(new StringReader(xmlString));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     Xml.parseElement(parser, xml, namespaceDictionary, null);
-    assertTrue(xml.elementEnum instanceof XmlEnumTest.AnyEnum);
-    assertTrue(xml.elementEnum.equals(AnyEnum.ENUM_2));
+    assertNotNull(xml.elementEnum);
+    assertEquals(xml.elementEnum, AnyEnum.ENUM_2);
     // serialize
     XmlSerializer serializer = Xml.createSerializer();
     ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -124,8 +124,8 @@ public class XmlEnumTest {
     parser.setInput(new StringReader(XML_ENUM_ATTRIBUTE_ONLY));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     Xml.parseElement(parser, xml, namespaceDictionary, null);
-    assertTrue(xml.attributeEnum instanceof XmlEnumTest.AnyEnum);
-    assertTrue(xml.attributeEnum.equals(AnyEnum.ENUM_1));
+    assertNotNull(xml.attributeEnum);
+    assertEquals(xml.attributeEnum, AnyEnum.ENUM_1);
     // serialize
     XmlSerializer serializer = Xml.createSerializer();
     ByteArrayOutputStream out = new ByteArrayOutputStream();

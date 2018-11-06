@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import org.junit.Test;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.Key;
@@ -72,7 +74,6 @@ public class GenericXmlTest {
    * The purpose of this test is to parse the given XML into a {@link GenericXml} Object that has no
    * fixed structure.
    */
-
   @SuppressWarnings("unchecked")
   @Test
   public void testParseToGenericXml() throws Exception {
@@ -105,7 +106,7 @@ public class GenericXmlTest {
   /**
    * The purpose of this test is map a generic XML to an element inside a dedicated element.
    */
-  @SuppressWarnings("cast")
+  @SuppressWarnings("unchecked")
   @Test
   public void testParseAnyGenericType() throws Exception {
     AnyGenericType xml = new AnyGenericType();
@@ -197,29 +198,15 @@ public class GenericXmlTest {
    * The purpose of this test is to map a {@link GenericXml} to the String element in the
    * object.
    */
-  @SuppressWarnings("cast")
   @Test
   public void testParseToAnyType() throws Exception {
-    AnyTypeGeneric xml = new AnyTypeGeneric();
-    XmlPullParser parser = Xml.createParser();
-    parser.setInput(new StringReader(ANY_TYPE_XML));
-    XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
-    Xml.parseElement(parser, xml, namespaceDictionary, null);
-    assertNotNull(xml);
-    assertEquals(4, xml.values().size());
-    // serialize
-    XmlSerializer serializer = Xml.createSerializer();
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    serializer.setOutput(out, "UTF-8");
-    namespaceDictionary.serialize(serializer, "any", xml);
-    assertEquals(ANY_TYPE_XML, out.toString());
+    processAnyTypeGeneric(ANY_TYPE_XML);
   }
 
   /**
    * The purpose of this test is to map a {@link GenericXml} to the String element in the
    * object.
    */
-  @SuppressWarnings("cast")
   @Test
   public void testParseToAnyTypeMissingField() throws Exception {
     AnyTypeMissingFieldGeneric xml = new AnyTypeMissingFieldGeneric();
@@ -243,7 +230,6 @@ public class GenericXmlTest {
    * The purpose of this test isto map a {@link GenericXml} to the String element in the
    * object.
    */
-  @SuppressWarnings("cast")
   @Test
   public void testParseToAnyTypeAdditionalField() throws Exception {
     AnyTypeAdditionalFieldGeneric xml = new AnyTypeAdditionalFieldGeneric();
@@ -329,22 +315,26 @@ public class GenericXmlTest {
    * The purpose of this test is to map a {@link GenericXml} to the String element in the
    * object.
    */
-  @SuppressWarnings("cast")
   @Test
   public void testParseAnyTypeWithNestedElementArrayMap() throws Exception {
+    processAnyTypeGeneric(ANY_TYPE_XML_NESTED_ARRAY);
+  }
+
+  private void processAnyTypeGeneric(final String anyTypeXmlNestedArray) throws XmlPullParserException, IOException {
     AnyTypeGeneric xml = new AnyTypeGeneric();
     XmlPullParser parser = Xml.createParser();
-    parser.setInput(new StringReader(ANY_TYPE_XML_NESTED_ARRAY));
+    parser.setInput(new StringReader(anyTypeXmlNestedArray));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     Xml.parseElement(parser, xml, namespaceDictionary, null);
     assertNotNull(xml);
-    assertEquals(4, xml.values().size());
+    assertEquals(4, xml.values()
+        .size());
     // serialize
     XmlSerializer serializer = Xml.createSerializer();
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     serializer.setOutput(out, "UTF-8");
     namespaceDictionary.serialize(serializer, "any", xml);
-    assertEquals(ANY_TYPE_XML_NESTED_ARRAY, out.toString());
+    assertEquals(anyTypeXmlNestedArray, out.toString());
   }
 
   private static class AnyGenericType {
@@ -408,7 +398,7 @@ public class GenericXmlTest {
     @Key("@attr")
     public int attr;
     @Key
-    public int intArray[];
+    public int[] intArray;
   }
 
   private static class AnyTypePrimitiveStringGeneric extends GenericXml {
@@ -417,7 +407,7 @@ public class GenericXmlTest {
     @Key("@attr")
     public String attr;
     @Key
-    public String strArray[];
+    public String[] strArray;
   }
 
 

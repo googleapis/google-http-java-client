@@ -60,6 +60,7 @@ public class GenericXmlListTest {
   /**
    * The purpose of this test is to map an XML with an Array of {@link XmlTest.AnyType} objects.
    */
+  @SuppressWarnings("unchecked")
   @Test
   public void testParseArrayTypeWithClassType() throws Exception {
     ArrayWithClassTypeGeneric xml = new ArrayWithClassTypeGeneric();
@@ -68,7 +69,7 @@ public class GenericXmlListTest {
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     Xml.parseElement(parser, xml, namespaceDictionary, null);
     // check type
-    assertTrue(xml.rep instanceof XmlTest.AnyType[]);
+    assertNotNull(xml.rep);
     XmlTest.AnyType[] rep = xml.rep;
     assertNotNull(rep);
     assertEquals(3, rep.length);
@@ -105,7 +106,7 @@ public class GenericXmlListTest {
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     Xml.parseElement(parser, xml, namespaceDictionary, null);
     // check type
-    assertTrue(xml.rep instanceof Collection);
+    assertNotNull(xml.rep);
     Collection<XmlTest.AnyType> rep = xml.rep;
     assertNotNull(rep);
     assertEquals(3, rep.size());
@@ -120,6 +121,7 @@ public class GenericXmlListTest {
   /**
    * The purpose of this test is to map an XML with an Array of {@link XmlTest.AnyType} objects.
    */
+  @SuppressWarnings("unchecked")
   @Test
   public void testParseMultiGenericWithClassType() throws Exception {
     MultiGenericWithClassType xml = new MultiGenericWithClassType();
@@ -154,6 +156,7 @@ public class GenericXmlListTest {
   /**
    * The purpose of this test is to map an XML with an Array of {@link XmlTest.AnyType} objects.
    */
+  @SuppressWarnings("unchecked")
   @Test
   public void testParseMultiGenericWithClassTypeGeneric() throws Exception {
     MultiGenericWithClassTypeGeneric xml = new MultiGenericWithClassTypeGeneric();
@@ -162,7 +165,6 @@ public class GenericXmlListTest {
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     Xml.parseElement(parser, xml, namespaceDictionary, null);
     // check type
-
     GenericXml[] rep = xml.rep;
     assertNotNull(rep);
     assertEquals(3, rep.length);
