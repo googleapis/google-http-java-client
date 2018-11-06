@@ -14,14 +14,14 @@
 
 package com.google.api.client.xml;
 
-import com.google.api.client.util.Key;
-import com.google.api.client.xml.atom.Atom;
-import com.google.common.collect.ImmutableMap;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.TreeSet;
-import junit.framework.TestCase;
 import org.xmlpull.v1.XmlSerializer;
+import com.google.api.client.util.Key;
+import com.google.api.client.xml.atom.Atom;
+import com.google.common.collect.ImmutableMap;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link XmlNamespaceDictionary}.
@@ -30,6 +30,19 @@ import org.xmlpull.v1.XmlSerializer;
  */
 public class XmlNamespaceDictionaryTest extends TestCase {
 
+  private static final String EXPECTED = "<?xml version=\"1.0\"?><feed xmlns=\"http://www.w3" +
+      ".org/2005/Atom\" xmlns:gd=\"http://schemas.google.com/g/2005\"><entry gd:etag=\"abc" +
+      "\"><title>One</title></entry><entry gd:etag=\"def\"><title>Two</title></entry></feed>";
+  private static final String EXPECTED_EMPTY_MAP = "<?xml version=\"1.0\"?><entry xmlns" +
+      "=\"http://www.w3.org/2005/Atom\" />";
+  private static final String EXPECTED_EMPTY_MAP_NS_UNDECLARED = "<?xml version=\"1.0\"?><n1" +
+      ":entry xmlns:n1=\"http://www.w3.org/2005/Atom\" />";
+  private static final String EXPECTED_EMPTY_MAP_ATOM_NS = "<?xml version=\"1.0\"?><atom" +
+      ":entry xmlns:atom=\"http://www.w3.org/2005/Atom\" />";
+  private static final String EXPECTED_UNKNOWN_NS = "<?xml version=\"1.0\"?><feed xmlns" +
+      "=\"http://unknown/\" xmlns:gd=\"http://unknown/gd\"><entry gd:etag=\"abc\"><title>One" +
+      "</title></entry><entry gd:etag=\"def\"><title>Two</title></entry></feed>";
+
   public XmlNamespaceDictionaryTest() {
   }
 
@@ -37,29 +50,10 @@ public class XmlNamespaceDictionaryTest extends TestCase {
     super(name);
   }
 
-  private static final String EXPECTED =
-      "<?xml version=\"1.0\"?>" + "<feed xmlns=\"http://www.w3.org/2005/Atom\" "
-          + "xmlns:gd=\"http://schemas.google.com/g/2005\">"
-          + "<entry gd:etag=\"abc\"><title>One</title></entry>"
-          + "<entry gd:etag=\"def\"><title>Two</title></entry></feed>";
-
-  private static final String EXPECTED_EMPTY_MAP =
-      "<?xml version=\"1.0\"?>" + "<entry xmlns=\"http://www.w3.org/2005/Atom\" />";
-
-  private static final String EXPECTED_EMPTY_MAP_NS_UNDECLARED =
-      "<?xml version=\"1.0\"?>" + "<n1:entry xmlns:n1=\"http://www.w3.org/2005/Atom\" />";
-
-  private static final String EXPECTED_EMPTY_MAP_ATOM_NS =
-    "<?xml version=\"1.0\"?>" + "<atom:entry xmlns:atom=\"http://www.w3.org/2005/Atom\" />";
-
-  private static final String EXPECTED_UNKNOWN_NS =
-      "<?xml version=\"1.0\"?>" + "<feed xmlns=\"http://unknown/\" "
-          + "xmlns:gd=\"http://unknown/gd\">" + "<entry gd:etag=\"abc\"><title>One</title></entry>"
-          + "<entry gd:etag=\"def\"><title>Two</title></entry></feed>";
-
   public void testSet() {
     XmlNamespaceDictionary dictionary = new XmlNamespaceDictionary();
-    dictionary.set("", "http://www.w3.org/2005/Atom").set("gd", "http://schemas.google.com/g/2005");
+    dictionary.set("", "http://www.w3.org/2005/Atom")
+        .set("gd", "http://schemas.google.com/g/2005");
     assertEquals("http://www.w3.org/2005/Atom", dictionary.getUriForAlias(""));
     assertEquals("", dictionary.getAliasForUri("http://www.w3.org/2005/Atom"));
     dictionary.set("", "http://www.w3.org/2006/Atom");
@@ -77,10 +71,12 @@ public class XmlNamespaceDictionaryTest extends TestCase {
     dictionary.set(null, null);
     assertEquals("http://schemas.google.com/g/2005", dictionary.getUriForAlias("foo"));
     dictionary.set("foo", null);
-    assertTrue(dictionary.getAliasToUriMap().isEmpty());
-    dictionary.set("foo", "http://schemas.google.com/g/2005").set(
-        null, "http://schemas.google.com/g/2005");
-    assertTrue(dictionary.getAliasToUriMap().isEmpty());
+    assertTrue(dictionary.getAliasToUriMap()
+        .isEmpty());
+    dictionary.set("foo", "http://schemas.google.com/g/2005")
+        .set(null, "http://schemas.google.com/g/2005");
+    assertTrue(dictionary.getAliasToUriMap()
+        .isEmpty());
   }
 
   public void testSerialize() throws Exception {
@@ -156,30 +152,6 @@ public class XmlNamespaceDictionaryTest extends TestCase {
     assertEquals(EXPECTED_EMPTY_MAP_NS_UNDECLARED, writer.toString());
   }
 
-  public static class Entry implements Comparable<Entry> {
-    @Key
-    public String title;
-
-    @Key("@gd:etag")
-    public String etag;
-
-    public Entry(String title, String etag) {
-      super();
-      this.title = title;
-      this.etag = etag;
-    }
-
-    public int compareTo(Entry other) {
-      return title.compareTo(other.title);
-    }
-  }
-
-  public static class Feed {
-    @Key("entry")
-    public Collection<Entry> entries;
-
-  }
-
   public void testSerialize_errorOnUnknown() throws Exception {
     Entry entry = new Entry("One", "abc");
     StringWriter writer = new StringWriter();
@@ -220,6 +192,30 @@ public class XmlNamespaceDictionaryTest extends TestCase {
     serializer.setOutput(writer);
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
     assertEquals(EXPECTED_UNKNOWN_NS, namespaceDictionary.toStringOf("feed", feed));
+  }
+
+  public static class Entry implements Comparable<Entry> {
+    @Key
+    public String title;
+
+    @Key("@gd:etag")
+    public String etag;
+
+    public Entry(String title, String etag) {
+      super();
+      this.title = title;
+      this.etag = etag;
+    }
+
+    public int compareTo(Entry other) {
+      return title.compareTo(other.title);
+    }
+  }
+
+  public static class Feed {
+    @Key("entry")
+    public Collection<Entry> entries;
+
   }
 
 }
