@@ -25,11 +25,60 @@
       <filtered>true</filtered>
       <outputDirectory>google-http-java-client</outputDirectory>
     </file>
+    <file>
+      <source>properties/google-http-client.jar.properties</source>
+      <destName>google-http-client-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/google-http-client-android.jar.properties</source>
+      <destName>google-http-client-android-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/google-http-client-gson.jar.properties</source>
+      <destName>google-http-client-gson-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/google-http-client-jackson.jar.properties</source>
+      <destName>google-http-client-jackson-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/google-http-client-jackson2.jar.properties</source>
+      <destName>google-http-client-jackson2-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/google-http-client-jdo.jar.properties</source>
+      <destName>google-http-client-jdo-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/google-http-client-protobuf.jar.properties</source>
+      <destName>google-http-client-protobuf-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/google-http-client-xml.jar.properties</source>
+      <destName>google-http-client-xml-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
   </files>
   <fileSets>
     <fileSet>
       <directory>dependencies</directory>
       <outputDirectory>google-http-java-client/dependencies</outputDirectory>
+      <filtered>true</filtered>
     </fileSet>
     <fileSet>
       <directory>target/libs</directory>

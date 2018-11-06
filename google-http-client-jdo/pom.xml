@@ -4,11 +4,13 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.26.0-SNAPSHOT</version>
+    <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client-jdo</artifactId>
+  <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-jdo:current} -->
   <name>JDO extensions to the Google HTTP Client Library for Java.</name>
+
   <build>
     <plugins>
       <plugin>

@@ -4,11 +4,13 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.26.0-SNAPSHOT</version>
+    <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client-appengine</artifactId>
+  <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-appengine:current} -->
   <name>Google App Engine extensions to the Google HTTP Client Library for Java.</name>
+
   <build>
     <plugins>
       <plugin>

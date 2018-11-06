@@ -1,0 +1,17 @@
+# Format:
+# module:released-version:current-version
+
+google-http-client:1.26.0:1.26.1-SNAPSHOT
+google-http-client-parent:1.26.0:1.26.1-SNAPSHOT
+google-http-client-android:1.26.0:1.26.1-SNAPSHOT
+google-http-client-android-test:1.26.0:1.26.1-SNAPSHOT
+google-http-client-appengine:1.26.0:1.26.1-SNAPSHOT
+google-http-client-assembly:1.26.0:1.26.1-SNAPSHOT
+google-http-client-findbugs:1.26.0:1.26.1-SNAPSHOT
+google-http-client-gson:1.26.0:1.26.1-SNAPSHOT
+google-http-client-jackson:1.26.0:1.26.1-SNAPSHOT
+google-http-client-jackson2:1.26.0:1.26.1-SNAPSHOT
+google-http-client-jdo:1.26.0:1.26.1-SNAPSHOT
+google-http-client-protobuf:1.26.0:1.26.1-SNAPSHOT
+google-http-client-test:1.26.0:1.26.1-SNAPSHOT
+google-http-client-xml:1.26.0:1.26.1-SNAPSHOT

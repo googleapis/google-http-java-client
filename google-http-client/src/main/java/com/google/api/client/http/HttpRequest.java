@@ -50,7 +50,7 @@ public final class HttpRequest {
    *
    * @since 1.8
    */
-  public static final String VERSION = "1.26.0-SNAPSHOT";
+  public static final String VERSION = "1.26.0";
 
   /**
    * User agent suffix for all requests.
@@ -179,13 +179,6 @@ public final class HttpRequest {
   /** HTTP content encoding or {@code null} for none. */
   private HttpEncoding encoding;
 
-  /**
-   * The {@link BackOffPolicy} to use between retry attempts or {@code null} for none.
-   */
-  @Deprecated
-  @Beta
-  private BackOffPolicy backOffPolicy;
-
   /** Whether to automatically follow redirects ({@code true} by default). */
   private boolean followRedirects = true;
 
@@ -307,37 +300,6 @@ public final class HttpRequest {
    */
   public HttpRequest setEncoding(HttpEncoding encoding) {
     this.encoding = encoding;
-    return this;
-  }
-
-  /**
-   * {@link Beta} <br/>
-   * Returns the {@link BackOffPolicy} to use between retry attempts or {@code null} for none.
-   *
-   * @since 1.7
-   * @deprecated (scheduled to be removed in 1.18).
-   *             {@link #setUnsuccessfulResponseHandler(HttpUnsuccessfulResponseHandler)} with a new
-   *             {@link HttpBackOffUnsuccessfulResponseHandler} instead.
-   */
-  @Deprecated
-  @Beta
-  public BackOffPolicy getBackOffPolicy() {
-    return backOffPolicy;
-  }
-
-  /**
-   * {@link Beta} <br/>
-   * Sets the {@link BackOffPolicy} to use between retry attempts or {@code null} for none.
-   *
-   * @since 1.7
-   * @deprecated (scheduled to be removed in 1.18). Use
-   *             {@link #setUnsuccessfulResponseHandler(HttpUnsuccessfulResponseHandler)} with a new
-   *             {@link HttpBackOffUnsuccessfulResponseHandler} instead.
-   */
-  @Deprecated
-  @Beta
-  public HttpRequest setBackOffPolicy(BackOffPolicy backOffPolicy) {
-    this.backOffPolicy = backOffPolicy;
     return this;
   }
 
@@ -873,10 +835,8 @@ public final class HttpRequest {
     boolean retryRequest = false;
     Preconditions.checkArgument(numRetries >= 0);
     int retriesRemaining = numRetries;
-    if (backOffPolicy != null) {
-      // Reset the BackOffPolicy at the start of each execute.
-      backOffPolicy.reset();
-    }
+    // TODO(chingor): notify error  handlers that the request is about to start
+
     HttpResponse response = null;
     IOException executeException;
 
@@ -1050,19 +1010,6 @@ public final class HttpRequest {
             if (handleRedirect(response.getStatusCode(), response.getHeaders())) {
               // The unsuccessful request's error could not be handled and it is a redirect request.
               errorHandled = true;
-            } else if (retryRequest && backOffPolicy != null
-                && backOffPolicy.isBackOffRequired(response.getStatusCode())) {
-              // The unsuccessful request's error could not be handled and should be backed off
-              // before retrying
-              long backOffTime = backOffPolicy.getNextBackOffMillis();
-              if (backOffTime != BackOffPolicy.STOP) {
-                try {
-                  sleeper.sleep(backOffTime);
-                } catch (InterruptedException exception) {
-                  // ignore
-                }
-                errorHandled = true;
-              }
             }
           }
           // A retry is required if the error was successfully handled or if it is a redirect
