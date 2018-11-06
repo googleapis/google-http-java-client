@@ -1,6 +1,6 @@
 # Google HTTP Client Library Bill of Materials
 
-The `google-http-client-bom` modules is basically a pom that can be used to import consistent 
+The `google-http-client-bom` modules is a pom that can be used to import consistent 
 versions of `google-http-client` components plus its dependencies.
 
 To use it in Maven, add the following to your `pom.xml`:
