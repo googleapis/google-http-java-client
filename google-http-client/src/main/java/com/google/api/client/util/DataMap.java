@@ -43,7 +43,6 @@ final class DataMap extends AbstractMap<String, Object> {
   DataMap(Object object, boolean ignoreCase) {
     this.object = object;
     classInfo = ClassInfo.of(object.getClass(), ignoreCase);
-    Preconditions.checkArgument(!classInfo.isEnum());
   }
 
   @Override
