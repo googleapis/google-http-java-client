@@ -66,6 +66,7 @@
     <module>google-http-client-jackson</module>
     <module>google-http-client-jackson2</module>
     <module>google-http-client-jdo</module>
+    <module>google-http-client-xml</module>
 
     <module>google-http-client-findbugs</module>
     <module>google-http-client-test</module>
@@ -73,7 +74,7 @@
     <module>samples/googleplus-simple-cmdline-sample</module>
 
     <!-- A deployable artifact must be last or deploys are skipped -->
-    <module>google-http-client-xml</module>
+    <module>google-http-client-bom</module>
   </modules>
 
   <pluginRepositories>
@@ -297,7 +298,11 @@
             <target>1.6</target>
           </configuration>
         </plugin>
-
+        <plugin>
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>jarjar-maven-plugin</artifactId>
+          <version>1.9</version>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
@@ -314,7 +319,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.9.1</version>
+          <version>3.0.1</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>

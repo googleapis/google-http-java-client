@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.google.http-client</groupId>
+  <artifactId>google-http-client-bom</artifactId>
+  <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-bom:current} -->
+  <packaging>pom</packaging>
+
+  <name>Google HTTP Client Library for Java BOM</name>
+  <url>https://github.com/googleapis/google-http-java-client/tree/master/google-http-client-bom</url>
+  <description>
+    BOM for Google HTTP Client Library for Java
+  </description>
+
+  <organization>
+    <name>Google LLC</name>
+  </organization>
+
+  <scm>
+    <connection>scm:git:https://github.com/googleapis/google-http-java-client.git</connection>
+    <developerConnection>scm:git:git@github.com:googleapis/google-http-java-client.git</developerConnection>
+    <url>https://github.com/googleapis/google-http-java-client</url>
+  </scm>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>sonatype-nexus-snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>sonatype-nexus-staging</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+    <site>
+      <id>github-pages-site</id>
+      <name>Deployment through GitHub's site deployment plugin</name>
+      <url>site/google-cloud-bom</url>
+    </site>
+  </distributionManagement>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client</artifactId>
+        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client:current} -->
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-android</artifactId>
+        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-android:current} -->
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-appengine</artifactId>
+        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-appengine:current} -->
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-assembly</artifactId>
+        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-assembly:current} -->
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-findbugs</artifactId>
+        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-findbugs:current} -->
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-gson</artifactId>
+        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-gson:current} -->
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-jackson</artifactId>
+        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-jackson:current} -->
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-jackson2</artifactId>
+        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-jackson2:current} -->
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-jdo</artifactId>
+        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-jdo:current} -->
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-protobuf</artifactId>
+        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-protobuf:current} -->
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-test</artifactId>
+        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-test:current} -->
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-xml</artifactId>
+        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-xml:current} -->
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+</project>

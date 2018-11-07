@@ -958,7 +958,8 @@ public class HttpRequestTest extends TestCase {
     assertEquals(ImmutableList.of("a2", "b2", "c2"), lowLevelRequest.getHeaderValues("objlist"));
     assertEquals(ImmutableList.of("a1", "a2"), lowLevelRequest.getHeaderValues("r"));
     assertTrue(lowLevelRequest.getHeaderValues("accept-encoding").isEmpty());
-    assertEquals(ImmutableList.of("foo " + HttpRequest.USER_AGENT_SUFFIX),
+    assertEquals(ImmutableList.of("foo Google-HTTP-Java-Client/" 
+        + HttpRequest.VERSION + " (gzip)"), 
         lowLevelRequest.getHeaderValues("user-agent"));
     assertEquals(ImmutableList.of("b"), lowLevelRequest.getHeaderValues("a"));
     assertEquals(ImmutableList.of("VALUE"), lowLevelRequest.getHeaderValues("value"));
@@ -1197,7 +1198,8 @@ public class HttpRequestTest extends TestCase {
       if (message.startsWith("curl")) {
         found = true;
         assertEquals("curl -v --compressed -H 'Accept-Encoding: gzip' -H 'User-Agent: "
-            + HttpRequest.USER_AGENT_SUFFIX + "' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c'",
+            + "Google-HTTP-Java-Client/" + HttpRequest.VERSION + " (gzip)" 
+        	+ "' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c'",
             message);
       }
     }

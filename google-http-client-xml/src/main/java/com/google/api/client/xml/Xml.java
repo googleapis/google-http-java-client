@@ -94,6 +94,7 @@ public class Xml {
 
   /**
    * Shows a debug string representation of an element data object of key/value pairs.
+   *
    * <p>
    * It will make up something for the element name and XML namespaces. If those are known, it is
    * better to use {@link XmlNamespaceDictionary#toStringOf(String, Object)}.
