@@ -23,5 +23,5 @@ echo $JOB_TYPE
 
 export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=128m"
 
-mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+mvn install -DskipTests=true -B -V
 mvn test -B
