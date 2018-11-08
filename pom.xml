@@ -384,7 +384,7 @@
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <additionalOptions>-Xdoclint:none</additionalOptions>
+          <doclint>none</doclint>
         </configuration>
         <executions>
           <execution>
