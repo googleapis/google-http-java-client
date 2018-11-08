@@ -18,9 +18,19 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.Preconditions;
 
+import com.google.api.client.util.StreamingContent;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author Yaniv Inbar
@@ -28,12 +38,14 @@ import java.net.HttpURLConnection;
 final class NetHttpRequest extends LowLevelHttpRequest {
 
   private final HttpURLConnection connection;
+  private int writeTimeout;
 
   /**
    * @param connection HTTP URL connection
    */
   NetHttpRequest(HttpURLConnection connection) {
     this.connection = connection;
+    this.writeTimeout = 0;
     connection.setInstanceFollowRedirects(false);
   }
 
@@ -49,7 +61,71 @@ final class NetHttpRequest extends LowLevelHttpRequest {
   }
 
   @Override
+  public void setWriteTimeout(int writeTimeout) throws IOException {
+    this.writeTimeout = writeTimeout;
+  }
+
+  interface OutputWriter {
+    void write(OutputStream outputStream, StreamingContent content) throws IOException;
+  }
+
+  static class DefaultOutputWriter implements OutputWriter {
+    @Override
+    public void write(OutputStream outputStream, final StreamingContent content)
+        throws IOException {
+      content.writeTo(outputStream);
+    }
+  }
+
+  static class TimeoutOutputWriter implements OutputWriter {
+    private final int timeout;
+    TimeoutOutputWriter(int timeout) {
+      this.timeout = timeout;
+    }
+    @Override
+    public void write(final OutputStream outputStream, StreamingContent content)
+        throws IOException {
+      final StreamingContent input = content;
+      final Callable<Boolean> writeContent = new Callable<Boolean>() {
+        @Override
+        public Boolean call() throws IOException {
+          input.writeTo(outputStream);
+          return Boolean.TRUE;
+        }
+      };
+
+      final ExecutorService executor = Executors.newSingleThreadExecutor();
+      final Future<Boolean> future = executor.submit(new FutureTask<Boolean>(writeContent), null);
+      executor.shutdown();
+
+      try {
+        future.get(timeout, TimeUnit.MILLISECONDS);
+      } catch (InterruptedException e) {
+        throw new IOException("Socket write interrupted", e);
+      } catch (ExecutionException e) {
+        throw new IOException("Exception in socket write", e);
+      } catch (TimeoutException e) {
+        throw new IOException("Socket write timed out", e);
+      }
+      if (!executor.isTerminated()) {
+        executor.shutdown();
+      }
+    }
+  }
+
+  private static final OutputWriter DEFAULT_CONNECTION_WRITER = new DefaultOutputWriter();
+
+  @Override
   public LowLevelHttpResponse execute() throws IOException {
+    if (writeTimeout == 0) {
+      return execute(DEFAULT_CONNECTION_WRITER);
+    } else {
+      return execute(new TimeoutOutputWriter(writeTimeout));
+    }
+  }
+
+  @VisibleForTesting
+  LowLevelHttpResponse execute(final OutputWriter outputWriter) throws IOException {
     HttpURLConnection connection = this.connection;
     // write content
     if (getStreamingContent() != null) {
@@ -74,10 +150,12 @@ final class NetHttpRequest extends LowLevelHttpRequest {
         } else {
           connection.setChunkedStreamingMode(0);
         }
-        OutputStream out = connection.getOutputStream();
+        final OutputStream out = connection.getOutputStream();
+
         boolean threw = true;
         try {
-          getStreamingContent().writeTo(out);
+          outputWriter.write(out, getStreamingContent());
+
           threw = false;
         } finally {
           try {
