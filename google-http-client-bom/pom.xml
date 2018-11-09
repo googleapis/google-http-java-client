@@ -16,6 +16,18 @@
     <name>Google LLC</name>
   </organization>
 
+  <developers>
+    <developer>
+      <id>chingor13</id>
+      <name>Jeff Ching</name>
+      <email>chingor@google.com</email>
+      <organization>Google LLC</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+  </developers>
+
   <scm>
     <connection>scm:git:https://github.com/googleapis/google-http-java-client.git</connection>
     <developerConnection>scm:git:git@github.com:googleapis/google-http-java-client.git</developerConnection>
