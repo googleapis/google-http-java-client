@@ -18,9 +18,19 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.Preconditions;
 
+import com.google.api.client.util.StreamingContent;
+import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author Yaniv Inbar
@@ -28,12 +38,14 @@ import java.net.HttpURLConnection;
 final class NetHttpRequest extends LowLevelHttpRequest {
 
   private final HttpURLConnection connection;
+  private int writeTimeout;
 
   /**
    * @param connection HTTP URL connection
    */
   NetHttpRequest(HttpURLConnection connection) {
     this.connection = connection;
+    this.writeTimeout = 0;
     connection.setInstanceFollowRedirects(false);
   }
 
@@ -49,7 +61,31 @@ final class NetHttpRequest extends LowLevelHttpRequest {
   }
 
   @Override
+  public void setWriteTimeout(int writeTimeout) throws IOException {
+    this.writeTimeout = writeTimeout;
+  }
+
+  interface OutputWriter {
+    void write(OutputStream outputStream, StreamingContent content) throws IOException;
+  }
+
+  static class DefaultOutputWriter implements OutputWriter {
+    @Override
+    public void write(OutputStream outputStream, final StreamingContent content)
+        throws IOException {
+      content.writeTo(outputStream);
+    }
+  }
+
+  private static final OutputWriter DEFAULT_CONNECTION_WRITER = new DefaultOutputWriter();
+
+  @Override
   public LowLevelHttpResponse execute() throws IOException {
+    return execute(DEFAULT_CONNECTION_WRITER);
+  }
+
+  @VisibleForTesting
+  LowLevelHttpResponse execute(final OutputWriter outputWriter) throws IOException {
     HttpURLConnection connection = this.connection;
     // write content
     if (getStreamingContent() != null) {
@@ -74,10 +110,12 @@ final class NetHttpRequest extends LowLevelHttpRequest {
         } else {
           connection.setChunkedStreamingMode(0);
         }
-        OutputStream out = connection.getOutputStream();
+        final OutputStream out = connection.getOutputStream();
+
         boolean threw = true;
         try {
-          getStreamingContent().writeTo(out);
+          writeContentToOutputStream(outputWriter, out);
+
           threw = false;
         } finally {
           try {
@@ -108,6 +146,40 @@ final class NetHttpRequest extends LowLevelHttpRequest {
     } finally {
       if (!successfulConnection) {
         connection.disconnect();
+      }
+    }
+  }
+
+  private void writeContentToOutputStream(final OutputWriter outputWriter, final OutputStream out)
+      throws IOException {
+    if (writeTimeout == 0) {
+      outputWriter.write(out, getStreamingContent());
+    } else {
+      // do it with timeout
+      final StreamingContent content = getStreamingContent();
+      final Callable<Boolean> writeContent = new Callable<Boolean>() {
+        @Override
+        public Boolean call() throws IOException {
+          outputWriter.write(out, content);
+          return Boolean.TRUE;
+        }
+      };
+
+      final ExecutorService executor = Executors.newSingleThreadExecutor();
+      final Future<Boolean> future = executor.submit(new FutureTask<Boolean>(writeContent), null);
+      executor.shutdown();
+
+      try {
+        future.get(writeTimeout, TimeUnit.MILLISECONDS);
+      } catch (InterruptedException e) {
+        throw new IOException("Socket write interrupted", e);
+      } catch (ExecutionException e) {
+        throw new IOException("Exception in socket write", e);
+      } catch (TimeoutException e) {
+        throw new IOException("Socket write timed out", e);
+      }
+      if (!executor.isTerminated()) {
+        executor.shutdown();
       }
     }
   }
