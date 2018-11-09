@@ -169,7 +169,7 @@ public abstract class LowLevelHttpRequest {
    * @param writeTimeout timeout in milliseconds to establish a connection or {@code 0} for an
    *        infinite timeout
    * @throws IOException I/O exception
-   * @since 1.26
+   * @since 1.27
    */
   public void setWriteTimeout(int writeTimeout) throws IOException {
   }
