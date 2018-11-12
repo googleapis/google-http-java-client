@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.http-client</groupId>
   <artifactId>google-http-client-bom</artifactId>
-  <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-bom:current} -->
+  <version>1.27.0</version><!-- {x-version-update:google-http-client-bom:current} -->
   <packaging>pom</packaging>
 
   <name>Google HTTP Client Library for Java BOM</name>
@@ -15,6 +15,18 @@
   <organization>
     <name>Google LLC</name>
   </organization>
+
+  <developers>
+    <developer>
+      <id>chingor13</id>
+      <name>Jeff Ching</name>
+      <email>chingor@google.com</email>
+      <organization>Google LLC</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+  </developers>
 
   <scm>
     <connection>scm:git:https://github.com/googleapis/google-http-java-client.git</connection>
@@ -51,63 +63,114 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client</artifactId>
-        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client:current} -->
+        <version>1.27.0</version><!-- {x-version-update:google-http-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-android</artifactId>
-        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-android:current} -->
+        <version>1.27.0</version><!-- {x-version-update:google-http-client-android:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-appengine</artifactId>
-        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-appengine:current} -->
+        <version>1.27.0</version><!-- {x-version-update:google-http-client-appengine:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-assembly</artifactId>
-        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-assembly:current} -->
+        <version>1.27.0</version><!-- {x-version-update:google-http-client-assembly:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-findbugs</artifactId>
-        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-findbugs:current} -->
+        <version>1.27.0</version><!-- {x-version-update:google-http-client-findbugs:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-gson</artifactId>
-        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-gson:current} -->
+        <version>1.27.0</version><!-- {x-version-update:google-http-client-gson:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-jackson</artifactId>
-        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-jackson:current} -->
+        <version>1.27.0</version><!-- {x-version-update:google-http-client-jackson:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-jackson2</artifactId>
-        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-jackson2:current} -->
+        <version>1.27.0</version><!-- {x-version-update:google-http-client-jackson2:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-jdo</artifactId>
-        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-jdo:current} -->
+        <version>1.27.0</version><!-- {x-version-update:google-http-client-jdo:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-protobuf</artifactId>
-        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-protobuf:current} -->
+        <version>1.27.0</version><!-- {x-version-update:google-http-client-protobuf:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-test</artifactId>
-        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-test:current} -->
+        <version>1.27.0</version><!-- {x-version-update:google-http-client-test:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-xml</artifactId>
-        <version>1.26.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-xml:current} -->
+        <version>1.27.0</version><!-- {x-version-update:google-http-client-xml:current} -->
       </dependency>
     </dependencies>
   </dependencyManagement>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.6</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>sonatype-nexus-staging</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>false</autoReleaseAfterClose>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>release-sign-artifacts</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <configuration>
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

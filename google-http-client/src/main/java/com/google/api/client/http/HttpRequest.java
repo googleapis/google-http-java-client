@@ -50,7 +50,7 @@ public final class HttpRequest {
    *
    * @since 1.8
    */
-  public static final String VERSION = "1.26.0";
+  public static final String VERSION = "1.27.0";
 
   /**
    * User agent suffix for all requests.
@@ -505,7 +505,7 @@ public final class HttpRequest {
    * By default it is 0 (infinite).
    * </p>
    *
-   * @since 1.26
+   * @since 1.27
    */
   public int getWriteTimeout() {
     return writeTimeout;
@@ -514,7 +514,7 @@ public final class HttpRequest {
   /**
    * Sets the timeout in milliseconds to send POST/PUT data or {@code 0} for an infinite timeout.
    *
-   * @since 1.26
+   * @since 1.27
    */
   public HttpRequest setWriteTimeout(int writeTimeout) {
     Preconditions.checkArgument(writeTimeout >= 0);

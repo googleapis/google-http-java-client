@@ -22,7 +22,7 @@ pushd $(dirname "$0")/../../
 setup_environment_secrets
 create_settings_xml_file "settings.xml"
 
-mvn clean install deploy \
+mvn clean install deploy -B \
   --settings settings.xml \
   -DperformRelease=true \
   -Dgpg.executable=gpg \
