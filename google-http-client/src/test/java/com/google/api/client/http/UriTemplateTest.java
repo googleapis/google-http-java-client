@@ -15,6 +15,7 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Value;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.Arrays;
@@ -55,6 +56,13 @@ public class UriTemplateTest extends TestCase {
     assertTrue(requestMap.containsKey("abc"));
     assertTrue(requestMap.containsKey("def"));
     assertTrue(requestMap.containsKey("unused"));
+  }
+
+  public void testExpanTemplates_basicEncodeValue() {
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
+    requestMap.put("abc", "xyz;def");
+    assertEquals(";abc=xyz%3Bdef", UriTemplate.expand("{;abc}", requestMap, false));
+    assertEquals("xyz;def", UriTemplate.expand("{+abc}", requestMap, false));
   }
 
   public void testExpandTemplates_noExpansionsWithQueryParams() {
