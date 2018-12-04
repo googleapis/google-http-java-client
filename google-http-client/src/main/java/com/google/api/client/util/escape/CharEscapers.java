@@ -103,8 +103,8 @@ public final class CharEscapers {
    * what characters are represented by any consecutive sequences of the form "%<i>XX</i>".
    *
    * <p>
-   * This doesnt replaces each occurrence of '+' with a space, ' '. So this method should not be used for
-   * application/x-www-form-urlencoded strings such as query.
+   * This doesnt replaces each occurrence of '+' with a space, ' '. So this method should not be
+   * used for application/x-www-form-urlencoded strings such as query.
    * </p>
    *
    * @param uri a percent-encoded US-ASCII string
