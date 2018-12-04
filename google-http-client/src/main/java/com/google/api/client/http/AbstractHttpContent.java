@@ -98,7 +98,7 @@ public abstract class AbstractHttpContent implements HttpContent {
    */
   protected final Charset getCharset() {
     return mediaType == null || mediaType.getCharsetParameter() == null
-        ? Charsets.UTF_8 : mediaType.getCharsetParameter();
+        ? Charsets.ISO_8859_1 : mediaType.getCharsetParameter();
   }
 
   public String getType() {
