@@ -475,6 +475,8 @@ public class GenericUrlTest extends TestCase {
     subtestToPathParts("/path/to/resource", "", "path", "to", "resource");
     subtestToPathParts("/path/to/resource/", "", "path", "to", "resource", "");
     subtestToPathParts("/Go%3D%23%2F%25%26%20?%3Co%3Egle/2nd", "", "Go=#/%& ?<o>gle", "2nd");
+    subtestToPathParts("/path+with+plus/2nd", "", "path+with+plus", "2nd");
+    subtestToPathParts("/path%2Bwith+plus/2nd", "", "path+with+plus", "2nd");
   }
 
   private void subtestToPathParts(String encodedPath, String... expectedDecodedParts) {

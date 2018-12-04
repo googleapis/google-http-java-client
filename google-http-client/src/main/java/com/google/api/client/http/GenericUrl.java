@@ -548,7 +548,7 @@ public class GenericUrl extends GenericData {
       } else {
         sub = encodedPath.substring(cur);
       }
-      result.add(CharEscapers.decodeUri(sub));
+      result.add(CharEscapers.decode(sub));
       cur = slash + 1;
     }
     return result;
