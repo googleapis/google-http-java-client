@@ -18,6 +18,7 @@ import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
 
 import java.io.IOException;
+import java.nio.charset.IllegalCharsetNameException;
 
 /**
  * Exception thrown when an error status code is detected in an HTTP response.
@@ -176,8 +177,10 @@ public class HttpResponseException extends IOException {
         if (content.length() == 0) {
           content = null;
         }
-      } catch (IOException exception) {
+      } catch (IOException  exception) {
         // it would be bad to throw an exception while throwing an exception
+        exception.printStackTrace();
+      } catch (IllegalCharsetNameException exception) {
         exception.printStackTrace();
       }
       // message
