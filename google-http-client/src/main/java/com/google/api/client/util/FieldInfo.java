@@ -117,7 +117,7 @@ public class FieldInfo {
   private final Field field;
 
   /** Setters Method for field */
-  private final Method setters[];
+  private final Method []setters;
 
   /**
    * Data key name associated with the field for a non-enum-constant with a {@link Key} annotation,
@@ -227,12 +227,14 @@ public class FieldInfo {
   public void setValue(Object obj, Object value) {
     if (setters.length > 0) {
       for (Method method : setters) {
-        if (method.getParameterTypes()[0].isAssignableFrom(value.getClass())) {
+        if (value == null || method.getParameterTypes()[0].isAssignableFrom(value.getClass())) {
           try {
             method.invoke(obj, value);
             return;
           } catch (IllegalAccessException e) {
+            // try to set field directly
           } catch (InvocationTargetException e) {
+            // try to set field directly
           }
         }
       }
