@@ -25,7 +25,6 @@ import com.google.api.client.util.Sets;
 import com.google.api.client.util.Types;
 
 import java.io.Closeable;
-import java.io.Flushable;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -62,7 +61,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @since 1.3
  * @author Yaniv Inbar
  */
-public abstract class JsonParser implements Closeable, Flushable {
+public abstract class JsonParser implements Closeable {
 
   /**
    * Maps a polymorphic {@link Class} to its {@link Field} with the {@link JsonPolymorphicTypeMap}
