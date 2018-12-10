@@ -177,10 +177,10 @@ public class HttpResponseException extends IOException {
         if (content.length() == 0) {
           content = null;
         }
-      } catch (IOException  exception) {
+      } catch (IOException exception) {
         // it would be bad to throw an exception while throwing an exception
         exception.printStackTrace();
-      } catch (IllegalCharsetNameException exception) {
+      } catch (IllegalArgumentException exception) {
         exception.printStackTrace();
       }
       // message
