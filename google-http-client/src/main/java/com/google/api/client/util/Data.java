@@ -107,7 +107,7 @@ public class Data {
    * @return magic object instance that represents the "null" value (not Java {@code null})
    * @throws IllegalArgumentException if unable to create a new instance
    */
-  public static <T> T nullOf(Class<?> objClass) {
+  public static <T> T nullOf(Class<T> objClass) {
     Object result = NULL_CACHE.get(objClass);
     if (result == null) {
       synchronized (NULL_CACHE) {
