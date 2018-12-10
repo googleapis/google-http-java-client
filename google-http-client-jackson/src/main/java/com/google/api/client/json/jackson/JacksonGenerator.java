@@ -28,7 +28,9 @@ import java.math.BigInteger;
  * </p>
  *
  * @author Yaniv Inbar
+ * @deprecated As of release 1.28, please use Jackson2 and google-http-client-jackson2.
  */
+@Deprecated
 final class JacksonGenerator extends JsonGenerator {
   private final org.codehaus.jackson.JsonGenerator generator;
   private final JacksonFactory factory;

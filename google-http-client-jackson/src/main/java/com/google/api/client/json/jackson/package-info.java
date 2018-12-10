@@ -18,7 +18,8 @@
  *
  * @since 1.3
  * @author Yaniv Inbar
+ * @deprecated As of release 1.28, please use Jackson2 and google-http-client-jackson2.
  */
-
+@Deprecated
 package com.google.api.client.json.jackson;
 
