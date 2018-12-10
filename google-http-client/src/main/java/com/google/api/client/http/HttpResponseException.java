@@ -18,7 +18,6 @@ import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
 
 import java.io.IOException;
-import java.nio.charset.IllegalCharsetNameException;
 
 /**
  * Exception thrown when an error status code is detected in an HTTP response.
