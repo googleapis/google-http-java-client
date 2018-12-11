@@ -183,6 +183,62 @@ public class HttpResponseExceptionTest extends TestCase {
     }
   }
 
+  public void testInvalidCharset() throws Exception {
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+            result.setStatusCode(HttpStatusCodes.STATUS_CODE_NOT_FOUND);
+            result.setReasonPhrase("Not Found");
+            result.setContentType("text/plain; charset=");
+            result.setContent("Unable to find resource");
+            return result;
+          }
+        };
+      }
+    };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    try {
+      request.execute();
+      fail();
+    } catch (HttpResponseException e) {
+      assertEquals(
+          "404 Not Found", e.getMessage());
+    }
+  }
+
+  public void testUnsupportedCharset() throws Exception {
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+            result.setStatusCode(HttpStatusCodes.STATUS_CODE_NOT_FOUND);
+            result.setReasonPhrase("Not Found");
+            result.setContentType("text/plain; charset=invalid-charset");
+            result.setContent("Unable to find resource");
+            return result;
+          }
+        };
+      }
+    };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    try {
+      request.execute();
+      fail();
+    } catch (HttpResponseException e) {
+      assertEquals(
+          "404 Not Found", e.getMessage());
+    }
+  }
+
   public void testSerialization() throws Exception {
     HttpTransport transport = new MockHttpTransport();
     HttpRequest request =
