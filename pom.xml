@@ -73,7 +73,6 @@
     <module>google-http-client-findbugs</module>
     <module>google-http-client-test</module>
     <module>samples/dailymotion-simple-cmdline-sample</module>
-    <module>samples/googleplus-simple-cmdline-sample</module>
 
     <!-- A deployable artifact must be last or deploys are skipped -->
     <module>google-http-client-bom</module>
@@ -367,7 +366,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>findbugs-maven-plugin</artifactId>
-          <version>2.5.2</version>
+          <version>3.0.5</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
