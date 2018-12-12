@@ -177,5 +177,15 @@
       <artifactId>j2objc-annotations</artifactId>
       <version>1.1</version>
     </dependency>
+    <dependency>
+      <groupId>io.opencensus</groupId>
+      <artifactId>opencensus-api</artifactId>
+      <version>0.11.1</version>
+    </dependency>
+    <dependency>
+      <groupId>io.opencensus</groupId>
+      <artifactId>opencensus-contrib-http-util</artifactId>
+      <version>0.11.1</version>
+    </dependency>
   </dependencies>
 </project>
