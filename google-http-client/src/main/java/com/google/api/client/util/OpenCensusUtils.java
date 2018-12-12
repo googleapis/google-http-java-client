@@ -15,19 +15,22 @@
 package com.google.api.client.util;
 
 import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpStatusCodes;
+import com.google.common.annotations.VisibleForTesting;
 
 import io.opencensus.contrib.http.util.HttpPropagationUtil;
 import io.opencensus.trace.BlankSpan;
 import io.opencensus.trace.EndSpanOptions;
+import io.opencensus.trace.NetworkEvent;
+import io.opencensus.trace.NetworkEvent.Type;
 import io.opencensus.trace.Span;
 import io.opencensus.trace.Status;
 import io.opencensus.trace.Tracer;
 import io.opencensus.trace.Tracing;
 import io.opencensus.trace.propagation.TextFormat;
 
-import java.io.IOException;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
@@ -35,33 +38,56 @@ import javax.annotation.Nullable;
 /**
  * Utilities for Census monitoring and tracing.
  *
- * @since 1.24
  * @author Hailong Wen
+ * @since 1.24
  */
 public class OpenCensusUtils {
 
-  private static final Logger LOGGER = Logger.getLogger(OpenCensusUtils.class.getName());
+  private static final Logger logger = Logger.getLogger(OpenCensusUtils.class.getName());
 
   /**
-   * OpenCensus tracing component.
-   * When no OpenCensus implementation is provided, it will return a no-op tracer.
+   * Span name for tracing {@link HttpRequest#execute()}.
    */
-  static Tracer tracer = Tracing.getTracer();
+  public static final String SPAN_NAME_HTTP_REQUEST_EXECUTE =
+      "Sent." + HttpRequest.class.getName() + ".execute";
+
+  /**
+   * OpenCensus tracing component. When no OpenCensus implementation is provided, it will return a
+   * no-op tracer.
+   */
+  private static Tracer tracer = Tracing.getTracer();
+
+  /**
+   * Sequence id generator for message event.
+   */
+  private static AtomicLong idGenerator = new AtomicLong();
+
+  /**
+   * Whether spans should be recorded locally. Defaults to true.
+   */
+  private static volatile boolean isRecordEvent = true;
 
   /**
    * {@link TextFormat} used in tracing context propagation.
    */
   @Nullable
-  static TextFormat propagationTextFormat = null;
+  @VisibleForTesting
+  static volatile TextFormat propagationTextFormat = null;
 
   /**
-   * {@link TextFormat.Setter} for {@link activeTextFormat}.
+   * {@link TextFormat.Setter} for {@link #propagationTextFormat}.
    */
   @Nullable
-  static TextFormat.Setter propagationTextFormatSetter = null;
+  @VisibleForTesting
+  static volatile TextFormat.Setter propagationTextFormatSetter = null;
 
   /**
    * Sets the {@link TextFormat} used in context propagation.
+   *
+   * <p>This API allows users of google-http-client to specify other text format, or disable context
+   * propagation by setting it to {@code null}. It should be used along with {@link
+   * #setPropagationTextFormatSetter} for setting purpose. </p>
+   *
    * @param textFormat the text format.
    */
   public static void setPropagationTextFormat(@Nullable TextFormat textFormat) {
@@ -70,10 +96,26 @@ public class OpenCensusUtils {
 
   /**
    * Sets the {@link TextFormat.Setter} used in context propagation.
+   *
+   * <p>This API allows users of google-http-client to specify other text format setter, or disable
+   * context propagation by setting it to {@code null}. It should be used along with {@link
+   * #setPropagationTextFormat} for setting purpose. </p>
+   *
    * @param textFormatSetter the {@code TextFormat.Setter} for the text format.
    */
   public static void setPropagationTextFormatSetter(@Nullable TextFormat.Setter textFormatSetter) {
     propagationTextFormatSetter = textFormatSetter;
+  }
+
+  /**
+   * Sets whether spans should be recorded locally.
+   *
+   * <p> This API allows users of google-http-client to turn on/off local span collection. </p>
+   *
+   * @param recordEvent record span locally if true.
+   */
+  public static void setIsRecordEvent(boolean recordEvent) {
+    isRecordEvent = recordEvent;
   }
 
   /**
@@ -86,14 +128,26 @@ public class OpenCensusUtils {
   }
 
   /**
+   * Returns whether spans should be recorded locally.
+   *
+   * @return whether spans should be recorded locally.
+   */
+  public static boolean isRecordEvent() {
+    return isRecordEvent;
+  }
+
+  /**
    * Propagate information of current tracing context. This information will be injected into HTTP
    * header.
+   *
+   * @param span the span to be propagated.
+   * @param headers the headers used in propagation.
    */
-  public static void propagateTracingContext(HttpHeaders headers) {
-    Preconditions.checkNotNull(headers);
+  public static void propagateTracingContext(Span span, HttpHeaders headers) {
+    Preconditions.checkArgument(span != null, "span should not be null.");
+    Preconditions.checkArgument(headers != null, "headers should not be null.");
     if (propagationTextFormat != null && propagationTextFormatSetter != null) {
-      Span span = tracer.getCurrentSpan();
-      if (span != null && !span.equals(BlankSpan.INSTANCE)) {
+      if (!span.equals(BlankSpan.INSTANCE)) {
         propagationTextFormat.inject(span.getContext(), headers, propagationTextFormatSetter);
       }
     }
@@ -107,7 +161,7 @@ public class OpenCensusUtils {
    */
   public static EndSpanOptions getEndSpanOptions(@Nullable Integer statusCode) {
     // Always sample the span, but optionally export it.
-    EndSpanOptions.Builder builder = EndSpanOptions.builder().setSampleToLocalSpanStore(true);
+    EndSpanOptions.Builder builder = EndSpanOptions.builder();
     if (statusCode == null) {
       builder.setStatus(Status.UNKNOWN);
     } else if (!HttpStatusCodes.isSuccess(statusCode)) {
@@ -139,6 +193,49 @@ public class OpenCensusUtils {
     return builder.build();
   }
 
+  /**
+   * Records a new message event which contains the size of the request content. Note that the size
+   * represents the message size in application layer, i.e., content-length.
+   *
+   * @param span The {@code span} in which the send event occurs.
+   * @param size Size of the request.
+   */
+  public static void recordSentMessageEvent(Span span, long size) {
+    recordMessageEvent(span, size, Type.SENT);
+  }
+
+  /**
+   * Records a new message event which contains the size of the response content. Note that the size
+   * represents the message size in application layer, i.e., content-length.
+   *
+   * @param span The {@code span} in which the receive event occurs.
+   * @param size Size of the response.
+   */
+  public static void recordReceivedMessageEvent(Span span, long size) {
+    recordMessageEvent(span, size, Type.RECV);
+  }
+
+  /**
+   * Records a message event of a certain {@link NetowrkEvent.Type}. This method is package
+   * protected since {@link NetworkEvent} might be deprecated in future releases.
+   *
+   * @param span The {@code span} in which the event occurs.
+   * @param size Size of the message.
+   * @param eventType The {@code NetworkEvent.Type} of the message event.
+   */
+  @VisibleForTesting
+  static void recordMessageEvent(Span span, long size, Type eventType) {
+    Preconditions.checkArgument(span != null, "span should not be null.");
+    if (size < 0) {
+      size = 0;
+    }
+    NetworkEvent event = NetworkEvent
+        .builder(eventType, idGenerator.getAndIncrement())
+        .setUncompressedMessageSize(size)
+        .build();
+    span.addNetworkEvent(event);
+  }
+
   static {
     try {
       propagationTextFormat = HttpPropagationUtil.getCloudTraceFormat();
@@ -149,7 +246,16 @@ public class OpenCensusUtils {
         }
       };
     } catch (Exception e) {
-      LOGGER.log(Level.WARNING, "Cannot initiate OpenCensus modules, tracing disabled", e);
+      logger.log(
+          Level.WARNING, "Cannot initialize default OpenCensus HTTP propagation text format.", e);
+    }
+
+    try {
+      Tracing.getExportComponent().getSampledSpanStore().registerSpanNamesForCollection(
+          Collections.<String>singletonList(SPAN_NAME_HTTP_REQUEST_EXECUTE));
+    } catch (Exception e) {
+      logger.log(
+          Level.WARNING, "Cannot register default OpenCensus span names for collection.", e);
     }
   }
 
