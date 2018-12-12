@@ -31,6 +31,7 @@ import io.opencensus.trace.Tracing;
 import io.opencensus.trace.propagation.TextFormat;
 
 import java.util.Collections;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
