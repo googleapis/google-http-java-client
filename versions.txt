@@ -6,6 +6,8 @@ google-http-client-bom:1.27.0:1.27.1-SNAPSHOT
 google-http-client-parent:1.27.0:1.27.1-SNAPSHOT
 google-http-client-android:1.27.0:1.27.1-SNAPSHOT
 google-http-client-android-test:1.27.0:1.27.1-SNAPSHOT
+google-http-client-apache:1.27.0:1.27.1-SNAPSHOT
+google-http-client-apache-legacy:1.27.0:1.27.1-SNAPSHOT
 google-http-client-appengine:1.27.0:1.27.1-SNAPSHOT
 google-http-client-assembly:1.27.0:1.27.1-SNAPSHOT
 google-http-client-findbugs:1.27.0:1.27.1-SNAPSHOT
