@@ -913,10 +913,10 @@ public final class HttpRequest {
       }
       // build low-level HTTP request
       String urlString = url.build();
-      span.putAttribute(HttpTraceAttributeConstants.HTTP_METHOD, AttributeValue.stringAttributeValue(requestMethod));
-      span.putAttribute(HttpTraceAttributeConstants.HTTP_HOST, AttributeValue.stringAttributeValue(url.getHost()));
-      span.putAttribute(HttpTraceAttributeConstants.HTTP_PATH, AttributeValue.stringAttributeValue(url.getRawPath()));
-      span.putAttribute(HttpTraceAttributeConstants.HTTP_URL, AttributeValue.stringAttributeValue(urlString));
+      addSpanAttribute(span, HttpTraceAttributeConstants.HTTP_METHOD, requestMethod);
+      addSpanAttribute(span, HttpTraceAttributeConstants.HTTP_HOST, url.getHost());
+      addSpanAttribute(span, HttpTraceAttributeConstants.HTTP_PATH, url.getRawPath());
+      addSpanAttribute(span, HttpTraceAttributeConstants.HTTP_URL, urlString);
 
       LowLevelHttpRequest lowLevelHttpRequest = transport.buildRequest(requestMethod, urlString);
       Logger logger = HttpTransport.LOGGER;
@@ -943,11 +943,11 @@ public final class HttpRequest {
       if (!suppressUserAgentSuffix) {
         if (originalUserAgent == null) {
           headers.setUserAgent(USER_AGENT_SUFFIX);
-          span.putAttribute(HttpTraceAttributeConstants.HTTP_USER_AGENT, AttributeValue.stringAttributeValue(USER_AGENT_SUFFIX));
+          addSpanAttribute(span, HttpTraceAttributeConstants.HTTP_USER_AGENT, USER_AGENT_SUFFIX);
         } else {
           String newUserAgent = originalUserAgent + " " + USER_AGENT_SUFFIX;
           headers.setUserAgent(newUserAgent);
-          span.putAttribute(HttpTraceAttributeConstants.HTTP_USER_AGENT, AttributeValue.stringAttributeValue(newUserAgent));
+          addSpanAttribute(span, HttpTraceAttributeConstants.HTTP_USER_AGENT, newUserAgent);
         }
       }
       OpenCensusUtils.propagateTracingContext(span, headers);
@@ -1236,5 +1236,11 @@ public final class HttpRequest {
   public HttpRequest setSleeper(Sleeper sleeper) {
     this.sleeper = Preconditions.checkNotNull(sleeper);
     return this;
+  }
+
+  private static void addSpanAttribute(Span span, String key, String value) {
+    if (value != null) {
+      span.putAttribute(key, AttributeValue.stringAttributeValue(value));
+    }
   }
 }
