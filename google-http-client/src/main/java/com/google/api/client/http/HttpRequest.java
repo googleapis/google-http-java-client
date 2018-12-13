@@ -25,6 +25,8 @@ import com.google.api.client.util.StreamingContent;
 import com.google.api.client.util.StringUtils;
 
 import io.opencensus.common.Scope;
+import io.opencensus.contrib.http.util.HttpTraceAttributeConstants;
+import io.opencensus.trace.AttributeValue;
 import io.opencensus.trace.Span;
 import io.opencensus.trace.Tracer;
 
@@ -911,6 +913,11 @@ public final class HttpRequest {
       }
       // build low-level HTTP request
       String urlString = url.build();
+      span.putAttribute(HttpTraceAttributeConstants.HTTP_METHOD, AttributeValue.stringAttributeValue(requestMethod));
+      span.putAttribute(HttpTraceAttributeConstants.HTTP_HOST, AttributeValue.stringAttributeValue(url.getHost()));
+      span.putAttribute(HttpTraceAttributeConstants.HTTP_PATH, AttributeValue.stringAttributeValue(url.getRawPath()));
+      span.putAttribute(HttpTraceAttributeConstants.HTTP_URL, AttributeValue.stringAttributeValue(urlString));
+
       LowLevelHttpRequest lowLevelHttpRequest = transport.buildRequest(requestMethod, urlString);
       Logger logger = HttpTransport.LOGGER;
       boolean loggable = loggingEnabled && logger.isLoggable(Level.CONFIG);
@@ -936,8 +943,11 @@ public final class HttpRequest {
       if (!suppressUserAgentSuffix) {
         if (originalUserAgent == null) {
           headers.setUserAgent(USER_AGENT_SUFFIX);
+          span.putAttribute(HttpTraceAttributeConstants.HTTP_USER_AGENT, AttributeValue.stringAttributeValue(USER_AGENT_SUFFIX));
         } else {
-          headers.setUserAgent(originalUserAgent + " " + USER_AGENT_SUFFIX);
+          String newUserAgent = originalUserAgent + " " + USER_AGENT_SUFFIX;
+          headers.setUserAgent(newUserAgent);
+          span.putAttribute(HttpTraceAttributeConstants.HTTP_USER_AGENT, AttributeValue.stringAttributeValue(newUserAgent));
         }
       }
       OpenCensusUtils.propagateTracingContext(span, headers);

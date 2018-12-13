@@ -217,7 +217,7 @@ public class OpenCensusUtils {
   }
 
   /**
-   * Records a message event of a certain {@link NetowrkEvent.Type}. This method is package
+   * Records a message event of a certain {@link NetworkEvent.Type}. This method is package
    * protected since {@link NetworkEvent} might be deprecated in future releases.
    *
    * @param span The {@code span} in which the event occurs.
