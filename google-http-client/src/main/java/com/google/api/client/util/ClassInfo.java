@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
@@ -121,7 +122,7 @@ public final class ClassInfo {
   public FieldInfo getFieldInfo(String name) {
     if (name != null) {
       if (ignoreCase) {
-        name = name.toLowerCase();
+        name = name.toLowerCase(Locale.US);
       }
       name = name.intern();
     }
@@ -164,7 +165,7 @@ public final class ClassInfo {
     // name set has a special comparator to keep null first
     TreeSet<String> nameSet = new TreeSet<String>(new Comparator<String>() {
       public int compare(String s0, String s1) {
-        return s0 == s1 ? 0 : s0 == null ? -1 : s1 == null ? 1 : s0.compareTo(s1);
+        return Objects.equal(s0, s1) ? 0 : s0 == null ? -1 : s1 == null ? 1 : s0.compareTo(s1);
       }
     });
     // iterate over declared fields
@@ -175,7 +176,7 @@ public final class ClassInfo {
       }
       String fieldName = fieldInfo.getName();
       if (ignoreCase) {
-        fieldName = fieldName.toLowerCase().intern();
+        fieldName = fieldName.toLowerCase(Locale.US).intern();
       }
       FieldInfo conflictingFieldInfo = nameToFieldInfoMap.get(fieldName);
       Preconditions.checkArgument(conflictingFieldInfo == null,

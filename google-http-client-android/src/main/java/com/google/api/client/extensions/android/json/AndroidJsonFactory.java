@@ -76,7 +76,7 @@ public class AndroidJsonFactory extends JsonFactory {
   @Override
   public JsonParser createJsonParser(InputStream in) {
     // TODO(mlinder): Charset should be detected automatically by the parser. Related to:
-    // http://code.google.com/p/google-http-java-client/issues/detail?id=6
+    // http://github.com/googleapis/google-http-java-client/issues/6
     return createJsonParser(new InputStreamReader(in, Charsets.UTF_8));
   }
 

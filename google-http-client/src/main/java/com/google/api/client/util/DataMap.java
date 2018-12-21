@@ -17,6 +17,7 @@ package com.google.api.client.util;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -42,7 +43,6 @@ final class DataMap extends AbstractMap<String, Object> {
   DataMap(Object object, boolean ignoreCase) {
     this.object = object;
     classInfo = ClassInfo.of(object.getClass(), ignoreCase);
-    Preconditions.checkArgument(!classInfo.isEnum());
   }
 
   @Override
@@ -204,7 +204,7 @@ final class DataMap extends AbstractMap<String, Object> {
     public String getKey() {
       String result = fieldInfo.getName();
       if (classInfo.getIgnoreCase()) {
-        result = result.toLowerCase();
+        result = result.toLowerCase(Locale.US);
       }
       return result;
     }

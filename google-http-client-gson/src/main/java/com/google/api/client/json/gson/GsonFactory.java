@@ -64,7 +64,7 @@ public class GsonFactory extends JsonFactory {
   @Override
   public JsonParser createJsonParser(InputStream in) {
     // TODO(mlinder): Parser should try to detect the charset automatically when using GSON
-    // http://code.google.com/p/google-http-java-client/issues/detail?id=6
+    // https://github.com/googleapis/google-http-java-client/issues/6
     return createJsonParser(new InputStreamReader(in, Charsets.UTF_8));
   }
 

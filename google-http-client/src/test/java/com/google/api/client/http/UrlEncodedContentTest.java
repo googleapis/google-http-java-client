@@ -39,7 +39,7 @@ public class UrlEncodedContentTest extends TestCase {
         "multi=a&multi=b&multi=c", ArrayMap.of("multi", Arrays.asList("a", "b", "c")));
     subtestWriteTo(
         "multi=a&multi=b&multi=c", ArrayMap.of("multi", new String[] {"a", "b", "c"}));
-    // https://code.google.com/p/google-http-java-client/issues/detail?id=202
+    // https://github.com/googleapis/google-http-java-client/issues/202
     final Map<String, String> params = new LinkedHashMap<String, String>();
     params.put("username", "un");
     params.put("password", "password123;{}");

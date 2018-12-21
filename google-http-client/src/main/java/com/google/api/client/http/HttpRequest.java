@@ -18,21 +18,13 @@ import com.google.api.client.util.Beta;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingStreamingContent;
 import com.google.api.client.util.ObjectParser;
-import com.google.api.client.util.OpenCensusUtils;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Sleeper;
 import com.google.api.client.util.StreamingContent;
 import com.google.api.client.util.StringUtils;
 
-import io.opencensus.common.Scope;
-import io.opencensus.trace.Annotation;
-import io.opencensus.trace.AttributeValue;
-import io.opencensus.trace.Span;
-import io.opencensus.trace.Tracer;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -58,7 +50,7 @@ public final class HttpRequest {
    *
    * @since 1.8
    */
-  public static final String VERSION = "1.24.0-SNAPSHOT";
+  public static final String VERSION = "1.27.0";
 
   /**
    * User agent suffix for all requests.
@@ -166,6 +158,11 @@ public final class HttpRequest {
    */
   private int readTimeout = 20 * 1000;
 
+  /**
+   * Timeout in milliseconds to set POST/PUT data or {@code 0} for an infinite timeout.
+   */
+  private int writeTimeout = 0;
+
   /** HTTP unsuccessful (non-2XX) response handler or {@code null} for none. */
   private HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler;
 
@@ -217,9 +214,6 @@ public final class HttpRequest {
 
   /** Sleeper. */
   private Sleeper sleeper = Sleeper.DEFAULT;
-
-  /** OpenCensus tracing component. */
-  private Tracer tracer = OpenCensusUtils.getTracer();
 
   /**
    * @param transport HTTP transport
@@ -501,6 +495,30 @@ public final class HttpRequest {
   public HttpRequest setReadTimeout(int readTimeout) {
     Preconditions.checkArgument(readTimeout >= 0);
     this.readTimeout = readTimeout;
+    return this;
+  }
+
+  /**
+   * Returns the timeout in milliseconds to send POST/PUT data or {@code 0} for an infinite timeout.
+   *
+   * <p>
+   * By default it is 0 (infinite).
+   * </p>
+   *
+   * @since 1.27
+   */
+  public int getWriteTimeout() {
+    return writeTimeout;
+  }
+
+  /**
+   * Sets the timeout in milliseconds to send POST/PUT data or {@code 0} for an infinite timeout.
+   *
+   * @since 1.27
+   */
+  public HttpRequest setWriteTimeout(int writeTimeout) {
+    Preconditions.checkArgument(writeTimeout >= 0);
+    this.writeTimeout = writeTimeout;
     return this;
   }
 
@@ -865,20 +883,7 @@ public final class HttpRequest {
     Preconditions.checkNotNull(requestMethod);
     Preconditions.checkNotNull(url);
 
-    Span span = tracer
-        .spanBuilder(OpenCensusUtils.SPAN_NAME_HTTP_REQUEST_EXECUTE)
-        .setRecordEvents(OpenCensusUtils.isRecordEvent())
-        .startSpan();
-    long sentIdGenerator = 0L;
-    long recvIdGenerator = 0L;
-
     do {
-      span.addAnnotation(
-          Annotation.fromDescriptionAndAttributes(
-              "retry",
-              Collections.<String, AttributeValue>singletonMap(
-                  "number",
-                  AttributeValue.longAttributeValue(numRetries - retriesRemaining))));
       // Cleanup any unneeded response from a previous iteration
       if (response != null) {
         response.ignore();
@@ -922,8 +927,6 @@ public final class HttpRequest {
           headers.setUserAgent(originalUserAgent + " " + USER_AGENT_SUFFIX);
         }
       }
-      OpenCensusUtils.propagateTracingContext(span.getContext(), headers);
-
       // headers
       HttpHeaders.serializeHeaders(headers, logbuf, curlbuf, logger, lowLevelHttpRequest);
       if (!suppressUserAgentSuffix) {
@@ -1003,16 +1006,9 @@ public final class HttpRequest {
 
       // execute
       lowLevelHttpRequest.setTimeout(connectTimeout, readTimeout);
-      // switch tracing scope to current span
-      Scope ws = tracer.withSpan(span);
-      OpenCensusUtils.recordSentMessageEvent(
-          span, sentIdGenerator++, lowLevelHttpRequest.getContentLength());
+      lowLevelHttpRequest.setWriteTimeout(writeTimeout);
       try {
         LowLevelHttpResponse lowLevelHttpResponse = lowLevelHttpRequest.execute();
-        if (lowLevelHttpResponse != null) {
-          OpenCensusUtils.recordReceivedMessageEvent(
-              span, recvIdGenerator++, lowLevelHttpResponse.getContentLength());
-        }
         // Flag used to indicate if an exception is thrown before the response is constructed.
         boolean responseConstructed = false;
         try {
@@ -1036,8 +1032,6 @@ public final class HttpRequest {
         if (loggable) {
           logger.log(Level.WARNING, "exception thrown while executing request", e);
         }
-      } finally {
-        ws.close();
       }
 
       // Flag used to indicate if an exception is thrown before the response has completed
@@ -1093,7 +1087,6 @@ public final class HttpRequest {
         }
       }
     } while (retryRequest);
-    span.end(OpenCensusUtils.getEndSpanOptions(response == null ? null : response.getStatusCode()));
 
     if (response == null) {
       // Retries did not help resolve the execute exception, re-throw it.

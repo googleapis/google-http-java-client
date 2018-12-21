@@ -15,7 +15,9 @@
 package com.google.api.client.util;
 
 import com.google.api.client.util.GenericData.Flags;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -32,6 +34,18 @@ public class GenericDataTest extends TestCase {
 
     @Key("FieldA")
     public String fieldA;
+
+    @Key("FieldB")
+    public List<String> fieldB;
+
+    public void setFieldB(String fieldB) {
+      this.fieldB = Lists.newArrayList();
+      this.fieldB.add(fieldB);
+    }
+
+    public void setFieldB(List<String> fieldB) {
+      this.fieldB = fieldB;
+    }
   }
 
 
@@ -118,5 +132,15 @@ public class GenericDataTest extends TestCase {
     data.set("testA", 1).set("testa", 2);
     assertEquals(2, data.remove("TESTA"));
     assertEquals(null, data.remove("TESTA"));
+  }
+
+  public void testPutShouldUseSetter() {
+    MyData data = new MyData();
+    data.put("fieldB", "value1");
+    assertEquals("value1", data.fieldB.get(0));
+    List<String> list = new ArrayList();
+    list.add("value2");
+    data.put("fieldB", list);
+    assertEquals(list, data.fieldB);
   }
 }

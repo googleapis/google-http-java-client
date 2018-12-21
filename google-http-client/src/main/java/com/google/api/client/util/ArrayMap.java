@@ -381,6 +381,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
         throw new NoSuchElementException();
       }
       this.nextIndex++;
+      this.removed = false;
       return new Entry(index);
     }
 
@@ -390,6 +391,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
         throw new IllegalArgumentException();
       }
       ArrayMap.this.remove(index);
+      this.nextIndex--;
       this.removed = true;
     }
   }

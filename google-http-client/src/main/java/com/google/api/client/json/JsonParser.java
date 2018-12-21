@@ -24,6 +24,7 @@ import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Sets;
 import com.google.api.client.util.Types;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -44,8 +45,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Abstract low-level JSON parser. See
- * <a href="https://code.google.com/p/google-http-java-client/wiki/JSON">
- * https://code.google.com/p/google-http-java-client/wiki/JSON</a>
+ * <a href="https://developers.google.com/api-client-library/java/google-http-java-client/json">
+ * https://developers.google.com/api-client-library/java/google-http-java-client/json</a>
  *
  * <p>
  * Implementation has no fields and therefore thread-safe, but sub-classes are not necessarily
@@ -60,7 +61,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @since 1.3
  * @author Yaniv Inbar
  */
-public abstract class JsonParser {
+public abstract class JsonParser implements Closeable {
 
   /**
    * Maps a polymorphic {@link Class} to its {@link Field} with the {@link JsonPolymorphicTypeMap}

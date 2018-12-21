@@ -78,26 +78,26 @@ class AndroidJsonParser extends JsonParser {
   @Override
   public byte getByteValue() {
     checkNumber();
-    return Byte.valueOf(currentText);
+    return Byte.parseByte(currentText);
   }
 
   @Override
   public short getShortValue() {
     checkNumber();
-    return Short.valueOf(currentText);
+    return Short.parseShort(currentText);
   }
 
 
   @Override
   public int getIntValue() {
     checkNumber();
-    return Integer.valueOf(currentText);
+    return Integer.parseInt(currentText);
   }
 
   @Override
   public float getFloatValue() {
     checkNumber();
-    return Float.valueOf(currentText);
+    return Float.parseFloat(currentText);
   }
 
   @Override
@@ -115,13 +115,13 @@ class AndroidJsonParser extends JsonParser {
   @Override
   public double getDoubleValue() {
     checkNumber();
-    return Double.valueOf(currentText);
+    return Double.parseDouble(currentText);
   }
 
   @Override
   public long getLongValue() {
     checkNumber();
-    return Long.valueOf(currentText);
+    return Long.parseLong(currentText);
   }
 
   private void checkNumber() {
@@ -151,7 +151,7 @@ class AndroidJsonParser extends JsonParser {
       }
     }
     // work around bug in GSON parser that it throws an EOFException for an empty document
-    // see http://code.google.com/p/google-gson/issues/detail?id=330
+    // see http://github.com/google/gson/issues/330
     android.util.JsonToken peek;
     try {
       peek = reader.peek();

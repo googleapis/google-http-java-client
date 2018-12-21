@@ -4,11 +4,12 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.24.0-SNAPSHOT</version>
+    <version>1.27.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>com.google.http-client</groupId>
   <artifactId>google-http-client-assembly</artifactId>
+  <version>1.27.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-assembly:current} -->
   <packaging>pom</packaging>
   <name>Assembly for the Google HTTP Client Library for Java</name>
 
@@ -52,6 +53,19 @@
   </dependencies>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <configuration>
+            <descriptors>
+              <descriptor>assembly.xml</descriptor>
+            </descriptors>
+            <finalName>google-http-java-client</finalName>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -92,12 +106,6 @@
             <goals>
               <goal>single</goal>
             </goals>
-            <configuration>
-              <descriptors>
-                <descriptor>assembly.xml</descriptor>
-              </descriptors>
-              <finalName>google-http-java-client</finalName>
-            </configuration>
           </execution>
         </executions>
       </plugin>

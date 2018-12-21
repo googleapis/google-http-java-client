@@ -94,6 +94,7 @@ public class Xml {
 
   /**
    * Shows a debug string representation of an element data object of key/value pairs.
+   *
    * <p>
    * It will make up something for the element name and XML namespaces. If those are known, it is
    * better to use {@link XmlNamespaceDictionary#toStringOf(String, Object)}.
@@ -237,6 +238,8 @@ public class Xml {
     @SuppressWarnings("unchecked")
     Map<String, Object> destinationMap =
         genericXml == null && destination instanceof Map<?, ?> ? Map.class.cast(destination) : null;
+
+    // if there is a class, we want to put the data into, create the class Info for this
     ClassInfo classInfo =
         destinationMap != null || destination == null ? null : ClassInfo.of(destination.getClass());
     if (parser.getEventType() == XmlPullParser.START_DOCUMENT) {
@@ -313,7 +316,11 @@ public class Xml {
             parseNamespacesForElement(parser, namespaceDictionary);
             String namespace = parser.getNamespace();
             String alias = namespaceDictionary.getNamespaceAliasForUriErrorOnUnknown(namespace);
+
+            //  get the "real" field name of the
             String fieldName = getFieldName(false, alias, namespace, parser.getName());
+
+            // fetch the field from the classInfo
             field = classInfo == null ? null : classInfo.getField(fieldName);
             Type fieldType = field == null ? valueType : field.getGenericType();
             fieldType = Data.resolveWildcardTypeOrTypeVariable(context, fieldType);
@@ -326,7 +333,9 @@ public class Xml {
             boolean isArray = Types.isArray(fieldType);
             // text content
             boolean ignore = field == null && destinationMap == null && genericXml == null;
-            if (ignore || Data.isPrimitive(fieldType)) {
+            // is the field an Enum
+            boolean isEnum = fieldClass != null && fieldClass.isEnum();
+            if (ignore || Data.isPrimitive(fieldType) || isEnum) {
               int level = 1;
               while (level != 0) {
                 switch (parser.next()) {
@@ -425,7 +434,8 @@ public class Xml {
               if (subFieldType instanceof ParameterizedType) {
                 subFieldClass = Types.getRawClass((ParameterizedType) subFieldType);
               }
-              if (Data.isPrimitive(subFieldType)) {
+              boolean isSubEnum = subFieldClass != null && subFieldClass.isEnum();
+              if (Data.isPrimitive(subFieldType) || isSubEnum) {
                 elementValue = parseTextContentForElement(parser, context, false, subFieldType);
               } else if (subFieldType == null || subFieldClass != null
                   && Types.isAssignableToOrFrom(subFieldClass, Map.class)) {
@@ -501,9 +511,9 @@ public class Xml {
             isStopped = true;
             break main;
           }
-          break;
-      }
-    }
+          break; // break Switch;
+      } // end -- switch (event)
+    } // end -- main: while (true)
     arrayValueMap.setValues();
     return isStopped;
   }

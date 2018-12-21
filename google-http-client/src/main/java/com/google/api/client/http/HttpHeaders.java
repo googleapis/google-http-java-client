@@ -36,6 +36,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1035,7 +1036,7 @@ public class HttpHeaders extends GenericData {
    * @since 1.13
    */
   public String getFirstHeaderStringValue(String name) {
-    Object value = get(name.toLowerCase());
+    Object value = get(name.toLowerCase(Locale.US));
     if (value == null) {
       return null;
     }
@@ -1056,7 +1057,7 @@ public class HttpHeaders extends GenericData {
    * @since 1.13
    */
   public List<String> getHeaderStringValues(String name) {
-    Object value = get(name.toLowerCase());
+    Object value = get(name.toLowerCase(Locale.US));
     if (value == null) {
       return Collections.emptyList();
     }

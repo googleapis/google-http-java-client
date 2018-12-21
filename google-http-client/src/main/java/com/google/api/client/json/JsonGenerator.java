@@ -22,6 +22,8 @@ import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
 
+import java.io.Closeable;
+import java.io.Flushable;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -39,7 +41,7 @@ import java.util.Map;
  * @since 1.3
  * @author Yaniv Inbar
  */
-public abstract class JsonGenerator {
+public abstract class JsonGenerator implements Closeable, Flushable {
 
   /** Returns the JSON factory from which this generator was created. */
   public abstract JsonFactory getFactory();

@@ -104,7 +104,7 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
     }
 
     @Override
-    void save() throws IOException {
+    public void save() throws IOException {
       IOUtils.serialize(keyValueMap, new FileOutputStream(dataFile));
     }
 

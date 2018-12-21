@@ -1,6 +1,6 @@
 <FindbugsPlugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="findbugsplugin.xsd" pluginid="com.google.api.client.findbugs"
-  provider="Google APIs Client Library" website="https://code.google.com/p/google-http-java-client/">
+  provider="Google APIs Client Library" website="https://github.com/googleapis/google-http-java-client">
 
   <Detector class="com.google.api.client.findbugs.BetaDetector"
     speed="fast"

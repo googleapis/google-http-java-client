@@ -18,6 +18,7 @@ import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.EnumSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
@@ -90,7 +91,7 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
       return fieldInfo.getValue(this);
     }
     if (classInfo.getIgnoreCase()) {
-      fieldName = fieldName.toLowerCase();
+      fieldName = fieldName.toLowerCase(Locale.US);
     }
     return unknownFields.get(fieldName);
   }
@@ -104,7 +105,7 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
       return oldValue;
     }
     if (classInfo.getIgnoreCase()) {
-      fieldName = fieldName.toLowerCase();
+      fieldName = fieldName.toLowerCase(Locale.US);
     }
     return unknownFields.put(fieldName, value);
   }
@@ -125,7 +126,7 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
       fieldInfo.setValue(this, value);
     } else {
       if (classInfo.getIgnoreCase()) {
-        fieldName = fieldName.toLowerCase();
+        fieldName = fieldName.toLowerCase(Locale.US);
       }
       unknownFields.put(fieldName, value);
     }
@@ -150,7 +151,7 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
       throw new UnsupportedOperationException();
     }
     if (classInfo.getIgnoreCase()) {
-      fieldName = fieldName.toLowerCase();
+      fieldName = fieldName.toLowerCase(Locale.US);
     }
     return unknownFields.remove(fieldName);
   }

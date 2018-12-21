@@ -4,18 +4,20 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.24.0-SNAPSHOT</version>
+    <version>1.27.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client-jdo</artifactId>
+  <version>1.27.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-jdo:current} -->
   <name>JDO extensions to the Google HTTP Client Library for Java.</name>
+
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links>
-            <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
+            <link>http://download.oracle.com/javase/7/docs/api/</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
@@ -30,15 +32,6 @@
             </manifest>
           </archive>
         </configuration>
-        <executions>
-          <execution>
-            <id>jar</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
@@ -54,10 +47,32 @@
       </plugin>
       <plugin>
         <groupId>org.datanucleus</groupId>
-        <artifactId>maven-datanucleus-plugin</artifactId>
+        <artifactId>datanucleus-maven-plugin</artifactId>
+        <version>${project.datanucleus-maven-plugin.version}</version>
         <configuration>
+          <api>JDO</api>
           <verbose>true</verbose>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-core</artifactId>
+            <version>${project.datanucleus-core.version}</version>
+            <scope>runtime</scope>
+          </dependency>
+          <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-api-jdo</artifactId>
+            <version>${project.datanucleus-api-jdo.version}</version>
+            <scope>runtime</scope>
+          </dependency>
+          <dependency>
+            <groupId>javax.jdo</groupId>
+            <artifactId>jdo2-api</artifactId>
+            <version>${project.jdo2-api.version}</version>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
         <executions>
           <execution>
             <phase>process-classes</phase>

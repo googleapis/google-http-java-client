@@ -4,14 +4,15 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.24.0-SNAPSHOT</version>
+    <version>1.27.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client</artifactId>
+  <version>1.27.1-SNAPSHOT</version><!-- {x-version-update:google-http-client:current} -->
   <name>Google HTTP Client Library for Java</name>
   <description>
     Google HTTP Client Library for Java. Functionality that works on all supported Java platforms,
-    including Java 5 (or higher) desktop (SE) and web (EE), Android, and Google App Engine.
+    including Java 6 (or higher) desktop (SE) and web (EE), Android, and Google App Engine.
   </description>
 
   <build>
@@ -20,9 +21,9 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links>
-            <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
-            <link>http://docs.guava-libraries.googlecode.com/git-history/v13.0.1/javadoc</link>
-            <link>http://commons.apache.org/proper/commons-codec/javadocs/api-release</link>
+            <link>http://download.oracle.com/javase/7/docs/api/</link>
+            <link>https://google.github.io/guava/releases/${project.guava.version}/api/docs/</link>
+            <link>https://commons.apache.org/proper/commons-codec/archives/${project.commons-codec.version}/apidocs/</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
@@ -55,7 +56,7 @@
             <configuration>
               <includes>
                 <include>commons-codec:commons-codec</include>
-                <include>com.google.guava:guava-jdk5</include>
+                <include>com.google.guava:guava</include>
               </includes>
               <rules>
                 <rule>
@@ -105,6 +106,9 @@
         <configuration>
           <archive>  
             <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+            <manifestEntries>
+              <Automatic-Module-Name>com.google.api.client</Automatic-Module-Name>
+            </manifestEntries>
           </archive> 
         </configuration>
       </plugin> 
@@ -138,7 +142,6 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -170,14 +173,9 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>io.opencensus</groupId>
-      <artifactId>opencensus-api</artifactId>
-      <version>0.11.1</version>
-    </dependency>
-    <dependency>
-      <groupId>io.opencensus</groupId>
-      <artifactId>opencensus-contrib-http-util</artifactId>
-      <version>0.11.1</version>
+      <groupId>com.google.j2objc</groupId>
+      <artifactId>j2objc-annotations</artifactId>
+      <version>1.1</version>
     </dependency>
   </dependencies>
 </project>

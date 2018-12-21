@@ -4,19 +4,21 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.24.0-SNAPSHOT</version>
+    <version>1.27.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client-appengine</artifactId>
+  <version>1.27.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-appengine:current} -->
   <name>Google App Engine extensions to the Google HTTP Client Library for Java.</name>
+
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links>
-            <link>http://download.oracle.com/javase/6/docs/api/</link>
-            <link>http://code.google.com/appengine/docs/java/javadoc</link>
+            <link>http://download.oracle.com/javase/7/docs/api/</link>
+            <link>https://cloud.google.com/appengine/docs/standard/java/javadoc/</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
@@ -41,7 +43,7 @@
         <configuration>
           <signature>
             <groupId>org.codehaus.mojo.signature</groupId>
-            <artifactId>java16</artifactId>
+            <artifactId>java17</artifactId>
             <version>1.0</version>
           </signature>
         </configuration>

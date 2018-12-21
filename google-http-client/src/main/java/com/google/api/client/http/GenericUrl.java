@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -155,7 +156,7 @@ public class GenericUrl extends GenericData {
       String fragment,
       String query,
       String userInfo) {
-    this.scheme = scheme.toLowerCase();
+    this.scheme = scheme.toLowerCase(Locale.US);
     this.host = host;
     this.port = port;
     this.pathParts = toPathParts(path);
@@ -182,7 +183,7 @@ public class GenericUrl extends GenericData {
     }
     GenericUrl other = (GenericUrl) obj;
     // TODO(yanivi): optimize?
-    return build().equals(other.toString());
+    return build().equals(other.build());
   }
 
   @Override

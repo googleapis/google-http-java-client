@@ -29,7 +29,9 @@ import java.math.BigInteger;
  * </p>
  *
  * @author Yaniv Inbar
+ * @deprecated As of release 1.28, please use Jackson2 and google-http-client-jackson2.
  */
+@Deprecated
 final class JacksonParser extends JsonParser {
 
   private final org.codehaus.jackson.JsonParser parser;

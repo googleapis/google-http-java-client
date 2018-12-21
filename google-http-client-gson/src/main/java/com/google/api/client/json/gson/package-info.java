@@ -14,7 +14,7 @@
 
 /**
  * Low-level implementation of the GSON parser library based on the <a
- * href="http://code.google.com/p/google-gson/">GSON</a> JSON library.
+ * href="https://github.com/google/gson">GSON</a> JSON library.
  *
  * @since 1.3
  * @author Yaniv Inbar

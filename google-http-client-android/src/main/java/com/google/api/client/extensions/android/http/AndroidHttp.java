@@ -28,8 +28,11 @@ import java.net.HttpURLConnection;
  *
  * @since 1.11
  * @author Yaniv Inbar
+ * @deprecated Gingerbread is no longer supported by Google Play Services. Please use
+ *   {@link NetHttpTransport} directly or switch to Cronet which is better supported.
  */
 @Beta
+@Deprecated
 public class AndroidHttp {
 
   /**
