@@ -29,7 +29,7 @@ public abstract class AbstractJsonGeneratorTest extends TestCase {
 
   class IterableMap extends HashMap<String, String> implements Iterable<Map.Entry<String, String>> {
     @Override
-    public Iterator<Entry<String, String>> iterator() {
+    public Iterator<Map.Entry<String, String>> iterator() {
       return entrySet().iterator();
     }
   }
