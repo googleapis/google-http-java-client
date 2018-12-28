@@ -40,11 +40,10 @@ public abstract class AbstractJsonGeneratorTest extends TestCase {
 
     Map m = new HashMap<String, String>();
     m.put("a", "b");
-    m.put("c", "d");
 
     generator.serialize(m);
     generator.close();
-    assertEquals("{\"a\":\"b\",\"c\":\"d\"}", writer.toString());
+    assertEquals("{\"a\":\"b\"}", writer.toString());
   }
 
   public void testSerialize_iterableMap() throws Exception {
@@ -53,10 +52,9 @@ public abstract class AbstractJsonGeneratorTest extends TestCase {
 
     Map m = new IterableMap();
     m.put("a", "b");
-    m.put("c", "d");
 
     generator.serialize(m);
     generator.close();
-    assertEquals("{\"a\":\"b\",\"c\":\"d\"}", writer.toString());
+    assertEquals("{\"a\":\"b\"}", writer.toString());
   }
 }
