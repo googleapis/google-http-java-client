@@ -47,6 +47,7 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>jarjar-maven-plugin</artifactId>
+        <version>1.9</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -77,6 +78,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
         <executions>
           <!-- Remove extraneous files from the jarjar'ed Apache Commons Codec
                Library. -->
