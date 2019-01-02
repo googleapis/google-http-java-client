@@ -21,7 +21,7 @@ import io.opencensus.trace.EndSpanOptions;
 import io.opencensus.trace.Annotation;
 import io.opencensus.trace.AttributeValue;
 import io.opencensus.trace.Link;
-import io.opencensus.trace.NetworkEvent;
+import io.opencensus.trace.MessageEvent;
 import io.opencensus.trace.Span;
 import io.opencensus.trace.SpanContext;
 import io.opencensus.trace.Status;
@@ -30,8 +30,6 @@ import io.opencensus.trace.propagation.TextFormat;
 import java.util.List;
 import java.util.Map;
 import junit.framework.TestCase;
-import org.junit.Assert;
-import org.junit.Rule;
 
 /**
  * Tests {@link OpenCensusUtils}.
@@ -87,8 +85,8 @@ public class OpenCensusUtilsTest extends TestCase {
       public void addAnnotation(Annotation annotation) {}
 
       @Override
-      public void addNetworkEvent(NetworkEvent event) {
-        throw new UnsupportedOperationException("Span.addNetworkEvent");
+      public void addMessageEvent(MessageEvent event) {
+        throw new UnsupportedOperationException("Span.addMessageEvent");
       }
 
       @Override
@@ -221,7 +219,7 @@ public class OpenCensusUtilsTest extends TestCase {
 
   public void testRecordMessageEventInNullSpan() {
     try {
-      OpenCensusUtils.recordMessageEvent(null, 0, NetworkEvent.Type.SENT);
+      OpenCensusUtils.recordMessageEvent(null, 0, MessageEvent.Type.SENT);
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       assertEquals(e.getMessage(), "span should not be null.");
@@ -230,10 +228,10 @@ public class OpenCensusUtilsTest extends TestCase {
 
   public void testRecordMessageEvent() {
     try {
-      OpenCensusUtils.recordMessageEvent(mockSpan, 0, NetworkEvent.Type.SENT);
+      OpenCensusUtils.recordMessageEvent(mockSpan, 0, MessageEvent.Type.SENT);
       fail("expected " + UnsupportedOperationException.class);
     } catch (UnsupportedOperationException e) {
-      assertEquals(e.getMessage(), "Span.addNetworkEvent");
+      assertEquals(e.getMessage(), "Span.addMessageEvent");
     }
   }
 }
