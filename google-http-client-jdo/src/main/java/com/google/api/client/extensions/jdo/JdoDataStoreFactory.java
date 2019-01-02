@@ -46,7 +46,9 @@ import javax.jdo.annotations.PrimaryKey;
  *
  * @since 1.16
  * @author Yaniv Inbar
+ * @deprecated Please use an alternative like Objectify.
  */
+@Deprecated
 public class JdoDataStoreFactory extends AbstractDataStoreFactory {
 
   /** Persistence manager factory. */
