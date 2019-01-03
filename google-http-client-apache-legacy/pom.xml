@@ -9,7 +9,7 @@
   </parent>
   <artifactId>google-http-client-apache</artifactId>
   <version>1.27.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-apache-legacy:current} -->
-  <name>Apache HTTP transport for the Google HTTP Client Library for Java.</name>
+  <name>Legacy Apache HTTP transport for the Google HTTP Client Library for Java.</name>
 
   <build>
     <plugins>
