@@ -56,8 +56,7 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
  * <p>
  * Default settings are specified in {@link #newDefaultHttpClient()}. Use the
  * {@link #ApacheHttpTransport(HttpClient)} constructor to override the Apache HTTP Client used.
- * Alternatively, use {@link #ApacheHttpTransport()} and change the {@link #getHttpClient()}. Please
- * read the <a
+ * Please read the <a
  * href="http://hc.apache.org/httpcomponents-client-ga/tutorial/html/connmgmt.html">Apache HTTP
  * Client connection management tutorial</a> for more complex configuration options.
  * </p>
@@ -72,10 +71,6 @@ public final class ApacheHttpTransport extends HttpTransport {
 
   /**
    * Constructor that uses {@link #newDefaultHttpClient()} for the Apache HTTP client.
-   *
-   * <p>
-   * Use {@link Builder} to modify HTTP client options.
-   * </p>
    *
    * @since 1.3
    */
@@ -95,11 +90,8 @@ public final class ApacheHttpTransport extends HttpTransport {
    * <ul>
    * <li>HTTP version is set to 1.1.</li>
    * <li>Redirects are disabled (google-http-client handles redirects).</li>
+   * <li>Retries are disabled (google-http-client handles retries).</li>
    * </ul>
-   *
-   * <p>
-   * Use {@link Builder} for a more user-friendly way to modify the HTTP client options.
-   * </p>
    *
    * @param httpClient Apache HTTP client to use
    *
@@ -114,7 +106,7 @@ public final class ApacheHttpTransport extends HttpTransport {
    * {@link #ApacheHttpTransport()} constructor.
    *
    * <p>
-   * Use this constructor if you want to customize the default Apache HTTP client. Settings:
+   * Settings:
    * </p>
    * <ul>
    * <li>The client connection manager is set to {@link PoolingHttpClientConnectionManager}.</li>
@@ -128,10 +120,32 @@ public final class ApacheHttpTransport extends HttpTransport {
    * </ul>
    *
    * @return new instance of the Apache HTTP client
-   * @since 1.6
+   * @since 2.0
    */
   public static HttpClient newDefaultHttpClient() {
-    return new Builder().buildClient();
+    // Set socket buffer sizes to 8192
+    SocketConfig socketConfig =
+        SocketConfig.custom()
+            .setRcvBufSize(8192)
+            .setSndBufSize(8192)
+            .build();
+
+    PoolingHttpClientConnectionManager connectionManager =
+        new PoolingHttpClientConnectionManager(-1, TimeUnit.MILLISECONDS);
+    // Disable the stale connection check (previously configured in the HttpConnectionParams
+    connectionManager.setValidateAfterInactivity(-1);
+
+    return HttpClientBuilder.create()
+        .useSystemProperties()
+        .setSSLSocketFactory(SSLConnectionSocketFactory.getSocketFactory())
+        .setDefaultSocketConfig(socketConfig)
+        .setMaxConnTotal(200)
+        .setMaxConnPerRoute(20)
+        .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
+        .setConnectionManager(connectionManager)
+        .disableRedirectHandling()
+        .disableAutomaticRetries()
+        .build();
   }
 
   @Override
@@ -188,138 +202,5 @@ public final class ApacheHttpTransport extends HttpTransport {
    */
   public HttpClient getHttpClient() {
     return httpClient;
-  }
-
-  /**
-   * Builder for {@link ApacheHttpTransport}.
-   *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
-   *
-   * @since 1.13
-   */
-  public static final class Builder {
-
-    /** SSL socket factory. */
-    private SSLConnectionSocketFactory socketFactory =
-        SSLConnectionSocketFactory.getSocketFactory();
-
-    /** HTTP proxy selector to use {@link SystemDefaultRoutePlanner}. */
-    private ProxySelector proxySelector = ProxySelector.getDefault();
-
-    /**
-     * Sets the HTTP proxy selector to use {@link SystemDefaultRoutePlanner}.
-     *
-     * <p>
-     * By default it is {@link ProxySelector#getDefault()} which uses the proxy settings from <a
-     * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
-     * properties</a>.
-     * </p>
-     */
-    public Builder setProxySelector(ProxySelector proxySelector) {
-      this.proxySelector = proxySelector;
-      return this;
-    }
-
-    /**
-     * Sets the SSL socket factory based on root certificates in a Java KeyStore.
-     *
-     * <p>
-     * Example usage:
-     * </p>
-     *
-     * <pre>
-    trustCertificatesFromJavaKeyStore(new FileInputStream("certs.jks"), "password");
-     * </pre>
-     *
-     * @param keyStoreStream input stream to the key store (closed at the end of this method in a
-     *        finally block)
-     * @param storePass password protecting the key store file
-     * @since 1.14
-     */
-    public Builder trustCertificatesFromJavaKeyStore(InputStream keyStoreStream, String storePass)
-        throws GeneralSecurityException, IOException {
-      KeyStore trustStore = SecurityUtils.getJavaKeyStore();
-      SecurityUtils.loadKeyStore(trustStore, keyStoreStream, storePass);
-      return trustCertificates(trustStore);
-    }
-
-    /**
-     * Sets the SSL socket factory based root certificates generated from the specified stream using
-     * {@link CertificateFactory#generateCertificates(InputStream)}.
-     *
-     * <p>
-     * Example usage:
-     * </p>
-     *
-     * <pre>
-    trustCertificatesFromStream(new FileInputStream("certs.pem"));
-     * </pre>
-     *
-     * @param certificateStream certificate stream
-     * @since 1.14
-     */
-    public Builder trustCertificatesFromStream(InputStream certificateStream)
-        throws GeneralSecurityException, IOException {
-      KeyStore trustStore = SecurityUtils.getJavaKeyStore();
-      trustStore.load(null, null);
-      SecurityUtils.loadKeyStoreFromCertificates(
-          trustStore, SecurityUtils.getX509CertificateFactory(), certificateStream);
-      return trustCertificates(trustStore);
-    }
-
-    /**
-     * Sets the SSL socket factory based on a root certificate trust store.
-     *
-     * @param trustStore certificate trust store (use for example {@link SecurityUtils#loadKeyStore}
-     *        or {@link SecurityUtils#loadKeyStoreFromCertificates})
-     *
-     * @since 1.14
-     */
-    public Builder trustCertificates(KeyStore trustStore) throws GeneralSecurityException {
-      SSLContext sslContext = SslUtils.getTlsSslContext();
-      SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());
-      return setSocketFactory(new SSLConnectionSocketFactory(sslContext));
-    }
-
-    /**
-     * Sets the SSL socket factory ({@link SSLConnectionSocketFactory#getSocketFactory()} by
-     * default).
-     */
-    public Builder setSocketFactory(SSLConnectionSocketFactory socketFactory) {
-      this.socketFactory = Preconditions.checkNotNull(socketFactory);
-      return this;
-    }
-
-    HttpClient buildClient() {
-      SocketConfig socketConfig =
-          SocketConfig.custom()
-              .setRcvBufSize(8192)
-              .setSndBufSize(8192)
-              .build();
-
-      PoolingHttpClientConnectionManager connectionManager =
-          new PoolingHttpClientConnectionManager(-1, TimeUnit.MILLISECONDS);
-      // Disable the stale connection check (previously configured in the HttpConnectionParams
-      connectionManager.setValidateAfterInactivity(-1);
-
-      return HttpClientBuilder.create()
-          .useSystemProperties()
-          .setSSLSocketFactory(socketFactory)
-          .setDefaultSocketConfig(socketConfig)
-          .setMaxConnTotal(200)
-          .setMaxConnPerRoute(20)
-          .setRoutePlanner(new SystemDefaultRoutePlanner(proxySelector))
-          .setConnectionManager(connectionManager)
-          .disableRedirectHandling()
-          .disableAutomaticRetries()
-          .build();
-    }
-
-    /** Returns a new instance of {@link ApacheHttpTransport} based on the options. */
-    public ApacheHttpTransport build() {
-      return new ApacheHttpTransport(buildClient());
-    }
   }
 }
