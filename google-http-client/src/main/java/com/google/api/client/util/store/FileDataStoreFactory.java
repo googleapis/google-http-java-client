@@ -54,7 +54,8 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
   private static final Logger LOGGER = Logger.getLogger(FileDataStoreFactory.class.getName());
 
-  private static final boolean IS_WINDOWS = StandardSystemProperty.OS_NAME.value().startsWith("WINDOWS");
+  private static final boolean IS_WINDOWS = StandardSystemProperty.OS_NAME.value()
+      .startsWith("WINDOWS");
 
   /** Directory to store data. */
   private final File dataDirectory;
@@ -140,7 +141,7 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
    * @throws IOException
    */
   static void setPermissionsToOwnerOnly(File file) throws IOException {
-    Set<PosixFilePermission> permissions = new HashSet<>();
+    Set permissions = new HashSet<PosixFilePermission>();
     permissions.add(PosixFilePermission.OWNER_READ);
     permissions.add(PosixFilePermission.OWNER_WRITE);
     permissions.add(PosixFilePermission.OWNER_EXECUTE);
