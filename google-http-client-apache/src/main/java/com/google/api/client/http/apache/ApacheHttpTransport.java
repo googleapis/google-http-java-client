@@ -202,7 +202,8 @@ public final class ApacheHttpTransport extends HttpTransport {
   public static final class Builder {
 
     /** SSL socket factory. */
-    private SSLConnectionSocketFactory socketFactory = SSLConnectionSocketFactory.getSocketFactory();
+    private SSLConnectionSocketFactory socketFactory =
+        SSLConnectionSocketFactory.getSocketFactory();
 
     /** HTTP proxy selector to use {@link SystemDefaultRoutePlanner}. */
     private ProxySelector proxySelector = ProxySelector.getDefault();
@@ -282,7 +283,10 @@ public final class ApacheHttpTransport extends HttpTransport {
       return setSocketFactory(new SSLConnectionSocketFactory(sslContext));
     }
 
-    /** Sets the SSL socket factory ({@link SSLConnectionSocketFactory#getSocketFactory()} by default). */
+    /**
+     * Sets the SSL socket factory ({@link SSLConnectionSocketFactory#getSocketFactory()} by
+     * default).
+     */
     public Builder setSocketFactory(SSLConnectionSocketFactory socketFactory) {
       this.socketFactory = Preconditions.checkNotNull(socketFactory);
       return this;
