@@ -19,7 +19,6 @@ import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.Preconditions;
 import java.io.IOException;
 import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -32,14 +31,12 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
 
   private final HttpRequestBase request;
 
-  private RequestConfig requestConfig;
-
-  private HttpHost proxy;
+  private RequestConfig.Builder requestConfig;
 
   ApacheHttpRequest(HttpClient httpClient, HttpRequestBase request) {
     this.httpClient = httpClient;
     this.request = request;
-    this.requestConfig = RequestConfig.DEFAULT;
+    this.requestConfig = RequestConfig.custom();//.setRedirectsEnabled(false);
   }
 
   @Override
@@ -49,11 +46,8 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
 
   @Override
   public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
-    this.requestConfig = RequestConfig.copy(requestConfig)
-        .setConnectionRequestTimeout(connectTimeout)
-        .setSocketTimeout(readTimeout)
-        .setProxy(proxy)
-        .build();
+    requestConfig.setConnectionRequestTimeout(connectTimeout)
+        .setSocketTimeout(readTimeout);
   }
 
   @Override
@@ -67,7 +61,7 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
       entity.setContentType(getContentType());
       ((HttpEntityEnclosingRequest) request).setEntity(entity);
     }
-    request.setConfig(requestConfig);
+    request.setConfig(requestConfig.build());
     return new ApacheHttpResponse(request, httpClient.execute(request));
   }
 }
