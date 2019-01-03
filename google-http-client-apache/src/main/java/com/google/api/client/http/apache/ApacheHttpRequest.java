@@ -36,7 +36,7 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
   ApacheHttpRequest(HttpClient httpClient, HttpRequestBase request) {
     this.httpClient = httpClient;
     this.request = request;
-    this.requestConfig = RequestConfig.custom();//.setRedirectsEnabled(false);
+    this.requestConfig = RequestConfig.custom().setRedirectsEnabled(false);
   }
 
   @Override
