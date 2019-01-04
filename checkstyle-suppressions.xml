@@ -9,7 +9,7 @@
   <suppress checks="." files="Base64.java"/>
   
   <!-- Don't check JavaDoc on tests in com.google.api.test.json. -->
-  <suppress checks="JavadocType" files="com/google/api/client/test/json/.*Test.java"/>
+  <suppress checks="JavadocType" files=".*Test.java"/>
 
   <!-- Don't check JavaDoc on package-info. -->
   <suppress checks="JavadocStyleCheck" files="package-info.java"/>
