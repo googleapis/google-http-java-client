@@ -185,13 +185,9 @@ public final class ApacheHttpTransport extends HttpTransport {
    * @since 1.4
    */
   @Override
-  public void shutdown() {
+  public void shutdown() throws IOException {
     if (httpClient instanceof CloseableHttpClient) {
-      try {
-        ((CloseableHttpClient) httpClient).close();
-      } catch (IOException e) {
-        // ignore
-      }
+      ((CloseableHttpClient) httpClient).close();
     }
   }
 
