@@ -38,6 +38,12 @@
       <filtered>true</filtered>
     </file>
     <file>
+      <source>properties/google-http-client-apache.jar.properties</source>
+      <destName>google-http-client-apache-${project.http-client-apache.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
       <source>properties/google-http-client-gson.jar.properties</source>
       <destName>google-http-client-gson-${project.version}.jar.properties</destName>
       <outputDirectory>google-http-java-client/libs</outputDirectory>
