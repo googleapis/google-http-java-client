@@ -549,7 +549,7 @@
         <executions>
           <execution>
             <goals>
-              <goal>dependency-info</goal>
+              <goal>dependencies</goal>
             </goals>
             <phase>package</phase>
           </execution>
