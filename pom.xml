@@ -542,12 +542,26 @@
           </execution>
         </executions>
       </plugin>
+      <!-- Build the dependencies report at package time (needed for the assembly artifact). -->
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>dependency-info</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
+
   <properties>
     <!--
       NOTE: if you make a change to these versions, you MUST make the same change to:

@@ -53,19 +53,6 @@
   </dependencies>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <configuration>
-            <descriptors>
-              <descriptor>assembly.xml</descriptor>
-            </descriptors>
-            <finalName>google-http-java-client</finalName>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -108,6 +95,12 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <descriptors>
+            <descriptor>assembly.xml</descriptor>
+          </descriptors>
+          <finalName>google-http-java-client</finalName>
+        </configuration>
       </plugin>
     </plugins>
   </build>
