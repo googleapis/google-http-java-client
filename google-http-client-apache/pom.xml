@@ -8,7 +8,7 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client-apache</artifactId>
-  <version>1.27.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-apache:current} -->
+  <version>2.0.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-apache:current} -->
   <name>Apache HTTP transport for the Google HTTP Client Library for Java.</name>
 
   <build>
@@ -101,6 +101,10 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>

@@ -166,13 +166,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.j2objc</groupId>
