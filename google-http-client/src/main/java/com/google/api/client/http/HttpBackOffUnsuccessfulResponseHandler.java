@@ -136,7 +136,7 @@ public class HttpBackOffUnsuccessfulResponseHandler implements HttpUnsuccessfulR
    * {@link Sleeper#sleep(long)} will be made.
    * </p>
    */
-  public final boolean handleResponse(
+  public boolean handleResponse(
       HttpRequest request, HttpResponse response, boolean supportsRetry) throws IOException {
     if (!supportsRetry) {
       return false;
