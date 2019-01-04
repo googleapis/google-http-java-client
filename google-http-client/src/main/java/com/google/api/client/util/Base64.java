@@ -67,7 +67,7 @@ public class Base64 {
    * @return String containing Base64 characters or {@code null} for {@code null} input
    */
   public static String encodeBase64URLSafeString(byte[] binaryData) {
-    return BaseEncoding.base64().omitPadding().encode(binaryData);
+    return BaseEncoding.base64Url().omitPadding().encode(binaryData);
   }
 
   /**
