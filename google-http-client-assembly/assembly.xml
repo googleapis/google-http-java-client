@@ -25,6 +25,7 @@
       <filtered>true</filtered>
       <outputDirectory>google-http-java-client</outputDirectory>
     </file>
+    <!-- properties files -->
     <file>
       <source>properties/google-http-client.jar.properties</source>
       <destName>google-http-client-${project.version}.jar.properties</destName>
@@ -76,6 +77,30 @@
     <file>
       <source>properties/google-http-client-xml.jar.properties</source>
       <destName>google-http-client-xml-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/gson.jar.properties</source>
+      <destName>gson-${project.gson.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/jackson-core.jar.properties</source>
+      <destName>jackson-core-${project.jackson-core2.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/jackson-core-asl.jar.properties</source>
+      <destName>jackson-core-asl-${project.jackson-core-asl.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/protobuf-java.jar.properties</source>
+      <destName>protobuf-java-${project.protobuf-java.version}.jar.properties</destName>
       <outputDirectory>google-http-java-client/libs</outputDirectory>
       <filtered>true</filtered>
     </file>
@@ -138,11 +163,6 @@
     <fileSet>
       <directory>target/libs</directory>
       <outputDirectory>google-http-java-client/libs</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>android-properties</directory>
-      <outputDirectory>google-http-java-client/libs</outputDirectory>
-      <filtered>true</filtered>
     </fileSet>
     <fileSet>
       <directory>target/libs-sources</directory>

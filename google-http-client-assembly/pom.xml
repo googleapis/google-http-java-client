@@ -20,15 +20,15 @@
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-appengine</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-android</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-protobuf</artifactId>
+      <artifactId>google-http-client-apache</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-appengine</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
@@ -45,6 +45,10 @@
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-jdo</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-protobuf</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
