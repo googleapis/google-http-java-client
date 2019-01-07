@@ -161,6 +161,10 @@
       <outputDirectory>google-http-java-client/dependencies/images</outputDirectory>
     </fileSet>
     <fileSet>
+      <directory>licenses</directory>
+      <outputDirectory>google-oauth-java-client/dependencies</outputDirectory>
+    </fileSet>
+    <fileSet>
       <directory>target/libs</directory>
       <outputDirectory>google-http-java-client/libs</outputDirectory>
     </fileSet>
