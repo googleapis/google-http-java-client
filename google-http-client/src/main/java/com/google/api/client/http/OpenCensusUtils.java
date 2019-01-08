@@ -57,12 +57,12 @@ public class OpenCensusUtils {
    * OpenCensus tracing component. When no OpenCensus implementation is provided, it will return a
    * no-op tracer.
    */
-  private static Tracer tracer = Tracing.getTracer();
+  private static final Tracer tracer = Tracing.getTracer();
 
   /**
    * Sequence id generator for message event.
    */
-  private static AtomicLong idGenerator = new AtomicLong();
+  private static final AtomicLong idGenerator = new AtomicLong();
 
   /**
    * Whether spans should be recorded locally. Defaults to true.
