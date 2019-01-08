@@ -231,9 +231,7 @@ public class FieldInfo {
           try {
             method.invoke(obj, value);
             return;
-          } catch (IllegalAccessException e) {
-            // try to set field directly
-          } catch (InvocationTargetException e) {
+          } catch (IllegalAccessException | InvocationTargetException e) {
             // try to set field directly
           }
         }
