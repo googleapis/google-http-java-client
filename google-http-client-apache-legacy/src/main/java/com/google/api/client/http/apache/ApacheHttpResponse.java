@@ -89,10 +89,6 @@ final class ApacheHttpResponse extends LowLevelHttpResponse {
     return statusLine == null ? null : statusLine.toString();
   }
 
-  public String getHeaderValue(String name) {
-    return response.getLastHeader(name).getValue();
-  }
-
   @Override
   public int getHeaderCount() {
     return allHeaders.length;
@@ -101,6 +97,10 @@ final class ApacheHttpResponse extends LowLevelHttpResponse {
   @Override
   public String getHeaderName(int index) {
     return allHeaders[index].getName();
+  }
+
+  public String getHeaderValue(String name) {
+    return response.getLastHeader(name).getValue();
   }
 
   @Override
