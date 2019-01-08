@@ -148,7 +148,7 @@ public class FieldInfo {
         methods.add(method);
       }
     }
-    return methods.toArray(new Method[methods.size()]);
+    return methods.toArray(new Method[0]);
   }
 
   /**
