@@ -18,6 +18,7 @@ import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.common.annotations.VisibleForTesting;
 
+import com.google.common.collect.ImmutableList;
 import io.opencensus.contrib.http.util.HttpPropagationUtil;
 import io.opencensus.trace.BlankSpan;
 import io.opencensus.trace.EndSpanOptions;
@@ -29,7 +30,6 @@ import io.opencensus.trace.Tracer;
 import io.opencensus.trace.Tracing;
 import io.opencensus.trace.propagation.TextFormat;
 
-import java.util.Collections;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -253,8 +253,9 @@ public class OpenCensusUtils {
     }
 
     try {
-      Tracing.getExportComponent().getSampledSpanStore().registerSpanNamesForCollection(
-          Collections.<String>singletonList(SPAN_NAME_HTTP_REQUEST_EXECUTE));
+      Tracing.getExportComponent()
+          .getSampledSpanStore()
+          .registerSpanNamesForCollection(ImmutableList.of(SPAN_NAME_HTTP_REQUEST_EXECUTE));
     } catch (Exception e) {
       logger.log(
           Level.WARNING, "Cannot register default OpenCensus span names for collection.", e);
