@@ -360,7 +360,7 @@ public class UriTemplate {
 
   private static String getSimpleValue(String name, String value, CompositeOutput compositeOutput) {
     if (compositeOutput.requiresVarAssignment()) {
-      return String.format("%s=%s", name, compositeOutput.getEncodedValue(value.toString()));
+      return String.format("%s=%s", name, compositeOutput.getEncodedValue(value));
     }
     return compositeOutput.getEncodedValue(value);
   }
