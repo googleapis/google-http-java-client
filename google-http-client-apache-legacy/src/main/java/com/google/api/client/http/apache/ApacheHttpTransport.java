@@ -258,7 +258,7 @@ public final class ApacheHttpTransport extends HttpTransport {
     private SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
 
     /** HTTP parameters. */
-    private HttpParams params = newDefaultHttpParams();
+    private final HttpParams params = newDefaultHttpParams();
 
     /**
      * HTTP proxy selector to use {@link ProxySelectorRoutePlanner} or {@code null} for
