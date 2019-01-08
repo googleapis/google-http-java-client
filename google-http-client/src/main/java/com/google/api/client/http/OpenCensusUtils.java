@@ -40,7 +40,7 @@ import javax.annotation.Nullable;
  * @author Hailong Wen
  * @since 1.28
  */
-class OpenCensusUtils {
+public class OpenCensusUtils {
 
   private static final Logger logger = Logger.getLogger(OpenCensusUtils.class.getName());
 
