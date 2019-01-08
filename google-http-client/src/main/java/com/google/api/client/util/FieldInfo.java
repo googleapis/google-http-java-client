@@ -142,7 +142,7 @@ public class FieldInfo {
    * Creates list of setter methods for a field only in declaring class.
    */
   private Method[] settersMethodForField(Field field) {
-    List<Method> methods = new ArrayList<Method>();
+    List<Method> methods = new ArrayList<>();
     for (Method method : field.getDeclaringClass().getDeclaredMethods()) {
       if (Ascii.toLowerCase(method.getName()).equals("set" + field.getName().toLowerCase())
           && method.getParameterTypes().length == 1) {
