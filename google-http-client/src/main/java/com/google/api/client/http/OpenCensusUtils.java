@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.common.annotations.VisibleForTesting;
 
@@ -35,11 +36,13 @@ import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
 /**
+ * {@link Beta} <br/>
  * Utilities for Census monitoring and tracing.
  *
  * @author Hailong Wen
  * @since 1.28
  */
+@Beta
 public class OpenCensusUtils {
 
   private static final Logger logger = Logger.getLogger(OpenCensusUtils.class.getName());
