@@ -134,4 +134,35 @@ public class NetHttpRequestTest {
     }
   }
 
+  @Test
+  public void testInterruptedWriteErrorOnResponse() throws Exception {
+    MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL)) {
+      @Override
+      public OutputStream getOutputStream() throws IOException {
+        return new OutputStream() {
+          @Override
+          public void write(int b) throws IOException {
+            throw new IOException("Error writing request body to server");
+          }
+        };
+      }
+
+      @Override
+      public int getResponseCode() throws IOException {
+        throw new IOException("Error parsing response code");
+      }
+    };
+    connection.setRequestMethod("POST");
+    NetHttpRequest request = new NetHttpRequest(connection);
+    InputStream is = NetHttpRequestTest.class.getClassLoader().getResourceAsStream("file.txt");
+    HttpContent content = new InputStreamContent("text/plain", is);
+    request.setStreamingContent(content);
+
+    try {
+      request.execute();
+      fail("Expected to throw an IOException");
+    } catch (IOException e) {
+      assertEquals("Error writing request body to server", e.getMessage());
+    }
+  }
 }
