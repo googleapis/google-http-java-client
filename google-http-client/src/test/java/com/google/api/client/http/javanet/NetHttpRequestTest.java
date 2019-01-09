@@ -165,4 +165,36 @@ public class NetHttpRequestTest {
       assertEquals("Error writing request body to server", e.getMessage());
     }
   }
+
+  @Test
+  public void testErrorOnClose() throws Exception {
+    MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL)) {
+      @Override
+      public OutputStream getOutputStream() throws IOException {
+        return new OutputStream() {
+          @Override
+          public void write(int b) throws IOException {
+            return;
+          }
+
+          @Override
+          public void close() throws IOException {
+            throw new IOException("Error during close");
+          }
+        };
+      }
+    };
+    connection.setRequestMethod("POST");
+    NetHttpRequest request = new NetHttpRequest(connection);
+    InputStream is = NetHttpRequestTest.class.getClassLoader().getResourceAsStream("file.txt");
+    HttpContent content = new InputStreamContent("text/plain", is);
+    request.setStreamingContent(content);
+
+    try {
+      request.execute();
+      fail("Expected to throw an IOException");
+    } catch (IOException e) {
+      assertEquals("Error during close", e.getMessage());
+    }
+  }
 }
