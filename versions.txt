@@ -6,7 +6,7 @@ google-http-client-bom:1.28.0:1.28.0
 google-http-client-parent:1.28.0:1.28.0
 google-http-client-android:1.28.0:1.28.0
 google-http-client-android-test:1.28.0:1.28.0
-google-http-client-apache:2.1.0:2.1.0
+google-http-client-apache:2.0.0:2.0.0
 google-http-client-apache-legacy:1.28.0:1.28.0
 google-http-client-appengine:1.28.0:1.28.0
 google-http-client-assembly:1.28.0:1.28.0
