@@ -41,22 +41,27 @@ final class ContentEntity extends AbstractHttpEntity {
     this.streamingContent = Preconditions.checkNotNull(streamingContent);
   }
 
+  @Override
   public InputStream getContent() {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public long getContentLength() {
     return contentLength;
   }
 
+  @Override
   public boolean isRepeatable() {
     return false;
   }
 
+  @Override
   public boolean isStreaming() {
     return true;
   }
 
+  @Override
   public void writeTo(OutputStream out) throws IOException {
     if (contentLength != 0) {
       streamingContent.writeTo(out);

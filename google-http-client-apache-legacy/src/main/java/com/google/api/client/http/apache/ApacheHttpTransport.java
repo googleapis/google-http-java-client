@@ -131,33 +131,6 @@ public final class ApacheHttpTransport extends HttpTransport {
     params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
   }
 
-  /**
-   * Creates a new instance of the Apache HTTP client that is used by the
-   * {@link #ApacheHttpTransport()} constructor.
-   *
-   * <p>
-   * Use this constructor if you want to customize the default Apache HTTP client. Settings:
-   * </p>
-   * <ul>
-   * <li>The client connection manager is set to {@link ThreadSafeClientConnManager}.</li>
-   * <li>The socket buffer size is set to 8192 using
-   * {@link HttpConnectionParams#setSocketBufferSize}.</li>
-   * <li><The retry mechanism is turned off by setting
-   * {@code new DefaultHttpRequestRetryHandler(0, false)}.</li>
-   * <li>The route planner uses {@link ProxySelectorRoutePlanner} with
-   * {@link ProxySelector#getDefault()}, which uses the proxy settings from <a
-   * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
-   * properties</a>.</li>
-   * </ul>
-   *
-   * @return new instance of the Apache HTTP client
-   * @since 1.6
-   */
-  public static DefaultHttpClient newDefaultHttpClient() {
-    return newDefaultHttpClient(
-        SSLSocketFactory.getSocketFactory(), newDefaultHttpParams(), ProxySelector.getDefault());
-  }
-
   /** Returns a new instance of the default HTTP parameters we use. */
   static HttpParams newDefaultHttpParams() {
     HttpParams params = new BasicHttpParams();
@@ -168,6 +141,32 @@ public final class ApacheHttpTransport extends HttpTransport {
     ConnManagerParams.setMaxTotalConnections(params, 200);
     ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(20));
     return params;
+  }
+
+  /**
+   * Creates a new instance of the Apache HTTP client that is used by the {@link
+   * #ApacheHttpTransport()} constructor.
+   *
+   * <p>Use this constructor if you want to customize the default Apache HTTP client. Settings:
+   *
+   * <ul>
+   *   <li>The client connection manager is set to {@link ThreadSafeClientConnManager}.</li>
+   *   <li>The socket buffer size is set to 8192 using {@link
+   *       HttpConnectionParams#setSocketBufferSize}.
+   *   <li>The retry mechanism is turned off by setting {@code new
+   *       DefaultHttpRequestRetryHandler(0, false)}.
+   *   <li>The route planner uses {@link ProxySelectorRoutePlanner} with {@link
+   *       ProxySelector#getDefault()}, which uses the proxy settings from <a
+   *       href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
+   *       properties</a>.
+   * </ul>
+   *
+   * @return new instance of the Apache HTTP client
+   * @since 1.6
+   */
+  public static DefaultHttpClient newDefaultHttpClient() {
+    return newDefaultHttpClient(
+        SSLSocketFactory.getSocketFactory(), newDefaultHttpParams(), ProxySelector.getDefault());
   }
 
   /**
@@ -258,7 +257,7 @@ public final class ApacheHttpTransport extends HttpTransport {
     private SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
 
     /** HTTP parameters. */
-    private HttpParams params = newDefaultHttpParams();
+    private final HttpParams params = newDefaultHttpParams();
 
     /**
      * HTTP proxy selector to use {@link ProxySelectorRoutePlanner} or {@code null} for
