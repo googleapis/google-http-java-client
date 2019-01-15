@@ -1,20 +1,20 @@
 # Format:
 # module:released-version:current-version
 
-google-http-client:1.28.0:1.28.0
-google-http-client-bom:1.28.0:1.28.0
-google-http-client-parent:1.28.0:1.28.0
-google-http-client-android:1.28.0:1.28.0
-google-http-client-android-test:1.28.0:1.28.0
-google-http-client-apache:2.0.0:2.0.0
-google-http-client-apache-legacy:1.28.0:1.28.0
-google-http-client-appengine:1.28.0:1.28.0
-google-http-client-assembly:1.28.0:1.28.0
-google-http-client-findbugs:1.28.0:1.28.0
-google-http-client-gson:1.28.0:1.28.0
-google-http-client-jackson:1.28.0:1.28.0
-google-http-client-jackson2:1.28.0:1.28.0
-google-http-client-jdo:1.28.0:1.28.0
-google-http-client-protobuf:1.28.0:1.28.0
-google-http-client-test:1.28.0:1.28.0
-google-http-client-xml:1.28.0:1.28.0
+google-http-client:1.28.0:1.28.1-SNAPSHOT
+google-http-client-bom:1.28.0:1.28.1-SNAPSHOT
+google-http-client-parent:1.28.0:1.28.1-SNAPSHOT
+google-http-client-android:1.28.0:1.28.1-SNAPSHOT
+google-http-client-android-test:1.28.0:1.28.1-SNAPSHOT
+google-http-client-apache:2.0.0:2.0.1-SNAPSHOT
+google-http-client-apache-legacy:1.28.0:1.28.1-SNAPSHOT
+google-http-client-appengine:1.28.0:1.28.1-SNAPSHOT
+google-http-client-assembly:1.28.0:1.28.1-SNAPSHOT
+google-http-client-findbugs:1.28.0:1.28.1-SNAPSHOT
+google-http-client-gson:1.28.0:1.28.1-SNAPSHOT
+google-http-client-jackson:1.28.0:1.28.1-SNAPSHOT
+google-http-client-jackson2:1.28.0:1.28.1-SNAPSHOT
+google-http-client-jdo:1.28.0:1.28.1-SNAPSHOT
+google-http-client-protobuf:1.28.0:1.28.1-SNAPSHOT
+google-http-client-test:1.28.0:1.28.1-SNAPSHOT
+google-http-client-xml:1.28.0:1.28.1-SNAPSHOT
