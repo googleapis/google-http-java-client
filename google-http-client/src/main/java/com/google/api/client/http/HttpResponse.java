@@ -363,7 +363,8 @@ public final class HttpResponse {
         try {
           // gzip encoding (wrap content with GZipInputStream)
           String contentEncoding = this.contentEncoding;
-          if (!returnRawInputStream && contentEncoding != null && contentEncoding.contains("gzip")) {
+          if (!returnRawInputStream && contentEncoding != null && contentEncoding
+              .contains("gzip")) {
             lowLevelResponseContent = new GZIPInputStream(lowLevelResponseContent);
           }
           // logging (wrap content with LoggingInputStream)
