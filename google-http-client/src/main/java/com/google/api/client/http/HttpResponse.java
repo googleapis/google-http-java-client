@@ -82,6 +82,9 @@ public final class HttpResponse {
   /** HTTP request. */
   private final HttpRequest request;
 
+  /** Whether {@link #getContent()} should return raw input stream. */
+  private final boolean returnRawInputStream;
+
   /**
    * Determines the limit to the content size that will be logged during {@link #getContent()}.
    *
@@ -118,6 +121,7 @@ public final class HttpResponse {
 
   HttpResponse(HttpRequest request, LowLevelHttpResponse response) throws IOException {
     this.request = request;
+    this.returnRawInputStream = request.getResponseReturnRawInputStream();
     contentLoggingLimit = request.getContentLoggingLimit();
     loggingEnabled = request.isLoggingEnabled();
     this.response = response;
@@ -359,7 +363,7 @@ public final class HttpResponse {
         try {
           // gzip encoding (wrap content with GZipInputStream)
           String contentEncoding = this.contentEncoding;
-          if (contentEncoding != null && contentEncoding.contains("gzip")) {
+          if (!returnRawInputStream && contentEncoding != null && contentEncoding.contains("gzip")) {
             lowLevelResponseContent = new GZIPInputStream(lowLevelResponseContent);
           }
           // logging (wrap content with LoggingInputStream)
