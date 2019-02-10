@@ -18,7 +18,6 @@ import com.google.api.client.util.Beta;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingStreamingContent;
 import com.google.api.client.util.ObjectParser;
-import com.google.api.client.util.OpenCensusUtils;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Sleeper;
 import com.google.api.client.util.StreamingContent;
@@ -57,7 +56,7 @@ public final class HttpRequest {
    *
    * @since 1.8
    */
-  public static final String VERSION = "1.27.0";
+  public static final String VERSION = "1.28.0";
 
   /**
    * User agent suffix for all requests.
@@ -223,7 +222,7 @@ public final class HttpRequest {
   private Sleeper sleeper = Sleeper.DEFAULT;
 
   /** OpenCensus tracing component. */
-  private Tracer tracer = OpenCensusUtils.getTracer();
+  private final Tracer tracer = OpenCensusUtils.getTracer();
 
   /**
    * @param transport HTTP transport

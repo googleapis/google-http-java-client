@@ -117,6 +117,12 @@ final class NetHttpRequest extends LowLevelHttpRequest {
           writeContentToOutputStream(outputWriter, out);
 
           threw = false;
+        } catch (IOException e) {
+          // If we've gotten a response back, continue on and try to parse the response. Otherwise,
+          // re-throw the IOException
+          if (!hasReponse(connection)) {
+            throw e;
+          }
         } finally {
           try {
             out.close();
@@ -147,6 +153,15 @@ final class NetHttpRequest extends LowLevelHttpRequest {
       if (!successfulConnection) {
         connection.disconnect();
       }
+    }
+  }
+
+  private boolean hasReponse(HttpURLConnection connection) {
+    try {
+      return connection.getResponseCode() > 0;
+    } catch (IOException e) {
+      // There's some exception trying to parse the response
+      return false;
     }
   }
 

@@ -14,6 +14,7 @@
 
 package com.google.api.client.util;
 
+import com.google.common.base.Ascii;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -141,14 +142,14 @@ public class FieldInfo {
    * Creates list of setter methods for a field only in declaring class.
    */
   private Method[] settersMethodForField(Field field) {
-    List<Method> methods = new ArrayList<Method>();
+    List<Method> methods = new ArrayList<>();
     for (Method method : field.getDeclaringClass().getDeclaredMethods()) {
-      if (method.getName().toLowerCase().equals("set" + field.getName().toLowerCase())
+      if (Ascii.toLowerCase(method.getName()).equals("set" + field.getName().toLowerCase())
           && method.getParameterTypes().length == 1) {
         methods.add(method);
       }
     }
-    return methods.toArray(new Method[methods.size()]);
+    return methods.toArray(new Method[0]);
   }
 
   /**
@@ -231,9 +232,7 @@ public class FieldInfo {
           try {
             method.invoke(obj, value);
             return;
-          } catch (IllegalAccessException e) {
-            // try to set field directly
-          } catch (InvocationTargetException e) {
+          } catch (IllegalAccessException | InvocationTargetException e) {
             // try to set field directly
           }
         }

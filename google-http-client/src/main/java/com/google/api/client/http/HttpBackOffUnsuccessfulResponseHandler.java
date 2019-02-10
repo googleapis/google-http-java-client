@@ -19,7 +19,6 @@ import com.google.api.client.util.BackOffUtils;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Sleeper;
-
 import java.io.IOException;
 
 /**
@@ -131,13 +130,12 @@ public class HttpBackOffUnsuccessfulResponseHandler implements HttpUnsuccessfulR
   /**
    * {@inheritDoc}
    *
-   * <p>
-   * Handles the request with {@link BackOff}. That means that if back-off is required a call to
+   * <p>Handles the request with {@link BackOff}. That means that if back-off is required a call to
    * {@link Sleeper#sleep(long)} will be made.
-   * </p>
    */
-  public boolean handleResponse(
-      HttpRequest request, HttpResponse response, boolean supportsRetry) throws IOException {
+  @Override
+  public boolean handleResponse(HttpRequest request, HttpResponse response, boolean supportsRetry)
+      throws IOException {
     if (!supportsRetry) {
       return false;
     }
