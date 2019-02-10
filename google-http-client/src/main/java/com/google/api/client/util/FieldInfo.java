@@ -14,9 +14,14 @@
 
 package com.google.api.client.util;
 
+import com.google.common.base.Ascii;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -112,6 +117,9 @@ public class FieldInfo {
   /** Field. */
   private final Field field;
 
+  /** Setters Method for field */
+  private final Method []setters;
+
   /**
    * Data key name associated with the field for a non-enum-constant with a {@link Key} annotation,
    * or data key value associated with the enum constant with a {@link Value} annotation or {@code
@@ -127,6 +135,21 @@ public class FieldInfo {
     this.field = field;
     this.name = name == null ? null : name.intern();
     isPrimitive = Data.isPrimitive(getType());
+    this.setters = settersMethodForField(field);
+  }
+
+  /**
+   * Creates list of setter methods for a field only in declaring class.
+   */
+  private Method[] settersMethodForField(Field field) {
+    List<Method> methods = new ArrayList<>();
+    for (Method method : field.getDeclaringClass().getDeclaredMethods()) {
+      if (Ascii.toLowerCase(method.getName()).equals("set" + field.getName().toLowerCase())
+          && method.getParameterTypes().length == 1) {
+        methods.add(method);
+      }
+    }
+    return methods.toArray(new Method[0]);
   }
 
   /**
@@ -203,6 +226,18 @@ public class FieldInfo {
    * If the field is final, it checks that value being set is identical to the existing value.
    */
   public void setValue(Object obj, Object value) {
+    if (setters.length > 0) {
+      for (Method method : setters) {
+        if (value == null || method.getParameterTypes()[0].isAssignableFrom(value.getClass())) {
+          try {
+            method.invoke(obj, value);
+            return;
+          } catch (IllegalAccessException | InvocationTargetException e) {
+            // try to set field directly
+          }
+        }
+      }
+    }
     setFieldValue(field, obj, value);
   }
 

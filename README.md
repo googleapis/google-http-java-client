@@ -13,7 +13,7 @@ content. The JSON and XML libraries are also fully pluggable, and they include s
 
 The library supports the following Java environments:
 
-- Java 6 (or higher)
+- Java 7 (or higher)
 - Android 4.0 (Ice Cream Sandwich) (or higher)
 - GoogleAppEngine Google App Engine
 
@@ -42,7 +42,7 @@ Java Version | Status
 ------------ | ------
 Java 7 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java7.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java7.html)
 Java 8 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java8.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java8.html)
-Java 10 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java10.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java10.html)
+Java 11 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java11.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java11.html)
 
 ## Links
 

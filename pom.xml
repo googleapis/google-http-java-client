@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.google.http-client</groupId>
   <artifactId>google-http-client-parent</artifactId>
-  <version>1.26.0-SNAPSHOT</version>
+  <version>1.28.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
   <packaging>pom</packaging>
   <name>Parent for the Google HTTP Client Library for Java</name>
 
@@ -21,10 +21,6 @@
   </issueManagement>
 
   <inceptionYear>2011</inceptionYear>
-
-  <prerequisites>
-    <maven>3.5.4</maven>
-  </prerequisites>
 
   <scm>
     <connection>scm:git:https://github.com/googleapis/google-http-java-client.git</connection>
@@ -61,16 +57,21 @@
     <module>google-http-client-assembly</module>
     <module>google-http-client-appengine</module>
     <module>google-http-client-android</module>
+    <module>google-http-client-apache</module>
+    <module>google-http-client-apache-legacy</module>
     <module>google-http-client-protobuf</module>
     <module>google-http-client-gson</module>
     <module>google-http-client-jackson</module>
     <module>google-http-client-jackson2</module>
     <module>google-http-client-jdo</module>
     <module>google-http-client-xml</module>
+
     <module>google-http-client-findbugs</module>
     <module>google-http-client-test</module>
     <module>samples/dailymotion-simple-cmdline-sample</module>
-    <module>samples/googleplus-simple-cmdline-sample</module>
+
+    <!-- A deployable artifact must be last or deploys are skipped -->
+    <module>google-http-client-bom</module>
   </modules>
 
   <pluginRepositories>
@@ -116,12 +117,12 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.8.2</version>
+        <version>4.12</version>
       </dependency>
       <dependency>
         <groupId>com.google.truth</groupId>
         <artifactId>truth</artifactId>
-        <version>0.40</version>
+        <version>0.42</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -150,11 +151,6 @@
         <version>${project.httpclient.version}</version>
       </dependency>
       <dependency>
-        <groupId>commons-codec</groupId>
-        <artifactId>commons-codec</artifactId>
-        <version>1.6</version>
-      </dependency>
-      <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>${project.guava.version}</version>
@@ -177,17 +173,22 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-apache</artifactId>
+        <version>${project.http-client-apache.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-appengine</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-android</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
@@ -197,42 +198,42 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-gson</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-jackson</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-jackson2</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-jdo</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-xml</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-findbugs</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-test</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-all</artifactId>
-        <version>1.9.0</version>
+        <version>1.10.19</version>
       </dependency>
       <dependency>
         <groupId>javax.jdo</groupId>
@@ -249,6 +250,16 @@
         <artifactId>j2objc-annotations</artifactId>
         <version>1.1</version>
       </dependency>
+      <dependency>
+        <groupId>io.opencensus</groupId>
+        <artifactId>opencensus-api</artifactId>
+        <version>${project.opencensus.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.opencensus</groupId>
+        <artifactId>opencensus-contrib-http-util</artifactId>
+        <version>${project.opencensus.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -257,112 +268,92 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <version>1.5</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.6</version>
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>nexus-staging-maven-plugin</artifactId>
+          <version>1.6.6</version>
+          <extensions>true</extensions>
+          <configuration>
+            <serverId>ossrh</serverId>
+            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+            <autoReleaseAfterClose>false</autoReleaseAfterClose>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>2.4.1</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>2.3.2</version>
           <configuration>
-            <source>1.6</source>
-            <target>1.6</target>
+            <source>1.7</source>
+            <target>1.7</target>
           </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-dependency-plugin</artifactId>
-          <version>2.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.5</version>
+          <version>2.8.2</version>
         </plugin>
         <plugin>
-          <artifactId>maven-ear-plugin</artifactId>
-          <version>2.4.2</version>
+          <groupId>org.sonatype.plugins</groupId>
+          <artifactId>jarjar-maven-plugin</artifactId>
+          <version>1.9</version>
         </plugin>
         <plugin>
-          <artifactId>maven-ejb-plugin</artifactId>
-          <version>2.3</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>2.3.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>2.3.1</version>
-          <configuration>
-            <archive>
-              <addMavenDescriptor>false</addMavenDescriptor>
-              <manifest>
-                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              </manifest>
-              <manifestEntries>
-                <Built-By>Google</Built-By>
-                <Build-Jdk>1.6.x</Build-Jdk>
-              </manifestEntries>
-            </archive>
-          </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.9</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-plugin-plugin</artifactId>
-          <version>2.6</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-rar-plugin</artifactId>
-          <version>2.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>2.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>2.4.3</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>2.1.1</version>
-        </plugin>
-        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>2.1.2</version>
+          <version>2.2.1</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <goals>
+                <goal>jar-no-fork</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.0.1</version>
+          <executions>
+            <execution>
+              <id>attach-javadocs</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.0.2</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>test-jar</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.12.4</version>
+          <version>3.0.0-M3</version>
           <configuration>
             <argLine>-Xmx1024m</argLine>
+            <reportNameSuffix>sponge_log</reportNameSuffix>
           </configuration>
         </plugin>
         <plugin>
-          <artifactId>maven-war-plugin</artifactId>
-          <version>2.1</version>
-        </plugin>
-        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>2.6</version>
+          <version>3.0.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>findbugs-maven-plugin</artifactId>
-          <version>2.5.2</version>
+          <version>3.0.5</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -372,11 +363,6 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>animal-sniffer-maven-plugin</artifactId>
-          <version>1.9</version>
-        </plugin>
-        <plugin>
-          <groupId>org.sonatype.plugins</groupId>
-          <artifactId>jarjar-maven-plugin</artifactId>
           <version>1.9</version>
         </plugin>
         <plugin>
@@ -393,9 +379,28 @@
     </pluginManagement>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M2</version><executions>
+        <execution>
+          <id>enforce-maven</id>
+          <goals>
+            <goal>enforce</goal>
+          </goals>
+          <configuration>
+            <rules>
+              <requireMavenVersion>
+                <version>[3.5.4,4.0.0)</version>
+              </requireMavenVersion>
+            </rules>
+          </configuration>
+        </execution>
+      </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <additionalparam>-Xdoclint:none</additionalparam>
+          <doclint>none</doclint>
         </configuration>
         <executions>
           <execution>
@@ -406,13 +411,12 @@
             <phase>site</phase>
             <configuration>
               <links>
-                <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
+                <link>http://download.oracle.com/javase/7/docs/api/</link>
                 <link>http://cloud.google.com/appengine/docs/java/javadoc</link>
-                <link>http://jackson.codehaus.org/1.9.9/javadoc</link>
-                <link>http://fasterxml.github.com/jackson-core/javadoc/2.0.5/</link>
-                <link>http://google-gson.googlecode.com/svn/trunk/gson/docs/javadocs</link>
-                <link>http://docs.guava-libraries.googlecode.com/git-history/v13.0.1/javadoc</link>
-                <link>http://commons.apache.org/proper/commons-codec/javadocs/api-release</link>
+                <link>https://jar-download.com/artifacts/org.codehaus.jackson/jackson-core-asl/${project.jackson-core-asl.version}/documentation</link>
+                <link>http://fasterxml.github.com/jackson-core/javadoc/${project.jackson-core2.version}/</link>
+                <link>https://www.javadoc.io/doc/com.google.code.gson/gson/${project.gson.version}</link>
+                <link>https://google.github.io/guava/releases/${project.guava.version}/api/docs/</link>
               </links>
               <doctitle>Google HTTP Client Library for Java ${project.version}</doctitle>
               <excludePackageNames>com.google.api.client.findbugs:com.google.api.client.test.:com.google.api.services</excludePackageNames>
@@ -461,11 +465,12 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
-          <configLocation>checkstyle.xml</configLocation>
+          <configLocation>${project.root-directory}/checkstyle.xml</configLocation>
           <consoleOutput>true</consoleOutput>
-          <suppressionsLocation>${basedir}/../checkstyle-suppressions.xml</suppressionsLocation>
+          <suppressionsLocation>${project.root-directory}/checkstyle-suppressions.xml</suppressionsLocation>
         </configuration>
         <executions>
           <execution>
@@ -484,7 +489,7 @@
             <plugin>
               <groupId>com.google.http-client</groupId>
               <artifactId>google-http-client-findbugs</artifactId>
-              <version>${project.version}</version>
+              <version>${project.http-client.version}</version>
             </plugin>
           </plugins>
         </configuration>
@@ -511,7 +516,7 @@
         <configuration>
           <signature>
             <groupId>org.codehaus.mojo.signature</groupId>
-            <artifactId>java15</artifactId>
+            <artifactId>java17</artifactId>
             <version>1.0</version>
           </signature>
         </configuration>
@@ -523,8 +528,26 @@
           </execution>
         </executions>
       </plugin>
+      <!-- Build the dependencies report at package time (needed for the assembly artifact). -->
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>dependencies</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+      </plugin>
     </plugins>
   </build>
+
   <properties>
     <!--
       NOTE: if you make a change to these versions, you MUST make the same change to:
@@ -535,6 +558,9 @@
       - google-api-java-client/google-api-client-assembly/android-properties (make the filenames match the version here)
       - Internally, update the default features.json file
     -->
+    <project.http-client.version>1.27.1-SNAPSHOT</project.http-client.version><!-- {x-version-update:google-http-client-parent:current} -->
+    <project.http-client.version>1.28.1-SNAPSHOT</project.http-client.version><!-- {x-version-update:google-http-client-parent:current} -->
+    <project.http-client-apache.version>2.0.1-SNAPSHOT</project.http-client-apache.version><!-- {x-version-update:google-http-client-apache:current} -->
     <project.appengine.version>1.9.64</project.appengine.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.jsr305.version>3.0.2</project.jsr305.version>
@@ -542,10 +568,60 @@
     <project.jackson-core-asl.version>1.9.13</project.jackson-core-asl.version>
     <project.jackson-core2.version>2.9.6</project.jackson-core2.version>
     <project.protobuf-java.version>2.6.1</project.protobuf-java.version>
-    <project.guava.version>20.0</project.guava.version>
+    <project.guava.version>26.0-android</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.commons-logging.version>1.1.1</project.commons-logging.version>
     <project.httpclient.version>4.5.5</project.httpclient.version>
     <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
+    <project.opencensus.version>0.18.0</project.opencensus.version>
+    <project.root-directory>..</project.root-directory>
   </properties>
+
+  <profiles>
+    <profile>
+      <id>release-sign-artifacts</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <configuration>
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <!-- set project.root-directory property based on where we are -->
+    <profile>
+      <id>root-directory</id>
+      <activation>
+        <file>
+          <exists>checkstyle-suppressions.xml</exists>
+        </file>
+      </activation>
+      <properties>
+        <project.root-directory>.</project.root-directory>
+      </properties>
+    </profile>
+  </profiles>
 </project>

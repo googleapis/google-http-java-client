@@ -179,6 +179,8 @@ public class HttpResponseException extends IOException {
       } catch (IOException exception) {
         // it would be bad to throw an exception while throwing an exception
         exception.printStackTrace();
+      } catch (IllegalArgumentException exception) {
+        exception.printStackTrace();
       }
       // message
       StringBuilder builder = computeMessageBuffer(response);

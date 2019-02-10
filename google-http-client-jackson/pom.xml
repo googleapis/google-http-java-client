@@ -4,10 +4,11 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.26.0-SNAPSHOT</version>
+    <version>1.28.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client-jackson</artifactId>
+  <version>1.28.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-jackson:current} -->
   <name>Jackson extensions to the Google HTTP Client Library for Java.</name>
 
   <build>
@@ -16,8 +17,8 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links>
-            <link>http://download.oracle.com/javase/1.5.0/docs/api/</link>
-            <link>http://jackson.codehaus.org/1.9.4/javadoc</link>
+            <link>http://download.oracle.com/javase/7/docs/api/</link>
+            <link>https://jar-download.com/artifacts/org.codehaus.jackson/jackson-core-asl/${project.jackson-core-asl.version}/documentation</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>

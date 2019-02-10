@@ -25,20 +25,148 @@
       <filtered>true</filtered>
       <outputDirectory>google-http-java-client</outputDirectory>
     </file>
+    <!-- properties files -->
+    <file>
+      <source>properties/google-http-client.jar.properties</source>
+      <destName>google-http-client-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/google-http-client-android.jar.properties</source>
+      <destName>google-http-client-android-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/google-http-client-apache.jar.properties</source>
+      <destName>google-http-client-apache-${project.http-client-apache.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/google-http-client-gson.jar.properties</source>
+      <destName>google-http-client-gson-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/google-http-client-jackson.jar.properties</source>
+      <destName>google-http-client-jackson-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/google-http-client-jackson2.jar.properties</source>
+      <destName>google-http-client-jackson2-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/google-http-client-jdo.jar.properties</source>
+      <destName>google-http-client-jdo-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/google-http-client-protobuf.jar.properties</source>
+      <destName>google-http-client-protobuf-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/google-http-client-xml.jar.properties</source>
+      <destName>google-http-client-xml-${project.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/gson.jar.properties</source>
+      <destName>gson-${project.gson.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/jackson-core.jar.properties</source>
+      <destName>jackson-core-${project.jackson-core2.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/jackson-core-asl.jar.properties</source>
+      <destName>jackson-core-asl-${project.jackson-core-asl.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <file>
+      <source>properties/protobuf-java.jar.properties</source>
+      <destName>protobuf-java-${project.protobuf-java.version}.jar.properties</destName>
+      <outputDirectory>google-http-java-client/libs</outputDirectory>
+      <filtered>true</filtered>
+    </file>
+    <!-- dependencies.html -->
+    <file>
+      <source>../google-http-client/target/site/dependencies.html</source>
+      <destName>google-http-client-dependencies.html</destName>
+      <outputDirectory>google-http-java-client/dependencies</outputDirectory>
+    </file>
+    <file>
+      <source>../google-http-client-android/target/site/dependencies.html</source>
+      <destName>google-http-client-android-dependencies.html</destName>
+      <outputDirectory>google-http-java-client/dependencies</outputDirectory>
+    </file>
+    <file>
+      <source>../google-http-client-apache/target/site/dependencies.html</source>
+      <destName>google-http-client-apache-dependencies.html</destName>
+      <outputDirectory>google-http-java-client/dependencies</outputDirectory>
+    </file>
+    <file>
+      <source>../google-http-client-gson/target/site/dependencies.html</source>
+      <destName>google-http-client-gson-dependencies.html</destName>
+      <outputDirectory>google-http-java-client/dependencies</outputDirectory>
+    </file>
+    <file>
+      <source>../google-http-client-jackson/target/site/dependencies.html</source>
+      <destName>google-http-client-jackson-dependencies.html</destName>
+      <outputDirectory>google-http-java-client/dependencies</outputDirectory>
+    </file>
+    <file>
+      <source>../google-http-client-jackson2/target/site/dependencies.html</source>
+      <destName>google-http-client-jackson2-dependencies.html</destName>
+      <outputDirectory>google-http-java-client/dependencies</outputDirectory>
+    </file>
+    <file>
+      <source>../google-http-client-jdo/target/site/dependencies.html</source>
+      <destName>google-http-client-jdo-dependencies.html</destName>
+      <outputDirectory>google-http-java-client/dependencies</outputDirectory>
+    </file>
+    <file>
+      <source>../google-http-client-protobuf/target/site/dependencies.html</source>
+      <destName>google-http-client-protobuf-dependencies.html</destName>
+      <outputDirectory>google-http-java-client/dependencies</outputDirectory>
+    </file>
+    <file>
+      <source>../google-http-client-xml/target/site/dependencies.html</source>
+      <destName>google-http-client-xml-dependencies.html</destName>
+      <outputDirectory>google-http-java-client/dependencies</outputDirectory>
+    </file>
   </files>
   <fileSets>
     <fileSet>
-      <directory>dependencies</directory>
-      <outputDirectory>google-http-java-client/dependencies</outputDirectory>
+      <directory>target/site/css</directory>
+      <outputDirectory>google-http-java-client/dependencies/css</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>target/site/images</directory>
+      <outputDirectory>google-http-java-client/dependencies/images</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>licenses</directory>
+      <outputDirectory>google-oauth-java-client/dependencies</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>target/libs</directory>
       <outputDirectory>google-http-java-client/libs</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>android-properties</directory>
-      <outputDirectory>google-http-java-client/libs</outputDirectory>
-      <filtered>true</filtered>
     </fileSet>
     <fileSet>
       <directory>target/libs-sources</directory>

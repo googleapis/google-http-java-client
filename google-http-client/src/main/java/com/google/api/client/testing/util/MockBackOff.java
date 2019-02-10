@@ -85,7 +85,7 @@ public class MockBackOff implements BackOff {
 
   /** Returns the maximum number of tries before returning {@link #STOP}. */
   public final int getMaxTries() {
-    return numTries;
+    return maxTries;
   }
 
   /** Returns the number of tries so far. */

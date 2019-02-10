@@ -186,7 +186,7 @@ public class UriTemplate {
       String encodedValue;
       if (reservedExpansion) {
         // Reserved expansion allows pct-encoded triplets and characters in the reserved set.
-        encodedValue = CharEscapers.escapeUriPath(value);
+        encodedValue = CharEscapers.escapeUriPathWithoutReserved(value);
       } else {
         encodedValue = CharEscapers.escapeUri(value);
       }
@@ -339,26 +339,14 @@ public class UriTemplate {
           value = getListPropertyValue(varName, iterator, containsExplodeModifier, compositeOutput);
         } else if (value.getClass().isEnum()) {
           String name = FieldInfo.of((Enum<?>) value).getName();
-          if (name != null) {
-            if (compositeOutput.requiresVarAssignment()) {
-              value = String.format("%s=%s", varName, value);
-            }
-            value = CharEscapers.escapeUriPath(value.toString());
-          }
+          value = getSimpleValue(varName, name != null ? name : value.toString(), compositeOutput);
         } else if (!Data.isValueOfPrimitiveType(value)) {
           // Parse the value as a key/value map.
           Map<String, Object> map = getMap(value);
           value = getMapPropertyValue(varName, map, containsExplodeModifier, compositeOutput);
         } else {
           // For everything else...
-          if (compositeOutput.requiresVarAssignment()) {
-            value = String.format("%s=%s", varName, value);
-          }
-          if (compositeOutput.getReservedExpansion()) {
-            value = CharEscapers.escapeUriPathWithoutReserved(value.toString());
-          } else {
-            value = CharEscapers.escapeUriPath(value.toString());
-          }
+          value = getSimpleValue(varName, value.toString(), compositeOutput);
         }
         pathBuf.append(value);
       }
@@ -368,6 +356,13 @@ public class UriTemplate {
       GenericUrl.addQueryParams(variableMap.entrySet(), pathBuf);
     }
     return pathBuf.toString();
+  }
+
+  private static String getSimpleValue(String name, String value, CompositeOutput compositeOutput) {
+    if (compositeOutput.requiresVarAssignment()) {
+      return String.format("%s=%s", name, compositeOutput.getEncodedValue(value));
+    }
+    return compositeOutput.getEncodedValue(value);
   }
 
   /**
