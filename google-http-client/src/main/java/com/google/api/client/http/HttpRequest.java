@@ -225,6 +225,16 @@ public final class HttpRequest {
   private final Tracer tracer = OpenCensusUtils.getTracer();
 
   /**
+   * Determines whether {@link HttpResponse#getContent()} of this request should return raw
+   * input stream or not.
+   *
+   * <p>
+   *   It is {@code false} by default.
+   * </p>
+   */
+  private boolean responseReturnRawInputStream = false;
+
+  /**
    * @param transport HTTP transport
    * @param requestMethod HTTP request method or {@code null} for none
    */
@@ -832,6 +842,31 @@ public final class HttpRequest {
    */
   public HttpRequest setSuppressUserAgentSuffix(boolean suppressUserAgentSuffix) {
     this.suppressUserAgentSuffix = suppressUserAgentSuffix;
+    return this;
+  }
+
+  /**
+   * Returns whether {@link HttpResponse#getContent()} should return raw input stream for this
+   * request.
+   *
+   * @since 1.29
+   */
+  public boolean getResponseReturnRawInputStream() {
+    return responseReturnRawInputStream;
+  }
+
+  /**
+   * Sets whether {@link HttpResponse#getContent()} should return raw input stream for this
+   * request.
+   *
+   * <p>
+   * The default value is {@code false}.
+   * </p>
+   *
+   * @since 1.29
+   */
+  public HttpRequest setResponseReturnRawInputStream(boolean responseReturnRawInputStream) {
+    this.responseReturnRawInputStream = responseReturnRawInputStream;
     return this;
   }
 

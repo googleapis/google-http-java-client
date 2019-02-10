@@ -29,6 +29,7 @@ import java.lang.reflect.Type;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.logging.Level;
+import java.util.zip.GZIPInputStream;
 import junit.framework.TestCase;
 
 /**
@@ -399,5 +400,27 @@ public class HttpResponseTest extends TestCase {
     HttpRequest request =
         transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.execute().getContent();
+  }
+
+  public void testGetContent_gzipEncoding_ReturnRawStream() throws IOException {
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildRequest(String method, final String url) throws IOException {
+        return new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+            result.setContent("");
+            result.setContentEncoding("gzip");
+            result.setContentType("text/plain");
+            return result;
+          }
+        };
+      }
+    };
+    HttpRequest request =
+        transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setResponseReturnRawInputStream(true);
+    assertFalse("it should not decompress stream", request.execute().getContent() instanceof GZIPInputStream);
   }
 }
