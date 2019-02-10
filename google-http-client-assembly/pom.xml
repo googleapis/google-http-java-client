@@ -20,15 +20,15 @@
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-appengine</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-android</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-protobuf</artifactId>
+      <artifactId>google-http-client-apache</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-appengine</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
@@ -48,24 +48,15 @@
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-protobuf</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-xml</artifactId>
     </dependency>
   </dependencies>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <configuration>
-            <descriptors>
-              <descriptor>assembly.xml</descriptor>
-            </descriptors>
-            <finalName>google-http-java-client</finalName>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -108,6 +99,12 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <descriptors>
+            <descriptor>assembly.xml</descriptor>
+          </descriptors>
+          <finalName>google-http-java-client</finalName>
+        </configuration>
       </plugin>
     </plugins>
   </build>

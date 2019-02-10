@@ -178,7 +178,7 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-apache</artifactId>
-        <version>${project.http-client.version}</version>
+        <version>${project.http-client-apache.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
@@ -543,12 +543,26 @@
           </execution>
         </executions>
       </plugin>
+      <!-- Build the dependencies report at package time (needed for the assembly artifact). -->
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>dependencies</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
+
   <properties>
     <!--
       NOTE: if you make a change to these versions, you MUST make the same change to:
@@ -559,7 +573,9 @@
       - google-api-java-client/google-api-client-assembly/android-properties (make the filenames match the version here)
       - Internally, update the default features.json file
     -->
+    <project.http-client.version>1.27.1-SNAPSHOT</project.http-client.version><!-- {x-version-update:google-http-client-parent:current} -->
     <project.http-client.version>1.28.1-SNAPSHOT</project.http-client.version><!-- {x-version-update:google-http-client-parent:current} -->
+    <project.http-client-apache.version>2.0.1-SNAPSHOT</project.http-client-apache.version><!-- {x-version-update:google-http-client-apache:current} -->
     <project.appengine.version>1.9.64</project.appengine.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.jsr305.version>3.0.2</project.jsr305.version>
