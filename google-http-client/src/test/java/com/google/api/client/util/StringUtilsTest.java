@@ -40,7 +40,15 @@ public class StringUtilsTest extends TestCase {
     Assert.assertArrayEquals(SAMPLE_UTF8, StringUtils.getBytesUtf8(SAMPLE));
   }
 
+  public void testToBytesUtf8Null() {
+    assertNull(StringUtils.getBytesUtf8(null));
+  }
+
   public void testFromBytesUtf8() {
     assertEquals(SAMPLE, StringUtils.newStringUtf8(SAMPLE_UTF8));
+  }
+
+  public void testFromBytesUtf8Null() {
+    assertNull(StringUtils.newStringUtf8(null));
   }
 }

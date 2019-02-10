@@ -14,48 +14,73 @@
 
 package com.google.api.client.http.apache;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.ByteArrayStreamingContent;
 import com.google.api.client.util.StringUtils;
-import junit.framework.TestCase;
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.apache.http.Header;
+import org.apache.http.HttpClientConnection;
+import org.apache.http.HttpException;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.params.ClientPNames;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.protocol.HttpRequestExecutor;
+import org.junit.Test;
 
 /**
  * Tests {@link ApacheHttpTransport}.
  *
  * @author Yaniv Inbar
  */
-public class ApacheHttpTransportTest extends TestCase {
+public class ApacheHttpTransportTest {
 
+  @Test
   public void testApacheHttpTransport() {
     ApacheHttpTransport transport = new ApacheHttpTransport();
-    DefaultHttpClient httpClient = (DefaultHttpClient) transport.getHttpClient();
-    checkDefaultHttpClient(httpClient);
-    checkHttpClient(httpClient);
+    checkHttpTransport(transport);
   }
 
+  @Test
   public void testApacheHttpTransportWithParam() {
-    ApacheHttpTransport transport = new ApacheHttpTransport(new DefaultHttpClient());
-    checkHttpClient(transport.getHttpClient());
+    ApacheHttpTransport transport = new ApacheHttpTransport(HttpClients.custom().build());
+    checkHttpTransport(transport);
   }
 
+  @Test
   public void testNewDefaultHttpClient() {
-    checkDefaultHttpClient(ApacheHttpTransport.newDefaultHttpClient());
+    HttpClient client = ApacheHttpTransport.newDefaultHttpClient();
+    checkHttpClient(client);
   }
 
+  private void checkHttpTransport(ApacheHttpTransport transport) {
+    assertNotNull(transport);
+    HttpClient client = transport.getHttpClient();
+    checkHttpClient(client);
+  }
+
+  private void checkHttpClient(HttpClient client) {
+    assertNotNull(client);
+    // TODO(chingor): Is it possible to test this effectively? The newer HttpClient implementations
+    // are read-only and we're testing that we built the client with the right configuration
+  }
+
+  @Test
   public void testRequestsWithContent() throws Exception {
     HttpClient mockClient = mock(HttpClient.class);
     HttpResponse mockResponse = mock(HttpResponse.class);
@@ -103,19 +128,51 @@ public class ApacheHttpTransportTest extends TestCase {
     request.execute();
   }
 
-  private void checkDefaultHttpClient(DefaultHttpClient client) {
-    HttpParams params = client.getParams();
-    assertTrue(client.getConnectionManager() instanceof ThreadSafeClientConnManager);
-    assertEquals(8192, params.getIntParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE, -1));
-    DefaultHttpRequestRetryHandler retryHandler =
-        (DefaultHttpRequestRetryHandler) client.getHttpRequestRetryHandler();
-    assertEquals(0, retryHandler.getRetryCount());
-    assertFalse(retryHandler.isRequestSentRetryEnabled());
+  @Test
+  public void testRequestShouldNotFollowRedirects() throws IOException {
+    final AtomicInteger requestsAttempted = new AtomicInteger(0);
+    HttpRequestExecutor requestExecutor = new HttpRequestExecutor() {
+      @Override
+      public HttpResponse execute(HttpRequest request, HttpClientConnection conn,
+          HttpContext context) throws IOException, HttpException {
+        HttpResponse resp = new BasicHttpResponse(HttpVersion.HTTP_1_1, 302, null);
+        resp.addHeader("location", "https://google.com/path");
+        requestsAttempted.incrementAndGet();
+        return resp;
+      }
+    };
+    HttpClient client = HttpClients.custom().setRequestExecutor(requestExecutor).build();
+    ApacheHttpTransport transport = new ApacheHttpTransport(client);
+    ApacheHttpRequest request = transport.buildRequest("GET", "https://google.com");
+    LowLevelHttpResponse response = request.execute();
+    assertEquals(1, requestsAttempted.get());
+    assertEquals(302, response.getStatusCode());
   }
 
-  private void checkHttpClient(HttpClient client) {
-    HttpParams params = client.getParams();
-    assertFalse(params.getBooleanParameter(ClientPNames.HANDLE_REDIRECTS, true));
-    assertEquals(HttpVersion.HTTP_1_1, HttpProtocolParams.getVersion(params));
+  @Test
+  public void testRequestCanSetHeaders() {
+    final AtomicBoolean interceptorCalled = new AtomicBoolean(false);
+    HttpClient client = HttpClients.custom().addInterceptorFirst(new HttpRequestInterceptor() {
+      @Override
+      public void process(HttpRequest request, HttpContext context)
+          throws HttpException, IOException {
+        Header header = request.getFirstHeader("foo");
+        assertNotNull("Should have found header", header);
+        assertEquals("bar", header.getValue());
+        interceptorCalled.set(true);
+        throw new IOException("cancelling request");
+      }
+    }).build();
+
+    ApacheHttpTransport transport = new ApacheHttpTransport(client);
+    ApacheHttpRequest request = transport.buildRequest("GET", "https://google.com");
+    request.addHeader("foo", "bar");
+    try {
+      LowLevelHttpResponse response = request.execute();
+      fail("should not actually make the request");
+    } catch (IOException exception) {
+      assertEquals("cancelling request", exception.getMessage());
+    }
+    assertTrue("Expected to have called our test interceptor", interceptorCalled.get());
   }
 }

@@ -12,13 +12,13 @@
  * the License.
  */
 
-package com.google.api.client.util;
+package com.google.api.client.http;
 
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpStatusCodes;
+import com.google.api.client.util.Beta;
+import com.google.api.client.util.Preconditions;
 import com.google.common.annotations.VisibleForTesting;
 
+import com.google.common.collect.ImmutableList;
 import io.opencensus.contrib.http.util.HttpPropagationUtil;
 import io.opencensus.trace.BlankSpan;
 import io.opencensus.trace.EndSpanOptions;
@@ -30,18 +30,19 @@ import io.opencensus.trace.Tracer;
 import io.opencensus.trace.Tracing;
 import io.opencensus.trace.propagation.TextFormat;
 
-import java.util.Collections;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
 /**
+ * {@link Beta} <br/>
  * Utilities for Census monitoring and tracing.
  *
  * @author Hailong Wen
  * @since 1.28
  */
+@Beta
 public class OpenCensusUtils {
 
   private static final Logger logger = Logger.getLogger(OpenCensusUtils.class.getName());
@@ -56,12 +57,12 @@ public class OpenCensusUtils {
    * OpenCensus tracing component. When no OpenCensus implementation is provided, it will return a
    * no-op tracer.
    */
-  private static Tracer tracer = Tracing.getTracer();
+  private static final Tracer tracer = Tracing.getTracer();
 
   /**
    * Sequence id generator for message event.
    */
-  private static AtomicLong idGenerator = new AtomicLong();
+  private static final AtomicLong idGenerator = new AtomicLong();
 
   /**
    * Whether spans should be recorded locally. Defaults to true.
@@ -252,8 +253,9 @@ public class OpenCensusUtils {
     }
 
     try {
-      Tracing.getExportComponent().getSampledSpanStore().registerSpanNamesForCollection(
-          Collections.<String>singletonList(SPAN_NAME_HTTP_REQUEST_EXECUTE));
+      Tracing.getExportComponent()
+          .getSampledSpanStore()
+          .registerSpanNamesForCollection(ImmutableList.of(SPAN_NAME_HTTP_REQUEST_EXECUTE));
     } catch (Exception e) {
       logger.log(
           Level.WARNING, "Cannot register default OpenCensus span names for collection.", e);
