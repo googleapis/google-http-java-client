@@ -241,6 +241,21 @@
         <version>${project.jdo2-api.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-core</artifactId>
+        <version>${project.datanucleus-core.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-api-jdo</artifactId>
+        <version>${project.datanucleus-api-jdo.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.datanucleus</groupId>
+        <artifactId>datanucleus-rdbms</artifactId>
+        <version>${project.datanucleus-rdbms.version}</version>
+      </dependency>
+      <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
         <version>5.1.18</version>
@@ -573,6 +588,10 @@
     <project.commons-logging.version>1.1.1</project.commons-logging.version>
     <project.httpclient.version>4.5.5</project.httpclient.version>
     <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
+    <project.datanucleus-core.version>3.2.2</project.datanucleus-core.version>
+    <project.datanucleus-api-jdo.version>3.2.1</project.datanucleus-api-jdo.version>
+    <project.datanucleus-rdbms.version>3.2.1</project.datanucleus-rdbms.version>
+    <project.datanucleus-maven-plugin.version>4.0.3</project.datanucleus-maven-plugin.version>
     <project.opencensus.version>0.18.0</project.opencensus.version>
     <project.root-directory>..</project.root-directory>
   </properties>
