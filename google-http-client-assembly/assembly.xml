@@ -63,12 +63,6 @@
       <filtered>true</filtered>
     </file>
     <file>
-      <source>properties/google-http-client-jdo.jar.properties</source>
-      <destName>google-http-client-jdo-${project.version}.jar.properties</destName>
-      <outputDirectory>google-http-java-client/libs</outputDirectory>
-      <filtered>true</filtered>
-    </file>
-    <file>
       <source>properties/google-http-client-protobuf.jar.properties</source>
       <destName>google-http-client-protobuf-${project.version}.jar.properties</destName>
       <outputDirectory>google-http-java-client/libs</outputDirectory>
@@ -133,11 +127,6 @@
     <file>
       <source>../google-http-client-jackson2/target/site/dependencies.html</source>
       <destName>google-http-client-jackson2-dependencies.html</destName>
-      <outputDirectory>google-http-java-client/dependencies</outputDirectory>
-    </file>
-    <file>
-      <source>../google-http-client-jdo/target/site/dependencies.html</source>
-      <destName>google-http-client-jdo-dependencies.html</destName>
       <outputDirectory>google-http-java-client/dependencies</outputDirectory>
     </file>
     <file>
