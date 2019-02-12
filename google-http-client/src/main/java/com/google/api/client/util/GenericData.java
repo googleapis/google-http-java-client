@@ -204,26 +204,19 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
     }
     if (o instanceof GenericData) {
       GenericData that = (GenericData) o;
-      return Objects.equals(this.classInfo, that.classInfo)
-          && Objects.equals(this.unknownFields, that.unknownFields);
+      return super.equals(that) && Objects.equals(this.classInfo, that.classInfo);
     }
     return false;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(classInfo, unknownFields);
+    return Objects.hash(super.hashCode(), classInfo);
   }
 
   @Override
   public String toString() {
-    return "GenericData{"
-        + "classInfo="
-        + classInfo.names
-        + ", "
-        + "unknownFields="
-        + unknownFields
-        + "}";
+    return "GenericData{" + "classInfo=" + classInfo.names + ", " + super.toString() + "}";
   }
 
   /**

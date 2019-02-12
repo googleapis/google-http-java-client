@@ -65,10 +65,10 @@ public class GenericDataTest extends TestCase {
 
   public void testClone_changingEntrySet() {
     GenericData data = new GenericData();
-    assertEquals("GenericData{classInfo=[], unknownFields={}}", data.toString());
+    assertEquals("GenericData{classInfo=[], {}}", data.toString());
     GenericData clone = data.clone();
     clone.set("foo", "bar");
-    assertEquals("GenericData{classInfo=[], unknownFields={foo=bar}}", clone.toString());
+    assertEquals("GenericData{classInfo=[], {foo=bar}}", clone.toString());
   }
 
   public void testSetIgnoreCase_unknownKey() {
