@@ -1200,14 +1200,14 @@ public final class HttpRequest {
   /**
    * {@link Beta} <br/>
    * Executes this request asynchronously using {@link #executeAsync(Executor)} in a single separate
-   * thread using {@link Executors#newSingleThreadExecutor()}.
+   * thread using {@link Executors#newFixedThreadPool(1)}.
    *
    * @return A future for accessing the results of the asynchronous request.
    * @since 1.13
    */
   @Beta
   public Future<HttpResponse> executeAsync() {
-    return executeAsync(Executors.newSingleThreadExecutor());
+    return executeAsync(Executors.newFixedThreadPool(1));
   }
 
   /**
