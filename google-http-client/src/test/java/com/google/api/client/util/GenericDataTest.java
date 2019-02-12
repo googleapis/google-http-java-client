@@ -48,17 +48,34 @@ public class GenericDataTest extends TestCase {
     }
   }
 
+  private class GenericData1 extends GenericData {
+    public GenericData1() {
+      super(EnumSet.of(Flags.IGNORE_CASE));
+    }
+
+    @Key("FieldA")
+    public String fieldA;
+  }
+
+  private class GenericData2 extends GenericData {
+    public GenericData2() {
+      super(EnumSet.of(Flags.IGNORE_CASE));
+    }
+
+    @Key("FieldA")
+    public String fieldA;
+  }
+
   public void testEquals_Symmetric() {
-    GenericData actual = new GenericData();
-    actual.set("foo", "bar");
-    GenericData expected = new GenericData();
+    GenericData actual = new GenericData1();
+    actual.set("fieldA", "bar");
+    GenericData expected = new GenericData2();
     // Test that objects equal
-    expected.set("foo", "bar");
+    expected.set("fieldA", "bar");
     assertNotSame(expected, actual);
-    assertEquals(expected.hashCode(), actual.hashCode());
     assertTrue(expected.equals(expected) && actual.equals(actual));
     // Test that objects not equal
-    expected.set("foo", "far");
+    expected.set("fieldA", "far");
     assertFalse(expected.equals(actual) || actual.equals(expected));
     assertFalse(expected.hashCode() == actual.hashCode());
   }
