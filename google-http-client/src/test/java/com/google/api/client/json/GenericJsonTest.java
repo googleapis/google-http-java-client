@@ -26,6 +26,6 @@ public class GenericJsonTest extends TestCase {
   public void testToString_noFactory() {
     GenericJson data = new GenericJson();
     data.put("a", "b");
-    assertEquals("{a=b}", data.toString());
+    assertEquals("GenericData{classInfo=[], {a=b}}", data.toString());
   }
 }
