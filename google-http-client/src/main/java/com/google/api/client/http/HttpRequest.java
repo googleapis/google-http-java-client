@@ -23,6 +23,7 @@ import com.google.api.client.util.Sleeper;
 import com.google.api.client.util.StreamingContent;
 import com.google.api.client.util.StringUtils;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.opencensus.common.Scope;
 import io.opencensus.contrib.http.util.HttpTraceAttributeConstants;
 import io.opencensus.trace.AttributeValue;
@@ -1207,7 +1208,8 @@ public final class HttpRequest {
    */
   @Beta
   public Future<HttpResponse> executeAsync() {
-    return executeAsync(Executors.newFixedThreadPool(1));
+    return executeAsync(
+        Executors.newFixedThreadPool(1, new ThreadFactoryBuilder().setDaemon(true).build()));
   }
 
   /**
