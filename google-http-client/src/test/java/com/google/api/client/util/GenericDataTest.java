@@ -70,12 +70,34 @@ public class GenericDataTest extends TestCase {
     GenericData actual = new GenericData1();
     actual.set("fieldA", "bar");
     GenericData expected = new GenericData2();
-    // Test that objects equal
+    // Test that objects are equal
     expected.set("fieldA", "bar");
     assertNotSame(expected, actual);
     assertTrue(expected.equals(expected) && actual.equals(actual));
-    // Test that objects not equal
+    // Test that objects not are equal
     expected.set("fieldA", "far");
+    assertFalse(expected.equals(actual) || actual.equals(expected));
+    assertFalse(expected.hashCode() == actual.hashCode());
+  }
+
+  public void testEquals_SymmetricWithSameClass() {
+    GenericData actual = new MyData();
+    actual.set("fieldA", "bar");
+    GenericData expected = new MyData();
+    // Test that objects are equal
+    expected.set("fieldA", "bar");
+    assertNotSame(expected, actual);
+    assertTrue(expected.equals(expected) && actual.equals(actual));
+    assertTrue(expected.hashCode() == expected.hashCode());
+  }
+
+  public void testNotEquals_SymmetricWithSameClass() {
+    GenericData actual = new MyData();
+    actual.set("fieldA", "bar");
+    GenericData expected = new MyData();
+    // Test that objects are not equal
+    expected.set("fieldA", "far");
+    assertNotSame(expected, actual);
     assertFalse(expected.equals(actual) || actual.equals(expected));
     assertFalse(expected.hashCode() == actual.hashCode());
   }
