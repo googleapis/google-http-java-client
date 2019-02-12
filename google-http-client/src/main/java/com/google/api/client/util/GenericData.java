@@ -20,6 +20,7 @@ import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
@@ -194,6 +195,35 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
    */
   public final void setUnknownKeys(Map<String, Object> unknownFields) {
     this.unknownFields = unknownFields;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+    if (o instanceof GenericData) {
+      GenericData that = (GenericData) o;
+      return Objects.equals(this.classInfo, that.classInfo)
+          && Objects.equals(this.unknownFields, that.unknownFields);
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(classInfo, unknownFields);
+  }
+
+  @Override
+  public String toString() {
+    return "GenericData{"
+        + "classInfo="
+        + classInfo.names
+        + ", "
+        + "unknownFields="
+        + unknownFields
+        + "}";
   }
 
   /**

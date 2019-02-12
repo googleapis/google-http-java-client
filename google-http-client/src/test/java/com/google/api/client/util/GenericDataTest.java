@@ -48,13 +48,27 @@ public class GenericDataTest extends TestCase {
     }
   }
 
+  public void testEquals_Symmetric() {
+    GenericData actual = new GenericData();
+    actual.set("foo", "bar");
+    GenericData expected = new GenericData();
+    // Test that objects equal
+    expected.set("foo", "bar");
+    assertNotSame(expected, actual);
+    assertEquals(expected.hashCode(), actual.hashCode());
+    assertTrue(expected.equals(expected) && actual.equals(actual));
+    // Test that objects not equal
+    expected.set("foo", "far");
+    assertFalse(expected.equals(actual) || actual.equals(expected));
+    assertFalse(expected.hashCode() == actual.hashCode());
+  }
 
   public void testClone_changingEntrySet() {
     GenericData data = new GenericData();
-    assertEquals("{}", data.toString());
+    assertEquals("GenericData{classInfo=[], unknownFields={}}", data.toString());
     GenericData clone = data.clone();
     clone.set("foo", "bar");
-    assertEquals("{foo=bar}", clone.toString());
+    assertEquals("GenericData{classInfo=[], unknownFields={foo=bar}}", clone.toString());
   }
 
   public void testSetIgnoreCase_unknownKey() {
