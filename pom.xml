@@ -548,7 +548,6 @@
       - google-api-java-client/google-api-client-assembly/android-properties (make the filenames match the version here)
       - Internally, update the default features.json file
     -->
-    <project.http-client.version>1.27.1-SNAPSHOT</project.http-client.version><!-- {x-version-update:google-http-client-parent:current} -->
     <project.http-client.version>1.28.1-SNAPSHOT</project.http-client.version><!-- {x-version-update:google-http-client-parent:current} -->
     <project.http-client-apache.version>2.0.1-SNAPSHOT</project.http-client-apache.version><!-- {x-version-update:google-http-client-apache:current} -->
     <project.appengine.version>1.9.64</project.appengine.version>
