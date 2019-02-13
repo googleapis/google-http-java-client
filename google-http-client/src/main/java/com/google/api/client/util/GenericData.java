@@ -199,14 +199,11 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
 
   @Override
   public boolean equals(Object o) {
-    if (o == this) {
-      return true;
+    if (!(o instanceof GenericData)) {
+      return false;
     }
-    if (o instanceof GenericData) {
-      GenericData that = (GenericData) o;
-      return super.equals(that) && Objects.equals(this.classInfo, that.classInfo);
-    }
-    return false;
+    GenericData that = (GenericData) o;
+    return super.equals(that) && Objects.equals(this.classInfo, that.classInfo);
   }
 
   @Override
