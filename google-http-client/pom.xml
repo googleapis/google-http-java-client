@@ -12,7 +12,7 @@
   <name>Google HTTP Client Library for Java</name>
   <description>
     Google HTTP Client Library for Java. Functionality that works on all supported Java platforms,
-    including Java 6 (or higher) desktop (SE) and web (EE), Android, and Google App Engine.
+    including Java 7 (or higher) desktop (SE) and web (EE), Android, and Google App Engine.
   </description>
 
   <build>
@@ -68,12 +68,11 @@
     </plugins>
   </build>
   <dependencies>
-    <dependency>
-      <groupId>com.google.android</groupId>
-      <artifactId>android</artifactId>
-      <version>1.5_r4</version>
-      <scope>provided</scope>
-    </dependency>
+<dependency>
+  <groupId>org.apache.httpcomponents</groupId>
+  <artifactId>httpclient</artifactId>
+  <version>4.3.6</version>
+</dependency>
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
