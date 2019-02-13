@@ -23,6 +23,7 @@ import com.google.api.client.util.Sleeper;
 import com.google.api.client.util.StreamingContent;
 import com.google.api.client.util.StringUtils;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.opencensus.common.Scope;
 import io.opencensus.contrib.http.util.HttpTraceAttributeConstants;
 import io.opencensus.trace.AttributeValue;
@@ -1200,14 +1201,15 @@ public final class HttpRequest {
   /**
    * {@link Beta} <br/>
    * Executes this request asynchronously using {@link #executeAsync(Executor)} in a single separate
-   * thread using {@link Executors#newSingleThreadExecutor()}.
+   * thread using {@link Executors#newFixedThreadPool(1)}.
    *
    * @return A future for accessing the results of the asynchronous request.
    * @since 1.13
    */
   @Beta
   public Future<HttpResponse> executeAsync() {
-    return executeAsync(Executors.newSingleThreadExecutor());
+    return executeAsync(
+        Executors.newFixedThreadPool(1, new ThreadFactoryBuilder().setDaemon(true).build()));
   }
 
   /**
