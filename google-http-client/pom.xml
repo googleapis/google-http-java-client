@@ -69,10 +69,8 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>com.google.android</groupId>
-      <artifactId>android</artifactId>
-      <version>1.5_r4</version>
-      <scope>provided</scope>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
