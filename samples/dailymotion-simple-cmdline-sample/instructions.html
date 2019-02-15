@@ -14,22 +14,19 @@
 
 <h3>Checkout Instructions</h3>
 
-<p><b>Prerequisites:</b> install <a href="https://www.java.com/en/">Java 7 or later</a>, <a
-  href="http://mercurial.selenic.com/">Mercurial</a>, and <a
-  href="http://maven.apache.org/download.html">Maven</a>. You may need to set
+<p><b>Prerequisites:</b> install <a href="https://www.java.com/en/">Java 7 or later</a>, git, 
+  and <a href="http://maven.apache.org/download.html">Maven</a>. You may need to set
 your <code>JAVA_HOME</code>.</p>
 
-<pre><tt>git clone https://github.com/googleapis/google-http-java-client
-cd google-http-java-client-samples/dailymotion-simple-cmdline-sample
-mvn compile
-mvn -q exec:java</tt></pre>
+<pre><tt>$ git clone https://github.com/googleapis/google-http-java-client
+$ cd google-http-java-client-samples/dailymotion-simple-cmdline-sample
+$ mvn compile
+$ mvn -q exec:java</tt></pre>
 
-<h3>Setup Project in Eclipse 3.5/3.6</h3>
+<h3>Setup Project in Eclipse</h3>
 
-<p><b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse</a>,
-the <a href="http://javaforge.com/project/HGE">Mercurial plugin</a>, and the <a
-  href="http://m2eclipse.sonatype.org/installing-m2eclipse.html">Maven
-plugin</a>.</p>
+<p><b>Prerequisites:</b> install <a href="http://www.eclipse.org/downloads/">Eclipse IDE</a>
+and the <a href="https://www.eclipse.org/m2e/">M2Eclipse plugin</a>.</p>
 
 <ul>
   <li>Setup Eclipse Preferences
@@ -37,8 +34,8 @@ plugin</a>.</p>
     <li>Window &gt; Preferences... (or on Mac, Eclipse &gt; Preferences...)</li>
     <li>Select Maven
     <ul>
-      <li>check on "Download Artifact Sources"</li>
-      <li>check on "Download Artifact JavaDoc"</li>
+      <li>Check "Download Artifact Sources"</li>
+      <li>Check "Download Artifact JavaDoc"</li>
     </ul>
     </li>
   </ul>
@@ -46,10 +43,10 @@ plugin</a>.</p>
   <li>Import <code>dailymotion-simple-cmdline-sample</code> project
   <ul>
     <li>File &gt; Import...</li>
-    <li>Select "General &gt; Existing Project into Workspace" and click
+    <li>Select "Maven &gt; Existing Maven Project" and click
     "Next"</li>
-    <li>Click "Browse" next to "Select root directory", find <code><i>[someDirectory]</i>/google-http-java-client-samples/dailymotion-simple-cmdline-sample</code>
-    and click "Next"</li>
+    <li>Click "Browse" next to "Select root directory", find 
+       <code>google-http-java-client/samples/dailymotion-simple-cmdline-sample</code></li>
     <li>Click "Finish"</li>
   </ul>
   </li>
@@ -57,8 +54,7 @@ plugin</a>.</p>
   <ul>
     <li>Right-click on project dailymotion-simple-cmdline-sample</li>
     <li>Run As &gt; Java Application</li>
-    <li>If asked, type "DailyMotionSample" and click OK</li>
-    <li>To enabled logging:
+    <li>To enable logging:
     <ul>
       <li>Run &gt; Run Configurations...</li>
       <li>Click on "Java Application &gt; DailyMotionSample"</li>
