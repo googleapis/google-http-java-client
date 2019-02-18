@@ -14,12 +14,15 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertArrayEquals;
+
 import com.google.api.client.http.HttpResponseException.Builder;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.StringUtils;
+import com.google.common.io.ByteStreams;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -61,6 +64,45 @@ public class HttpResponseExceptionTest extends TestCase {
     HttpResponseException e = builder.build();
     assertEquals("message", e.getMessage());
     assertEquals("content", e.getContent());
+    assertEquals(9, e.getStatusCode());
+    assertEquals("statusMessage", e.getStatusMessage());
+    assertTrue(headers == e.getHeaders());
+  }
+
+  public void testGetContentAsInputStream() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    Builder builder =
+        new HttpResponseException.Builder(9, "statusMessage", headers)
+            .setMessage("message")
+            .setContent("content");
+    assertEquals("message", builder.getMessage());
+    assertEquals("content", builder.getContent());
+    assertEquals(9, builder.getStatusCode());
+    assertEquals("statusMessage", builder.getStatusMessage());
+    assertTrue(headers == builder.getHeaders());
+    HttpResponseException e = builder.build();
+    assertEquals("message", e.getMessage());
+    byte[] bytes = ByteStreams.toByteArray(e.getContentAsInputStream());
+    assertArrayEquals("content".getBytes(), bytes);
+    assertEquals(9, e.getStatusCode());
+    assertEquals("statusMessage", e.getStatusMessage());
+    assertTrue(headers == e.getHeaders());
+  }
+
+  public void testGetNullContentAsInputStream() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    Builder builder =
+        new HttpResponseException.Builder(9, "statusMessage", headers)
+            .setMessage("message")
+            .setContent(null);
+    assertEquals("message", builder.getMessage());
+    assertEquals(null, builder.getContent());
+    assertEquals(9, builder.getStatusCode());
+    assertEquals("statusMessage", builder.getStatusMessage());
+    assertTrue(headers == builder.getHeaders());
+    HttpResponseException e = builder.build();
+    assertEquals("message", e.getMessage());
+    assertNull(e.getContentAsInputStream());
     assertEquals(9, e.getStatusCode());
     assertEquals("statusMessage", e.getStatusMessage());
     assertTrue(headers == e.getHeaders());

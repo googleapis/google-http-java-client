@@ -17,7 +17,9 @@ package com.google.api.client.http;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Exception thrown when an error status code is detected in an HTTP response.
@@ -125,6 +127,16 @@ public class HttpResponseException extends IOException {
    */
   public final String getContent() {
     return content;
+  }
+
+  /**
+   * Returns the HTTP response content or {@code null} for none as an input stream.
+   *
+   * @since 1.28
+   */
+  public final InputStream getContentAsInputStream() {
+    if (content == null) return null;
+    return new ByteArrayInputStream(content.getBytes());
   }
 
   /**
