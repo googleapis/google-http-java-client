@@ -84,6 +84,7 @@ public class HttpResponseExceptionTest extends TestCase {
     assertEquals("message", e.getMessage());
     byte[] bytes = ByteStreams.toByteArray(e.getContentAsInputStream());
     assertArrayEquals("content".getBytes(), bytes);
+    assertEquals("content", e.getContent());
     assertEquals(9, e.getStatusCode());
     assertEquals("statusMessage", e.getStatusMessage());
     assertTrue(headers == e.getHeaders());
@@ -103,6 +104,7 @@ public class HttpResponseExceptionTest extends TestCase {
     HttpResponseException e = builder.build();
     assertEquals("message", e.getMessage());
     assertNull(e.getContentAsInputStream());
+    assertEquals(null, e.getContent());
     assertEquals(9, e.getStatusCode());
     assertEquals("statusMessage", e.getStatusMessage());
     assertTrue(headers == e.getHeaders());
