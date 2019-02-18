@@ -130,7 +130,7 @@ public class HttpResponseException extends IOException {
   }
 
   /**
-   * Returns the HTTP response content or {@code null} for none as an input stream.
+   * Returns the HTTP response or {@code null} for none as an input stream.
    *
    * @since 1.28
    */
