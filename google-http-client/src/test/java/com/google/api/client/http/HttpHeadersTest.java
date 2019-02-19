@@ -86,6 +86,7 @@ public class HttpHeadersTest extends TestCase {
     myHeaders.setAcceptEncoding(null);
     myHeaders.setContentLength(Long.MAX_VALUE);
     myHeaders.setUserAgent("foo");
+    myHeaders.setWarning("warn");
     myHeaders.set("a", "b");
     myHeaders.value = E.VALUE;
     myHeaders.otherValue = E.OTHER_VALUE;
@@ -103,6 +104,7 @@ public class HttpHeadersTest extends TestCase {
     assertEquals(ImmutableList.of("a1", "a2"), lowLevelRequest.getHeaderValues("r"));
     assertTrue(lowLevelRequest.getHeaderValues("accept-encoding").isEmpty());
     assertEquals(ImmutableList.of("foo"), lowLevelRequest.getHeaderValues("user-agent"));
+    assertEquals(ImmutableList.of("warn"), lowLevelRequest.getHeaderValues("warning"));
     assertEquals(ImmutableList.of("b"), lowLevelRequest.getHeaderValues("a"));
     assertEquals(ImmutableList.of("VALUE"), lowLevelRequest.getHeaderValues("value"));
     assertEquals(ImmutableList.of("other"), lowLevelRequest.getHeaderValues("othervalue"));
@@ -128,6 +130,7 @@ public class HttpHeadersTest extends TestCase {
     expectedOutput.append("someLong: 0\r\n");
     expectedOutput.append("User-Agent: foo\r\n");
     expectedOutput.append("value: VALUE\r\n");
+    expectedOutput.append("Warning: warn\r\n");
     expectedOutput.append("a: b\r\n");
 
     assertEquals(expectedOutput.toString(), outputStream.toString());
@@ -139,6 +142,7 @@ public class HttpHeadersTest extends TestCase {
     rawHeaders.setContentLength(Long.MAX_VALUE);
     rawHeaders.setContentType("foo/bar");
     rawHeaders.setUserAgent("FooBar");
+    rawHeaders.setWarning("warn");
     rawHeaders.set("foo", "bar");
     rawHeaders.set("someLong", "5");
     rawHeaders.set("list", ImmutableList.of("a", "b", "c"));
@@ -154,6 +158,7 @@ public class HttpHeadersTest extends TestCase {
     assertEquals(Long.MAX_VALUE, myHeaders.getContentLength().longValue());
     assertEquals("foo/bar", myHeaders.getContentType());
     assertEquals("FooBar", myHeaders.getUserAgent());
+    assertEquals("warn", myHeaders.getWarning());
     assertEquals("bar", myHeaders.foo);
     assertEquals(5, myHeaders.someLong);
     assertEquals(ImmutableList.of("5"), myHeaders.objNum);
@@ -197,6 +202,7 @@ public class HttpHeadersTest extends TestCase {
     myHeaders.setAcceptEncoding(null);
     myHeaders.setContentLength(Long.MAX_VALUE);
     myHeaders.setUserAgent("foo");
+    myHeaders.setWarning("warn");
     myHeaders.set("a", "b");
     myHeaders.value = E.VALUE;
     myHeaders.otherValue = E.OTHER_VALUE;
@@ -207,6 +213,7 @@ public class HttpHeadersTest extends TestCase {
     assertEquals("a1", myHeaders.getFirstHeaderStringValue("r"));
     assertNull(myHeaders.getFirstHeaderStringValue("accept-encoding"));
     assertEquals("foo", myHeaders.getFirstHeaderStringValue("user-agent"));
+    assertEquals("warn", myHeaders.getFirstHeaderStringValue("warning"));
     assertEquals("b", myHeaders.getFirstHeaderStringValue("a"));
     assertEquals("VALUE", myHeaders.getFirstHeaderStringValue("value"));
     assertEquals("other", myHeaders.getFirstHeaderStringValue("othervalue"));
@@ -219,6 +226,7 @@ public class HttpHeadersTest extends TestCase {
     assertEquals(ImmutableList.of("a1", "a2"), myHeaders.getHeaderStringValues("r"));
     assertTrue(myHeaders.getHeaderStringValues("accept-encoding").isEmpty());
     assertEquals(ImmutableList.of("foo"), myHeaders.getHeaderStringValues("user-agent"));
+    assertEquals(ImmutableList.of("warn"), myHeaders.getHeaderStringValues("warning"));
     assertEquals(ImmutableList.of("b"), myHeaders.getHeaderStringValues("a"));
     assertEquals(ImmutableList.of("VALUE"), myHeaders.getHeaderStringValues("value"));
     assertEquals(ImmutableList.of("other"), myHeaders.getHeaderStringValues("othervalue"));

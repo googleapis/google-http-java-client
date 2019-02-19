@@ -158,6 +158,10 @@ public class HttpHeaders extends GenericData {
   @Key("User-Agent")
   private List<String> userAgent;
 
+  /** {@code "Warning"} header. */
+  @Key("Warning")
+  private List<String> warning;
+
   /** {@code "WWW-Authenticate"} header. */
   @Key("WWW-Authenticate")
   private List<String> authenticate;
@@ -809,6 +813,37 @@ public class HttpHeaders extends GenericData {
   public HttpHeaders setAuthenticate(String authenticate) {
     this.authenticate = getAsList(authenticate);
     return this;
+  }
+
+  /**
+   * Sets the {@code "Warning"} header or {@code null} for none.
+   *
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
+   *
+   * @since 1.28
+   */
+  public HttpHeaders setWarning(String warning) {
+    this.warning = getAsList(warning);
+    return this;
+  }
+
+  /**
+   * Returns the first {@code "Warning"} header or {@code null} for none.
+   *
+   * @since 1.28
+   */
+  public final String getWarning() {
+    return getFirstHeaderValue(warning);
+  }
+
+  /**
+   * Returns all {@code "Warning"} headers or {@code null} for none.
+   *
+   * @since 1.28
+   */
+  public final List<String> getWarningAsList() {
+    return warning;
   }
 
   /**
