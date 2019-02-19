@@ -242,6 +242,25 @@ public class DataTest extends TestCase {
       // expected
     }
     assertNull(Data.parsePrimitiveValue(Void.class, "abc"));
+    assertNull(Data.parsePrimitiveValue(Enum.class, null));
+  }
+
+  private enum MyEnum {
+    A("a");
+    private final String s;
+
+    MyEnum(String s) {
+      this.s = s;
+    }
+  }
+
+  public void testParsePrimitiveValueWithUnknownEnum() {
+    try {
+      Data.parsePrimitiveValue(MyEnum.class, "foo");
+      fail("expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
   }
 
   static class Resolve<X, T extends Number> {
