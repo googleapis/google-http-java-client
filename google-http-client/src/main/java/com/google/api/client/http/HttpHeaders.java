@@ -824,17 +824,15 @@ public class HttpHeaders extends GenericData {
    * @since 1.28
    */
   public HttpHeaders setWarning(String warning) {
-    this.warning = getAsList(warning);
+    if (warning == null) {
+      return this;
+    }
+    if (this.warning == null) {
+      this.warning = getAsList(warning);
+    } else {
+      this.warning.add(warning);
+    }
     return this;
-  }
-
-  /**
-   * Returns the first {@code "Warning"} header or {@code null} for none.
-   *
-   * @since 1.28
-   */
-  public final String getWarning() {
-    return getFirstHeaderValue(warning);
   }
 
   /**
@@ -842,8 +840,8 @@ public class HttpHeaders extends GenericData {
    *
    * @since 1.28
    */
-  public final List<String> getWarningAsList() {
-    return warning;
+  public final List<String> getWarnings() {
+    return new ArrayList<>(warning);
   }
 
   /**
