@@ -816,14 +816,14 @@ public class HttpHeaders extends GenericData {
   }
 
   /**
-   * Sets the {@code "Warning"} header or {@code null} for none.
+   * Adds the {@code "Warning"} header or {@code null} for none.
    *
    * <p>Overriding is only supported for the purpose of calling the super implementation and
    * changing the return type, but nothing else.
    *
    * @since 1.28
    */
-  public HttpHeaders setWarning(String warning) {
+  public HttpHeaders addWarning(String warning) {
     if (warning == null) {
       return this;
     }

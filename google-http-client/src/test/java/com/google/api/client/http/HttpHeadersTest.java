@@ -86,8 +86,8 @@ public class HttpHeadersTest extends TestCase {
     myHeaders.setAcceptEncoding(null);
     myHeaders.setContentLength(Long.MAX_VALUE);
     myHeaders.setUserAgent("foo");
-    myHeaders.setWarning("warn0");
-    myHeaders.setWarning("warn1");
+    myHeaders.addWarning("warn0");
+    myHeaders.addWarning("warn1");
     myHeaders.set("a", "b");
     myHeaders.value = E.VALUE;
     myHeaders.otherValue = E.OTHER_VALUE;
@@ -144,8 +144,8 @@ public class HttpHeadersTest extends TestCase {
     rawHeaders.setContentLength(Long.MAX_VALUE);
     rawHeaders.setContentType("foo/bar");
     rawHeaders.setUserAgent("FooBar");
-    rawHeaders.setWarning("warn0");
-    rawHeaders.setWarning("warn1");
+    rawHeaders.addWarning("warn0");
+    rawHeaders.addWarning("warn1");
     rawHeaders.set("foo", "bar");
     rawHeaders.set("someLong", "5");
     rawHeaders.set("list", ImmutableList.of("a", "b", "c"));
@@ -206,7 +206,7 @@ public class HttpHeadersTest extends TestCase {
     myHeaders.setAcceptEncoding(null);
     myHeaders.setContentLength(Long.MAX_VALUE);
     myHeaders.setUserAgent("foo");
-    myHeaders.setWarning("warn");
+    myHeaders.addWarning("warn");
     myHeaders.set("a", "b");
     myHeaders.value = E.VALUE;
     myHeaders.otherValue = E.OTHER_VALUE;
