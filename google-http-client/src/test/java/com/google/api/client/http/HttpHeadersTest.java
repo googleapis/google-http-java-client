@@ -161,8 +161,8 @@ public class HttpHeadersTest extends TestCase {
     assertEquals(Long.MAX_VALUE, myHeaders.getContentLength().longValue());
     assertEquals("foo/bar", myHeaders.getContentType());
     assertEquals("FooBar", myHeaders.getUserAgent());
-    assertEquals("warn0", myHeaders.getWarnings().get(0));
-    assertEquals("warn1", myHeaders.getWarnings().get(1));
+    assertEquals("warn0", myHeaders.getWarning().get(0));
+    assertEquals("warn1", myHeaders.getWarning().get(1));
     assertEquals("bar", myHeaders.foo);
     assertEquals(5, myHeaders.someLong);
     assertEquals(ImmutableList.of("5"), myHeaders.objNum);
