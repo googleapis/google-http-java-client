@@ -160,7 +160,7 @@ public class HttpHeaders extends GenericData {
 
   /** {@code "Warning"} header. */
   @Key("Warning")
-  private List<String> warning;
+  private List<String> warnings;
 
   /** {@code "WWW-Authenticate"} header. */
   @Key("WWW-Authenticate")
@@ -827,10 +827,10 @@ public class HttpHeaders extends GenericData {
     if (warning == null) {
       return this;
     }
-    if (this.warning == null) {
-      this.warning = getAsList(warning);
+    if (this.warnings == null) {
+      this.warnings = getAsList(warning);
     } else {
-      this.warning.add(warning);
+      this.warnings.add(warning);
     }
     return this;
   }
@@ -841,7 +841,7 @@ public class HttpHeaders extends GenericData {
    * @since 1.28
    */
   public final List<String> getWarnings() {
-    return new ArrayList<>(warning);
+    return new ArrayList<>(warnings);
   }
 
   /**
