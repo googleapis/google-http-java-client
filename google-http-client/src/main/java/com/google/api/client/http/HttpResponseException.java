@@ -135,7 +135,9 @@ public class HttpResponseException extends IOException {
    * @since 1.28
    */
   public final InputStream getContentAsInputStream() {
-    if (content == null) return null;
+    if (content == null) {
+      return null;
+    }
     return new ByteArrayInputStream(content.getBytes());
   }
 
