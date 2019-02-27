@@ -37,6 +37,8 @@ import junit.framework.TestCase;
  * @author Yaniv Inbar
  */
 public class HttpResponseExceptionTest extends TestCase {
+  private static String BINARY_CONTENT = "rDE2iq2Ob9Bbo5oDS8H8eCMw7yCzx+AAAAAElFTkSuQmCC";
+  private static String IMAGE_CONTENT = "g9\\357ax\\205{~\\370\\3524\\371鶌>S\\220\\263D5";
 
   public void testConstructor() throws Exception {
     HttpTransport transport = new MockHttpTransport();
@@ -85,6 +87,48 @@ public class HttpResponseExceptionTest extends TestCase {
     byte[] bytes = ByteStreams.toByteArray(e.getContentAsInputStream());
     assertArrayEquals("content".getBytes(), bytes);
     assertEquals("content", e.getContent());
+    assertEquals(9, e.getStatusCode());
+    assertEquals("statusMessage", e.getStatusMessage());
+    assertTrue(headers == e.getHeaders());
+  }
+
+  public void testGetBinaryContentAsInputStream() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    Builder builder =
+        new HttpResponseException.Builder(9, "statusMessage", headers)
+            .setMessage("message")
+            .setContent(BINARY_CONTENT);
+    assertEquals("message", builder.getMessage());
+    assertEquals(BINARY_CONTENT, builder.getContent());
+    assertEquals(9, builder.getStatusCode());
+    assertEquals("statusMessage", builder.getStatusMessage());
+    assertTrue(headers == builder.getHeaders());
+    HttpResponseException e = builder.build();
+    assertEquals("message", e.getMessage());
+    byte[] bytes = ByteStreams.toByteArray(e.getContentAsInputStream());
+    assertArrayEquals(BINARY_CONTENT.getBytes(), bytes);
+    assertEquals(BINARY_CONTENT, e.getContent());
+    assertEquals(9, e.getStatusCode());
+    assertEquals("statusMessage", e.getStatusMessage());
+    assertTrue(headers == e.getHeaders());
+  }
+
+  public void testGetImageContentAsInputStream() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    Builder builder =
+        new HttpResponseException.Builder(9, "statusMessage", headers)
+            .setMessage("message")
+            .setContent(IMAGE_CONTENT);
+    assertEquals("message", builder.getMessage());
+    assertEquals(IMAGE_CONTENT, builder.getContent());
+    assertEquals(9, builder.getStatusCode());
+    assertEquals("statusMessage", builder.getStatusMessage());
+    assertTrue(headers == builder.getHeaders());
+    HttpResponseException e = builder.build();
+    assertEquals("message", e.getMessage());
+    byte[] bytes = ByteStreams.toByteArray(e.getContentAsInputStream());
+    assertArrayEquals(IMAGE_CONTENT.getBytes(), bytes);
+    assertEquals(IMAGE_CONTENT, e.getContent());
     assertEquals(9, e.getStatusCode());
     assertEquals("statusMessage", e.getStatusMessage());
     assertTrue(headers == e.getHeaders());
