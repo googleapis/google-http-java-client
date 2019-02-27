@@ -14,6 +14,7 @@
 
 package com.google.api.client.http;
 
+import com.google.api.client.util.Charsets;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
 import com.google.common.io.ByteStreams;
@@ -131,7 +132,7 @@ public class HttpResponseException extends IOException {
    * @since 1.14
    */
   public final String getContent() throws IOException {
-    if (content == null || charset == null) {
+    if (content == null) {
       return null;
     }
     ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -299,7 +300,7 @@ public class HttpResponseException extends IOException {
 
     /** Returns the HTTP response content or {@code null} for none. */
     public final String getContent() throws IOException {
-      if (content == null || charset == null) {
+      if (content == null) {
         return null;
       }
       ByteArrayOutputStream out = new ByteArrayOutputStream();
