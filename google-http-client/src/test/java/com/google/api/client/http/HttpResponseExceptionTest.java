@@ -21,6 +21,7 @@ import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
+import com.google.api.client.util.Charsets;
 import com.google.api.client.util.StringUtils;
 import com.google.common.io.ByteStreams;
 import java.io.ByteArrayInputStream;
@@ -56,8 +57,11 @@ public class HttpResponseExceptionTest extends TestCase {
 
   public void testBuilder() throws Exception {
     HttpHeaders headers = new HttpHeaders();
-    Builder builder = new HttpResponseException.Builder(9, "statusMessage", headers).setMessage(
-        "message").setContent("content");
+    Builder builder =
+        new HttpResponseException.Builder(9, "statusMessage", headers)
+            .setMessage("message")
+            .setContent("content")
+            .setCharset(Charsets.UTF_8);
     assertEquals("message", builder.getMessage());
     assertEquals("content", builder.getContent());
     assertEquals(9, builder.getStatusCode());
@@ -76,6 +80,7 @@ public class HttpResponseExceptionTest extends TestCase {
     Builder builder =
         new HttpResponseException.Builder(9, "statusMessage", headers)
             .setMessage("message")
+            .setCharset(Charsets.UTF_8)
             .setContent("content");
     assertEquals("message", builder.getMessage());
     assertEquals("content", builder.getContent());
@@ -97,6 +102,7 @@ public class HttpResponseExceptionTest extends TestCase {
     Builder builder =
         new HttpResponseException.Builder(9, "statusMessage", headers)
             .setMessage("message")
+            .setCharset(Charsets.UTF_8)
             .setContent(BINARY_CONTENT);
     assertEquals("message", builder.getMessage());
     assertEquals(BINARY_CONTENT, builder.getContent());
@@ -118,6 +124,7 @@ public class HttpResponseExceptionTest extends TestCase {
     Builder builder =
         new HttpResponseException.Builder(9, "statusMessage", headers)
             .setMessage("message")
+            .setCharset(Charsets.UTF_8)
             .setContent(IMAGE_CONTENT);
     assertEquals("message", builder.getMessage());
     assertEquals(IMAGE_CONTENT, builder.getContent());

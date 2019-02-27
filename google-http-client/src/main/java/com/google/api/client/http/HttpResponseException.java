@@ -16,10 +16,12 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
-
+import com.google.common.io.ByteStreams;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 
 /**
  * Exception thrown when an error status code is detected in an HTTP response.
@@ -44,8 +46,11 @@ public class HttpResponseException extends IOException {
   /** HTTP headers. */
   private final transient HttpHeaders headers;
 
-  /** HTTP response content or {@code null} for none. */
-  private final String content;
+  /** HTTP response content or {@code null}. for none. */
+  private final byte[] content;
+
+  /** HTTP response charset or {@code null} for none. */
+  private final Charset charset;
 
   /**
    * Constructor that constructs a detail message from the given HTTP response that includes the
@@ -72,7 +77,6 @@ public class HttpResponseException extends IOException {
 
   /**
    * @param builder builder
-   *
    * @since 1.14
    */
   protected HttpResponseException(Builder builder) {
@@ -81,6 +85,7 @@ public class HttpResponseException extends IOException {
     statusMessage = builder.statusMessage;
     headers = builder.headers;
     content = builder.content;
+    charset = builder.charset;
   }
 
   /**
@@ -125,8 +130,13 @@ public class HttpResponseException extends IOException {
    *
    * @since 1.14
    */
-  public final String getContent() {
-    return content;
+  public final String getContent() throws IOException {
+    if (content == null || charset == null) {
+      return null;
+    }
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    ByteStreams.copy(new ByteArrayInputStream(content), out);
+    return out.toString(charset.name());
   }
 
   /**
@@ -135,10 +145,7 @@ public class HttpResponseException extends IOException {
    * @since 1.28
    */
   public final InputStream getContentAsInputStream() {
-    if (content == null) {
-      return null;
-    }
-    return new ByteArrayInputStream(content.getBytes());
+    return content != null ? new ByteArrayInputStream(content) : null;
   }
 
   /**
@@ -163,10 +170,13 @@ public class HttpResponseException extends IOException {
     HttpHeaders headers;
 
     /** Response content or {@code null} for none. */
-    String content;
+    byte[] content;
 
     /** Detail message to use or {@code null} for none. */
     String message;
+
+    /** Response charset or {@code null} for none. */
+    Charset charset;
 
     /**
      * @param statusCode HTTP status code
@@ -186,9 +196,9 @@ public class HttpResponseException extends IOException {
       this(response.getStatusCode(), response.getStatusMessage(), response.getHeaders());
       // content
       try {
-        content = response.parseAsString();
-        if (content.length() == 0) {
-          content = null;
+        InputStream inputStream = response.getContent();
+        if (inputStream != null) {
+          content = ByteStreams.toByteArray(response.getContent());
         }
       } catch (IOException exception) {
         // it would be bad to throw an exception while throwing an exception
@@ -199,7 +209,19 @@ public class HttpResponseException extends IOException {
       // message
       StringBuilder builder = computeMessageBuffer(response);
       if (content != null) {
-        builder.append(StringUtils.LINE_SEPARATOR).append(content);
+        try {
+          // charset
+          charset = response.getContentCharset();
+          String strContent = getContent();
+          if (strContent != null) {
+            builder.append(StringUtils.LINE_SEPARATOR).append(strContent);
+          }
+        } catch (IOException exception) {
+          // it would be bad to throw an exception while throwing an exception
+          exception.printStackTrace();
+        } catch (IllegalArgumentException exception) {
+          exception.printStackTrace();
+        }
       }
       message = builder.toString();
     }
@@ -267,10 +289,8 @@ public class HttpResponseException extends IOException {
     /**
      * Sets the HTTP response headers.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setHeaders(HttpHeaders headers) {
       this.headers = Preconditions.checkNotNull(headers);
@@ -278,20 +298,38 @@ public class HttpResponseException extends IOException {
     }
 
     /** Returns the HTTP response content or {@code null} for none. */
-    public final String getContent() {
-      return content;
+    public final String getContent() throws IOException {
+      if (content == null || charset == null) {
+        return null;
+      }
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      ByteStreams.copy(new ByteArrayInputStream(content), out);
+      return out.toString(charset.name());
     }
 
     /**
      * Sets the HTTP response content or {@code null} for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setContent(String content) {
-      this.content = content;
+      if (content != null) {
+        this.content = content.getBytes();
+      }
+      return this;
+    }
+
+    /**
+     * Sets the HTTP response charset or {@code null} for none.
+     *
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
+     */
+    public Builder setCharset(Charset charset) {
+      if (charset != null) {
+        this.charset = charset;
+      }
       return this;
     }
 
