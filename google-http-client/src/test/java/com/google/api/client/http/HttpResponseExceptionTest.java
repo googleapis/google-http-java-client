@@ -23,7 +23,6 @@ import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.util.Charsets;
 import com.google.api.client.util.StringUtils;
-import com.google.common.io.ByteStreams;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -89,7 +88,7 @@ public class HttpResponseExceptionTest extends TestCase {
     assertTrue(headers == builder.getHeaders());
     HttpResponseException e = builder.build();
     assertEquals("message", e.getMessage());
-    byte[] bytes = ByteStreams.toByteArray(e.getContentAsInputStream());
+    byte[] bytes = e.getRawContent();
     assertArrayEquals("content".getBytes(), bytes);
     assertEquals("content", e.getContent());
     assertEquals(9, e.getStatusCode());
@@ -111,7 +110,7 @@ public class HttpResponseExceptionTest extends TestCase {
     assertTrue(headers == builder.getHeaders());
     HttpResponseException e = builder.build();
     assertEquals("message", e.getMessage());
-    byte[] bytes = ByteStreams.toByteArray(e.getContentAsInputStream());
+    byte[] bytes = e.getRawContent();
     assertArrayEquals(BINARY_CONTENT.getBytes(), bytes);
     assertEquals(BINARY_CONTENT, e.getContent());
     assertEquals(9, e.getStatusCode());
@@ -133,7 +132,7 @@ public class HttpResponseExceptionTest extends TestCase {
     assertTrue(headers == builder.getHeaders());
     HttpResponseException e = builder.build();
     assertEquals("message", e.getMessage());
-    byte[] bytes = ByteStreams.toByteArray(e.getContentAsInputStream());
+    byte[] bytes = e.getRawContent();
     assertArrayEquals(IMAGE_CONTENT.getBytes(), bytes);
     assertEquals(IMAGE_CONTENT, e.getContent());
     assertEquals(9, e.getStatusCode());
@@ -154,7 +153,7 @@ public class HttpResponseExceptionTest extends TestCase {
     assertTrue(headers == builder.getHeaders());
     HttpResponseException e = builder.build();
     assertEquals("message", e.getMessage());
-    assertNull(e.getContentAsInputStream());
+    assertNull(e.getRawContent());
     assertEquals(null, e.getContent());
     assertEquals(9, e.getStatusCode());
     assertEquals("statusMessage", e.getStatusMessage());

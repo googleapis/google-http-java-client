@@ -14,14 +14,12 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Charsets;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
 import com.google.common.io.ByteStreams;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 /**
@@ -131,22 +129,26 @@ public class HttpResponseException extends IOException {
    *
    * @since 1.14
    */
-  public final String getContent() throws IOException {
+  public final String getContent() {
     if (content == null) {
       return null;
     }
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    ByteStreams.copy(new ByteArrayInputStream(content), out);
-    return out.toString(charset.name());
+    try {
+      return new String(content, charset.name());
+    } catch (UnsupportedEncodingException exception) {
+      // it would be bad to throw an exception while throwing an exception
+      exception.printStackTrace();
+    }
+    return null;
   }
 
   /**
-   * Returns the HTTP response or {@code null} for none as an input stream.
+   * Returns the HTTP response or {@code null} for none as raw bytes.
    *
    * @since 1.28
    */
-  public final InputStream getContentAsInputStream() {
-    return content != null ? new ByteArrayInputStream(content) : null;
+  public final byte[] getRawContent() {
+    return content;
   }
 
   /**
@@ -199,7 +201,7 @@ public class HttpResponseException extends IOException {
       try {
         InputStream inputStream = response.getContent();
         if (inputStream != null) {
-          content = ByteStreams.toByteArray(response.getContent());
+          content = ByteStreams.toByteArray(inputStream);
         }
       } catch (IOException exception) {
         // it would be bad to throw an exception while throwing an exception
@@ -303,9 +305,7 @@ public class HttpResponseException extends IOException {
       if (content == null) {
         return null;
       }
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      ByteStreams.copy(new ByteArrayInputStream(content), out);
-      return out.toString(charset.name());
+      return new String(content, charset.name());
     }
 
     /**
