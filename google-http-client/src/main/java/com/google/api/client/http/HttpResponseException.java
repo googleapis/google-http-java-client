@@ -200,8 +200,8 @@ public class HttpResponseException extends IOException {
       this(response.getStatusCode(), response.getStatusMessage(), response.getHeaders());
       // content
       try {
-        // reads the stream to make sure that connection goes back to the pool regardless of user
-        // reads stream or not
+        // reads the stream to make sure that connection goes back to the pool regardless of whether
+        // user reads the stream or not
         InputStream inputStream = response.getContent();
         if (inputStream != null) {
           content = ByteStreams.toByteArray(inputStream);
