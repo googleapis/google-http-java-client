@@ -16,6 +16,7 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.ByteStreams;
 import java.io.IOException;
 import java.io.InputStream;
@@ -199,7 +200,8 @@ public class HttpResponseException extends IOException {
       this(response.getStatusCode(), response.getStatusMessage(), response.getHeaders());
       // content
       try {
-        // reads the input stream so the connection closes
+        // reads the stream to make sure that connection goes back to the pool regardless of user
+        // reads stream or not
         InputStream inputStream = response.getContent();
         if (inputStream != null) {
           content = ByteStreams.toByteArray(inputStream);
@@ -328,7 +330,8 @@ public class HttpResponseException extends IOException {
      * <p>Overriding is only supported for the purpose of calling the super implementation and
      * changing the return type, but nothing else.
      */
-    public Builder setCharset(Charset charset) {
+    @VisibleForTesting
+    Builder setCharset(Charset charset) {
       if (charset != null) {
         this.charset = charset;
       }
