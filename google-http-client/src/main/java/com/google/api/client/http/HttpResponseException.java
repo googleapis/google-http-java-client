@@ -199,6 +199,7 @@ public class HttpResponseException extends IOException {
       this(response.getStatusCode(), response.getStatusMessage(), response.getHeaders());
       // content
       try {
+        // reads the input stream so the connection closes
         InputStream inputStream = response.getContent();
         if (inputStream != null) {
           content = ByteStreams.toByteArray(inputStream);
