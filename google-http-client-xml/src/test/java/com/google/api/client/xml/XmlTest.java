@@ -19,6 +19,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import com.google.api.client.util.ArrayMap;
+import com.google.api.client.util.Key;
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -27,8 +30,6 @@ import java.util.List;
 import org.junit.Test;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
-import com.google.api.client.util.ArrayMap;
-import com.google.api.client.util.Key;
 
 /**
  * Tests {@link Xml}.
@@ -38,51 +39,60 @@ import com.google.api.client.util.Key;
  */
 public class XmlTest {
 
-
   private static final String SIMPLE_XML = "<any>test</any>";
   private static final String SIMPLE_XML_NUMERIC = "<any>1</any>";
   private static final String START_WITH_TEXT = "<?xml version=\"1.0\"?>start_with_text</any>";
-  private static final String MISSING_END_ELEMENT = "<?xml version=\"1.0\"?><any xmlns=\"\">" +
-      "missing_end_element";
-  private static final String START_WITH_END_ELEMENT = "<?xml version=\"1.0\"?></p><any " +
-      "xmlns=\"\">start_with_end_elemtn</any>";
-  private static final String START_WITH_END_ELEMENT_NESTED = "<?xml version=\"1.0\"?><any " +
-      "xmlns=\"\"></p>start_with_end_element_nested</any>";
-  private static final String ANY_TYPE_XML = "<?xml version=\"1.0\"?><any attr=\"value\" " +
-      "xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><rep>rep1</rep><rep>rep2" +
-      "</rep><value>content</value></any>";
-  private static final String ANY_TYPE_MISSING_XML = "<?xml version=\"1.0\"?><any attr=\"value\" "
-      + "xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><value>content</value" +
-      "></any>";
-  private static final String ANY_TYPE_XML_PRIMITIVE_INT = "<?xml version=\"1.0\"?><any attr" +
-      "=\"2\" xmlns=\"http://www.w3.org/2005/Atom\">1<intArray>1</intArray><intArray>2" +
-      "</intArray></any>";
-  private static final String ANY_TYPE_XML_PRIMITIVE_STR = "<?xml version=\"1.0\"?><any attr" +
-      "=\"2+1\" xmlns=\"http://www.w3.org/2005/Atom\">1+1<strArray>1+1</strArray><strArray>2" +
-      "+1</strArray></any>";
-  private static final String NESTED_NS = "<?xml version=\"1.0\"?><any xmlns=\"http://www.w3" +
-      ".org/2005/Atom\"><app:edited xmlns:app='http://www.w3.org/2007/app'>2011-08-09T04:38" +
-      ":14.017Z</app:edited></any>";
-  private static final String NESTED_NS_SERIALIZED = "<?xml version=\"1.0\"?><any xmlns" +
-      "=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\"><app:edited" +
-      ">2011-08-09T04:38:14.017Z</app:edited></any>";
-  private static final String INF_TEST = "<?xml version=\"1.0\"?><any xmlns=\"\"><dblInfNeg" +
-      ">-INF</dblInfNeg><dblInfPos>INF</dblInfPos><fltInfNeg>-INF</fltInfNeg><fltInfPos>INF" +
-      "</fltInfPos></any>";
-  private static final String ALL_TYPE = "<?xml version=\"1.0\"?><any xmlns=\"\"><integer" +
-      "/><str/><genericXml/><anyEnum/><stringArray/><integerCollection/></any>";
-  private static final String ALL_TYPE_WITH_DATA = "<?xml version=\"1.0\"?><any xmlns=\"\">" +
-      "<anyEnum>ENUM_1</anyEnum><anyEnum>ENUM_2</anyEnum><genericXml><html><head><title" +
-      ">Title</title></head><body><p>Test</p></body></html></genericXml><integer>1</integer" +
-      "><integerCollection>1</integerCollection><integerCollection>2</integerCollection><str" +
-      ">str1</str><stringArray>arr1</stringArray><stringArray>arr2</stringArray></any>";
-  private static final String ANY_TYPE_XML_NESTED_ARRAY = "<?xml version=\"1.0\"?><any attr" +
-      "=\"value\" xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><rep><p>rep1</p" +
-      "><p>rep2</p></rep><rep><p>rep3</p><p>rep4</p></rep><value>content</value></any>";
+  private static final String MISSING_END_ELEMENT =
+      "<?xml version=\"1.0\"?><any xmlns=\"\">" + "missing_end_element";
+  private static final String START_WITH_END_ELEMENT =
+      "<?xml version=\"1.0\"?></p><any " + "xmlns=\"\">start_with_end_elemtn</any>";
+  private static final String START_WITH_END_ELEMENT_NESTED =
+      "<?xml version=\"1.0\"?><any " + "xmlns=\"\"></p>start_with_end_element_nested</any>";
+  private static final String ANY_TYPE_XML =
+      "<?xml version=\"1.0\"?><any attr=\"value\" "
+          + "xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><rep>rep1</rep><rep>rep2"
+          + "</rep><value>content</value></any>";
+  private static final String ANY_TYPE_MISSING_XML =
+      "<?xml version=\"1.0\"?><any attr=\"value\" "
+          + "xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><value>content</value"
+          + "></any>";
+  private static final String ANY_TYPE_XML_PRIMITIVE_INT =
+      "<?xml version=\"1.0\"?><any attr"
+          + "=\"2\" xmlns=\"http://www.w3.org/2005/Atom\">1<intArray>1</intArray><intArray>2"
+          + "</intArray></any>";
+  private static final String ANY_TYPE_XML_PRIMITIVE_STR =
+      "<?xml version=\"1.0\"?><any attr"
+          + "=\"2+1\" xmlns=\"http://www.w3.org/2005/Atom\">1+1<strArray>1+1</strArray><strArray>2"
+          + "+1</strArray></any>";
+  private static final String NESTED_NS =
+      "<?xml version=\"1.0\"?><any xmlns=\"http://www.w3"
+          + ".org/2005/Atom\"><app:edited xmlns:app='http://www.w3.org/2007/app'>2011-08-09T04:38"
+          + ":14.017Z</app:edited></any>";
+  private static final String NESTED_NS_SERIALIZED =
+      "<?xml version=\"1.0\"?><any xmlns"
+          + "=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\"><app:edited"
+          + ">2011-08-09T04:38:14.017Z</app:edited></any>";
+  private static final String INF_TEST =
+      "<?xml version=\"1.0\"?><any xmlns=\"\"><dblInfNeg"
+          + ">-INF</dblInfNeg><dblInfPos>INF</dblInfPos><fltInfNeg>-INF</fltInfNeg><fltInfPos>INF"
+          + "</fltInfPos></any>";
+  private static final String ALL_TYPE =
+      "<?xml version=\"1.0\"?><any xmlns=\"\"><integer"
+          + "/><str/><genericXml/><anyEnum/><stringArray/><integerCollection/></any>";
+  private static final String ALL_TYPE_WITH_DATA =
+      "<?xml version=\"1.0\"?><any xmlns=\"\">"
+          + "<anyEnum>ENUM_1</anyEnum><anyEnum>ENUM_2</anyEnum><genericXml><html><head><title"
+          + ">Title</title></head><body><p>Test</p></body></html></genericXml><integer>1</integer"
+          + "><integerCollection>1</integerCollection><integerCollection>2</integerCollection><str"
+          + ">str1</str><stringArray>arr1</stringArray><stringArray>arr2</stringArray></any>";
+  private static final String ANY_TYPE_XML_NESTED_ARRAY =
+      "<?xml version=\"1.0\"?><any attr"
+          + "=\"value\" xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><rep><p>rep1</p"
+          + "><p>rep2</p></rep><rep><p>rep3</p><p>rep4</p></rep><value>content</value></any>";
 
   /**
-   * The purpose of this test is to map a single element to a single field of a
-   * destination object. In this case the object mapped is a {@link String}; no namespace used.
+   * The purpose of this test is to map a single element to a single field of a destination object.
+   * In this case the object mapped is a {@link String}; no namespace used.
    */
   @Test
   public void testParseSimpleTypeAsValueString() throws Exception {
@@ -102,9 +112,8 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test is to map a single element to a single field of a
-   * destination object. In this is it is not an object but a {@code int}. no namespace
-   * used.
+   * The purpose of this test is to map a single element to a single field of a destination object.
+   * In this is it is not an object but a {@code int}. no namespace used.
    */
   @Test
   public void testParseSimpleTypeAsValueInteger() throws Exception {
@@ -123,9 +132,7 @@ public class XmlTest {
     assertEquals("<?xml version=\"1.0\"?><any xmlns=\"\">1</any>", out.toString());
   }
 
-  /**
-   * Negative test to check for text without a start-element.
-   */
+  /** Negative test to check for text without a start-element. */
   @Test
   public void testWithTextFail() throws Exception {
     SimpleTypeString xml = new SimpleTypeString();
@@ -136,15 +143,14 @@ public class XmlTest {
       Xml.parseElement(parser, xml, namespaceDictionary, null);
       fail();
     } catch (final Exception e) {
-      assertEquals("only whitespace content allowed before start tag and not s (position: " +
-          "START_DOCUMENT seen <?xml version=\"1.0\"?>s... @1:22)", e.getMessage()
-          .trim());
+      assertEquals(
+          "only whitespace content allowed before start tag and not s (position: "
+              + "START_DOCUMENT seen <?xml version=\"1.0\"?>s... @1:22)",
+          e.getMessage().trim());
     }
   }
 
-  /**
-   * Negative test to check for missing end-element.
-   */
+  /** Negative test to check for missing end-element. */
   @Test
   public void testWithMissingEndElementFail() throws Exception {
     SimpleTypeString xml = new SimpleTypeString();
@@ -155,16 +161,15 @@ public class XmlTest {
       Xml.parseElement(parser, xml, namespaceDictionary, null);
       fail();
     } catch (final Exception e) {
-      assertEquals("no more data available - expected end tag </any> to close start tag <any" +
-          "> from line 1, parser stopped on START_TAG seen ...<any xmlns" +
-          "=\"\">missing_end_element... @1:54", e.getMessage()
-          .trim());
+      assertEquals(
+          "no more data available - expected end tag </any> to close start tag <any"
+              + "> from line 1, parser stopped on START_TAG seen ...<any xmlns"
+              + "=\"\">missing_end_element... @1:54",
+          e.getMessage().trim());
     }
   }
 
-  /**
-   * Negative test with that start with a end-element.
-   */
+  /** Negative test with that start with a end-element. */
   @Test
   public void testWithEndElementStarting() throws Exception {
     SimpleTypeString xml = new SimpleTypeString();
@@ -175,15 +180,14 @@ public class XmlTest {
       Xml.parseElement(parser, xml, namespaceDictionary, null);
       fail();
     } catch (final Exception e) {
-      assertEquals("expected start tag name and not / (position: START_DOCUMENT seen <?xml " +
-          "version=\"1.0\"?></... @1:23)", e.getMessage()
-          .trim());
+      assertEquals(
+          "expected start tag name and not / (position: START_DOCUMENT seen <?xml "
+              + "version=\"1.0\"?></... @1:23)",
+          e.getMessage().trim());
     }
   }
 
-  /**
-   * Negative test with that start with a end element tag nested in an started element.
-   */
+  /** Negative test with that start with a end element tag nested in an started element. */
   @Test
   public void testWithEndElementNested() throws Exception {
     SimpleTypeString xml = new SimpleTypeString();
@@ -194,15 +198,14 @@ public class XmlTest {
       Xml.parseElement(parser, xml, namespaceDictionary, null);
       fail();
     } catch (final Exception e) {
-      assertEquals("end tag name </p> must match start tag name <any> from line 1 (position:" +
-          " START_TAG seen ...<any xmlns=\"\"></p>... @1:39)", e.getMessage()
-          .trim());
+      assertEquals(
+          "end tag name </p> must match start tag name <any> from line 1 (position:"
+              + " START_TAG seen ...<any xmlns=\"\"></p>... @1:39)",
+          e.getMessage().trim());
     }
   }
 
-  /**
-   * Negative test that maps a string to an integer and causes an exception.
-   */
+  /** Negative test that maps a string to an integer and causes an exception. */
   @Test
   public void testFailMappingOfDataType() throws Exception {
     SimpleTypeNumeric xml = new SimpleTypeNumeric();
@@ -213,8 +216,7 @@ public class XmlTest {
       Xml.parseElement(parser, xml, namespaceDictionary, null);
       fail();
     } catch (final Exception e) {
-      assertEquals("For input string: \"test\"", e.getMessage()
-          .trim());
+      assertEquals("For input string: \"test\"", e.getMessage().trim());
     }
   }
 
@@ -306,8 +308,8 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test is to see, if parsing works with a {@link Xml.CustomizeParser}.
-   * The XML will be mapped to {@link AnyType}.
+   * The purpose of this test is to see, if parsing works with a {@link Xml.CustomizeParser}. The
+   * XML will be mapped to {@link AnyType}.
    */
   @Test
   public void testParseAnyTypeWithCustomParser() throws Exception {
@@ -330,9 +332,9 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test it to parse elements which will be mapped to a
-   * {@link javax.lang.model.type.PrimitiveType}. Therefore {@code int}s are mapped to attributes,
-   * elements and element arrays.
+   * The purpose of this test it to parse elements which will be mapped to a {@link
+   * javax.lang.model.type.PrimitiveType}. Therefore {@code int}s are mapped to attributes, elements
+   * and element arrays.
    */
   @Test
   public void testParseToAnyTypePrimitiveInt() throws Exception {
@@ -355,9 +357,9 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test it to parse elements which will be mapped to a Java
-   * {@link javax.lang.model.type.PrimitiveType}. Therefore {@code int}s are mapped to attributes,
-   * elements and element arrays.
+   * The purpose of this test it to parse elements which will be mapped to a Java {@link
+   * javax.lang.model.type.PrimitiveType}. Therefore {@code int}s are mapped to attributes, elements
+   * and element arrays.
    */
   @Test
   public void testParseToAnyTypeStringOnly() throws Exception {
@@ -379,9 +381,7 @@ public class XmlTest {
     assertEquals(ANY_TYPE_XML_PRIMITIVE_STR, out.toString());
   }
 
-  /**
-   * The purpose of this test is to map nested elements with a namespace attribute.
-   */
+  /** The purpose of this test is to map nested elements with a namespace attribute. */
   @Test
   public void testParseOfNestedNs() throws Exception {
     XmlPullParser parser = Xml.createParser();
@@ -399,8 +399,8 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test is to map the infinity values of both {@code doubles} and
-   * {@code floats}.
+   * The purpose of this test is to map the infinity values of both {@code doubles} and {@code
+   * floats}.
    */
   @Test
   public void testParseInfiniteValues() throws Exception {
@@ -446,8 +446,9 @@ public class XmlTest {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     serializer.setOutput(out, "UTF-8");
     namespaceDictionary.serialize(serializer, "any", xml);
-    assertEquals("<?xml version=\"1.0\"?><any xmlns=\"\"><genericXml /><integer>0</integer" +
-        "></any>", out.toString());
+    assertEquals(
+        "<?xml version=\"1.0\"?><any xmlns=\"\"><genericXml /><integer>0</integer" + "></any>",
+        out.toString());
   }
 
   /**
@@ -513,16 +514,24 @@ public class XmlTest {
     assertTrue(xml.value.content instanceof String);
     assertEquals(1, ((Collection<?>) xml.elem).size());
     assertEquals(2, ((Collection<?>) xml.rep).size());
-    assertEquals(1, ((Collection<?>) xml.rep).toArray(new ArrayMap[]{})[0].size());
-    assertEquals(1, ((Collection<?>) xml.rep).toArray(new ArrayMap[]{})[1].size());
-    assertEquals("rep1",
-        ((ArrayList<?>) ((ArrayList<?>) xml.rep).toArray(new ArrayMap[]{})[0].get("p")).toArray(new ArrayMap[]{})[0].getValue(0));
-    assertEquals("rep2",
-        ((ArrayList<?>) ((ArrayList<?>) xml.rep).toArray(new ArrayMap[]{})[0].get("p")).toArray(new ArrayMap[]{})[1].getValue(0));
-    assertEquals("rep3",
-        ((ArrayList<?>) ((ArrayList<?>) xml.rep).toArray(new ArrayMap[]{})[1].get("p")).toArray(new ArrayMap[]{})[0].getValue(0));
-    assertEquals("rep4",
-        ((ArrayList<?>) ((ArrayList<?>) xml.rep).toArray(new ArrayMap[]{})[1].get("p")).toArray(new ArrayMap[]{})[1].getValue(0));
+    assertEquals(1, ((Collection<?>) xml.rep).toArray(new ArrayMap[] {})[0].size());
+    assertEquals(1, ((Collection<?>) xml.rep).toArray(new ArrayMap[] {})[1].size());
+    assertEquals(
+        "rep1",
+        ((ArrayList<?>) ((ArrayList<?>) xml.rep).toArray(new ArrayMap[] {})[0].get("p"))
+            .toArray(new ArrayMap[] {})[0].getValue(0));
+    assertEquals(
+        "rep2",
+        ((ArrayList<?>) ((ArrayList<?>) xml.rep).toArray(new ArrayMap[] {})[0].get("p"))
+            .toArray(new ArrayMap[] {})[1].getValue(0));
+    assertEquals(
+        "rep3",
+        ((ArrayList<?>) ((ArrayList<?>) xml.rep).toArray(new ArrayMap[] {})[1].get("p"))
+            .toArray(new ArrayMap[] {})[0].getValue(0));
+    assertEquals(
+        "rep4",
+        ((ArrayList<?>) ((ArrayList<?>) xml.rep).toArray(new ArrayMap[] {})[1].get("p"))
+            .toArray(new ArrayMap[] {})[1].getValue(0));
 
     // serialize
     XmlSerializer serializer = Xml.createSerializer();
@@ -545,34 +554,28 @@ public class XmlTest {
   public static class AnyType {
     @Key("@attr")
     public Object attr;
-    @Key
-    public Object elem;
-    @Key
-    public Object rep;
-    @Key
-    public ValueType value;
+
+    @Key public Object elem;
+    @Key public Object rep;
+    @Key public ValueType value;
   }
 
   public static class AnyTypeMissingField {
     @Key("@attr")
     public Object attr;
-    @Key
-    public Object elem;
-    @Key
-    public ValueType value;
+
+    @Key public Object elem;
+    @Key public ValueType value;
   }
 
   public static class AnyTypeAdditionalField {
     @Key("@attr")
     public Object attr;
-    @Key
-    public Object elem;
-    @Key
-    public Object rep;
-    @Key
-    public Object additionalField;
-    @Key
-    public ValueType value;
+
+    @Key public Object elem;
+    @Key public Object rep;
+    @Key public Object additionalField;
+    @Key public ValueType value;
   }
 
   public static class ValueType {
@@ -583,45 +586,36 @@ public class XmlTest {
   public static class AnyTypePrimitiveInt {
     @Key("text()")
     public int value;
+
     @Key("@attr")
     public int attr;
-    @Key
-    public int[] intArray;
+
+    @Key public int[] intArray;
   }
 
   public static class AnyTypePrimitiveString {
     @Key("text()")
     public String value;
+
     @Key("@attr")
     public String attr;
-    @Key
-    public String[] strArray;
+
+    @Key public String[] strArray;
   }
 
   private static class AnyTypeInf {
-    @Key
-    public double dblInfNeg;
-    @Key
-    public double dblInfPos;
-    @Key
-    public float fltInfNeg;
-    @Key
-    public float fltInfPos;
+    @Key public double dblInfNeg;
+    @Key public double dblInfPos;
+    @Key public float fltInfNeg;
+    @Key public float fltInfPos;
   }
 
   private static class AllType {
-    @Key
-    public int integer;
-    @Key
-    public String str;
-    @Key
-    public GenericXml genericXml;
-    @Key
-    public XmlEnumTest.AnyEnum[] anyEnum;
-    @Key
-    public String[] stringArray;
-    @Key
-    public List<Integer> integerCollection;
+    @Key public int integer;
+    @Key public String str;
+    @Key public GenericXml genericXml;
+    @Key public XmlEnumTest.AnyEnum[] anyEnum;
+    @Key public String[] stringArray;
+    @Key public List<Integer> integerCollection;
   }
 }
-

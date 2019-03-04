@@ -17,7 +17,6 @@ package com.google.api.client.util;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
-
 /**
  * Utilities for strings.
  *
@@ -40,9 +39,9 @@ public class StringUtils {
    * @param string the String to encode, may be <code>null</code>
    * @return encoded bytes, or <code>null</code> if the input string was <code>null</code>
    * @throws IllegalStateException Thrown when the charset is missing, which should be never
-   *         according the the Java specification.
+   *     according the the Java specification.
    * @see <a href="http://download.oracle.com/javase/7/docs/api/java/nio/charset/Charset.html"
-   *      >Standard charsets</a>
+   *     >Standard charsets</a>
    * @since 1.8
    */
   public static byte[] getBytesUtf8(String string) {
@@ -58,9 +57,9 @@ public class StringUtils {
    *
    * @param bytes The bytes to be decoded into characters
    * @return A new <code>String</code> decoded from the specified array of bytes using the UTF-8
-   *         charset, or <code>null</code> if the input byte array was <code>null</code>.
+   *     charset, or <code>null</code> if the input byte array was <code>null</code>.
    * @throws IllegalStateException Thrown when a {@link UnsupportedEncodingException} is caught,
-   *         which should never happen since the charset is required.
+   *     which should never happen since the charset is required.
    * @since 1.8
    */
   public static String newStringUtf8(byte[] bytes) {
@@ -70,6 +69,5 @@ public class StringUtils {
     return new String(bytes, StandardCharsets.UTF_8);
   }
 
-  private StringUtils() {
-  }
+  private StringUtils() {}
 }

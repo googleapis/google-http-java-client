@@ -17,7 +17,6 @@ package com.google.api.client.http;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.common.annotations.VisibleForTesting;
-
 import com.google.common.collect.ImmutableList;
 import io.opencensus.contrib.http.util.HttpPropagationUtil;
 import io.opencensus.trace.BlankSpan;
@@ -29,14 +28,13 @@ import io.opencensus.trace.Status;
 import io.opencensus.trace.Tracer;
 import io.opencensus.trace.Tracing;
 import io.opencensus.trace.propagation.TextFormat;
-
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Utilities for Census monitoring and tracing.
  *
  * @author Hailong Wen
@@ -47,9 +45,7 @@ public class OpenCensusUtils {
 
   private static final Logger logger = Logger.getLogger(OpenCensusUtils.class.getName());
 
-  /**
-   * Span name for tracing {@link HttpRequest#execute()}.
-   */
+  /** Span name for tracing {@link HttpRequest#execute()}. */
   public static final String SPAN_NAME_HTTP_REQUEST_EXECUTE =
       "Sent." + HttpRequest.class.getName() + ".execute";
 
@@ -59,36 +55,24 @@ public class OpenCensusUtils {
    */
   private static final Tracer tracer = Tracing.getTracer();
 
-  /**
-   * Sequence id generator for message event.
-   */
+  /** Sequence id generator for message event. */
   private static final AtomicLong idGenerator = new AtomicLong();
 
-  /**
-   * Whether spans should be recorded locally. Defaults to true.
-   */
+  /** Whether spans should be recorded locally. Defaults to true. */
   private static volatile boolean isRecordEvent = true;
 
-  /**
-   * {@link TextFormat} used in tracing context propagation.
-   */
-  @Nullable
-  @VisibleForTesting
-  static volatile TextFormat propagationTextFormat = null;
+  /** {@link TextFormat} used in tracing context propagation. */
+  @Nullable @VisibleForTesting static volatile TextFormat propagationTextFormat = null;
 
-  /**
-   * {@link TextFormat.Setter} for {@link #propagationTextFormat}.
-   */
-  @Nullable
-  @VisibleForTesting
-  static volatile TextFormat.Setter propagationTextFormatSetter = null;
+  /** {@link TextFormat.Setter} for {@link #propagationTextFormat}. */
+  @Nullable @VisibleForTesting static volatile TextFormat.Setter propagationTextFormatSetter = null;
 
   /**
    * Sets the {@link TextFormat} used in context propagation.
    *
    * <p>This API allows users of google-http-client to specify other text format, or disable context
    * propagation by setting it to {@code null}. It should be used along with {@link
-   * #setPropagationTextFormatSetter} for setting purpose. </p>
+   * #setPropagationTextFormatSetter} for setting purpose.
    *
    * @param textFormat the text format.
    */
@@ -101,7 +85,7 @@ public class OpenCensusUtils {
    *
    * <p>This API allows users of google-http-client to specify other text format setter, or disable
    * context propagation by setting it to {@code null}. It should be used along with {@link
-   * #setPropagationTextFormat} for setting purpose. </p>
+   * #setPropagationTextFormat} for setting purpose.
    *
    * @param textFormatSetter the {@code TextFormat.Setter} for the text format.
    */
@@ -112,7 +96,7 @@ public class OpenCensusUtils {
   /**
    * Sets whether spans should be recorded locally.
    *
-   * <p> This API allows users of google-http-client to turn on/off local span collection. </p>
+   * <p>This API allows users of google-http-client to turn on/off local span collection.
    *
    * @param recordEvent record span locally if true.
    */
@@ -231,22 +215,23 @@ public class OpenCensusUtils {
     if (size < 0) {
       size = 0;
     }
-    MessageEvent event = MessageEvent
-        .builder(eventType, idGenerator.getAndIncrement())
-        .setUncompressedMessageSize(size)
-        .build();
+    MessageEvent event =
+        MessageEvent.builder(eventType, idGenerator.getAndIncrement())
+            .setUncompressedMessageSize(size)
+            .build();
     span.addMessageEvent(event);
   }
 
   static {
     try {
       propagationTextFormat = HttpPropagationUtil.getCloudTraceFormat();
-      propagationTextFormatSetter = new TextFormat.Setter<HttpHeaders>() {
-        @Override
-        public void put(HttpHeaders carrier, String key, String value) {
-          carrier.set(key, value);
-        }
-      };
+      propagationTextFormatSetter =
+          new TextFormat.Setter<HttpHeaders>() {
+            @Override
+            public void put(HttpHeaders carrier, String key, String value) {
+              carrier.set(key, value);
+            }
+          };
     } catch (Exception e) {
       logger.log(
           Level.WARNING, "Cannot initialize default OpenCensus HTTP propagation text format.", e);
@@ -257,8 +242,7 @@ public class OpenCensusUtils {
           .getSampledSpanStore()
           .registerSpanNamesForCollection(ImmutableList.of(SPAN_NAME_HTTP_REQUEST_EXECUTE));
     } catch (Exception e) {
-      logger.log(
-          Level.WARNING, "Cannot register default OpenCensus span names for collection.", e);
+      logger.log(Level.WARNING, "Cannot register default OpenCensus span names for collection.", e);
     }
   }
 

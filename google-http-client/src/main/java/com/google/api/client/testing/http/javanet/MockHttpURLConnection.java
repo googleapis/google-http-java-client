@@ -16,7 +16,6 @@ package com.google.api.client.testing.http.javanet;
 
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,12 +29,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Mock for {@link HttpURLConnection}.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.11
  * @author Yaniv Inbar
@@ -47,19 +44,18 @@ public class MockHttpURLConnection extends HttpURLConnection {
   private boolean doOutputCalled;
 
   /**
-   * Output stream or {@code null} to throw an {@link UnknownServiceException} when
-   * {@link #getOutputStream()} is called.
+   * Output stream or {@code null} to throw an {@link UnknownServiceException} when {@link
+   * #getOutputStream()} is called.
    */
   private OutputStream outputStream = new ByteArrayOutputStream(0);
 
   /**
-   * The input byte array which represents the content when the status code is less then
-   * {@code 400}.
+   * The input byte array which represents the content when the status code is less then {@code
+   * 400}.
    *
    * @deprecated As of 1.20. Use {@link #setInputStream(InputStream)} instead.
    */
-  @Deprecated
-  public static final byte[] INPUT_BUF = new byte[1];
+  @Deprecated public static final byte[] INPUT_BUF = new byte[1];
 
   /**
    * The error byte array which represents the content when the status code is greater or equal to
@@ -67,8 +63,7 @@ public class MockHttpURLConnection extends HttpURLConnection {
    *
    * @deprecated As of 1.20. Use {@link #setErrorStream(InputStream)} instead.
    */
-  @Deprecated
-  public static final byte[] ERROR_BUF = new byte[5];
+  @Deprecated public static final byte[] ERROR_BUF = new byte[5];
 
   /** The input stream. */
   private InputStream inputStream = null;
@@ -78,16 +73,13 @@ public class MockHttpURLConnection extends HttpURLConnection {
 
   private Map<String, List<String>> headers = new LinkedHashMap<String, List<String>>();
 
-  /**
-   * @param u the URL or {@code null} for none
-   */
+  /** @param u the URL or {@code null} for none */
   public MockHttpURLConnection(URL u) {
     super(u);
   }
 
   @Override
-  public void disconnect() {
-  }
+  public void disconnect() {}
 
   @Override
   public boolean usingProxy() {
@@ -95,8 +87,7 @@ public class MockHttpURLConnection extends HttpURLConnection {
   }
 
   @Override
-  public void connect() throws IOException {
-  }
+  public void connect() throws IOException {}
 
   @Override
   public int getResponseCode() throws IOException {
@@ -122,12 +113,10 @@ public class MockHttpURLConnection extends HttpURLConnection {
   }
 
   /**
-   * Sets the output stream or {@code null} to throw an {@link UnknownServiceException} when
-   * {@link #getOutputStream()} is called.
+   * Sets the output stream or {@code null} to throw an {@link UnknownServiceException} when {@link
+   * #getOutputStream()} is called.
    *
-   * <p>
-   * By default it is {@code null}.
-   * </p>
+   * <p>By default it is {@code null}.
    */
   public MockHttpURLConnection setOutputStream(OutputStream outputStream) {
     this.outputStream = outputStream;

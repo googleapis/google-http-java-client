@@ -39,8 +39,10 @@ public class NetHttpResponseTest extends TestCase {
   }
 
   public void subtestGetStatusCode(int expectedCode, int responseCode) throws IOException {
-    assertEquals(expectedCode, new NetHttpResponse(
-        new MockHttpURLConnection(null).setResponseCode(responseCode)).getStatusCode());
+    assertEquals(
+        expectedCode,
+        new NetHttpResponse(new MockHttpURLConnection(null).setResponseCode(responseCode))
+            .getStatusCode());
   }
 
   public void testGetContent() throws IOException {
@@ -61,9 +63,12 @@ public class NetHttpResponseTest extends TestCase {
 
   public void subtestGetContent(int responseCode) throws IOException {
     NetHttpResponse response =
-        new NetHttpResponse(new MockHttpURLConnection(null).setResponseCode(responseCode)
-            .setInputStream(new ByteArrayInputStream(StringUtils.getBytesUtf8(VALID_RESPONSE)))
-            .setErrorStream(new ByteArrayInputStream(StringUtils.getBytesUtf8(ERROR_RESPONSE))));
+        new NetHttpResponse(
+            new MockHttpURLConnection(null)
+                .setResponseCode(responseCode)
+                .setInputStream(new ByteArrayInputStream(StringUtils.getBytesUtf8(VALID_RESPONSE)))
+                .setErrorStream(
+                    new ByteArrayInputStream(StringUtils.getBytesUtf8(ERROR_RESPONSE))));
     InputStream is = response.getContent();
     byte[] buf = new byte[100];
     int bytes = 0, n = 0;
@@ -79,9 +84,12 @@ public class NetHttpResponseTest extends TestCase {
 
   public void subtestGetContentWithShortRead(int responseCode) throws IOException {
     NetHttpResponse response =
-        new NetHttpResponse(new MockHttpURLConnection(null).setResponseCode(responseCode)
-            .setInputStream(new ByteArrayInputStream(StringUtils.getBytesUtf8(VALID_RESPONSE)))
-            .setErrorStream(new ByteArrayInputStream(StringUtils.getBytesUtf8(ERROR_RESPONSE))));
+        new NetHttpResponse(
+            new MockHttpURLConnection(null)
+                .setResponseCode(responseCode)
+                .setInputStream(new ByteArrayInputStream(StringUtils.getBytesUtf8(VALID_RESPONSE)))
+                .setErrorStream(
+                    new ByteArrayInputStream(StringUtils.getBytesUtf8(ERROR_RESPONSE))));
     InputStream is = response.getContent();
     byte[] buf = new byte[100];
     int bytes = 0, b = 0;
@@ -96,10 +104,11 @@ public class NetHttpResponseTest extends TestCase {
   }
 
   public void testSkippingBytes() throws IOException {
-    MockHttpURLConnection connection = new MockHttpURLConnection(null)
-        .setResponseCode(200)
-        .setInputStream(new ByteArrayInputStream(StringUtils.getBytesUtf8("0123456789")))
-        .addHeader("Content-Length", "10");
+    MockHttpURLConnection connection =
+        new MockHttpURLConnection(null)
+            .setResponseCode(200)
+            .setInputStream(new ByteArrayInputStream(StringUtils.getBytesUtf8("0123456789")))
+            .addHeader("Content-Length", "10");
     NetHttpResponse response = new NetHttpResponse(connection);
     InputStream is = response.getContent();
     // read 1 byte, then skip 9 (to EOF)

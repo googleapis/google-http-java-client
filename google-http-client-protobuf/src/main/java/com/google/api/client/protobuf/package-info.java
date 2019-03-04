@@ -13,12 +13,12 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
- * Utilities for the <a href="https://github.com/protocolbuffers/protobuf">Protocol Buffer</a> format.
+ * {@link com.google.api.client.util.Beta} <br>
+ * Utilities for the <a href="https://github.com/protocolbuffers/protobuf">Protocol Buffer</a>
+ * format.
  *
  * @since 1.5
  * @author Yaniv Inbar
  */
 @com.google.api.client.util.Beta
 package com.google.api.client.protobuf;
-

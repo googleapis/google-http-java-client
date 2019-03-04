@@ -18,7 +18,7 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.util.Beta;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Utilities and constants related to testing the HTTP library.
  *
  * @author Yaniv Inbar
@@ -33,6 +33,5 @@ public final class HttpTesting {
   /** A simple generic URL for testing of value {@link #SIMPLE_URL}. */
   public static final GenericUrl SIMPLE_GENERIC_URL = new GenericUrl(SIMPLE_URL);
 
-  private HttpTesting() {
-  }
+  private HttpTesting() {}
 }

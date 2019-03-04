@@ -13,7 +13,7 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
+ * {@link com.google.api.client.util.Beta} <br>
  * Low-level implementation of the GSON parser library built-in to the Android 3.0 SDK.
  *
  * @since 1.11

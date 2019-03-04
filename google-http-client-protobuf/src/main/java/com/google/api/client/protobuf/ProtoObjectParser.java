@@ -17,7 +17,6 @@ package com.google.api.client.protobuf;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.ObjectParser;
 import com.google.protobuf.MessageLite;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -25,20 +24,14 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Parses protocol buffer HTTP response content into a protocol buffer message.
  *
- * <p>
- * Implementation is immutable and therefore thread-safe.
- * </p>
+ * <p>Implementation is immutable and therefore thread-safe.
  *
- * <p>
- * Data-classes are expected to extend {@link MessageLite}.
- * </p>
+ * <p>Data-classes are expected to extend {@link MessageLite}.
  *
- * <p>
- * All Charset parameters are ignored for protocol buffers.
- * </p>
+ * <p>All Charset parameters are ignored for protocol buffers.
  *
  * @author Matthias Linder (mlinder)
  * @since 1.10

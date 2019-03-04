@@ -20,62 +20,54 @@ import java.io.IOException;
  * HTTP response interceptor to intercept the end of {@link HttpRequest#execute()} before returning
  * a successful response or throwing an exception for an unsuccessful response.
  *
- * <p>
- * For example, this might be used to add a simple timer on requests:
- * </p>
+ * <p>For example, this might be used to add a simple timer on requests:
  *
  * <pre>
-  public static class TimerResponseInterceptor implements HttpResponseInterceptor {
-
-    private final long startTime = System.nanoTime();
-
-    public void interceptResponse(HttpResponse response) {
-      long elapsedNanos = System.nanoTime() - startTime;
-      System.out.println("elapsed seconds: " + TimeUnit.NANOSECONDS.toSeconds(elapsedNanos) + "s");
-    }
-  }
+ * public static class TimerResponseInterceptor implements HttpResponseInterceptor {
+ *
+ * private final long startTime = System.nanoTime();
+ *
+ * public void interceptResponse(HttpResponse response) {
+ * long elapsedNanos = System.nanoTime() - startTime;
+ * System.out.println("elapsed seconds: " + TimeUnit.NANOSECONDS.toSeconds(elapsedNanos) + "s");
+ * }
+ * }
  * </pre>
  *
- * <p>
- * Sample usage with a request factory:
- * </p>
+ * <p>Sample usage with a request factory:
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
-    return transport.createRequestFactory(new HttpRequestInitializer() {
-
-      {@literal @}Override
-      public void initialize(HttpRequest request) {
-        request.setResponseInterceptor(new TimerResponseInterceptor());
-      }
-    });
-  }
+ * public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
+ * return transport.createRequestFactory(new HttpRequestInitializer() {
+ *
+ * {@literal @}Override
+ * public void initialize(HttpRequest request) {
+ * request.setResponseInterceptor(new TimerResponseInterceptor());
+ * }
+ * });
+ * }
  * </pre>
  *
- * <p>
- * More complex usage example:
- * </p>
+ * <p>More complex usage example:
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactory2(HttpTransport transport) {
-    final HttpResponseInterceptor responseInterceptor = new TimerResponseInterceptor();
-    return transport.createRequestFactory(new HttpRequestInitializer() {
-
-      public void initialize(HttpRequest request) {
-        request.setResponseInterceptor(new HttpResponseInterceptor() {
-
-          public void interceptResponse(HttpResponse response) throws IOException {
-            responseInterceptor.interceptResponse(response);
-          }
-        });
-      }
-    });
-  }
+ * public static HttpRequestFactory createRequestFactory2(HttpTransport transport) {
+ * final HttpResponseInterceptor responseInterceptor = new TimerResponseInterceptor();
+ * return transport.createRequestFactory(new HttpRequestInitializer() {
+ *
+ * public void initialize(HttpRequest request) {
+ * request.setResponseInterceptor(new HttpResponseInterceptor() {
+ *
+ * public void interceptResponse(HttpResponse response) throws IOException {
+ * responseInterceptor.interceptResponse(response);
+ * }
+ * });
+ * }
+ * });
+ * }
  * </pre>
  *
- * <p>
- * Implementations should normally be thread-safe.
- * </p>
+ * <p>Implementations should normally be thread-safe.
  *
  * @author Yaniv Inbar
  * @since 1.13
@@ -86,12 +78,10 @@ public interface HttpResponseInterceptor {
    * Invoked at the end of {@link HttpRequest#execute()} before returning a successful response or
    * throwing an exception for an unsuccessful response.
    *
-   * <p>
-   * Do not read from the content stream unless you intend to throw an exception. Otherwise, it
+   * <p>Do not read from the content stream unless you intend to throw an exception. Otherwise, it
    * would prevent the caller of {@link HttpRequest#execute()} to be able to read the stream from
    * {@link HttpResponse#getContent()}. If you intend to throw an exception, you should parse the
    * response, or alternatively pass the response as part of the exception.
-   * </p>
    *
    * @param response HTTP response
    */

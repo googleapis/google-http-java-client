@@ -15,7 +15,6 @@
 package com.google.api.client.util.store;
 
 import com.google.api.client.util.Preconditions;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
@@ -25,7 +24,6 @@ import java.util.Set;
  * Abstract data store implementation.
  *
  * @param <V> serializable type of the mapped value
- *
  * @author Yaniv Inbar
  * @since 1.16
  */
@@ -49,10 +47,8 @@ public abstract class AbstractDataStore<V extends Serializable> implements DataS
   /**
    * {@inheritDoc}
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public DataStoreFactory getDataStoreFactory() {
     return dataStoreFactory;
@@ -65,9 +61,7 @@ public abstract class AbstractDataStore<V extends Serializable> implements DataS
   /**
    * {@inheritDoc}
    *
-   * <p>
-   * Default implementation is to call {@link #get(String)} and check if it is {@code null}.
-   * </p>
+   * <p>Default implementation is to call {@link #get(String)} and check if it is {@code null}.
    */
   public boolean containsKey(String key) throws IOException {
     return get(key) != null;
@@ -76,9 +70,7 @@ public abstract class AbstractDataStore<V extends Serializable> implements DataS
   /**
    * {@inheritDoc}
    *
-   * <p>
-   * Default implementation is to call {@link Collection#contains(Object)} on {@link #values()}.
-   * </p>
+   * <p>Default implementation is to call {@link Collection#contains(Object)} on {@link #values()}.
    */
   public boolean containsValue(V value) throws IOException {
     return values().contains(value);
@@ -87,9 +79,7 @@ public abstract class AbstractDataStore<V extends Serializable> implements DataS
   /**
    * {@inheritDoc}
    *
-   * <p>
-   * Default implementation is to check if {@link #size()} is {@code 0}.
-   * </p>
+   * <p>Default implementation is to check if {@link #size()} is {@code 0}.
    */
   public boolean isEmpty() throws IOException {
     return size() == 0;
@@ -98,9 +88,7 @@ public abstract class AbstractDataStore<V extends Serializable> implements DataS
   /**
    * {@inheritDoc}
    *
-   * <p>
-   * Default implementation is to call {@link Set#size()} on {@link #keySet()}.
-   * </p>
+   * <p>Default implementation is to call {@link Set#size()} on {@link #keySet()}.
    */
   public int size() throws IOException {
     return keySet().size();

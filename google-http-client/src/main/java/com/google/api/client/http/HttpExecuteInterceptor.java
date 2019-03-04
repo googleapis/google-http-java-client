@@ -20,55 +20,47 @@ import java.io.IOException;
  * HTTP request execute interceptor to intercept the start of {@link HttpRequest#execute()} before
  * executing the HTTP request.
  *
- * <p>
- * For example, this might be used to sign a request for OAuth:
- * </p>
+ * <p>For example, this might be used to sign a request for OAuth:
  *
  * <pre>
-  public class OAuthSigner implements HttpExecuteInterceptor {
-    public void intercept(HttpRequest request) throws IOException {
-      // sign request...
-    }
-  }
+ * public class OAuthSigner implements HttpExecuteInterceptor {
+ * public void intercept(HttpRequest request) throws IOException {
+ * // sign request...
+ * }
+ * }
  * </pre>
  *
- * <p>
- * Sample usage with a request factory:
- * </p>
+ * <p>Sample usage with a request factory:
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
-    final OAuthSigner signer = new OAuthSigner(...);
-    return transport.createRequestFactory(new HttpRequestInitializer() {
-      public void initialize(HttpRequest request) {
-        request.setInterceptor(signer);
-      }
-    });
-  }
+ * public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
+ * final OAuthSigner signer = new OAuthSigner(...);
+ * return transport.createRequestFactory(new HttpRequestInitializer() {
+ * public void initialize(HttpRequest request) {
+ * request.setInterceptor(signer);
+ * }
+ * });
+ * }
  * </pre>
  *
- * <p>
- * More complex usage example:
- * </p>
+ * <p>More complex usage example:
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactory2(HttpTransport transport) {
-    final OAuthSigner signer = new OAuthSigner(...);
-    return transport.createRequestFactory(new HttpRequestInitializer() {
-      public void initialize(HttpRequest request) {
-        request.setInterceptor(new HttpExecuteInterceptor() {
-          public void intercept(HttpRequest request) throws IOException {
-            signer.intercept(request);
-          }
-        });
-      }
-    });
-  }
+ * public static HttpRequestFactory createRequestFactory2(HttpTransport transport) {
+ * final OAuthSigner signer = new OAuthSigner(...);
+ * return transport.createRequestFactory(new HttpRequestInitializer() {
+ * public void initialize(HttpRequest request) {
+ * request.setInterceptor(new HttpExecuteInterceptor() {
+ * public void intercept(HttpRequest request) throws IOException {
+ * signer.intercept(request);
+ * }
+ * });
+ * }
+ * });
+ * }
  * </pre>
  *
- * <p>
- * Implementations should normally be thread-safe.
- * </p>
+ * <p>Implementations should normally be thread-safe.
  *
  * @since 1.0
  * @author Yaniv Inbar

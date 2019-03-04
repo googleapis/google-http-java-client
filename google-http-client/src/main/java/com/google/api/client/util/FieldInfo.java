@@ -144,7 +144,7 @@ public class FieldInfo {
   private Method[] settersMethodForField(Field field) {
     List<Method> methods = new ArrayList<>();
     for (Method method : field.getDeclaringClass().getDeclaredMethods()) {
-      if (Ascii.toLowerCase(method.getName()).equals("set" + Ascii.toLowerCase(field.getName()))
+      if (Ascii.toLowerCase(method.getName()).equals("set" + field.getName().toLowerCase())
           && method.getParameterTypes().length == 1) {
         methods.add(method);
       }

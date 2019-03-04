@@ -20,7 +20,6 @@ import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
 import com.google.common.base.Splitter;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -30,49 +29,26 @@ import java.util.Map;
 /**
  * Expands URI Templates.
  *
- * This Class supports Level 1 templates and all Level 4 composite templates as described in:
- * <a href="http://tools.ietf.org/html/rfc6570">RFC 6570</a>.
+ * <p>This Class supports Level 1 templates and all Level 4 composite templates as described in: <a
+ * href="http://tools.ietf.org/html/rfc6570">RFC 6570</a>.
  *
- * Specifically, for the variables:
- * var := "value"
- * list := ["red", "green", "blue"]
- * keys := [("semi", ";"),("dot", "."),("comma", ",")]
+ * <p>Specifically, for the variables: var := "value" list := ["red", "green", "blue"] keys :=
+ * [("semi", ";"),("dot", "."),("comma", ",")]
  *
- * The following templates results in the following expansions:
- * {var}       ->   value
- * {list}      ->   red,green,blue
- * {list*}     ->   red,green,blue
- * {keys}      ->   semi,%3B,dot,.,comma,%2C
- * {keys*}     ->   semi=%3B,dot=.,comma=%2C
- * {+list}     ->   red,green,blue
- * {+list*}    ->   red,green,blue
- * {+keys}     ->   semi,;,dot,.,comma,,
- * {+keys*}    ->   semi=;,dot=.,comma=,
- * {#list}     ->   #red,green,blue
- * {#list*}    ->   #red,green,blue
- * {#keys}     ->   #semi,;,dot,.,comma,,
- * {#keys*}    ->   #semi=;,dot=.,comma=,
- * X{.list}    ->   X.red,green,blue
- * X{.list*}   ->   X.red.green.blue
- * X{.keys}    ->   X.semi,%3B,dot,.,comma,%2C
- * X{.keys*}   ->   X.semi=%3B.dot=..comma=%2C
- * {/list}     ->   /red,green,blue
- * {/list*}    ->   /red/green/blue
- * {/keys}     ->   /semi,%3B,dot,.,comma,%2C
- * {/keys*}    ->   /semi=%3B/dot=./comma=%2C
- * {;list}     ->   ;list=red,green,blue
- * {;list*}    ->   ;list=red;list=green;list=blue
- * {;keys}     ->   ;keys=semi,%3B,dot,.,comma,%2C
- * {;keys*}    ->   ;semi=%3B;dot=.;comma=%2C
- * {?list}     ->   ?list=red,green,blue
- * {?list*}    ->   ?list=red&list=green&list=blue
- * {?keys}     ->   ?keys=semi,%3B,dot,.,comma,%2C
- * {?keys*}    ->   ?semi=%3B&dot=.&comma=%2C
- * {&list}     ->   &list=red,green,blue
- * {&list*}    ->   &list=red&list=green&list=blue
- * {&keys}     ->   &keys=semi,%3B,dot,.,comma,%2C
- * {&keys*}    ->   &semi=%3B&dot=.&comma=%2C
- * {?var,list} ->   ?var=value&list=red,green,blue
+ * <p>The following templates results in the following expansions: {var} -> value {list} ->
+ * red,green,blue {list*} -> red,green,blue {keys} -> semi,%3B,dot,.,comma,%2C {keys*} ->
+ * semi=%3B,dot=.,comma=%2C {+list} -> red,green,blue {+list*} -> red,green,blue {+keys} ->
+ * semi,;,dot,.,comma,, {+keys*} -> semi=;,dot=.,comma=, {#list} -> #red,green,blue {#list*} ->
+ * #red,green,blue {#keys} -> #semi,;,dot,.,comma,, {#keys*} -> #semi=;,dot=.,comma=, X{.list} ->
+ * X.red,green,blue X{.list*} -> X.red.green.blue X{.keys} -> X.semi,%3B,dot,.,comma,%2C X{.keys*}
+ * -> X.semi=%3B.dot=..comma=%2C {/list} -> /red,green,blue {/list*} -> /red/green/blue {/keys} ->
+ * /semi,%3B,dot,.,comma,%2C {/keys*} -> /semi=%3B/dot=./comma=%2C {;list} -> ;list=red,green,blue
+ * {;list*} -> ;list=red;list=green;list=blue {;keys} -> ;keys=semi,%3B,dot,.,comma,%2C {;keys*} ->
+ * ;semi=%3B;dot=.;comma=%2C {?list} -> ?list=red,green,blue {?list*} ->
+ * ?list=red&list=green&list=blue {?keys} -> ?keys=semi,%3B,dot,.,comma,%2C {?keys*} ->
+ * ?semi=%3B&dot=.&comma=%2C {&list} -> &list=red,green,blue {&list*} ->
+ * &list=red&list=green&list=blue {&keys} -> &keys=semi,%3B,dot,.,comma,%2C {&keys*} ->
+ * &semi=%3B&dot=.&comma=%2C {?var,list} -> ?var=value&list=red,green,blue
  *
  * @since 1.6
  * @author Ravi Mistry
@@ -88,9 +64,7 @@ public class UriTemplate {
 
   private static final String COMPOSITE_NON_EXPLODE_JOINER = ",";
 
-  /**
-   * Contains information on how to output a composite value.
-   */
+  /** Contains information on how to output a composite value. */
   private enum CompositeOutput {
 
     /** Reserved expansion. */
@@ -125,16 +99,20 @@ public class UriTemplate {
 
     /**
      * @param propertyPrefix The prefix of a parameter or {@code null} for none. In {+var} the
-     *        prefix is '+'
+     *     prefix is '+'
      * @param outputPrefix The string that should be prefixed to the expanded template.
      * @param explodeJoiner The delimiter used to join composite values.
-     * @param requiresVarAssignment Denotes whether or not the expanded template should contain
-     *        an assignment with the variable.
-     * @param reservedExpansion Reserved expansion allows pct-encoded triplets and characters in
-     *        the reserved set.
+     * @param requiresVarAssignment Denotes whether or not the expanded template should contain an
+     *     assignment with the variable.
+     * @param reservedExpansion Reserved expansion allows pct-encoded triplets and characters in the
+     *     reserved set.
      */
-    CompositeOutput(Character propertyPrefix, String outputPrefix, String explodeJoiner,
-        boolean requiresVarAssignment, boolean reservedExpansion) {
+    CompositeOutput(
+        Character propertyPrefix,
+        String outputPrefix,
+        String explodeJoiner,
+        boolean requiresVarAssignment,
+        boolean reservedExpansion) {
       this.propertyPrefix = propertyPrefix;
       this.outputPrefix = Preconditions.checkNotNull(outputPrefix);
       this.explodeJoiner = Preconditions.checkNotNull(explodeJoiner);
@@ -145,22 +123,18 @@ public class UriTemplate {
       }
     }
 
-    /**
-     * Returns the string that should be prefixed to the expanded template.
-     */
+    /** Returns the string that should be prefixed to the expanded template. */
     String getOutputPrefix() {
       return outputPrefix;
     }
 
-    /**
-     * Returns the delimiter used to join composite values.
-     */
+    /** Returns the delimiter used to join composite values. */
     String getExplodeJoiner() {
       return explodeJoiner;
     }
 
     /**
-     *  Returns whether or not the expanded template should contain an assignment with the variable.
+     * Returns whether or not the expanded template should contain an assignment with the variable.
      */
     boolean requiresVarAssignment() {
       return requiresVarAssignment;
@@ -175,11 +149,10 @@ public class UriTemplate {
     }
 
     /**
-     * Encodes the specified value. If reserved expansion is turned on then
-     * pct-encoded triplets and characters are allowed in the reserved set.
+     * Encodes the specified value. If reserved expansion is turned on then pct-encoded triplets and
+     * characters are allowed in the reserved set.
      *
      * @param value The string to be encoded.
-     *
      * @return The encoded string.
      */
     String getEncodedValue(String value) {
@@ -206,9 +179,7 @@ public class UriTemplate {
   /**
    * Constructs a new {@code Map<String, Object>} from an {@code Object}.
    *
-   * <p>
-   * There are no null values in the returned map.
-   * </p>
+   * <p>There are no null values in the returned map.
    */
   private static Map<String, Object> getMap(Object obj) {
     // Using a LinkedHashMap to maintain the original order of insertions. This is done to help
@@ -226,28 +197,24 @@ public class UriTemplate {
   /**
    * Expands templates in a URI template that is relative to a base URL.
    *
-   * <p>
-   * If the URI template starts with a "/" the raw path from the base URL is stripped out. If the
+   * <p>If the URI template starts with a "/" the raw path from the base URL is stripped out. If the
    * URI template is a full URL then it is used instead of the base URL.
-   * </p>
    *
-   * <p>
-   * Supports Level 1 templates and all Level 4 composite templates as described in:
-   * <a href="http://tools.ietf.org/html/rfc6570">RFC 6570</a>.
-   * </p>
+   * <p>Supports Level 1 templates and all Level 4 composite templates as described in: <a
+   * href="http://tools.ietf.org/html/rfc6570">RFC 6570</a>.
    *
    * @param baseUrl The base URL which the URI component is relative to.
    * @param uriTemplate URI component. It may contain one or more sequences of the form "{name}",
-   *        where "name" must be a key in variableMap.
+   *     where "name" must be a key in variableMap.
    * @param parameters an object with parameters designated by Key annotations. If the template has
-   *        no variable references, parameters may be {@code null}.
+   *     no variable references, parameters may be {@code null}.
    * @param addUnusedParamsAsQueryParams If true then parameters that do not match the template are
-   *        appended to the expanded template as query parameters.
+   *     appended to the expanded template as query parameters.
    * @return The expanded template
    * @since 1.7
    */
-  public static String expand(String baseUrl, String uriTemplate, Object parameters,
-      boolean addUnusedParamsAsQueryParams) {
+  public static String expand(
+      String baseUrl, String uriTemplate, Object parameters, boolean addUnusedParamsAsQueryParams) {
     String pathUri;
     if (uriTemplate.startsWith("/")) {
       // Remove the base path from the base URL.
@@ -265,22 +232,20 @@ public class UriTemplate {
   /**
    * Expands templates in a URI.
    *
-   * <p>
-   * Supports Level 1 templates and all Level 4 composite templates as described in:
-   * <a href="http://tools.ietf.org/html/rfc6570">RFC 6570</a>.
-   * </p>
+   * <p>Supports Level 1 templates and all Level 4 composite templates as described in: <a
+   * href="http://tools.ietf.org/html/rfc6570">RFC 6570</a>.
    *
    * @param pathUri URI component. It may contain one or more sequences of the form "{name}", where
-   *        "name" must be a key in variableMap
+   *     "name" must be a key in variableMap
    * @param parameters an object with parameters designated by Key annotations. If the template has
-   *        no variable references, parameters may be {@code null}.
+   *     no variable references, parameters may be {@code null}.
    * @param addUnusedParamsAsQueryParams If true then parameters that do not match the template are
-   *        appended to the expanded template as query parameters.
+   *     appended to the expanded template as query parameters.
    * @return The expanded template
    * @since 1.6
    */
-  public static String expand(String pathUri, Object parameters,
-      boolean addUnusedParamsAsQueryParams) {
+  public static String expand(
+      String pathUri, Object parameters, boolean addUnusedParamsAsQueryParams) {
     Map<String, Object> variableMap = getMap(parameters);
     StringBuilder pathBuf = new StringBuilder();
     int cur = 0;
@@ -308,8 +273,8 @@ public class UriTemplate {
         String template = templateIterator.next();
         boolean containsExplodeModifier = template.endsWith("*");
 
-        int varNameStartIndex = templateIterator.nextIndex() == 1
-            ? compositeOutput.getVarNameStartIndex() : 0;
+        int varNameStartIndex =
+            templateIterator.nextIndex() == 1 ? compositeOutput.getVarNameStartIndex() : 0;
         int varNameEndIndex = template.length();
         if (containsExplodeModifier) {
           // The expression contains an explode modifier '*' at the end, update end index.
@@ -366,9 +331,8 @@ public class UriTemplate {
   }
 
   /**
-   * Expand the template of a composite list property.
-   * Eg: If d := ["red", "green", "blue"]
-   *     then {/d*} is expanded to "/red/green/blue"
+   * Expand the template of a composite list property. Eg: If d := ["red", "green", "blue"] then
+   * {/d*} is expanded to "/red/green/blue"
    *
    * @param varName The name of the variable the value corresponds to. Eg: "d"
    * @param iterator The iterator over list values. Eg: ["red", "green", "blue"]
@@ -378,8 +342,11 @@ public class UriTemplate {
    * @return The expanded list template
    * @throws IllegalArgumentException if the required list path parameter is empty
    */
-  private static String getListPropertyValue(String varName, Iterator<?> iterator,
-      boolean containsExplodeModifier, CompositeOutput compositeOutput) {
+  private static String getListPropertyValue(
+      String varName,
+      Iterator<?> iterator,
+      boolean containsExplodeModifier,
+      CompositeOutput compositeOutput) {
     if (!iterator.hasNext()) {
       return "";
     }
@@ -408,9 +375,8 @@ public class UriTemplate {
   }
 
   /**
-   * Expand the template of a composite map property.
-   * Eg: If d := [("semi", ";"),("dot", "."),("comma", ",")]
-   *     then {/d*} is expanded to "/semi=%3B/dot=./comma=%2C"
+   * Expand the template of a composite map property. Eg: If d := [("semi", ";"),("dot",
+   * "."),("comma", ",")] then {/d*} is expanded to "/semi=%3B/dot=./comma=%2C"
    *
    * @param varName The name of the variable the value corresponds to. Eg: "d"
    * @param map The map property value. Eg: [("semi", ";"),("dot", "."),("comma", ",")]
@@ -420,8 +386,11 @@ public class UriTemplate {
    * @return The expanded map template
    * @throws IllegalArgumentException if the required list path parameter is map
    */
-  private static String getMapPropertyValue(String varName, Map<String, Object> map,
-      boolean containsExplodeModifier, CompositeOutput compositeOutput) {
+  private static String getMapPropertyValue(
+      String varName,
+      Map<String, Object> map,
+      boolean containsExplodeModifier,
+      CompositeOutput compositeOutput) {
     if (map.isEmpty()) {
       return "";
     }
@@ -440,7 +409,7 @@ public class UriTemplate {
       }
     }
     for (Iterator<Map.Entry<String, Object>> mapIterator = map.entrySet().iterator();
-        mapIterator.hasNext();) {
+        mapIterator.hasNext(); ) {
       Map.Entry<String, Object> entry = mapIterator.next();
       String encodedKey = compositeOutput.getEncodedValue(entry.getKey());
       String encodedValue = compositeOutput.getEncodedValue(entry.getValue().toString());

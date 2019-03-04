@@ -16,7 +16,6 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.ByteStreams;
 import com.google.api.client.util.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,17 +23,15 @@ import java.io.OutputStream;
 /**
  * Serializes HTTP request content from an input stream into an output stream.
  *
- * <p>
- * The {@link #type} field is required. Subclasses should implement the {@link #getLength()},
+ * <p>The {@link #type} field is required. Subclasses should implement the {@link #getLength()},
  * {@link #getInputStream()}, and {@link #retrySupported()} for their specific type of input stream.
  * By default, all content is read from the input stream. If instead you want to limit the maximum
- * amount of content read from the input stream, you may use
- * {@link ByteStreams#limit(InputStream, long)}.
- * <p>
+ * amount of content read from the input stream, you may use {@link ByteStreams#limit(InputStream,
+ * long)}.
  *
  * <p>
- * Implementations don't need to be thread-safe.
- * </p>
+ *
+ * <p>Implementations don't need to be thread-safe.
  *
  * @since 1.4
  * @author moshenko@google.com (Jacob Moshenko)
@@ -45,8 +42,8 @@ public abstract class AbstractInputStreamContent implements HttpContent {
   private String type;
 
   /**
-   * Whether the input stream should be closed at the end of {@link #writeTo}. Default is
-   * {@code true}.
+   * Whether the input stream should be closed at the end of {@link #writeTo}. Default is {@code
+   * true}.
    */
   private boolean closeInputStream = true;
 
@@ -59,10 +56,10 @@ public abstract class AbstractInputStreamContent implements HttpContent {
   }
 
   /**
-   * Return an input stream for the specific implementation type of
-   * {@link AbstractInputStreamContent}. If the specific implementation will return {@code true} for
-   * {@link #retrySupported()} this should be a factory function which will create a new
-   * {@link InputStream} from the source data whenever invoked.
+   * Return an input stream for the specific implementation type of {@link
+   * AbstractInputStreamContent}. If the specific implementation will return {@code true} for {@link
+   * #retrySupported()} this should be a factory function which will create a new {@link
+   * InputStream} from the source data whenever invoked.
    *
    * @since 1.7
    */

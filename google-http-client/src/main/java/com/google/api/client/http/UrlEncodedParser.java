@@ -25,7 +25,6 @@ import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Throwables;
 import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,27 +41,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Implements support for HTTP form content encoding parsing of type
- * {@code application/x-www-form-urlencoded} as specified in the <a href=
+ * Implements support for HTTP form content encoding parsing of type {@code
+ * application/x-www-form-urlencoded} as specified in the <a href=
  * "http://www.w3.org/TR/1998/REC-html40-19980424/interact/forms.html#h-17.13.4.1" >HTML 4.0
  * Specification</a>.
  *
- * <p>
- * Implementation is thread-safe.
- * </p>
+ * <p>Implementation is thread-safe.
  *
- * <p>
- * The data is parsed using {@link #parse(String, Object)}.
- * </p>
+ * <p>The data is parsed using {@link #parse(String, Object)}.
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>
-   static void setParser(HttpTransport transport) {
-     transport.addParser(new UrlEncodedParser());
-   }
+ * static void setParser(HttpTransport transport) {
+ * transport.addParser(new UrlEncodedParser());
+ * }
  * </pre>
  *
  * @since 1.0
@@ -104,24 +97,20 @@ public class UrlEncodedParser implements ObjectParser {
    * Parses the given URL-encoded content into the given data object of data key name/value pairs,
    * including support for repeating data key names.
    *
-   * <p>
-   * Declared fields of a "primitive" type (as defined by {@link Data#isPrimitive(Type)} are parsed
-   * using {@link Data#parsePrimitiveValue(Type, String)} where the {@link Class} parameter is the
-   * declared field class. Declared fields of type {@link Collection} are used to support repeating
-   * data key names, so each member of the collection is an additional data key value. They are
-   * parsed the same as "primitive" fields, except that the generic type parameter of the collection
-   * is used as the {@link Class} parameter.
-   * </p>
+   * <p>Declared fields of a "primitive" type (as defined by {@link Data#isPrimitive(Type)} are
+   * parsed using {@link Data#parsePrimitiveValue(Type, String)} where the {@link Class} parameter
+   * is the declared field class. Declared fields of type {@link Collection} are used to support
+   * repeating data key names, so each member of the collection is an additional data key value.
+   * They are parsed the same as "primitive" fields, except that the generic type parameter of the
+   * collection is used as the {@link Class} parameter.
    *
-   * <p>
-   * If there is no declared field for an input parameter name, it will be ignored unless the input
-   * {@code data} parameter is a {@link Map}. If it is a map, the parameter value will be stored
-   * either as a string, or as a {@link ArrayList}&lt;String&gt; in the case of repeated parameters.
-   * </p>
+   * <p>If there is no declared field for an input parameter name, it will be ignored unless the
+   * input {@code data} parameter is a {@link Map}. If it is a map, the parameter value will be
+   * stored either as a string, or as a {@link ArrayList}&lt;String&gt; in the case of repeated
+   * parameters.
    *
    * @param reader URL-encoded reader
    * @param data data key name/value pairs
-   *
    * @since 1.14
    */
   public static void parse(Reader reader, Object data) throws IOException {
@@ -135,11 +124,12 @@ public class UrlEncodedParser implements ObjectParser {
     StringWriter nameWriter = new StringWriter();
     StringWriter valueWriter = new StringWriter();
     boolean readingName = true;
-    mainLoop: while (true) {
+    mainLoop:
+    while (true) {
       int read = reader.read();
       switch (read) {
         case -1:
-      // falls through
+          // falls through
         case '&':
           // parse name/value pair
           String name = CharEscapers.decodeUri(nameWriter.toString());
@@ -155,7 +145,9 @@ public class UrlEncodedParser implements ObjectParser {
                 // array that can handle repeating values
                 Class<?> rawArrayComponentType =
                     Types.getRawArrayComponentType(context, Types.getArrayComponentType(type));
-                arrayValueMap.put(fieldInfo.getField(), rawArrayComponentType,
+                arrayValueMap.put(
+                    fieldInfo.getField(),
+                    rawArrayComponentType,
                     parseValue(rawArrayComponentType, context, stringValue));
               } else if (Types.isAssignableToOrFrom(
                   Types.getRawArrayComponentType(context, type), Iterable.class)) {

@@ -34,12 +34,11 @@ public class LoggingStreamingContentTest extends TestCase {
       new byte[] {49, 50, 51, -41, -103, -41, -96, -41, -103, -41, -111};
   private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
 
-  /**
-   * Test method for {@link LoggingStreamingContent#writeTo(java.io.OutputStream)}.
-   */
+  /** Test method for {@link LoggingStreamingContent#writeTo(java.io.OutputStream)}. */
   public void testWriteTo() throws Exception {
-    LoggingStreamingContent logContent = new LoggingStreamingContent(
-        new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, Integer.MAX_VALUE);
+    LoggingStreamingContent logContent =
+        new LoggingStreamingContent(
+            new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, Integer.MAX_VALUE);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     LOGGER.setLevel(Level.CONFIG);
     LogRecordingHandler recorder = new LogRecordingHandler();
@@ -56,16 +55,21 @@ public class LoggingStreamingContentTest extends TestCase {
     LogRecordingHandler recorder = new LogRecordingHandler();
     LOGGER.addHandler(recorder);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    LoggingStreamingContent logContent = new LoggingStreamingContent(
-        new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, SAMPLE_UTF8.length);
+    LoggingStreamingContent logContent =
+        new LoggingStreamingContent(
+            new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, SAMPLE_UTF8.length);
     logContent.writeTo(out);
     assertEquals(Arrays.asList("Total: 11 bytes", SAMPLE), recorder.messages());
 
     // Set the content logging limit to be less than the length of the content.
     recorder = new LogRecordingHandler();
     LOGGER.addHandler(recorder);
-    logContent = new LoggingStreamingContent(
-        new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, SAMPLE_UTF8.length - 1);
+    logContent =
+        new LoggingStreamingContent(
+            new ByteArrayStreamingContent(SAMPLE_UTF8),
+            LOGGER,
+            Level.CONFIG,
+            SAMPLE_UTF8.length - 1);
     logContent.writeTo(new ByteArrayOutputStream());
     assertEquals(
         Arrays.asList("Total: 11 bytes (logging first 10 bytes)", "123\u05D9\u05e0\u05D9\ufffd"),
@@ -74,23 +78,26 @@ public class LoggingStreamingContentTest extends TestCase {
     // Set the content logging limit to 0 to disable content logging.
     recorder = new LogRecordingHandler();
     LOGGER.addHandler(recorder);
-    logContent = new LoggingStreamingContent(
-        new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, 0);
+    logContent =
+        new LoggingStreamingContent(
+            new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, 0);
     logContent.writeTo(new ByteArrayOutputStream());
     assertEquals(Arrays.asList("Total: 11 bytes"), recorder.messages());
 
     // writeTo should behave as expected even if content length is specified to be -1.
     recorder = new LogRecordingHandler();
     LOGGER.addHandler(recorder);
-    logContent = new LoggingStreamingContent(
-        new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, SAMPLE_UTF8.length);
+    logContent =
+        new LoggingStreamingContent(
+            new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, SAMPLE_UTF8.length);
     logContent.writeTo(new ByteArrayOutputStream());
     assertEquals(Arrays.asList("Total: 11 bytes", SAMPLE), recorder.messages());
 
     // Assert that an exception is thrown if content logging limit < 0.
     try {
-      logContent = new LoggingStreamingContent(
-          new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, -1);
+      logContent =
+          new LoggingStreamingContent(
+              new ByteArrayStreamingContent(SAMPLE_UTF8), LOGGER, Level.CONFIG, -1);
       logContent.writeTo(new ByteArrayOutputStream());
       fail("Expected: " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {

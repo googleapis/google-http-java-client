@@ -19,6 +19,4 @@
  * @since 1.0
  * @author Yaniv Inbar
  */
-
 package com.google.api.client.http;
-

@@ -16,7 +16,6 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
@@ -24,21 +23,17 @@ import java.io.InputStream;
  * Concrete implementation of {@link AbstractInputStreamContent} that generates repeatable input
  * streams based on the contents of byte array.
  *
- * <p>
- * Sample use:
- * </p>
+ * <p>Sample use:
  *
  * <pre>
  * <code>
-  static void setJsonContent(HttpRequest request, byte[] json) {
-    request.setContent(new ByteArrayContent("application/json", json));
-  }
+ * static void setJsonContent(HttpRequest request, byte[] json) {
+ * request.setContent(new ByteArrayContent("application/json", json));
+ * }
  * </code>
  * </pre>
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.4
  * @author moshenko@google.com (Jacob Moshenko)
@@ -78,8 +73,12 @@ public final class ByteArrayContent extends AbstractInputStreamContent {
   public ByteArrayContent(String type, byte[] array, int offset, int length) {
     super(type);
     this.byteArray = Preconditions.checkNotNull(array);
-    Preconditions.checkArgument(offset >= 0 && length >= 0 && offset + length <= array.length,
-        "offset %s, length %s, array length %s", offset, length, array.length);
+    Preconditions.checkArgument(
+        offset >= 0 && length >= 0 && offset + length <= array.length,
+        "offset %s, length %s, array length %s",
+        offset,
+        length,
+        array.length);
     this.offset = offset;
     this.length = length;
   }
@@ -87,15 +86,14 @@ public final class ByteArrayContent extends AbstractInputStreamContent {
   /**
    * Returns a new instance with the UTF-8 encoding (using {@link StringUtils#getBytesUtf8(String)})
    * of the given content string.
-   * <p>
-   * Sample use:
-   * </p>
+   *
+   * <p>Sample use:
    *
    * <pre>
    * <code>
-  static void setJsonContent(HttpRequest request, String json) {
-    request.setContent(ByteArrayContent.fromString("application/json", json));
-  }
+   * static void setJsonContent(HttpRequest request, String json) {
+   * request.setContent(ByteArrayContent.fromString("application/json", json));
+   * }
    * </code>
    * </pre>
    *

@@ -14,32 +14,43 @@
 
 package com.google.api.client.http.apache;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.ByteArrayStreamingContent;
 import com.google.api.client.util.StringUtils;
-import junit.framework.TestCase;
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.apache.http.Header;
+import org.apache.http.HttpClientConnection;
+import org.apache.http.HttpException;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.params.ClientPNames;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.protocol.HttpRequestExecutor;
+import org.junit.Test;
 
 /**
  * Tests {@link ApacheHttpTransport}.
  *
  * @author Yaniv Inbar
  */
-public class ApacheHttpTransportTest extends TestCase {
+public class ApacheHttpTransportTest {
 
+  @Test
   public void testApacheHttpTransport() {
     ApacheHttpTransport transport = new ApacheHttpTransport();
     DefaultHttpClient httpClient = (DefaultHttpClient) transport.getHttpClient();
@@ -47,15 +58,31 @@ public class ApacheHttpTransportTest extends TestCase {
     checkHttpClient(httpClient);
   }
 
+  @Test
   public void testApacheHttpTransportWithParam() {
     ApacheHttpTransport transport = new ApacheHttpTransport(new DefaultHttpClient());
     checkHttpClient(transport.getHttpClient());
   }
 
+  @Test
   public void testNewDefaultHttpClient() {
-    checkDefaultHttpClient(ApacheHttpTransport.newDefaultHttpClient());
+    HttpClient client = ApacheHttpTransport.newDefaultHttpClient();
+    checkHttpClient(client);
   }
 
+  private void checkHttpTransport(ApacheHttpTransport transport) {
+    assertNotNull(transport);
+    HttpClient client = transport.getHttpClient();
+    checkHttpClient(client);
+  }
+
+  private void checkHttpClient(HttpClient client) {
+    assertNotNull(client);
+    // TODO(chingor): Is it possible to test this effectively? The newer HttpClient implementations
+    // are read-only and we're testing that we built the client with the right configuration
+  }
+
+  @Test
   public void testRequestsWithContent() throws Exception {
     HttpClient mockClient = mock(HttpClient.class);
     HttpResponse mockResponse = mock(HttpResponse.class);
@@ -73,6 +100,8 @@ public class ApacheHttpTransportTest extends TestCase {
     subtestUnsupportedRequestsWithContent(
         transport.buildRequest("HEAD", "http://www.test.url"), "HEAD");
 
+    // Test PATCH.
+    execute(transport.buildRequest("PATCH", "http://www.test.url"));
     // Test PUT.
     execute(transport.buildRequest("PUT", "http://www.test.url"));
     // Test POST.
@@ -88,7 +117,8 @@ public class ApacheHttpTransportTest extends TestCase {
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
-      assertEquals(e.getMessage(),
+      assertEquals(
+          e.getMessage(),
           "Apache HTTP client does not support " + method + " requests with content.");
     }
   }

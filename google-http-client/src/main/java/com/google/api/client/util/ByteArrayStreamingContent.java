@@ -20,9 +20,7 @@ import java.io.OutputStream;
 /**
  * Streaming content whose source is a byte array.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.14
  * @author Yaniv Inbar
@@ -38,9 +36,7 @@ public class ByteArrayStreamingContent implements StreamingContent {
   /** Length of bytes to read from byte array. */
   private final int length;
 
-  /**
-   * @param byteArray byte array content
-   */
+  /** @param byteArray byte array content */
   public ByteArrayStreamingContent(byte[] byteArray) {
     this(byteArray, 0, byteArray.length);
   }

@@ -15,16 +15,13 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.StreamingContent;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
  * Serializes HTTP request content into an output stream.
  *
- * <p>
- * Implementations don't need to be thread-safe.
- * </p>
+ * <p>Implementations don't need to be thread-safe.
  *
  * @since 1.0
  * @author Yaniv Inbar

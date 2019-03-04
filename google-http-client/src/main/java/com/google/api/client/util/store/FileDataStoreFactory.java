@@ -17,7 +17,6 @@ package com.google.api.client.util.store;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Maps;
 import com.google.api.client.util.Throwables;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,11 +29,9 @@ import java.util.logging.Logger;
 /**
  * Thread-safe file implementation of a credential store.
  *
- * <p>
- * For security purposes, the file's permissions are set to be accessible only by the file's owner.
- * Note that Java 1.5 does not support manipulating file permissions, and must be done manually or
- * using the JNI.
- * </p>
+ * <p>For security purposes, the file's permissions are set to be accessible only by the file's
+ * owner. Note that Java 1.5 does not support manipulating file permissions, and must be done
+ * manually or using the JNI.
  *
  * @since 1.16
  * @author Yaniv Inbar
@@ -46,9 +43,7 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
   /** Directory to store data. */
   private final File dataDirectory;
 
-  /**
-   * @param dataDirectory data directory
-   */
+  /** @param dataDirectory data directory */
   public FileDataStoreFactory(File dataDirectory) throws IOException {
     dataDirectory = dataDirectory.getCanonicalFile();
     this.dataDirectory = dataDirectory;
@@ -144,8 +139,10 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
       // shouldn't reach this point, but just in case...
       throw new RuntimeException(cause);
     } catch (NoSuchMethodException exception) {
-      LOGGER.warning("Unable to set permissions for " + file
-          + ", likely because you are running a version of Java prior to 1.6");
+      LOGGER.warning(
+          "Unable to set permissions for "
+              + file
+              + ", likely because you are running a version of Java prior to 1.6");
     } catch (SecurityException exception) {
       // ignored
     } catch (IllegalAccessException exception) {

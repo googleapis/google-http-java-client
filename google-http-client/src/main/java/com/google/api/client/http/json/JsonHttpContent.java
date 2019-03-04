@@ -20,28 +20,23 @@ import com.google.api.client.json.Json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.util.Preconditions;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
  * Serializes JSON HTTP content based on the data key/value mapping object for an item.
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>
- *<code>
-  static void setContent(HttpRequest request, Object data) {
-    request.setContent(new JsonHttpContent(new JacksonFactory(), data));
-  }
+ * <code>
+ * static void setContent(HttpRequest request, Object data) {
+ * request.setContent(new JsonHttpContent(new JacksonFactory(), data));
+ * }
  * </code>
  * </pre>
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -118,10 +113,8 @@ public class JsonHttpContent extends AbstractHttpContent {
   /**
    * Sets the wrapper key for the JSON content or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.14
    */

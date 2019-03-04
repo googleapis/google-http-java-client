@@ -15,12 +15,11 @@
 package com.google.api.client.testing.util;
 
 import com.google.api.client.util.Beta;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Testable extension for a byte array input stream.
  *
  * @author Yaniv Inbar
@@ -49,9 +48,7 @@ public class TestableByteArrayInputStream extends ByteArrayInputStream {
   /**
    * {@inheritDoc}
    *
-   * <p>
-   * Overriding is supported, but overriding method must call the super implementation.
-   * </p>
+   * <p>Overriding is supported, but overriding method must call the super implementation.
    */
   @Override
   public void close() throws IOException {
