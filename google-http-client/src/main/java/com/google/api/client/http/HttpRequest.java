@@ -186,6 +186,9 @@ public final class HttpRequest {
   /** HTTP content encoding or {@code null} for none. */
   private HttpEncoding encoding;
 
+  /** Content length or {@code 0}. */
+  private long contentLength;
+
   /**
    * The {@link BackOffPolicy} to use between retry attempts or {@code null} for none.
    */
@@ -999,7 +1002,6 @@ public final class HttpRequest {
       final boolean contentRetrySupported = streamingContent == null || content.retrySupported();
       if (streamingContent != null) {
         final String contentEncoding;
-        final long contentLength;
         final String contentType = content.getType();
         // log content
         if (loggable) {
@@ -1009,7 +1011,7 @@ public final class HttpRequest {
         // encoding
         if (encoding == null) {
           contentEncoding = null;
-          contentLength = content.getLength();
+          contentLength = contentLength > 0 ? contentLength : content.getLength();
         } else {
           contentEncoding = encoding.getName();
           streamingContent = new HttpEncodingStreamingContent(streamingContent, encoding);
