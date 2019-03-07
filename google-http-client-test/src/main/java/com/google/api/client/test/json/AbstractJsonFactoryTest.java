@@ -1367,6 +1367,39 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     assertEquals(SIMPLE_WRAPPED, out.toString("UTF-8"));
   }
 
+  public void testJsonHttpContent_lengthBeforeWriteTo() throws Exception {
+    JsonFactory factory = newFactory();
+    Simple simple = new Simple();
+    simple.a = "b";
+    JsonHttpContent content = new JsonHttpContent(factory, simple);
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    long length = content.getLength();
+    content.writeTo(out);
+    assertEquals(SIMPLE, out.toString("UTF-8"));
+    assertEquals(length, out.size());
+  }
+
+  public void testJsonHttpContent_lengthAfterWriteTo() throws Exception {
+    JsonFactory factory = newFactory();
+    Simple simple = new Simple();
+    simple.a = "b";
+    JsonHttpContent content = new JsonHttpContent(factory, simple);
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    content.writeTo(out);
+    assertEquals(SIMPLE, out.toString("UTF-8"));
+    assertEquals(content.getLength(), out.size());
+  }
+
+  public void testJsonHttpContent_lengthWhenEmpty() throws Exception {
+    JsonFactory factory = newFactory();
+    Simple simple = new Simple();
+    JsonHttpContent content = new JsonHttpContent(factory, simple);
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    long length = content.getLength();
+    content.writeTo(out);
+    assertEquals(length, 2);
+  }
+
   public static class V {
     @Key
     Void v;
