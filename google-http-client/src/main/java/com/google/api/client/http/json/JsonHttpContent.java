@@ -21,6 +21,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.util.Preconditions;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -61,6 +62,9 @@ public class JsonHttpContent extends AbstractHttpContent {
   /** Data length. */
   private long length = -1;
 
+  /** Serialized data */
+  private ByteArrayOutputStream outputStream;
+
   /**
    * @param jsonFactory JSON factory to use
    * @param data JSON key name/value data
@@ -73,6 +77,9 @@ public class JsonHttpContent extends AbstractHttpContent {
   }
 
   public void writeTo(OutputStream out) throws IOException {
+    if (this.outputStream == out) {
+      return;
+    }
     JsonGenerator generator = jsonFactory.createJsonGenerator(out, getCharset());
     if (wrapperKey != null) {
       generator.writeStartObject();
@@ -88,7 +95,8 @@ public class JsonHttpContent extends AbstractHttpContent {
   @Override
   public long getLength() throws IOException {
     if (length == -1) {
-      length = jsonFactory.toByteArray(data).length;
+      writeTo(outputStream);
+      length = outputStream.size();
     }
     return length;
   }
