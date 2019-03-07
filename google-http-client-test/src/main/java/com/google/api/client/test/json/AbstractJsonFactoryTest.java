@@ -1367,7 +1367,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     assertEquals(SIMPLE_WRAPPED, out.toString("UTF-8"));
   }
 
-  public void testJsonHttpContent_lengthBeforeWriteTo() throws Exception {
+  public void testJsonHttpContent_getLengthBeforeWriteTo() throws Exception {
     JsonFactory factory = newFactory();
     Simple simple = new Simple();
     simple.a = "b";
@@ -1379,7 +1379,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     assertEquals(length, out.size());
   }
 
-  public void testJsonHttpContent_lengthAfterWriteTo() throws Exception {
+  public void testJsonHttpContent_getLengthAfterWriteTo() throws Exception {
     JsonFactory factory = newFactory();
     Simple simple = new Simple();
     simple.a = "b";
@@ -1390,7 +1390,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     assertEquals(content.getLength(), out.size());
   }
 
-  public void testJsonHttpContent_lengthWhenEmpty() throws Exception {
+  public void testJsonHttpContent_getLengthWhenEmpty() throws Exception {
     JsonFactory factory = newFactory();
     Simple simple = new Simple();
     JsonHttpContent content = new JsonHttpContent(factory, simple);
