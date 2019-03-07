@@ -58,6 +58,9 @@ public class JsonHttpContent extends AbstractHttpContent {
   /** Wrapper key for the JSON content or {@code null} for none. */
   private String wrapperKey;
 
+  /** Data length. */
+  private long length = -1;
+
   /**
    * @param jsonFactory JSON factory to use
    * @param data JSON key name/value data
@@ -80,6 +83,14 @@ public class JsonHttpContent extends AbstractHttpContent {
       generator.writeEndObject();
     }
     generator.flush();
+  }
+
+  @Override
+  public long getLength() throws IOException {
+    if (length == -1) {
+      length = jsonFactory.toByteArray(data).length;
+    }
+    return length;
   }
 
   @Override
