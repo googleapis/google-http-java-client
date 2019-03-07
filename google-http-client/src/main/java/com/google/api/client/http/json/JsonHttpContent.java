@@ -81,7 +81,7 @@ public class JsonHttpContent extends AbstractHttpContent {
   }
 
   /**
-   * Returns length of Serialized data byte array
+   * Returns the length of serialized data byte array.
    *
    * @since 1.29
    */
