@@ -27,8 +27,8 @@ import java.net.HttpURLConnection;
  *
  * @since 1.11
  * @author Yaniv Inbar
- * @deprecated Gingerbread is no longer supported by Google Play Services. Please use {@link
- *     NetHttpTransport} directly or switch to Cronet which is better supported.
+ * @deprecated Gingerbread is no longer supported by Google Play Services. Please use
+ * {@link NetHttpTransport} directly or switch to Cronet which is better supported.
  */
 @Beta
 @Deprecated
@@ -45,8 +45,8 @@ public class AndroidHttp {
    * HTTP Client was preferred. However, starting with Gingerbread, the {@link HttpURLConnection}
    * implementation bugs were fixed, and is now better supported than the Apache HTTP Client. There
    * is no guarantee that Apache HTTP transport will continue to work in future SDKs. Therefore,
-   * this method uses {@link NetHttpTransport} for Gingerbread or higher, and otherwise {@link
-   * ApacheHttpTransport}.
+   * this method uses {@link NetHttpTransport} for Gingerbread or higher, and otherwise
+   * {@link ApacheHttpTransport}.
    */
   public static HttpTransport newCompatibleTransport() {
     return AndroidUtils.isMinimumSdkLevel(9) ? new NetHttpTransport() : new ApacheHttpTransport();

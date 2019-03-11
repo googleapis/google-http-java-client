@@ -256,8 +256,8 @@ public final class DateTime implements Serializable {
    * <p>Upgrade warning: in prior version 1.17, this method required milliseconds to be exactly 3
    * digits (if included), and did not throw an exception for all types of invalid input values, but
    * starting in version 1.18, the parsing done by this method has become more strict to enforce
-   * that only valid RFC3339 strings are entered, and if not, it throws a {@link
-   * NumberFormatException}. Also, in accordance with the RFC3339 standard, any number of
+   * that only valid RFC3339 strings are entered, and if not, it throws a
+   * {@link NumberFormatException}. Also, in accordance with the RFC3339 standard, any number of
    * milliseconds digits is now allowed.
    *
    * <p>For the date-only case, the time zone is ignored and the hourOfDay, minute, second, and

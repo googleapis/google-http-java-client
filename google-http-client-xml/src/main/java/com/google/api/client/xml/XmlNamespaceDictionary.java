@@ -282,8 +282,8 @@ public final class XmlNamespaceDictionary {
    * @param alias namespace alias
    * @return namespace URI, using a predictable made-up namespace URI if the namespace alias is not
    *     recognized
-   * @throws IllegalArgumentException if the namespace alias is not recognized and {@code
-   *     errorOnUnkown} is {@code true}
+   * @throws IllegalArgumentException if the namespace alias is not recognized and
+   * {@code errorOnUnkown} is {@code true}
    */
   String getNamespaceUriForAliasHandlingUnknown(boolean errorOnUnknown, String alias) {
     String result = getUriForAlias(alias);

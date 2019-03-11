@@ -38,8 +38,8 @@ public abstract class AbstractDataStoreFactory implements DataStoreFactory {
   private final Map<String, DataStore<? extends Serializable>> dataStoreMap = Maps.newHashMap();
 
   /**
-   * Pattern to control possible values for the {@code id} parameter of {@link
-   * #getDataStore(String)}.
+   * Pattern to control possible values for the {@code id} parameter of
+   * {@link #getDataStore(String)}.
    */
   private static final Pattern ID_PATTERN = Pattern.compile("\\w{1,30}");
 

@@ -181,8 +181,8 @@ public class Xml {
 
     /**
      * Returns whether to stop parsing when reaching the end tag of an XML element after it has been
-     * processed. Only called if the element is actually being processed. By default, returns {@code
-     * false}, but subclasses may override.
+     * processed. Only called if the element is actually being processed. By default, returns
+     * {@code false}, but subclasses may override.
      *
      * @param namespace XML element's namespace URI
      * @param localName XML element's local name

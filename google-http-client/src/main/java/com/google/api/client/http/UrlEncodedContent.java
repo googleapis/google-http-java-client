@@ -28,8 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Implements support for HTTP form content encoding serialization of type {@code
- * application/x-www-form-urlencoded} as specified in the <a href=
+ * Implements support for HTTP form content encoding serialization of type
+ * {@code application/x-www-form-urlencoded} as specified in the <a href=
  * "http://www.w3.org/TR/REC-html40/interact/forms.html#h-17.13.4.1">HTML 4.0 Specification</a>.
  *
  * <p>Sample usage:
@@ -111,8 +111,8 @@ public class UrlEncodedContent extends AbstractHttpContent {
    *
    * @param request HTTP request
    * @return URL-encoded content
-   * @throws ClassCastException if the HTTP request has a content defined that is not {@link
-   *     UrlEncodedContent}
+   * @throws ClassCastException if the HTTP request has a content defined that is not
+   * {@link UrlEncodedContent}
    * @since 1.7
    */
   public static UrlEncodedContent getContent(HttpRequest request) {

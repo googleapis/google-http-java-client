@@ -93,8 +93,8 @@ public class IOUtils {
   }
 
   /**
-   * Computes and returns the byte content length for a streaming content by calling {@link
-   * StreamingContent#writeTo(OutputStream)} on a fake output stream that only counts bytes written.
+   * Computes and returns the byte content length for a streaming content by calling
+   * {@link StreamingContent#writeTo(OutputStream)} on a fake output stream that only counts bytes written.
    *
    * @param content streaming content
    */

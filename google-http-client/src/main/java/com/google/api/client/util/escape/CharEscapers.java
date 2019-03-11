@@ -18,8 +18,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 /**
- * Utility functions for dealing with {@code CharEscaper}s, and some commonly used {@code
- * CharEscaper} instances.
+ * Utility functions for dealing with {@code CharEscaper}s, and some commonly used
+ * {@code CharEscaper} instances.
  *
  * @since 1.0
  */

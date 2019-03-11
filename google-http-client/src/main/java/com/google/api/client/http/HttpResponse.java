@@ -251,8 +251,8 @@ public final class HttpResponse {
   }
 
   /**
-   * Returns whether received a successful HTTP status code {@code >= 200 && < 300} (see {@link
-   * #getStatusCode()}).
+   * Returns whether received a successful HTTP status code {@code >= 200 && < 300} (see
+   * {@link #getStatusCode()}).
    *
    * @since 1.5
    */
@@ -395,8 +395,8 @@ public final class HttpResponse {
   }
 
   /**
-   * Close the HTTP response content using {@link #ignore}, and disconnect using {@link
-   * LowLevelHttpResponse#disconnect()}.
+   * Close the HTTP response content using {@link #ignore}, and disconnect using
+   * {@link LowLevelHttpResponse#disconnect()}.
    *
    * @since 1.4
    */
@@ -421,8 +421,8 @@ public final class HttpResponse {
   }
 
   /**
-   * Returns whether this response contains a message body as specified in {@href
-   * http://tools.ietf.org/html/rfc2616#section-4.3}, calling {@link #ignore()} if {@code false}.
+   * Returns whether this response contains a message body as specified in
+   * {@href http://tools.ietf.org/html/rfc2616#section-4.3}, calling {@link #ignore()} if {@code false}.
    */
   private boolean hasMessageBody() throws IOException {
     int statusCode = getStatusCode();
@@ -475,8 +475,8 @@ public final class HttpResponse {
   }
 
   /**
-   * Returns the {@link Charset} specified in the Content-Type of this response or the {@code
-   * "ISO-8859-1"} charset as a default.
+   * Returns the {@link Charset} specified in the Content-Type of this response or the
+   * {@code "ISO-8859-1"} charset as a default.
    *
    * @since 1.10
    */

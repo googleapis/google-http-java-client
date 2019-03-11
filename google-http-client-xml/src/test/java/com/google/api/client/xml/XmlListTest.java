@@ -154,8 +154,8 @@ public class XmlListTest {
     assertEquals(MULTIPLE_STRING_ELEMENT, out.toString());
   }
   /**
-   * The purpose of this test is to map an XML with a sub element of a {@link Collection} of {@link
-   * String} objects.
+   * The purpose of this test is to map an XML with a sub element of a {@link Collection} of
+   * {@link String} objects.
    */
   @Test
   public void testParseAnyTypeWithACollectionString() throws Exception {

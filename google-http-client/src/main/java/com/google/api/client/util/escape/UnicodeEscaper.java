@@ -19,8 +19,8 @@ package com.google.api.client.util.escape;
  * context (such as an XML document). Typically (but not always), the inverse process of
  * "unescaping" the text is performed automatically by the relevant parser.
  *
- * <p>For example, an XML escaper would convert the literal string {@code "Foo<Bar>"} into {@code
- * "Foo&lt;Bar&gt;"} to prevent {@code "<Bar>"} from being confused with an XML tag. When the
+ * <p>For example, an XML escaper would convert the literal string {@code "Foo<Bar>"} into
+ * {@code "Foo&lt;Bar&gt;"} to prevent {@code "<Bar>"} from being confused with an XML tag. When the
  * resulting XML document is parsed, the parser API will return this text as the original literal
  * string {@code "Foo<Bar>"}.
  *
@@ -107,8 +107,8 @@ public abstract class UnicodeEscaper extends Escaper {
    * protected to allow subclasses to override the fastpath escaping function to inline their
    * escaping test.
    *
-   * <p>This method is not reentrant and may only be invoked by the top level {@link
-   * #escape(String)} method.
+   * <p>This method is not reentrant and may only be invoked by the top level
+   * {@link #escape(String)} method.
    *
    * @param s the literal string to be escaped
    * @param index the index to start escaping from
@@ -191,8 +191,8 @@ public abstract class UnicodeEscaper extends Escaper {
    *             surrogate is returned.</b>
    *         <li><b>If the next character was a valid low surrogate, the code point value of the
    *             high/low surrogate pair is returned.</b>
-   *         <li>If the next character was not a low surrogate value, then {@link
-   *             IllegalArgumentException} is thrown.
+   *         <li>If the next character was not a low surrogate value, then
+   *         {@link IllegalArgumentException} is thrown.
    *       </ol>
    *   <li>If the first character was a low surrogate value, {@link IllegalArgumentException} is
    *       thrown.

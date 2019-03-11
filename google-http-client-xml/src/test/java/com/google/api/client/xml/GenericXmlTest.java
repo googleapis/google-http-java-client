@@ -35,8 +35,8 @@ import org.xmlpull.v1.XmlSerializer;
 /**
  * Tests {@link GenericXml}.
  *
- * <p>Tests are copies from {@link XmlTest}, but the dedicated Objects are derived from {@link
- * GenericXml}
+ * <p>Tests are copies from {@link XmlTest}, but the dedicated Objects are derived from
+ * {@link GenericXml}
  *
  * @author Yaniv Inbar
  * @author Gerald Madlmayr

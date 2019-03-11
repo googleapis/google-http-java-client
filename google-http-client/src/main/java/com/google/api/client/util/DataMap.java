@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
- * Map that uses {@link ClassInfo} to parse the key/value pairs into a map for use in {@link
- * Data#mapOf(Object)}.
+ * Map that uses {@link ClassInfo} to parse the key/value pairs into a map for use in
+ * {@link Data#mapOf(Object)}.
  *
  * @author Yaniv Inbar
  */
@@ -115,8 +115,8 @@ final class DataMap extends AbstractMap<String, Object> {
   final class EntryIterator implements Iterator<Map.Entry<String, Object>> {
 
     /**
-     * Next index into key names array computed in {@link #hasNext()} or {@code -1} before {@link
-     * #hasNext()} has been called.
+     * Next index into key names array computed in {@link #hasNext()} or {@code -1} before
+     * {@link #hasNext()} has been called.
      */
     private int nextKeyIndex = -1;
 
@@ -184,8 +184,8 @@ final class DataMap extends AbstractMap<String, Object> {
   final class Entry implements Map.Entry<String, Object> {
 
     /**
-     * Current field value, possibly modified only by {@link #setValue(Object)}. As specified {@link
-     * java.util.Map.Entry}, behavior is undefined if the field value is modified by other means.
+     * Current field value, possibly modified only by {@link #setValue(Object)}. As specified
+     * {@link java.util.Map.Entry}, behavior is undefined if the field value is modified by other means.
      */
     private Object fieldValue;
 

@@ -35,8 +35,8 @@ import java.io.IOException;
  * <p><b>Note:</b> max_interval caps the retry_interval and not the randomized_interval.
  *
  * <p>If the time elapsed since an {@link ExponentialBackOff} instance is created goes past the
- * max_elapsed_time then the method {@link #nextBackOffMillis()} starts returning {@link
- * BackOff#STOP}. The elapsed time can be reset by calling {@link #reset()}.
+ * max_elapsed_time then the method {@link #nextBackOffMillis()} starts returning
+ * {@link BackOff#STOP}. The elapsed time can be reset by calling {@link #reset()}.
  *
  * <p>Example: The default retry_interval is .5 seconds, default randomization_factor is 0.5,
  * default multiplier is 1.5 and the default max_interval is 1 minute. For 10 tries the sequence
@@ -112,8 +112,8 @@ public class ExponentialBackOff implements BackOff {
   long startTimeNanos;
 
   /**
-   * The maximum elapsed time after instantiating {@link ExponentialBackOff} or calling {@link
-   * #reset()} after which {@link #nextBackOffMillis()} returns {@link BackOff#STOP}.
+   * The maximum elapsed time after instantiating {@link ExponentialBackOff} or calling
+   * {@link #reset()} after which {@link #nextBackOffMillis()} returns {@link BackOff#STOP}.
    */
   private final int maxElapsedTimeMillis;
 
@@ -287,8 +287,8 @@ public class ExponentialBackOff implements BackOff {
 
     /**
      * The maximum elapsed time in milliseconds after instantiating {@link ExponentialBackOff} or
-     * calling {@link #reset()} after which {@link #nextBackOffMillis()} returns {@link
-     * BackOff#STOP}.
+     * calling {@link #reset()} after which {@link #nextBackOffMillis()} returns
+     * {@link BackOff#STOP}.
      */
     int maxElapsedTimeMillis = DEFAULT_MAX_ELAPSED_TIME_MILLIS;
 
@@ -311,8 +311,8 @@ public class ExponentialBackOff implements BackOff {
     }
 
     /**
-     * Sets the initial retry interval in milliseconds. The default value is {@link
-     * #DEFAULT_INITIAL_INTERVAL_MILLIS}. Must be {@code > 0}.
+     * Sets the initial retry interval in milliseconds. The default value is
+     * {@link #DEFAULT_INITIAL_INTERVAL_MILLIS}. Must be {@code > 0}.
      *
      * <p>Overriding is only supported for the purpose of calling the super implementation and
      * changing the return type, but nothing else.
@@ -338,8 +338,8 @@ public class ExponentialBackOff implements BackOff {
 
     /**
      * Sets the randomization factor to use for creating a range around the retry interval. The
-     * default value is {@link #DEFAULT_RANDOMIZATION_FACTOR}. Must fall in the range {@code 0 <=
-     * randomizationFactor < 1}.
+     * default value is {@link #DEFAULT_RANDOMIZATION_FACTOR}. Must fall in the range
+     * {@code 0 <= randomizationFactor < 1}.
      *
      * <p>A randomization factor of 0.5 results in a random period ranging between 50% below and 50%
      * above the retry interval.
@@ -374,8 +374,8 @@ public class ExponentialBackOff implements BackOff {
 
     /**
      * Returns the maximum value of the back off period in milliseconds. Once the current interval
-     * reaches this value it stops increasing. The default value is {@link
-     * #DEFAULT_MAX_INTERVAL_MILLIS}. Must be {@code >= initialInterval}.
+     * reaches this value it stops increasing. The default value is
+     * {@link #DEFAULT_MAX_INTERVAL_MILLIS}. Must be {@code >= initialInterval}.
      */
     public final int getMaxIntervalMillis() {
       return maxIntervalMillis;
@@ -383,8 +383,8 @@ public class ExponentialBackOff implements BackOff {
 
     /**
      * Sets the maximum value of the back off period in milliseconds. Once the current interval
-     * reaches this value it stops increasing. The default value is {@link
-     * #DEFAULT_MAX_INTERVAL_MILLIS}.
+     * reaches this value it stops increasing. The default value is
+     * {@link #DEFAULT_MAX_INTERVAL_MILLIS}.
      *
      * <p>Overriding is only supported for the purpose of calling the super implementation and
      * changing the return type, but nothing else.
@@ -395,24 +395,24 @@ public class ExponentialBackOff implements BackOff {
     }
 
     /**
-     * Returns the maximum elapsed time in milliseconds. The default value is {@link
-     * #DEFAULT_MAX_ELAPSED_TIME_MILLIS}.
+     * Returns the maximum elapsed time in milliseconds. The default value is
+     * {@link #DEFAULT_MAX_ELAPSED_TIME_MILLIS}.
      *
      * <p>If the time elapsed since an {@link ExponentialBackOff} instance is created goes past the
-     * max_elapsed_time then the method {@link #nextBackOffMillis()} starts returning {@link
-     * BackOff#STOP}. The elapsed time can be reset by calling {@link #reset()}.
+     * max_elapsed_time then the method {@link #nextBackOffMillis()} starts returning
+     * {@link BackOff#STOP}. The elapsed time can be reset by calling {@link #reset()}.
      */
     public final int getMaxElapsedTimeMillis() {
       return maxElapsedTimeMillis;
     }
 
     /**
-     * Sets the maximum elapsed time in milliseconds. The default value is {@link
-     * #DEFAULT_MAX_ELAPSED_TIME_MILLIS}. Must be {@code > 0}.
+     * Sets the maximum elapsed time in milliseconds. The default value is
+     * {@link #DEFAULT_MAX_ELAPSED_TIME_MILLIS}. Must be {@code > 0}.
      *
      * <p>If the time elapsed since an {@link ExponentialBackOff} instance is created goes past the
-     * max_elapsed_time then the method {@link #nextBackOffMillis()} starts returning {@link
-     * BackOff#STOP}. The elapsed time can be reset by calling {@link #reset()}.
+     * max_elapsed_time then the method {@link #nextBackOffMillis()} starts returning
+     * {@link BackOff#STOP}. The elapsed time can be reset by calling {@link #reset()}.
      *
      * <p>Overriding is only supported for the purpose of calling the super implementation and
      * changing the return type, but nothing else.

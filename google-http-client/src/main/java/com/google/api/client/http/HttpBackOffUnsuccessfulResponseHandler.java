@@ -36,8 +36,8 @@ import java.io.IOException;
  * new HttpBackOffUnsuccessfulResponseHandler(new ExponentialBackOff()));
  * </pre>
  *
- * <p>Note: Implementation doesn't call {@link BackOff#reset} at all, since it expects a new {@link
- * BackOff} instance.
+ * <p>Note: Implementation doesn't call {@link BackOff#reset} at all, since it expects a new
+ * {@link BackOff} instance.
  *
  * <p>Implementation is not thread-safe
  *
@@ -147,8 +147,8 @@ public class HttpBackOffUnsuccessfulResponseHandler implements HttpUnsuccessfulR
     boolean isRequired(HttpResponse response);
 
     /**
-     * Back-off required implementation which returns {@code true} to every {@link
-     * #isRequired(HttpResponse)} call.
+     * Back-off required implementation which returns {@code true} to every
+     * {@link #isRequired(HttpResponse)} call.
      */
     BackOffRequired ALWAYS =
         new BackOffRequired() {
@@ -158,8 +158,8 @@ public class HttpBackOffUnsuccessfulResponseHandler implements HttpUnsuccessfulR
         };
 
     /**
-     * Back-off required implementation which its {@link #isRequired(HttpResponse)} returns {@code
-     * true} if a server error occurred (5xx).
+     * Back-off required implementation which its {@link #isRequired(HttpResponse)} returns
+     * {@code true} if a server error occurred (5xx).
      */
     BackOffRequired ON_SERVER_ERROR =
         new BackOffRequired() {

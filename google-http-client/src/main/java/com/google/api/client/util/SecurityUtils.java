@@ -223,8 +223,8 @@ public final class SecurityUtils {
   }
 
   /**
-   * Loads a key store with certificates generated from the specified stream using {@link
-   * CertificateFactory#generateCertificates(InputStream)}.
+   * Loads a key store with certificates generated from the specified stream using
+   * {@link CertificateFactory#generateCertificates(InputStream)}.
    *
    * <p>For each certificate, {@link KeyStore#setCertificateEntry(String, Certificate)} is called
    * with an alias that is the string form of incrementing non-negative integers starting with 0 (0,
@@ -239,8 +239,8 @@ public final class SecurityUtils {
    * </pre>
    *
    * @param keyStore key store (for example {@link #getJavaKeyStore()})
-   * @param certificateFactory certificate factory (for example {@link
-   *     #getX509CertificateFactory()})
+   * @param certificateFactory certificate factory (for example
+   * {@link #getX509CertificateFactory()})
    * @param certificateStream certificate stream
    */
   public static void loadKeyStoreFromCertificates(

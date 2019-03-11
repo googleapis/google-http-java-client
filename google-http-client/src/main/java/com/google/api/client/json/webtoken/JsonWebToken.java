@@ -57,8 +57,8 @@ public class JsonWebToken {
     private String type;
 
     /**
-     * Content type header parameter used to declare structural information about the JWT or {@code
-     * null} for none.
+     * Content type header parameter used to declare structural information about the JWT or
+     * {@code null} for none.
      */
     @Key("cty")
     private String contentType;
@@ -136,8 +136,8 @@ public class JsonWebToken {
     private Long notBeforeTimeSeconds;
 
     /**
-     * Issued at claim that identifies the time (in seconds) at which the JWT was issued or {@code
-     * null} for none.
+     * Issued at claim that identifies the time (in seconds) at which the JWT was issued or
+     * {@code null} for none.
      */
     @Key("iat")
     private Long issuedAtTimeSeconds;
@@ -158,8 +158,8 @@ public class JsonWebToken {
     private String jwtId;
 
     /**
-     * Type claim that is used to declare a type for the contents of this JWT Claims Set or {@code
-     * null} for none.
+     * Type claim that is used to declare a type for the contents of this JWT Claims Set or
+     * {@code null} for none.
      */
     @Key("typ")
     private String type;
@@ -326,16 +326,16 @@ public class JsonWebToken {
     }
 
     /**
-     * Returns the subject claim identifying the principal that is the subject of the JWT or {@code
-     * null} for none.
+     * Returns the subject claim identifying the principal that is the subject of the JWT or
+     * {@code null} for none.
      */
     public final String getSubject() {
       return subject;
     }
 
     /**
-     * Sets the subject claim identifying the principal that is the subject of the JWT or {@code
-     * null} for none.
+     * Sets the subject claim identifying the principal that is the subject of the JWT or
+     * {@code null} for none.
      *
      * <p>Overriding is only supported for the purpose of calling the super implementation and
      * changing the return type, but nothing else.

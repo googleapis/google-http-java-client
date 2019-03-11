@@ -32,8 +32,8 @@ public final class Objects {
    *   <li>{@code false} in all other situations.
    * </ul>
    *
-   * <p>This assumes that any non-null objects passed to this function conform to the {@code
-   * equals()} contract.
+   * <p>This assumes that any non-null objects passed to this function conform to the
+   * {@code equals()} contract.
    */
   public static boolean equal(Object a, Object b) {
     return com.google.common.base.Objects.equal(a, b);

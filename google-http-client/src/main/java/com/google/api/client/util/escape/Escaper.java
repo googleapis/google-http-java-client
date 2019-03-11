@@ -19,8 +19,8 @@ package com.google.api.client.util.escape;
  * (such as an XML document). Typically (but not always), the inverse process of "unescaping" the
  * text is performed automatically by the relevant parser.
  *
- * <p>For example, an XML escaper would convert the literal string {@code "Foo<Bar>"} into {@code
- * "Foo&lt;Bar&gt;"} to prevent {@code "<Bar>"} from being confused with an XML tag. When the
+ * <p>For example, an XML escaper would convert the literal string {@code "Foo<Bar>"} into
+ * {@code "Foo&lt;Bar&gt;"} to prevent {@code "<Bar>"} from being confused with an XML tag. When the
  * resulting XML document is parsed, the parser API will return this text as the original literal
  * string {@code "Foo<Bar>"}.
  *

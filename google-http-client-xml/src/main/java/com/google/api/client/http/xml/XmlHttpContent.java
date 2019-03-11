@@ -59,8 +59,8 @@ public class XmlHttpContent extends AbstractXmlHttpContent {
   }
 
   /**
-   * XML element local name, optionally prefixed by its namespace alias, for example {@code
-   * "atom:entry"}.
+   * XML element local name, optionally prefixed by its namespace alias, for example
+   * {@code "atom:entry"}.
    */
   private final String elementName;
 

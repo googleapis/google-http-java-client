@@ -52,8 +52,8 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * <p>
  *
- * <p>If a JSON map is encountered while using a destination class of type Map, then an {@link
- * ArrayMap} is used by default for the parsed values.
+ * <p>If a JSON map is encountered while using a destination class of type Map, then an
+ * {@link ArrayMap} is used by default for the parsed values.
  *
  * @since 1.3
  * @author Yaniv Inbar
@@ -94,15 +94,15 @@ public abstract class JsonParser implements Closeable {
   public abstract String getCurrentName() throws IOException;
 
   /**
-   * Skips to the matching {@link JsonToken#END_ARRAY} if current token is {@link
-   * JsonToken#START_ARRAY}, the matching {@link JsonToken#END_OBJECT} if the current token is
+   * Skips to the matching {@link JsonToken#END_ARRAY} if current token is
+   * {@link JsonToken#START_ARRAY}, the matching {@link JsonToken#END_OBJECT} if the current token is
    * {@link JsonToken#START_OBJECT}, else does nothing.
    */
   public abstract JsonParser skipChildren() throws IOException;
 
   /**
-   * Returns a textual representation of the current token or {@code null} if {@link
-   * #getCurrentToken()} is {@code null}.
+   * Returns a textual representation of the current token or {@code null} if
+   * {@link #getCurrentToken()} is {@code null}.
    */
   public abstract String getText() throws IOException;
 
@@ -171,8 +171,8 @@ public abstract class JsonParser implements Closeable {
    * Skips the values of all keys in the current object until it finds the given key.
    *
    * <p>Before this method is called, the parser must either point to the start or end of a JSON
-   * object or to a field name. After this method ends, the current token will either be the {@link
-   * JsonToken#END_OBJECT} of the current object if the key is not found, or the value of the key
+   * object or to a field name. After this method ends, the current token will either be the
+   * {@link JsonToken#END_OBJECT} of the current object if the key is not found, or the value of the key
    * that was found.
    *
    * @param keyToFind key to find
@@ -185,8 +185,8 @@ public abstract class JsonParser implements Closeable {
    * Skips the values of all keys in the current object until it finds one of the given keys.
    *
    * <p>Before this method is called, the parser must either point to the start or end of a JSON
-   * object or to a field name. After this method ends, the current token will either be the {@link
-   * JsonToken#END_OBJECT} of the current object if no matching key is found, or the value of the
+   * object or to a field name. After this method ends, the current token will either be the
+   * {@link JsonToken#END_OBJECT} of the current object if no matching key is found, or the value of the
    * key that was found.
    *
    * @param keysToFind set of keys to look for
@@ -223,10 +223,10 @@ public abstract class JsonParser implements Closeable {
    * first array value or end of object or array.
    *
    * <p>If the parser is at the start of input, {@link #nextToken()} is called. The current token
-   * must then be {@link JsonToken#START_OBJECT}, {@link JsonToken#END_OBJECT}, {@link
-   * JsonToken#START_ARRAY}, {@link JsonToken#END_ARRAY}, or {@link JsonToken#FIELD_NAME}. For an
-   * object only, after the method is called, the current token must be either {@link
-   * JsonToken#FIELD_NAME} or {@link JsonToken#END_OBJECT}.
+   * must then be {@link JsonToken#START_OBJECT}, {@link JsonToken#END_OBJECT},
+   * {@link JsonToken#START_ARRAY}, {@link JsonToken#END_ARRAY}, or {@link JsonToken#FIELD_NAME}. For an
+   * object only, after the method is called, the current token must be either
+   * {@link JsonToken#FIELD_NAME} or {@link JsonToken#END_OBJECT}.
    */
   private JsonToken startParsingObjectOrArray() throws IOException {
     JsonToken currentToken = startParsing();
@@ -371,8 +371,8 @@ public abstract class JsonParser implements Closeable {
    * Parse a JSON object from the given JSON parser into the given destination object.
    *
    * <p>Before this method is called, the parser must either point to the start or end of a JSON
-   * object or to a field name. After this method ends, the current token will be the {@link
-   * JsonToken#END_OBJECT} of the current object.
+   * object or to a field name. After this method ends, the current token will be the
+   * {@link JsonToken#END_OBJECT} of the current object.
    *
    * @param destination destination object
    * @since 1.15
@@ -387,8 +387,8 @@ public abstract class JsonParser implements Closeable {
    * using the given parser customizer.
    *
    * <p>Before this method is called, the parser must either point to the start or end of a JSON
-   * object or to a field name. After this method ends, the current token will be the {@link
-   * JsonToken#END_OBJECT} of the current object.
+   * object or to a field name. After this method ends, the current token will be the
+   * {@link JsonToken#END_OBJECT} of the current object.
    *
    * @param destination destination object
    * @param customizeParser optional parser customizer or {@code null} for none

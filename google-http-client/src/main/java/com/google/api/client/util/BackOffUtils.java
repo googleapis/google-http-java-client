@@ -35,8 +35,8 @@ public final class BackOffUtils {
    *
    * @param sleeper sleeper
    * @param backOff back-off policy
-   * @return whether to continue to back off; in other words, whether {@link
-   *     BackOff#nextBackOffMillis()} did not return {@link BackOff#STOP}
+   * @return whether to continue to back off; in other words,
+   * whether {@link BackOff#nextBackOffMillis()} did not return {@link BackOff#STOP}
    * @throws InterruptedException if any thread has interrupted the current thread
    */
   public static boolean next(Sleeper sleeper, BackOff backOff)

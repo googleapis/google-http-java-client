@@ -332,9 +332,9 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test it to parse elements which will be mapped to a {@link
-   * javax.lang.model.type.PrimitiveType}. Therefore {@code int}s are mapped to attributes, elements
-   * and element arrays.
+   * The purpose of this test it to parse elements which will be mapped to a
+   * {@link javax.lang.model.type.PrimitiveType}.Therefore {@code int}s are mapped to attributes,
+   * elements and element arrays.
    */
   @Test
   public void testParseToAnyTypePrimitiveInt() throws Exception {
@@ -357,8 +357,8 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test it to parse elements which will be mapped to a Java {@link
-   * javax.lang.model.type.PrimitiveType}. Therefore {@code int}s are mapped to attributes, elements
+   * The purpose of this test it to parse elements which will be mapped to a Java
+   * {@link javax.lang.model.type.PrimitiveType}. Therefore {@code int}s are mapped to attributes, elements
    * and element arrays.
    */
   @Test
@@ -399,8 +399,8 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test is to map the infinity values of both {@code doubles} and {@code
-   * floats}.
+   * The purpose of this test is to map the infinity values of both {@code doubles} and
+   * {@code floats}.
    */
   @Test
   public void testParseInfiniteValues() throws Exception {
@@ -497,8 +497,8 @@ public class XmlTest {
   }
 
   /**
-   * The purpose of this test is to map the sub elements of an {@link ArrayMap} again to an {@link
-   * ArrayMap}.
+   * The purpose of this test is to map the sub elements of an {@link ArrayMap} again to an
+   * {@link ArrayMap}.
    */
   @Test
   public void testParseAnyTypeWithNestedElementArrayMap() throws Exception {

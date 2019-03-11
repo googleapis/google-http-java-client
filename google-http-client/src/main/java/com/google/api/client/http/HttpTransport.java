@@ -39,12 +39,12 @@ import java.util.logging.Logger;
  *       </ul>
  *   <li>Android:
  *       <ul>
- *         <li>For maximum backwards compatibility with older SDK's use {@code
- *             newCompatibleTransport} from {@code
- *             com.google.api.client.extensions.android.http.AndroidHttp} (read its JavaDoc for
+ *         <li>For maximum backwards compatibility with older SDK's use
+ *         {@code newCompatibleTransport} from
+ *         {@code com.google.api.client.extensions.android.http.AndroidHttp} (read its JavaDoc for
  *             details).
- *         <li>If your application is targeting Gingerbread (SDK 2.3) or higher, simply use {@code
- *             com.google.api.client.javanet.NetHttpTransport}.
+ *         <li>If your application is targeting Gingerbread (SDK 2.3) or higher, simply use
+ *         {@code com.google.api.client.javanet.NetHttpTransport}.
  *       </ul>
  *   <li>Other Java environments
  *       <ul>

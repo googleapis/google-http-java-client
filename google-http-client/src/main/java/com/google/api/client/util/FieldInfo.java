@@ -122,8 +122,8 @@ public class FieldInfo {
 
   /**
    * Data key name associated with the field for a non-enum-constant with a {@link Key} annotation,
-   * or data key value associated with the enum constant with a {@link Value} annotation or {@code
-   * null} for an enum constant with a {@link NullValue} annotation.
+   * or data key value associated with the enum constant with a {@link Value} annotation or
+   * {@code null} for an enum constant with a {@link NullValue} annotation.
    *
    * <p>
    * This string is interned.

@@ -277,11 +277,11 @@ public class GenericUrl extends GenericData {
   }
 
   /**
-   * Sets the decoded path component by parts with each part separated by a {@code '/'} or {@code
-   * null} for none.
+   * Sets the decoded path component by parts with each part separated by a {@code '/'} or
+   * {@code null} for none.
    *
-   * <p>For example {@code "/m8/feeds/contacts/default/full"} is represented by {@code "", "m8",
-   * "feeds", "contacts", "default", "full"}.
+   * <p>For example {@code "/m8/feeds/contacts/default/full"} is represented by
+   * {@code "", "m8", "feeds", "contacts", "default", "full"}.
    *
    * <p>Use {@link #appendRawPath(String)} to append to the path, which ensures that no extra slash
    * is added.
@@ -311,8 +311,8 @@ public class GenericUrl extends GenericData {
   }
 
   /**
-   * Constructs the string representation of the URL, including the path specified by {@link
-   * #pathParts} and the query parameters specified by this generic URL.
+   * Constructs the string representation of the URL, including the path specified by
+   * {@link #pathParts} and the query parameters specified by this generic URL.
    */
   public final String build() {
     return buildAuthority() + buildRelativeUrl();
@@ -448,8 +448,8 @@ public class GenericUrl extends GenericData {
   /**
    * Returns the raw encoded path computed from the {@link #pathParts}.
    *
-   * @return raw encoded path computed from the {@link #pathParts} or {@code null} if {@link
-   *     #pathParts} is {@code null}
+   * @return raw encoded path computed from the {@link #pathParts} or {@code null} if
+   * {@link #pathParts} is {@code null}
    */
   public String getRawPath() {
     List<String> pathParts = this.pathParts;
@@ -496,8 +496,8 @@ public class GenericUrl extends GenericData {
   /**
    * Returns the decoded path parts for the given encoded path.
    *
-   * @param encodedPath slash-prefixed encoded path, for example {@code
-   *     "/m8/feeds/contacts/default/full"}
+   * @param encodedPath slash-prefixed encoded path, for example
+   * {@code "/m8/feeds/contacts/default/full"}
    * @return decoded path parts, with each part assumed to be preceded by a {@code '/'}, for example
    *     {@code "", "m8", "feeds", "contacts", "default", "full"}, or {@code null} for {@code null}
    *     or {@code ""} input

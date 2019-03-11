@@ -71,8 +71,8 @@ public class OpenCensusUtils {
    * Sets the {@link TextFormat} used in context propagation.
    *
    * <p>This API allows users of google-http-client to specify other text format, or disable context
-   * propagation by setting it to {@code null}. It should be used along with {@link
-   * #setPropagationTextFormatSetter} for setting purpose.
+   * propagation by setting it to {@code null}. It should be used along with
+   * {@link #setPropagationTextFormatSetter} for setting purpose.
    *
    * @param textFormat the text format.
    */
@@ -84,8 +84,8 @@ public class OpenCensusUtils {
    * Sets the {@link TextFormat.Setter} used in context propagation.
    *
    * <p>This API allows users of google-http-client to specify other text format setter, or disable
-   * context propagation by setting it to {@code null}. It should be used along with {@link
-   * #setPropagationTextFormat} for setting purpose.
+   * context propagation by setting it to {@code null}. It should be used along with
+   * {@link #setPropagationTextFormat} for setting purpose.
    *
    * @param textFormatSetter the {@code TextFormat.Setter} for the text format.
    */

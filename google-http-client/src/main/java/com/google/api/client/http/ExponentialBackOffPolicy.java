@@ -39,8 +39,8 @@ import java.io.IOException;
  * <p><b>Note:</b> max_interval caps the retry_interval and not the randomized_interval.
  *
  * <p>If the time elapsed since an {@link ExponentialBackOffPolicy} instance is created goes past
- * the max_elapsed_time then the method {@link #getNextBackOffMillis()} starts returning {@link
- * BackOffPolicy#STOP}. The elapsed time can be reset by calling {@link #reset()}.
+ * the max_elapsed_time then the method {@link #getNextBackOffMillis()} starts returning
+ * {@link BackOffPolicy#STOP}. The elapsed time can be reset by calling {@link #reset()}.
  *
  * <p>Example: The default retry_interval is .5 seconds, default randomization_factor is 0.5,
  * default multiplier is 1.5 and the default max_interval is 1 minute. For 10 requests the sequence
@@ -198,8 +198,8 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
    * Returns the maximum elapsed time in milliseconds.
    *
    * <p>If the time elapsed since an {@link ExponentialBackOffPolicy} instance is created goes past
-   * the max_elapsed_time then the method {@link #getNextBackOffMillis()} starts returning {@link
-   * BackOffPolicy#STOP}. The elapsed time can be reset by calling {@link #reset()}.
+   * the max_elapsed_time then the method {@link #getNextBackOffMillis()} starts returning
+   * {@link BackOffPolicy#STOP}. The elapsed time can be reset by calling {@link #reset()}.
    */
   public final int getMaxElapsedTimeMillis() {
     return exponentialBackOff.getMaxElapsedTimeMillis();
@@ -243,8 +243,8 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
     }
 
     /**
-     * Returns the initial retry interval in milliseconds. The default value is {@link
-     * #DEFAULT_INITIAL_INTERVAL_MILLIS}.
+     * Returns the initial retry interval in milliseconds. The default value is
+     * {@link #DEFAULT_INITIAL_INTERVAL_MILLIS}.
      */
     public final int getInitialIntervalMillis() {
       return exponentialBackOffBuilder.getInitialIntervalMillis();
@@ -335,8 +335,8 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
     }
 
     /**
-     * Returns the maximum elapsed time in milliseconds. The default value is {@link
-     * #DEFAULT_MAX_ELAPSED_TIME_MILLIS}.
+     * Returns the maximum elapsed time in milliseconds. The default value is
+     * {@link #DEFAULT_MAX_ELAPSED_TIME_MILLIS}.
      *
      * <p>If the time elapsed since an {@link ExponentialBackOffPolicy} instance is created goes
      * past the max_elapsed_time then the method {@link #getNextBackOffMillis()} starts returning
@@ -347,8 +347,8 @@ public class ExponentialBackOffPolicy implements BackOffPolicy {
     }
 
     /**
-     * Sets the maximum elapsed time in milliseconds. The default value is {@link
-     * #DEFAULT_MAX_ELAPSED_TIME_MILLIS}. Must be {@code > 0}.
+     * Sets the maximum elapsed time in milliseconds. The default value is
+     * {@link #DEFAULT_MAX_ELAPSED_TIME_MILLIS}. Must be {@code > 0}.
      *
      * <p>If the time elapsed since an {@link ExponentialBackOffPolicy} instance is created goes
      * past the max_elapsed_time then the method {@link #getNextBackOffMillis()} starts returning

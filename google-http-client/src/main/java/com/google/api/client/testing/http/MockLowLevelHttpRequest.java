@@ -96,8 +96,8 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
   /**
    * Returns an unmodifiable view of the map of lowercase header name to values.
    *
-   * <p>Note that unlike this method, {@link #getFirstHeaderValue(String)} and {@link
-   * #getHeaderValues(String)} are not case sensitive with respect to the input header name.
+   * <p>Note that unlike this method, {@link #getFirstHeaderValue(String)} and
+   * {@link #getHeaderValues(String)} are not case sensitive with respect to the input header name.
    *
    * @since 1.5
    */

@@ -99,8 +99,8 @@ public abstract class JsonFactory {
   }
 
   /**
-   * Returns a serialized JSON string representation for the given item using {@link
-   * JsonGenerator#serialize(Object)}.
+   * Returns a serialized JSON string representation for the given item using
+   * {@link JsonGenerator#serialize(Object)}.
    *
    * @param item data key/value pairs
    * @return serialized JSON string representation
@@ -110,12 +110,12 @@ public abstract class JsonFactory {
   }
 
   /**
-   * Returns a pretty-printed serialized JSON string representation for the given item using {@link
-   * JsonGenerator#serialize(Object)} with {@link JsonGenerator#enablePrettyPrint()}.
+   * Returns a pretty-printed serialized JSON string representation for the given item using
+   * {@link JsonGenerator#serialize(Object)} with {@link JsonGenerator#enablePrettyPrint()}.
    *
    * <p>The specifics of how the JSON representation is made pretty is implementation dependent, and
-   * should not be relied on. However, it is assumed to be legal, and in fact differs from {@link
-   * #toString(Object)} only by adding whitespace that does not change its meaning.
+   * should not be relied on. However, it is assumed to be legal, and in fact differs from
+   * {@link #toString(Object)} only by adding whitespace that does not change its meaning.
    *
    * @param item data key/value pairs
    * @return serialized JSON string representation
@@ -138,8 +138,8 @@ public abstract class JsonFactory {
   }
 
   /**
-   * Returns a serialized JSON string representation for the given item using {@link
-   * JsonGenerator#serialize(Object)}.
+   * Returns a serialized JSON string representation for the given item using
+   * {@link JsonGenerator#serialize(Object)}.
    *
    * @param item data key/value pairs
    * @param pretty whether to return a pretty representation

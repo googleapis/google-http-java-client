@@ -62,13 +62,13 @@ final class NetHttpResponse extends LowLevelHttpResponse {
    * <p>Returns {@link HttpURLConnection#getInputStream} when it doesn't throw {@link IOException},
    * otherwise it returns {@link HttpURLConnection#getErrorStream}.
    *
-   * <p>Upgrade warning: in prior version 1.16 {@link #getContent()} returned {@link
-   * HttpURLConnection#getInputStream} only when the status code was successful. Starting with
-   * version 1.17 it returns {@link HttpURLConnection#getInputStream} when it doesn't throw {@link
-   * IOException}, otherwise it returns {@link HttpURLConnection#getErrorStream}
+   * <p>Upgrade warning: in prior version 1.16 {@link #getContent()} returned
+   * {@link HttpURLConnection#getInputStream} only when the status code was successful. Starting with
+   * version 1.17 it returns {@link HttpURLConnection#getInputStream} when it doesn't throw
+   * {@link IOException}, otherwise it returns {@link HttpURLConnection#getErrorStream}
    *
-   * <p>Upgrade warning: in versions prior to 1.20 {@link #getContent()} returned {@link
-   * HttpURLConnection#getInputStream()} or {@link HttpURLConnection#getErrorStream()}, both of
+   * <p>Upgrade warning: in versions prior to 1.20 {@link #getContent()} returned
+   * {@link HttpURLConnection#getInputStream()} or {@link HttpURLConnection#getErrorStream()}, both of
    * which silently returned -1 for read() calls when the connection got closed in the middle of
    * receiving a response. This is highly likely a bug from JDK's {@link HttpURLConnection}. Since
    * version 1.20, the bytes read off the wire will be checked and an {@link IOException} will be

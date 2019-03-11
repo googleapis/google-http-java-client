@@ -88,8 +88,8 @@ public final class SecurityTestUtils {
   }
 
   /**
-   * Returns a new copy of a sample encoded public key that matches {@link
-   * #newEncodedRsaPrivateKeyBytes()}.
+   * Returns a new copy of a sample encoded public key that matches
+   * {@link #newEncodedRsaPrivateKeyBytes()}.
    */
   public static byte[] newEncodedRsaPublicKeyBytes() {
     return ENCODED_PUBLIC_KEY.clone();

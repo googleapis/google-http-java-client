@@ -15,8 +15,8 @@
 package com.google.api.client.util;
 
 /**
- * Sleeper interface to use for requesting the current thread to sleep as specified in {@link
- * Thread#sleep(long)}.
+ * Sleeper interface to use for requesting the current thread to sleep as specified in
+ * {@link Thread#sleep(long)}.
  *
  * <p>The default implementation can be accessed at {@link #DEFAULT}. Primarily used for testing.
  *

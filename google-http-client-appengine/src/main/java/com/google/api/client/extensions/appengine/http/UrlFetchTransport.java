@@ -31,11 +31,11 @@ import java.util.Arrays;
  * globally-shared instance of the HTTP transport.
  *
  * <p>URL Fetch is only available on Google App Engine (not on any other Java environment), and is
- * the underlying HTTP transport used for App Engine. Their implementation of {@link
- * HttpURLConnection} is simply an abstraction layer on top of URL Fetch. By implementing a
+ * the underlying HTTP transport used for App Engine. Their implementation of
+ * {@link HttpURLConnection} is simply an abstraction layer on top of URL Fetch. By implementing a
  * transport that directly uses URL Fetch, we can optimize the behavior slightly, and can
- * potentially take advantage of features in URL Fetch that are not available in {@link
- * HttpURLConnection}. Furthermore, there is currently a serious bug in how HTTP headers are
+ * potentially take advantage of features in URL Fetch that are not available in
+ * {@link HttpURLConnection}. Furthermore, there is currently a serious bug in how HTTP headers are
  * processed in the App Engine implementation of {@link HttpURLConnection}, which we are able to
  * avoid using this implementation. Therefore, this is the recommended transport to use on App
  * Engine.

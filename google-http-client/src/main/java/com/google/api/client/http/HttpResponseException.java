@@ -46,8 +46,8 @@ public class HttpResponseException extends IOException {
    * Constructor that constructs a detail message from the given HTTP response that includes the
    * status code, status message and HTTP response content.
    *
-   * <p>Callers of this constructor should call {@link HttpResponse#disconnect} after {@link
-   * HttpResponseException} is instantiated. Example usage:
+   * <p>Callers of this constructor should call {@link HttpResponse#disconnect} after
+   * {@link HttpResponseException} is instantiated. Example usage:
    *
    * <pre>
    * try {
@@ -76,8 +76,8 @@ public class HttpResponseException extends IOException {
   }
 
   /**
-   * Returns whether received a successful HTTP status code {@code >= 200 && < 300} (see {@link
-   * #getStatusCode()}).
+   * Returns whether received a successful HTTP status code {@code >= 200 && < 300} (see
+   * {@link #getStatusCode()}).
    *
    * @since 1.7
    */

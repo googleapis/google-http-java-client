@@ -95,10 +95,10 @@ public final class SslUtils {
    * given trust store.
    *
    * @param sslContext SSL context (for example {@link SSLContext#getInstance})
-   * @param trustStore key store for certificates to trust (for example {@link
-   *     SecurityUtils#getJavaKeyStore()})
-   * @param trustManagerFactory trust manager factory (for example {@link
-   *     #getPkixTrustManagerFactory()})
+   * @param trustStore key store for certificates to trust (for example
+   * {@link SecurityUtils#getJavaKeyStore()})
+   * @param trustManagerFactory trust manager factory (for example
+   * {@link #getPkixTrustManagerFactory()})
    * @since 1.14
    */
   public static SSLContext initSslContext(

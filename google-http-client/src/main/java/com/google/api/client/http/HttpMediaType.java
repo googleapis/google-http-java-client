@@ -26,8 +26,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * HTTP Media-type as specified in the HTTP RFC ( {@link
- * "http://tools.ietf.org/html/rfc2616#section-3.7"}).
+ * HTTP Media-type as specified in the HTTP RFC (
+ * {@link "http://tools.ietf.org/html/rfc2616#section-3.7"}).
  *
  * <p>Implementation is not thread-safe.
  *
@@ -290,8 +290,8 @@ public final class HttpMediaType {
   }
 
   /**
-   * Returns {@code true} if the specified media type has both the same type and subtype, or {@code
-   * false} if they don't match or the media type is {@code null}.
+   * Returns {@code true} if the specified media type has both the same type and subtype, or
+   * {@code false} if they don't match or the media type is {@code null}.
    */
   public boolean equalsIgnoreParameters(HttpMediaType mediaType) {
     return mediaType != null

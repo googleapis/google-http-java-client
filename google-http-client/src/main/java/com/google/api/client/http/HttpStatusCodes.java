@@ -108,8 +108,8 @@ public class HttpStatusCodes {
   }
 
   /**
-   * Returns whether the given HTTP response status code is a redirect code {@code 301, 302, 303,
-   * 307}.
+   * Returns whether the given HTTP response status code is a redirect code
+   * {@code 301, 302, 303, 307}.
    *
    * @since 1.11
    */

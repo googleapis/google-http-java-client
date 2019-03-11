@@ -26,8 +26,8 @@ import java.io.IOException;
  * {@link HttpIOExceptionHandler} implementation with {@link BackOff}.
  *
  * <p>It is designed to work with only one {@link HttpRequest} at a time. As a result you MUST
- * create a new instance of {@link HttpBackOffIOExceptionHandler} with a new instance of {@link
- * BackOff} for each instance of {@link HttpRequest}.
+ * create a new instance of {@link HttpBackOffIOExceptionHandler} with a new instance of
+ * {@link BackOff} for each instance of {@link HttpRequest}.
  *
  * <p>Sample usage:
  *
@@ -35,8 +35,8 @@ import java.io.IOException;
  * request.setIOExceptionHandler(new HttpBackOffIOExceptionHandler(new ExponentialBackOff());
  * </pre>
  *
- * <p>Note: Implementation doesn't call {@link BackOff#reset} at all, since it expects a new {@link
- * BackOff} instance.
+ * <p>Note: Implementation doesn't call {@link BackOff#reset} at all, since it expects a new
+ * {@link BackOff} instance.
  *
  * <p>Implementation is not thread-safe
  *

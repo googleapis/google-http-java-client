@@ -164,8 +164,8 @@ public class Data {
    * returns the input. Otherwise, it will create a map view using reflection that is backed by the
    * object, so that any changes to the map will be reflected on the object. The map keys of that
    * map view are based on the {@link Key} annotation, and null is not a possible map value,
-   * although the magic null instance is possible (see {@link #nullOf(Class)} and {@link
-   * #isNull(Object)}). Iteration order of the data keys is based on the sorted (ascending) key
+   * although the magic null instance is possible (see {@link #nullOf(Class)} and
+   * {@link #isNull(Object)}). Iteration order of the data keys is based on the sorted (ascending) key
    * names of the declared fields. Note that since the map view is backed by the object, and that
    * the object may change, many methods in the map view must recompute the field values using
    * reflection, for example {@link Map#size()} must check the number of non-null fields.
@@ -327,8 +327,8 @@ public class Data {
    * date/time, or is a wildcard of one.
    *
    * <p>A primitive class is any class for whom {@link Class#isPrimitive()} is true, as well as any
-   * classes of type: {@link Character}, {@link String}, {@link Integer}, {@link Long}, {@link
-   * Short}, {@link Byte}, {@link Float}, {@link Double}, {@link BigInteger}, {@link BigDecimal},
+   * classes of type: {@link Character}, {@link String}, {@link Integer}, {@link Long},
+   * {@link Short}, {@link Byte}, {@link Float}, {@link Double}, {@link BigInteger}, {@link BigDecimal},
    * {@link Boolean}, and {@link DateTime}.
    *
    * @param type type or {@code null} for {@code false} result
@@ -359,8 +359,8 @@ public class Data {
   }
 
   /**
-   * Returns whether to given value is {@code null} or its class is primitive as defined by {@link
-   * Data#isPrimitive(Type)}.
+   * Returns whether to given value is {@code null} or its class is primitive as defined by
+   * {@link Data#isPrimitive(Type)}.
    */
   public static boolean isValueOfPrimitiveType(Object fieldValue) {
     return fieldValue == null || Data.isPrimitive(fieldValue.getClass());

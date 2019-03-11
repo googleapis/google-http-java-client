@@ -44,14 +44,14 @@ public class MockHttpURLConnection extends HttpURLConnection {
   private boolean doOutputCalled;
 
   /**
-   * Output stream or {@code null} to throw an {@link UnknownServiceException} when {@link
-   * #getOutputStream()} is called.
+   * Output stream or {@code null} to throw an {@link UnknownServiceException} when
+   * {@link #getOutputStream()} is called.
    */
   private OutputStream outputStream = new ByteArrayOutputStream(0);
 
   /**
-   * The input byte array which represents the content when the status code is less then {@code
-   * 400}.
+   * The input byte array which represents the content when the status code is less then
+   * {@code 400}.
    *
    * @deprecated As of 1.20. Use {@link #setInputStream(InputStream)} instead.
    */
@@ -113,8 +113,8 @@ public class MockHttpURLConnection extends HttpURLConnection {
   }
 
   /**
-   * Sets the output stream or {@code null} to throw an {@link UnknownServiceException} when {@link
-   * #getOutputStream()} is called.
+   * Sets the output stream or {@code null} to throw an {@link UnknownServiceException} when
+   * {@link #getOutputStream()} is called.
    *
    * <p>By default it is {@code null}.
    */

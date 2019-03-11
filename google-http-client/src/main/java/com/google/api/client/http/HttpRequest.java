@@ -103,8 +103,8 @@ public final class HttpRequest {
 
   /**
    * The number of retries that will be allowed to execute before the request will be terminated or
-   * {@code 0} to not retry requests. Retries occur as a result of either {@link
-   * HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler} which handles abnormal HTTP
+   * {@code 0} to not retry requests. Retries occur as a result of either
+   * {@link HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler} which handles abnormal HTTP
    * response or the I/O exception.
    */
   private int numRetries = DEFAULT_NUMBER_OF_RETRIES;
@@ -181,8 +181,8 @@ public final class HttpRequest {
   private boolean throwExceptionOnExecuteError = true;
 
   /**
-   * Whether to retry the request if an {@link IOException} is encountered in {@link
-   * LowLevelHttpRequest#execute()}.
+   * Whether to retry the request if an {@link IOException} is encountered in
+   * {@link LowLevelHttpRequest#execute()}.
    */
   @Deprecated @Beta private boolean retryOnExecuteIOException = false;
 
@@ -308,8 +308,8 @@ public final class HttpRequest {
    *
    * @since 1.7
    * @deprecated (scheduled to be removed in 1.18). {@link
-   *     #setUnsuccessfulResponseHandler(HttpUnsuccessfulResponseHandler)} with a new {@link
-   *     HttpBackOffUnsuccessfulResponseHandler} instead.
+   *     #setUnsuccessfulResponseHandler(HttpUnsuccessfulResponseHandler)} with a new
+   *     {@link HttpBackOffUnsuccessfulResponseHandler} instead.
    */
   @Deprecated
   @Beta
@@ -323,8 +323,8 @@ public final class HttpRequest {
    *
    * @since 1.7
    * @deprecated (scheduled to be removed in 1.18). Use {@link
-   *     #setUnsuccessfulResponseHandler(HttpUnsuccessfulResponseHandler)} with a new {@link
-   *     HttpBackOffUnsuccessfulResponseHandler} instead.
+   *     #setUnsuccessfulResponseHandler(HttpUnsuccessfulResponseHandler)} with a new
+   *     {@link HttpBackOffUnsuccessfulResponseHandler} instead.
    */
   @Deprecated
   @Beta
@@ -625,8 +625,8 @@ public final class HttpRequest {
 
   /**
    * Returns the number of retries that will be allowed to execute before the request will be
-   * terminated or {@code 0} to not retry requests. Retries occur as a result of either {@link
-   * HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler} which handles abnormal HTTP
+   * terminated or {@code 0} to not retry requests. Retries occur as a result of either
+   * {@link HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler} which handles abnormal HTTP
    * response or the I/O exception.
    *
    * @since 1.5
@@ -637,8 +637,8 @@ public final class HttpRequest {
 
   /**
    * Sets the number of retries that will be allowed to execute before the request will be
-   * terminated or {@code 0} to not retry requests. Retries occur as a result of either {@link
-   * HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler} which handles abnormal HTTP
+   * terminated or {@code 0} to not retry requests. Retries occur as a result of either
+   * {@link HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler} which handles abnormal HTTP
    * response or the I/O exception.
    *
    * <p>The default value is {@link #DEFAULT_NUMBER_OF_RETRIES}.
@@ -719,12 +719,12 @@ public final class HttpRequest {
 
   /**
    * {@link Beta} <br>
-   * Returns whether to retry the request if an {@link IOException} is encountered in {@link
-   * LowLevelHttpRequest#execute()}.
+   * Returns whether to retry the request if an {@link IOException} is encountered in
+   * {@link LowLevelHttpRequest#execute()}.
    *
    * @since 1.9
-   * @deprecated (scheduled to be removed in 1.18) Use {@link
-   *     #setIOExceptionHandler(HttpIOExceptionHandler)} instead.
+   * @deprecated (scheduled to be removed in 1.18) Use
+   * {@link #setIOExceptionHandler(HttpIOExceptionHandler)} instead.
    */
   @Deprecated
   @Beta
@@ -734,14 +734,14 @@ public final class HttpRequest {
 
   /**
    * {@link Beta} <br>
-   * Sets whether to retry the request if an {@link IOException} is encountered in {@link
-   * LowLevelHttpRequest#execute()}.
+   * Sets whether to retry the request if an {@link IOException} is encountered in
+   * {@link LowLevelHttpRequest#execute()}.
    *
    * <p>The default value is {@code false}.
    *
    * @since 1.9
-   * @deprecated (scheduled to be removed in 1.18) Use {@link
-   *     #setIOExceptionHandler(HttpIOExceptionHandler)} instead.
+   * @deprecated (scheduled to be removed in 1.18) Use
+   * {@link #setIOExceptionHandler(HttpIOExceptionHandler)} instead.
    */
   @Deprecated
   @Beta
@@ -821,10 +821,10 @@ public final class HttpRequest {
    * }
    * </pre>
    *
-   * @return HTTP response for an HTTP success response (or HTTP error response if {@link
-   *     #getThrowExceptionOnExecuteError()} is {@code false})
-   * @throws HttpResponseException for an HTTP error response (only if {@link
-   *     #getThrowExceptionOnExecuteError()} is {@code true})
+   * @return HTTP response for an HTTP success response (or HTTP error response if
+   * {@link #getThrowExceptionOnExecuteError()} is {@code false})
+   * @throws HttpResponseException for an HTTP error response (only if
+   * {@link #getThrowExceptionOnExecuteError()} is {@code true})
    * @see HttpResponse#isSuccessStatusCode()
    */
   @SuppressWarnings("deprecation")

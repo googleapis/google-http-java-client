@@ -31,8 +31,8 @@ public interface Clock {
   long currentTimeMillis();
 
   /**
-   * Provides the default System implementation of a Clock by using {@link
-   * System#currentTimeMillis()}.
+   * Provides the default System implementation of a Clock by using
+   * {@link System#currentTimeMillis()}.
    */
   Clock SYSTEM =
       new Clock() {

@@ -39,8 +39,8 @@ import java.util.concurrent.ConcurrentMap;
 public class GenericXml extends GenericData implements Cloneable {
 
   /**
-   * Optional XML element local name prefixed by its namespace alias -- for example {@code
-   * "atom:entry"} -- or {@code null} if not set.
+   * Optional XML element local name prefixed by its namespace alias -- for example
+   * {@code "atom:entry"} -- or {@code null} if not set.
    */
   public String name;
 

@@ -148,8 +148,8 @@ public final class ClassInfo {
   }
 
   /**
-   * Returns an unmodifiable sorted set (with any possible {@code null} member first) of {@link
-   * FieldInfo#getName() names}.
+   * Returns an unmodifiable sorted set (with any possible {@code null} member first) of
+   * {@link FieldInfo#getName() names}.
    */
   public Collection<String> getNames() {
     return names;
@@ -213,8 +213,8 @@ public final class ClassInfo {
    * Returns an unmodifiable collection of the {@code FieldInfo}s for this class, without any
    * guarantee of order.
    *
-   * <p>If you need sorted order, instead use {@link #getNames()} with {@link
-   * #getFieldInfo(String)}.
+   * <p>If you need sorted order, instead use {@link #getNames()} with
+   * {@link #getFieldInfo(String)}.
    *
    * @since 1.16
    */

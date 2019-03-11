@@ -39,13 +39,13 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 /**
  * Thread-safe HTTP transport based on the Apache HTTP Client library.
  *
- * <p>Implementation is thread-safe, as long as any parameter modification to the {@link
- * #getHttpClient() Apache HTTP Client} is only done at initialization time. For maximum efficiency,
- * applications should use a single globally-shared instance of the HTTP transport.
+ * <p>Implementation is thread-safe, as long as any parameter modification to the
+ * {@link #getHttpClient() Apache HTTP Client} is only done at initialization time. For maximum
+ * efficiency, applications should use a single globally-shared instance of the HTTP transport.
  *
- * <p>Default settings are specified in {@link #newDefaultHttpClient()}. Use the {@link
- * #ApacheHttpTransport(HttpClient)} constructor to override the Apache HTTP Client used. Please
- * read the <a
+ * <p>Default settings are specified in {@link #newDefaultHttpClient()}. Use the
+ * {@link #ApacheHttpTransport(HttpClient)} constructor to override the Apache HTTP Client used.
+ * Please read the <a
  * href="http://hc.apache.org/httpcomponents-client-ga/tutorial/html/connmgmt.html">Apache HTTP
  * Client connection management tutorial</a> for more complex configuration options.
  *
@@ -88,20 +88,20 @@ public final class ApacheHttpTransport extends HttpTransport {
   }
 
   /**
-   * Creates a new instance of the Apache HTTP client that is used by the {@link
-   * #ApacheHttpTransport()} constructor.
+   * Creates a new instance of the Apache HTTP client that is used by the
+   * {@link #ApacheHttpTransport()} constructor.
    *
    * <p>Settings:
    *
    * <ul>
    *   <li>The client connection manager is set to {@link PoolingHttpClientConnectionManager}.
    *   <li>The socket buffer size is set to 8192 using {@link SocketConfig}.
-   *   <li><The retry mechanism is turned off using {@link
-   *       HttpClientBuilder#disableRedirectHandling}.
-   *   <li>The route planner uses {@link SystemDefaultRoutePlanner} with {@link
-   *       ProxySelector#getDefault()}, which uses the proxy settings from <a
-   *       href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
-   *       properties</a>.
+   *   <li><The retry mechanism is turned off using
+   *   {@link HttpClientBuilder#disableRedirectHandling}.
+   *   <li>The route planner uses {@link SystemDefaultRoutePlanner} with {@link ProxySelector#getDefault()},
+   *   which uses the proxy settings from <a
+   *   href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
+   *   properties</a>.
    * </ul>
    *
    * @return new instance of the Apache HTTP client

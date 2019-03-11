@@ -20,8 +20,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation to specify that an enum constant is the "null" data value to use for {@link
- * Data#nullOf(Class)}.
+ * Use this annotation to specify that an enum constant is the "null" data value to use for
+ * {@link Data#nullOf(Class)}.
  *
  * <p>See {@link Value} for an example.
  *

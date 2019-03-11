@@ -43,8 +43,8 @@ import javax.net.ssl.SSLSocketFactory;
  * available <a
  * href='http://docs.oracle.com/javase/7/docs/technotes/guides/net/http-keepalive.html'>here</a>.
  *
- * <p>We honor the default global caching behavior. To change the default behavior use {@link
- * HttpURLConnection#setDefaultUseCaches(boolean)}.
+ * <p>We honor the default global caching behavior. To change the default behavior use
+ * {@link HttpURLConnection#setDefaultUseCaches(boolean)}.
  *
  * <p>Implementation is thread-safe. For maximum efficiency, applications should use a single
  * globally-shared instance of the HTTP transport.
@@ -210,8 +210,8 @@ public final class NetHttpTransport extends HttpTransport {
      * Sets the {@link ConnectionFactory} or {@code null} to use a {@link DefaultConnectionFactory}.
      * <b>This value is ignored if the {@link #setProxy} has been called with a non-null value.</b>
      *
-     * <p>If you wish to use a {@link Proxy}, it should be included in your {@link
-     * ConnectionFactory} implementation.
+     * <p>If you wish to use a {@link Proxy}, it should be included in your
+     * {@link ConnectionFactory} implementation.
      *
      * @since 1.20
      */
@@ -278,9 +278,9 @@ public final class NetHttpTransport extends HttpTransport {
 
     /**
      * {@link Beta} <br>
-     * Disables validating server SSL certificates by setting the SSL socket factory using {@link
-     * SslUtils#trustAllSSLContext()} for the SSL context and {@link
-     * SslUtils#trustAllHostnameVerifier()} for the host name verifier.
+     * Disables validating server SSL certificates by setting the SSL socket factory using
+     * {@link SslUtils#trustAllSSLContext()} for the SSL context and
+     * {@link SslUtils#trustAllHostnameVerifier()} for the host name verifier.
      *
      * <p>Be careful! Disabling certificate validation is dangerous and should only be done in
      * testing environments.

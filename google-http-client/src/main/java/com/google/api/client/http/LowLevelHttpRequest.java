@@ -46,8 +46,8 @@ public abstract class LowLevelHttpRequest {
   /**
    * Adds a header to the HTTP request.
    *
-   * <p>Note that multiple headers of the same name need to be supported, in which case {@link
-   * #addHeader} will be called for each instance of the header.
+   * <p>Note that multiple headers of the same name need to be supported, in which case
+   * {@link #addHeader} will be called for each instance of the header.
    *
    * @param name header name
    * @param value header value

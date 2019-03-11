@@ -41,8 +41,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Implements support for HTTP form content encoding parsing of type {@code
- * application/x-www-form-urlencoded} as specified in the <a href=
+ * Implements support for HTTP form content encoding parsing of type
+ * {@code application/x-www-form-urlencoded} as specified in the <a href=
  * "http://www.w3.org/TR/1998/REC-html40-19980424/interact/forms.html#h-17.13.4.1" >HTML 4.0
  * Specification</a>.
  *

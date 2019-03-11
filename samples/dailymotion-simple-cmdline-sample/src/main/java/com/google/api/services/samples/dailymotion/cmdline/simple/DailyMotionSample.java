@@ -40,7 +40,8 @@ public class DailyMotionSample {
 
   /** Represents a video feed. */
   public static class VideoFeed {
-    @Key public List<Video> list;
+    @Key
+    public List<Video> list;
 
     @Key("has_more")
     public boolean hasMore;
@@ -48,13 +49,17 @@ public class DailyMotionSample {
 
   /** Represents a video. */
   public static class Video {
-    @Key public String id;
+    @Key
+    public String id;
 
-    @Key public List<String> tags;
+    @Key
+    public List<String> tags;
 
-    @Key public String title;
+    @Key
+    public String title;
 
-    @Key public String url;
+    @Key
+    public String url;
   }
 
   /** URL for Dailymotion API. */
@@ -64,7 +69,8 @@ public class DailyMotionSample {
       super(encodedUrl);
     }
 
-    @Key public String fields;
+    @Key
+    public String fields;
   }
 
   private static void run() throws Exception {

@@ -61,12 +61,12 @@ import org.apache.http.params.HttpProtocolParams;
 /**
  * Thread-safe HTTP transport based on the Apache HTTP Client library.
  *
- * <p>Implementation is thread-safe, as long as any parameter modification to the {@link
- * #getHttpClient() Apache HTTP Client} is only done at initialization time. For maximum efficiency,
- * applications should use a single globally-shared instance of the HTTP transport.
+ * <p>Implementation is thread-safe, as long as any parameter modification to the
+ * {@link #getHttpClient() Apache HTTP Client} is only done at initialization time. For maximum
+ * efficiency, applications should use a single globally-shared instance of the HTTP transport.
  *
- * <p>Default settings are specified in {@link #newDefaultHttpClient()}. Use the {@link
- * #ApacheHttpTransport(HttpClient)} constructor to override the Apache HTTP Client used.
+ * <p>Default settings are specified in {@link #newDefaultHttpClient()}. Use the
+ * {@link #ApacheHttpTransport(HttpClient)} constructor to override the Apache HTTP Client used.
  * Alternatively, use {@link #ApacheHttpTransport()} and change the {@link #getHttpClient()}. Please
  * read the <a
  * href="http://hc.apache.org/httpcomponents-client-ga/tutorial/html/connmgmt.html">Apache HTTP
@@ -97,14 +97,14 @@ public final class ApacheHttpTransport extends HttpTransport {
    * <p>Note that a few settings are overridden:
    *
    * <ul>
-   *   <li>HTTP version is set to 1.1 using {@link HttpProtocolParams#setVersion} with {@link
-   *       HttpVersion#HTTP_1_1}.
+   *   <li>HTTP version is set to 1.1 using {@link HttpProtocolParams#setVersion} with
+   *   {@link HttpVersion#HTTP_1_1}.
    *   <li>Redirects are disabled using {@link ClientPNames#HANDLE_REDIRECTS}.
-   *   <li>{@link ConnManagerParams#setTimeout} and {@link
-   *       HttpConnectionParams#setConnectionTimeout} are set on each request based on {@link
-   *       HttpRequest#getConnectTimeout()}.
-   *   <li>{@link HttpConnectionParams#setSoTimeout} is set on each request based on {@link
-   *       HttpRequest#getReadTimeout()}.
+   *   <li>{@link ConnManagerParams#setTimeout} and
+   *       {@link HttpConnectionParams#setConnectionTimeout} are set on each request based on
+   *       {@link HttpRequest#getConnectTimeout()}.
+   *   <li>{@link HttpConnectionParams#setSoTimeout} is set on each request based on
+   *       {@link HttpRequest#getReadTimeout()}.
    * </ul>
    *
    * <p>Use {@link Builder} for a more user-friendly way to modify the HTTP client options.
@@ -161,13 +161,13 @@ public final class ApacheHttpTransport extends HttpTransport {
   }
 
   /**
-   * Creates a new instance of the Apache HTTP client that is used by the {@link
-   * #ApacheHttpTransport()} constructor.
+   * Creates a new instance of the Apache HTTP client that is used by the
+   * {@link #ApacheHttpTransport()} constructor.
    *
    * @param socketFactory SSL socket factory
    * @param params HTTP parameters
-   * @param proxySelector HTTP proxy selector to use {@link ProxySelectorRoutePlanner} or {@code
-   *     null} for {@link DefaultHttpRoutePlanner}
+   * @param proxySelector HTTP proxy selector to use {@link ProxySelectorRoutePlanner} or
+   * {@code null} for {@link DefaultHttpRoutePlanner}
    * @return new instance of the Apache HTTP client
    */
   static DefaultHttpClient newDefaultHttpClient(
@@ -249,14 +249,14 @@ public final class ApacheHttpTransport extends HttpTransport {
     private final HttpParams params = newDefaultHttpParams();
 
     /**
-     * HTTP proxy selector to use {@link ProxySelectorRoutePlanner} or {@code null} for {@link
-     * DefaultHttpRoutePlanner}.
+     * HTTP proxy selector to use {@link ProxySelectorRoutePlanner} or {@code null} for
+     * {@link DefaultHttpRoutePlanner}.
      */
     private ProxySelector proxySelector = ProxySelector.getDefault();
 
     /**
-     * Sets the HTTP proxy to use {@link DefaultHttpRoutePlanner} or {@code null} to use {@link
-     * #setProxySelector(ProxySelector)} with {@link ProxySelector#getDefault()}.
+     * Sets the HTTP proxy to use {@link DefaultHttpRoutePlanner} or {@code null} to use
+     * {@link #setProxySelector(ProxySelector)} with {@link ProxySelector#getDefault()}.
      *
      * <p>By default it is {@code null}, which uses the proxy settings from <a
      * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
@@ -349,9 +349,9 @@ public final class ApacheHttpTransport extends HttpTransport {
 
     /**
      * {@link Beta} <br>
-     * Disables validating server SSL certificates by setting the SSL socket factory using {@link
-     * SslUtils#trustAllSSLContext()} for the SSL context and {@link
-     * SSLSocketFactory#ALLOW_ALL_HOSTNAME_VERIFIER} for the host name verifier.
+     * Disables validating server SSL certificates by setting the SSL socket factory using
+     * {@link SslUtils#trustAllSSLContext()} for the SSL context and
+     * {@link SSLSocketFactory#ALLOW_ALL_HOSTNAME_VERIFIER} for the host name verifier.
      *
      * <p>Be careful! Disabling certificate validation is dangerous and should only be done in
      * testing environments.

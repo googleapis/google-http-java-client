@@ -69,8 +69,8 @@ public class GenericJson extends GenericData implements Cloneable {
   }
 
   /**
-   * Returns a pretty-printed serialized JSON string representation or {@link #toString()} if {@link
-   * #getFactory()} is {@code null}.
+   * Returns a pretty-printed serialized JSON string representation or {@link #toString()} if
+   * {@link #getFactory()} is {@code null}.
    *
    * @since 1.6
    */

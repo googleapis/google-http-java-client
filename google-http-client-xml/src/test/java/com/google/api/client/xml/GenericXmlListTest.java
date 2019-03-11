@@ -30,8 +30,8 @@ import org.xmlpull.v1.XmlSerializer;
 /**
  * Tests List and Arrays of {@link GenericXml}.
  *
- * <p>Tests are copies from {@link XmlListTest}, but the dedicated classes are derived from {@link
- * GenericXml}
+ * <p>Tests are copies from {@link XmlListTest}, but the dedicated classes are derived from
+ * {@link GenericXml}
  *
  * @author Gerald Madlmayr
  */

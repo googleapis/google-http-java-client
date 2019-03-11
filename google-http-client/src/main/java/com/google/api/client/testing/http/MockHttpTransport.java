@@ -133,10 +133,10 @@ public class MockHttpTransport extends HttpTransport {
     MockLowLevelHttpRequest lowLevelHttpRequest;
 
     /**
-     * The {@link MockLowLevelHttpResponse} that should be the result of the {@link
-     * MockLowLevelHttpRequest} to be returned by {@link #buildRequest}. Note that this field is
-     * ignored if the caller provides a {@link MockLowLevelHttpRequest} via {@link
-     * #setLowLevelHttpRequest}.
+     * The {@link MockLowLevelHttpResponse} that should be the result of the
+     * {@link MockLowLevelHttpRequest} to be returned by {@link #buildRequest}. Note that this field is
+     * ignored if the caller provides a {@link MockLowLevelHttpRequest} via
+     * {@link #setLowLevelHttpRequest}.
      */
     MockLowLevelHttpResponse lowLevelHttpResponse;
 
@@ -168,8 +168,8 @@ public class MockHttpTransport extends HttpTransport {
 
     /**
      * Sets the {@link MockLowLevelHttpRequest} that will be returned by {@link #buildRequest}, if
-     * non-{@code null}. If {@code null}, {@link #buildRequest} will create a new {@link
-     * MockLowLevelHttpRequest} arguments.
+     * non-{@code null}. If {@code null}, {@link #buildRequest} will create a new
+     * {@link MockLowLevelHttpRequest} arguments.
      *
      * <p>Note that the user can set a low level HTTP Request only if a low level HTTP response has
      * not been set on this instance.
@@ -195,8 +195,8 @@ public class MockHttpTransport extends HttpTransport {
     }
 
     /**
-     * Sets the {@link MockLowLevelHttpResponse} that will be the result when the {@link
-     * MockLowLevelHttpRequest} returned by {@link #buildRequest} is executed. Note that the
+     * Sets the {@link MockLowLevelHttpResponse} that will be the result when the
+     * {@link MockLowLevelHttpRequest} returned by {@link #buildRequest} is executed. Note that the
      * response can be set only the caller has not provided a {@link MockLowLevelHttpRequest} via
      * {@link #setLowLevelHttpRequest}.
      *
