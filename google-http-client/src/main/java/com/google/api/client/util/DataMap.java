@@ -184,8 +184,9 @@ final class DataMap extends AbstractMap<String, Object> {
   final class Entry implements Map.Entry<String, Object> {
 
     /**
-     * Current field value, possibly modified only by {@link #setValue(Object)}. As specified
-     * {@link java.util.Map.Entry}, behavior is undefined if the field value is modified by other means.
+     * Current field value, possibly modified only by {@link #setValue(Object)}.
+     * As specified {@link java.util.Map.Entry},
+     * behavior is undefined if the field value is modified by other means.
      */
     private Object fieldValue;
 

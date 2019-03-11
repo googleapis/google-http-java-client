@@ -97,9 +97,9 @@ public final class ApacheHttpTransport extends HttpTransport {
    *   <li>The client connection manager is set to {@link PoolingHttpClientConnectionManager}.
    *   <li>The socket buffer size is set to 8192 using {@link SocketConfig}.
    *   <li><The retry mechanism is turned off using
-   *   {@link HttpClientBuilder#disableRedirectHandling}.
-   *   <li>The route planner uses {@link SystemDefaultRoutePlanner} with {@link ProxySelector#getDefault()},
-   *   which uses the proxy settings from <a
+   *       {@link HttpClientBuilder#disableRedirectHandling}.
+   *   <li>The route planner uses {@link SystemDefaultRoutePlanner} with
+   *       {@link ProxySelector#getDefault()}, which uses the proxy settings from <a
    *   href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
    *   properties</a>.
    * </ul>

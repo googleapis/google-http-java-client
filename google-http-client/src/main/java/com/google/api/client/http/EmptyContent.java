@@ -22,9 +22,10 @@ import java.io.OutputStream;
  * {@code Content-Length: 0}.
  *
  * <p>Note that there is no {@code Content-Length} header if the HTTP request content is
- * {@code null} . However, when making a request like PUT or POST without a {@code Content-Length} header,
- * some servers may respond with a {@code 411 Length Required} error. Specifying the
- * {@code Content-Length: 0} header may work around that problem.
+ * {@code null} .
+ * However, when making a request like PUT or POST without a {@code Content-Length} header,
+ * some servers may respond with a {@code 411 Length Required} error.
+ * Specifying the {@code Content-Length: 0} header may work around that problem.
  *
  * @since 1.11
  * @author Yaniv Inbar

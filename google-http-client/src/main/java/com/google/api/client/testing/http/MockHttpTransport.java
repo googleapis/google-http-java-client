@@ -134,9 +134,9 @@ public class MockHttpTransport extends HttpTransport {
 
     /**
      * The {@link MockLowLevelHttpResponse} that should be the result of the
-     * {@link MockLowLevelHttpRequest} to be returned by {@link #buildRequest}. Note that this field is
-     * ignored if the caller provides a {@link MockLowLevelHttpRequest} via
-     * {@link #setLowLevelHttpRequest}.
+     * {@link MockLowLevelHttpRequest} to be returned by {@link #buildRequest}.
+     * Note that this field is ignored if the caller provides a
+     * {@link MockLowLevelHttpRequest} via {@link #setLowLevelHttpRequest}.
      */
     MockLowLevelHttpResponse lowLevelHttpResponse;
 

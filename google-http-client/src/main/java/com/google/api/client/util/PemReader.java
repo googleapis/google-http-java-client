@@ -26,13 +26,14 @@ import java.util.regex.Pattern;
  *
  * <p>Supports reading any PEM stream that contains Base64 encoded content stored inside
  * {@code "-----BEGIN ...-----"} and {@code "-----END ...-----"} tags. Each call to
- * {@link #readNextSection()} parses the next section in the PEM file. If you need a section of a certain
- * title use {@link #readNextSection(String)}, for example {@code readNextSection("PRIVATE KEY")}.
+ * {@link #readNextSection()} parses the next section in the PEM file.
+ * If you need a section of a certain title use {@link #readNextSection(String)},
+ * for example {@code readNextSection("PRIVATE KEY")}.
  * To ensure that the stream is closed properly, call {@link #close()} in a finally block.
  *
  * <p>As a convenience, use {@link #readFirstSectionAndClose(Reader)} or
- * {@link #readFirstSectionAndClose(Reader, String)} for the common case of only a single section in a PEM
- * file (or only a single section of a given title).
+ * {@link #readFirstSectionAndClose(Reader, String)} for the common case of only a single section
+ * in a PEM file (or only a single section of a given title).
  *
  * <p>Limitations:
  *

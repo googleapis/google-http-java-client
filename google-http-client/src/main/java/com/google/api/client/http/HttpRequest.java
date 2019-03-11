@@ -104,8 +104,8 @@ public final class HttpRequest {
   /**
    * The number of retries that will be allowed to execute before the request will be terminated or
    * {@code 0} to not retry requests. Retries occur as a result of either
-   * {@link HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler} which handles abnormal HTTP
-   * response or the I/O exception.
+   * {@link HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler}
+   * which handles abnormal HTTP response or the I/O exception.
    */
   private int numRetries = DEFAULT_NUMBER_OF_RETRIES;
 
@@ -626,8 +626,8 @@ public final class HttpRequest {
   /**
    * Returns the number of retries that will be allowed to execute before the request will be
    * terminated or {@code 0} to not retry requests. Retries occur as a result of either
-   * {@link HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler} which handles abnormal HTTP
-   * response or the I/O exception.
+   * {@link HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler}
+   * which handles abnormal HTTP response or the I/O exception.
    *
    * @since 1.5
    */
@@ -638,8 +638,8 @@ public final class HttpRequest {
   /**
    * Sets the number of retries that will be allowed to execute before the request will be
    * terminated or {@code 0} to not retry requests. Retries occur as a result of either
-   * {@link HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler} which handles abnormal HTTP
-   * response or the I/O exception.
+   * {@link HttpUnsuccessfulResponseHandler} or {@link HttpIOExceptionHandler}
+   * which handles abnormal HTTP response or the I/O exception.
    *
    * <p>The default value is {@link #DEFAULT_NUMBER_OF_RETRIES}.
    *

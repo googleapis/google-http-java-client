@@ -27,8 +27,8 @@ import java.lang.reflect.Method;
  *
  * <p>There is no official media type for protocol buffers registered with the <a
  * href="http://www.iana.org/assignments/media-types/application/index.html">IANA</a>.
- * {@link #CONTENT_TYPE} and {@link #ALT_CONTENT_TYPE} are some of the more popular choices being used
- * today, but other media types are also in use.
+ * {@link #CONTENT_TYPE} and {@link #ALT_CONTENT_TYPE} are some of the more popular choices being
+ * used today, but other media types are also in use.
  *
  * @since 1.5
  * @author Yaniv Inbar

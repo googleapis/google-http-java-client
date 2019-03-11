@@ -95,8 +95,8 @@ public abstract class JsonParser implements Closeable {
 
   /**
    * Skips to the matching {@link JsonToken#END_ARRAY} if current token is
-   * {@link JsonToken#START_ARRAY}, the matching {@link JsonToken#END_OBJECT} if the current token is
-   * {@link JsonToken#START_OBJECT}, else does nothing.
+   * {@link JsonToken#START_ARRAY}, the matching {@link JsonToken#END_OBJECT}
+   * if the current token is {@link JsonToken#START_OBJECT}, else does nothing.
    */
   public abstract JsonParser skipChildren() throws IOException;
 
@@ -172,8 +172,8 @@ public abstract class JsonParser implements Closeable {
    *
    * <p>Before this method is called, the parser must either point to the start or end of a JSON
    * object or to a field name. After this method ends, the current token will either be the
-   * {@link JsonToken#END_OBJECT} of the current object if the key is not found, or the value of the key
-   * that was found.
+   * {@link JsonToken#END_OBJECT} of the current object if the key is not found,
+   * or the value of the key that was found.
    *
    * @param keyToFind key to find
    */
@@ -186,8 +186,8 @@ public abstract class JsonParser implements Closeable {
    *
    * <p>Before this method is called, the parser must either point to the start or end of a JSON
    * object or to a field name. After this method ends, the current token will either be the
-   * {@link JsonToken#END_OBJECT} of the current object if no matching key is found, or the value of the
-   * key that was found.
+   * {@link JsonToken#END_OBJECT} of the current object if no matching key is found,
+   * or the value of the key that was found.
    *
    * @param keysToFind set of keys to look for
    * @return name of the first matching key found or {@code null} if no match was found
@@ -224,8 +224,8 @@ public abstract class JsonParser implements Closeable {
    *
    * <p>If the parser is at the start of input, {@link #nextToken()} is called. The current token
    * must then be {@link JsonToken#START_OBJECT}, {@link JsonToken#END_OBJECT},
-   * {@link JsonToken#START_ARRAY}, {@link JsonToken#END_ARRAY}, or {@link JsonToken#FIELD_NAME}. For an
-   * object only, after the method is called, the current token must be either
+   * {@link JsonToken#START_ARRAY}, {@link JsonToken#END_ARRAY}, or {@link JsonToken#FIELD_NAME}.
+   * For an object only, after the method is called, the current token must be either
    * {@link JsonToken#FIELD_NAME} or {@link JsonToken#END_OBJECT}.
    */
   private JsonToken startParsingObjectOrArray() throws IOException {

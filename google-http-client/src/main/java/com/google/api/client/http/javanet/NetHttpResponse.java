@@ -63,18 +63,20 @@ final class NetHttpResponse extends LowLevelHttpResponse {
    * otherwise it returns {@link HttpURLConnection#getErrorStream}.
    *
    * <p>Upgrade warning: in prior version 1.16 {@link #getContent()} returned
-   * {@link HttpURLConnection#getInputStream} only when the status code was successful. Starting with
-   * version 1.17 it returns {@link HttpURLConnection#getInputStream} when it doesn't throw
-   * {@link IOException}, otherwise it returns {@link HttpURLConnection#getErrorStream}
+   * {@link HttpURLConnection#getInputStream} only when the status code was successful.
+   * Starting with version 1.17 it returns {@link HttpURLConnection#getInputStream}
+   * when it doesn't throw {@link IOException}, otherwise it returns
+   * {@link HttpURLConnection#getErrorStream}
    *
    * <p>Upgrade warning: in versions prior to 1.20 {@link #getContent()} returned
-   * {@link HttpURLConnection#getInputStream()} or {@link HttpURLConnection#getErrorStream()}, both of
-   * which silently returned -1 for read() calls when the connection got closed in the middle of
-   * receiving a response. This is highly likely a bug from JDK's {@link HttpURLConnection}. Since
-   * version 1.20, the bytes read off the wire will be checked and an {@link IOException} will be
-   * thrown if the response is not fully delivered when the connection is closed by server for
-   * whatever reason, e.g., server restarts. Note though that this is a best-effort check: when the
-   * response is chunk encoded, we have to rely on the underlying HTTP library to behave correctly.
+   * {@link HttpURLConnection#getInputStream()} or {@link HttpURLConnection#getErrorStream()},
+   * both of which silently returned -1 for read() calls when the connection got closed in the
+   * middle of receiving a response. This is highly likely a bug from JDK's
+   * {@link HttpURLConnection}. Since version 1.20, the bytes read off the wire will be checked
+   * and an {@link IOException} will be thrown if the response is not fully delivered when the
+   * connection is closed by server for whatever reason, e.g., server restarts.
+   * Note though that this is a best-effort check: when the response is chunk encoded,
+   * we have to rely on the underlying HTTP library to behave correctly.
    */
   @Override
   public InputStream getContent() throws IOException {

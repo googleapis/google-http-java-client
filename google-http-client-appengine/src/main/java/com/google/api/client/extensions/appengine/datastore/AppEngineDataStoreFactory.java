@@ -55,7 +55,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * {@link Builder#setDisableMemcache(boolean)}. The Memcache is only read to check if a key already
  * has a value inside {@link DataStore#get(String)}. The values in the Memcache are updated in the
  * {@link DataStore#get(String)}, {@link DataStore#set(String, Serializable)},
- * {@link DataStore#delete(String)}, {@link DataStore#values()}, and {@link DataStore#clear()} methods.
+ * {@link DataStore#delete(String)}, {@link DataStore#values()}, and {@link DataStore#clear()}
+ * methods.
  *
  * @since 1.16
  * @author Yaniv Inbar
