@@ -278,6 +278,12 @@ public class HttpResponseExceptionTest extends TestCase {
   }
 
   public void testInvalidCharset() throws Exception {
+    StringBuilder expected = new StringBuilder();
+    expected
+        .append("404 Not Found")
+        .append(StringUtils.LINE_SEPARATOR)
+        .append("Content could not be retrieved")
+        .append(StringUtils.LINE_SEPARATOR);
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
@@ -300,12 +306,18 @@ public class HttpResponseExceptionTest extends TestCase {
       request.execute();
       fail();
     } catch (HttpResponseException e) {
-      assertEquals(
-          "404 Not Found", e.getMessage());
+      assertEquals(expected.toString(), e.getMessage());
     }
   }
 
   public void testUnsupportedCharset() throws Exception {
+    StringBuilder expected = new StringBuilder();
+    expected
+        .append("404 Not Found")
+        .append(StringUtils.LINE_SEPARATOR)
+        .append("Content could not be retrieved")
+        .append(StringUtils.LINE_SEPARATOR)
+        .append("invalid-charset");
     HttpTransport transport = new MockHttpTransport() {
       @Override
       public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
@@ -328,8 +340,7 @@ public class HttpResponseExceptionTest extends TestCase {
       request.execute();
       fail();
     } catch (HttpResponseException e) {
-      assertEquals(
-          "404 Not Found", e.getMessage());
+      assertEquals(expected.toString(), e.getMessage());
     }
   }
 

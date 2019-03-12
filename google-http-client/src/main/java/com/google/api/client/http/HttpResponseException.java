@@ -138,7 +138,6 @@ public class HttpResponseException extends IOException {
       return new String(content, charset.name());
     } catch (UnsupportedEncodingException exception) {
       // it would be bad to throw an exception while throwing an exception
-      exception.printStackTrace();
     }
     return null;
   }
@@ -224,9 +223,17 @@ public class HttpResponseException extends IOException {
           }
         } catch (IOException exception) {
           // it would be bad to throw an exception while throwing an exception
-          exception.printStackTrace();
+          builder
+              .append(StringUtils.LINE_SEPARATOR)
+              .append("Content could not be retrieved")
+              .append(StringUtils.LINE_SEPARATOR)
+              .append(exception.getMessage());
         } catch (IllegalArgumentException exception) {
-          exception.printStackTrace();
+          builder
+              .append(StringUtils.LINE_SEPARATOR)
+              .append("Content could not be retrieved")
+              .append(StringUtils.LINE_SEPARATOR)
+              .append(exception.getMessage());
         }
       }
       message = builder.toString();
