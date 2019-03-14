@@ -11,10 +11,4 @@
     <differenceType>8001</differenceType>
     <className>com/google/api/client/http/apache/**</className>
   </difference>
-  <difference>
-    <differenceType>7006</differenceType>
-    <className>com/google/api/client/http/apache/**</className>
-    <method>org.apache.http.impl.client.DefaultHttpClient newDefaultHttpClient()</method>
-    <to>org.apache.http.client.HttpClient</to>
-  </difference>
 </differences>
