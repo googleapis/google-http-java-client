@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- see http://mojo.codehaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
+<!-- see http://www.mojohaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
 
 <differences>
   <!-- 8001 (Class removed): className -->
@@ -10,5 +10,11 @@
   <difference>
     <differenceType>8001</differenceType>
     <className>com/google/api/client/http/apache/**</className>
+  </difference>
+  <difference>
+    <differenceType>7006</differenceType>
+    <className>com/google/api/client/http/apache/**</className>
+    <method>org.apache.http.impl.client.DefaultHttpClient newDefaultHttpClient()</method>
+    <to>org.apache.http.client.HttpClient</to>
   </difference>
 </differences>
