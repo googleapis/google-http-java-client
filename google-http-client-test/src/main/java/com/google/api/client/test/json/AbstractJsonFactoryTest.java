@@ -483,7 +483,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   static final String MAP_TYPE =
       "{\"value\":[{\"map1\":{\"k1\":1,\"k2\":2},\"map2\":{\"kk1\":3,\"kk2\":4}}]}";
   static final String BIGDECIMAL_MAP_TYPE =
-      "{\"value\":[{\"map1\":{\"k1\":1.14566,\"k2\":2.14786},\"map2\":{\"kk1\":3.29786,\"kk2\":4.69786}}]}";
+      "{\"value\":[{\"map1\":{\"k1\":1.14566,\"k2\":2.14},\"map2\":{\"kk1\":3.29,\"kk2\":4.69}}]}";
 
   public void testParser_mapType() throws Exception {
     // parse
