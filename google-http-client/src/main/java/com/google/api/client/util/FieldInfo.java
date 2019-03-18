@@ -144,7 +144,7 @@ public class FieldInfo {
   private Method[] settersMethodForField(Field field) {
     List<Method> methods = new ArrayList<>();
     for (Method method : field.getDeclaringClass().getDeclaredMethods()) {
-      if (Ascii.toLowerCase(method.getName()).equals("set" + field.getName().toLowerCase())
+      if (Ascii.toLowerCase(method.getName()).equals("set" + Ascii.toLowerCase(field.getName()))
           && method.getParameterTypes().length == 1) {
         methods.add(method);
       }
@@ -221,9 +221,9 @@ public class FieldInfo {
   }
 
   /**
-   * Sets to the given value of the field in the given object instance using reflection.
+   * Sets this field in the given object to the given value using reflection.
    * <p>
-   * If the field is final, it checks that value being set is identical to the existing value.
+   * If the field is final, it checks that the value being set is identical to the existing value.
    */
   public void setValue(Object obj, Object value) {
     if (setters.length > 0) {
@@ -252,7 +252,7 @@ public class FieldInfo {
   }
 
   /**
-   * Returns the value of the given field in the given object instance using reflection.
+   * Returns the value of the given field in the given object using reflection.
    */
   public static Object getFieldValue(Field field, Object obj) {
     try {
@@ -263,9 +263,9 @@ public class FieldInfo {
   }
 
   /**
-   * Sets to the given value of the given field in the given object instance using reflection.
+   * Sets the given field in the given object to the given value using reflection.
    * <p>
-   * If the field is final, it checks that value being set is identical to the existing value.
+   * If the field is final, it checks that the value being set is identical to the existing value.
    */
   public static void setFieldValue(Field field, Object obj, Object value) {
     if (Modifier.isFinal(field.getModifiers())) {
