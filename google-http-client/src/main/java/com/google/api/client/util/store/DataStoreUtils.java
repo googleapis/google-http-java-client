@@ -14,7 +14,6 @@
 
 package com.google.api.client.util.store;
 
-
 import java.io.IOException;
 
 /**
@@ -26,13 +25,11 @@ import java.io.IOException;
 public final class DataStoreUtils {
 
   /**
-   * Returns a debug string for the given data store to be used as an implementation of
-   * {@link Object#toString()}.
+   * Returns a debug string for the given data store to be used as an implementation of {@link
+   * Object#toString()}.
    *
-   * <p>
-   * Implementation iterates over {@link DataStore#keySet()}, calling {@link DataStore#get(String)}
-   * on each key.
-   * </p>
+   * <p>Implementation iterates over {@link DataStore#keySet()}, calling {@link
+   * DataStore#get(String)} on each key.
    *
    * @param dataStore data store
    * @return debug string
@@ -56,6 +53,5 @@ public final class DataStoreUtils {
     }
   }
 
-  private DataStoreUtils() {
-  }
+  private DataStoreUtils() {}
 }

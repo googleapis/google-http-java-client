@@ -22,32 +22,24 @@ import com.google.api.client.util.Sleeper;
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Back-off handler which handles an abnormal HTTP response with {@link BackOff}.
  *
- * <p>
- * It is designed to work with only one {@link HttpRequest} at a time. As a result you MUST create a
- * new instance of {@link HttpBackOffUnsuccessfulResponseHandler} with a new instance of
+ * <p>It is designed to work with only one {@link HttpRequest} at a time. As a result you MUST
+ * create a new instance of {@link HttpBackOffUnsuccessfulResponseHandler} with a new instance of
  * {@link BackOff} for each instance of {@link HttpRequest}.
- * </p>
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>
-  request.setUnsuccessfulResponseHandler(
-    new HttpBackOffUnsuccessfulResponseHandler(new ExponentialBackOff()));
+ * request.setUnsuccessfulResponseHandler(
+ * new HttpBackOffUnsuccessfulResponseHandler(new ExponentialBackOff()));
  * </pre>
  *
- * <p>
- * Note: Implementation doesn't call {@link BackOff#reset} at all, since it expects a new
- * {@link BackOff} instance.
- * </p>
+ * <p>Note: Implementation doesn't call {@link BackOff#reset} at all, since it expects a new {@link
+ * BackOff} instance.
  *
- * <p>
- * Implementation is not thread-safe
- * </p>
+ * <p>Implementation is not thread-safe
  *
  * @author Eyal Peled
  * @since 1.15
@@ -90,14 +82,10 @@ public class HttpBackOffUnsuccessfulResponseHandler implements HttpUnsuccessfulR
    * Sets the {@link BackOffRequired} instance which determines if back-off is required based on an
    * abnormal HTTP response.
    *
-   * <p>
-   * The default value is {@link BackOffRequired#ON_SERVER_ERROR}.
-   * </p>
+   * <p>The default value is {@link BackOffRequired#ON_SERVER_ERROR}.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public HttpBackOffUnsuccessfulResponseHandler setBackOffRequired(
       BackOffRequired backOffRequired) {
@@ -113,14 +101,10 @@ public class HttpBackOffUnsuccessfulResponseHandler implements HttpUnsuccessfulR
   /**
    * Sets the sleeper.
    *
-   * <p>
-   * The default value is {@link Sleeper#DEFAULT}.
-   * </p>
+   * <p>The default value is {@link Sleeper#DEFAULT}.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public HttpBackOffUnsuccessfulResponseHandler setSleeper(Sleeper sleeper) {
     this.sleeper = Preconditions.checkNotNull(sleeper);
@@ -151,7 +135,7 @@ public class HttpBackOffUnsuccessfulResponseHandler implements HttpUnsuccessfulR
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Interface which defines if back-off is required based on an abnormal {@link HttpResponse}.
    *
    * @author Eyal Peled
@@ -163,23 +147,25 @@ public class HttpBackOffUnsuccessfulResponseHandler implements HttpUnsuccessfulR
     boolean isRequired(HttpResponse response);
 
     /**
-     * Back-off required implementation which returns {@code true} to every
-     * {@link #isRequired(HttpResponse)} call.
+     * Back-off required implementation which returns {@code true} to every {@link
+     * #isRequired(HttpResponse)} call.
      */
-    BackOffRequired ALWAYS = new BackOffRequired() {
-      public boolean isRequired(HttpResponse response) {
-        return true;
-      }
-    };
+    BackOffRequired ALWAYS =
+        new BackOffRequired() {
+          public boolean isRequired(HttpResponse response) {
+            return true;
+          }
+        };
 
     /**
-     * Back-off required implementation which its {@link #isRequired(HttpResponse)} returns
-     * {@code true} if a server error occurred (5xx).
+     * Back-off required implementation which its {@link #isRequired(HttpResponse)} returns {@code
+     * true} if a server error occurred (5xx).
      */
-    BackOffRequired ON_SERVER_ERROR = new BackOffRequired() {
-      public boolean isRequired(HttpResponse response) {
-        return response.getStatusCode() / 100 == 5;
-      }
-    };
+    BackOffRequired ON_SERVER_ERROR =
+        new BackOffRequired() {
+          public boolean isRequired(HttpResponse response) {
+            return response.getStatusCode() / 100 == 5;
+          }
+        };
   }
 }

@@ -100,6 +100,7 @@ public class HttpRequestTest extends TestCase {
 
   static class MockExecutor implements Executor {
     private Runnable runnable;
+
     public void actuallyRun() {
       runnable.run();
     }
@@ -110,14 +111,13 @@ public class HttpRequestTest extends TestCase {
   }
 
   @Deprecated
-  static private class MockBackOffPolicy implements BackOffPolicy {
+  private static class MockBackOffPolicy implements BackOffPolicy {
 
     int backOffCalls;
     int resetCalls;
     boolean returnBackOffStop;
 
-    MockBackOffPolicy() {
-    }
+    MockBackOffPolicy() {}
 
     public boolean isBackOffRequired(int statusCode) {
       switch (statusCode) {
@@ -142,9 +142,7 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
-  /**
-   * Transport used for testing the redirection logic in HttpRequest.
-   */
+  /** Transport used for testing the redirection logic in HttpRequest. */
   static class RedirectTransport extends MockHttpTransport {
 
     int lowLevelExecCalls;
@@ -154,31 +152,34 @@ public class HttpRequestTest extends TestCase {
     int redirectStatusCode = HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY;
     String[] expectedContent;
 
-    LowLevelHttpRequest retryableGetRequest = new MockLowLevelHttpRequest() {
+    LowLevelHttpRequest retryableGetRequest =
+        new MockLowLevelHttpRequest() {
 
-      @Override
-      public LowLevelHttpResponse execute() throws IOException {
-        if (expectedContent != null) {
-          assertEquals(String.valueOf(lowLevelExecCalls), expectedContent[lowLevelExecCalls],
-              getContentAsString());
-        }
-        lowLevelExecCalls++;
-        if (infiniteRedirection || lowLevelExecCalls == 1) {
-          // Return redirect on only the first call.
-          // If infiniteRedirection is true then always return the redirect status code.
-          MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
-          response.setStatusCode(redirectStatusCode);
-          if (!removeLocation) {
-            response.addHeader("Location", HttpTesting.SIMPLE_URL);
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            if (expectedContent != null) {
+              assertEquals(
+                  String.valueOf(lowLevelExecCalls),
+                  expectedContent[lowLevelExecCalls],
+                  getContentAsString());
+            }
+            lowLevelExecCalls++;
+            if (infiniteRedirection || lowLevelExecCalls == 1) {
+              // Return redirect on only the first call.
+              // If infiniteRedirection is true then always return the redirect status code.
+              MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+              response.setStatusCode(redirectStatusCode);
+              if (!removeLocation) {
+                response.addHeader("Location", HttpTesting.SIMPLE_URL);
+              }
+              return response;
+            }
+            // Return success on the second if infiniteRedirection is False.
+            MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+            response.setContent("{\"data\":{\"foo\":{\"v1\":{}}}}");
+            return response;
           }
-          return response;
-        }
-        // Return success on the second if infiniteRedirection is False.
-        MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
-        response.setContent("{\"data\":{\"foo\":{\"v1\":{}}}}");
-        return response;
-      }
-    };
+        };
 
     @Override
     public LowLevelHttpRequest buildRequest(String method, String url) {
@@ -190,13 +191,15 @@ public class HttpRequestTest extends TestCase {
       HttpRequest request, BackOff backOff, final HttpUnsuccessfulResponseHandler handler) {
     final HttpBackOffUnsuccessfulResponseHandler backOffHandler =
         new HttpBackOffUnsuccessfulResponseHandler(backOff).setSleeper(new MockSleeper());
-    request.setUnsuccessfulResponseHandler(new HttpUnsuccessfulResponseHandler() {
-      public boolean handleResponse(
-          HttpRequest request, HttpResponse response, boolean supportsRetry) throws IOException {
-        return handler.handleResponse(request, response, supportsRetry)
-            || backOffHandler.handleResponse(request, response, supportsRetry);
-      }
-    });
+    request.setUnsuccessfulResponseHandler(
+        new HttpUnsuccessfulResponseHandler() {
+          public boolean handleResponse(
+              HttpRequest request, HttpResponse response, boolean supportsRetry)
+              throws IOException {
+            return handler.handleResponse(request, response, supportsRetry)
+                || backOffHandler.handleResponse(request, response, supportsRetry);
+          }
+        });
   }
 
   public void test301Redirect() throws Exception {
@@ -308,8 +311,11 @@ public class HttpRequestTest extends TestCase {
     fakeTransport.redirectStatusCode = HttpStatusCodes.STATUS_CODE_SEE_OTHER;
     byte[] content = new byte[300];
     Arrays.fill(content, (byte) ' ');
-    HttpRequest request = fakeTransport.createRequestFactory()
-        .buildPostRequest(new GenericUrl("http://gmail.com"), new ByteArrayContent(null, content));
+    HttpRequest request =
+        fakeTransport
+            .createRequestFactory()
+            .buildPostRequest(
+                new GenericUrl("http://gmail.com"), new ByteArrayContent(null, content));
     request.setRequestMethod(HttpMethods.POST);
     HttpResponse resp = request.execute();
 
@@ -353,7 +359,7 @@ public class HttpRequestTest extends TestCase {
     Assert.assertEquals(1, fakeTransport.lowLevelExecCalls);
   }
 
-  static private class FailThenSuccessBackoffTransport extends MockHttpTransport {
+  private static class FailThenSuccessBackoffTransport extends MockHttpTransport {
 
     public int lowLevelExecCalls;
     int errorStatusCode;
@@ -364,26 +370,27 @@ public class HttpRequestTest extends TestCase {
       this.callsBeforeSuccess = callsBeforeSuccess;
     }
 
-    public LowLevelHttpRequest retryableGetRequest = new MockLowLevelHttpRequest() {
+    public LowLevelHttpRequest retryableGetRequest =
+        new MockLowLevelHttpRequest() {
 
-      @Override
-      public LowLevelHttpResponse execute() {
-        lowLevelExecCalls++;
+          @Override
+          public LowLevelHttpResponse execute() {
+            lowLevelExecCalls++;
 
-        if (lowLevelExecCalls <= callsBeforeSuccess) {
-          // Return failure on the first call
-          MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
-          response.setContent("INVALID TOKEN");
-          response.setStatusCode(errorStatusCode);
-          return response;
-        }
-        // Return success on the second
-        MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
-        response.setContent("{\"data\":{\"foo\":{\"v1\":{}}}}");
-        response.setStatusCode(200);
-        return response;
-      }
-    };
+            if (lowLevelExecCalls <= callsBeforeSuccess) {
+              // Return failure on the first call
+              MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+              response.setContent("INVALID TOKEN");
+              response.setStatusCode(errorStatusCode);
+              return response;
+            }
+            // Return success on the second
+            MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+            response.setContent("{\"data\":{\"foo\":{\"v1\":{}}}}");
+            response.setStatusCode(200);
+            return response;
+          }
+        };
 
     @Override
     public LowLevelHttpRequest buildRequest(String method, String url) {
@@ -391,7 +398,7 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
-  static private class FailThenSuccessConnectionErrorTransport extends MockHttpTransport {
+  private static class FailThenSuccessConnectionErrorTransport extends MockHttpTransport {
 
     public int lowLevelExecCalls;
     int callsBeforeSuccess;
@@ -423,22 +430,22 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
-  static private class StatusCodesTransport extends MockHttpTransport {
+  private static class StatusCodesTransport extends MockHttpTransport {
 
     int statusCode = 200;
 
-    public StatusCodesTransport() {
-    }
+    public StatusCodesTransport() {}
 
-    public MockLowLevelHttpRequest retryableGetRequest = new MockLowLevelHttpRequest() {
+    public MockLowLevelHttpRequest retryableGetRequest =
+        new MockLowLevelHttpRequest() {
 
-      @Override
-      public LowLevelHttpResponse execute() throws IOException {
-        MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
-        response.setStatusCode(statusCode);
-        return response;
-      }
-    };
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse response = new MockLowLevelHttpResponse();
+            response.setStatusCode(statusCode);
+            return response;
+          }
+        };
 
     @Override
     public LowLevelHttpRequest buildRequest(String method, String url) {
@@ -724,8 +731,9 @@ public class HttpRequestTest extends TestCase {
   @Deprecated
   public void testBackOffMultipleCalls() throws Exception {
     int callsBeforeSuccess = 5;
-    FailThenSuccessBackoffTransport fakeTransport = new FailThenSuccessBackoffTransport(
-        HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
+    FailThenSuccessBackoffTransport fakeTransport =
+        new FailThenSuccessBackoffTransport(
+            HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
 
@@ -744,8 +752,9 @@ public class HttpRequestTest extends TestCase {
 
   public void testBackOffUnsucessfulReponseMultipleCalls() throws Exception {
     int callsBeforeSuccess = 5;
-    FailThenSuccessBackoffTransport fakeTransport = new FailThenSuccessBackoffTransport(
-        HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
+    FailThenSuccessBackoffTransport fakeTransport =
+        new FailThenSuccessBackoffTransport(
+            HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
 
     HttpRequest req =
@@ -763,8 +772,9 @@ public class HttpRequestTest extends TestCase {
   @Deprecated
   public void testBackOffCallsBeyondRetryLimit() throws Exception {
     int callsBeforeSuccess = 11;
-    FailThenSuccessBackoffTransport fakeTransport = new FailThenSuccessBackoffTransport(
-        HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
+    FailThenSuccessBackoffTransport fakeTransport =
+        new FailThenSuccessBackoffTransport(
+            HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
 
@@ -786,8 +796,9 @@ public class HttpRequestTest extends TestCase {
 
   public void testBackOffUnsuccessfulReponseCallsBeyondRetryLimit() throws Exception {
     int callsBeforeSuccess = 11;
-    FailThenSuccessBackoffTransport fakeTransport = new FailThenSuccessBackoffTransport(
-        HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
+    FailThenSuccessBackoffTransport fakeTransport =
+        new FailThenSuccessBackoffTransport(
+            HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
 
     HttpRequest req =
@@ -851,8 +862,9 @@ public class HttpRequestTest extends TestCase {
   @Deprecated
   public void testBackOffStop() throws Exception {
     int callsBeforeSuccess = 5;
-    FailThenSuccessBackoffTransport fakeTransport = new FailThenSuccessBackoffTransport(
-        HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
+    FailThenSuccessBackoffTransport fakeTransport =
+        new FailThenSuccessBackoffTransport(
+            HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
     backOffPolicy.returnBackOffStop = true;
@@ -876,8 +888,9 @@ public class HttpRequestTest extends TestCase {
 
   public void testBackOffUnsucessfulResponseStop() throws Exception {
     int callsBeforeSuccess = 5;
-    FailThenSuccessBackoffTransport fakeTransport = new FailThenSuccessBackoffTransport(
-        HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
+    FailThenSuccessBackoffTransport fakeTransport =
+        new FailThenSuccessBackoffTransport(
+            HttpStatusCodes.STATUS_CODE_SERVER_ERROR, callsBeforeSuccess);
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
 
     HttpRequest req =
@@ -896,7 +909,6 @@ public class HttpRequestTest extends TestCase {
   }
 
   public enum E {
-
     @Value
     VALUE,
     @Value("other")
@@ -905,26 +917,19 @@ public class HttpRequestTest extends TestCase {
 
   public static class MyHeaders extends HttpHeaders {
 
-    @Key
-    public String foo;
+    @Key public String foo;
 
-    @Key
-    Object objNum;
+    @Key Object objNum;
 
-    @Key
-    Object objList;
+    @Key Object objList;
 
-    @Key
-    List<String> list;
+    @Key List<String> list;
 
-    @Key
-    String[] r;
+    @Key String[] r;
 
-    @Key
-    E value;
+    @Key E value;
 
-    @Key
-    E otherValue;
+    @Key E otherValue;
   }
 
   public void testExecute_headerSerialization() throws Exception {
@@ -942,12 +947,13 @@ public class HttpRequestTest extends TestCase {
     myHeaders.otherValue = E.OTHER_VALUE;
     // execute request
     final MockLowLevelHttpRequest lowLevelRequest = new MockLowLevelHttpRequest();
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
-        return lowLevelRequest;
-      }
-    };
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return lowLevelRequest;
+          }
+        };
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setHeaders(myHeaders);
@@ -958,8 +964,8 @@ public class HttpRequestTest extends TestCase {
     assertEquals(ImmutableList.of("a2", "b2", "c2"), lowLevelRequest.getHeaderValues("objlist"));
     assertEquals(ImmutableList.of("a1", "a2"), lowLevelRequest.getHeaderValues("r"));
     assertTrue(lowLevelRequest.getHeaderValues("accept-encoding").isEmpty());
-    assertEquals(ImmutableList.of("foo Google-HTTP-Java-Client/" 
-        + HttpRequest.VERSION + " (gzip)"), 
+    assertEquals(
+        ImmutableList.of("foo Google-HTTP-Java-Client/" + HttpRequest.VERSION + " (gzip)"),
         lowLevelRequest.getHeaderValues("user-agent"));
     assertEquals(ImmutableList.of("b"), lowLevelRequest.getHeaderValues("a"));
     assertEquals(ImmutableList.of("VALUE"), lowLevelRequest.getHeaderValues("value"));
@@ -998,9 +1004,14 @@ public class HttpRequestTest extends TestCase {
     MyTransport transport = new MyTransport();
     byte[] content = new byte[300];
     Arrays.fill(content, (byte) ' ');
-    HttpRequest request = transport.createRequestFactory().buildPostRequest(
-        HttpTesting.SIMPLE_GENERIC_URL, new ByteArrayContent(
-            new HttpMediaType("text/plain").setCharsetParameter(Charsets.UTF_8).build(), content));
+    HttpRequest request =
+        transport
+            .createRequestFactory()
+            .buildPostRequest(
+                HttpTesting.SIMPLE_GENERIC_URL,
+                new ByteArrayContent(
+                    new HttpMediaType("text/plain").setCharsetParameter(Charsets.UTF_8).build(),
+                    content));
     assertNull(request.getEncoding());
     request.execute();
     assertNull(request.getEncoding());
@@ -1037,8 +1048,11 @@ public class HttpRequestTest extends TestCase {
     // Create content of length 300.
     byte[] content = new byte[300];
     Arrays.fill(content, (byte) ' ');
-    HttpRequest request = transport.createRequestFactory().buildPostRequest(
-        HttpTesting.SIMPLE_GENERIC_URL, new ByteArrayContent("text/html", content));
+    HttpRequest request =
+        transport
+            .createRequestFactory()
+            .buildPostRequest(
+                HttpTesting.SIMPLE_GENERIC_URL, new ByteArrayContent("text/html", content));
 
     // Assert logging is enabled by default.
     assertTrue(request.isLoggingEnabled());
@@ -1152,16 +1166,19 @@ public class HttpRequestTest extends TestCase {
         // expect that it redirected to new URL every time using the count
         assertEquals(HttpTesting.SIMPLE_URL + "_" + count, url);
         count++;
-        return new MockLowLevelHttpRequest().setResponse(
-            new MockLowLevelHttpResponse().setStatusCode(
-                HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY)
-                .setHeaderNames(Arrays.asList("Location"))
-                .setHeaderValues(Arrays.asList(HttpTesting.SIMPLE_URL + "_" + count)));
+        return new MockLowLevelHttpRequest()
+            .setResponse(
+                new MockLowLevelHttpResponse()
+                    .setStatusCode(HttpStatusCodes.STATUS_CODE_MOVED_PERMANENTLY)
+                    .setHeaderNames(Arrays.asList("Location"))
+                    .setHeaderValues(Arrays.asList(HttpTesting.SIMPLE_URL + "_" + count)));
       }
     }
     MyTransport transport = new MyTransport();
-    HttpRequest request = transport.createRequestFactory()
-        .buildGetRequest(new GenericUrl(HttpTesting.SIMPLE_URL + "_" + transport.count));
+    HttpRequest request =
+        transport
+            .createRequestFactory()
+            .buildGetRequest(new GenericUrl(HttpTesting.SIMPLE_URL + "_" + transport.count));
     try {
       request.execute();
       fail("expected " + HttpResponseException.class);
@@ -1176,12 +1193,15 @@ public class HttpRequestTest extends TestCase {
     String contentValue = "hello";
     fakeTransport.expectedContent = new String[] {contentValue, ""};
     byte[] bytes = StringUtils.getBytesUtf8(contentValue);
-    InputStreamContent content = new InputStreamContent(
-        new HttpMediaType("text/plain").setCharsetParameter(Charsets.UTF_8).build(),
-        new ByteArrayInputStream(bytes));
+    InputStreamContent content =
+        new InputStreamContent(
+            new HttpMediaType("text/plain").setCharsetParameter(Charsets.UTF_8).build(),
+            new ByteArrayInputStream(bytes));
     content.setRetrySupported(true);
-    HttpRequest request = fakeTransport.createRequestFactory()
-        .buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL, content);
+    HttpRequest request =
+        fakeTransport
+            .createRequestFactory()
+            .buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL, content);
     HttpResponse resp = request.execute();
     assertEquals(200, resp.getStatusCode());
     assertEquals(2, fakeTransport.lowLevelExecCalls);
@@ -1191,15 +1211,20 @@ public class HttpRequestTest extends TestCase {
     LogRecordingHandler recorder = new LogRecordingHandler();
     HttpTransport.LOGGER.setLevel(Level.CONFIG);
     HttpTransport.LOGGER.addHandler(recorder);
-    new MockHttpTransport().createRequestFactory()
-        .buildGetRequest(new GenericUrl("http://google.com/#q=a'b'c")).execute();
+    new MockHttpTransport()
+        .createRequestFactory()
+        .buildGetRequest(new GenericUrl("http://google.com/#q=a'b'c"))
+        .execute();
     boolean found = false;
     for (String message : recorder.messages()) {
       if (message.startsWith("curl")) {
         found = true;
-        assertEquals("curl -v --compressed -H 'Accept-Encoding: gzip' -H 'User-Agent: "
-            + "Google-HTTP-Java-Client/" + HttpRequest.VERSION + " (gzip)" 
-        	+ "' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c'",
+        assertEquals(
+            "curl -v --compressed -H 'Accept-Encoding: gzip' -H 'User-Agent: "
+                + "Google-HTTP-Java-Client/"
+                + HttpRequest.VERSION
+                + " (gzip)"
+                + "' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c'",
             message);
       }
     }
@@ -1213,19 +1238,24 @@ public class HttpRequestTest extends TestCase {
 
     String contentValue = "hello";
     byte[] bytes = StringUtils.getBytesUtf8(contentValue);
-    InputStreamContent content = new InputStreamContent(
-        new HttpMediaType("text/plain").setCharsetParameter(Charsets.UTF_8).build(),
-        new ByteArrayInputStream(bytes));
+    InputStreamContent content =
+        new InputStreamContent(
+            new HttpMediaType("text/plain").setCharsetParameter(Charsets.UTF_8).build(),
+            new ByteArrayInputStream(bytes));
 
-    new MockHttpTransport().createRequestFactory()
+    new MockHttpTransport()
+        .createRequestFactory()
         .buildPostRequest(new GenericUrl("http://google.com/#q=a'b'c"), content)
-        .setEncoding(new GZipEncoding()).execute();
+        .setEncoding(new GZipEncoding())
+        .execute();
 
     boolean found = false;
-    final String expectedCurlLog = "curl -v --compressed -X POST -H 'Accept-Encoding: gzip' "
-        + "-H 'User-Agent: " + HttpRequest.USER_AGENT_SUFFIX
-        + "' -H 'Content-Type: text/plain; charset=UTF-8' -H 'Content-Encoding: gzip' "
-        + "-d '@-' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c' << $$$";
+    final String expectedCurlLog =
+        "curl -v --compressed -X POST -H 'Accept-Encoding: gzip' "
+            + "-H 'User-Agent: "
+            + HttpRequest.USER_AGENT_SUFFIX
+            + "' -H 'Content-Type: text/plain; charset=UTF-8' -H 'Content-Encoding: gzip' "
+            + "-d '@-' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c' << $$$";
     for (String message : recorder.messages()) {
       if (message.startsWith("curl")) {
         found = true;

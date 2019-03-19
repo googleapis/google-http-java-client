@@ -19,12 +19,10 @@ import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * JSON-RPC 2.0 request object.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -33,26 +31,22 @@ import com.google.api.client.util.Key;
 public class JsonRpcRequest extends GenericData {
 
   /** Version of the JSON-RPC protocol which is {@code "2.0"}. */
-  @Key
-  private final String jsonrpc = "2.0";
+  @Key private final String jsonrpc = "2.0";
 
   /**
    * Identifier established by the client that must be a string or a number or {@code null} for a
    * notification and therefore not expect to receive a response.
    */
-  @Key
-  private Object id;
+  @Key private Object id;
 
   /** Name of the method to be invoked. */
-  @Key
-  private String method;
+  @Key private String method;
 
   /**
    * Structured value that holds the parameter values to be used during the invocation of the method
    * or {@code null} for none.
    */
-  @Key
-  private Object params;
+  @Key private Object params;
 
   /**
    * Returns the version of the JSON-RPC protocol which is {@code "2.0"}.

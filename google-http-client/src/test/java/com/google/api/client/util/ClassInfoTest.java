@@ -27,13 +27,13 @@ import junit.framework.TestCase;
 public class ClassInfoTest extends TestCase {
 
   public enum E {
-
     @Value
     VALUE,
     @Value("other")
     OTHER_VALUE,
     @NullValue
-    NULL, IGNORED_VALUE
+    NULL,
+    IGNORED_VALUE
   }
 
   public void testIsEnum() {
@@ -49,10 +49,11 @@ public class ClassInfoTest extends TestCase {
   }
 
   public class A {
-    @Key
-    String b;
+    @Key String b;
+
     @Key("oc")
     String c;
+
     String d;
 
     @Key("AbC")
@@ -60,8 +61,7 @@ public class ClassInfoTest extends TestCase {
   }
 
   public class B extends A {
-    @Key
-    String e;
+    @Key String e;
   }
 
   public class C extends B {
@@ -70,8 +70,8 @@ public class ClassInfoTest extends TestCase {
   }
 
   public class A1 {
-    @Key
-    String foo;
+    @Key String foo;
+
     @Key("foo")
     String foo2;
   }

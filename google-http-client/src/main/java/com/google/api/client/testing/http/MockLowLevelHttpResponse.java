@@ -19,19 +19,16 @@ import com.google.api.client.testing.util.TestableByteArrayInputStream;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Mock for {@link LowLevelHttpResponse}.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @author Yaniv Inbar
  * @since 1.3
@@ -81,10 +78,8 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   /**
    * Sets the response content to the given content string.
    *
-   * <p>
-   * If the input string is {@code null}, it will set the content to {@code null}. Else, it will use
-   * {@link TestableByteArrayInputStream} with the UTF-8 encoded string content.
-   * </p>
+   * <p>If the input string is {@code null}, it will set the content to {@code null}. Else, it will
+   * use {@link TestableByteArrayInputStream} with the UTF-8 encoded string content.
    *
    * @param stringContent content string or {@code null} for none
    */
@@ -98,13 +93,9 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
    * Sets the response content to the given byte array.
    *
    * @param byteContent content byte array, or {@code null} for none.
-   *
-   * <p>
-   * If the byte array is {@code null}, the method invokes {@link #setZeroContent}.
-   * Otherwise, {@code byteContent} is wrapped in a {@link TestableByteArrayInputStream}
-   * and becomes this {@link MockLowLevelHttpResponse}'s contents.
-   * </p>
-   *
+   *     <p>If the byte array is {@code null}, the method invokes {@link #setZeroContent}.
+   *     Otherwise, {@code byteContent} is wrapped in a {@link TestableByteArrayInputStream} and
+   *     becomes this {@link MockLowLevelHttpResponse}'s contents.
    * @since 1.18
    */
   public MockLowLevelHttpResponse setContent(byte[] byteContent) {
@@ -117,8 +108,8 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   }
 
   /**
-   * Sets the content to {@code null} and the content length to 0. Note that
-   * the result will have a content length header whose value is 0.
+   * Sets the content to {@code null} and the content length to 0. Note that the result will have a
+   * content length header whose value is 0.
    *
    * @since 1.18
    */
@@ -195,9 +186,7 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   /**
    * Sets the list of header names of HTTP response.
    *
-   * <p>
-   * Default value is an empty list.
-   * </p>
+   * <p>Default value is an empty list.
    *
    * @since 1.5
    */
@@ -209,9 +198,7 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   /**
    * Returns the list of header values of HTTP response.
    *
-   * <p>
-   * Default value is an empty list.
-   * </p>
+   * <p>Default value is an empty list.
    *
    * @since 1.5
    */
@@ -262,9 +249,7 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   /**
    * Sets the content length or {@code -1} for unknown.
    *
-   * <p>
-   * By default it is {@code -1}.
-   * </p>
+   * <p>By default it is {@code -1}.
    *
    * @since 1.5
    */
@@ -277,9 +262,7 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   /**
    * Sets the status code of HTTP response.
    *
-   * <p>
-   * Default value is {@code 200}.
-   * </p>
+   * <p>Default value is {@code 200}.
    *
    * @since 1.5
    */

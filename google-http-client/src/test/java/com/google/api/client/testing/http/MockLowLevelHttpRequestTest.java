@@ -16,7 +16,6 @@ package com.google.api.client.testing.http;
 
 import com.google.api.client.util.ByteArrayStreamingContent;
 import com.google.api.client.util.StringUtils;
-
 import junit.framework.TestCase;
 
 /**

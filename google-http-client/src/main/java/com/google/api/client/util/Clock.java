@@ -17,10 +17,8 @@ package com.google.api.client.util;
 /**
  * Clock which can be used to get the amount of elapsed milliseconds in system time.
  *
- * <p>
- * The default system implementation can be accessed at {@link #SYSTEM}. Alternative implementations
- * may be used for testing.
- * </p>
+ * <p>The default system implementation can be accessed at {@link #SYSTEM}. Alternative
+ * implementations may be used for testing.
  *
  * @since 1.9
  * @author mlinder@google.com (Matthias Linder)
@@ -33,12 +31,13 @@ public interface Clock {
   long currentTimeMillis();
 
   /**
-   * Provides the default System implementation of a Clock by using
-   * {@link System#currentTimeMillis()}.
+   * Provides the default System implementation of a Clock by using {@link
+   * System#currentTimeMillis()}.
    */
-  Clock SYSTEM = new Clock() {
-    public long currentTimeMillis() {
-      return System.currentTimeMillis();
-    }
-  };
+  Clock SYSTEM =
+      new Clock() {
+        public long currentTimeMillis() {
+          return System.currentTimeMillis();
+        }
+      };
 }

@@ -33,11 +33,16 @@ public class HttpBackOffUnsuccessfulResponseHandlerTest extends TestCase {
   }
 
   public void testHandleResponse_requiredFalse() throws IOException {
-    subsetHandleResponse(0, 0, true, new MockBackOff(), new BackOffRequired() {
-      public boolean isRequired(HttpResponse response) {
-        return false;
-      }
-    });
+    subsetHandleResponse(
+        0,
+        0,
+        true,
+        new MockBackOff(),
+        new BackOffRequired() {
+          public boolean isRequired(HttpResponse response) {
+            return false;
+          }
+        });
   }
 
   public void testHandleResponse_requiredTrue() throws IOException {
@@ -52,8 +57,10 @@ public class HttpBackOffUnsuccessfulResponseHandlerTest extends TestCase {
       throws IOException {
     // create the handler
     MockSleeper sleeper = new MockSleeper();
-    HttpBackOffUnsuccessfulResponseHandler handler = new HttpBackOffUnsuccessfulResponseHandler(
-        backOff).setSleeper(sleeper).setBackOffRequired(backOffRequired);
+    HttpBackOffUnsuccessfulResponseHandler handler =
+        new HttpBackOffUnsuccessfulResponseHandler(backOff)
+            .setSleeper(sleeper)
+            .setBackOffRequired(backOffRequired);
 
     while (handler.handleResponse(null, null, retry)) {
       assertEquals(millis, sleeper.getLastMillis());

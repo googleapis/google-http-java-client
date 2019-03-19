@@ -14,10 +14,9 @@
 
 package com.google.api.client.util;
 
-import junit.framework.TestCase;
-
 import java.util.Iterator;
 import java.util.Map;
+import junit.framework.TestCase;
 
 /**
  * Tests {@link ArrayMap}.
@@ -26,8 +25,7 @@ import java.util.Map;
  */
 public class ArrayMapTest extends TestCase {
 
-  public ArrayMapTest() {
-  }
+  public ArrayMapTest() {}
 
   public ArrayMapTest(String testName) {
     super(testName);

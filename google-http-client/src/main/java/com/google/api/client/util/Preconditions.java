@@ -18,9 +18,7 @@ package com.google.api.client.util;
  * Simple static methods to be called at the start of your own methods to verify correct arguments
  * and state.
  *
- * <p>
- * NOTE: proxy for the Guava implementation of {@link com.google.common.base.Preconditions}.
- * </p>
+ * <p>NOTE: proxy for the Guava implementation of {@link com.google.common.base.Preconditions}.
  *
  * @since 1.14
  * @author Yaniv Inbar
@@ -42,7 +40,7 @@ public final class Preconditions {
    *
    * @param expression a boolean expression
    * @param errorMessage the exception message to use if the check fails; will be converted to a
-   *        string using {@link String#valueOf(Object)}
+   *     string using {@link String#valueOf(Object)}
    * @throws IllegalArgumentException if {@code expression} is false
    */
   public static void checkArgument(boolean expression, Object errorMessage) {
@@ -54,15 +52,15 @@ public final class Preconditions {
    *
    * @param expression a boolean expression
    * @param errorMessageTemplate a template for the exception message should the check fail. The
-   *        message is formed by replacing each {@code %s} placeholder in the template with an
-   *        argument. These are matched by position - the first {@code %s} gets
-   *        {@code errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted
-   *        message in square braces. Unmatched placeholders will be left as-is.
+   *     message is formed by replacing each {@code %s} placeholder in the template with an
+   *     argument. These are matched by position - the first {@code %s} gets {@code
+   *     errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted message in
+   *     square braces. Unmatched placeholders will be left as-is.
    * @param errorMessageArgs the arguments to be substituted into the message template. Arguments
-   *        are converted to strings using {@link String#valueOf(Object)}.
+   *     are converted to strings using {@link String#valueOf(Object)}.
    * @throws IllegalArgumentException if {@code expression} is false
    * @throws NullPointerException if the check fails and either {@code errorMessageTemplate} or
-   *         {@code errorMessageArgs} is null (don't let this happen)
+   *     {@code errorMessageArgs} is null (don't let this happen)
    */
   public static void checkArgument(
       boolean expression, String errorMessageTemplate, Object... errorMessageArgs) {
@@ -87,7 +85,7 @@ public final class Preconditions {
    *
    * @param expression a boolean expression
    * @param errorMessage the exception message to use if the check fails; will be converted to a
-   *        string using {@link String#valueOf(Object)}
+   *     string using {@link String#valueOf(Object)}
    * @throws IllegalStateException if {@code expression} is false
    */
   public static void checkState(boolean expression, Object errorMessage) {
@@ -100,15 +98,15 @@ public final class Preconditions {
    *
    * @param expression a boolean expression
    * @param errorMessageTemplate a template for the exception message should the check fail. The
-   *        message is formed by replacing each {@code %s} placeholder in the template with an
-   *        argument. These are matched by position - the first {@code %s} gets
-   *        {@code errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted
-   *        message in square braces. Unmatched placeholders will be left as-is.
+   *     message is formed by replacing each {@code %s} placeholder in the template with an
+   *     argument. These are matched by position - the first {@code %s} gets {@code
+   *     errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted message in
+   *     square braces. Unmatched placeholders will be left as-is.
    * @param errorMessageArgs the arguments to be substituted into the message template. Arguments
-   *        are converted to strings using {@link String#valueOf(Object)}.
+   *     are converted to strings using {@link String#valueOf(Object)}.
    * @throws IllegalStateException if {@code expression} is false
    * @throws NullPointerException if the check fails and either {@code errorMessageTemplate} or
-   *         {@code errorMessageArgs} is null (don't let this happen)
+   *     {@code errorMessageArgs} is null (don't let this happen)
    */
   public static void checkState(
       boolean expression, String errorMessageTemplate, Object... errorMessageArgs) {
@@ -132,7 +130,7 @@ public final class Preconditions {
    *
    * @param reference an object reference
    * @param errorMessage the exception message to use if the check fails; will be converted to a
-   *        string using {@link String#valueOf(Object)}
+   *     string using {@link String#valueOf(Object)}
    * @return the non-null reference that was validated
    * @throws NullPointerException if {@code reference} is null
    */
@@ -145,12 +143,12 @@ public final class Preconditions {
    *
    * @param reference an object reference
    * @param errorMessageTemplate a template for the exception message should the check fail. The
-   *        message is formed by replacing each {@code %s} placeholder in the template with an
-   *        argument. These are matched by position - the first {@code %s} gets
-   *        {@code errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted
-   *        message in square braces. Unmatched placeholders will be left as-is.
+   *     message is formed by replacing each {@code %s} placeholder in the template with an
+   *     argument. These are matched by position - the first {@code %s} gets {@code
+   *     errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted message in
+   *     square braces. Unmatched placeholders will be left as-is.
    * @param errorMessageArgs the arguments to be substituted into the message template. Arguments
-   *        are converted to strings using {@link String#valueOf(Object)}.
+   *     are converted to strings using {@link String#valueOf(Object)}.
    * @return the non-null reference that was validated
    * @throws NullPointerException if {@code reference} is null
    */
@@ -160,6 +158,5 @@ public final class Preconditions {
         reference, errorMessageTemplate, errorMessageArgs);
   }
 
-  private Preconditions() {
-  }
+  private Preconditions() {}
 }

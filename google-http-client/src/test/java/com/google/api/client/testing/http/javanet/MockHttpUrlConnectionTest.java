@@ -25,48 +25,46 @@ import java.util.List;
 import java.util.Map;
 import junit.framework.TestCase;
 
-/**
- * Tests {@link MockHttpURLConnection}.
- */
+/** Tests {@link MockHttpURLConnection}. */
 public class MockHttpUrlConnectionTest extends TestCase {
 
   private static final String RESPONSE_BODY = "body";
   private static final String HEADER_NAME = "Custom-Header";
 
   public void testSetGetHeaders() throws IOException {
-      MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
-      connection.addHeader(HEADER_NAME, "100");
-      assertEquals("100", connection.getHeaderField(HEADER_NAME));
+    MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
+    connection.addHeader(HEADER_NAME, "100");
+    assertEquals("100", connection.getHeaderField(HEADER_NAME));
   }
 
   public void testSetGetMultipleHeaders() throws IOException {
-      MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
-      List<String> values = Arrays.asList("value1", "value2", "value3");
-      for (String value : values) {
-        connection.addHeader(HEADER_NAME, value);
-      }
-      Map<String, List<String>> headers = connection.getHeaderFields();
-      assertEquals(3, headers.get(HEADER_NAME).size());
-      for (int i = 0; i < 3; i++) {
-        assertEquals(values.get(i), headers.get(HEADER_NAME).get(i));
-      }
+    MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
+    List<String> values = Arrays.asList("value1", "value2", "value3");
+    for (String value : values) {
+      connection.addHeader(HEADER_NAME, value);
+    }
+    Map<String, List<String>> headers = connection.getHeaderFields();
+    assertEquals(3, headers.get(HEADER_NAME).size());
+    for (int i = 0; i < 3; i++) {
+      assertEquals(values.get(i), headers.get(HEADER_NAME).get(i));
+    }
   }
 
   public void testGetNonExistingHeader() throws IOException {
-      MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
-      assertNull(connection.getHeaderField(HEADER_NAME));
+    MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
+    assertNull(connection.getHeaderField(HEADER_NAME));
   }
 
   public void testSetInputStreamAndInputStreamImmutable() throws IOException {
-      MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
-      connection.setInputStream(new ByteArrayInputStream(StringUtils.getBytesUtf8(RESPONSE_BODY)));
-      connection.setInputStream(new ByteArrayInputStream(StringUtils.getBytesUtf8("override")));
-      byte[] buf = new byte[10];
-      InputStream in = connection.getInputStream();
-      int n = 0, bytes = 0;
-      while ((n = in.read(buf)) != -1) {
-        bytes += n;
-      }
-      assertEquals(RESPONSE_BODY, new String(buf, 0, bytes));
+    MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
+    connection.setInputStream(new ByteArrayInputStream(StringUtils.getBytesUtf8(RESPONSE_BODY)));
+    connection.setInputStream(new ByteArrayInputStream(StringUtils.getBytesUtf8("override")));
+    byte[] buf = new byte[10];
+    InputStream in = connection.getInputStream();
+    int n = 0, bytes = 0;
+    while ((n = in.read(buf)) != -1) {
+      bytes += n;
+    }
+    assertEquals(RESPONSE_BODY, new String(buf, 0, bytes));
   }
 }

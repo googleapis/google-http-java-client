@@ -21,59 +21,49 @@ import java.util.logging.Logger;
 /**
  * Thread-safe abstract HTTP transport.
  *
- * <p>
- * Implementation is thread-safe, and sub-classes must be thread-safe. For maximum efficiency,
+ * <p>Implementation is thread-safe, and sub-classes must be thread-safe. For maximum efficiency,
  * applications should use a single globally-shared instance of the HTTP transport.
- * </p>
  *
- * <p>
- * The recommended concrete implementation HTTP transport library to use depends on what environment
- * you are running in:
- * </p>
+ * <p>The recommended concrete implementation HTTP transport library to use depends on what
+ * environment you are running in:
+ *
  * <ul>
- * <li>Google App Engine: use
- * {@code com.google.api.client.extensions.appengine.http.UrlFetchTransport}.
- * <ul>
- * <li>{@code com.google.api.client.apache.ApacheHttpTransport} doesn't work on App Engine because
- * the Apache HTTP Client opens its own sockets (though in theory there are ways to hack it to work
- * on App Engine that might work).</li>
- * <li>{@code com.google.api.client.javanet.NetHttpTransport} is discouraged due to a bug in the App
- * Engine SDK itself in how it parses HTTP headers in the response.</li>
- * </ul>
- * </li>
- * <li>Android:
- * <ul>
- * <li>For maximum backwards compatibility with older SDK's use {@code newCompatibleTransport} from
- * {@code com.google.api.client.extensions.android.http.AndroidHttp} (read its JavaDoc for details).
- * </li>
- * <li>If your application is targeting Gingerbread (SDK 2.3) or higher, simply use
- * {@code com.google.api.client.javanet.NetHttpTransport}.</li>
- * </ul>
- * </li>
- * <li>Other Java environments
- * <ul>
- * <li>{@code com.google.api.client.googleapis.javanet.GoogleNetHttpTransport} is included in
- * google-api-cient 1.22.0, so easy to include.</li>
- * <li>{@code com.google.api.client.javanet.NetHttpTransport} is based on the HttpURLConnection
- * built into the Java SDK, so it used to be the preferred choice.</li>
- * <li>{@code com.google.api.client.apache.ApacheHttpTransport} is a good choice for users of the
- * Apache HTTP Client, especially if you need some of the configuration options available in that
- * library.</li>
- * </ul>
- * </li>
+ *   <li>Google App Engine: use {@code
+ *       com.google.api.client.extensions.appengine.http.UrlFetchTransport}.
+ *       <ul>
+ *         <li>{@code com.google.api.client.apache.ApacheHttpTransport} doesn't work on App Engine
+ *             because the Apache HTTP Client opens its own sockets (though in theory there are ways
+ *             to hack it to work on App Engine that might work).
+ *         <li>{@code com.google.api.client.javanet.NetHttpTransport} is discouraged due to a bug in
+ *             the App Engine SDK itself in how it parses HTTP headers in the response.
+ *       </ul>
+ *   <li>Android:
+ *       <ul>
+ *         <li>For maximum backwards compatibility with older SDK's use {@code
+ *             newCompatibleTransport} from {@code
+ *             com.google.api.client.extensions.android.http.AndroidHttp} (read its JavaDoc for
+ *             details).
+ *         <li>If your application is targeting Gingerbread (SDK 2.3) or higher, simply use {@code
+ *             com.google.api.client.javanet.NetHttpTransport}.
+ *       </ul>
+ *   <li>Other Java environments
+ *       <ul>
+ *         <li>{@code com.google.api.client.googleapis.javanet.GoogleNetHttpTransport} is included
+ *             in google-api-cient 1.22.0, so easy to include.
+ *         <li>{@code com.google.api.client.javanet.NetHttpTransport} is based on the
+ *             HttpURLConnection built into the Java SDK, so it used to be the preferred choice.
+ *         <li>{@code com.google.api.client.apache.ApacheHttpTransport} is a good choice for users
+ *             of the Apache HTTP Client, especially if you need some of the configuration options
+ *             available in that library.
+ *       </ul>
  * </ul>
  *
- * <p>
- * Some HTTP transports do not support all HTTP methods. Use {@link #supportsMethod(String)} to
+ * <p>Some HTTP transports do not support all HTTP methods. Use {@link #supportsMethod(String)} to
  * check if a certain HTTP method is supported. Calling {@link #buildRequest()} on a method that is
  * not supported will result in an {@link IllegalArgumentException}.
- * </p>
  *
- * <p>
- * Subclasses should override {@link #supportsMethod(String)} and
- * {@link #buildRequest(String, String)} to build requests and specify which HTTP methods are
- * supported.
- * </p>
+ * <p>Subclasses should override {@link #supportsMethod(String)} and {@link #buildRequest(String,
+ * String)} to build requests and specify which HTTP methods are supported.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -86,8 +76,10 @@ public abstract class HttpTransport {
    * All valid request methods as specified in {@link #supportsMethod(String)}, sorted in ascending
    * alphabetical order.
    */
-  private static final String[] SUPPORTED_METHODS =
-      {HttpMethods.DELETE, HttpMethods.GET, HttpMethods.POST, HttpMethods.PUT};
+  private static final String[] SUPPORTED_METHODS = {
+    HttpMethods.DELETE, HttpMethods.GET, HttpMethods.POST, HttpMethods.PUT
+  };
+
   static {
     Arrays.sort(SUPPORTED_METHODS);
   }
@@ -126,10 +118,8 @@ public abstract class HttpTransport {
   /**
    * Returns whether a specified HTTP method is supported by this transport.
    *
-   * <p>
-   * Default implementation returns true if and only if the request method is {@code "DELETE"},
+   * <p>Default implementation returns true if and only if the request method is {@code "DELETE"},
    * {@code "GET"}, {@code "POST"}, or {@code "PUT"}. Subclasses should override.
-   * </p>
    *
    * @param method HTTP method
    * @throws IOException I/O exception
@@ -157,6 +147,5 @@ public abstract class HttpTransport {
    * @throws IOException I/O exception
    * @since 1.4
    */
-  public void shutdown() throws IOException {
-  }
+  public void shutdown() throws IOException {}
 }

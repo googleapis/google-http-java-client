@@ -56,8 +56,7 @@ public abstract class AbstractDataStoreFactoryTest extends TestCase {
   }
 
   private static void assertContentsAnyOrder(Collection<?> c, Object... elts) {
-    assertEquals(Sets.newHashSet(c),
-                 Sets.newHashSet(Arrays.asList(elts)));
+    assertEquals(Sets.newHashSet(c), Sets.newHashSet(Arrays.asList(elts)));
   }
 
   public void testId() throws Exception {

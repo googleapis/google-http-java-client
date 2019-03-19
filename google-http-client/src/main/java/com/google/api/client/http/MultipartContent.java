@@ -16,7 +16,6 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StreamingContent;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -32,15 +31,11 @@ import java.util.Collections;
  * and <a href="http://tools.ietf.org/html/rfc1521#section-7.2.2">RFC 2046: Multipurpose Internet
  * Mail Extensions: The Multipart/mixed (primary) subtype</a>.
  *
- * <p>
- * By default the media type is {@code "multipart/related; boundary=__END_OF_PART__"}, but this may
- * be customized by calling {@link #setMediaType(HttpMediaType)}, {@link #getMediaType()}, or
+ * <p>By default the media type is {@code "multipart/related; boundary=__END_OF_PART__"}, but this
+ * may be customized by calling {@link #setMediaType(HttpMediaType)}, {@link #getMediaType()}, or
  * {@link #setBoundary(String)}.
- * </p>
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.14
  * @author Yaniv Inbar
@@ -66,7 +61,8 @@ public class MultipartContent extends AbstractHttpContent {
       if (part.headers != null) {
         headers.fromHttpHeaders(part.headers);
       }
-      headers.setContentEncoding(null)
+      headers
+          .setContentEncoding(null)
           .setUserAgent(null)
           .setContentType(null)
           .setContentLength(null)
@@ -141,10 +137,8 @@ public class MultipartContent extends AbstractHttpContent {
   /**
    * Adds an HTTP multipart part.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public MultipartContent addPart(Part part) {
     parts.add(Preconditions.checkNotNull(part));
@@ -154,10 +148,8 @@ public class MultipartContent extends AbstractHttpContent {
   /**
    * Sets the parts of the HTTP multipart request.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public MultipartContent setParts(Collection<Part> parts) {
     this.parts = new ArrayList<Part>(parts);
@@ -168,10 +160,8 @@ public class MultipartContent extends AbstractHttpContent {
    * Sets the HTTP content parts of the HTTP multipart request, where each part is assumed to have
    * no HTTP headers and no encoding.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public MultipartContent setContentParts(Collection<? extends HttpContent> contentParts) {
     this.parts = new ArrayList<Part>(contentParts.size());
@@ -189,14 +179,10 @@ public class MultipartContent extends AbstractHttpContent {
   /**
    * Sets the boundary string to use.
    *
-   * <p>
-   * Defaults to {@code "END_OF_PART"}.
-   * </p>
+   * <p>Defaults to {@code "END_OF_PART"}.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public MultipartContent setBoundary(String boundary) {
     getMediaType().setParameter("boundary", Preconditions.checkNotNull(boundary));
@@ -206,9 +192,7 @@ public class MultipartContent extends AbstractHttpContent {
   /**
    * Single part of a multi-part request.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    */
   public static final class Part {
 
@@ -225,9 +209,7 @@ public class MultipartContent extends AbstractHttpContent {
       this(null);
     }
 
-    /**
-     * @param content HTTP content or {@code null} for none
-     */
+    /** @param content HTTP content or {@code null} for none */
     public Part(HttpContent content) {
       this(null, content);
     }

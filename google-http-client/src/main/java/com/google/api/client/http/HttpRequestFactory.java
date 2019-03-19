@@ -16,23 +16,20 @@ package com.google.api.client.http;
 
 import java.io.IOException;
 
-
 /**
  * Thread-safe light-weight HTTP request factory layer on top of the HTTP transport that has an
  * optional {@link HttpRequestInitializer HTTP request initializer} for initializing requests.
  *
- * <p>
- * For example, to use a particular authorization header across all requests, use:
- * </p>
+ * <p>For example, to use a particular authorization header across all requests, use:
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
-    return transport.createRequestFactory(new HttpRequestInitializer() {
-      public void initialize(HttpRequest request) throws IOException {
-        request.getHeaders().setAuthorization("...");
-      }
-    });
-  }
+ * public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
+ * return transport.createRequestFactory(new HttpRequestInitializer() {
+ * public void initialize(HttpRequest request) throws IOException {
+ * request.getHeaders().setAuthorization("...");
+ * }
+ * });
+ * }
  * </pre>
  *
  * @since 1.4
@@ -67,9 +64,7 @@ public final class HttpRequestFactory {
   /**
    * Returns the HTTP request initializer or {@code null} for none.
    *
-   * <p>
-   * This initializer is invoked before setting its method, URL, or content.
-   * </p>
+   * <p>This initializer is invoked before setting its method, URL, or content.
    *
    * @since 1.5
    */

@@ -16,16 +16,13 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StreamingContent;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
  * Streaming content based on an HTTP encoding.
  *
- * <p>
- * Implementation is thread-safe only if the streaming content and HTTP encoding are thread-safe.
- * </p>
+ * <p>Implementation is thread-safe only if the streaming content and HTTP encoding are thread-safe.
  *
  * @since 1.14
  * @author Yaniv Inbar

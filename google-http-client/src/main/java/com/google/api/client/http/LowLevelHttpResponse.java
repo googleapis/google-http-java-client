@@ -20,15 +20,11 @@ import java.io.InputStream;
 /**
  * Low-level HTTP response.
  *
- * <p>
- * This allows providing a different implementation of the HTTP response that is more compatible
+ * <p>This allows providing a different implementation of the HTTP response that is more compatible
  * with the Java environment used.
- * </p>
  *
- * <p>
- * Implementation has no fields and therefore thread-safe, but sub-classes are not necessarily
+ * <p>Implementation has no fields and therefore thread-safe, but sub-classes are not necessarily
  * thread-safe.
- * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -63,10 +59,8 @@ public abstract class LowLevelHttpResponse {
   /**
    * Returns the number of HTTP response headers.
    *
-   * <p>
-   * Note that multiple headers of the same name need to be supported, in which case each header
+   * <p>Note that multiple headers of the same name need to be supported, in which case each header
    * value is treated as a separate header.
-   * </p>
    */
   public abstract int getHeaderCount() throws IOException;
 
@@ -83,6 +77,5 @@ public abstract class LowLevelHttpResponse {
    * @throws IOException I/O exception
    * @since 1.4
    */
-  public void disconnect() throws IOException {
-  }
+  public void disconnect() throws IOException {}
 }

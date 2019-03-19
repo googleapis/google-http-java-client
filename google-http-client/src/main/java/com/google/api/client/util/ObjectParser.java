@@ -23,9 +23,7 @@ import java.nio.charset.Charset;
 /**
  * Parses a data source into the specified data type.
  *
- * <p>
- * Implementations should normally be thread-safe.
- * </p>
+ * <p>Implementations should normally be thread-safe.
  *
  * @author Yaniv Inbar
  * @since 1.10
@@ -38,7 +36,7 @@ public interface ObjectParser {
    *
    * @param in input stream which contains the data to parse
    * @param charset charset which should be used to decode the input stream or {@code null} if
-   *        unknown
+   *     unknown
    * @param dataClass class into which the data is parsed
    */
   <T> T parseAndClose(InputStream in, Charset charset, Class<T> dataClass) throws IOException;
@@ -49,7 +47,7 @@ public interface ObjectParser {
    *
    * @param in input stream which contains the data to parse
    * @param charset charset which should be used to decode the input stream or {@code null} if
-   *        unknown
+   *     unknown
    * @param dataType type into which the data is parsed
    */
   Object parseAndClose(InputStream in, Charset charset, Type dataType) throws IOException;

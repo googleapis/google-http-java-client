@@ -37,11 +37,10 @@ final class SSLSocketFactoryExtension extends SSLSocketFactory {
   /** Wrapped Java SSL socket factory. */
   private final javax.net.ssl.SSLSocketFactory socketFactory;
 
-  /**
-   * @param sslContext SSL context
-   */
-  SSLSocketFactoryExtension(SSLContext sslContext) throws KeyManagementException,
-      UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
+  /** @param sslContext SSL context */
+  SSLSocketFactoryExtension(SSLContext sslContext)
+      throws KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException,
+          KeyStoreException {
     super((KeyStore) null);
     socketFactory = sslContext.getSocketFactory();
   }

@@ -15,7 +15,6 @@
 package com.google.api.client.findbugs;
 
 import com.google.api.client.util.Beta;
-
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
@@ -36,19 +35,13 @@ public class BetaDetector extends OpcodeStackDetector {
   /** Beta annotation "signature". */
   private static final String BETA_ANNOTATION = "Lcom/google/api/client/util/Beta;";
 
-  /**
-   * A message indicating there is a usage of a method annotated with Beta annotation.
-   */
+  /** A message indicating there is a usage of a method annotated with Beta annotation. */
   private static final String BETA_METHOD_USAGE = "BETA_METHOD_USAGE";
 
-  /**
-   * A message indicating there is a usage of a field annotated with Beta annotation.
-   */
+  /** A message indicating there is a usage of a field annotated with Beta annotation. */
   private static final String BETA_FIELD_USAGE = "BETA_FIELD_USAGE";
 
-  /**
-   * A message indicating there is a usage of a class annotated with Beta annotation.
-   */
+  /** A message indicating there is a usage of a class annotated with Beta annotation. */
   private static final String BETA_CLASS_USAGE = "BETA_CLASS_USAGE";
 
   /** The bug reporter is used to report errors. */
@@ -96,7 +89,7 @@ public class BetaDetector extends OpcodeStackDetector {
         break;
 
       default:
-    // DO NOTHING
+        // DO NOTHING
     }
   }
 
@@ -115,9 +108,7 @@ public class BetaDetector extends OpcodeStackDetector {
    * class, it's not {@link Beta} and it doesn't appear in other {@link Beta} section. Otherwise
    * returns {@code null}.
    *
-   * <p>
-   * Reports a bug in case the class is {@link Beta}.
-   * </p>
+   * <p>Reports a bug in case the class is {@link Beta}.
    */
   private JavaClass checkClass() {
     // TODO(peleyal): check if caching the beta state of every class could improve
@@ -167,9 +158,7 @@ public class BetaDetector extends OpcodeStackDetector {
   /**
    * Reports bug in case the method defined by the given name and signature is {@link Beta}.
    *
-   * <p>
-   * The method is searched in current class and all super classses as well.
-   * </p>
+   * <p>The method is searched in current class and all super classses as well.
    */
   private void checkMethod(String methodName, String signature) {
     JavaClass javaClass = checkClass();
@@ -197,9 +186,7 @@ public class BetaDetector extends OpcodeStackDetector {
   /**
    * Reports bug in case the field defined by the given name is {@link Beta}.
    *
-   * <p>
-   * The field is searched in current class and all super classses as well.
-   * </p>
+   * <p>The field is searched in current class and all super classses as well.
    */
   private void checkField(String fieldName) {
     JavaClass javaClass = checkClass();

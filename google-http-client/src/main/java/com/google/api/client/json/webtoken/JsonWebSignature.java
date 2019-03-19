@@ -21,7 +21,6 @@ import com.google.api.client.util.Key;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.StringUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -34,7 +33,6 @@ import java.security.Signature;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
@@ -43,20 +41,16 @@ import javax.net.ssl.X509TrustManager;
  * <a href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-11">JSON Web Signature
  * (JWS)</a>.
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>
-  public static void printPayload(JsonFactory jsonFactory, String tokenString) throws IOException {
-    JsonWebSignature jws = JsonWebSignature.parse(jsonFactory, tokenString);
-    System.out.println(jws.getPayload());
-  }
+ * public static void printPayload(JsonFactory jsonFactory, String tokenString) throws IOException {
+ * JsonWebSignature jws = JsonWebSignature.parse(jsonFactory, tokenString);
+ * System.out.println(jws.getPayload());
+ * }
  * </pre>
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.14 (since 1.7 as com.google.api.client.auth.jsontoken.JsonWebSignature)
  * @author Yaniv Inbar
@@ -169,10 +163,8 @@ public class JsonWebSignature extends JsonWebToken {
      * Sets the algorithm header parameter that identifies the cryptographic algorithm used to
      * secure the JWS or {@code null} for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Header setAlgorithm(String algorithm) {
       this.algorithm = algorithm;
@@ -193,10 +185,8 @@ public class JsonWebSignature extends JsonWebToken {
      * for a set of JSON-encoded public keys, one of which corresponds to the key that was used to
      * digitally sign the JWS or {@code null} for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Header setJwkUrl(String jwkUrl) {
       this.jwkUrl = jwkUrl;
@@ -215,10 +205,8 @@ public class JsonWebSignature extends JsonWebToken {
      * Sets the JSON Web Key header parameter that is a public key that corresponds to the key used
      * to digitally sign the JWS or {@code null} for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Header setJwk(String jwk) {
       this.jwk = jwk;
@@ -237,10 +225,8 @@ public class JsonWebSignature extends JsonWebToken {
      * Sets the key ID header parameter that is a hint indicating which specific key owned by the
      * signer should be used to validate the digital signature or {@code null} for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Header setKeyId(String keyId) {
       this.keyId = keyId;
@@ -261,10 +247,8 @@ public class JsonWebSignature extends JsonWebToken {
      * X.509 public key certificate or certificate chain corresponding to the key used to digitally
      * sign the JWS or {@code null} for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Header setX509Url(String x509Url) {
       this.x509Url = x509Url;
@@ -285,10 +269,8 @@ public class JsonWebSignature extends JsonWebToken {
      * SHA-1 thumbprint (a.k.a. digest) of the DER encoding of an X.509 certificate that can be used
      * to match the certificate or {@code null} for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Header setX509Thumbprint(String x509Thumbprint) {
       this.x509Thumbprint = x509Thumbprint;
@@ -325,13 +307,11 @@ public class JsonWebSignature extends JsonWebToken {
      * Sets the X.509 certificate chain header parameter contains the X.509 public key certificate
      * corresponding to the key used to digitally sign the JWS or {@code null} for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      *
-     * <p>@deprecated Since release 1.19.1, replaced by
-     * {@link #setX509Certificates(List x509Certificates)}.
+     * <p>@deprecated Since release 1.19.1, replaced by {@link #setX509Certificates(List
+     * x509Certificates)}.
      */
     @Deprecated
     public Header setX509Certificate(String x509Certificate) {
@@ -346,10 +326,8 @@ public class JsonWebSignature extends JsonWebToken {
      * or certificate chain corresponding to the key used to digitally sign the JWS or {@code null}
      * for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      *
      * @since 1.19.1.
      */
@@ -372,10 +350,8 @@ public class JsonWebSignature extends JsonWebToken {
      * Sets the array listing the header parameter names that define extensions that are used in the
      * JWS header that MUST be understood and processed or {@code null} for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      *
      * @since 1.16
      */
@@ -403,10 +379,8 @@ public class JsonWebSignature extends JsonWebToken {
   /**
    * Verifies the signature of the content.
    *
-   * <p>
-   * Currently only {@code "RS256"} algorithm is verified, but others may be added in the future.
+   * <p>Currently only {@code "RS256"} algorithm is verified, but others may be added in the future.
    * For any other algorithm it returns {@code false}.
-   * </p>
    *
    * @param publicKey public key
    * @return whether the algorithm is recognized and it is verified
@@ -424,20 +398,16 @@ public class JsonWebSignature extends JsonWebToken {
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Verifies the signature of the content using the certificate chain embedded in the signature.
    *
-   * <p>
-   * Currently only {@code "RS256"} algorithm is verified, but others may be added in the future.
+   * <p>Currently only {@code "RS256"} algorithm is verified, but others may be added in the future.
    * For any other algorithm it returns {@code null}.
-   * </p>
    *
-   * <p>
-   * The leaf certificate of the certificate chain must be an SSL server certificate.
-   * </p>
+   * <p>The leaf certificate of the certificate chain must be an SSL server certificate.
    *
    * @param trustManager Trust manager used to verify the X509 certificate chain embedded in this
-   *        message.
+   *     message.
    * @return The signature certificate if the signature could be verified, null otherwise.
    * @throws GeneralSecurityException
    * @since 1.19.1.
@@ -456,26 +426,20 @@ public class JsonWebSignature extends JsonWebToken {
     } else {
       return null;
     }
-    return SecurityUtils.verify(signatureAlg, trustManager, x509Certificates, signatureBytes,
-        signedContentBytes);
+    return SecurityUtils.verify(
+        signatureAlg, trustManager, x509Certificates, signatureBytes, signedContentBytes);
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Verifies the signature of the content using the certificate chain embedded in the signature.
    *
-   * <p>
-   * Currently only {@code "RS256"} algorithm is verified, but others may be added in the future.
+   * <p>Currently only {@code "RS256"} algorithm is verified, but others may be added in the future.
    * For any other algorithm it returns {@code null}.
-   * </p>
    *
-   * <p>
-   * The certificate chain is verified using the system default trust manager.
-   * </p>
+   * <p>The certificate chain is verified using the system default trust manager.
    *
-   * <p>
-   * The leaf certificate of the certificate chain must be an SSL server certificate.
-   * </p>
+   * <p>The leaf certificate of the certificate chain must be an SSL server certificate.
    *
    * @return The signature certificate if the signature could be verified, null otherwise.
    * @throws GeneralSecurityException
@@ -538,9 +502,7 @@ public class JsonWebSignature extends JsonWebToken {
   /**
    * JWS parser.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    */
   public static final class Parser {
 
@@ -553,9 +515,7 @@ public class JsonWebSignature extends JsonWebToken {
     /** Payload class to use for parsing. */
     private Class<? extends Payload> payloadClass = Payload.class;
 
-    /**
-     * @param jsonFactory JSON factory
-     */
+    /** @param jsonFactory JSON factory */
     public Parser(JsonFactory jsonFactory) {
       this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
     }
@@ -628,14 +588,20 @@ public class JsonWebSignature extends JsonWebToken {
    * @return signed JWS string
    * @since 1.14 (since 1.7 as com.google.api.client.auth.jsontoken.RsaSHA256Signer)
    */
-  public static String signUsingRsaSha256(PrivateKey privateKey, JsonFactory jsonFactory,
-      JsonWebSignature.Header header, JsonWebToken.Payload payload)
+  public static String signUsingRsaSha256(
+      PrivateKey privateKey,
+      JsonFactory jsonFactory,
+      JsonWebSignature.Header header,
+      JsonWebToken.Payload payload)
       throws GeneralSecurityException, IOException {
-    String content = Base64.encodeBase64URLSafeString(jsonFactory.toByteArray(header)) + "."
-        + Base64.encodeBase64URLSafeString(jsonFactory.toByteArray(payload));
+    String content =
+        Base64.encodeBase64URLSafeString(jsonFactory.toByteArray(header))
+            + "."
+            + Base64.encodeBase64URLSafeString(jsonFactory.toByteArray(payload));
     byte[] contentBytes = StringUtils.getBytesUtf8(content);
-    byte[] signature = SecurityUtils.sign(
-        SecurityUtils.getSha256WithRsaSignatureAlgorithm(), privateKey, contentBytes);
+    byte[] signature =
+        SecurityUtils.sign(
+            SecurityUtils.getSha256WithRsaSignatureAlgorithm(), privateKey, contentBytes);
     return content + "." + Base64.encodeBase64URLSafeString(signature);
   }
 }

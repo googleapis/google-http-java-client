@@ -20,10 +20,8 @@ import java.nio.charset.Charset;
  * Contains constant definitions for some standard {@link Charset} instances that are guaranteed to
  * be supported by all Java platform implementations.
  *
- * <p>
- * NOTE: this is a copy of a subset of Guava's {@link com.google.common.base.Charsets}. The
+ * <p>NOTE: this is a copy of a subset of Guava's {@link com.google.common.base.Charsets}. The
  * implementation must match as closely as possible to Guava's implementation.
- * </p>
  *
  * @since 1.14
  * @author Yaniv Inbar
@@ -36,6 +34,5 @@ public final class Charsets {
   /** ISO-8859-1 charset. */
   public static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
 
-  private Charsets() {
-  }
+  private Charsets() {}
 }

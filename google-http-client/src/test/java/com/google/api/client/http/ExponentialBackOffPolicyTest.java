@@ -15,7 +15,6 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.NanoClock;
-
 import junit.framework.TestCase;
 
 /**
@@ -32,31 +31,39 @@ public class ExponentialBackOffPolicyTest extends TestCase {
 
   public void testConstructor() {
     ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
-    assertEquals(ExponentialBackOffPolicy.DEFAULT_INITIAL_INTERVAL_MILLIS,
+    assertEquals(
+        ExponentialBackOffPolicy.DEFAULT_INITIAL_INTERVAL_MILLIS,
         backOffPolicy.getInitialIntervalMillis());
-    assertEquals(ExponentialBackOffPolicy.DEFAULT_INITIAL_INTERVAL_MILLIS,
+    assertEquals(
+        ExponentialBackOffPolicy.DEFAULT_INITIAL_INTERVAL_MILLIS,
         backOffPolicy.getCurrentIntervalMillis());
-    assertEquals(ExponentialBackOffPolicy.DEFAULT_RANDOMIZATION_FACTOR,
+    assertEquals(
+        ExponentialBackOffPolicy.DEFAULT_RANDOMIZATION_FACTOR,
         backOffPolicy.getRandomizationFactor());
     assertEquals(ExponentialBackOffPolicy.DEFAULT_MULTIPLIER, backOffPolicy.getMultiplier());
     assertEquals(
         ExponentialBackOffPolicy.DEFAULT_MAX_INTERVAL_MILLIS, backOffPolicy.getMaxIntervalMillis());
-    assertEquals(ExponentialBackOffPolicy.DEFAULT_MAX_ELAPSED_TIME_MILLIS,
+    assertEquals(
+        ExponentialBackOffPolicy.DEFAULT_MAX_ELAPSED_TIME_MILLIS,
         backOffPolicy.getMaxElapsedTimeMillis());
   }
 
   public void testBuilder() {
     ExponentialBackOffPolicy backOffPolicy = ExponentialBackOffPolicy.builder().build();
-    assertEquals(ExponentialBackOffPolicy.DEFAULT_INITIAL_INTERVAL_MILLIS,
+    assertEquals(
+        ExponentialBackOffPolicy.DEFAULT_INITIAL_INTERVAL_MILLIS,
         backOffPolicy.getInitialIntervalMillis());
-    assertEquals(ExponentialBackOffPolicy.DEFAULT_INITIAL_INTERVAL_MILLIS,
+    assertEquals(
+        ExponentialBackOffPolicy.DEFAULT_INITIAL_INTERVAL_MILLIS,
         backOffPolicy.getCurrentIntervalMillis());
-    assertEquals(ExponentialBackOffPolicy.DEFAULT_RANDOMIZATION_FACTOR,
+    assertEquals(
+        ExponentialBackOffPolicy.DEFAULT_RANDOMIZATION_FACTOR,
         backOffPolicy.getRandomizationFactor());
     assertEquals(ExponentialBackOffPolicy.DEFAULT_MULTIPLIER, backOffPolicy.getMultiplier());
     assertEquals(
         ExponentialBackOffPolicy.DEFAULT_MAX_INTERVAL_MILLIS, backOffPolicy.getMaxIntervalMillis());
-    assertEquals(ExponentialBackOffPolicy.DEFAULT_MAX_ELAPSED_TIME_MILLIS,
+    assertEquals(
+        ExponentialBackOffPolicy.DEFAULT_MAX_ELAPSED_TIME_MILLIS,
         backOffPolicy.getMaxElapsedTimeMillis());
 
     int testInitialInterval = 1;
@@ -65,13 +72,14 @@ public class ExponentialBackOffPolicyTest extends TestCase {
     int testMaxInterval = 10;
     int testMaxElapsedTime = 900000;
 
-    backOffPolicy = ExponentialBackOffPolicy.builder()
-        .setInitialIntervalMillis(testInitialInterval)
-        .setRandomizationFactor(testRandomizationFactor)
-        .setMultiplier(testMultiplier)
-        .setMaxIntervalMillis(testMaxInterval)
-        .setMaxElapsedTimeMillis(testMaxElapsedTime)
-        .build();
+    backOffPolicy =
+        ExponentialBackOffPolicy.builder()
+            .setInitialIntervalMillis(testInitialInterval)
+            .setRandomizationFactor(testRandomizationFactor)
+            .setMultiplier(testMultiplier)
+            .setMaxIntervalMillis(testMaxInterval)
+            .setMaxElapsedTimeMillis(testMaxElapsedTime)
+            .build();
     assertEquals(testInitialInterval, backOffPolicy.getInitialIntervalMillis());
     assertEquals(testInitialInterval, backOffPolicy.getCurrentIntervalMillis());
     assertEquals(testRandomizationFactor, backOffPolicy.getRandomizationFactor());
@@ -87,13 +95,14 @@ public class ExponentialBackOffPolicyTest extends TestCase {
     int testMaxInterval = 5000;
     int testMaxElapsedTime = 900000;
 
-    ExponentialBackOffPolicy backOffPolicy = ExponentialBackOffPolicy.builder()
-        .setInitialIntervalMillis(testInitialInterval)
-        .setRandomizationFactor(testRandomizationFactor)
-        .setMultiplier(testMultiplier)
-        .setMaxIntervalMillis(testMaxInterval)
-        .setMaxElapsedTimeMillis(testMaxElapsedTime)
-        .build();
+    ExponentialBackOffPolicy backOffPolicy =
+        ExponentialBackOffPolicy.builder()
+            .setInitialIntervalMillis(testInitialInterval)
+            .setRandomizationFactor(testRandomizationFactor)
+            .setMultiplier(testMultiplier)
+            .setMaxIntervalMillis(testMaxInterval)
+            .setMaxElapsedTimeMillis(testMaxElapsedTime)
+            .build();
     int[] expectedResults = {500, 1000, 2000, 4000, 5000, 5000, 5000, 5000, 5000, 5000};
     for (int expected : expectedResults) {
       assertEquals(expected, backOffPolicy.getCurrentIntervalMillis());
@@ -110,8 +119,7 @@ public class ExponentialBackOffPolicyTest extends TestCase {
     private int i = 0;
     private long startSeconds;
 
-    MyNanoClock() {
-    }
+    MyNanoClock() {}
 
     MyNanoClock(long startSeconds) {
       this.startSeconds = startSeconds;
@@ -133,11 +141,12 @@ public class ExponentialBackOffPolicyTest extends TestCase {
     int testInitialInterval = Integer.MAX_VALUE / 2;
     double testMultiplier = 2.1;
     int testMaxInterval = Integer.MAX_VALUE;
-    ExponentialBackOffPolicy backOffPolicy = ExponentialBackOffPolicy.builder()
-        .setInitialIntervalMillis(testInitialInterval)
-        .setMultiplier(testMultiplier)
-        .setMaxIntervalMillis(testMaxInterval)
-        .build();
+    ExponentialBackOffPolicy backOffPolicy =
+        ExponentialBackOffPolicy.builder()
+            .setInitialIntervalMillis(testInitialInterval)
+            .setMultiplier(testMultiplier)
+            .setMaxIntervalMillis(testMaxInterval)
+            .build();
     backOffPolicy.getNextBackOffMillis();
     // Assert that when an overflow is possible the current interval is set to the max interval.
     assertEquals(testMaxInterval, backOffPolicy.getCurrentIntervalMillis());

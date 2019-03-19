@@ -14,7 +14,6 @@
 
 package com.google.api.client.test.util.store;
 
-import com.google.api.client.test.util.store.AbstractDataStoreFactoryTest;
 import com.google.api.client.util.store.DataStoreFactory;
 import com.google.api.client.util.store.MemoryDataStoreFactory;
 

@@ -14,7 +14,6 @@
 
 package com.google.api.client.http;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import junit.framework.TestCase;

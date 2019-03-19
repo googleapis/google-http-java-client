@@ -22,11 +22,10 @@ import com.google.api.client.util.Lists;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.escape.PercentEscaper;
 import com.google.api.client.xml.Xml;
-
 import java.util.Arrays;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Atom Utilities.
  *
  * @since 1.0
@@ -41,9 +40,7 @@ public final class Atom {
   /**
    * {@code "application/atom+xml; charset=utf-8"} media type used as a default for Atom parsing.
    *
-   * <p>
-   * Use {@link HttpMediaType#equalsIgnoreParameters} for comparing media types.
-   * </p>
+   * <p>Use {@link HttpMediaType#equalsIgnoreParameters} for comparing media types.
    *
    * @since 1.10
    */
@@ -64,8 +61,7 @@ public final class Atom {
     }
   }
 
-  private Atom() {
-  }
+  private Atom() {}
 
   /**
    * Checks the given content type matches the Atom content type specified in {@link #MEDIA_TYPE}.
@@ -74,8 +70,10 @@ public final class Atom {
    */
   public static void checkContentType(String contentType) {
     Preconditions.checkArgument(contentType != null); // for backwards compatibility
-    Preconditions.checkArgument(HttpMediaType.equalsIgnoreParameters(MEDIA_TYPE, contentType),
-        "Wrong content type: expected <" + MEDIA_TYPE + "> but got <%s>", contentType);
+    Preconditions.checkArgument(
+        HttpMediaType.equalsIgnoreParameters(MEDIA_TYPE, contentType),
+        "Wrong content type: expected <" + MEDIA_TYPE + "> but got <%s>",
+        contentType);
   }
 
   /**

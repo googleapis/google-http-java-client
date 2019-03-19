@@ -48,8 +48,9 @@ public class IOUtilsTest extends TestCase {
     File file2 = new File(file.getCanonicalPath() + "2");
     file2.deleteOnExit();
     try {
-      Process process = Runtime.getRuntime()
-          .exec(new String[] {"ln", "-s", file.getCanonicalPath(), file2.getCanonicalPath()});
+      Process process =
+          Runtime.getRuntime()
+              .exec(new String[] {"ln", "-s", file.getCanonicalPath(), file2.getCanonicalPath()});
       process.waitFor();
       process.destroy();
     } catch (IOException e) {

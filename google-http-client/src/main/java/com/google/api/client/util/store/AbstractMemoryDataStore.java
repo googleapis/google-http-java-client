@@ -18,7 +18,6 @@ import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Lists;
 import com.google.api.client.util.Maps;
 import com.google.api.client.util.Preconditions;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -34,7 +33,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * Abstract, thread-safe, in-memory implementation of a data store factory.
  *
  * @param <V> serializable type of the mapped value
- *
  * @author Yaniv Inbar
  */
 public class AbstractMemoryDataStore<V extends Serializable> extends AbstractDataStore<V> {
@@ -182,8 +180,7 @@ public class AbstractMemoryDataStore<V extends Serializable> extends AbstractDat
    * {@link #clear()}.
    */
   @SuppressWarnings("unused")
-  public void save() throws IOException {
-  }
+  public void save() throws IOException {}
 
   @Override
   public String toString() {

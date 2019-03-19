@@ -23,9 +23,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpRequestBase;
 
-/**
- * @author Yaniv Inbar
- */
+/** @author Yaniv Inbar */
 final class ApacheHttpRequest extends LowLevelHttpRequest {
   private final HttpClient httpClient;
 
@@ -46,14 +44,14 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
 
   @Override
   public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
-    requestConfig.setConnectionRequestTimeout(connectTimeout)
-        .setSocketTimeout(readTimeout);
+    requestConfig.setConnectionRequestTimeout(connectTimeout).setSocketTimeout(readTimeout);
   }
 
   @Override
   public LowLevelHttpResponse execute() throws IOException {
     if (getStreamingContent() != null) {
-      Preconditions.checkArgument(request instanceof HttpEntityEnclosingRequest,
+      Preconditions.checkArgument(
+          request instanceof HttpEntityEnclosingRequest,
           "Apache HTTP client does not support %s requests with content.",
           request.getRequestLine().getMethod());
       ContentEntity entity = new ContentEntity(getContentLength(), getStreamingContent());

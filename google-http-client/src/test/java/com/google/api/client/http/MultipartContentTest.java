@@ -28,19 +28,56 @@ public class MultipartContentTest extends TestCase {
 
   private static final String CRLF = "\r\n";
   private static final String CONTENT_TYPE = Json.MEDIA_TYPE;
-  private static final String HEADERS = "Content-Length: 3" + CRLF
-      + "Content-Type: application/json; charset=UTF-8" + CRLF + "content-transfer-encoding: binary"
-      + CRLF;
+  private static final String HEADERS =
+      "Content-Length: 3"
+          + CRLF
+          + "Content-Type: application/json; charset=UTF-8"
+          + CRLF
+          + "content-transfer-encoding: binary"
+          + CRLF;
 
   public void testContent() throws Exception {
     subtestContent("--__END_OF_PART__--" + CRLF, null);
     subtestContent(
         "--__END_OF_PART__" + CRLF + HEADERS + CRLF + "foo" + CRLF + "--__END_OF_PART__--" + CRLF,
-        null, "foo");
-    subtestContent("--__END_OF_PART__" + CRLF + HEADERS + CRLF + "foo" + CRLF + "--__END_OF_PART__"
-        + CRLF + HEADERS + CRLF + "bar" + CRLF + "--__END_OF_PART__--" + CRLF, null, "foo", "bar");
-    subtestContent("--myboundary" + CRLF + HEADERS + CRLF + "foo" + CRLF + "--myboundary" + CRLF
-        + HEADERS + CRLF + "bar" + CRLF + "--myboundary--" + CRLF, "myboundary", "foo", "bar");
+        null,
+        "foo");
+    subtestContent(
+        "--__END_OF_PART__"
+            + CRLF
+            + HEADERS
+            + CRLF
+            + "foo"
+            + CRLF
+            + "--__END_OF_PART__"
+            + CRLF
+            + HEADERS
+            + CRLF
+            + "bar"
+            + CRLF
+            + "--__END_OF_PART__--"
+            + CRLF,
+        null,
+        "foo",
+        "bar");
+    subtestContent(
+        "--myboundary"
+            + CRLF
+            + HEADERS
+            + CRLF
+            + "foo"
+            + CRLF
+            + "--myboundary"
+            + CRLF
+            + HEADERS
+            + CRLF
+            + "bar"
+            + CRLF
+            + "--myboundary--"
+            + CRLF,
+        "myboundary",
+        "foo",
+        "bar");
   }
 
   private void subtestContent(String expectedContent, String boundaryString, String... contents)
@@ -59,7 +96,10 @@ public class MultipartContentTest extends TestCase {
     content.writeTo(out);
     assertEquals(expectedContent, out.toString());
     assertEquals(StringUtils.getBytesUtf8(expectedContent).length, content.getLength());
-    assertEquals(boundaryString == null ? "multipart/related; boundary=__END_OF_PART__" :
-        "multipart/related; boundary=" + boundaryString, content.getType());
+    assertEquals(
+        boundaryString == null
+            ? "multipart/related; boundary=__END_OF_PART__"
+            : "multipart/related; boundary=" + boundaryString,
+        content.getType());
   }
 }

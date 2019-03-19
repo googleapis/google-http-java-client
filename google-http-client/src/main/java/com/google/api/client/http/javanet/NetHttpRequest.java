@@ -17,7 +17,6 @@ package com.google.api.client.http.javanet;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.Preconditions;
-
 import com.google.api.client.util.StreamingContent;
 import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
@@ -32,17 +31,13 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-/**
- * @author Yaniv Inbar
- */
+/** @author Yaniv Inbar */
 final class NetHttpRequest extends LowLevelHttpRequest {
 
   private final HttpURLConnection connection;
   private int writeTimeout;
 
-  /**
-   * @param connection HTTP URL connection
-   */
+  /** @param connection HTTP URL connection */
   NetHttpRequest(HttpURLConnection connection) {
     this.connection = connection;
     this.writeTimeout = 0;
@@ -172,13 +167,14 @@ final class NetHttpRequest extends LowLevelHttpRequest {
     } else {
       // do it with timeout
       final StreamingContent content = getStreamingContent();
-      final Callable<Boolean> writeContent = new Callable<Boolean>() {
-        @Override
-        public Boolean call() throws IOException {
-          outputWriter.write(out, content);
-          return Boolean.TRUE;
-        }
-      };
+      final Callable<Boolean> writeContent =
+          new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws IOException {
+              outputWriter.write(out, content);
+              return Boolean.TRUE;
+            }
+          };
 
       final ExecutorService executor = Executors.newSingleThreadExecutor();
       final Future<Boolean> future = executor.submit(new FutureTask<Boolean>(writeContent), null);

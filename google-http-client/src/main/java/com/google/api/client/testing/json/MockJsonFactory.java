@@ -18,7 +18,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,12 +26,10 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Mock for {@link JsonFactory}.
  *
- * <p>
- * Implementation is thread-safe.
- * </p>
+ * <p>Implementation is thread-safe.
  *
  * @author rmistry@google.com (Ravi Mistry)
  * @since 1.15 (since 1.11 as com.google.api.client.testing.http.json.MockJsonFactory)

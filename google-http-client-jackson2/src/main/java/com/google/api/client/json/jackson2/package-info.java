@@ -19,6 +19,4 @@
  * @since 1.11
  * @author Yaniv Inbar
  */
-
 package com.google.api.client.json.jackson2;
-

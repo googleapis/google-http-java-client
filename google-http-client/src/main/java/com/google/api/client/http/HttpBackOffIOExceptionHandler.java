@@ -19,35 +19,26 @@ import com.google.api.client.util.BackOffUtils;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Sleeper;
-
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * {@link HttpIOExceptionHandler} implementation with {@link BackOff}.
  *
- * <p>
- * It is designed to work with only one {@link HttpRequest} at a time. As a result you MUST create a
- * new instance of {@link HttpBackOffIOExceptionHandler} with a new instance of {@link BackOff} for
- * each instance of {@link HttpRequest}.
- * </p>
+ * <p>It is designed to work with only one {@link HttpRequest} at a time. As a result you MUST
+ * create a new instance of {@link HttpBackOffIOExceptionHandler} with a new instance of {@link
+ * BackOff} for each instance of {@link HttpRequest}.
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>
-  request.setIOExceptionHandler(new HttpBackOffIOExceptionHandler(new ExponentialBackOff());
+ * request.setIOExceptionHandler(new HttpBackOffIOExceptionHandler(new ExponentialBackOff());
  * </pre>
  *
- * <p>
- * Note: Implementation doesn't call {@link BackOff#reset} at all, since it expects a new
- * {@link BackOff} instance.
- * </p>
+ * <p>Note: Implementation doesn't call {@link BackOff#reset} at all, since it expects a new {@link
+ * BackOff} instance.
  *
- * <p>
- * Implementation is not thread-safe
- * </p>
+ * <p>Implementation is not thread-safe
  *
  * @author Eyal Peled
  * @since 1.15
@@ -83,14 +74,10 @@ public class HttpBackOffIOExceptionHandler implements HttpIOExceptionHandler {
   /**
    * Sets the sleeper.
    *
-   * <p>
-   * The default value is {@link Sleeper#DEFAULT}.
-   * </p>
+   * <p>The default value is {@link Sleeper#DEFAULT}.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public HttpBackOffIOExceptionHandler setSleeper(Sleeper sleeper) {
     this.sleeper = Preconditions.checkNotNull(sleeper);
@@ -100,10 +87,8 @@ public class HttpBackOffIOExceptionHandler implements HttpIOExceptionHandler {
   /**
    * {@inheritDoc}
    *
-   * <p>
-   * Handles the request with {@link BackOff}. That means that if back-off is required a call to
+   * <p>Handles the request with {@link BackOff}. That means that if back-off is required a call to
    * {@link Sleeper#sleep(long)} will be made.
-   * </p>
    */
   public boolean handleIOException(HttpRequest request, boolean supportsRetry) throws IOException {
     if (!supportsRetry) {

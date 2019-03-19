@@ -22,10 +22,8 @@ import java.util.List;
 /**
  * Static utility methods pertaining to {@link List} instances.
  *
- * <p>
- * NOTE: this is a copy of a subset of Guava's {@link com.google.common.collect.Lists}. The
+ * <p>NOTE: this is a copy of a subset of Guava's {@link com.google.common.collect.Lists}. The
  * implementation must match as closely as possible to Guava's implementation.
- * </p>
  *
  * @since 1.14
  * @author Yaniv Inbar
@@ -42,9 +40,9 @@ public final class Lists {
    * equivalent to {@link ArrayList#ArrayList(int)}.
    *
    * @param initialArraySize the exact size of the initial backing array for the returned array list
-   *        ({@code ArrayList} documentation calls this value the "capacity")
+   *     ({@code ArrayList} documentation calls this value the "capacity")
    * @return a new, empty {@code ArrayList} which is guaranteed not to resize itself unless its size
-   *         reaches {@code initialArraySize + 1}
+   *     reaches {@code initialArraySize + 1}
    * @throws IllegalArgumentException if {@code initialArraySize} is negative
    */
   public static <E> ArrayList<E> newArrayListWithCapacity(int initialArraySize) {
@@ -59,7 +57,8 @@ public final class Lists {
    */
   public static <E> ArrayList<E> newArrayList(Iterable<? extends E> elements) {
     return (elements instanceof Collection)
-        ? new ArrayList<E>(Collections2.cast(elements)) : newArrayList(elements.iterator());
+        ? new ArrayList<E>(Collections2.cast(elements))
+        : newArrayList(elements.iterator());
   }
 
   /**
@@ -76,6 +75,5 @@ public final class Lists {
     return list;
   }
 
-  private Lists() {
-  }
+  private Lists() {}
 }

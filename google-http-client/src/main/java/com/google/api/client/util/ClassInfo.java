@@ -29,9 +29,7 @@ import java.util.WeakHashMap;
 /**
  * Computes class information to determine data key name/value pairs associated with the class.
  *
- * <p>
- * Implementation is thread-safe.
- * </p>
+ * <p>Implementation is thread-safe.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -150,8 +148,8 @@ public final class ClassInfo {
   }
 
   /**
-   * Returns an unmodifiable sorted set (with any possible {@code null} member first) of
-   * {@link FieldInfo#getName() names}.
+   * Returns an unmodifiable sorted set (with any possible {@code null} member first) of {@link
+   * FieldInfo#getName() names}.
    */
   public Collection<String> getNames() {
     return names;
@@ -163,11 +161,15 @@ public final class ClassInfo {
     Preconditions.checkArgument(
         !ignoreCase || !srcClass.isEnum(), "cannot ignore case on an enum: " + srcClass);
     // name set has a special comparator to keep null first
-    TreeSet<String> nameSet = new TreeSet<String>(new Comparator<String>() {
-      public int compare(String s0, String s1) {
-        return Objects.equal(s0, s1) ? 0 : s0 == null ? -1 : s1 == null ? 1 : s0.compareTo(s1);
-      }
-    });
+    TreeSet<String> nameSet =
+        new TreeSet<String>(
+            new Comparator<String>() {
+              public int compare(String s0, String s1) {
+                return Objects.equal(s0, s1)
+                    ? 0
+                    : s0 == null ? -1 : s1 == null ? 1 : s0.compareTo(s1);
+              }
+            });
     // iterate over declared fields
     for (Field field : srcClass.getDeclaredFields()) {
       FieldInfo fieldInfo = FieldInfo.of(field);
@@ -179,7 +181,8 @@ public final class ClassInfo {
         fieldName = fieldName.toLowerCase(Locale.US).intern();
       }
       FieldInfo conflictingFieldInfo = nameToFieldInfoMap.get(fieldName);
-      Preconditions.checkArgument(conflictingFieldInfo == null,
+      Preconditions.checkArgument(
+          conflictingFieldInfo == null,
           "two fields have the same %sname <%s>: %s and %s",
           ignoreCase ? "case-insensitive " : "",
           fieldName,
@@ -200,17 +203,18 @@ public final class ClassInfo {
         }
       }
     }
-    names = nameSet.isEmpty() ? Collections.<String>emptyList() : Collections.unmodifiableList(
-        new ArrayList<String>(nameSet));
+    names =
+        nameSet.isEmpty()
+            ? Collections.<String>emptyList()
+            : Collections.unmodifiableList(new ArrayList<String>(nameSet));
   }
 
   /**
    * Returns an unmodifiable collection of the {@code FieldInfo}s for this class, without any
    * guarantee of order.
    *
-   * <p>
-   * If you need sorted order, instead use {@link #getNames()} with {@link #getFieldInfo(String)}.
-   * </p>
+   * <p>If you need sorted order, instead use {@link #getNames()} with {@link
+   * #getFieldInfo(String)}.
    *
    * @since 1.16
    */

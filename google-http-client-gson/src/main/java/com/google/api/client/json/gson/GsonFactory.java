@@ -21,7 +21,6 @@ import com.google.api.client.util.Beta;
 import com.google.api.client.util.Charsets;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -34,10 +33,8 @@ import java.nio.charset.Charset;
 /**
  * Low-level JSON library implementation based on GSON.
  *
- * <p>
- * Implementation is thread-safe, and sub-classes must be thread-safe. For maximum efficiency,
+ * <p>Implementation is thread-safe, and sub-classes must be thread-safe. For maximum efficiency,
  * applications should use a single globally-shared instance of the JSON factory.
- * </p>
  *
  * @since 1.3
  * @author Yaniv Inbar
@@ -45,7 +42,7 @@ import java.nio.charset.Charset;
 public class GsonFactory extends JsonFactory {
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Returns a global thread-safe instance.
    *
    * @since 1.16
