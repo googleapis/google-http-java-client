@@ -25,10 +25,8 @@ public class Json {
   /**
    * {@code "application/json; charset=utf-8"} media type used as a default for JSON parsing.
    *
-   * <p>
-   * Use {@link com.google.api.client.http.HttpMediaType#equalsIgnoreParameters} for comparing
+   * <p>Use {@link com.google.api.client.http.HttpMediaType#equalsIgnoreParameters} for comparing
    * media types.
-   * </p>
    *
    * @since 1.10
    */

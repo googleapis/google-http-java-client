@@ -26,16 +26,10 @@ public class HttpStatusCodes {
   /** Status code for a successful request. */
   public static final int STATUS_CODE_OK = 200;
 
-  /**
-   * Status code for a successful request that has been fulfilled
-   * to create a new resource.
-   */
+  /** Status code for a successful request that has been fulfilled to create a new resource. */
   public static final int STATUS_CODE_CREATED = 201;
 
-  /**
-   * Status code for a successful request that has been received
-   * but not yet acted upon.
-   */
+  /** Status code for a successful request that has been received but not yet acted upon. */
   public static final int STATUS_CODE_ACCEPTED = 202;
 
   /**
@@ -75,15 +69,15 @@ public class HttpStatusCodes {
   /** Status code for a server that has not found anything matching the Request-URI. */
   public static final int STATUS_CODE_NOT_FOUND = 404;
 
-  /** 
-   * Status code for a method specified in the Request-Line is not allowed for the resource 
-   * identified by the Request-URI. 
-   * */
+  /**
+   * Status code for a method specified in the Request-Line is not allowed for the resource
+   * identified by the Request-URI.
+   */
   public static final int STATUS_CODE_METHOD_NOT_ALLOWED = 405;
-  
+
   /** Status code for a request that could not be completed due to a resource conflict. */
   public static final int STATUS_CODE_CONFLICT = 409;
-  
+
   /** Status code for a request for which one of the conditions it was made under has failed. */
   public static final int STATUS_CODE_PRECONDITION_FAILED = 412;
 
@@ -114,8 +108,8 @@ public class HttpStatusCodes {
   }
 
   /**
-   * Returns whether the given HTTP response status code is a redirect code
-   * {@code 301, 302, 303, 307}.
+   * Returns whether the given HTTP response status code is a redirect code {@code 301, 302, 303,
+   * 307}.
    *
    * @since 1.11
    */

@@ -16,32 +16,29 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.BackOff;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Handles an {@link IOException} in an HTTP request.
  *
- * <p>
- * For example, this might be used to handle an {@link IOException} with {@link BackOff} policy.
- * </p>
+ * <p>For example, this might be used to handle an {@link IOException} with {@link BackOff} policy.
  *
  * <pre>
-  public static class HttpBackOffIOExceptionHandler implements HttpIOExceptionHandler {
-    BackOff backOff;
-    Sleeper sleeper;
-    public boolean handle(HttpRequest request, boolean supportsRetry) throws IOException {
-      if (!supportsRetry) {
-        return false;
-      }
-      try {
-        return BackOffUtils.next(sleeper, backOff);
-      } catch (InterruptedException exception) {
-        return false;
-      }
-    }
-  }
+ * public static class HttpBackOffIOExceptionHandler implements HttpIOExceptionHandler {
+ * BackOff backOff;
+ * Sleeper sleeper;
+ * public boolean handle(HttpRequest request, boolean supportsRetry) throws IOException {
+ * if (!supportsRetry) {
+ * return false;
+ * }
+ * try {
+ * return BackOffUtils.next(sleeper, backOff);
+ * } catch (InterruptedException exception) {
+ * return false;
+ * }
+ * }
+ * }
  * </pre>
  *
  * @author Eyal Peled
@@ -53,18 +50,16 @@ public interface HttpIOExceptionHandler {
   /**
    * Invoked when an {@link IOException} is thrown during an HTTP request.
    *
-   * <p>
-   * There is a simple rule that one must follow: If you modify the request object or modify its
+   * <p>There is a simple rule that one must follow: If you modify the request object or modify its
    * execute interceptors in a way that should resolve the error, you must return {@code true} to
    * issue a retry.
-   * </p>
    *
    * @param request request object that can be read from for context or modified before retry
    * @param supportsRetry whether there will actually be a retry if this handler return {@code true}
-   *        . Some handlers may want to have an effect only when there will actually be a retry
-   *        after they handle their event (e.g. a handler that implements backoff policy).
+   *     . Some handlers may want to have an effect only when there will actually be a retry after
+   *     they handle their event (e.g. a handler that implements backoff policy).
    * @return whether or not this handler has made a change that will require the request to be
-   *         re-sent.
+   *     re-sent.
    */
   boolean handleIOException(HttpRequest request, boolean supportsRetry) throws IOException;
 }

@@ -18,12 +18,10 @@ import com.google.api.client.util.Beta;
 import com.google.api.client.util.Sleeper;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Mock for {@link Sleeper}.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @author Yaniv Inbar
  * @since 1.15

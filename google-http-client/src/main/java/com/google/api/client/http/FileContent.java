@@ -15,7 +15,6 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Preconditions;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -25,21 +24,17 @@ import java.io.InputStream;
  * Concrete implementation of {@link AbstractInputStreamContent} that generates repeatable input
  * streams based on the contents of a file.
  *
- * <p>
- * Sample use:
- * </p>
+ * <p>Sample use:
  *
  * <pre>
  * <code>
-  private static void setRequestJpegContent(HttpRequest request, File jpegFile) {
-    request.setContent(new FileContent("image/jpeg", jpegFile));
-  }
+ * private static void setRequestJpegContent(HttpRequest request, File jpegFile) {
+ * request.setContent(new FileContent("image/jpeg", jpegFile));
+ * }
  * </code>
  * </pre>
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.4
  * @author moshenko@google.com (Jacob Moshenko)

@@ -25,7 +25,6 @@ import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.Throwables;
 import com.google.api.client.util.Types;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Type;
@@ -45,13 +44,9 @@ import java.util.logging.Logger;
  * Stores HTTP headers used in an HTTP request or response, as defined in <a
  * href="http://tools.ietf.org/html/rfc2616#section-14">Header Field Definitions</a>.
  *
- * <p>
- * {@code null} is not allowed as a name or value of a header. Names are case-insensitive.
- * </p>
+ * <p>{@code null} is not allowed as a name or value of a header. Names are case-insensitive.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -192,10 +187,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Accept"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -216,9 +209,7 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Accept-Encoding"} header or {@code null} for none.
    *
-   * <p>
-   * By default, this is {@code "gzip"}.
-   * </p>
+   * <p>By default, this is {@code "gzip"}.
    *
    * @since 1.5
    */
@@ -248,10 +239,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Authorization"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -262,10 +251,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Authorization"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.13
    */
@@ -286,10 +273,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Cache-Control"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -310,10 +295,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Content-Encoding"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -334,10 +317,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Content-Length"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -358,10 +339,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Content-MD5"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -382,10 +361,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Content-Range"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -406,10 +383,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Content-Type"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -421,9 +396,7 @@ public class HttpHeaders extends GenericData {
   /**
    * Returns the first {@code "Cookie"} header or {@code null} for none.
    *
-   * <p>
-   * See <a href='http://tools.ietf.org/html/rfc6265'>Cookie Specification.</a>
-   * </p>
+   * <p>See <a href='http://tools.ietf.org/html/rfc6265'>Cookie Specification.</a>
    *
    * @since 1.6
    */
@@ -434,10 +407,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Cookie"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.6
    */
@@ -458,10 +429,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Date"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -482,10 +451,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "ETag"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -506,10 +473,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Expires"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -530,10 +495,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "If-Modified-Since"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -554,10 +517,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "If-Match"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -578,10 +539,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "If-None-Match"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -602,10 +561,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "If-Unmodified-Since"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -626,10 +583,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "If-Range"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.14
    */
@@ -650,10 +605,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Last-Modified"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -674,10 +627,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Location"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -698,10 +649,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "MIME-Version"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -722,10 +671,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Range"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -746,10 +693,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Retry-After"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -770,10 +715,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "User-Agent"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -803,10 +746,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "WWW-Authenticate"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -856,10 +797,8 @@ public class HttpHeaders extends GenericData {
   /**
    * Sets the {@code "Age"} header or {@code null} for none.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.14
    */
@@ -872,10 +811,8 @@ public class HttpHeaders extends GenericData {
    * Sets the {@link #authorization} header as specified in <a
    * href="http://tools.ietf.org/html/rfc2617#section-2">Basic Authentication Scheme</a>.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.2
    */
@@ -886,13 +823,15 @@ public class HttpHeaders extends GenericData {
     return setAuthorization("Basic " + encoded);
   }
 
-  private static void addHeader(Logger logger,
+  private static void addHeader(
+      Logger logger,
       StringBuilder logbuf,
       StringBuilder curlbuf,
       LowLevelHttpRequest lowLevelHttpRequest,
       String name,
       Object value,
-      Writer writer) throws IOException {
+      Writer writer)
+      throws IOException {
     // ignore nulls
     if (value == null || Data.isNull(value)) {
       return;
@@ -926,12 +865,11 @@ public class HttpHeaders extends GenericData {
     }
   }
 
-  /**
-   * Returns the string header value for the given header value as an object.
-   */
+  /** Returns the string header value for the given header value as an object. */
   private static String toStringValue(Object headerValue) {
     return headerValue instanceof Enum<?>
-        ? FieldInfo.of((Enum<?>) headerValue).getName() : headerValue.toString();
+        ? FieldInfo.of((Enum<?>) headerValue).getName()
+        : headerValue.toString();
   }
 
   /**
@@ -941,12 +879,17 @@ public class HttpHeaders extends GenericData {
    * @param logbuf log buffer or {@code null} for none
    * @param curlbuf log buffer for logging curl requests or {@code null} for none
    * @param logger logger or {@code null} for none. Logger must be specified if log buffer is
-   *        specified
+   *     specified
    * @param lowLevelHttpRequest low level HTTP request where HTTP headers will be serialized to or
-   *        {@code null} for none
+   *     {@code null} for none
    */
-  static void serializeHeaders(HttpHeaders headers, StringBuilder logbuf, StringBuilder curlbuf,
-      Logger logger, LowLevelHttpRequest lowLevelHttpRequest) throws IOException {
+  static void serializeHeaders(
+      HttpHeaders headers,
+      StringBuilder logbuf,
+      StringBuilder curlbuf,
+      Logger logger,
+      LowLevelHttpRequest lowLevelHttpRequest)
+      throws IOException {
     serializeHeaders(headers, logbuf, curlbuf, logger, lowLevelHttpRequest, null);
   }
 
@@ -956,9 +899,8 @@ public class HttpHeaders extends GenericData {
    * @param headers HTTP headers
    * @param logbuf log buffer or {@code null} for none
    * @param logger logger or {@code null} for none. Logger must be specified if log buffer is
-   *        specified
+   *     specified
    * @param writer Writer where HTTP headers will be serialized to or {@code null} for none
-   *
    * @since 1.9
    */
   public static void serializeHeadersForMultipartRequests(
@@ -966,17 +908,21 @@ public class HttpHeaders extends GenericData {
     serializeHeaders(headers, logbuf, null, logger, null, writer);
   }
 
-  static void serializeHeaders(HttpHeaders headers,
+  static void serializeHeaders(
+      HttpHeaders headers,
       StringBuilder logbuf,
       StringBuilder curlbuf,
       Logger logger,
       LowLevelHttpRequest lowLevelHttpRequest,
-      Writer writer) throws IOException {
+      Writer writer)
+      throws IOException {
     HashSet<String> headerNames = new HashSet<String>();
     for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
       String name = headerEntry.getKey();
-      Preconditions.checkArgument(headerNames.add(name),
-          "multiple headers of the same name (headers are case insensitive): %s", name);
+      Preconditions.checkArgument(
+          headerNames.add(name),
+          "multiple headers of the same name (headers are case insensitive): %s",
+          name);
       Object value = headerEntry.getValue();
       if (value != null) {
         // compute the display name from the declared field name to fix capitalization
@@ -988,13 +934,8 @@ public class HttpHeaders extends GenericData {
         Class<? extends Object> valueClass = value.getClass();
         if (value instanceof Iterable<?> || valueClass.isArray()) {
           for (Object repeatedValue : Types.iterableOf(value)) {
-            addHeader(logger,
-                logbuf,
-                curlbuf,
-                lowLevelHttpRequest,
-                displayName,
-                repeatedValue,
-                writer);
+            addHeader(
+                logger, logbuf, curlbuf, lowLevelHttpRequest, displayName, repeatedValue, writer);
           }
         } else {
           addHeader(logger, logbuf, curlbuf, lowLevelHttpRequest, displayName, value, writer);
@@ -1011,7 +952,7 @@ public class HttpHeaders extends GenericData {
    *
    * @param response Response from which the headers are copied
    * @param logger {@link StringBuilder} to which logging output is added or {@code null} to disable
-   *        logging
+   *     logging
    * @since 1.10
    */
   public final void fromHttpResponse(LowLevelHttpResponse response, StringBuilder logger)
@@ -1151,9 +1092,7 @@ public class HttpHeaders extends GenericData {
       this.arrayValueMap = new ArrayValueMap(headers);
     }
 
-    /**
-     * Finishes the parsing-process by setting all array-values.
-     */
+    /** Finishes the parsing-process by setting all array-values. */
     void finish() {
       arrayValueMap.setValues();
     }
@@ -1178,7 +1117,9 @@ public class HttpHeaders extends GenericData {
         // array that can handle repeating values
         Class<?> rawArrayComponentType =
             Types.getRawArrayComponentType(context, Types.getArrayComponentType(type));
-        arrayValueMap.put(fieldInfo.getField(), rawArrayComponentType,
+        arrayValueMap.put(
+            fieldInfo.getField(),
+            rawArrayComponentType,
             parseValue(rawArrayComponentType, context, headerValue));
       } else if (Types.isAssignableToOrFrom(
           Types.getRawArrayComponentType(context, type), Iterable.class)) {

@@ -22,10 +22,8 @@ import java.io.OutputStream;
 /**
  * Provides utility methods for working with byte arrays and I/O streams.
  *
- * <p>
- * NOTE: this is a copy of a subset of Guava's {@link com.google.common.io.ByteStreams}. The
+ * <p>NOTE: this is a copy of a subset of Guava's {@link com.google.common.io.ByteStreams}. The
  * implementation must match as closely as possible to Guava's implementation.
- * </p>
  *
  * @since 1.14
  * @author Yaniv Inbar
@@ -145,24 +143,18 @@ public final class ByteStreams {
   /**
    * Reads some bytes from an input stream and stores them into the buffer array {@code b}.
    *
-   * <p>
-   * This method blocks until {@code len} bytes of input data have been read into the array, or end
-   * of file is detected. The number of bytes read is returned, possibly zero. Does not close the
-   * stream.
-   * </p>
+   * <p>This method blocks until {@code len} bytes of input data have been read into the array, or
+   * end of file is detected. The number of bytes read is returned, possibly zero. Does not close
+   * the stream.
    *
-   * <p>
-   * A caller can detect EOF if the number of bytes read is less than {@code len}. All subsequent
+   * <p>A caller can detect EOF if the number of bytes read is less than {@code len}. All subsequent
    * calls on the same stream will return zero.
-   * </p>
    *
-   * <p>
-   * If {@code b} is null, a {@code NullPointerException} is thrown. If {@code off} is negative, or
-   * {@code len} is negative, or {@code off+len} is greater than the length of the array {@code b},
-   * then an {@code IndexOutOfBoundsException} is thrown. If {@code len} is zero, then no bytes are
-   * read. Otherwise, the first byte read is stored into element {@code b[off]}, the next one into
-   * {@code b[off+1]}, and so on. The number of bytes read is, at most, equal to {@code len}.
-   * </p>
+   * <p>If {@code b} is null, a {@code NullPointerException} is thrown. If {@code off} is negative,
+   * or {@code len} is negative, or {@code off+len} is greater than the length of the array {@code
+   * b}, then an {@code IndexOutOfBoundsException} is thrown. If {@code len} is zero, then no bytes
+   * are read. Otherwise, the first byte read is stored into element {@code b[off]}, the next one
+   * into {@code b[off+1]}, and so on. The number of bytes read is, at most, equal to {@code len}.
    *
    * @param in the input stream to read from
    * @param b the buffer into which the data is read
@@ -187,6 +179,5 @@ public final class ByteStreams {
     return total;
   }
 
-  private ByteStreams() {
-  }
+  private ByteStreams() {}
 }

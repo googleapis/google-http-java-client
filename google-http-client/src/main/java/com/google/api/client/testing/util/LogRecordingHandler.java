@@ -16,13 +16,12 @@ package com.google.api.client.testing.util;
 
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Lists;
-
 import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Logging handler that stores log records.
  *
  * @author Yaniv Inbar
@@ -40,12 +39,10 @@ public class LogRecordingHandler extends Handler {
   }
 
   @Override
-  public void flush() {
-  }
+  public void flush() {}
 
   @Override
-  public void close() throws SecurityException {
-  }
+  public void close() throws SecurityException {}
 
   /** Returns a new instance of a list of published record messages. */
   public List<String> messages() {

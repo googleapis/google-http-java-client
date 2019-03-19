@@ -34,7 +34,6 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -50,18 +49,13 @@ import java.util.concurrent.locks.ReentrantLock;
  * Thread-safe Google App Engine implementation of a data store factory that directly uses the App
  * Engine Data Store API.
  *
- * <p>
- * For convenience, a default global instance is provided in {@link #getDefaultInstance()}.
- * </p>
+ * <p>For convenience, a default global instance is provided in {@link #getDefaultInstance()}.
  *
- * <p>
- * By default, it uses the Memcache API as an in-memory data cache. To disable it, call
- * {@link Builder#setDisableMemcache(boolean)}. The Memcache is only read to check if a key already
- * has a value inside {@link DataStore#get(String)}. The values in the Memcache are updated in the
- * {@link DataStore#get(String)}, {@link DataStore#set(String, Serializable)},
- * {@link DataStore#delete(String)}, {@link DataStore#values()}, and {@link DataStore#clear()}
- * methods.
- * </p>
+ * <p>By default, it uses the Memcache API as an in-memory data cache. To disable it, call {@link
+ * Builder#setDisableMemcache(boolean)}. The Memcache is only read to check if a key already has a
+ * value inside {@link DataStore#get(String)}. The values in the Memcache are updated in the {@link
+ * DataStore#get(String)}, {@link DataStore#set(String, Serializable)}, {@link
+ * DataStore#delete(String)}, {@link DataStore#values()}, and {@link DataStore#clear()} methods.
  *
  * @since 1.16
  * @author Yaniv Inbar
@@ -83,9 +77,7 @@ public class AppEngineDataStoreFactory extends AbstractDataStoreFactory {
     this(new Builder());
   }
 
-  /**
-   * @param builder builder
-   */
+  /** @param builder builder */
   public AppEngineDataStoreFactory(Builder builder) {
     disableMemcache = builder.disableMemcache;
     memcacheExpiration = builder.memcacheExpiration;
@@ -97,8 +89,8 @@ public class AppEngineDataStoreFactory extends AbstractDataStoreFactory {
   }
 
   /**
-   * Returns a global thread-safe instance based on the default constructor
-   * {@link #AppEngineDataStoreFactory()}.
+   * Returns a global thread-safe instance based on the default constructor {@link
+   * #AppEngineDataStoreFactory()}.
    */
   public static AppEngineDataStoreFactory getDefaultInstance() {
     return InstanceHolder.INSTANCE;
@@ -296,9 +288,7 @@ public class AppEngineDataStoreFactory extends AbstractDataStoreFactory {
   /**
    * App Engine data store factory builder.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    *
    * @since 1.16
    */
@@ -318,10 +308,8 @@ public class AppEngineDataStoreFactory extends AbstractDataStoreFactory {
     /**
      * Sets whether to disable the memcache ({@code false} by default).
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setDisableMemcache(boolean disableMemcache) {
       this.disableMemcache = disableMemcache;
@@ -336,10 +324,8 @@ public class AppEngineDataStoreFactory extends AbstractDataStoreFactory {
     /**
      * Sets the Memcache expiration policy on puts.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setMemcacheExpiration(Expiration memcacheExpiration) {
       this.memcacheExpiration = memcacheExpiration;

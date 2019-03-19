@@ -15,48 +15,41 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Strategy interface to control back off between retry attempts.
  *
  * @since 1.7
  * @author Ravi Mistry
  * @deprecated (scheduled to be removed in 1.18) Use {@link HttpBackOffUnsuccessfulResponseHandler}
- *             instead.
+ *     instead.
  */
 @Deprecated
 @Beta
 public interface BackOffPolicy {
 
-  /**
-   * Value indicating that no more retries should be made, see {@link #getNextBackOffMillis()}.
-   */
+  /** Value indicating that no more retries should be made, see {@link #getNextBackOffMillis()}. */
   public static final long STOP = -1L;
 
   /**
    * Determines if back off is required based on the specified status code.
    *
-   * <p>
-   * Implementations may want to back off on server or product-specific errors.
-   * </p>
+   * <p>Implementations may want to back off on server or product-specific errors.
    *
    * @param statusCode HTTP status code
    */
   public boolean isBackOffRequired(int statusCode);
 
-  /**
-   * Reset Back off counters (if any) in an implementation-specific fashion.
-   */
+  /** Reset Back off counters (if any) in an implementation-specific fashion. */
   public void reset();
 
   /**
    * Gets the number of milliseconds to wait before retrying an HTTP request. If {@link #STOP} is
    * returned, no retries should be made.
    *
-   * This method should be used as follows:
+   * <p>This method should be used as follows:
    *
    * <pre>
    *  long backoffTime = backoffPolicy.getNextBackoffMs();
@@ -65,10 +58,10 @@ public interface BackOffPolicy {
    *  } else {
    *    // Retry after backoffTime.
    *  }
-   *</pre>
+   * </pre>
    *
    * @return the number of milliseconds to wait when backing off requests, or {@link #STOP} if no
-   *         more retries should be made
+   *     more retries should be made
    */
   public long getNextBackOffMillis() throws IOException;
 }

@@ -14,7 +14,6 @@
 
 package com.google.api.client.util;
 
-
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.GenericDeclaration;
@@ -43,11 +42,9 @@ public class Types {
    * Returns the parameterized type that is or extends the given type that matches the given super
    * class.
    *
-   * <p>
-   * For example, if the input type is {@code HashMap<String,Integer>} and the input super class is
-   * {@code Map.class}, it will return the extended parameterized type {@link Map}, but which
+   * <p>For example, if the input type is {@code HashMap<String,Integer>} and the input super class
+   * is {@code Map.class}, it will return the extended parameterized type {@link Map}, but which
    * retains the actual type information from the original {@code HashMap}.
-   * </p>
    *
    * @param type class or parameterized type
    * @param superClass super class
@@ -55,7 +52,8 @@ public class Types {
    */
   public static ParameterizedType getSuperParameterizedType(Type type, Class<?> superClass) {
     if (type instanceof Class<?> || type instanceof ParameterizedType) {
-      outer: while (type != null && type != Object.class) {
+      outer:
+      while (type != null && type != Object.class) {
         Class<?> rawType;
         if (type instanceof Class<?>) {
           // type is a class
@@ -73,8 +71,9 @@ public class Types {
             for (Type interfaceType : rawType.getGenericInterfaces()) {
               // interface type is class or parameterized type
               Class<?> interfaceClass =
-                  interfaceType instanceof Class<?> ? (Class<?>) interfaceType : getRawClass(
-                      (ParameterizedType) interfaceType);
+                  interfaceType instanceof Class<?>
+                      ? (Class<?>) interfaceType
+                      : getRawClass((ParameterizedType) interfaceType);
               if (superClass.isAssignableFrom(interfaceClass)) {
                 type = interfaceType;
                 continue outer;
@@ -103,10 +102,8 @@ public class Types {
   /**
    * Creates a new instance of the given class by invoking its default constructor.
    *
-   * <p>
-   * The given class must be public and must have a public default constructor, and must not be an
-   * array or an interface or be abstract. If an enclosing class, it must be static.
-   * </p>
+   * <p>The given class must be public and must have a public default constructor, and must not be
+   * an array or an interface or be abstract. If an enclosing class, it must be static.
    */
   public static <T> T newInstance(Class<T> clazz) {
     // TODO(yanivi): investigate "sneaky" options for allocating the class that GSON uses, like
@@ -167,28 +164,27 @@ public class Types {
 
   /** Returns whether the given type is an array. */
   public static boolean isArray(Type type) {
-    return type instanceof GenericArrayType || type instanceof Class<?>
-        && ((Class<?>) type).isArray();
+    return type instanceof GenericArrayType
+        || type instanceof Class<?> && ((Class<?>) type).isArray();
   }
 
   /**
    * Returns the component type of the given array type, assuming {@link #isArray(Type)}.
    *
-   * <p>
-   * Return type will either be class, parameterized type, generic array type, or type variable, but
-   * not a wildcard type.
-   * </p>
+   * <p>Return type will either be class, parameterized type, generic array type, or type variable,
+   * but not a wildcard type.
    *
    * @throws ClassCastException if {@link #isArray(Type)} is false
    */
   public static Type getArrayComponentType(Type array) {
-    return array instanceof GenericArrayType ? ((GenericArrayType) array).getGenericComponentType()
+    return array instanceof GenericArrayType
+        ? ((GenericArrayType) array).getGenericComponentType()
         : ((Class<?>) array).getComponentType();
   }
 
   /**
-   * Returns the raw class for the given parameter type as defined in
-   * {@link ParameterizedType#getRawType()}.
+   * Returns the raw class for the given parameter type as defined in {@link
+   * ParameterizedType#getRawType()}.
    *
    * @param parameterType parameter type
    * @return raw class
@@ -214,17 +210,15 @@ public class Types {
   /**
    * Resolves the actual type of the given type variable that comes from a field type based on the
    * given context list.
-   * <p>
-   * In case the type variable can be resolved partially, it will return the partially resolved type
-   * variable.
-   * </p>
+   *
+   * <p>In case the type variable can be resolved partially, it will return the partially resolved
+   * type variable.
    *
    * @param context context list, ordering from least specific to most specific type context, for
-   *        example container class and then its field
+   *     example container class and then its field
    * @param typeVariable type variable
    * @return resolved or partially resolved actual type (type variable, class, parameterized type,
-   *         or generic array type, but not wildcard type) or {@code null} if unable to resolve at
-   *         all
+   *     or generic array type, but not wildcard type) or {@code null} if unable to resolve at all
    */
   public static Type resolveTypeVariable(List<Type> context, TypeVariable<?> typeVariable) {
     // determine where the type variable was declared
@@ -265,11 +259,11 @@ public class Types {
   }
 
   /**
-   * Returns the raw array component type to use -- for example for the first parameter of
-   * {@link Array#newInstance(Class, int)} -- for the given component type.
+   * Returns the raw array component type to use -- for example for the first parameter of {@link
+   * Array#newInstance(Class, int)} -- for the given component type.
    *
    * @param context context list, ordering from least specific to most specific type context, for
-   *        example container class and then its field
+   *     example container class and then its field
    * @param componentType array component type or {@code null} for {@code Object.class} result
    * @return raw array component type
    */
@@ -295,10 +289,8 @@ public class Types {
   /**
    * Returns the type parameter of {@link Iterable} that is assignable from the given iterable type.
    *
-   * <p>
-   * For example, for the type {@code ArrayList<Integer>} -- or for a class that extends {@code
+   * <p>For example, for the type {@code ArrayList<Integer>} -- or for a class that extends {@code
    * ArrayList<Integer>} -- it will return {@code Integer}.
-   * </p>
    *
    * @param iterableType iterable type (must extend {@link Iterable})
    * @return type parameter, which may be any type
@@ -310,10 +302,8 @@ public class Types {
   /**
    * Returns the value type parameter of {@link Map} that is assignable from the given map type.
    *
-   * <p>
-   * For example, for the type {@code Map<String, Integer>} -- or for a class that extends {@code
+   * <p>For example, for the type {@code Map<String, Integer>} -- or for a class that extends {@code
    * Map<String, Integer>} -- it will return {@code Integer}.
-   * </p>
    *
    * @param mapType map type (must extend {@link Map})
    * @return type parameter, which may be any type
@@ -342,10 +332,9 @@ public class Types {
   /**
    * Returns an iterable for an input iterable or array value.
    *
-   * <p>
-   * If the input value extends {@link Iterable}, it will just return the input value. Otherwise, it
-   * will return an iterable that can handle arrays of primitive and non-primitive component type.
-   * </p>
+   * <p>If the input value extends {@link Iterable}, it will just return the input value. Otherwise,
+   * it will return an iterable that can handle arrays of primitive and non-primitive component
+   * type.
    *
    * @param value iterable (extends {@link Iterable}) or array value
    * @return iterable
@@ -408,6 +397,5 @@ public class Types {
     return collection.toArray((Object[]) Array.newInstance(componentType, collection.size()));
   }
 
-  private Types() {
-  }
+  private Types() {}
 }

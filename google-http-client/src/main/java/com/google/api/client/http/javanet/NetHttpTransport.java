@@ -38,22 +38,16 @@ import javax.net.ssl.SSLSocketFactory;
 /**
  * Thread-safe HTTP low-level transport based on the {@code java.net} package.
  *
- * <p>
- * Users should consider modifying the keep alive property on {@link NetHttpTransport} to control
+ * <p>Users should consider modifying the keep alive property on {@link NetHttpTransport} to control
  * whether the socket should be returned to a pool of connected sockets. More information is
  * available <a
  * href='http://docs.oracle.com/javase/7/docs/technotes/guides/net/http-keepalive.html'>here</a>.
- * </p>
  *
- * <p>
- * We honor the default global caching behavior. To change the default behavior use
- * {@link HttpURLConnection#setDefaultUseCaches(boolean)}.
- * </p>
+ * <p>We honor the default global caching behavior. To change the default behavior use {@link
+ * HttpURLConnection#setDefaultUseCaches(boolean)}.
  *
- * <p>
- * Implementation is thread-safe. For maximum efficiency, applications should use a single
+ * <p>Implementation is thread-safe. For maximum efficiency, applications should use a single
  * globally-shared instance of the HTTP transport.
- * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -61,22 +55,26 @@ import javax.net.ssl.SSLSocketFactory;
 public final class NetHttpTransport extends HttpTransport {
   private static Proxy defaultProxy() {
     return new Proxy(
-        Proxy.Type.HTTP, new InetSocketAddress(
-          System.getProperty("https.proxyHost"),
-          Integer.parseInt(System.getProperty("https.proxyPort"))));
+        Proxy.Type.HTTP,
+        new InetSocketAddress(
+            System.getProperty("https.proxyHost"),
+            Integer.parseInt(System.getProperty("https.proxyPort"))));
   }
 
   /**
    * All valid request methods as specified in {@link HttpURLConnection#setRequestMethod}, sorted in
    * ascending alphabetical order.
    */
-  private static final String[] SUPPORTED_METHODS = {HttpMethods.DELETE,
-      HttpMethods.GET,
-      HttpMethods.HEAD,
-      HttpMethods.OPTIONS,
-      HttpMethods.POST,
-      HttpMethods.PUT,
-      HttpMethods.TRACE};
+  private static final String[] SUPPORTED_METHODS = {
+    HttpMethods.DELETE,
+    HttpMethods.GET,
+    HttpMethods.HEAD,
+    HttpMethods.OPTIONS,
+    HttpMethods.POST,
+    HttpMethods.PUT,
+    HttpMethods.TRACE
+  };
+
   static {
     Arrays.sort(SUPPORTED_METHODS);
   }
@@ -95,9 +93,7 @@ public final class NetHttpTransport extends HttpTransport {
   /**
    * Constructor with the default behavior.
    *
-   * <p>
-   * Instead use {@link Builder} to modify behavior.
-   * </p>
+   * <p>Instead use {@link Builder} to modify behavior.
    */
   public NetHttpTransport() {
     this((ConnectionFactory) null, null, null);
@@ -105,8 +101,8 @@ public final class NetHttpTransport extends HttpTransport {
 
   /**
    * @param proxy HTTP proxy or {@code null} to use the proxy settings from <a
-   *        href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">
-   *        system properties</a>
+   *     href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">
+   *     system properties</a>
    * @param sslSocketFactory SSL socket factory or {@code null} for the default
    * @param hostnameVerifier host name verifier or {@code null} for the default
    */
@@ -117,15 +113,16 @@ public final class NetHttpTransport extends HttpTransport {
 
   /**
    * @param connectionFactory factory to produce connections from {@link URL}s; if {@code null} then
-   *        {@link DefaultConnectionFactory} is used
+   *     {@link DefaultConnectionFactory} is used
    * @param sslSocketFactory SSL socket factory or {@code null} for the default
    * @param hostnameVerifier host name verifier or {@code null} for the default
    * @since 1.20
    */
-  NetHttpTransport(ConnectionFactory connectionFactory,
-      SSLSocketFactory sslSocketFactory, HostnameVerifier hostnameVerifier) {
-    this.connectionFactory =
-        getConnectionFactory(connectionFactory);
+  NetHttpTransport(
+      ConnectionFactory connectionFactory,
+      SSLSocketFactory sslSocketFactory,
+      HostnameVerifier hostnameVerifier) {
+    this.connectionFactory = getConnectionFactory(connectionFactory);
     this.sslSocketFactory = sslSocketFactory;
     this.hostnameVerifier = hostnameVerifier;
   }
@@ -168,9 +165,7 @@ public final class NetHttpTransport extends HttpTransport {
   /**
    * Builder for {@link NetHttpTransport}.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    *
    * @since 1.13
    */
@@ -200,12 +195,10 @@ public final class NetHttpTransport extends HttpTransport {
      * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
      * properties</a>.
      *
-     * <p>
-     * For example:
-     * </p>
+     * <p>For example:
      *
      * <pre>
-       setProxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 8080)))
+     * setProxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 8080)))
      * </pre>
      */
     public Builder setProxy(Proxy proxy) {
@@ -217,10 +210,8 @@ public final class NetHttpTransport extends HttpTransport {
      * Sets the {@link ConnectionFactory} or {@code null} to use a {@link DefaultConnectionFactory}.
      * <b>This value is ignored if the {@link #setProxy} has been called with a non-null value.</b>
      *
-     * <p>
-     * If you wish to use a {@link Proxy}, it should be included in your {@link ConnectionFactory}
-     * implementation.
-     * </p>
+     * <p>If you wish to use a {@link Proxy}, it should be included in your {@link
+     * ConnectionFactory} implementation.
      *
      * @since 1.20
      */
@@ -232,16 +223,14 @@ public final class NetHttpTransport extends HttpTransport {
     /**
      * Sets the SSL socket factory based on root certificates in a Java KeyStore.
      *
-     * <p>
-     * Example usage:
-     * </p>
+     * <p>Example usage:
      *
      * <pre>
-    trustCertificatesFromJavaKeyStore(new FileInputStream("certs.jks"), "password");
+     * trustCertificatesFromJavaKeyStore(new FileInputStream("certs.jks"), "password");
      * </pre>
      *
      * @param keyStoreStream input stream to the key store (closed at the end of this method in a
-     *        finally block)
+     *     finally block)
      * @param storePass password protecting the key store file
      * @since 1.14
      */
@@ -256,12 +245,10 @@ public final class NetHttpTransport extends HttpTransport {
      * Sets the SSL socket factory based root certificates generated from the specified stream using
      * {@link CertificateFactory#generateCertificates(InputStream)}.
      *
-     * <p>
-     * Example usage:
-     * </p>
+     * <p>Example usage:
      *
      * <pre>
-    trustCertificatesFromStream(new FileInputStream("certs.pem"));
+     * trustCertificatesFromStream(new FileInputStream("certs.pem"));
      * </pre>
      *
      * @param certificateStream certificate stream
@@ -280,7 +267,7 @@ public final class NetHttpTransport extends HttpTransport {
      * Sets the SSL socket factory based on a root certificate trust store.
      *
      * @param trustStore certificate trust store (use for example {@link SecurityUtils#loadKeyStore}
-     *        or {@link SecurityUtils#loadKeyStoreFromCertificates})
+     *     or {@link SecurityUtils#loadKeyStoreFromCertificates})
      * @since 1.14
      */
     public Builder trustCertificates(KeyStore trustStore) throws GeneralSecurityException {
@@ -290,15 +277,13 @@ public final class NetHttpTransport extends HttpTransport {
     }
 
     /**
-     * {@link Beta} <br/>
-     * Disables validating server SSL certificates by setting the SSL socket factory using
-     * {@link SslUtils#trustAllSSLContext()} for the SSL context and
-     * {@link SslUtils#trustAllHostnameVerifier()} for the host name verifier.
+     * {@link Beta} <br>
+     * Disables validating server SSL certificates by setting the SSL socket factory using {@link
+     * SslUtils#trustAllSSLContext()} for the SSL context and {@link
+     * SslUtils#trustAllHostnameVerifier()} for the host name verifier.
      *
-     * <p>
-     * Be careful! Disabling certificate validation is dangerous and should only be done in testing
-     * environments.
-     * </p>
+     * <p>Be careful! Disabling certificate validation is dangerous and should only be done in
+     * testing environments.
      */
     @Beta
     public Builder doNotValidateCertificate() throws GeneralSecurityException {

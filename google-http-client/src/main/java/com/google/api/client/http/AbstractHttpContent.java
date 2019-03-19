@@ -17,16 +17,13 @@ package com.google.api.client.http;
 import com.google.api.client.util.Charsets;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.StreamingContent;
-
 import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
  * Abstract implementation of an HTTP content with typical options.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.5
  * @author Yaniv Inbar
@@ -41,7 +38,7 @@ public abstract class AbstractHttpContent implements HttpContent {
 
   /**
    * @param mediaType Media type string (for example "type/subtype") this content represents or
-   *        {@code null} to leave out. Can also contain parameters like {@code "charset=utf-8"}
+   *     {@code null} to leave out. Can also contain parameters like {@code "charset=utf-8"}
    * @since 1.10
    */
   protected AbstractHttpContent(String mediaType) {
@@ -79,10 +76,8 @@ public abstract class AbstractHttpContent implements HttpContent {
   /**
    * Sets the media type to use for the Content-Type header, or {@code null} if unspecified.
    *
-   * <p>
-   * This will also overwrite any previously set parameter of the media type (for example
-   * {@code "charset"}), and therefore might change other properties as well.
-   * </p>
+   * <p>This will also overwrite any previously set parameter of the media type (for example {@code
+   * "charset"}), and therefore might change other properties as well.
    *
    * @since 1.10
    */
@@ -98,7 +93,8 @@ public abstract class AbstractHttpContent implements HttpContent {
    */
   protected final Charset getCharset() {
     return mediaType == null || mediaType.getCharsetParameter() == null
-        ? Charsets.ISO_8859_1 : mediaType.getCharsetParameter();
+        ? Charsets.ISO_8859_1
+        : mediaType.getCharsetParameter();
   }
 
   public String getType() {
@@ -108,10 +104,8 @@ public abstract class AbstractHttpContent implements HttpContent {
   /**
    * Computes and returns the content length or less than zero if not known.
    *
-   * <p>
-   * Subclasses may override, but by default this computes the length by calling
-   * {@link #computeLength(HttpContent)}.
-   * </p>
+   * <p>Subclasses may override, but by default this computes the length by calling {@link
+   * #computeLength(HttpContent)}.
    */
   protected long computeLength() throws IOException {
     return computeLength(this);
@@ -129,7 +123,6 @@ public abstract class AbstractHttpContent implements HttpContent {
    *
    * @param content HTTP content
    * @return computed content length or {@code -1} if retry is not supported
-   *
    * @since 1.14
    */
   public static long computeLength(HttpContent content) throws IOException {

@@ -14,12 +14,9 @@
 
 package com.google.api.client.util.escape;
 
-/**
- * Methods factored out so that they can be emulated differently in GWT.
- */
+/** Methods factored out so that they can be emulated differently in GWT. */
 final class Platform {
-  private Platform() {
-  }
+  private Platform() {}
 
   /** Returns a thread-local 1024-char array. */
   // DEST_TL.get() is not null because initialValue() below returns a non-null.
@@ -33,10 +30,11 @@ final class Platform {
    * 1024 characters. If we grow past this we don't put it back in the threadlocal, we just keep
    * going and grow as needed.
    */
-  private static final ThreadLocal<char[]> DEST_TL = new ThreadLocal<char[]>() {
-    @Override
-    protected char[] initialValue() {
-      return new char[1024];
-    }
-  };
+  private static final ThreadLocal<char[]> DEST_TL =
+      new ThreadLocal<char[]>() {
+        @Override
+        protected char[] initialValue() {
+          return new char[1024];
+        }
+      };
 }

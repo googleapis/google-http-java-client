@@ -14,12 +14,10 @@
 
 package com.google.api.client.test.util.store;
 
-import com.google.api.client.test.util.store.AbstractDataStoreFactoryTest;
 import com.google.api.client.util.store.DataStore;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -41,7 +39,8 @@ public class FileDataStoreFactoryTest extends AbstractDataStoreFactoryTest {
     FileDataStoreFactory factory = newDataStoreFactory();
     DataStore<String> store = factory.getDataStore("foo");
     store.set("k", "v");
-    assertEquals(ImmutableSet.of("k"),
+    assertEquals(
+        ImmutableSet.of("k"),
         new FileDataStoreFactory(factory.getDataDirectory()).getDataStore("foo").keySet());
     store.clear();
     assertTrue(new FileDataStoreFactory(factory.getDataDirectory()).getDataStore("foo").isEmpty());

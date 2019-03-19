@@ -30,7 +30,7 @@ public class Base64 {
    *
    * @param binaryData binary data to encode or {@code null} for {@code null} result
    * @return byte[] containing Base64 characters in their UTF-8 representation or {@code null} for
-   *         {@code null} input
+   *     {@code null} input
    */
   public static byte[] encodeBase64(byte[] binaryData) {
     return StringUtils.getBytesUtf8(encodeBase64String(binaryData));
@@ -46,14 +46,13 @@ public class Base64 {
     return BaseEncoding.base64().encode(binaryData);
   }
 
-
   /**
    * Encodes binary data using a URL-safe variation of the base64 algorithm but does not chunk the
    * output. The url-safe variation emits - and _ instead of + and / characters.
    *
    * @param binaryData binary data to encode or {@code null} for {@code null} result
    * @return byte[] containing Base64 characters in their UTF-8 representation or {@code null} for
-   *         {@code null} input
+   *     {@code null} input
    */
   public static byte[] encodeBase64URLSafe(byte[] binaryData) {
     return StringUtils.getBytesUtf8(encodeBase64URLSafeString(binaryData));
@@ -71,8 +70,8 @@ public class Base64 {
   }
 
   /**
-   * Decodes Base64 data into octets. Note that this method handles both URL-safe and
-   * non-URL-safe base 64 encoded inputs.
+   * Decodes Base64 data into octets. Note that this method handles both URL-safe and non-URL-safe
+   * base 64 encoded inputs.
    *
    * @param base64Data Byte array containing Base64 data or {@code null} for {@code null} result
    * @return Array containing decoded data or {@code null} for {@code null} input
@@ -99,6 +98,5 @@ public class Base64 {
     }
   }
 
-  private Base64() {
-  }
+  private Base64() {}
 }

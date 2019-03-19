@@ -48,7 +48,8 @@ public class UriTemplateTest extends TestCase {
     // Assert with addUnusedParamsAsQueryParams = false.
     assertEquals("foo/xyz/bar/123", UriTemplate.expand("foo/{abc}/bar/{def}", requestMap, false));
     // Assert with addUnusedParamsAsQueryParams = true.
-    assertEquals("foo/xyz/bar/123?unused=unused%20parameter",
+    assertEquals(
+        "foo/xyz/bar/123?unused=unused%20parameter",
         UriTemplate.expand("foo/{abc}/bar/{def}", requestMap, true));
     // Assert the map has not changed.
     assertEquals(3, requestMap.size());
@@ -68,8 +69,8 @@ public class UriTemplateTest extends TestCase {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
     requestMap.put("def", "123");
-    assertEquals("foo/xyz/bar/123?abc=xyz&def=123",
-        UriTemplate.expand("foo/xyz/bar/123", requestMap, true));
+    assertEquals(
+        "foo/xyz/bar/123?abc=xyz&def=123", UriTemplate.expand("foo/xyz/bar/123", requestMap, true));
   }
 
   public void testExpandTemplates_noExpansionsWithoutQueryParams() {
@@ -104,22 +105,22 @@ public class UriTemplateTest extends TestCase {
 
   // template, expected output.
   private static final String[][] LIST_TESTS = {
-      {"{d}", "red,green,blue"},
-      {"{d*}", "red,green,blue"},
-      {"{+d}", "red,green,blue"},
-      {"{+d*}", "red,green,blue"},
-      {"{#d}", "#red,green,blue"},
-      {"{#d*}", "#red,green,blue"},
-      {"X{.d}", "X.red,green,blue"},
-      {"X{.d*}", "X.red.green.blue"},
-      {"{/d}", "/red,green,blue"},
-      {"{/d*}", "/red/green/blue"},
-      {"{;d}", ";d=red,green,blue"},
-      {"{;d*}", ";d=red;d=green;d=blue"},
-      {"{?d}", "?d=red,green,blue"},
-      {"{?d*}", "?d=red&d=green&d=blue"},
-      {"{&d}", "&d=red,green,blue"},
-      {"{&d*}", "&d=red&d=green&d=blue"},
+    {"{d}", "red,green,blue"},
+    {"{d*}", "red,green,blue"},
+    {"{+d}", "red,green,blue"},
+    {"{+d*}", "red,green,blue"},
+    {"{#d}", "#red,green,blue"},
+    {"{#d*}", "#red,green,blue"},
+    {"X{.d}", "X.red,green,blue"},
+    {"X{.d*}", "X.red.green.blue"},
+    {"{/d}", "/red,green,blue"},
+    {"{/d*}", "/red/green/blue"},
+    {"{;d}", ";d=red,green,blue"},
+    {"{;d*}", ";d=red;d=green;d=blue"},
+    {"{?d}", "?d=red,green,blue"},
+    {"{?d*}", "?d=red&d=green&d=blue"},
+    {"{&d}", "&d=red,green,blue"},
+    {"{&d*}", "&d=red&d=green&d=blue"},
   };
 
   public void testExpandTemplates_explodeIterator() {
@@ -172,22 +173,22 @@ public class UriTemplateTest extends TestCase {
 
   // template, expected output.
   private static final String[][] MAP_TESTS = {
-      {"{d}", "semi,%3B,dot,.,comma,%2C"},
-      {"{d*}", "semi=%3B,dot=.,comma=%2C"},
-      {"{+d}", "semi,;,dot,.,comma,,"},
-      {"{+d*}", "semi=;,dot=.,comma=,"},
-      {"{#d}", "#semi,;,dot,.,comma,,"},
-      {"{#d*}", "#semi=;,dot=.,comma=,"},
-      {"X{.d}", "X.semi,%3B,dot,.,comma,%2C"},
-      {"X{.d*}", "X.semi=%3B.dot=..comma=%2C"},
-      {"{/d}", "/semi,%3B,dot,.,comma,%2C"},
-      {"{/d*}", "/semi=%3B/dot=./comma=%2C"},
-      {"{;d}", ";d=semi,%3B,dot,.,comma,%2C"},
-      {"{;d*}", ";semi=%3B;dot=.;comma=%2C"},
-      {"{?d}", "?d=semi,%3B,dot,.,comma,%2C"},
-      {"{?d*}", "?semi=%3B&dot=.&comma=%2C"},
-      {"{&d}", "&d=semi,%3B,dot,.,comma,%2C"},
-      {"{&d*}", "&semi=%3B&dot=.&comma=%2C"},
+    {"{d}", "semi,%3B,dot,.,comma,%2C"},
+    {"{d*}", "semi=%3B,dot=.,comma=%2C"},
+    {"{+d}", "semi,;,dot,.,comma,,"},
+    {"{+d*}", "semi=;,dot=.,comma=,"},
+    {"{#d}", "#semi,;,dot,.,comma,,"},
+    {"{#d*}", "#semi=;,dot=.,comma=,"},
+    {"X{.d}", "X.semi,%3B,dot,.,comma,%2C"},
+    {"X{.d*}", "X.semi=%3B.dot=..comma=%2C"},
+    {"{/d}", "/semi,%3B,dot,.,comma,%2C"},
+    {"{/d*}", "/semi=%3B/dot=./comma=%2C"},
+    {"{;d}", ";d=semi,%3B,dot,.,comma,%2C"},
+    {"{;d*}", ";semi=%3B;dot=.;comma=%2C"},
+    {"{?d}", "?d=semi,%3B,dot,.,comma,%2C"},
+    {"{?d*}", "?semi=%3B&dot=.&comma=%2C"},
+    {"{&d}", "&d=semi,%3B,dot,.,comma,%2C"},
+    {"{&d*}", "&semi=%3B&dot=.&comma=%2C"},
   };
 
   public void testExpandTemplates_explodeMap() {
@@ -210,7 +211,8 @@ public class UriTemplateTest extends TestCase {
     requestMap.put("unused1", "abc!1234?");
     requestMap.put("unused2", "56$7 8");
     requestMap.put("unused3", "9=&/:@.");
-    assertEquals("?unused1=abc!1234?&unused2=56$7%208&unused3=9%3D%26/:@.",
+    assertEquals(
+        "?unused1=abc!1234?&unused2=56$7%208&unused3=9%3D%26/:@.",
         UriTemplate.expand("", requestMap, true));
   }
 
@@ -223,7 +225,8 @@ public class UriTemplateTest extends TestCase {
     requestMap.put("unused1", params);
     requestMap.put("unused2", "56$7 8");
     requestMap.put("unused3", "9=&/:@.");
-    assertEquals("?unused1=value1&unused1=value2&unused2=56$7%208&unused3=9%3D%26/:@.",
+    assertEquals(
+        "?unused1=value1&unused1=value2&unused2=56$7%208&unused3=9%3D%26/:@.",
         UriTemplate.expand("", requestMap, true));
   }
 
@@ -243,7 +246,7 @@ public class UriTemplateTest extends TestCase {
     requestMap.put("unused2", "unused=param");
     assertEquals(
         "foo/xyz/red/green/blue&iterable=red&iterable=green&iterable=blue&map=semi,%3B,dot,.,comma"
-        + ",%2C&enum=ONE?unused1=unused%20param&unused2=unused%3Dparam",
+            + ",%2C&enum=ONE?unused1=unused%20param&unused2=unused%3Dparam",
         UriTemplate.expand("foo/{abc}{/iterator*}{&iterable*}{&map}{&enum}", requestMap, true));
     // Assert the map has not changed.
     assertEquals(7, requestMap.size());
@@ -261,32 +264,36 @@ public class UriTemplateTest extends TestCase {
     requestMap.put("def", "123");
 
     // Expand with URI template not starting with "/".
-    assertEquals("https://test/base/path/xyz/123/bar/",
+    assertEquals(
+        "https://test/base/path/xyz/123/bar/",
         UriTemplate.expand("https://test/base/path/", "{abc}/{def}/bar/", requestMap, true));
     // Expand with URI template starting with "/".
-    assertEquals("https://test/xyz/123/bar/",
+    assertEquals(
+        "https://test/xyz/123/bar/",
         UriTemplate.expand("https://test/base/path/", "/{abc}/{def}/bar/", requestMap, true));
     // Expand with URI template as a full URL.
-    assertEquals("http://test3/xyz/123/bar/", UriTemplate.expand("https://test/base/path/",
-        "http://test3/{abc}/{def}/bar/", requestMap, true));
+    assertEquals(
+        "http://test3/xyz/123/bar/",
+        UriTemplate.expand(
+            "https://test/base/path/", "http://test3/{abc}/{def}/bar/", requestMap, true));
   }
 
   public void testExpandNonReservedNonComposite() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
     requestMap.put("def", "a/b?c");
-    assertEquals("foo/xyz/bar/a%2Fb%3Fc",
-        UriTemplate.expand("foo/{abc}/bar/{def}", requestMap, false));
-    assertEquals("foo/xyz/bar/a/b?c",
-        UriTemplate.expand("foo/{abc}/bar/{+def}", requestMap, false));
+    assertEquals(
+        "foo/xyz/bar/a%2Fb%3Fc", UriTemplate.expand("foo/{abc}/bar/{def}", requestMap, false));
+    assertEquals(
+        "foo/xyz/bar/a/b?c", UriTemplate.expand("foo/{abc}/bar/{+def}", requestMap, false));
   }
 
   public void testExpandSeveralTemplates() {
-      SortedMap<String, Object> map = Maps.newTreeMap();
-      map.put("id", "a");
-      map.put("uid", "b");
+    SortedMap<String, Object> map = Maps.newTreeMap();
+    map.put("id", "a");
+    map.put("uid", "b");
 
-      assertEquals("?id=a&uid=b", UriTemplate.expand("{?id,uid}", map, false));
+    assertEquals("?id=a&uid=b", UriTemplate.expand("{?id,uid}", map, false));
   }
 
   public void testExpandSeveralTemplatesUnusedParameterInMiddle() {

@@ -15,7 +15,6 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Preconditions;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -25,24 +24,19 @@ import java.io.OutputStream;
  * be re-opened and retried. If you have a stream that it is possible to recreate please create a
  * new subclass of {@link AbstractInputStreamContent}.
  *
- * <p>
- * The input stream is guaranteed to be closed at the end of {@link #writeTo(OutputStream)}.
- * </p>
+ * <p>The input stream is guaranteed to be closed at the end of {@link #writeTo(OutputStream)}.
  *
- * <p>
- * Sample use with a URL:
+ * <p>Sample use with a URL:
  *
  * <pre>
  * <code>
-  private static void setRequestJpegContent(HttpRequest request, URL jpegUrl) throws IOException {
-    request.setContent(new InputStreamContent("image/jpeg", jpegUrl.openStream()));
-  }
+ * private static void setRequestJpegContent(HttpRequest request, URL jpegUrl) throws IOException {
+ * request.setContent(new InputStreamContent("image/jpeg", jpegUrl.openStream()));
+ * }
  * </code>
  * </pre>
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -79,10 +73,8 @@ public final class InputStreamContent extends AbstractInputStreamContent {
   /**
    * Sets whether or not retry is supported. Defaults to {@code false}.
    *
-   * <p>
-   * Should be set to {@code true} if {@link #getInputStream} is called to reset to the original
+   * <p>Should be set to {@code true} if {@link #getInputStream} is called to reset to the original
    * position of the input stream.
-   * </p>
    *
    * @since 1.7
    */
@@ -109,9 +101,7 @@ public final class InputStreamContent extends AbstractInputStreamContent {
   /**
    * Sets the content length or less than zero if not known.
    *
-   * <p>
-   * Defaults to {@code -1}.
-   * </p>
+   * <p>Defaults to {@code -1}.
    *
    * @since 1.5
    */

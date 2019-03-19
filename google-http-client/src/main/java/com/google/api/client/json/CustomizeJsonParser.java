@@ -15,23 +15,18 @@
 package com.google.api.client.json;
 
 import com.google.api.client.util.Beta;
-
 import java.lang.reflect.Field;
 import java.util.Collection;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Customizes the behavior of a JSON parser.
  *
- * <p>
- * All methods have a default trivial implementation, so subclasses need only implement the methods
- * whose behavior needs customization.
- * </p>
+ * <p>All methods have a default trivial implementation, so subclasses need only implement the
+ * methods whose behavior needs customization.
  *
- * <p>
- * Implementation has no fields and therefore thread-safe, but sub-classes are not necessarily
+ * <p>Implementation has no fields and therefore thread-safe, but sub-classes are not necessarily
  * thread-safe.
- * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -39,18 +34,13 @@ import java.util.Collection;
 @Beta
 public class CustomizeJsonParser {
 
-  /**
-   * Returns whether to stop parsing at the given key of the given context object.
-   */
+  /** Returns whether to stop parsing at the given key of the given context object. */
   public boolean stopAt(Object context, String key) {
     return false;
   }
 
-  /**
-   * Called when the given unrecognized key is encountered in the given context object.
-   */
-  public void handleUnrecognizedKey(Object context, String key) {
-  }
+  /** Called when the given unrecognized key is encountered in the given context object. */
+  public void handleUnrecognizedKey(Object context, String key) {}
 
   /**
    * Returns a new instance value for the given field in the given context object for a JSON array

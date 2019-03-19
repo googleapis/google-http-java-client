@@ -17,8 +17,8 @@ package com.google.api.client.extensions.appengine.datastore;
 import com.google.api.client.util.store.DataStoreFactory;
 
 /**
- * Tests {@link AppEngineDataStoreFactory} with
- * {@link AppEngineDataStoreFactory.Builder#setDisableMemcache(boolean)}.
+ * Tests {@link AppEngineDataStoreFactory} with {@link
+ * AppEngineDataStoreFactory.Builder#setDisableMemcache(boolean)}.
  *
  * @author Yaniv Inbar
  */

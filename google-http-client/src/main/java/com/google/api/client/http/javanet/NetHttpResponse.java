@@ -15,7 +15,6 @@
 package com.google.api.client.http.javanet;
 
 import com.google.api.client.http.LowLevelHttpResponse;
-
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,28 +59,22 @@ final class NetHttpResponse extends LowLevelHttpResponse {
   /**
    * {@inheritDoc}
    *
-   * <p>
-   * Returns {@link HttpURLConnection#getInputStream} when it doesn't throw {@link IOException},
+   * <p>Returns {@link HttpURLConnection#getInputStream} when it doesn't throw {@link IOException},
    * otherwise it returns {@link HttpURLConnection#getErrorStream}.
-   * </p>
    *
-   * <p>
-   * Upgrade warning: in prior version 1.16 {@link #getContent()} returned
-   * {@link HttpURLConnection#getInputStream} only when the status code was successful. Starting
-   * with version 1.17 it returns {@link HttpURLConnection#getInputStream} when it doesn't throw
-   * {@link IOException}, otherwise it returns {@link HttpURLConnection#getErrorStream}
-   * </p>
+   * <p>Upgrade warning: in prior version 1.16 {@link #getContent()} returned {@link
+   * HttpURLConnection#getInputStream} only when the status code was successful. Starting with
+   * version 1.17 it returns {@link HttpURLConnection#getInputStream} when it doesn't throw {@link
+   * IOException}, otherwise it returns {@link HttpURLConnection#getErrorStream}
    *
-   * <p>
-   * Upgrade warning: in versions prior to 1.20 {@link #getContent()} returned
-   * {@link HttpURLConnection#getInputStream()} or {@link HttpURLConnection#getErrorStream()}, both
-   * of which silently returned -1 for read() calls when the connection got closed in the middle
-   * of receiving a response. This is highly likely a bug from JDK's {@link HttpURLConnection}.
-   * Since version 1.20, the bytes read off the wire will be checked and an {@link IOException} will
-   * be thrown if the response is not fully delivered when the connection is closed by server for
+   * <p>Upgrade warning: in versions prior to 1.20 {@link #getContent()} returned {@link
+   * HttpURLConnection#getInputStream()} or {@link HttpURLConnection#getErrorStream()}, both of
+   * which silently returned -1 for read() calls when the connection got closed in the middle of
+   * receiving a response. This is highly likely a bug from JDK's {@link HttpURLConnection}. Since
+   * version 1.20, the bytes read off the wire will be checked and an {@link IOException} will be
+   * thrown if the response is not fully delivered when the connection is closed by server for
    * whatever reason, e.g., server restarts. Note though that this is a best-effort check: when the
    * response is chunk encoded, we have to rely on the underlying HTTP library to behave correctly.
-   * </p>
    */
   @Override
   public InputStream getContent() throws IOException {
@@ -162,7 +155,9 @@ final class NetHttpResponse extends LowLevelHttpResponse {
     /**
      * java.io.InputStream#read(byte[], int, int) swallows IOException thrown from read() so we have
      * to override it.
-     * @see "http://grepcode.com/file/repository.grepcode.com/java/root/jdk/openjdk/8-b132/java/io/InputStream.java#185"
+     *
+     * @see
+     *     "http://grepcode.com/file/repository.grepcode.com/java/root/jdk/openjdk/8-b132/java/io/InputStream.java#185"
      */
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
@@ -206,8 +201,11 @@ final class NetHttpResponse extends LowLevelHttpResponse {
       //
       // See http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.4 for details.
       if (bytesRead != 0 && bytesRead < contentLength) {
-        throw new IOException("Connection closed prematurely: bytesRead = " + bytesRead
-            + ", Content-Length = " + contentLength);
+        throw new IOException(
+            "Connection closed prematurely: bytesRead = "
+                + bytesRead
+                + ", Content-Length = "
+                + contentLength);
       }
     }
   }

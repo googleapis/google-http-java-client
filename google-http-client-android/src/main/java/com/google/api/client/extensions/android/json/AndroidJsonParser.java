@@ -29,12 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Low-level JSON serializer implementation based on GSON.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @author Yaniv Inbar
  */
@@ -86,7 +84,6 @@ class AndroidJsonParser extends JsonParser {
     checkNumber();
     return Short.parseShort(currentText);
   }
-
 
   @Override
   public int getIntValue() {
@@ -199,8 +196,10 @@ class AndroidJsonParser extends JsonParser {
         break;
       case NUMBER:
         currentText = reader.nextString();
-        currentToken = currentText.indexOf('.') == -1
-            ? JsonToken.VALUE_NUMBER_INT : JsonToken.VALUE_NUMBER_FLOAT;
+        currentToken =
+            currentText.indexOf('.') == -1
+                ? JsonToken.VALUE_NUMBER_INT
+                : JsonToken.VALUE_NUMBER_FLOAT;
         break;
       case NAME:
         currentText = reader.nextName();

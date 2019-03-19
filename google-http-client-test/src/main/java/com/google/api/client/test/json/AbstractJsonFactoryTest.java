@@ -69,8 +69,12 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   protected abstract JsonFactory newFactory();
 
   private static final String EMPTY = "";
-  private static final String JSON_THREE_ELEMENTS = "{" + "  \"one\": { \"num\": 1 }"
-      + ", \"two\": { \"num\": 2 }" + ", \"three\": { \"num\": 3 }" + "}";
+  private static final String JSON_THREE_ELEMENTS =
+      "{"
+          + "  \"one\": { \"num\": 1 }"
+          + ", \"two\": { \"num\": 2 }"
+          + ", \"three\": { \"num\": 3 }"
+          + "}";
 
   public void testParse_empty() throws Exception {
     JsonParser parser = newFactory().createJsonParser(EMPTY);
@@ -262,18 +266,15 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class Entry {
-    @Key
-    public String title;
+    @Key public String title;
   }
 
   public static class Feed {
-    @Key
-    public Collection<Entry> entries;
+    @Key public Collection<Entry> entries;
   }
 
   public static class A {
-    @Key
-    public Map<String, String> map;
+    @Key public Map<String, String> map;
   }
 
   static final String CONTAINED_MAP = "{\"map\":{\"title\":\"foo\"}}";
@@ -286,114 +287,69 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class NumberTypes {
-    @Key
-    byte byteValue;
-    @Key
-    Byte byteObjValue;
-    @Key
-    short shortValue;
-    @Key
-    Short shortObjValue;
-    @Key
-    int intValue;
-    @Key
-    Integer intObjValue;
-    @Key
-    float floatValue;
-    @Key
-    Float floatObjValue;
-    @Key
-    long longValue;
-    @Key
-    Long longObjValue;
-    @Key
-    double doubleValue;
-    @Key
-    Double doubleObjValue;
-    @Key
-    BigInteger bigIntegerValue;
-    @Key
-    BigDecimal bigDecimalValue;
+    @Key byte byteValue;
+    @Key Byte byteObjValue;
+    @Key short shortValue;
+    @Key Short shortObjValue;
+    @Key int intValue;
+    @Key Integer intObjValue;
+    @Key float floatValue;
+    @Key Float floatObjValue;
+    @Key long longValue;
+    @Key Long longObjValue;
+    @Key double doubleValue;
+    @Key Double doubleObjValue;
+    @Key BigInteger bigIntegerValue;
+    @Key BigDecimal bigDecimalValue;
+
     @Key("yetAnotherBigDecimalValue")
     BigDecimal anotherBigDecimalValue;
 
-    @Key
-    List<Long> longListValue;
+    @Key List<Long> longListValue;
 
-    @Key
-    Map<String, Long> longMapValue;
+    @Key Map<String, Long> longMapValue;
   }
 
   public static class NumberTypesAsString {
-    @Key
-    @JsonString
-    byte byteValue;
-    @Key
-    @JsonString
-    Byte byteObjValue;
-    @Key
-    @JsonString
-    short shortValue;
-    @Key
-    @JsonString
-    Short shortObjValue;
-    @Key
-    @JsonString
-    int intValue;
-    @Key
-    @JsonString
-    Integer intObjValue;
-    @Key
-    @JsonString
-    float floatValue;
-    @Key
-    @JsonString
-    Float floatObjValue;
-    @Key
-    @JsonString
-    long longValue;
-    @Key
-    @JsonString
-    Long longObjValue;
-    @Key
-    @JsonString
-    double doubleValue;
-    @Key
-    @JsonString
-    Double doubleObjValue;
-    @Key
-    @JsonString
-    BigInteger bigIntegerValue;
-    @Key
-    @JsonString
-    BigDecimal bigDecimalValue;
+    @Key @JsonString byte byteValue;
+    @Key @JsonString Byte byteObjValue;
+    @Key @JsonString short shortValue;
+    @Key @JsonString Short shortObjValue;
+    @Key @JsonString int intValue;
+    @Key @JsonString Integer intObjValue;
+    @Key @JsonString float floatValue;
+    @Key @JsonString Float floatObjValue;
+    @Key @JsonString long longValue;
+    @Key @JsonString Long longObjValue;
+    @Key @JsonString double doubleValue;
+    @Key @JsonString Double doubleObjValue;
+    @Key @JsonString BigInteger bigIntegerValue;
+    @Key @JsonString BigDecimal bigDecimalValue;
+
     @Key("yetAnotherBigDecimalValue")
     @JsonString
     BigDecimal anotherBigDecimalValue;
 
-    @Key
-    @JsonString
-    List<Long> longListValue;
+    @Key @JsonString List<Long> longListValue;
 
-    @Key
-    @JsonString
-    Map<String, Long> longMapValue;
+    @Key @JsonString Map<String, Long> longMapValue;
   }
 
   static final String NUMBER_TYPES =
       "{\"bigDecimalValue\":1.0,\"bigIntegerValue\":1,\"byteObjValue\":1,\"byteValue\":1,"
-      + "\"doubleObjValue\":1.0,\"doubleValue\":1.0,\"floatObjValue\":1.0,\"floatValue\":1.0,"
-      + "\"intObjValue\":1,\"intValue\":1,\"longListValue\":[1],\"longMapValue\":{\"a\":1},"
-      + "\"longObjValue\":1,\"longValue\":1,\"shortObjValue\":1,\"shortValue\":1,"
-      + "\"yetAnotherBigDecimalValue\":1}";
+          + "\"doubleObjValue\":1.0,\"doubleValue\":1.0,\"floatObjValue\":1.0,\"floatValue\":1.0,"
+          + "\"intObjValue\":1,\"intValue\":1,\"longListValue\":[1],\"longMapValue\":{\"a\":1},"
+          + "\"longObjValue\":1,\"longValue\":1,\"shortObjValue\":1,\"shortValue\":1,"
+          + "\"yetAnotherBigDecimalValue\":1}";
 
   static final String NUMBER_TYPES_AS_STRING =
       "{\"bigDecimalValue\":\"1.0\",\"bigIntegerValue\":\"1\",\"byteObjValue\":\"1\","
-      + "\"byteValue\":\"1\",\"doubleObjValue\":\"1.0\",\"doubleValue\":\"1.0\","
-      + "\"floatObjValue\":\"1.0\",\"floatValue\":\"1.0\",\"intObjValue\":\"1\","
-      + "\"intValue\":\"1\",\"longListValue\":[\"1\"],\"longMapValue\":{\"a\":\"1\"},"
-      + "\"longObjValue\":\"1\",\"longValue\":\"1\"," + "\"shortObjValue\":\"1\","
-      + "\"shortValue\":\"1\",\"yetAnotherBigDecimalValue\":\"1\"}";
+          + "\"byteValue\":\"1\",\"doubleObjValue\":\"1.0\",\"doubleValue\":\"1.0\","
+          + "\"floatObjValue\":\"1.0\",\"floatValue\":\"1.0\",\"intObjValue\":\"1\","
+          + "\"intValue\":\"1\",\"longListValue\":[\"1\"],\"longMapValue\":{\"a\":\"1\"},"
+          + "\"longObjValue\":\"1\",\"longValue\":\"1\","
+          + "\"shortObjValue\":\"1\","
+          + "\"shortValue\":\"1\",\"yetAnotherBigDecimalValue\":\"1\"}";
 
   public void testParser_numberTypes() throws Exception {
     JsonFactory factory = newFactory();
@@ -445,22 +401,17 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class AnyType {
-    @Key
-    public Object arr;
-    @Key
-    public Object bool;
-    @Key
-    public Object num;
-    @Key
-    public Object obj;
-    @Key
-    public Object str;
-    @Key
-    public Object nul;
+    @Key public Object arr;
+    @Key public Object bool;
+    @Key public Object num;
+    @Key public Object obj;
+    @Key public Object str;
+    @Key public Object nul;
   }
 
-  static final String ANY_TYPE = "{\"arr\":[1],\"bool\":true,\"nul\":null,\"num\":5,"
-      + "\"obj\":{\"key\":\"value\"},\"str\":\"value\"}";
+  static final String ANY_TYPE =
+      "{\"arr\":[1],\"bool\":true,\"nul\":null,\"num\":5,"
+          + "\"obj\":{\"key\":\"value\"},\"str\":\"value\"}";
 
   public void testParser_anyType() throws Exception {
     JsonFactory factory = newFactory();
@@ -472,14 +423,11 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class ArrayType {
-    @Key
-    int[] arr;
+    @Key int[] arr;
 
-    @Key
-    int[][] arr2;
+    @Key int[][] arr2;
 
-    @Key
-    public Integer[] integerArr;
+    @Key public Integer[] integerArr;
   }
 
   static final String ARRAY_TYPE = "{\"arr\":[4,5],\"arr2\":[[1,2],[3]],\"integerArr\":[6,7]}";
@@ -510,8 +458,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class CollectionOfCollectionType {
-    @Key
-    public LinkedList<LinkedList<String>> arr;
+    @Key public LinkedList<LinkedList<String>> arr;
   }
 
   static final String COLLECTION_TYPE = "{\"arr\":[[\"a\",\"b\"],[\"c\"]]}";
@@ -530,8 +477,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class MapOfMapType {
-    @Key
-    public Map<String, Map<String, Integer>>[] value;
+    @Key public Map<String, Map<String, Integer>>[] value;
   }
 
   static final String MAP_TYPE =
@@ -577,23 +523,17 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class WildCardTypes {
-    @Key
-    public Collection<? super Integer>[] lower;
-    @Key
-    public Map<String, ?> map;
-    @Key
-    public Collection<? super TreeMap<String, ? extends Integer>> mapInWild;
-    @Key
-    public Map<String, ? extends Integer> mapUpper;
-    @Key
-    public Collection<?>[] simple;
-    @Key
-    public Collection<? extends Integer>[] upper;
+    @Key public Collection<? super Integer>[] lower;
+    @Key public Map<String, ?> map;
+    @Key public Collection<? super TreeMap<String, ? extends Integer>> mapInWild;
+    @Key public Map<String, ? extends Integer> mapUpper;
+    @Key public Collection<?>[] simple;
+    @Key public Collection<? extends Integer>[] upper;
   }
 
   static final String WILDCARD_TYPE =
       "{\"lower\":[[1,2,3]],\"map\":{\"v\":1},\"mapInWild\":[{\"v\":1}],"
-      + "\"mapUpper\":{\"v\":1},\"simple\":[[1,2,3]],\"upper\":[[1,2,3]]}";
+          + "\"mapUpper\":{\"v\":1},\"simple\":[[1,2,3]],\"upper\":[[1,2,3]]}";
 
   @SuppressWarnings("unchecked")
   public void testParser_wildCardType() throws Exception {
@@ -633,30 +573,22 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
 
   public static class TypeVariableType<T> {
 
-    @Key
-    public T[][] arr;
+    @Key public T[][] arr;
 
-    @Key
-    public LinkedList<LinkedList<T>> list;
+    @Key public LinkedList<LinkedList<T>> list;
 
-    @Key
-    public T nullValue;
+    @Key public T nullValue;
 
-    @Key
-    public T value;
+    @Key public T value;
   }
 
-  public static class IntegerTypeVariableType extends TypeVariableType<Integer> {
-  }
+  public static class IntegerTypeVariableType extends TypeVariableType<Integer> {}
 
-  public static class IntArrayTypeVariableType extends TypeVariableType<int[]> {
-  }
+  public static class IntArrayTypeVariableType extends TypeVariableType<int[]> {}
 
-  public static class DoubleListTypeVariableType extends TypeVariableType<List<Double>> {
-  }
+  public static class DoubleListTypeVariableType extends TypeVariableType<List<Double>> {}
 
-  public static class FloatMapTypeVariableType extends TypeVariableType<Map<String, Float>> {
-  }
+  public static class FloatMapTypeVariableType extends TypeVariableType<Map<String, Float>> {}
 
   static final String INTEGER_TYPE_VARIABLE_TYPE =
       "{\"arr\":[null,[null,1]],\"list\":[null,[null,1]],\"nullValue\":null,\"value\":1}";
@@ -666,11 +598,11 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
 
   static final String DOUBLE_LIST_TYPE_VARIABLE_TYPE =
       "{\"arr\":[null,[null,[1.0]]],\"list\":[null,[null,[1.0]]],"
-      + "\"nullValue\":null,\"value\":[1.0]}";
+          + "\"nullValue\":null,\"value\":[1.0]}";
 
   static final String FLOAT_MAP_TYPE_VARIABLE_TYPE =
       "{\"arr\":[null,[null,{\"a\":1.0}]],\"list\":[null,[null,{\"a\":1.0}]],"
-      + "\"nullValue\":null,\"value\":{\"a\":1.0}}";
+          + "\"nullValue\":null,\"value\":{\"a\":1.0}}";
 
   public void testParser_integerTypeVariableType() throws Exception {
     // parse
@@ -853,12 +785,9 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class StringNullValue {
-    @Key
-    public String[][] arr2;
-    @Key
-    public String[] arr;
-    @Key
-    public String value;
+    @Key public String[][] arr2;
+    @Key public String[] arr;
+    @Key public String value;
   }
 
   static final String NULL_VALUE = "{\"arr\":[null],\"arr2\":[null,[null]],\"value\":null}";
@@ -886,22 +815,19 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public enum E {
-
     @Value
     VALUE,
     @Value("other")
     OTHER_VALUE,
     @NullValue
-    NULL, IGNORED_VALUE
+    NULL,
+    IGNORED_VALUE
   }
 
   public static class EnumValue {
-    @Key
-    public E value;
-    @Key
-    public E otherValue;
-    @Key
-    public E nullValue;
+    @Key public E value;
+    @Key public E otherValue;
+    @Key public E nullValue;
   }
 
   static final String ENUM_VALUE =
@@ -923,22 +849,18 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class X<XT> {
-    @Key
-    Y<XT> y;
+    @Key Y<XT> y;
   }
 
   public static class Y<YT> {
-    @Key
-    Z<YT> z;
+    @Key Z<YT> z;
   }
 
   public static class Z<ZT> {
-    @Key
-    ZT f;
+    @Key ZT f;
   }
 
-  public static class TypeVariablesPassedAround extends X<LinkedList<String>> {
-  }
+  public static class TypeVariablesPassedAround extends X<LinkedList<String>> {}
 
   static final String TYPE_VARS = "{\"y\":{\"z\":{\"f\":[\"abc\"]}}}";
 
@@ -1147,16 +1069,23 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
 
   public void testObjectParserParse_entry() throws Exception {
     @SuppressWarnings("serial")
-    Entry entry = (Entry) newFactory().createJsonObjectParser()
-        .parseAndClose(new StringReader(JSON_ENTRY), new TypeToken<Entry>() {}.getType());
+    Entry entry =
+        (Entry)
+            newFactory()
+                .createJsonObjectParser()
+                .parseAndClose(new StringReader(JSON_ENTRY), new TypeToken<Entry>() {}.getType());
     assertEquals("foo", entry.title);
   }
 
   public void testObjectParserParse_stringList() throws Exception {
     JsonFactory factory = newFactory();
     @SuppressWarnings({"unchecked", "serial"})
-    List<String> result = (List<String>) factory.createJsonObjectParser()
-        .parseAndClose(new StringReader(STRING_ARRAY), new TypeToken<List<String>>() {}.getType());
+    List<String> result =
+        (List<String>)
+            factory
+                .createJsonObjectParser()
+                .parseAndClose(
+                    new StringReader(STRING_ARRAY), new TypeToken<List<String>>() {}.getType());
     result.get(0);
     assertEquals(STRING_ARRAY, factory.toString(result));
     // check types and values
@@ -1232,8 +1161,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class TestClass {
-    public TestClass() {
-    }
+    public TestClass() {}
 
     @Key("foo")
     public int foo;
@@ -1284,9 +1212,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class ExtendsGenericJson extends GenericJson {
-    @Key
-    @JsonString
-    Long numAsString;
+    @Key @JsonString Long numAsString;
 
     @Override
     public ExtendsGenericJson set(String fieldName, Object value) {
@@ -1307,8 +1233,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class Simple {
-    @Key
-    String a;
+    @Key String a;
   }
 
   static final String SIMPLE = "{\"a\":\"b\"}";
@@ -1324,8 +1249,11 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   public void testJsonObjectParser_inputStream() throws Exception {
     JsonFactory factory = newFactory();
     JsonObjectParser parser = new JsonObjectParser(factory);
-    Simple simple = parser.parseAndClose(
-        new ByteArrayInputStream(StringUtils.getBytesUtf8(SIMPLE)), Charsets.UTF_8, Simple.class);
+    Simple simple =
+        parser.parseAndClose(
+            new ByteArrayInputStream(StringUtils.getBytesUtf8(SIMPLE)),
+            Charsets.UTF_8,
+            Simple.class);
     assertEquals("b", simple.a);
   }
 
@@ -1341,9 +1269,11 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     JsonFactory factory = newFactory();
     JsonObjectParser parser =
         new JsonObjectParser.Builder(factory).setWrapperKeys(Collections.singleton("d")).build();
-    Simple simple = parser.parseAndClose(
-        new ByteArrayInputStream(StringUtils.getBytesUtf8(SIMPLE_WRAPPED)), Charsets.UTF_8,
-        Simple.class);
+    Simple simple =
+        parser.parseAndClose(
+            new ByteArrayInputStream(StringUtils.getBytesUtf8(SIMPLE_WRAPPED)),
+            Charsets.UTF_8,
+            Simple.class);
     assertEquals("b", simple.a);
   }
 
@@ -1368,10 +1298,8 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class V {
-    @Key
-    Void v;
-    @Key
-    String s;
+    @Key Void v;
+    @Key String s;
   }
 
   public void testParse_void() throws Exception {
@@ -1396,10 +1324,8 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class BooleanTypes {
-    @Key
-    Boolean boolObj;
-    @Key
-    boolean bool;
+    @Key Boolean boolObj;
+    @Key boolean bool;
   }
 
   public static final String BOOLEAN_TYPE_EMPTY = "{}";
@@ -1442,21 +1368,25 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public abstract static class Animal {
-    @Key
-    public String name;
+    @Key public String name;
+
     @Key("legCount")
     public int numberOfLegs;
+
     @Key
-    @JsonPolymorphicTypeMap(typeDefinitions = {@TypeDef(key = "dog", ref = Dog.class),
-        @TypeDef(key = "bug", ref = Centipede.class), @TypeDef(key = "human", ref = Human.class),
-        @TypeDef(key = "dogwithfamily", ref = DogWithFamily.class),
-        @TypeDef(key = "human with pets", ref = HumanWithPets.class)})
+    @JsonPolymorphicTypeMap(
+        typeDefinitions = {
+          @TypeDef(key = "dog", ref = Dog.class),
+          @TypeDef(key = "bug", ref = Centipede.class),
+          @TypeDef(key = "human", ref = Human.class),
+          @TypeDef(key = "dogwithfamily", ref = DogWithFamily.class),
+          @TypeDef(key = "human with pets", ref = HumanWithPets.class)
+        })
     public String type;
   }
 
   public static class Dog extends Animal {
-    @Key
-    public int tricksKnown;
+    @Key public int tricksKnown;
   }
 
   public static class Centipede extends Animal {
@@ -1479,10 +1409,10 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   // Test heterogeneous scheme with additional, unused information:
   public static final String DOG_EXTRA_INFO =
       "{\"name\":\"Fido\",\"legCount\":4,\"unusedInfo\":\"this is not being used!\","
-      + "\"tricksKnown\":3,\"type\":\"dog\",\"unused\":{\"foo\":200}}";
+          + "\"tricksKnown\":3,\"type\":\"dog\",\"unused\":{\"foo\":200}}";
   public static final String CENTIPEDE_EXTRA_INFO =
       "{\"unused\":0, \"bodyColor\":\"green\",\"name\":\"Mr. Icky\",\"legCount\":68,\"type\":"
-      + "\"bug\"}";
+          + "\"bug\"}";
 
   public void testParser_heterogeneousSchemata() throws Exception {
     testParser_heterogeneousSchemata_Helper(DOG, CENTIPEDE);
@@ -1534,8 +1464,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class Human extends Animal {
-    @Key
-    public Dog bestFriend;
+    @Key public Dog bestFriend;
   }
 
   // Test a subclass with an additional object in it.
@@ -1560,23 +1489,23 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class AnimalGenericJson extends GenericJson {
-    @Key
-    public String name;
+    @Key public String name;
+
     @Key("legCount")
     public int numberOfLegs;
+
     @Key
     @JsonPolymorphicTypeMap(typeDefinitions = {@TypeDef(key = "dog", ref = DogGenericJson.class)})
     public String type;
   }
 
   public static class DogGenericJson extends AnimalGenericJson {
-    @Key
-    public int tricksKnown;
+    @Key public int tricksKnown;
   }
 
   public static final String DOG_EXTRA_INFO_ORDERED =
       "{\"legCount\":4,\"name\":\"Fido\",\"tricksKnown\":3,\"type\":\"dog\","
-      + "\"unusedInfo\":\"this is not being used!\",\"unused\":{\"foo\":200}}";
+          + "\"unusedInfo\":\"this is not being used!\",\"unused\":{\"foo\":200}}";
 
   @SuppressWarnings("unchecked")
   public void testParser_heterogeneousSchema_genericJson() throws Exception {
@@ -1594,15 +1523,17 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     assertEquals(200, foo.intValue());
   }
 
-  public static final String DOG_WITH_FAMILY = "{\"children\":[" + DOG + "," + CENTIPEDE
-      + "],\"legCount\":4,\"name\":\"Bob\",\"nicknames\":[\"Fluffy\",\"Hey, you\"],"
-      + "\"tricksKnown\":10,\"type\":\"dogwithfamily\"}";
+  public static final String DOG_WITH_FAMILY =
+      "{\"children\":["
+          + DOG
+          + ","
+          + CENTIPEDE
+          + "],\"legCount\":4,\"name\":\"Bob\",\"nicknames\":[\"Fluffy\",\"Hey, you\"],"
+          + "\"tricksKnown\":10,\"type\":\"dogwithfamily\"}";
 
   public static class DogWithFamily extends Dog {
-    @Key
-    public String[] nicknames;
-    @Key
-    public Animal[] children;
+    @Key public String[] nicknames;
+    @Key public Animal[] children;
   }
 
   public void testParser_heterogeneousSchema_withArrays() throws Exception {
@@ -1643,13 +1574,14 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class PolymorphicWithMultipleAnnotations {
-    @Key
-    String a;
+    @Key String a;
+
     @Key
     @JsonPolymorphicTypeMap(typeDefinitions = {@TypeDef(key = "dog", ref = Dog.class)})
     String b;
-    @Key
-    String c;
+
+    @Key String c;
+
     @Key
     @JsonPolymorphicTypeMap(typeDefinitions = {@TypeDef(key = "bug", ref = Centipede.class)})
     String d;
@@ -1666,22 +1598,24 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     } catch (IllegalArgumentException e) {
       return; // expected
     }
-    fail("Expected IllegalArgumentException on class with multiple @JsonPolymorphicTypeMap"
-        + " annotations.");
+    fail(
+        "Expected IllegalArgumentException on class with multiple @JsonPolymorphicTypeMap"
+            + " annotations.");
   }
 
   public static class PolymorphicWithNumericType {
     @Key
-    @JsonPolymorphicTypeMap(typeDefinitions = {
-        @TypeDef(key = "1", ref = NumericTypedSubclass1.class),
-        @TypeDef(key = "2", ref = NumericTypedSubclass2.class)})
+    @JsonPolymorphicTypeMap(
+        typeDefinitions = {
+          @TypeDef(key = "1", ref = NumericTypedSubclass1.class),
+          @TypeDef(key = "2", ref = NumericTypedSubclass2.class)
+        })
     Integer type;
   }
 
-  public static class NumericTypedSubclass1 extends PolymorphicWithNumericType {
-  }
-  public static class NumericTypedSubclass2 extends PolymorphicWithNumericType {
-  }
+  public static class NumericTypedSubclass1 extends PolymorphicWithNumericType {}
+
+  public static class NumericTypedSubclass2 extends PolymorphicWithNumericType {}
 
   public static final String POLYMORPHIC_NUMERIC_TYPE_1 = "{\"foo\":\"bar\",\"type\":1}";
   public static final String POLYMORPHIC_NUMERIC_TYPE_2 = "{\"foo\":\"bar\",\"type\":2}";
@@ -1700,16 +1634,17 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
 
   public static class PolymorphicWithNumericValueType {
     @Key
-    @JsonPolymorphicTypeMap(typeDefinitions = {
-        @TypeDef(key = "1", ref = NumericValueTypedSubclass1.class),
-        @TypeDef(key = "2", ref = NumericValueTypedSubclass2.class)})
+    @JsonPolymorphicTypeMap(
+        typeDefinitions = {
+          @TypeDef(key = "1", ref = NumericValueTypedSubclass1.class),
+          @TypeDef(key = "2", ref = NumericValueTypedSubclass2.class)
+        })
     int type;
   }
 
-  public static class NumericValueTypedSubclass1 extends PolymorphicWithNumericValueType {
-  }
-  public static class NumericValueTypedSubclass2 extends PolymorphicWithNumericValueType {
-  }
+  public static class NumericValueTypedSubclass1 extends PolymorphicWithNumericValueType {}
+
+  public static class NumericValueTypedSubclass2 extends PolymorphicWithNumericValueType {}
 
   public static final String POLYMORPHIC_NUMERIC_UNSPECIFIED_TYPE = "{\"foo\":\"bar\"}";
 
@@ -1736,8 +1671,11 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
 
   public static class PolymorphicWithIllegalValueType {
     @Key
-    @JsonPolymorphicTypeMap(typeDefinitions = {
-        @TypeDef(key = "foo", ref = Object.class), @TypeDef(key = "bar", ref = Object.class)})
+    @JsonPolymorphicTypeMap(
+        typeDefinitions = {
+          @TypeDef(key = "foo", ref = Object.class),
+          @TypeDef(key = "bar", ref = Object.class)
+        })
     Object type;
   }
 
@@ -1752,11 +1690,13 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     fail("Expected IllegalArgumentException on class with illegal @JsonPolymorphicTypeMap type");
   }
 
-
   public static class PolymorphicWithDuplicateTypeKeys {
     @Key
-    @JsonPolymorphicTypeMap(typeDefinitions = {
-        @TypeDef(key = "foo", ref = Object.class), @TypeDef(key = "foo", ref = Object.class)})
+    @JsonPolymorphicTypeMap(
+        typeDefinitions = {
+          @TypeDef(key = "foo", ref = Object.class),
+          @TypeDef(key = "foo", ref = Object.class)
+        })
     String type;
   }
 
@@ -1790,8 +1730,8 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     @JsonPolymorphicTypeMap(
         typeDefinitions = {@TypeDef(key = "self", ref = PolymorphicSelfReferencing.class)})
     String type;
-    @Key
-    String info;
+
+    @Key String info;
   }
 
   public static final String POLYMORPHIC_SELF_REFERENCING = "{\"info\":\"blah\",\"type\":\"self\"}";
@@ -1807,18 +1747,23 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
   }
 
   public static class HumanWithPets extends Human {
-    @Key
-    Map<String, Animal> pets;
+    @Key Map<String, Animal> pets;
   }
 
-  public static final String HUMAN_WITH_PETS = "{\"bestFriend\":" + DOG
-      + ",\"legCount\":2,\"name\":\"Joe\",\"pets\":{\"first\":" + CENTIPEDE
-      + ",\"second\":{\"type\":\"dog\"}},\"type\":\"human with pets\",\"unused\":\"foo\"}";
+  public static final String HUMAN_WITH_PETS =
+      "{\"bestFriend\":"
+          + DOG
+          + ",\"legCount\":2,\"name\":\"Joe\",\"pets\":{\"first\":"
+          + CENTIPEDE
+          + ",\"second\":{\"type\":\"dog\"}},\"type\":\"human with pets\",\"unused\":\"foo\"}";
 
-  public static final String HUMAN_WITH_PETS_PARSED = "{\"bestFriend\":" + DOG
-      + ",\"legCount\":2,\"name\":\"Joe\",\"pets\":{\"first\":" + CENTIPEDE
-      + ",\"second\":{\"legCount\":0,\"tricksKnown\":0,\"type\":\"dog\"}},"
-      + "\"type\":\"human with pets\"}";
+  public static final String HUMAN_WITH_PETS_PARSED =
+      "{\"bestFriend\":"
+          + DOG
+          + ",\"legCount\":2,\"name\":\"Joe\",\"pets\":{\"first\":"
+          + CENTIPEDE
+          + ",\"second\":{\"legCount\":0,\"tricksKnown\":0,\"type\":\"dog\"}},"
+          + "\"type\":\"human with pets\"}";
 
   public void testParser_polymorphicClass_mapOfPolymorphicClasses() throws Exception {
     JsonFactory factory = newFactory();
@@ -1839,6 +1784,4 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     assertEquals(0, ((Dog) humanWithPets.pets.get("second")).tricksKnown);
     assertEquals(2, humanWithPets.pets.size());
   }
-
-
 }

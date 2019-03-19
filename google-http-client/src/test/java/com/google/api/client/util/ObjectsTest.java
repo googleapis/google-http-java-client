@@ -33,17 +33,14 @@ public class ObjectsTest extends TestCase {
   }
 
   public void testToString_oneIntegerField() {
-    String toTest = Objects.toStringHelper(new TestClass())
-        .add("field1", new Integer(42))
-        .toString();
+    String toTest =
+        Objects.toStringHelper(new TestClass()).add("field1", new Integer(42)).toString();
     assertEquals("TestClass{field1=42}", toTest);
   }
 
   public void testToStringOmitNullValues_oneField() {
-    String toTest = Objects.toStringHelper(new TestClass())
-        .omitNullValues()
-        .add("field1", null)
-        .toString();
+    String toTest =
+        Objects.toStringHelper(new TestClass()).omitNullValues().add("field1", null).toString();
     assertEquals("TestClass{}", toTest);
   }
 

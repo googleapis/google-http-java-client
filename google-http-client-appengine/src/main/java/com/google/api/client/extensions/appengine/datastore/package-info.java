@@ -19,4 +19,3 @@
  * @author Yaniv Inbar
  */
 package com.google.api.client.extensions.appengine.datastore;
-

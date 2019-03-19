@@ -37,5 +37,4 @@ public class MockBackOffTest extends TestCase {
       assertEquals(expectedValue, backOffPolicy.nextBackOffMillis());
     }
   }
-
 }

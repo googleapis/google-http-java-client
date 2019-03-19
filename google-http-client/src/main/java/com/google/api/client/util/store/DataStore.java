@@ -14,7 +14,6 @@
 
 package com.google.api.client.util.store;
 
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
@@ -24,12 +23,9 @@ import java.util.Set;
  * Stores and manages serializable data of a specific type, where the key is a string and the value
  * is a {@link Serializable} object.
  *
- * <p>
- * {@code null} keys or values are not allowed. Implementation should be thread-safe.
- * </p>
+ * <p>{@code null} keys or values are not allowed. Implementation should be thread-safe.
  *
  * @param <V> serializable type of the mapped value
- *
  * @author Yaniv Inbar
  * @since 1.16
  */
@@ -56,9 +52,7 @@ public interface DataStore<V extends Serializable> {
   /**
    * Returns the unmodifiable set of all stored keys.
    *
-   * <p>
-   * Order of the keys is not specified.
-   * </p>
+   * <p>Order of the keys is not specified.
    */
   Set<String> keySet() throws IOException;
 

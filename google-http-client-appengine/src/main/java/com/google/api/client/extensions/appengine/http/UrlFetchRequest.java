@@ -23,14 +23,11 @@ import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
-/**
- * @author Yaniv Inbar
- */
+/** @author Yaniv Inbar */
 final class UrlFetchRequest extends LowLevelHttpRequest {
 
   private final HTTPRequest request;
@@ -46,8 +43,12 @@ final class UrlFetchRequest extends LowLevelHttpRequest {
 
   @Override
   public void setTimeout(int connectTimeout, int readTimeout) {
-    request.getFetchOptions().setDeadline(connectTimeout == 0 || readTimeout == 0
-        ? Double.MAX_VALUE : (connectTimeout + readTimeout) / 1000.0);
+    request
+        .getFetchOptions()
+        .setDeadline(
+            connectTimeout == 0 || readTimeout == 0
+                ? Double.MAX_VALUE
+                : (connectTimeout + readTimeout) / 1000.0);
   }
 
   @Override

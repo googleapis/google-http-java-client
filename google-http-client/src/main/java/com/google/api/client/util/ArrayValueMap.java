@@ -22,23 +22,17 @@ import java.util.concurrent.ConcurrentMap;
  * Collects the array values of a key/value data object, writing the fields or map values only after
  * all values have been collected.
  *
- * <p>
- * The typical application for this is when parsing JSON or XML when the value type is known to be
- * an array. It stores the values in a collection during the parsing, and only when the parsing of
- * an object is finished does it convert the collection into an array and stores it.
- * </p>
+ * <p>The typical application for this is when parsing JSON or XML when the value type is known to
+ * be an array. It stores the values in a collection during the parsing, and only when the parsing
+ * of an object is finished does it convert the collection into an array and stores it.
  *
- * <p>
- * Use {@link #put(String, Class, Object)} when the destination object is a map with string keys and
- * whose values accept an array of objects. Use {@link #put(Field, Class, Object)} when setting the
- * value of a field using reflection, assuming its type accepts an array of objects. One can
+ * <p>Use {@link #put(String, Class, Object)} when the destination object is a map with string keys
+ * and whose values accept an array of objects. Use {@link #put(Field, Class, Object)} when setting
+ * the value of a field using reflection, assuming its type accepts an array of objects. One can
  * potentially use both {@code put} methods for example on an instance of {@link GenericData}.
- * </p>
  *
- * <p>
- * Implementation is not thread-safe. For a thread-safe choice instead use an implementation of
+ * <p>Implementation is not thread-safe. For a thread-safe choice instead use an implementation of
  * {@link ConcurrentMap}.
- * </p>
  *
  * @since 1.4
  * @author Yaniv Inbar
@@ -54,9 +48,7 @@ public final class ArrayValueMap {
     /** Values to be stored in the array. */
     final ArrayList<Object> values = new ArrayList<Object>();
 
-    /**
-     * @param componentType array component type
-     */
+    /** @param componentType array component type */
     ArrayValue(Class<?> componentType) {
       this.componentType = componentType;
     }
@@ -87,7 +79,7 @@ public final class ArrayValueMap {
 
   /**
    * @param destination destination object whose fields must be set, or destination map whose values
-   *        must be set
+   *     must be set
    */
   public ArrayValueMap(Object destination) {
     this.destination = destination;

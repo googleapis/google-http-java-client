@@ -88,7 +88,8 @@ public class ApacheHttpTransportTest extends TestCase {
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
-      assertEquals(e.getMessage(),
+      assertEquals(
+          e.getMessage(),
           "Apache HTTP client does not support " + method + " requests with content.");
     }
   }

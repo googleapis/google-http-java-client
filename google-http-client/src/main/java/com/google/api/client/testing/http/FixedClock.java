@@ -16,16 +16,13 @@ package com.google.api.client.testing.http;
 
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Clock;
-
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * A thread-safe fixed time implementation of the Clock to be used for unit testing.
  *
- * <p>
- * Explicitly allows you to set the time to any arbitrary value.
- * </p>
+ * <p>Explicitly allows you to set the time to any arbitrary value.
  *
  * @since 1.9
  * @author mlinder@google.com (Matthias Linder)
@@ -34,15 +31,14 @@ import java.util.concurrent.atomic.AtomicLong;
 public class FixedClock implements Clock {
   private AtomicLong currentTime;
 
-  /**
-   * Initializes the FixedClock with 0 millis as start time.
-   */
+  /** Initializes the FixedClock with 0 millis as start time. */
   public FixedClock() {
     this(0L);
   }
 
   /**
    * Initializes the FixedClock with the specified time.
+   *
    * @param startTime time in milliseconds used for initialization.
    */
   public FixedClock(long startTime) {
@@ -51,6 +47,7 @@ public class FixedClock implements Clock {
 
   /**
    * Changes the time value this time provider is returning.
+   *
    * @param newTime New time in milliseconds.
    */
   public FixedClock setTime(long newTime) {

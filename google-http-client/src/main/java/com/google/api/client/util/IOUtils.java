@@ -37,23 +37,19 @@ public class IOUtils {
    * Writes the content provided by the given source input stream into the given destination output
    * stream.
    *
-   * <p>
-   * The input stream is guaranteed to be closed at the end of this method.
-   * </p>
+   * <p>The input stream is guaranteed to be closed at the end of this method.
    *
-   * <p>
-   * Sample use:
-   * </p>
+   * <p>Sample use:
    *
    * <pre>
-  static void copy(InputStream inputStream, File file) throws IOException {
-    FileOutputStream out = new FileOutputStream(file);
-    try {
-      IOUtils.copy(inputStream, out);
-    } finally {
-      out.close();
-    }
-  }
+   * static void copy(InputStream inputStream, File file) throws IOException {
+   * FileOutputStream out = new FileOutputStream(file);
+   * try {
+   * IOUtils.copy(inputStream, out);
+   * } finally {
+   * out.close();
+   * }
+   * }
    * </pre>
    *
    * @param inputStream source input stream
@@ -63,24 +59,21 @@ public class IOUtils {
     copy(inputStream, outputStream, true);
   }
 
-
   /**
    * Writes the content provided by the given source input stream into the given destination output
    * stream, optionally closing the input stream.
    *
-   * <p>
-   * Sample use:
-   * </p>
+   * <p>Sample use:
    *
    * <pre>
-  static void copy(InputStream inputStream, File file) throws IOException {
-    FileOutputStream out = new FileOutputStream(file);
-    try {
-      IOUtils.copy(inputStream, out, true);
-    } finally {
-      out.close();
-    }
-  }
+   * static void copy(InputStream inputStream, File file) throws IOException {
+   * FileOutputStream out = new FileOutputStream(file);
+   * try {
+   * IOUtils.copy(inputStream, out, true);
+   * } finally {
+   * out.close();
+   * }
+   * }
    * </pre>
    *
    * @param inputStream source input stream
@@ -99,11 +92,9 @@ public class IOUtils {
     }
   }
 
-
   /**
-   * Computes and returns the byte content length for a streaming content by calling
-   * {@link StreamingContent#writeTo(OutputStream)} on a fake output stream that only counts bytes
-   * written.
+   * Computes and returns the byte content length for a streaming content by calling {@link
+   * StreamingContent#writeTo(OutputStream)} on a fake output stream that only counts bytes written.
    *
    * @param content streaming content
    */

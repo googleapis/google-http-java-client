@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Given a {@link URL} instance, produces an {@link HttpURLConnection}.
- */
+/** Given a {@link URL} instance, produces an {@link HttpURLConnection}. */
 public interface ConnectionFactory {
 
   /**

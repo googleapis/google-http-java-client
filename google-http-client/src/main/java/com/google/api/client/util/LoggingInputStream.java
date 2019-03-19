@@ -37,7 +37,7 @@ public class LoggingInputStream extends FilterInputStream {
    * @param logger logger
    * @param loggingLevel logging level
    * @param contentLoggingLimit maximum number of bytes to log (may be {@code 0} to avoid logging
-   *        content)
+   *     content)
    */
   public LoggingInputStream(
       InputStream inputStream, Logger logger, Level loggingLevel, int contentLoggingLimit) {

@@ -14,7 +14,6 @@
 
 package com.google.api.client.util;
 
-
 import junit.framework.TestCase;
 
 /**
@@ -25,13 +24,13 @@ import junit.framework.TestCase;
 public class FieldInfoTest extends TestCase {
 
   public enum E {
-
     @Value
     VALUE,
     @Value("other")
     OTHER_VALUE,
     @NullValue
-    NULL, IGNORED_VALUE
+    NULL,
+    IGNORED_VALUE
   }
 
   public void testOf_enum() throws Exception {

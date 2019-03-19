@@ -25,12 +25,10 @@ import java.io.OutputStream;
 import org.xmlpull.v1.XmlSerializer;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Abstract serializer for XML HTTP content based on the data key/value mapping object for an item.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.0
  * @author Yaniv Inbar
