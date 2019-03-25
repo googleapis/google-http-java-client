@@ -294,20 +294,17 @@ public class HttpResponseExceptionTest extends TestCase {
       public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
-          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
-            return new MockLowLevelHttpRequest() {
-              @Override
-              public LowLevelHttpResponse execute() throws IOException {
-                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
-                result.setStatusCode(HttpStatusCodes.STATUS_CODE_NOT_FOUND);
-                result.setReasonPhrase("Not Found");
-                result.setContentType("text/plain; charset=");
-                result.setContent("Unable to find resource");
-                return result;
-              }
-            };
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+            result.setStatusCode(HttpStatusCodes.STATUS_CODE_NOT_FOUND);
+            result.setReasonPhrase("Not Found");
+            result.setContentType("text/plain; charset=");
+            result.setContent("Unable to find resource");
+            return result;
           }
         };
+      }
+    };
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     try {
@@ -331,20 +328,17 @@ public class HttpResponseExceptionTest extends TestCase {
       public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
         return new MockLowLevelHttpRequest() {
           @Override
-          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
-            return new MockLowLevelHttpRequest() {
-              @Override
-              public LowLevelHttpResponse execute() throws IOException {
-                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
-                result.setStatusCode(HttpStatusCodes.STATUS_CODE_NOT_FOUND);
-                result.setReasonPhrase("Not Found");
-                result.setContentType("text/plain; charset=invalid-charset");
-                result.setContent("Unable to find resource");
-                return result;
-              }
-            };
+          public LowLevelHttpResponse execute() throws IOException {
+            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+            result.setStatusCode(HttpStatusCodes.STATUS_CODE_NOT_FOUND);
+            result.setReasonPhrase("Not Found");
+            result.setContentType("text/plain; charset=invalid-charset");
+            result.setContent("Unable to find resource");
+            return result;
           }
         };
+      }
+    };
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     try {
