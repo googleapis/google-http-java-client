@@ -18,16 +18,13 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Mock for {@link HttpUnsuccessfulResponseHandler}.
  *
- * <p>
- * Contains an {@link #isCalled} method that returns true if {@link #handleResponse} is called.
- * </p>
+ * <p>Contains an {@link #isCalled} method that returns true if {@link #handleResponse} is called.
  *
  * @author Ravi Mistry
  * @since 1.6
@@ -47,9 +44,7 @@ public class MockHttpUnsuccessfulResponseHandler implements HttpUnsuccessfulResp
     this.successfullyHandleResponse = successfullyHandleResponse;
   }
 
-  /**
-   * Returns whether the {@link #handleResponse} method was called or not.
-   */
+  /** Returns whether the {@link #handleResponse} method was called or not. */
   public boolean isCalled() {
     return isCalled;
   }

@@ -19,7 +19,6 @@ import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingInputStream;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -34,24 +33,20 @@ import java.util.zip.GZIPInputStream;
 /**
  * HTTP response.
  *
- * <p>
- * Callers should call {@link #disconnect} when the HTTP response object is no longer needed.
+ * <p>Callers should call {@link #disconnect} when the HTTP response object is no longer needed.
  * However, {@link #disconnect} does not have to be called if the response stream is properly
  * closed. Example usage:
- * </p>
  *
  * <pre>
-   HttpResponse response = request.execute();
-   try {
-     // process the HTTP response object
-   } finally {
-     response.disconnect();
-   }
+ * HttpResponse response = request.execute();
+ * try {
+ * // process the HTTP response object
+ * } finally {
+ * response.disconnect();
+ * }
  * </pre>
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -88,31 +83,21 @@ public final class HttpResponse {
   /**
    * Determines the limit to the content size that will be logged during {@link #getContent()}.
    *
-   * <p>
-   * Content will only be logged if {@link #isLoggingEnabled} is {@code true}.
-   * </p>
+   * <p>Content will only be logged if {@link #isLoggingEnabled} is {@code true}.
    *
-   * <p>
-   * If the content size is greater than this limit then it will not be logged.
-   * </p>
+   * <p>If the content size is greater than this limit then it will not be logged.
    *
-   * <p>
-   * Can be set to {@code 0} to disable content logging. This is useful for example if content has
-   * sensitive data such as authentication information.
-   * </p>
+   * <p>Can be set to {@code 0} to disable content logging. This is useful for example if content
+   * has sensitive data such as authentication information.
    *
-   * <p>
-   * Defaults to {@link HttpRequest#getContentLoggingLimit()}.
-   * </p>
+   * <p>Defaults to {@link HttpRequest#getContentLoggingLimit()}.
    */
   private int contentLoggingLimit;
 
   /**
    * Determines whether logging should be enabled on this response.
    *
-   * <p>
-   * Defaults to {@link HttpRequest#isLoggingEnabled()}.
-   * </p>
+   * <p>Defaults to {@link HttpRequest#isLoggingEnabled()}.
    */
   private boolean loggingEnabled;
 
@@ -169,22 +154,14 @@ public final class HttpResponse {
   /**
    * Returns the limit to the content size that will be logged during {@link #getContent()}.
    *
-   * <p>
-   * Content will only be logged if {@link #isLoggingEnabled} is {@code true}.
-   * </p>
+   * <p>Content will only be logged if {@link #isLoggingEnabled} is {@code true}.
    *
-   * <p>
-   * If the content size is greater than this limit then it will not be logged.
-   * </p>
+   * <p>If the content size is greater than this limit then it will not be logged.
    *
-   * <p>
-   * Can be set to {@code 0} to disable content logging. This is useful for example if content has
-   * sensitive data such as authentication information.
-   * </p>
+   * <p>Can be set to {@code 0} to disable content logging. This is useful for example if content
+   * has sensitive data such as authentication information.
    *
-   * <p>
-   * Defaults to {@link HttpRequest#getContentLoggingLimit()}.
-   * </p>
+   * <p>Defaults to {@link HttpRequest#getContentLoggingLimit()}.
    *
    * @since 1.7
    */
@@ -195,22 +172,14 @@ public final class HttpResponse {
   /**
    * Set the limit to the content size that will be logged during {@link #getContent()}.
    *
-   * <p>
-   * Content will only be logged if {@link #isLoggingEnabled} is {@code true}.
-   * </p>
+   * <p>Content will only be logged if {@link #isLoggingEnabled} is {@code true}.
    *
-   * <p>
-   * If the content size is greater than this limit then it will not be logged.
-   * </p>
+   * <p>If the content size is greater than this limit then it will not be logged.
    *
-   * <p>
-   * Can be set to {@code 0} to disable content logging. This is useful for example if content has
-   * sensitive data such as authentication information.
-   * </p>
+   * <p>Can be set to {@code 0} to disable content logging. This is useful for example if content
+   * has sensitive data such as authentication information.
    *
-   * <p>
-   * Defaults to {@link HttpRequest#getContentLoggingLimit()}.
-   * </p>
+   * <p>Defaults to {@link HttpRequest#getContentLoggingLimit()}.
    *
    * @since 1.7
    */
@@ -224,9 +193,7 @@ public final class HttpResponse {
   /**
    * Returns whether logging should be enabled on this response.
    *
-   * <p>
-   * Defaults to {@link HttpRequest#isLoggingEnabled()}.
-   * </p>
+   * <p>Defaults to {@link HttpRequest#isLoggingEnabled()}.
    *
    * @since 1.9
    */
@@ -237,9 +204,7 @@ public final class HttpResponse {
   /**
    * Sets whether logging should be enabled on this response.
    *
-   * <p>
-   * Defaults to {@link HttpRequest#isLoggingEnabled()}.
-   * </p>
+   * <p>Defaults to {@link HttpRequest#isLoggingEnabled()}.
    *
    * @since 1.9
    */
@@ -286,8 +251,8 @@ public final class HttpResponse {
   }
 
   /**
-   * Returns whether received a successful HTTP status code {@code >= 200 && < 300} (see
-   * {@link #getStatusCode()}).
+   * Returns whether received a successful HTTP status code {@code >= 200 && < 300} (see {@link
+   * #getStatusCode()}).
    *
    * @since 1.5
    */
@@ -333,22 +298,22 @@ public final class HttpResponse {
 
   /**
    * Returns the content of the HTTP response.
-   * <p>
-   * The result is cached, so subsequent calls will be fast.
-   * <p>
-   * Callers should call {@link InputStream#close} after the returned {@link InputStream} is no
+   *
+   * <p>The result is cached, so subsequent calls will be fast.
+   *
+   * <p>Callers should call {@link InputStream#close} after the returned {@link InputStream} is no
    * longer needed. Example usage:
    *
    * <pre>
-     InputStream is = response.getContent();
-     try {
-       // Process the input stream..
-     } finally {
-       is.close();
-     }
+   * InputStream is = response.getContent();
+   * try {
+   * // Process the input stream..
+   * } finally {
+   * is.close();
+   * }
    * </pre>
-   * <p>
-   * {@link HttpResponse#disconnect} does not have to be called if the content is closed.
+   *
+   * <p>{@link HttpResponse#disconnect} does not have to be called if the content is closed.
    *
    * @return input stream content of the HTTP response or {@code null} for none
    * @throws IOException I/O exception
@@ -363,15 +328,17 @@ public final class HttpResponse {
         try {
           // gzip encoding (wrap content with GZipInputStream)
           String contentEncoding = this.contentEncoding;
-          if (!returnRawInputStream && contentEncoding != null && contentEncoding
-              .contains("gzip")) {
+          if (!returnRawInputStream
+              && contentEncoding != null
+              && contentEncoding.contains("gzip")) {
             lowLevelResponseContent = new GZIPInputStream(lowLevelResponseContent);
           }
           // logging (wrap content with LoggingInputStream)
           Logger logger = HttpTransport.LOGGER;
           if (loggingEnabled && logger.isLoggable(Level.CONFIG)) {
-            lowLevelResponseContent = new LoggingInputStream(
-                lowLevelResponseContent, logger, Level.CONFIG, contentLoggingLimit);
+            lowLevelResponseContent =
+                new LoggingInputStream(
+                    lowLevelResponseContent, logger, Level.CONFIG, contentLoggingLimit);
           }
           content = lowLevelResponseContent;
           contentProcessed = true;
@@ -392,30 +359,23 @@ public final class HttpResponse {
   /**
    * Writes the content of the HTTP response into the given destination output stream.
    *
-   * <p>
-   * Sample usage:
+   * <p>Sample usage:
    *
    * <pre>
-     HttpRequest request = requestFactory.buildGetRequest(
-         new GenericUrl("https://www.google.com/images/srpr/logo3w.png"));
-     OutputStream outputStream = new FileOutputStream(new File("/tmp/logo3w.png"));
-     try {
-       HttpResponse response = request.execute();
-       response.download(outputStream);
-     } finally {
-       outputStream.close();
-     }
-    </pre>
+   * HttpRequest request = requestFactory.buildGetRequest(
+   * new GenericUrl("https://www.google.com/images/srpr/logo3w.png"));
+   * OutputStream outputStream = new FileOutputStream(new File("/tmp/logo3w.png"));
+   * try {
+   * HttpResponse response = request.execute();
+   * response.download(outputStream);
+   * } finally {
+   * outputStream.close();
+   * }
+   * </pre>
    *
-   * </p>
+   * <p>This method closes the content of the HTTP response from {@link #getContent()}.
    *
-   * <p>
-   * This method closes the content of the HTTP response from {@link #getContent()}.
-   * </p>
-   *
-   * <p>
-   * This method does not close the given output stream.
-   * </p>
+   * <p>This method does not close the given output stream.
    *
    * @param outputStream destination output stream
    * @throws IOException I/O exception
@@ -426,9 +386,7 @@ public final class HttpResponse {
     IOUtils.copy(inputStream, outputStream);
   }
 
-  /**
-   * Closes the content of the HTTP response from {@link #getContent()}, ignoring any content.
-   */
+  /** Closes the content of the HTTP response from {@link #getContent()}, ignoring any content. */
   public void ignore() throws IOException {
     InputStream content = getContent();
     if (content != null) {
@@ -437,8 +395,8 @@ public final class HttpResponse {
   }
 
   /**
-   * Close the HTTP response content using {@link #ignore}, and disconnect using
-   * {@link LowLevelHttpResponse#disconnect()}.
+   * Close the HTTP response content using {@link #ignore}, and disconnect using {@link
+   * LowLevelHttpResponse#disconnect()}.
    *
    * @since 1.4
    */
@@ -451,9 +409,7 @@ public final class HttpResponse {
    * Parses the content of the HTTP response from {@link #getContent()} and reads it into a data
    * class of key/value pairs using the parser returned by {@link HttpRequest#getParser()}.
    *
-   * <p>
-   * <b>Reference:</b> http://tools.ietf.org/html/rfc2616#section-4.3
-   * </p>
+   * <p><b>Reference:</b> http://tools.ietf.org/html/rfc2616#section-4.3
    *
    * @return parsed data class or {@code null} for no content
    */
@@ -470,7 +426,8 @@ public final class HttpResponse {
    */
   private boolean hasMessageBody() throws IOException {
     int statusCode = getStatusCode();
-    if (getRequest().getRequestMethod().equals(HttpMethods.HEAD) || statusCode / 100 == 1
+    if (getRequest().getRequestMethod().equals(HttpMethods.HEAD)
+        || statusCode / 100 == 1
         || statusCode == HttpStatusCodes.STATUS_CODE_NO_CONTENT
         || statusCode == HttpStatusCodes.STATUS_CODE_NOT_MODIFIED) {
       ignore();
@@ -496,17 +453,13 @@ public final class HttpResponse {
   /**
    * Parses the content of the HTTP response from {@link #getContent()} and reads it into a string.
    *
-   * <p>
-   * Since this method returns {@code ""} for no content, a simpler check for no content is to check
-   * if {@link #getContent()} is {@code null}.
-   * </p>
+   * <p>Since this method returns {@code ""} for no content, a simpler check for no content is to
+   * check if {@link #getContent()} is {@code null}.
    *
-   * <p>
-   * All content is read from the input content stream rather than being limited by the
+   * <p>All content is read from the input content stream rather than being limited by the
    * Content-Length. For the character set, it follows the specification by parsing the "charset"
    * parameter of the Content-Type header or by default {@code "ISO-8859-1"} if the parameter is
    * missing.
-   * </p>
    *
    * @return parsed string or {@code ""} for no content
    * @throws IOException I/O exception
@@ -522,13 +475,14 @@ public final class HttpResponse {
   }
 
   /**
-   * Returns the {@link Charset} specified in the Content-Type of this response or the
-   * {@code "ISO-8859-1"} charset as a default.
+   * Returns the {@link Charset} specified in the Content-Type of this response or the {@code
+   * "ISO-8859-1"} charset as a default.
    *
    * @since 1.10
-   * */
+   */
   public Charset getContentCharset() {
     return mediaType == null || mediaType.getCharsetParameter() == null
-        ? Charsets.ISO_8859_1 : mediaType.getCharsetParameter();
+        ? Charsets.ISO_8859_1
+        : mediaType.getCharsetParameter();
   }
 }

@@ -25,8 +25,6 @@
           </execution>
         </executions>
       </plugin>
-      <!--The animal-sniffer plugin crashes on FindBugs on the icu4j:2.6.1
-          dependency-->
       <plugin>
          <groupId>org.codehaus.mojo</groupId>
          <artifactId>animal-sniffer-maven-plugin</artifactId>
@@ -44,7 +42,7 @@
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>findbugs</artifactId>
-      <version>2.0.0</version>
+      <version>3.0.1</version>
       <exclusions>
         <exclusion>
           <artifactId>xalan</artifactId>

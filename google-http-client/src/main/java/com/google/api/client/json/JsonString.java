@@ -22,44 +22,42 @@ import java.lang.annotation.Target;
 /**
  * Use this annotation to specify that a declared numeric Java field should map to a JSON string.
  *
- * <p>
- * By default declared Java numeric fields are stored as JSON numbers. For example:
+ * <p>By default declared Java numeric fields are stored as JSON numbers. For example:
  *
  * <pre>
  * <code>
-class A {
-  &#64;Key BigInteger value;
-}
+ * class A {
+ * &#64;Key BigInteger value;
+ * }
  * </code>
  * </pre>
  *
- *  can be used for this JSON content:
+ * can be used for this JSON content:
  *
  * <pre>
  * <code>
-{"value" : 12345768901234576890123457689012345768901234576890}
+ * {"value" : 12345768901234576890123457689012345768901234576890}
  * </code>
  * </pre>
  *
- *  However, if instead the JSON content uses a JSON String to store the value, one needs to use the
+ * However, if instead the JSON content uses a JSON String to store the value, one needs to use the
  * {@link JsonString} annotation. For example:
  *
  * <pre>
  * <code>
-class B {
-  &#64;Key &#64;JsonString BigInteger value;
-}
+ * class B {
+ * &#64;Key &#64;JsonString BigInteger value;
+ * }
  * </code>
  * </pre>
  *
- *  can be used for this JSON content:
+ * can be used for this JSON content:
  *
  * <pre>
  * <code>
-{"value" : "12345768901234576890123457689012345768901234576890"}
+ * {"value" : "12345768901234576890123457689012345768901234576890"}
  * </code>
  * </pre>
- * </p>
  *
  * @since 1.3
  * @author Yaniv Inbar
@@ -68,5 +66,4 @@ class B {
 // BigDecimalString?
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface JsonString {
-}
+public @interface JsonString {}

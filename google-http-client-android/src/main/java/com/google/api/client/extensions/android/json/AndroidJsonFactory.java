@@ -33,17 +33,13 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Low-level JSON library implementation based on GSON.
  *
- * <p>
- * Implementation is thread-safe, and sub-classes must be thread-safe. For maximum efficiency,
+ * <p>Implementation is thread-safe, and sub-classes must be thread-safe. For maximum efficiency,
  * applications should use a single globally-shared instance of the JSON factory.
- * </p>
  *
- * <p>
- * Required minimum Android SDK 3.0 (level 11).
- * </p>
+ * <p>Required minimum Android SDK 3.0 (level 11).
  *
  * @since 1.11
  * @author Yaniv Inbar

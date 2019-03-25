@@ -27,9 +27,7 @@ import java.util.regex.Pattern;
  * Immutable representation of a date with an optional time and an optional time zone based on <a
  * href="http://tools.ietf.org/html/rfc3339">RFC 3339</a>.
  *
- * <p>
- * Implementation is immutable and therefore thread-safe.
- * </p>
+ * <p>Implementation is immutable and therefore thread-safe.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -41,18 +39,18 @@ public final class DateTime implements Serializable {
   private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
 
   /** Regular expression for parsing RFC3339 date/times. */
-  private static final Pattern RFC3339_PATTERN = Pattern.compile(
-      "^(\\d{4})-(\\d{2})-(\\d{2})" // yyyy-MM-dd
-      + "([Tt](\\d{2}):(\\d{2}):(\\d{2})(\\.\\d+)?)?" // 'T'HH:mm:ss.milliseconds
-      + "([Zz]|([+-])(\\d{2}):(\\d{2}))?"); // 'Z' or time zone shift HH:mm following '+' or '-'
+  private static final Pattern RFC3339_PATTERN =
+      Pattern.compile(
+          "^(\\d{4})-(\\d{2})-(\\d{2})" // yyyy-MM-dd
+              + "([Tt](\\d{2}):(\\d{2}):(\\d{2})(\\.\\d+)?)?" // 'T'HH:mm:ss.milliseconds
+              + "([Zz]|([+-])(\\d{2}):(\\d{2}))?"); // 'Z' or time zone shift HH:mm following '+' or
+                                                    // '-'
 
   /**
    * Date/time value expressed as the number of ms since the Unix epoch.
    *
-   * <p>
-   * If the time zone is specified, this value is normalized to UTC, so to format this date/time
+   * <p>If the time zone is specified, this value is normalized to UTC, so to format this date/time
    * value, the time zone shift has to be applied.
-   * </p>
    */
   private final long value;
 
@@ -75,10 +73,8 @@ public final class DateTime implements Serializable {
   /**
    * Instantiates {@link DateTime} from the number of milliseconds since the Unix epoch.
    *
-   * <p>
-   * The time zone is interpreted as {@code TimeZone.getDefault()}, which may vary with
+   * <p>The time zone is interpreted as {@code TimeZone.getDefault()}, which may vary with
    * implementation.
-   * </p>
    *
    * @param value number of milliseconds since the Unix epoch (January 1, 1970, 00:00:00 GMT)
    */
@@ -89,10 +85,8 @@ public final class DateTime implements Serializable {
   /**
    * Instantiates {@link DateTime} from a {@link Date}.
    *
-   * <p>
-   * The time zone is interpreted as {@code TimeZone.getDefault()}, which may vary with
+   * <p>The time zone is interpreted as {@code TimeZone.getDefault()}, which may vary with
    * implementation.
-   * </p>
    *
    * @param value date and time
    */
@@ -118,7 +112,7 @@ public final class DateTime implements Serializable {
    * @param dateOnly specifies if this should represent a date-only value
    * @param value number of milliseconds since the Unix epoch (January 1, 1970, 00:00:00 GMT)
    * @param tzShift time zone, represented by the number of minutes off of UTC, or {@code null} for
-   *        {@code TimeZone.getDefault()}.
+   *     {@code TimeZone.getDefault()}.
    */
   public DateTime(boolean dateOnly, long value, Integer tzShift) {
     this.dateOnly = dateOnly;
@@ -131,14 +125,12 @@ public final class DateTime implements Serializable {
    * Instantiates {@link DateTime} from an <a href='http://tools.ietf.org/html/rfc3339'>RFC 3339</a>
    * date/time value.
    *
-   * <p>
-   * Upgrade warning: in prior version 1.17, this method required milliseconds to be exactly 3
+   * <p>Upgrade warning: in prior version 1.17, this method required milliseconds to be exactly 3
    * digits (if included), and did not throw an exception for all types of invalid input values, but
    * starting in version 1.18, the parsing done by this method has become more strict to enforce
-   * that only valid RFC3339 strings are entered, and if not, it throws a
-   * {@link NumberFormatException}. Also, in accordance with the RFC3339 standard, any number of
+   * that only valid RFC3339 strings are entered, and if not, it throws a {@link
+   * NumberFormatException}. Also, in accordance with the RFC3339 standard, any number of
    * milliseconds digits is now allowed.
-   * </p>
    *
    * @param value an <a href='http://tools.ietf.org/html/rfc3339'>RFC 3339</a> date/time value.
    * @since 1.11
@@ -156,10 +148,8 @@ public final class DateTime implements Serializable {
   /**
    * Returns the date/time value expressed as the number of milliseconds since the Unix epoch.
    *
-   * <p>
-   * If the time zone is specified, this value is normalized to UTC, so to format this date/time
+   * <p>If the time zone is specified, this value is normalized to UTC, so to format this date/time
    * value, the time zone shift has to be applied.
-   * </p>
    *
    * @since 1.5
    */
@@ -240,10 +230,8 @@ public final class DateTime implements Serializable {
   /**
    * {@inheritDoc}
    *
-   * <p>
-   * A check is added that the time zone is the same. If you ONLY want to check equality of time
+   * <p>A check is added that the time zone is the same. If you ONLY want to check equality of time
    * value, check equality on the {@link #getValue()}.
-   * </p>
    */
   @Override
   public boolean equals(Object o) {
@@ -265,24 +253,20 @@ public final class DateTime implements Serializable {
   /**
    * Parses an RFC3339 date/time value.
    *
-   * <p>
-   * Upgrade warning: in prior version 1.17, this method required milliseconds to be exactly 3
+   * <p>Upgrade warning: in prior version 1.17, this method required milliseconds to be exactly 3
    * digits (if included), and did not throw an exception for all types of invalid input values, but
    * starting in version 1.18, the parsing done by this method has become more strict to enforce
-   * that only valid RFC3339 strings are entered, and if not, it throws a
-   * {@link NumberFormatException}. Also, in accordance with the RFC3339 standard, any number of
+   * that only valid RFC3339 strings are entered, and if not, it throws a {@link
+   * NumberFormatException}. Also, in accordance with the RFC3339 standard, any number of
    * milliseconds digits is now allowed.
-   * </p>
    *
-   * <p>
-   * For the date-only case, the time zone is ignored and the hourOfDay, minute, second, and
+   * <p>For the date-only case, the time zone is ignored and the hourOfDay, minute, second, and
    * millisecond parameters are set to zero.
-   * </p>
    *
    * @param str Date/time string in RFC3339 format
    * @throws NumberFormatException if {@code str} doesn't match the RFC3339 standard format; an
-   *         exception is thrown if {@code str} doesn't match {@code RFC3339_REGEX} or if it
-   *         contains a time zone shift but no time.
+   *     exception is thrown if {@code str} doesn't match {@code RFC3339_REGEX} or if it contains a
+   *     time zone shift but no time.
    */
   public static DateTime parseRfc3339(String str) throws NumberFormatException {
     Matcher matcher = RFC3339_PATTERN.matcher(str);
@@ -303,8 +287,10 @@ public final class DateTime implements Serializable {
     Integer tzShiftInteger = null;
 
     if (isTzShiftGiven && !isTimeGiven) {
-      throw new NumberFormatException("Invalid date/time format, cannot specify time zone shift" +
-            " without specifying time: " + str);
+      throw new NumberFormatException(
+          "Invalid date/time format, cannot specify time zone shift"
+              + " without specifying time: "
+              + str);
     }
 
     if (isTimeGiven) {
@@ -328,8 +314,9 @@ public final class DateTime implements Serializable {
       if (Character.toUpperCase(tzShiftRegexGroup.charAt(0)) == 'Z') {
         tzShift = 0;
       } else {
-        tzShift = Integer.parseInt(matcher.group(11)) * 60 // time zone shift HH
-            + Integer.parseInt(matcher.group(12)); // time zone shift mm
+        tzShift =
+            Integer.parseInt(matcher.group(11)) * 60 // time zone shift HH
+                + Integer.parseInt(matcher.group(12)); // time zone shift mm
         if (matcher.group(10).charAt(0) == '-') { // time zone shift + or -
           tzShift = -tzShift;
         }

@@ -52,8 +52,6 @@ public class AbstractHttpContentTest extends TestCase {
     public boolean retrySupported() {
       return retrySupported;
     }
-
-
   }
 
   public void testRetrySupported() {

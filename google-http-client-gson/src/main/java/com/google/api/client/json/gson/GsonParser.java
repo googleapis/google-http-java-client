@@ -29,9 +29,7 @@ import java.util.List;
 /**
  * Low-level JSON serializer implementation based on GSON.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @author Yaniv Inbar
  */
@@ -81,7 +79,6 @@ class GsonParser extends JsonParser {
     checkNumber();
     return Short.parseShort(currentText);
   }
-
 
   @Override
   public int getIntValue() {
@@ -194,8 +191,10 @@ class GsonParser extends JsonParser {
         break;
       case NUMBER:
         currentText = reader.nextString();
-        currentToken = currentText.indexOf('.') == -1
-            ? JsonToken.VALUE_NUMBER_INT : JsonToken.VALUE_NUMBER_FLOAT;
+        currentToken =
+            currentText.indexOf('.') == -1
+                ? JsonToken.VALUE_NUMBER_INT
+                : JsonToken.VALUE_NUMBER_FLOAT;
         break;
       case NAME:
         currentText = reader.nextName();

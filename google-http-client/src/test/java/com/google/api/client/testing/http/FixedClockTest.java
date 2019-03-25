@@ -18,12 +18,11 @@ import junit.framework.TestCase;
 
 /**
  * Tests for the {@link FixedClock}.
+ *
  * @author mlinder@google.com (Matthias Linder)
  */
 public class FixedClockTest extends TestCase {
-  /**
-   * Tests that the {@link FixedClock#currentTimeMillis()} method will return the mocked values.
-   */
+  /** Tests that the {@link FixedClock#currentTimeMillis()} method will return the mocked values. */
   public void testCurrentTimeMillis() {
     // Check that the initial value is set properly.
     FixedClock clock = new FixedClock(100);

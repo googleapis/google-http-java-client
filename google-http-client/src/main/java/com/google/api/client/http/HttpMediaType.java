@@ -15,7 +15,6 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Preconditions;
-
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Locale;
@@ -27,12 +26,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * HTTP Media-type as specified in the HTTP RFC (
- * {@link "http://tools.ietf.org/html/rfc2616#section-3.7"}).
+ * HTTP Media-type as specified in the HTTP RFC ( {@link
+ * "http://tools.ietf.org/html/rfc2616#section-3.7"}).
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @author Matthias Linder (mlinder)
  * @since 1.10
@@ -79,22 +76,39 @@ public final class HttpMediaType {
     // detection can be done on a per-type/parameter basis.
     String typeOrKey = "[^\\s/=;\"]+"; // only disallow separators
     String wholeParameterSection = ";.*";
-    FULL_MEDIA_TYPE_REGEX = Pattern.compile(
-        "\\s*(" + typeOrKey + ")/(" + typeOrKey + ")" + // main type (G1)/sub type (G2)
-        "\\s*(" + wholeParameterSection + ")?", Pattern.DOTALL); // parameters (G3) or null
+    FULL_MEDIA_TYPE_REGEX =
+        Pattern.compile(
+            "\\s*("
+                + typeOrKey
+                + ")/("
+                + typeOrKey
+                + ")"
+                + // main type (G1)/sub type (G2)
+                "\\s*("
+                + wholeParameterSection
+                + ")?",
+            Pattern.DOTALL); // parameters (G3) or null
 
     // PARAMETER_REGEX: Semi-restrictive regex matching each parameter in the parameter section.
     // We also allow multipart values here (http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html)
     // although those do not fully conform to the HTTP spec.
     String quotedParameterValue = "\"([^\"]*)\"";
     String unquotedParameterValue = "[^\\s;\"]*";
-    String parameterValue =  quotedParameterValue + "|" + unquotedParameterValue;
-    PARAMETER_REGEX = Pattern.compile("\\s*;\\s*(" + typeOrKey + ")" + // parameter key (G1)
-        "=(" + parameterValue + ")"); // G2 (if quoted) and else G3
+    String parameterValue = quotedParameterValue + "|" + unquotedParameterValue;
+    PARAMETER_REGEX =
+        Pattern.compile(
+            "\\s*;\\s*("
+                + typeOrKey
+                + ")"
+                + // parameter key (G1)
+                "=("
+                + parameterValue
+                + ")"); // G2 (if quoted) and else G3
   }
 
   /**
    * Initializes the {@link HttpMediaType} by setting the specified media type.
+   *
    * @param type main media type, for example {@code "text"}
    * @param subType sub media type, for example {@code "plain"}
    */
@@ -125,9 +139,7 @@ public final class HttpMediaType {
     return this;
   }
 
-  /**
-   * Returns the main media type, for example {@code "text"}, or {@code null} for '*'.
-   */
+  /** Returns the main media type, for example {@code "text"}, or {@code null} for '*'. */
   public String getType() {
     return type;
   }
@@ -145,21 +157,17 @@ public final class HttpMediaType {
     return this;
   }
 
-  /**
-   * Returns the sub media type, for example {@code "plain"} when using {@code "text"}.
-   */
+  /** Returns the sub media type, for example {@code "plain"} when using {@code "text"}. */
   public String getSubType() {
     return subType;
   }
 
   /**
-   * Sets the full media type by parsing a full content-type string, for example
-   * {@code "text/plain; foo=bar"}.
+   * Sets the full media type by parsing a full content-type string, for example {@code "text/plain;
+   * foo=bar"}.
    *
-   * <p>
-   * This method will not clear existing parameters. Use {@link #clearParameters()} if this behavior
-   * is required.
-   * </p>
+   * <p>This method will not clear existing parameters. Use {@link #clearParameters()} if this
+   * behavior is required.
    *
    * @param combinedType full media type in the {@code "maintype/subtype; key=value"} format.
    */
@@ -225,9 +233,7 @@ public final class HttpMediaType {
     return this;
   }
 
-  /**
-   * Removes all set parameters from this media type.
-   */
+  /** Removes all set parameters from this media type. */
   public void clearParameters() {
     cachedBuildResult = null;
     parameters.clear();
@@ -255,9 +261,7 @@ public final class HttpMediaType {
     return "\"" + escapedString + "\"";
   }
 
-  /**
-   * Builds the full media type string which can be passed in the Content-Type header.
-   */
+  /** Builds the full media type string which can be passed in the Content-Type header. */
   public String build() {
     if (cachedBuildResult != null) {
       return cachedBuildResult;
@@ -286,11 +290,12 @@ public final class HttpMediaType {
   }
 
   /**
-   * Returns {@code true} if the specified media type has both the same type and subtype, or
-   * {@code false} if they don't match or the media type is {@code null}.
+   * Returns {@code true} if the specified media type has both the same type and subtype, or {@code
+   * false} if they don't match or the media type is {@code null}.
    */
   public boolean equalsIgnoreParameters(HttpMediaType mediaType) {
-    return mediaType != null && getType().equalsIgnoreCase(mediaType.getType())
+    return mediaType != null
+        && getType().equalsIgnoreCase(mediaType.getType())
         && getSubType().equalsIgnoreCase(mediaType.getSubType());
   }
 
@@ -300,8 +305,10 @@ public final class HttpMediaType {
    */
   public static boolean equalsIgnoreParameters(String mediaTypeA, String mediaTypeB) {
     // TODO(mlinder): Make the HttpMediaType.isSameType implementation more performant.
-    return (mediaTypeA == null && mediaTypeB == null) || mediaTypeA != null && mediaTypeB != null
-        && new HttpMediaType(mediaTypeA).equalsIgnoreParameters(new HttpMediaType(mediaTypeB));
+    return (mediaTypeA == null && mediaTypeB == null)
+        || mediaTypeA != null
+            && mediaTypeB != null
+            && new HttpMediaType(mediaTypeA).equalsIgnoreParameters(new HttpMediaType(mediaTypeB));
   }
 
   /**
@@ -314,9 +321,7 @@ public final class HttpMediaType {
     return this;
   }
 
-  /**
-   * Returns the specified charset or {@code null} if unset.
-   */
+  /** Returns the specified charset or {@code null} if unset. */
   public Charset getCharsetParameter() {
     String value = getParameter("charset");
     return value == null ? null : Charset.forName(value);

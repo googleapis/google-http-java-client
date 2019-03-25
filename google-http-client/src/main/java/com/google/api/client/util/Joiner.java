@@ -20,9 +20,7 @@ import java.util.Map;
  * An object which joins pieces of text (specified as an array, {@link Iterable}, varargs or even a
  * {@link Map}) with a separator.
  *
- * <p>
- * NOTE: proxy for the Guava implementation of {@link com.google.common.base.Joiner}.
- * </p>
+ * <p>NOTE: proxy for the Guava implementation of {@link com.google.common.base.Joiner}.
  *
  * @since 1.14
  * @author Yaniv Inbar
@@ -32,16 +30,12 @@ public final class Joiner {
   /** Wrapped joiner. */
   private final com.google.common.base.Joiner wrapped;
 
-  /**
-   * Returns a joiner which automatically places {@code separator} between consecutive elements.
-   */
+  /** Returns a joiner which automatically places {@code separator} between consecutive elements. */
   public static Joiner on(char separator) {
     return new Joiner(com.google.common.base.Joiner.on(separator));
   }
 
-  /**
-   * @param wrapped wrapped joiner
-   */
+  /** @param wrapped wrapped joiner */
   private Joiner(com.google.common.base.Joiner wrapped) {
     this.wrapped = wrapped;
   }

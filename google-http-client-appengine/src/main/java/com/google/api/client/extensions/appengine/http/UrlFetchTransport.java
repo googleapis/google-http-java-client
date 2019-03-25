@@ -19,7 +19,6 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Preconditions;
 import com.google.appengine.api.urlfetch.FetchOptions;
 import com.google.appengine.api.urlfetch.HTTPMethod;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Arrays;
@@ -28,21 +27,18 @@ import java.util.Arrays;
  * Thread-safe HTTP transport for Google App Engine based on <a
  * href="https://cloud.google.com/appengine/docs/standard/java/issue-requests">URL Fetch</a>.
  *
- * <p>
- * Implementation is thread-safe. For maximum efficiency, applications should use a single
+ * <p>Implementation is thread-safe. For maximum efficiency, applications should use a single
  * globally-shared instance of the HTTP transport.
- * </p>
  *
- * <p>
- * URL Fetch is only available on Google App Engine (not on any other Java environment), and is the
- * underlying HTTP transport used for App Engine. Their implementation of {@link HttpURLConnection}
- * is simply an abstraction layer on top of URL Fetch. By implementing a transport that directly
- * uses URL Fetch, we can optimize the behavior slightly, and can potentially take advantage of
- * features in URL Fetch that are not available in {@link HttpURLConnection}. Furthermore, there is
- * currently a serious bug in how HTTP headers are processed in the App Engine implementation of
- * {@link HttpURLConnection}, which we are able to avoid using this implementation. Therefore, this
- * is the recommended transport to use on App Engine.
- * </p>
+ * <p>URL Fetch is only available on Google App Engine (not on any other Java environment), and is
+ * the underlying HTTP transport used for App Engine. Their implementation of {@link
+ * HttpURLConnection} is simply an abstraction layer on top of URL Fetch. By implementing a
+ * transport that directly uses URL Fetch, we can optimize the behavior slightly, and can
+ * potentially take advantage of features in URL Fetch that are not available in {@link
+ * HttpURLConnection}. Furthermore, there is currently a serious bug in how HTTP headers are
+ * processed in the App Engine implementation of {@link HttpURLConnection}, which we are able to
+ * avoid using this implementation. Therefore, this is the recommended transport to use on App
+ * Engine.
  *
  * @since 1.10
  * @author Yaniv Inbar
@@ -54,16 +50,24 @@ public final class UrlFetchTransport extends HttpTransport {
    * {@link FetchOptions#validateCertificate()}.
    */
   enum CertificateValidationBehavior {
-    DEFAULT, VALIDATE, DO_NOT_VALIDATE
+    DEFAULT,
+    VALIDATE,
+    DO_NOT_VALIDATE
   }
 
   /**
    * All valid request methods as specified in {@link HTTPMethod}, sorted in ascending alphabetical
    * order.
    */
-  private static final String[] SUPPORTED_METHODS =
-      {HttpMethods.DELETE, HttpMethods.GET, HttpMethods.HEAD, HttpMethods.POST,
-         HttpMethods.PUT, HttpMethods.PATCH};
+  private static final String[] SUPPORTED_METHODS = {
+    HttpMethods.DELETE,
+    HttpMethods.GET,
+    HttpMethods.HEAD,
+    HttpMethods.POST,
+    HttpMethods.PUT,
+    HttpMethods.PATCH
+  };
+
   static {
     Arrays.sort(SUPPORTED_METHODS);
   }
@@ -74,17 +78,13 @@ public final class UrlFetchTransport extends HttpTransport {
   /**
    * Constructor with the default fetch options.
    *
-   * <p>
-   * Use {@link Builder} to modify fetch options.
-   * </p>
+   * <p>Use {@link Builder} to modify fetch options.
    */
   public UrlFetchTransport() {
     this(new Builder());
   }
 
-  /**
-   * @param builder builder
-   */
+  /** @param builder builder */
   UrlFetchTransport(Builder builder) {
     certificateValidationBehavior = builder.certificateValidationBehavior;
   }
@@ -144,9 +144,7 @@ public final class UrlFetchTransport extends HttpTransport {
   /**
    * Builder for {@link UrlFetchTransport}.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    *
    * @since 1.13
    */
@@ -160,10 +158,8 @@ public final class UrlFetchTransport extends HttpTransport {
      * Sets whether to use {@link FetchOptions#doNotValidateCertificate()} ({@code false} by
      * default).
      *
-     * <p>
-     * Be careful! Disabling certificate validation is dangerous and should be done in testing
+     * <p>Be careful! Disabling certificate validation is dangerous and should be done in testing
      * environments only.
-     * </p>
      */
     public Builder doNotValidateCertificate() {
       this.certificateValidationBehavior = CertificateValidationBehavior.DO_NOT_VALIDATE;

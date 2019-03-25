@@ -25,14 +25,16 @@ import junit.framework.TestCase;
 public class ProtocolBuffersTest extends TestCase {
 
   public void testParseAndClose() throws Exception {
-    SimpleProto.TestMessage mockResponse = SimpleProto.TestMessage.newBuilder()
-        .setStatus(SimpleProto.TestStatus.SUCCESS)
-        .setName("This is a test!")
-        .setValue(123454321)
-        .build();
+    SimpleProto.TestMessage mockResponse =
+        SimpleProto.TestMessage.newBuilder()
+            .setStatus(SimpleProto.TestStatus.SUCCESS)
+            .setName("This is a test!")
+            .setValue(123454321)
+            .build();
     // Create the parser and test it with our mock response
-    SimpleProto.TestMessage parsedResponse = ProtocolBuffers.parseAndClose(
-        new ByteArrayInputStream(mockResponse.toByteArray()), SimpleProto.TestMessage.class);
+    SimpleProto.TestMessage parsedResponse =
+        ProtocolBuffers.parseAndClose(
+            new ByteArrayInputStream(mockResponse.toByteArray()), SimpleProto.TestMessage.class);
     // Validate the parser properly parsed the response
     // (i.e. it matches the original mock response)
     assertEquals(mockResponse.getSerializedSize(), parsedResponse.getSerializedSize());

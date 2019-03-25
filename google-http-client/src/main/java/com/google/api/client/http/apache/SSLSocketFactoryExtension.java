@@ -16,6 +16,7 @@ package com.google.api.client.http.apache;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -51,7 +52,7 @@ final class SSLSocketFactoryExtension extends SSLSocketFactory {
 
   @Override
   public Socket createSocket(Socket socket, String host, int port, boolean autoClose)
-      throws IOException {
+      throws IOException, UnknownHostException {
     SSLSocket sslSocket = (SSLSocket) socketFactory.createSocket(socket, host, port, autoClose);
     getHostnameVerifier().verify(host, sslSocket);
     return sslSocket;

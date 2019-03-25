@@ -19,47 +19,39 @@ import java.io.IOException;
 /**
  * HTTP request initializer.
  *
- * <p>
- * For example, this might be used to disable request timeouts:
- * </p>
+ * <p>For example, this might be used to disable request timeouts:
  *
  * <pre>
-  public class DisableTimeout implements HttpRequestInitializer {
-    public void initialize(HttpRequest request) {
-      request.setConnectTimeout(0);
-      request.setReadTimeout(0);
-    }
-  }
+ * public class DisableTimeout implements HttpRequestInitializer {
+ * public void initialize(HttpRequest request) {
+ * request.setConnectTimeout(0);
+ * request.setReadTimeout(0);
+ * }
+ * }
  * </pre>
  *
- * <p>
- * Sample usage with a request factory:
- * </p>
+ * <p>Sample usage with a request factory:
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
-    return transport.createRequestFactory(new DisableTimeout());
-  }
+ * public static HttpRequestFactory createRequestFactory(HttpTransport transport) {
+ * return transport.createRequestFactory(new DisableTimeout());
+ * }
  * </pre>
  *
- * <p>
- * More complex usage example:
- * </p>
+ * <p>More complex usage example:
  *
  * <pre>
-  public static HttpRequestFactory createRequestFactory2(HttpTransport transport) {
-    final DisableTimeout disableTimeout = new DisableTimeout();
-    return transport.createRequestFactory(new HttpRequestInitializer() {
-      public void initialize(HttpRequest request) {
-        disableTimeout.initialize(request);
-      }
-    });
-  }
+ * public static HttpRequestFactory createRequestFactory2(HttpTransport transport) {
+ * final DisableTimeout disableTimeout = new DisableTimeout();
+ * return transport.createRequestFactory(new HttpRequestInitializer() {
+ * public void initialize(HttpRequest request) {
+ * disableTimeout.initialize(request);
+ * }
+ * });
+ * }
  * </pre>
  *
- * <p>
- * Implementations should normally be thread-safe.
- * </p>
+ * <p>Implementations should normally be thread-safe.
  *
  * @since 1.4
  * @author Yaniv Inbar

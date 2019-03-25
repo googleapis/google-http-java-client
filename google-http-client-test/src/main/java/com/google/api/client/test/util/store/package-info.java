@@ -18,4 +18,3 @@
  * @author Yaniv Inbar
  */
 package com.google.api.client.test.util.store;
-

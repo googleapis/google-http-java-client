@@ -27,12 +27,9 @@ import junit.framework.TestCase;
  */
 public class DataMapTest extends TestCase {
   static class A {
-    @Key
-    String r;
-    @Key
-    String s;
-    @Key
-    String t;
+    @Key String r;
+    @Key String s;
+    @Key String t;
   }
 
   public void testSizeAndIsEmpty() {

@@ -17,6 +17,4 @@
  *
  * @author Ravi Mistry
  */
-
 package com.google.api.client.test.json;
-

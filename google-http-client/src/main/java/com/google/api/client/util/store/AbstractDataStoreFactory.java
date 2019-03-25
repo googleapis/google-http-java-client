@@ -16,7 +16,6 @@ package com.google.api.client.util.store;
 
 import com.google.api.client.util.Maps;
 import com.google.api.client.util.Preconditions;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
@@ -39,8 +38,8 @@ public abstract class AbstractDataStoreFactory implements DataStoreFactory {
   private final Map<String, DataStore<? extends Serializable>> dataStoreMap = Maps.newHashMap();
 
   /**
-   * Pattern to control possible values for the {@code id} parameter of
-   * {@link #getDataStore(String)}.
+   * Pattern to control possible values for the {@code id} parameter of {@link
+   * #getDataStore(String)}.
    */
   private static final Pattern ID_PATTERN = Pattern.compile("\\w{1,30}");
 
@@ -64,9 +63,7 @@ public abstract class AbstractDataStoreFactory implements DataStoreFactory {
   /**
    * Returns a new instance of a type-specific data store based on the given unique ID.
    *
-   * <p>
-   * The {@link DataStore#getId()} must match the {@code id} parameter from this method.
-   * </p>
+   * <p>The {@link DataStore#getId()} must match the {@code id} parameter from this method.
    *
    * @param id unique ID to refer to typed data store
    * @param <V> serializable type of the mapped value

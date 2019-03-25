@@ -19,7 +19,6 @@ import com.google.api.client.util.FieldInfo;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Types;
 import com.google.api.client.util.escape.CharEscapers;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,23 +28,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Implements support for HTTP form content encoding serialization of type
- * {@code application/x-www-form-urlencoded} as specified in the <a href=
+ * Implements support for HTTP form content encoding serialization of type {@code
+ * application/x-www-form-urlencoded} as specified in the <a href=
  * "http://www.w3.org/TR/REC-html40/interact/forms.html#h-17.13.4.1">HTML 4.0 Specification</a>.
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>
-  static void setContent(HttpRequest request, Object item) {
-    request.setContent(new UrlEncodedContent(item));
-  }
+ * static void setContent(HttpRequest request, Object item) {
+ * request.setContent(new UrlEncodedContent(item));
+ * }
  * </pre>
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -55,9 +50,7 @@ public class UrlEncodedContent extends AbstractHttpContent {
   /** Key name/value data. */
   private Object data;
 
-  /**
-   * @param data key name/value data
-   */
+  /** @param data key name/value data */
   public UrlEncodedContent(Object data) {
     super(UrlEncodedParser.MEDIA_TYPE);
     setData(data);
@@ -101,10 +94,8 @@ public class UrlEncodedContent extends AbstractHttpContent {
   /**
    * Sets the key name/value data.
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    *
    * @since 1.5
    */
@@ -120,8 +111,8 @@ public class UrlEncodedContent extends AbstractHttpContent {
    *
    * @param request HTTP request
    * @return URL-encoded content
-   * @throws ClassCastException if the HTTP request has a content defined that is not
-   *         {@link UrlEncodedContent}
+   * @throws ClassCastException if the HTTP request has a content defined that is not {@link
+   *     UrlEncodedContent}
    * @since 1.7
    */
   public static UrlEncodedContent getContent(HttpRequest request) {
@@ -147,8 +138,9 @@ public class UrlEncodedContent extends AbstractHttpContent {
       writer.write("&");
     }
     writer.write(name);
-    String stringValue = CharEscapers.escapeUri(
-        value instanceof Enum<?> ? FieldInfo.of((Enum<?>) value).getName() : value.toString());
+    String stringValue =
+        CharEscapers.escapeUri(
+            value instanceof Enum<?> ? FieldInfo.of((Enum<?>) value).getName() : value.toString());
     if (stringValue.length() != 0) {
       writer.write("=");
       writer.write(stringValue);

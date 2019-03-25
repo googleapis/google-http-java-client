@@ -27,8 +27,7 @@ public class DateTimeTest extends TestCase {
 
   private TimeZone originalTimeZone;
 
-  public DateTimeTest() {
-  }
+  public DateTimeTest() {}
 
   public DateTimeTest(String testName) {
     super(testName);
@@ -47,52 +46,57 @@ public class DateTimeTest extends TestCase {
   public void testToStringRfc3339() {
     TimeZone.setDefault(TimeZone.getTimeZone("GMT-4"));
 
-    assertEquals("Check with explicit Date and Timezone.",
+    assertEquals(
+        "Check with explicit Date and Timezone.",
         "2012-11-06T12:10:44.000-08:00",
         new DateTime(new Date(1352232644000L), TimeZone.getTimeZone("GMT-8")).toStringRfc3339());
 
-    assertEquals("Check with explicit Date but no explicit Timezone.",
+    assertEquals(
+        "Check with explicit Date but no explicit Timezone.",
         "2012-11-06T16:10:44.000-04:00",
         new DateTime(new Date(1352232644000L)).toStringRfc3339());
 
-    assertEquals("Check with explicit Date and Timezone-Shift.",
+    assertEquals(
+        "Check with explicit Date and Timezone-Shift.",
         "2012-11-06T17:10:44.000-03:00",
         new DateTime(1352232644000L, -180).toStringRfc3339());
 
-    assertEquals("Check with explicit Date and Zulu Timezone Offset.",
+    assertEquals(
+        "Check with explicit Date and Zulu Timezone Offset.",
         "2012-11-06T20:10:44.000Z",
         new DateTime(1352232644000L, 0).toStringRfc3339());
 
     TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 
-    assertEquals("Check with explicit Date but no explicit Timezone.",
+    assertEquals(
+        "Check with explicit Date but no explicit Timezone.",
         "2012-11-06T20:10:44.000Z",
         new DateTime(new Date(1352232644000L)).toStringRfc3339());
   }
 
   public void testToStringRfc3339_dateOnly() {
-    for (String timeZoneString : new String[]{"GMT-4", "UTC", "UTC-7"}) {
+    for (String timeZoneString : new String[] {"GMT-4", "UTC", "UTC-7"}) {
       TimeZone.setDefault(TimeZone.getTimeZone(timeZoneString));
-      assertEquals(
-          "2012-11-06",
-          new DateTime(true, 1352232644000L, 1).toStringRfc3339());
-      assertEquals(
-          "2012-11-06",
-          new DateTime(true, 1352232644000L, null).toStringRfc3339());
+      assertEquals("2012-11-06", new DateTime(true, 1352232644000L, 1).toStringRfc3339());
+      assertEquals("2012-11-06", new DateTime(true, 1352232644000L, null).toStringRfc3339());
       assertEquals("2000-01-01", new DateTime("2000-01-01").toStringRfc3339());
     }
   }
 
   public void testEquals() throws InterruptedException {
-    assertFalse("Check equals with two different tz specified.",
+    assertFalse(
+        "Check equals with two different tz specified.",
         new DateTime(1234567890L).equals(new DateTime(1234567890L, 120)));
-    assertTrue("Check equals with two identical tz specified.",
+    assertTrue(
+        "Check equals with two identical tz specified.",
         new DateTime(1234567890L, -240).equals(new DateTime(1234567890L, -240)));
-    assertFalse("Check equals with two different tz specified.",
+    assertFalse(
+        "Check equals with two different tz specified.",
         new DateTime(1234567890L, 60).equals(new DateTime(1234567890L, 240)));
 
     assertFalse("Check not equal.", new DateTime(1234567890L).equals(new DateTime(9876543210L)));
-    assertFalse("Check not equal with tz.",
+    assertFalse(
+        "Check not equal with tz.",
         new DateTime(1234567890L, 120).equals(new DateTime(9876543210L, 120)));
     assertFalse(
         "Check not equal with Date.", new DateTime(1234567890L).equals(new Date(9876543210L)));
@@ -129,11 +133,14 @@ public class DateTimeTest extends TestCase {
     assertEquals(0, value.getValue() % 100);
 
     // From the RFC3339 Standard
-    assertEquals(DateTime.parseRfc3339("1996-12-19T16:39:57-08:00").getValue(),
+    assertEquals(
+        DateTime.parseRfc3339("1996-12-19T16:39:57-08:00").getValue(),
         DateTime.parseRfc3339("1996-12-20T00:39:57Z").getValue()); // from Section 5.8 Examples
-    assertEquals(DateTime.parseRfc3339("1990-12-31T23:59:60Z").getValue(),
+    assertEquals(
+        DateTime.parseRfc3339("1990-12-31T23:59:60Z").getValue(),
         DateTime.parseRfc3339("1990-12-31T15:59:60-08:00").getValue()); // from Section 5.8 Examples
-    assertEquals(DateTime.parseRfc3339("2007-06-01t18:50:00-04:00").getValue(),
+    assertEquals(
+        DateTime.parseRfc3339("2007-06-01t18:50:00-04:00").getValue(),
         DateTime.parseRfc3339("2007-06-01t22:50:00Z").getValue()); // from Section 4.2 Local Offsets
   }
 
@@ -146,7 +153,7 @@ public class DateTimeTest extends TestCase {
     assertEquals(expected, output);
 
     // Truncated to milliseconds.
-    input    = "1996-12-19T16:39:57.123456789-08:00";
+    input = "1996-12-19T16:39:57.123456789-08:00";
     expected = "1996-12-19T16:39:57.123-08:00";
     dt = DateTime.parseRfc3339(input);
     output = dt.toStringRfc3339();

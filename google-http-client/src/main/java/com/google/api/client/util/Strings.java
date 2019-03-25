@@ -17,9 +17,7 @@ package com.google.api.client.util;
 /**
  * Static utility methods pertaining to {@code String} instances.
  *
- * <p>
- * NOTE: proxy for the Guava implementation of {@link com.google.common.base.Strings}.
- * </p>
+ * <p>NOTE: proxy for the Guava implementation of {@link com.google.common.base.Strings}.
  *
  * @since 1.14
  * @author Yaniv Inbar
@@ -36,6 +34,5 @@ public final class Strings {
     return com.google.common.base.Strings.isNullOrEmpty(string);
   }
 
-  private Strings() {
-  }
+  private Strings() {}
 }

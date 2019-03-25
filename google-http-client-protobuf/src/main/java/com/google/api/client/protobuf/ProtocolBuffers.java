@@ -17,21 +17,18 @@ package com.google.api.client.protobuf;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Throwables;
 import com.google.protobuf.MessageLite;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Utilities for protocol buffers.
  *
- * <p>
- * There is no official media type for protocol buffers registered with the <a
- * href="http://www.iana.org/assignments/media-types/application/index.html">IANA</a>.
- * {@link #CONTENT_TYPE} and {@link #ALT_CONTENT_TYPE} are some of the more popular choices being
- * used today, but other media types are also in use.
- * </p>
+ * <p>There is no official media type for protocol buffers registered with the <a
+ * href="http://www.iana.org/assignments/media-types/application/index.html">IANA</a>. {@link
+ * #CONTENT_TYPE} and {@link #ALT_CONTENT_TYPE} are some of the more popular choices being used
+ * today, but other media types are also in use.
  *
  * @since 1.5
  * @author Yaniv Inbar
@@ -51,7 +48,7 @@ public class ProtocolBuffers {
    *
    * @param <T> destination message type
    * @param messageClass destination message class that has a {@code parseFrom(InputStream)} public
-   *        static method
+   *     static method
    * @return new instance of the parsed destination message class
    */
   public static <T extends MessageLite> T parseAndClose(
@@ -69,6 +66,5 @@ public class ProtocolBuffers {
     }
   }
 
-  private ProtocolBuffers() {
-  }
+  private ProtocolBuffers() {}
 }

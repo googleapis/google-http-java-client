@@ -23,15 +23,13 @@ import java.util.logging.Logger;
 /**
  * Thread-safe byte array output stream that logs what was written to it when the stream is closed.
  *
- * <p>
- * Use this as a safe way to log a limited amount of content. As content is written to the stream,
- * it is stored as a byte array, up to the maximum number of bytes limit that was set in the
+ * <p>Use this as a safe way to log a limited amount of content. As content is written to the
+ * stream, it is stored as a byte array, up to the maximum number of bytes limit that was set in the
  * constructor. Note that if the maximum limit is set too high, it risks an {@link OutOfMemoryError}
  * on low-memory devices. This class also keeps track of the total number of bytes written,
  * regardless of whether they were logged. On {@link #close()}, it then logs two records to the
  * specified logger and logging level: the total number of bytes written, and the bounded content
  * logged (assuming charset "UTF-8"). Any control characters are stripped out of the content.
- * </p>
  *
  * @since 1.9
  * @author Yaniv Inbar
@@ -57,7 +55,7 @@ public class LoggingByteArrayOutputStream extends ByteArrayOutputStream {
    * @param logger logger
    * @param loggingLevel logging level
    * @param maximumBytesToLog maximum number of bytes to log (may be {@code 0} to avoid logging
-   *        content)
+   *     content)
    */
   public LoggingByteArrayOutputStream(Logger logger, Level loggingLevel, int maximumBytesToLog) {
     this.logger = Preconditions.checkNotNull(logger);
@@ -106,7 +104,8 @@ public class LoggingByteArrayOutputStream extends ByteArrayOutputStream {
         // log response content
         if (count != 0) {
           // strip out some unprintable control chars
-          logger.log(loggingLevel,
+          logger.log(
+              loggingLevel,
               toString("UTF-8").replaceAll("[\\x00-\\x09\\x0B\\x0C\\x0E-\\x1F\\x7F]", " "));
         }
       }

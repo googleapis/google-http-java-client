@@ -18,7 +18,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.test.json.AbstractJsonFactoryTest;
 import com.google.common.base.Charsets;
-
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
@@ -33,11 +32,26 @@ public class GsonFactoryTest extends AbstractJsonFactoryTest {
 
   private static final String JSON_ENTRY_PRETTY =
       "{" + GSON_LINE_SEPARATOR + "  \"title\": \"foo\"" + GSON_LINE_SEPARATOR + "}";
-  private static final String JSON_FEED_PRETTY = "{" + GSON_LINE_SEPARATOR + "  \"entries\": ["
-      + GSON_LINE_SEPARATOR + "    {" + GSON_LINE_SEPARATOR + "      \"title\": \"foo\""
-      + GSON_LINE_SEPARATOR + "    }," + GSON_LINE_SEPARATOR + "    {"
-      + GSON_LINE_SEPARATOR + "      \"title\": \"bar\"" + GSON_LINE_SEPARATOR + "    }"
-      + GSON_LINE_SEPARATOR + "  ]" + GSON_LINE_SEPARATOR + "}";
+  private static final String JSON_FEED_PRETTY =
+      "{"
+          + GSON_LINE_SEPARATOR
+          + "  \"entries\": ["
+          + GSON_LINE_SEPARATOR
+          + "    {"
+          + GSON_LINE_SEPARATOR
+          + "      \"title\": \"foo\""
+          + GSON_LINE_SEPARATOR
+          + "    },"
+          + GSON_LINE_SEPARATOR
+          + "    {"
+          + GSON_LINE_SEPARATOR
+          + "      \"title\": \"bar\""
+          + GSON_LINE_SEPARATOR
+          + "    }"
+          + GSON_LINE_SEPARATOR
+          + "  ]"
+          + GSON_LINE_SEPARATOR
+          + "}";
 
   public GsonFactoryTest(String name) {
     super(name);

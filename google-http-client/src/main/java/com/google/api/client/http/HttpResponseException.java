@@ -26,9 +26,7 @@ import java.nio.charset.Charset;
 /**
  * Exception thrown when an error status code is detected in an HTTP response.
  *
- * <p>
- * Implementation is not thread safe.
- * </p>
+ * <p>Implementation is not thread safe.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -56,17 +54,15 @@ public class HttpResponseException extends IOException {
    * Constructor that constructs a detail message from the given HTTP response that includes the
    * status code, status message and HTTP response content.
    *
-   * <p>
-   * Callers of this constructor should call {@link HttpResponse#disconnect} after
-   * {@link HttpResponseException} is instantiated. Example usage:
-   * </p>
+   * <p>Callers of this constructor should call {@link HttpResponse#disconnect} after {@link
+   * HttpResponseException} is instantiated. Example usage:
    *
    * <pre>
-     try {
-       throw new HttpResponseException(response);
-     } finally {
-       response.disconnect();
-     }
+   * try {
+   * throw new HttpResponseException(response);
+   * } finally {
+   * response.disconnect();
+   * }
    * </pre>
    *
    * @param response HTTP response
@@ -89,8 +85,8 @@ public class HttpResponseException extends IOException {
   }
 
   /**
-   * Returns whether received a successful HTTP status code {@code >= 200 && < 300} (see
-   * {@link #getStatusCode()}).
+   * Returns whether received a successful HTTP status code {@code >= 200 && < 300} (see {@link
+   * #getStatusCode()}).
    *
    * @since 1.7
    */
@@ -154,10 +150,7 @@ public class HttpResponseException extends IOException {
   /**
    * Builder.
    *
-   * <p>
-   * Implementation is not thread safe.
-   * </p>
-   *
+   * <p>Implementation is not thread safe.
    *
    * @since 1.14
    */
@@ -192,9 +185,7 @@ public class HttpResponseException extends IOException {
       setHeaders(headers);
     }
 
-    /**
-     * @param response HTTP response
-     */
+    /** @param response HTTP response */
     public Builder(HttpResponse response) {
       this(response.getStatusCode(), response.getStatusMessage(), response.getHeaders());
       // content
@@ -247,10 +238,8 @@ public class HttpResponseException extends IOException {
     /**
      * Sets the detail message to use or {@code null} for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setMessage(String message) {
       this.message = message;
@@ -265,10 +254,8 @@ public class HttpResponseException extends IOException {
     /**
      * Sets the HTTP status code or {@code 0} for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setStatusCode(int statusCode) {
       Preconditions.checkArgument(statusCode >= 0);
@@ -284,10 +271,8 @@ public class HttpResponseException extends IOException {
     /**
      * Sets the HTTP status message or {@code null} for none.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setStatusMessage(String statusMessage) {
       this.statusMessage = statusMessage;

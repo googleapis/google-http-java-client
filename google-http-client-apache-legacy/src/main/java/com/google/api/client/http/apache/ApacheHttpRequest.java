@@ -25,9 +25,7 @@ import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-/**
- * @author Yaniv Inbar
- */
+/** @author Yaniv Inbar */
 final class ApacheHttpRequest extends LowLevelHttpRequest {
   private final HttpClient httpClient;
 
@@ -54,7 +52,8 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
   @Override
   public LowLevelHttpResponse execute() throws IOException {
     if (getStreamingContent() != null) {
-      Preconditions.checkArgument(request instanceof HttpEntityEnclosingRequest,
+      Preconditions.checkArgument(
+          request instanceof HttpEntityEnclosingRequest,
           "Apache HTTP client does not support %s requests with content.",
           request.getRequestLine().getMethod());
       ContentEntity entity = new ContentEntity(getContentLength(), getStreamingContent());

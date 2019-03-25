@@ -13,9 +13,9 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
- * HTTP utilities for the <a href="https://github.com/protocolbuffers/protobuf">Protocol Buffer</a> format
- * based on the pluggable HTTP library.
+ * {@link com.google.api.client.util.Beta} <br>
+ * HTTP utilities for the <a href="https://github.com/protocolbuffers/protobuf">Protocol Buffer</a>
+ * format based on the pluggable HTTP library.
  *
  * @since 1.5
  * @author Yaniv Inbar

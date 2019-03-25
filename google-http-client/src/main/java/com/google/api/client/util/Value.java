@@ -22,28 +22,27 @@ import java.lang.annotation.Target;
 /**
  * Use this annotation to specify that an enum constant is a string data value, optionally providing
  * the string data value to use.
- * <p>
- * If the string data value is not specified, the default is the Java field's name. For example:
- * </p>
+ *
+ * <p>If the string data value is not specified, the default is the Java field's name. For example:
  *
  * <pre>
-  public enum A {
-
-    // value is "USE_FIELD_NAME"
-    &#64;Value
-    USE_FIELD_NAME,
-    
-    // value is "specifiedValue"
-    &#64;Value("specifiedValue")
-    USE_SPECIFIED_VALUE, 
-    
-    // value is null
-    &#64;NullValue
-    NULL_VALUE
-
-    // not a value
-    NOT_A_VALUE
-  }
+ * public enum A {
+ *
+ * // value is "USE_FIELD_NAME"
+ * &#64;Value
+ * USE_FIELD_NAME,
+ *
+ * // value is "specifiedValue"
+ * &#64;Value("specifiedValue")
+ * USE_SPECIFIED_VALUE,
+ *
+ * // value is null
+ * &#64;NullValue
+ * NULL_VALUE
+ *
+ * // not a value
+ * NOT_A_VALUE
+ * }
  * </pre>
  *
  * @since 1.4

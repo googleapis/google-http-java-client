@@ -20,17 +20,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this annotation to specify that an enum constant is the "null" data value to use for
- * {@link Data#nullOf(Class)}.
- * <p>
- * See {@link Value} for an example.
- * </p>
+ * Use this annotation to specify that an enum constant is the "null" data value to use for {@link
+ * Data#nullOf(Class)}.
+ *
+ * <p>See {@link Value} for an example.
  *
  * @since 1.4
  * @author Yaniv Inbar
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface NullValue {
-
-}
+public @interface NullValue {}

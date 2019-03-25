@@ -16,7 +16,6 @@ package com.google.api.client.http;
 
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
-
 import junit.framework.TestCase;
 
 /**
@@ -41,8 +40,9 @@ public class BasicAuthenticationTest extends TestCase {
   public void testInitialize() throws Exception {
     BasicAuthentication auth = new BasicAuthentication(USERNAME, PASSWORD);
     HttpRequest request =
-        new MockHttpTransport().createRequestFactory().buildGetRequest(
-            HttpTesting.SIMPLE_GENERIC_URL);
+        new MockHttpTransport()
+            .createRequestFactory()
+            .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     auth.intercept(request);
     assertEquals(AUTH_HEADER, request.getHeaders().getAuthorization());
   }

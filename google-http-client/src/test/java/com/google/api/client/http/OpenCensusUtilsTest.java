@@ -14,12 +14,11 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.http.HttpHeaders;
 
-import io.opencensus.trace.BlankSpan;
-import io.opencensus.trace.EndSpanOptions;
 import io.opencensus.trace.Annotation;
 import io.opencensus.trace.AttributeValue;
+import io.opencensus.trace.BlankSpan;
+import io.opencensus.trace.EndSpanOptions;
 import io.opencensus.trace.Link;
 import io.opencensus.trace.MessageEvent;
 import io.opencensus.trace.Span;
@@ -52,49 +51,52 @@ public class OpenCensusUtilsTest extends TestCase {
 
   @Override
   public void setUp() {
-    mockTextFormat = new TextFormat() {
-      @Override
-      public List<String> fields() {
-        throw new UnsupportedOperationException("TextFormat.fields");
-      }
+    mockTextFormat =
+        new TextFormat() {
+          @Override
+          public List<String> fields() {
+            throw new UnsupportedOperationException("TextFormat.fields");
+          }
 
-      @Override
-      public <C> void inject(SpanContext spanContext, C carrier, Setter<C> setter) {
-        throw new UnsupportedOperationException("TextFormat.inject");
-      }
+          @Override
+          public <C> void inject(SpanContext spanContext, C carrier, Setter<C> setter) {
+            throw new UnsupportedOperationException("TextFormat.inject");
+          }
 
-      @Override
-      public <C> SpanContext extract(C carrier, Getter<C> getter) {
-        throw new UnsupportedOperationException("TextFormat.extract");
-      }
-    };
-    mockTextFormatSetter = new TextFormat.Setter<HttpHeaders>() {
-      @Override
-      public void put(HttpHeaders carrier, String key, String value) {
-        throw new UnsupportedOperationException("TextFormat.Setter.put");
-      }
-    };
+          @Override
+          public <C> SpanContext extract(C carrier, Getter<C> getter) {
+            throw new UnsupportedOperationException("TextFormat.extract");
+          }
+        };
+    mockTextFormatSetter =
+        new TextFormat.Setter<HttpHeaders>() {
+          @Override
+          public void put(HttpHeaders carrier, String key, String value) {
+            throw new UnsupportedOperationException("TextFormat.Setter.put");
+          }
+        };
     headers = new HttpHeaders();
     tracer = OpenCensusUtils.getTracer();
-    mockSpan = new Span(tracer.getCurrentSpan().getContext(), null) {
+    mockSpan =
+        new Span(tracer.getCurrentSpan().getContext(), null) {
 
-      @Override
-      public void addAnnotation(String description, Map<String, AttributeValue> attributes) {}
+          @Override
+          public void addAnnotation(String description, Map<String, AttributeValue> attributes) {}
 
-      @Override
-      public void addAnnotation(Annotation annotation) {}
+          @Override
+          public void addAnnotation(Annotation annotation) {}
 
-      @Override
-      public void addMessageEvent(MessageEvent event) {
-        throw new UnsupportedOperationException("Span.addMessageEvent");
-      }
+          @Override
+          public void addMessageEvent(MessageEvent event) {
+            throw new UnsupportedOperationException("Span.addMessageEvent");
+          }
 
-      @Override
-      public void addLink(Link link) {}
+          @Override
+          public void addLink(Link link) {}
 
-      @Override
-      public void end(EndSpanOptions options) {}
-    };
+          @Override
+          public void end(EndSpanOptions options) {}
+        };
     originTextFormat = OpenCensusUtils.propagationTextFormat;
     originTextFormatSetter = OpenCensusUtils.propagationTextFormatSetter;
   }
@@ -200,7 +202,8 @@ public class OpenCensusUtilsTest extends TestCase {
   }
 
   public void testGetEndSpanOptionsPreconditionFailed() {
-    EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.FAILED_PRECONDITION).build();
+    EndSpanOptions expected =
+        EndSpanOptions.builder().setStatus(Status.FAILED_PRECONDITION).build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(412));
   }
 

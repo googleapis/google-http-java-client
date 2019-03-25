@@ -20,28 +20,23 @@ import com.google.api.client.protobuf.ProtocolBuffers;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
 import com.google.protobuf.MessageLite;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Serializes of a protocol buffer message to HTTP content.
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>
-  static HttpRequest buildPostRequest(
-      HttpRequestFactory requestFactory, GenericUrl url, MessageLite message) throws IOException {
-    return requestFactory.buildPostRequest(url, new ProtoHttpContent(message));
-  }
+ * static HttpRequest buildPostRequest(
+ * HttpRequestFactory requestFactory, GenericUrl url, MessageLite message) throws IOException {
+ * return requestFactory.buildPostRequest(url, new ProtoHttpContent(message));
+ * }
  * </pre>
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.5
  * @author Yaniv Inbar
@@ -52,9 +47,7 @@ public class ProtoHttpContent extends AbstractHttpContent {
   /** Message to serialize. */
   private final MessageLite message;
 
-  /**
-   * @param message message to serialize
-   */
+  /** @param message message to serialize */
   public ProtoHttpContent(MessageLite message) {
     super(ProtocolBuffers.CONTENT_TYPE);
     this.message = Preconditions.checkNotNull(message);

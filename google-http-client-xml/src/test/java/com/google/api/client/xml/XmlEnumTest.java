@@ -18,14 +18,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import com.google.api.client.util.Key;
+import com.google.api.client.util.Value;
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import org.junit.Test;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
-import com.google.api.client.util.Key;
-import com.google.api.client.util.Value;
 
 /**
  * Tests {@link Xml}.
@@ -34,19 +35,23 @@ import com.google.api.client.util.Value;
  */
 public class XmlEnumTest {
 
-  private static final String XML = "<?xml version=\"1.0\"?><any anyEnum=\"ENUM_1\" attr" +
-      "=\"value\" xmlns=\"http://www.w3.org/2005/Atom\"><anotherEnum>ENUM_2</anotherEnum" +
-      "><elem>content</elem><rep>rep1</rep><rep>rep2</rep><value>ENUM_1</value></any>";
-  private static final String XML_ENUM_ELEMENT_ONLY = "<?xml version=\"1.0\"?><any xmlns" +
-      "=\"http://www.w3.org/2005/Atom\"><elementEnum>ENUM_2</elementEnum></any>";
-  private static final String XML_ENUM_ATTRIBUTE_ONLY = "<?xml version=\"1.0\"?><any " +
-      "attributeEnum=\"ENUM_1\" xmlns=\"http://www.w3.org/2005/Atom\" />";
-  private static final String XML_ENUM_INCORRECT = "<?xml version=\"1.0\"?><any xmlns=\"http" +
-      "://www.w3.org/2005/Atom\"><elementEnum>ENUM_3</elementEnum></any>";
-  private static final String XML_ENUM_ELEMENT_ONLY_NESTED = "<?xml version=\"1.0\"?><any " +
-      "xmlns=\"http://www.w3.org/2005/Atom\"><elementEnum>ENUM_2<nested>something</nested" +
-      "></elementEnum></any>";
-
+  private static final String XML =
+      "<?xml version=\"1.0\"?><any anyEnum=\"ENUM_1\" attr"
+          + "=\"value\" xmlns=\"http://www.w3.org/2005/Atom\"><anotherEnum>ENUM_2</anotherEnum"
+          + "><elem>content</elem><rep>rep1</rep><rep>rep2</rep><value>ENUM_1</value></any>";
+  private static final String XML_ENUM_ELEMENT_ONLY =
+      "<?xml version=\"1.0\"?><any xmlns"
+          + "=\"http://www.w3.org/2005/Atom\"><elementEnum>ENUM_2</elementEnum></any>";
+  private static final String XML_ENUM_ATTRIBUTE_ONLY =
+      "<?xml version=\"1.0\"?><any "
+          + "attributeEnum=\"ENUM_1\" xmlns=\"http://www.w3.org/2005/Atom\" />";
+  private static final String XML_ENUM_INCORRECT =
+      "<?xml version=\"1.0\"?><any xmlns=\"http"
+          + "://www.w3.org/2005/Atom\"><elementEnum>ENUM_3</elementEnum></any>";
+  private static final String XML_ENUM_ELEMENT_ONLY_NESTED =
+      "<?xml version=\"1.0\"?><any "
+          + "xmlns=\"http://www.w3.org/2005/Atom\"><elementEnum>ENUM_2<nested>something</nested"
+          + "></elementEnum></any>";
 
   @Test
   public void testParseAnyType() throws Exception {
@@ -73,17 +78,15 @@ public class XmlEnumTest {
     assertEquals(XML, out.toString());
   }
 
-  /**
-   * The purpose of this test is to parse an XML element to an objects's field.
-   */
+  /** The purpose of this test is to parse an XML element to an objects's field. */
   @Test
   public void testParseToEnumElementType() throws Exception {
     assertEquals(XML_ENUM_ELEMENT_ONLY, testStandardXml(XML_ENUM_ELEMENT_ONLY));
   }
 
   /**
-   * The purpose of this test is to parse an XML element to an objects's field, whereas
-   * there are additional nested elements in the tag.
+   * The purpose of this test is to parse an XML element to an objects's field, whereas there are
+   * additional nested elements in the tag.
    */
   @Test
   public void testParseToEnumElementTypeWithNestedElement() throws Exception {
@@ -111,12 +114,9 @@ public class XmlEnumTest {
     serializer.setOutput(out, "UTF-8");
     namespaceDictionary.serialize(serializer, "any", xml);
     return out.toString();
-
   }
 
-  /**
-   * The purpose of this test is to parse an XML attribute to an object's field.
-   */
+  /** The purpose of this test is to parse an XML attribute to an object's field. */
   @Test
   public void testParse_enumAttributeType() throws Exception {
     XmlEnumTest.AnyTypeEnumAttributeOnly xml = new XmlEnumTest.AnyTypeEnumAttributeOnly();
@@ -154,28 +154,28 @@ public class XmlEnumTest {
   }
 
   public enum AnyEnum {
-    @Value ENUM_1,
-    @Value ENUM_2
+    @Value
+    ENUM_1,
+    @Value
+    ENUM_2
   }
 
   private static class AnyType {
     @Key("@attr")
     private Object attr;
-    @Key
-    private Object elem;
-    @Key
-    private Object rep;
+
+    @Key private Object elem;
+    @Key private Object rep;
+
     @Key("@anyEnum")
     private XmlEnumTest.AnyEnum anyEnum;
-    @Key
-    private XmlEnumTest.AnyEnum anotherEnum;
-    @Key
-    private ValueType value;
+
+    @Key private XmlEnumTest.AnyEnum anotherEnum;
+    @Key private ValueType value;
   }
 
   private static class AnyTypeEnumElementOnly {
-    @Key
-    private XmlEnumTest.AnyEnum elementEnum;
+    @Key private XmlEnumTest.AnyEnum elementEnum;
   }
 
   private static class AnyTypeEnumAttributeOnly {
@@ -183,9 +183,7 @@ public class XmlEnumTest {
     private AnyEnum attributeEnum;
   }
 
-  /**
-   * Needs to be public, this is referenced in another element.
-   */
+  /** Needs to be public, this is referenced in another element. */
   public static class ValueType {
     @Key("text()")
     private XmlEnumTest.AnyEnum content;

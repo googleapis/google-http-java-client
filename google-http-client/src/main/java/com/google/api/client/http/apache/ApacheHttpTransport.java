@@ -122,18 +122,6 @@ public final class ApacheHttpTransport extends HttpTransport {
     params.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, false);
   }
 
-  /** Returns a new instance of the default HTTP parameters we use. */
-  static HttpParams newDefaultHttpParams() {
-    HttpParams params = new BasicHttpParams();
-    // Turn off stale checking. Our connections break all the time anyway,
-    // and it's not worth it to pay the penalty of checking every time.
-    HttpConnectionParams.setStaleCheckingEnabled(params, false);
-    HttpConnectionParams.setSocketBufferSize(params, 8192);
-    ConnManagerParams.setMaxTotalConnections(params, 200);
-    ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(20));
-    return params;
-  }
-
   /**
    * Creates a new instance of the Apache HTTP client that is used by the {@link
    * #ApacheHttpTransport()} constructor.
@@ -144,8 +132,8 @@ public final class ApacheHttpTransport extends HttpTransport {
    *   <li>The client connection manager is set to {@link ThreadSafeClientConnManager}.
    *   <li>The socket buffer size is set to 8192 using {@link
    *       HttpConnectionParams#setSocketBufferSize}.
-   *   <li>The retry mechanism is turned off by setting {@code new DefaultHttpRequestRetryHandler(0,
-   *       false)}.
+   *   <li><The retry mechanism is turned off by setting {@code new
+   *       DefaultHttpRequestRetryHandler(0, false)}.
    *   <li>The route planner uses {@link ProxySelectorRoutePlanner} with {@link
    *       ProxySelector#getDefault()}, which uses the proxy settings from <a
    *       href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
@@ -158,6 +146,18 @@ public final class ApacheHttpTransport extends HttpTransport {
   public static DefaultHttpClient newDefaultHttpClient() {
     return newDefaultHttpClient(
         SSLSocketFactory.getSocketFactory(), newDefaultHttpParams(), ProxySelector.getDefault());
+  }
+
+  /** Returns a new instance of the default HTTP parameters we use. */
+  static HttpParams newDefaultHttpParams() {
+    HttpParams params = new BasicHttpParams();
+    // Turn off stale checking. Our connections break all the time anyway,
+    // and it's not worth it to pay the penalty of checking every time.
+    HttpConnectionParams.setStaleCheckingEnabled(params, false);
+    HttpConnectionParams.setSocketBufferSize(params, 8192);
+    ConnManagerParams.setMaxTotalConnections(params, 200);
+    ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(20));
+    return params;
   }
 
   /**
@@ -246,7 +246,7 @@ public final class ApacheHttpTransport extends HttpTransport {
     private SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
 
     /** HTTP parameters. */
-    private final HttpParams params = newDefaultHttpParams();
+    private HttpParams params = newDefaultHttpParams();
 
     /**
      * HTTP proxy selector to use {@link ProxySelectorRoutePlanner} or {@code null} for {@link

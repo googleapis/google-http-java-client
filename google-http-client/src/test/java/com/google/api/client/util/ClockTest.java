@@ -18,12 +18,11 @@ import junit.framework.TestCase;
 
 /**
  * Tests for the {@link Clock}.
+ *
  * @author mlinder@google.com (Matthias Linder)
  */
 public class ClockTest extends TestCase {
-  /**
-   * Tests that the Clock.SYSTEM.currentTimeMillis() method returns useful values.
-   */
+  /** Tests that the Clock.SYSTEM.currentTimeMillis() method returns useful values. */
   public void testSystemClock() {
     assertNotNull(Clock.SYSTEM);
 
