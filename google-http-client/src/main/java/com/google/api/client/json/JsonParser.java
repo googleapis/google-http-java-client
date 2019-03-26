@@ -828,6 +828,10 @@ public abstract class JsonParser implements Closeable {
           Preconditions.checkArgument(
               fieldContext == null || fieldContext.getAnnotation(JsonString.class) == null,
               "number type formatted as a JSON number cannot use @JsonString annotation");
+          if (getCurrentToken() == JsonToken.VALUE_NUMBER_INT
+              && (valueClass == null || valueClass.isAssignableFrom(Integer.class))) {
+            return getIntValue();
+          }
           if (valueClass == null || valueClass.isAssignableFrom(BigDecimal.class)) {
             return getDecimalValue();
           }
