@@ -82,11 +82,6 @@
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-assembly</artifactId>
-        <version>1.29.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-assembly:current} -->
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-findbugs</artifactId>
         <version>1.29.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-findbugs:current} -->
       </dependency>
