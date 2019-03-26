@@ -107,11 +107,6 @@
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-jdo</artifactId>
-        <version>1.29.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-jdo:current} -->
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-protobuf</artifactId>
         <version>1.29.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-protobuf:current} -->
       </dependency>
