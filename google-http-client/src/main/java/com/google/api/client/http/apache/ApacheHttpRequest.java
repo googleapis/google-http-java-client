@@ -18,7 +18,9 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.Preconditions;
 import java.io.IOException;
+import java.net.InetAddress;
 import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -28,13 +30,19 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
   private final HttpClient httpClient;
 
   private final HttpRequestBase request;
+  private final DnsResolver dnsResolver;
 
   private RequestConfig.Builder requestConfig;
 
   ApacheHttpRequest(HttpClient httpClient, HttpRequestBase request) {
+    this(httpClient, request, /*dnsResolver=*/ null);
+  }
+
+  ApacheHttpRequest(HttpClient httpClient, HttpRequestBase request, DnsResolver dnsResolver) {
     this.httpClient = httpClient;
     this.request = request;
     this.requestConfig = RequestConfig.custom().setRedirectsEnabled(false);
+    this.dnsResolver = dnsResolver;
   }
 
   @Override
@@ -60,6 +68,21 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
       ((HttpEntityEnclosingRequest) request).setEntity(entity);
     }
     request.setConfig(requestConfig.build());
-    return new ApacheHttpResponse(request, httpClient.execute(request));
+    if (dnsResolver == null) {
+      // Use the default OS DNS resolution.
+      return new ApacheHttpResponse(request, httpClient.execute(request));
+    }
+
+    // Use the IP provided by our specialized DNS resolver.
+    InetAddress ip = dnsResolver.resolve(request.getURI().getHost());
+    int port =
+        request.getURI().getPort() != -1
+            ? request.getURI().getPort()
+            : "https".equals(request.getURI().getScheme()) ? 443 : 80;
+    return new ApacheHttpResponse(
+        request,
+        httpClient.execute(
+            new HttpHost(ip, request.getURI().getHost(), port, request.getURI().getScheme()),
+            request));
   }
 }

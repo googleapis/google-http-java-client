@@ -79,6 +79,8 @@ public final class ApacheHttpTransport extends HttpTransport {
 
   /** Apache HTTP client. */
   private final HttpClient httpClient;
+  
+  private final DnsResolver dnsResolver;
 
   /**
    * Constructor that uses {@link #newDefaultHttpClient()} for the Apache HTTP client.
@@ -88,7 +90,7 @@ public final class ApacheHttpTransport extends HttpTransport {
    * @since 1.3
    */
   public ApacheHttpTransport() {
-    this(newDefaultHttpClient());
+    this(newDefaultHttpClient(), /*dnsResolver=*/ null);
   }
 
   /**
@@ -113,7 +115,12 @@ public final class ApacheHttpTransport extends HttpTransport {
    * @since 1.6
    */
   public ApacheHttpTransport(HttpClient httpClient) {
+    this(httpClient, /*dnsResolver=*/ null);    
+  }
+
+  public ApacheHttpTransport(HttpClient httpClient, DnsResolver dnsResolver) {
     this.httpClient = httpClient;
+    this.dnsResolver = dnsResolver;
     HttpParams params = httpClient.getParams();
     if (params == null) {
       params = newDefaultHttpClient().getParams();
@@ -210,7 +217,9 @@ public final class ApacheHttpTransport extends HttpTransport {
     } else {
       requestBase = new HttpExtensionMethod(method, url);
     }
-    return new ApacheHttpRequest(httpClient, requestBase);
+    return dnsResolver == null
+        ? new ApacheHttpRequest(httpClient, requestBase)
+        : new ApacheHttpRequest(httpClient, requestBase, dnsResolver);
   }
 
   /**
@@ -381,7 +390,8 @@ public final class ApacheHttpTransport extends HttpTransport {
 
     /** Returns a new instance of {@link ApacheHttpTransport} based on the options. */
     public ApacheHttpTransport build() {
-      return new ApacheHttpTransport(newDefaultHttpClient(socketFactory, params, proxySelector));
+      return new ApacheHttpTransport(
+          newDefaultHttpClient(socketFactory, params, proxySelector), /* dnsResolver= */ null);
     }
   }
 }
