@@ -59,6 +59,7 @@
     <module>google-http-client-android</module>
     <module>google-http-client-apache</module>
     <module>google-http-client-apache-legacy</module>
+    <module>google-http-client-dns</module>
     <module>google-http-client-protobuf</module>
     <module>google-http-client-gson</module>
     <module>google-http-client-jackson</module>

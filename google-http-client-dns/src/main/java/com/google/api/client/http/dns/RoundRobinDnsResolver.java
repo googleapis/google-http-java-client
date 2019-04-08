@@ -1,4 +1,4 @@
-package com.google.api.client.http.apache;
+package com.google.api.client.http.dns;
 
 import com.google.api.client.http.DnsResolver;
 import com.google.common.collect.ImmutableList;

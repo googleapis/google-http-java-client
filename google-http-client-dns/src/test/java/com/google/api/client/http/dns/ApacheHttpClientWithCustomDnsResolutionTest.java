@@ -1,8 +1,11 @@
-package com.google.api.client.http.apache;
+package com.google.api.client.http.dns;
 
+import com.google.api.client.http.DnsResolver;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.apache.ApacheHttpTransport;
+import com.google.api.client.http.dns.RoundRobinDnsResolver;
 import junit.framework.TestCase;
 
 /** Tests {@link ApacheHttpTransport} using custom DNS resolution. */

@@ -14,6 +14,7 @@
 
 package com.google.api.client.http.apache;
 
+import com.google.api.client.http.DnsResolver;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpTransport;

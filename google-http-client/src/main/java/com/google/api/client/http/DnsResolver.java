@@ -1,4 +1,4 @@
-package com.google.api.client.http.apache;
+package com.google.api.client.http;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
