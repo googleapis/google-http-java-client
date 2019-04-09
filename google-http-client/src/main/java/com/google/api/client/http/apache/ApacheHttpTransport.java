@@ -116,7 +116,7 @@ public final class ApacheHttpTransport extends HttpTransport {
    * @since 1.6
    */
   public ApacheHttpTransport(HttpClient httpClient) {
-    this(httpClient, /*dnsResolver=*/ null);    
+    this(httpClient, (DnsResolver) null);    
   }
 
   public ApacheHttpTransport(HttpClient httpClient, DnsResolver dnsResolver) {

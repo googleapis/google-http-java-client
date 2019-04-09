@@ -18,6 +18,7 @@ import com.google.api.client.http.DnsResolver;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.Preconditions;
+import com.google.common.base.Optional;
 import java.io.IOException;
 import java.net.InetAddress;
 import org.apache.http.HttpEntityEnclosingRequest;

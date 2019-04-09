@@ -5,7 +5,7 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.apache.ApacheHttpTransport;
-import com.google.api.client.http.dns.RoundRobinDnsResolver;
+import com.google.api.client.http.dns.GoogleDnsResolver;
 import junit.framework.TestCase;
 
 /** Tests {@link ApacheHttpTransport} using custom DNS resolution. */
@@ -13,7 +13,7 @@ public class ApacheHttpClientWithCustomDnsResolutionTest extends TestCase {
   public void testConnectWithRoundRobinDnsResolution() throws Exception {
 
     // Customize DNS resolution.
-    DnsResolver dnsResolver = new RoundRobinDnsResolver();
+    DnsResolver dnsResolver = new GoogleDnsResolver();
 
     // Everything else is "as usual".
     HttpRequestFactory requestFactory =
