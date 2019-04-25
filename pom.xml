@@ -304,7 +304,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.0.1</version>
+          <version>3.1.0</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>
@@ -357,7 +357,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>2.7</version>
+          <version>3.0.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.7.1</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -385,6 +390,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <doclint>none</doclint>
+          <source>7</source>
         </configuration>
         <executions>
           <execution>
@@ -397,9 +403,9 @@
               <links>
                 <link>http://download.oracle.com/javase/7/docs/api/</link>
                 <link>http://cloud.google.com/appengine/docs/java/javadoc</link>
-                <link>https://jar-download.com/artifacts/org.codehaus.jackson/jackson-core-asl/${project.jackson-core-asl.version}/documentation</link>
+                <link>https://jar-download.com/javaDoc/org.codehaus.jackson/jackson-core-asl/${project.jackson-core-asl.version}</link>
                 <link>http://fasterxml.github.com/jackson-core/javadoc/${project.jackson-core2.version}/</link>
-                <link>https://www.javadoc.io/doc/com.google.code.gson/gson/${project.gson.version}</link>
+                <link>https://static.javadoc.io/doc/com.google.code.gson/gson/${project.gson.version}</link>
                 <link>https://google.github.io/guava/releases/${project.guava.version}/api/docs/</link>
               </links>
               <doctitle>Google HTTP Client Library for Java ${project.version}</doctitle>
