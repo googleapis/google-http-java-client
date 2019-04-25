@@ -18,7 +18,7 @@
         <configuration>
           <links>
             <link>https://download.oracle.com/javase/7/docs/api/</link>
-            <link>https://jar-download.com/artifacts/org.codehaus.jackson/jackson-core-asl/${project.jackson-core-asl.version}/documentation</link>
+            <link>https://jar-download.com/javaDoc/org.codehaus.jackson/jackson-core-asl/${project.jackson-core-asl.version}</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
