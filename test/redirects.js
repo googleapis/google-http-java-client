@@ -36,8 +36,4 @@ describe('redirectUrl', () => {
     const expected = null;
     assert.equal(redirectPath(path), expected);
   });
-
-  it('works', () => {
-    assert.equal([1, 2, 3].indexOf(4), -1);
-  });
 });
