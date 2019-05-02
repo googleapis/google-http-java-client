@@ -15,25 +15,37 @@
 'use strict';
 
 const assert = require('assert');
-const redirectPath = require('../src/redirects.js').redirectPath;
+const redirectUrl = require('../src/redirects.js').redirectUrl;
 
 describe('redirectUrl', () => {
 
-  it('finds a versioned doc', () => {
-    const path = 'google-http-java-client/releases/1.25.0/javadoc/index.html';
-    const expected = 'java/google-http-client/1.25.0/index.html';
-    assert.equal(redirectPath(path), expected);
+  it('should handle a versioned doc', () => {
+    const url = 'https://googleapis.github.io/google-http-java-client/releases/1.25.0/javadoc/index.html';
+    const expected = 'https://googleapis.dev/java/google-http-client/1.25.0/index.html';
+    assert.equal(redirectUrl(url), expected);
   });
 
-  it('finds a deeplink', () => {
-    const path = 'google-http-java-client/releases/1.25.0/javadoc/index.html?com/google/api/client/http/HttpIOExceptionHandler.html';
-    const expected = 'java/google-http-client/1.25.0/index.html?com/google/api/client/http/HttpIOExceptionHandler.html';
-    assert.equal(redirectPath(path), expected);
+  it('should handle root page without index.html', () => {
+    const url = 'https://googleapis.github.io/google-http-java-client/releases/1.25.0/javadoc/';
+    const expected = 'https://googleapis.dev/java/google-http-client/1.25.0/';
+    assert.equal(redirectUrl(url), expected);
+  });
+
+  it('should handle a deeplink', () => {
+    const url = 'https://googleapis.github.io/google-http-java-client/releases/1.25.0/javadoc/index.html?com/google/api/client/http/HttpIOExceptionHandler.html';
+    const expected = 'https://googleapis.dev/java/google-http-client/1.25.0/index.html?com/google/api/client/http/HttpIOExceptionHandler.html';
+    assert.equal(redirectUrl(url), expected);
+  });
+
+  it('should handle anchor to method', () => {
+    const url = 'https://googleapis.github.io/google-http-java-client/releases/1.25.0/javadoc/com/google/api/client/http/AbstractHttpContent.html#computeLength-com.google.api.client.http.HttpContent-';
+    const expected = 'https://googleapis.dev/java/google-http-client/1.25.0/com/google/api/client/http/AbstractHttpContent.html#computeLength-com.google.api.client.http.HttpContent-';
+    assert.equal(redirectUrl(url), expected);
   });
 
   it('defaults to the latest docs', () => {
-    const path = 'abcd';
+    const path = 'http://example.com/abcd';
     const expected = null;
-    assert.equal(redirectPath(path), expected);
+    assert.equal(redirectUrl(path), expected);
   });
 });

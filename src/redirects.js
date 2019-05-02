@@ -14,12 +14,12 @@
 
 'use strict';
 
-module.exports.redirectPath = function(path) {
-  var pattern = /^google-http-java-client\/releases\/(\d+\.\d+\.\d+|latest)\/javadoc\/(.*)/;
-  var match = pattern.exec(path);
+module.exports.redirectUrl = function(url) {
+  var uri = new URL(url);
+  var pattern = /^\/google-http-java-client\/releases\/(\d+\.\d+\.\d+|latest)\/javadoc\/(.*)/;
+  var match = pattern.exec(uri.pathname);
   if (match == null) {
     return null;
   }
-
-  return 'java/google-http-client/' + match[1] + '/' + match[2];
+  return 'https://googleapis.dev/java/google-http-client/' + match[1] + '/' + match[2] + uri.search + uri.hash;
 };
