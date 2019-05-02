@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chingor13/google-http-java-client.git"
+    "url": "git+https://github.com/googleapis/google-http-java-client.git"
   },
   "author": "Google Inc.",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/chingor13/google-http-java-client/issues"
+    "url": "https://github.com/googleapis/google-http-java-client/issues"
   },
-  "homepage": "https://github.com/chingor13/google-http-java-client#readme",
+  "homepage": "https://github.com/googleapis/google-http-java-client#readme",
   "devDependencies": {
     "mocha": "^6.1.4"
   }
