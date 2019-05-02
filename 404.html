@@ -87,20 +87,20 @@
     <script>
       (function() {
         'use strict';
-        const redirectPath = function(path) {
-          var pattern = /^google-http-java-client\/releases\/(\d+\.\d+\.\d+|latest)\/javadoc\/(.*)/;
-          var match = pattern.exec(path);
+        const redirectUrl = function(url) {
+          var uri = new URL(url);
+          var pattern = /^\/google-http-java-client\/releases\/(\d+\.\d+\.\d+|latest)\/javadoc\/(.*)/;
+          var match = pattern.exec(uri.pathname);
           if (match == null) {
             return null;
           }
-
-          return 'java/google-http-client/' + match[1] + '/' + match[2];
+          return 'https://googleapis.dev/java/google-http-client/' + match[1] + '/' + match[2] + uri.search + uri.hash;
+        };
+        var destination = redirectUrl(location.href);
+        if (!destination) {
+          destination = 'https://googleapis.dev/java/google-cloud-clients/latest/index.html';
         }
-        var destinationPath = redirectPath(location.path);
-        if (!destinationPath) {
-          destinationPath = 'java/google-http-client/latest/index.html';
-        }
-        location.href = 'https://googleapis.dev/' + destinationPath;
+        location.href = destination;
       }());
     </script>
   </body>
