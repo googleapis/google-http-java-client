@@ -19,9 +19,9 @@ The library supports the following Java environments:
 
 The following related projects are built on the Google HTTP Client Library for Java:
 
-- [Google OAuth Client Library for Java](https://github.com/google/google-oauth-java-client),
+- [Google OAuth Client Library for Java](https://github.com/googleapis/google-oauth-java-client),
 for the OAuth 2.0 and OAuth 1.0a authorization standards.
-- [Google APIs Client Library for Java](https://github.com/google/google-api-java-client), for
+- [Google APIs Client Library for Java](https://github.com/googleapis/google-api-java-client), for
 access to Google APIs.
 
 This is an open-source library, and
