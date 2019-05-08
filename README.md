@@ -33,7 +33,7 @@ are welcome.
 - [Developer's Guide](https://developers.google.com/api-client-library/java/google-http-java-client/)
 - [Setup Instructions](https://developers.google.com/api-client-library/java/google-http-java-client/setup)
 - [JavaDoc](https://googleapis.dev/java/google-http-client/latest/)
-- [Release Notes](https://github.com/googleapis/google-oauth-java-client/releases)
+- [Release Notes](https://github.com/googleapis/google-http-java-client/releases)
 - [Support (Questions, Bugs)](https://developers.google.com/api-client-library/java/google-http-java-client/support)
 
 ## CI Status
