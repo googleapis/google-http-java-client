@@ -17,5 +17,7 @@
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated Please use com.google.api.client.http.apache.v2 provided by the
+ *     com.google.http-client:google-http-client-apache-v2 artifact.
  */
 package com.google.api.client.http.apache;
