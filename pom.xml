@@ -176,7 +176,7 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-apache-v2</artifactId>
-        <version>${project.http-client-apache.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
