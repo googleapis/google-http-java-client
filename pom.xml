@@ -175,7 +175,7 @@
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-apache</artifactId>
+        <artifactId>google-http-client-apache-v2</artifactId>
         <version>${project.http-client-apache.version}</version>
       </dependency>
       <dependency>
@@ -553,7 +553,6 @@
       - Internally, update the default features.json file
     -->
     <project.http-client.version>1.29.2-SNAPSHOT</project.http-client.version><!-- {x-version-update:google-http-client-parent:current} -->
-    <project.http-client-apache.version>2.1.2-SNAPSHOT</project.http-client-apache.version><!-- {x-version-update:google-http-client-apache:current} -->
     <project.appengine.version>1.9.71</project.appengine.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.jsr305.version>3.0.2</project.jsr305.version>
