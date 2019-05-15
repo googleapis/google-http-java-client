@@ -24,8 +24,8 @@ import static org.mockito.Mockito.when;
 
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.ByteArrayStreamingContent;
-import com.google.api.client.util.StringUtils;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.http.Header;
@@ -121,7 +121,7 @@ public class ApacheHttpTransportTest {
   }
 
   private void execute(ApacheHttpRequest request) throws IOException {
-    byte[] bytes = StringUtils.getBytesUtf8("abc");
+    byte[] bytes = "abc".getBytes(StandardCharsets.UTF_8);
     request.setStreamingContent(new ByteArrayStreamingContent(bytes));
     request.setContentType("text/html");
     request.setContentLength(bytes.length);
