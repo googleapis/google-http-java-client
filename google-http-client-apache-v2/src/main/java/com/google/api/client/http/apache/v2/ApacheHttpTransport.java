@@ -82,8 +82,8 @@ public final class ApacheHttpTransport extends HttpTransport {
    * Constructor that allows an alternative Apache HTTP client to be used.
    *
    * <p>
-   * Note that in the previous version, we tried overrode several settings, however, we are no
-   * longer able to do so.
+   * Note that in the previous version, we overrode several settings, however, we are no longer able
+   * to do so.
    * </p>
    *
    * <p>If you choose to provide your own Apache HttpClient implementation, be sure that</p>
@@ -179,7 +179,7 @@ public final class ApacheHttpTransport extends HttpTransport {
   }
 
   /**
-   * Shuts down the connection manager and releases allocated resources. This includes closing all
+   * Shuts down the connection manager and releases allocated resources. This closes all
    * connections, whether they are currently used or not.
    *
    * @since 1.30
