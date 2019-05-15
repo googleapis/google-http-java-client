@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Google Inc.
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -81,7 +81,7 @@ public class ApacheHttpTransportTest {
   }
 
   @Test
-  public void testRequestsWithContent() throws Exception {
+  public void testRequestsWithContent() throws IOException {
     HttpClient mockClient = mock(HttpClient.class);
     HttpResponse mockResponse = mock(HttpResponse.class);
     when(mockClient.execute(any(HttpUriRequest.class))).thenReturn(mockResponse);
@@ -109,7 +109,7 @@ public class ApacheHttpTransportTest {
   }
 
   private void subtestUnsupportedRequestsWithContent(ApacheHttpRequest request, String method)
-      throws Exception {
+      throws IOException {
     try {
       execute(request);
       fail("expected " + IllegalArgumentException.class);
@@ -120,7 +120,7 @@ public class ApacheHttpTransportTest {
     }
   }
 
-  private void execute(ApacheHttpRequest request) throws Exception {
+  private void execute(ApacheHttpRequest request) throws IOException {
     byte[] bytes = StringUtils.getBytesUtf8("abc");
     request.setStreamingContent(new ByteArrayStreamingContent(bytes));
     request.setContentType("text/html");
