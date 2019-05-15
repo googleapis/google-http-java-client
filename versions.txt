@@ -6,8 +6,7 @@ google-http-client-bom:1.29.1:1.29.2-SNAPSHOT
 google-http-client-parent:1.29.1:1.29.2-SNAPSHOT
 google-http-client-android:1.29.1:1.29.2-SNAPSHOT
 google-http-client-android-test:1.29.1:1.29.2-SNAPSHOT
-google-http-client-apache:2.1.1:2.1.2-SNAPSHOT
-google-http-client-apache-legacy:1.29.1:1.29.2-SNAPSHOT
+google-http-client-apache-v2:1.29.1:1.29.2-SNAPSHOT
 google-http-client-appengine:1.29.1:1.29.2-SNAPSHOT
 google-http-client-assembly:1.29.1:1.29.2-SNAPSHOT
 google-http-client-findbugs:1.29.1:1.29.2-SNAPSHOT

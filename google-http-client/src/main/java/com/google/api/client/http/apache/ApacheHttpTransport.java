@@ -74,7 +74,10 @@ import org.apache.http.params.HttpProtocolParams;
  *
  * @since 1.0
  * @author Yaniv Inbar
+ * @deprecated Please use com.google.api.client.http.apache.v2.ApacheHttpTransport provided by
+ *     the com.google.http-client:google-http-client-apache-v2 artifact.
  */
+@Deprecated
 public final class ApacheHttpTransport extends HttpTransport {
 
   /** Apache HTTP client. */

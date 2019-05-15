@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,11 +13,11 @@
  */
 
 /**
- * HTTP Transport library for Google API's based on Apache HTTP Client version 4.
+ * HTTP Transport library for Google API's based on Apache HTTP Client version 4.5+
  *
- * @since 1.0
+ * @since 1.30
  * @author Yaniv Inbar
- * @deprecated Please use com.google.api.client.http.apache.v2 provided by the
- *     com.google.http-client:google-http-client-apache-v2 artifact.
  */
-package com.google.api.client.http.apache;
+
+package com.google.api.client.http.apache.v2;
+

@@ -39,8 +39,8 @@
       <filtered>true</filtered>
     </file>
     <file>
-      <source>properties/google-http-client-apache.jar.properties</source>
-      <destName>google-http-client-apache-${project.http-client-apache.version}.jar.properties</destName>
+      <source>properties/google-http-client-apache-v2.jar.properties</source>
+      <destName>google-http-client-apache-v2-${project.http-client.version}.jar.properties</destName>
       <outputDirectory>google-http-java-client/libs</outputDirectory>
       <filtered>true</filtered>
     </file>
@@ -110,8 +110,8 @@
       <outputDirectory>google-http-java-client/dependencies</outputDirectory>
     </file>
     <file>
-      <source>../google-http-client-apache/target/site/dependencies.html</source>
-      <destName>google-http-client-apache-dependencies.html</destName>
+      <source>../google-http-client-apache-v2/target/site/dependencies.html</source>
+      <destName>google-http-client-apache-v2-dependencies.html</destName>
       <outputDirectory>google-http-java-client/dependencies</outputDirectory>
     </file>
     <file>
