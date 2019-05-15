@@ -133,12 +133,12 @@ public class ApacheHttpTransportTest {
     final AtomicInteger requestsAttempted = new AtomicInteger(0);
     HttpRequestExecutor requestExecutor = new HttpRequestExecutor() {
       @Override
-      public HttpResponse execute(HttpRequest request, HttpClientConnection conn,
+      public HttpResponse execute(HttpRequest request, HttpClientConnection connection,
           HttpContext context) throws IOException, HttpException {
-        HttpResponse resp = new BasicHttpResponse(HttpVersion.HTTP_1_1, 302, null);
-        resp.addHeader("location", "https://google.com/path");
+        HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1, 302, null);
+        response.addHeader("location", "https://google.com/path");
         requestsAttempted.incrementAndGet();
-        return resp;
+        return response;
       }
     };
     HttpClient client = HttpClients.custom().setRequestExecutor(requestExecutor).build();
