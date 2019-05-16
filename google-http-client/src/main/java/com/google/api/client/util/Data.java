@@ -108,40 +108,51 @@ public class Data {
    * @return magic object instance that represents the "null" value (not Java {@code null})
    * @throws IllegalArgumentException if unable to create a new instance
    */
-  public static <T> T nullOf(Class<T> objClass) {
+  public static <T> T nullOf(Class<?> objClass) {
+    // ConcurrentMap.computeIfAbsent is explicitly NOT used in the following logic. The
+    // ConcurrentHashMap implementation of that method BLOCKS if the mappingFunction triggers
+    // modification of the map which createNullInstance can do depending on the state of class
+    // loading.
     Object result = NULL_CACHE.get(objClass);
     if (result == null) {
-      synchronized (NULL_CACHE) {
-        result = NULL_CACHE.get(objClass);
-        if (result == null) {
-          if (objClass.isArray()) {
-            // arrays are special because we need to compute both the dimension and component type
-            int dims = 0;
-            Class<?> componentType = objClass;
-            do {
-              componentType = componentType.getComponentType();
-              dims++;
-            } while (componentType.isArray());
-            result = Array.newInstance(componentType, new int[dims]);
-          } else if (objClass.isEnum()) {
-            // enum requires look for constant with @NullValue
-            FieldInfo fieldInfo = ClassInfo.of(objClass).getFieldInfo(null);
-            Preconditions.checkNotNull(
-                fieldInfo, "enum missing constant with @NullValue annotation: %s", objClass);
-            @SuppressWarnings({"unchecked", "rawtypes"})
-            Enum e = fieldInfo.<Enum>enumValue();
-            result = e;
-          } else {
-            // other classes are simpler
-            result = Types.newInstance(objClass);
-          }
-          NULL_CACHE.put(objClass, result);
-        }
+      // If nullOf is called concurrently for the same class createNullInstance may be executed
+      // multiple times. However putIfAbsent ensures that no matter what the concurrent access
+      // pattern looks like callers always get a singleton instance returned. Since
+      // createNullInstance has no side-effects beyond triggering class loading this multiple-call
+      // pattern is safe.
+      Object newValue = createNullInstance(objClass);
+      result = NULL_CACHE.putIfAbsent(objClass, newValue);
+      if (result == null) {
+        result = newValue;
       }
     }
     @SuppressWarnings("unchecked")
     T tResult = (T) result;
     return tResult;
+  }
+
+  private static Object createNullInstance(Class<?> objClass) {
+    if (objClass.isArray()) {
+      // arrays are special because we need to compute both the dimension and component type
+      int dims = 0;
+      Class<?> componentType = objClass;
+      do {
+        componentType = componentType.getComponentType();
+        dims++;
+      } while (componentType.isArray());
+      return Array.newInstance(componentType, new int[dims]);
+    }
+    if (objClass.isEnum()) {
+      // enum requires look for constant with @NullValue
+      FieldInfo fieldInfo = ClassInfo.of(objClass).getFieldInfo(null);
+      Preconditions.checkNotNull(
+          fieldInfo, "enum missing constant with @NullValue annotation: %s", objClass);
+      @SuppressWarnings({"unchecked", "rawtypes"})
+      Enum e = fieldInfo.<Enum>enumValue();
+      return e;
+    }
+    // other classes are simpler
+    return Types.newInstance(objClass);
   }
 
   /**
