@@ -115,7 +115,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
         } catch (IOException e) {
           // If we've gotten a response back, continue on and try to parse the response. Otherwise,
           // re-throw the IOException
-          if (!hasReponse(connection)) {
+          if (!hasResponse(connection)) {
             throw e;
           }
         } finally {
@@ -151,7 +151,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
     }
   }
 
-  private boolean hasReponse(HttpURLConnection connection) {
+  private boolean hasResponse(HttpURLConnection connection) {
     try {
       return connection.getResponseCode() > 0;
     } catch (IOException e) {

@@ -195,7 +195,7 @@ public class Xml {
   /**
    * Parses an XML element using the given XML pull parser into the given destination object.
    *
-   * <p>Requires the the current event be {@link XmlPullParser#START_TAG} (skipping any initial
+   * <p>Requires the current event be {@link XmlPullParser#START_TAG} (skipping any initial
    * {@link XmlPullParser#START_DOCUMENT}) of the element being parsed. At normal parsing
    * completion, the current event will either be {@link XmlPullParser#END_TAG} of the element being
    * parsed, or the {@link XmlPullParser#START_TAG} of the requested {@code atom:entry}.

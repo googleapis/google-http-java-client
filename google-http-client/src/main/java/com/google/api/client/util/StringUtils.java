@@ -39,7 +39,7 @@ public class StringUtils {
    * @param string the String to encode, may be <code>null</code>
    * @return encoded bytes, or <code>null</code> if the input string was <code>null</code>
    * @throws IllegalStateException Thrown when the charset is missing, which should be never
-   *     according the the Java specification.
+   *     according the Java specification.
    * @see <a href="http://download.oracle.com/javase/7/docs/api/java/nio/charset/Charset.html"
    *     >Standard charsets</a>
    * @since 1.8
