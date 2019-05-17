@@ -24,7 +24,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeSet;
-import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Computes class information to determine data key name/value pairs associated with the class.
@@ -37,11 +38,12 @@ import java.util.WeakHashMap;
 public final class ClassInfo {
 
   /** Class information cache, with case-sensitive field names. */
-  private static final Map<Class<?>, ClassInfo> CACHE = new WeakHashMap<Class<?>, ClassInfo>();
+  private static final ConcurrentMap<Class<?>, ClassInfo> CACHE =
+      new ConcurrentHashMap<Class<?>, ClassInfo>();
 
   /** Class information cache, with case-insensitive fields names. */
-  private static final Map<Class<?>, ClassInfo> CACHE_IGNORE_CASE =
-      new WeakHashMap<Class<?>, ClassInfo>();
+  private static final ConcurrentMap<Class<?>, ClassInfo> CACHE_IGNORE_CASE =
+      new ConcurrentHashMap<Class<?>, ClassInfo>();
 
   /** Class. */
   private final Class<?> clazz;
@@ -81,16 +83,9 @@ public final class ClassInfo {
     if (underlyingClass == null) {
       return null;
     }
-    final Map<Class<?>, ClassInfo> cache = ignoreCase ? CACHE_IGNORE_CASE : CACHE;
-    ClassInfo classInfo;
-    synchronized (cache) {
-      classInfo = cache.get(underlyingClass);
-      if (classInfo == null) {
-        classInfo = new ClassInfo(underlyingClass, ignoreCase);
-        cache.put(underlyingClass, classInfo);
-      }
-    }
-    return classInfo;
+    final ConcurrentMap<Class<?>, ClassInfo> cache = ignoreCase ? CACHE_IGNORE_CASE : CACHE;
+    return cache.computeIfAbsent(
+        underlyingClass, key -> new ClassInfo(underlyingClass, ignoreCase));
   }
 
   /**
