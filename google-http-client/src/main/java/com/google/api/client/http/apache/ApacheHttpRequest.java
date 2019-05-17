@@ -20,21 +20,22 @@ import com.google.api.client.util.Preconditions;
 import java.io.IOException;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
-/** @author Yaniv Inbar */
+/**
+ * @author Yaniv Inbar
+ */
 final class ApacheHttpRequest extends LowLevelHttpRequest {
   private final HttpClient httpClient;
 
   private final HttpRequestBase request;
 
-  private RequestConfig.Builder requestConfig;
-
   ApacheHttpRequest(HttpClient httpClient, HttpRequestBase request) {
     this.httpClient = httpClient;
     this.request = request;
-    this.requestConfig = RequestConfig.custom().setRedirectsEnabled(false);
   }
 
   @Override
@@ -44,14 +45,16 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
 
   @Override
   public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
-    requestConfig.setConnectionRequestTimeout(connectTimeout).setSocketTimeout(readTimeout);
+    HttpParams params = request.getParams();
+    ConnManagerParams.setTimeout(params, connectTimeout);
+    HttpConnectionParams.setConnectionTimeout(params, connectTimeout);
+    HttpConnectionParams.setSoTimeout(params, readTimeout);
   }
 
   @Override
   public LowLevelHttpResponse execute() throws IOException {
     if (getStreamingContent() != null) {
-      Preconditions.checkArgument(
-          request instanceof HttpEntityEnclosingRequest,
+      Preconditions.checkArgument(request instanceof HttpEntityEnclosingRequest,
           "Apache HTTP client does not support %s requests with content.",
           request.getRequestLine().getMethod());
       ContentEntity entity = new ContentEntity(getContentLength(), getStreamingContent());
@@ -59,7 +62,6 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
       entity.setContentType(getContentType());
       ((HttpEntityEnclosingRequest) request).setEntity(entity);
     }
-    request.setConfig(requestConfig.build());
     return new ApacheHttpResponse(request, httpClient.execute(request));
   }
 }
