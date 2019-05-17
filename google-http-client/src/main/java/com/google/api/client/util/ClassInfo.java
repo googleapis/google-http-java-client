@@ -84,8 +84,14 @@ public final class ClassInfo {
       return null;
     }
     final ConcurrentMap<Class<?>, ClassInfo> cache = ignoreCase ? CACHE_IGNORE_CASE : CACHE;
-    return cache.computeIfAbsent(
-        underlyingClass, key -> new ClassInfo(underlyingClass, ignoreCase));
+
+    // Logic copied from ConcurrentMap.computeIfAbsent
+    ClassInfo v, newValue;
+    return ((v = cache.get(underlyingClass)) == null
+            && (newValue = new ClassInfo(underlyingClass, ignoreCase)) != null
+            && (v = cache.putIfAbsent(underlyingClass, newValue)) == null)
+        ? newValue
+        : v;
   }
 
   /**
