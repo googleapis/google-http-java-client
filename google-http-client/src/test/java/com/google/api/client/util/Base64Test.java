@@ -24,25 +24,42 @@ import junit.framework.TestCase;
  */
 public class Base64Test extends TestCase {
 
-  public void testHandlesPadding() {
+  public void test_decodeBase64_withPadding() {
     String encoded = "Zm9vOmJhcg==";
     assertEquals("foo:bar", new String(Base64.decodeBase64(encoded), StandardCharsets.UTF_8));
   }
 
-  public void testHandlesWithoutPadding() {
+  public void test_decodeBase64_withoutPadding() {
     String encoded = "Zm9vOmJhcg";
     assertEquals("foo:bar", new String(Base64.decodeBase64(encoded), StandardCharsets.UTF_8));
   }
 
-  public void testHandlesWithExtraWhitespace() {
+  public void test_decodeBase64_withTrailingWhitespace() {
     // Some internal use cases append extra space characters that apache-commons base64 decoding
     // previously handled.
     String encoded = "Zm9vOmJhcg==\r\n";
     assertEquals("foo:bar", new String(Base64.decodeBase64(encoded), StandardCharsets.UTF_8));
   }
 
-  public void testNullInput() {
+  public void test_decodeBase64_withNullBytes_shouldReturnNull() {
+    byte[] encoded = null;
+    assertNull(Base64.decodeBase64(encoded));
+  }
+
+  public void test_decodeBase64_withNull_shouldReturnNull() {
     String encoded = null;
     assertNull(Base64.decodeBase64(encoded));
+  }
+
+  public void test_encodeBase64URLSafeString_withNull_shouldReturnNull() {
+    assertNull(Base64.encodeBase64URLSafeString(null));
+  }
+
+  public void test_encodeBase64URLSafe_withNull_shouldReturnNull() {
+    assertNull(Base64.encodeBase64URLSafe(null));
+  }
+
+  public void test_encodeBase64_withNull_shouldReturnNull() {
+    assertNull(Base64.encodeBase64(null));
   }
 }
