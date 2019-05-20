@@ -893,21 +893,6 @@ public class HttpHeaders extends GenericData {
     serializeHeaders(headers, logbuf, curlbuf, logger, lowLevelHttpRequest, null);
   }
 
-  /**
-   * Serializes headers to an {@link Writer} for Multi-part requests.
-   *
-   * @param headers HTTP headers
-   * @param logbuf log buffer or {@code null} for none
-   * @param logger logger or {@code null} for none. Logger must be specified if log buffer is
-   *     specified
-   * @param writer Writer where HTTP headers will be serialized to or {@code null} for none
-   * @since 1.9
-   */
-  public static void serializeHeadersForMultipartRequests(
-      HttpHeaders headers, StringBuilder logbuf, Logger logger, Writer writer) throws IOException {
-    serializeHeaders(headers, logbuf, null, logger, null, writer);
-  }
-
   static void serializeHeaders(
       HttpHeaders headers,
       StringBuilder logbuf,
@@ -945,6 +930,21 @@ public class HttpHeaders extends GenericData {
     if (writer != null) {
       writer.flush();
     }
+  }
+
+  /**
+   * Serializes headers to an {@link Writer} for Multi-part requests.
+   *
+   * @param headers HTTP headers
+   * @param logbuf log buffer or {@code null} for none
+   * @param logger logger or {@code null} for none. Logger must be specified if log buffer is
+   *     specified
+   * @param writer Writer where HTTP headers will be serialized to or {@code null} for none
+   * @since 1.9
+   */
+  public static void serializeHeadersForMultipartRequests(
+      HttpHeaders headers, StringBuilder logbuf, Logger logger, Writer writer) throws IOException {
+    serializeHeaders(headers, logbuf, null, logger, null, writer);
   }
 
   /**
