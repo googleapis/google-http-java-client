@@ -92,7 +92,7 @@ public class Base64 {
       return BaseEncoding.base64().decode(base64String);
     } catch (IllegalArgumentException e) {
       if (e.getCause() instanceof DecodingException) {
-        return BaseEncoding.base64Url().decode(base64String);
+        return BaseEncoding.base64Url().decode(base64String.trim());
       }
       throw e;
     }
