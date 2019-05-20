@@ -40,4 +40,9 @@ public class Base64Test extends TestCase {
     String encoded = "Zm9vOmJhcg==\r\n";
     assertEquals("foo:bar", new String(Base64.decodeBase64(encoded), StandardCharsets.UTF_8));
   }
+
+  public void testNullInput() {
+    String encoded = null;
+    assertNull(Base64.decodeBase64(encoded));
+  }
 }

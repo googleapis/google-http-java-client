@@ -88,6 +88,9 @@ public class Base64 {
    * @return Array containing decoded data or {@code null} for {@code null} input
    */
   public static byte[] decodeBase64(String base64String) {
+    if (base64String == null) {
+      return null;
+    }
     try {
       return BaseEncoding.base64().decode(base64String);
     } catch (IllegalArgumentException e) {
