@@ -25,6 +25,7 @@ import com.google.api.client.testing.util.MockSleeper;
 import com.google.api.client.util.BackOff;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.LoggingStreamingContent;
+import com.google.api.client.util.StreamingContent;
 import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.Value;
 import com.google.common.base.Charsets;
@@ -33,6 +34,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -1263,5 +1265,57 @@ public class HttpRequestTest extends TestCase {
       }
     }
     assertTrue(found);
+  }
+
+  public void testExecute_shouldEncodeContentOnce() throws IOException {
+    class TestEncoding implements HttpEncoding {
+
+      private int encodingCount = 0;
+
+      @Override
+      public String getName() {
+        return "test-encoding";
+      }
+
+      @Override
+      public void encode(StreamingContent content, OutputStream out) throws IOException {
+        encodingCount++;
+        return;
+      }
+
+      public int getEncodingCount() {
+        return encodingCount;
+      }
+    }
+
+    class NullOutputStream extends OutputStream {
+      @Override
+      public void write(int b) throws IOException {
+      }
+    }
+    final LowLevelHttpRequest lowLevelHttpRequest =
+        new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            // LowLevelRequest implementations will use writeTo for the request body
+            getStreamingContent().writeTo(new NullOutputStream());
+            return super.execute();
+          }
+        };
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return lowLevelHttpRequest;
+          }
+        };
+    HttpContent content = new EmptyContent();
+    TestEncoding encoding = new TestEncoding();
+    HttpRequest request =
+        transport.createRequestFactory().buildPostRequest(HttpTesting.SIMPLE_GENERIC_URL, content);
+    request.setEncoding(encoding);
+    request.execute();
+
+    assertEquals(1, encoding.getEncodingCount());
   }
 }
