@@ -15,7 +15,7 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Beta;
-import com.google.api.client.util.IOUtils;
+import com.google.api.client.util.CachingByteArrayOutputStream;
 import com.google.api.client.util.LoggingStreamingContent;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Preconditions;
@@ -932,7 +932,14 @@ public final class HttpRequest {
         } else {
           contentEncoding = encoding.getName();
           streamingContent = new HttpEncodingStreamingContent(streamingContent, encoding);
-          contentLength = contentRetrySupported ? IOUtils.computeLength(streamingContent) : -1;
+          if (contentRetrySupported) {
+            CachingByteArrayOutputStream outputStream = new CachingByteArrayOutputStream();
+            streamingContent.writeTo(outputStream);
+            contentLength = outputStream.getContentLength();
+            streamingContent = new ByteArrayContent(contentType, outputStream.getBuffer());
+          } else {
+            contentLength = -1;
+          }
         }
         // append content headers to log buffer
         if (loggable) {
