@@ -51,12 +51,6 @@
       <filtered>true</filtered>
     </file>
     <file>
-      <source>properties/google-http-client-jackson.jar.properties</source>
-      <destName>google-http-client-jackson-${project.version}.jar.properties</destName>
-      <outputDirectory>google-http-java-client/libs</outputDirectory>
-      <filtered>true</filtered>
-    </file>
-    <file>
       <source>properties/google-http-client-jackson2.jar.properties</source>
       <destName>google-http-client-jackson2-${project.version}.jar.properties</destName>
       <outputDirectory>google-http-java-client/libs</outputDirectory>
@@ -87,12 +81,6 @@
       <filtered>true</filtered>
     </file>
     <file>
-      <source>properties/jackson-core-asl.jar.properties</source>
-      <destName>jackson-core-asl-${project.jackson-core-asl.version}.jar.properties</destName>
-      <outputDirectory>google-http-java-client/libs</outputDirectory>
-      <filtered>true</filtered>
-    </file>
-    <file>
       <source>properties/protobuf-java.jar.properties</source>
       <destName>protobuf-java-${project.protobuf-java.version}.jar.properties</destName>
       <outputDirectory>google-http-java-client/libs</outputDirectory>
@@ -117,11 +105,6 @@
     <file>
       <source>../google-http-client-gson/target/site/dependencies.html</source>
       <destName>google-http-client-gson-dependencies.html</destName>
-      <outputDirectory>google-http-java-client/dependencies</outputDirectory>
-    </file>
-    <file>
-      <source>../google-http-client-jackson/target/site/dependencies.html</source>
-      <destName>google-http-client-jackson-dependencies.html</destName>
       <outputDirectory>google-http-java-client/dependencies</outputDirectory>
     </file>
     <file>
