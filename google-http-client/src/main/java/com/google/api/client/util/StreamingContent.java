@@ -31,8 +31,8 @@ public interface StreamingContent {
    * Writes the byte content to the given output stream.
    *
    * <p>Implementations must not close the output stream, and instead should flush the output
-   * stream. Some callers may assume that the the output stream has not been closed, and will fail
-   * to work if it has been closed.
+   * stream. Some callers may assume that the output stream has not been closed, and will fail to
+   * work if it has been closed.
    *
    * @param out output stream
    */

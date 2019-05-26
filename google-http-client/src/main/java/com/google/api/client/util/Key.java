@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  *
  * // uses data key name of "some_other_name"
  * &#64;Key("some_other_name")
- * private String dataKeyNameIsOverriden;
+ * private String dataKeyNameIsOverridden;
  *
  * // not a data key
  * private String notADataKey;
