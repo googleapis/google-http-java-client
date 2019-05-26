@@ -88,7 +88,7 @@ public final class Objects {
     private ValueHolder holderTail = holderHead;
     private boolean omitNullValues;
 
-    /** @param wrapped wrapped object */
+    /** @param className wrapped object */
     ToStringHelper(String className) {
       this.className = className;
     }
