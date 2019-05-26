@@ -92,11 +92,6 @@
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-jackson</artifactId>
-        <version>1.29.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-jackson:current} -->
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-jackson2</artifactId>
         <version>1.29.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-jackson2:current} -->
       </dependency>

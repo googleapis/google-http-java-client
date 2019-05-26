@@ -11,7 +11,6 @@ google-http-client-appengine:1.29.1:1.29.2-SNAPSHOT
 google-http-client-assembly:1.29.1:1.29.2-SNAPSHOT
 google-http-client-findbugs:1.29.1:1.29.2-SNAPSHOT
 google-http-client-gson:1.29.1:1.29.2-SNAPSHOT
-google-http-client-jackson:1.29.1:1.29.2-SNAPSHOT
 google-http-client-jackson2:1.29.1:1.29.2-SNAPSHOT
 google-http-client-jdo:1.29.1:1.29.2-SNAPSHOT
 google-http-client-protobuf:1.29.1:1.29.2-SNAPSHOT
