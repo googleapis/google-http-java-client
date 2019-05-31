@@ -482,8 +482,6 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
 
   static final String MAP_TYPE =
       "{\"value\":[{\"map1\":{\"k1\":1,\"k2\":2},\"map2\":{\"kk1\":3,\"kk2\":4}}]}";
-  static final String BIGDECIMAL_MAP_TYPE =
-      "{\"value\":[{\"map1\":{\"k1\":1.14566,\"k2\":2.14},\"map2\":{\"kk1\":3.29,\"kk2\":4.69}}]}";
 
   public void testParser_mapType() throws Exception {
     // parse
@@ -512,35 +510,16 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     parser = factory.createJsonParser(MAP_TYPE);
     parser.nextToken();
     @SuppressWarnings("unchecked")
-    HashMap<String, ArrayList<ArrayMap<String, ArrayMap<String, Integer>>>> result =
+    HashMap<String, ArrayList<ArrayMap<String, ArrayMap<String, BigDecimal>>>> result =
         parser.parse(HashMap.class);
     // serialize
     assertEquals(MAP_TYPE, factory.toString(result));
     // check parsed result
-    ArrayList<ArrayMap<String, ArrayMap<String, Integer>>> value = result.get("value");
-    ArrayMap<String, ArrayMap<String, Integer>> firstMap = value.get(0);
-    ArrayMap<String, Integer> map1 = firstMap.get("map1");
-    Integer integer = map1.get("k1");
-    assertEquals(1, integer.intValue());
-  }
-
-  public void testParser_hashmapForMapTypeWithBigDecimal() throws Exception {
-    // parse
-    JsonFactory factory = newFactory();
-    JsonParser parser;
-    parser = factory.createJsonParser(BIGDECIMAL_MAP_TYPE);
-    parser.nextToken();
-    @SuppressWarnings("unchecked")
-    HashMap<String, ArrayList<ArrayMap<String, ArrayMap<String, BigDecimal>>>> result =
-        parser.parse(HashMap.class);
-    // serialize
-    assertEquals(BIGDECIMAL_MAP_TYPE, factory.toString(result));
-    // check parsed result
     ArrayList<ArrayMap<String, ArrayMap<String, BigDecimal>>> value = result.get("value");
     ArrayMap<String, ArrayMap<String, BigDecimal>> firstMap = value.get(0);
     ArrayMap<String, BigDecimal> map1 = firstMap.get("map1");
-    BigDecimal bigDecimal = map1.get("k1");
-    assertEquals(BigDecimal.valueOf(1.14566).setScale(5), bigDecimal);
+    BigDecimal integer = map1.get("k1");
+    assertEquals(1, integer.intValue());
   }
 
   public static class WildCardTypes {
@@ -568,8 +547,8 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     assertEquals(WILDCARD_TYPE, factory.toString(result));
     // check parsed result
     Collection<?>[] simple = result.simple;
-    ArrayList<Integer> wildcard = (ArrayList<Integer>) simple[0];
-    Integer wildcardFirstValue = wildcard.get(0);
+    ArrayList<BigDecimal> wildcard = (ArrayList<BigDecimal>) simple[0];
+    BigDecimal wildcardFirstValue = wildcard.get(0);
     assertEquals(1, wildcardFirstValue.intValue());
     Collection<? extends Integer>[] upper = result.upper;
     ArrayList<Integer> wildcardUpper = (ArrayList<Integer>) upper[0];
@@ -579,8 +558,8 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     ArrayList<Integer> wildcardLower = (ArrayList<Integer>) lower[0];
     Integer wildcardFirstValueLower = wildcardLower.get(0);
     assertEquals(1, wildcardFirstValueLower.intValue());
-    Map<String, Integer> map = (Map<String, Integer>) result.map;
-    Integer mapValue = map.get("v");
+    Map<String, BigDecimal> map = (Map<String, BigDecimal>) result.map;
+    BigDecimal mapValue = map.get("v");
     assertEquals(1, mapValue.intValue());
     Map<String, Integer> mapUpper = (Map<String, Integer>) result.mapUpper;
     Integer mapUpperValue = mapUpper.get("v");
@@ -792,16 +771,16 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     ArrayList<Object> arr = (ArrayList<Object>) result.get("arr");
     assertEquals(2, arr.size());
     assertEquals(Data.nullOf(Object.class), arr.get(0));
-    ArrayList<Integer> subArr = (ArrayList<Integer>) arr.get(1);
+    ArrayList<BigDecimal> subArr = (ArrayList<BigDecimal>) arr.get(1);
     assertEquals(2, subArr.size());
     assertEquals(Data.nullOf(Object.class), subArr.get(0));
-    Integer arrValue = subArr.get(1);
+    BigDecimal arrValue = subArr.get(1);
     assertEquals(1, arrValue.intValue());
     // null value
     Object nullValue = result.get("nullValue");
     assertEquals(Data.nullOf(Object.class), nullValue);
     // value
-    Integer value = (Integer) result.get("value");
+    BigDecimal value = (BigDecimal) result.get("value");
     assertEquals(1, value.intValue());
   }
 
@@ -1540,7 +1519,7 @@ public abstract class AbstractJsonFactoryTest extends TestCase {
     assertEquals(4, dog.numberOfLegs);
     assertEquals(3, ((DogGenericJson) dog).tricksKnown);
     assertEquals("this is not being used!", dog.get("unusedInfo"));
-    Integer foo = ((Integer) ((ArrayMap<String, Object>) dog.get("unused")).get("foo"));
+    BigDecimal foo = ((BigDecimal) ((ArrayMap<String, Object>) dog.get("unused")).get("foo"));
     assertEquals(200, foo.intValue());
   }
 
