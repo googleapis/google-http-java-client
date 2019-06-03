@@ -552,7 +552,7 @@
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.commons-logging.version>1.2</project.commons-logging.version>
     <project.httpclient.version>4.5.8</project.httpclient.version>
-    <project.opencensus.version>0.19.2</project.opencensus.version>
+    <project.opencensus.version>0.22.1</project.opencensus.version>
     <project.root-directory>..</project.root-directory>
   </properties>
 
