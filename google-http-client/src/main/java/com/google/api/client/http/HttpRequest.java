@@ -53,7 +53,7 @@ public final class HttpRequest {
    *
    * @since 1.8
    */
-  public static final String VERSION = "1.28.0";
+  public static final String VERSION = "1.29.2";
 
   /**
    * User agent suffix for all requests.
