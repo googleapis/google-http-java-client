@@ -83,7 +83,7 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-findbugs</artifactId>
-        <version>1.29.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-findbugs:current} -->
+        <version>1.29.2</version><!-- {x-version-update:google-http-client-findbugs:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
