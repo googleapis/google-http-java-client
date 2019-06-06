@@ -257,7 +257,7 @@
           <configuration>
             <serverId>ossrh</serverId>
             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-            <autoReleaseAfterClose>false</autoReleaseAfterClose>
+            <autoReleaseAfterClose>${deploy.autorelease}</autoReleaseAfterClose>
           </configuration>
         </plugin>
         <plugin>
@@ -554,6 +554,7 @@
     <project.httpclient.version>4.5.8</project.httpclient.version>
     <project.opencensus.version>0.21.0</project.opencensus.version>
     <project.root-directory>..</project.root-directory>
+    <deploy.autorelease>false</deploy.autorelease>
   </properties>
 
   <profiles>
