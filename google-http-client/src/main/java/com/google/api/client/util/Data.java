@@ -108,7 +108,7 @@ public class Data {
    * @return magic object instance that represents the "null" value (not Java {@code null})
    * @throws IllegalArgumentException if unable to create a new instance
    */
-  public static <T> T nullOf(Class<?> objClass) {
+  public static <T> T nullOf(Class<T> objClass) {
     // ConcurrentMap.computeIfAbsent is explicitly NOT used in the following logic. The
     // ConcurrentHashMap implementation of that method BLOCKS if the mappingFunction triggers
     // modification of the map which createNullInstance can do depending on the state of class

@@ -14,6 +14,7 @@
 
 package com.google.api.client.util;
 
+import com.google.common.collect.ImmutableMap;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -66,6 +67,12 @@ public class DataTest extends TestCase {
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
     }
+  }
+
+  public void testNullOfTemplateTypes() {
+    String nullValue = Data.nullOf(String.class);
+    Map<String, String> nullField = ImmutableMap.of("v", nullValue);
+    assertEquals(nullValue, nullField.get("v"));
   }
 
   public void testIsNull() {
