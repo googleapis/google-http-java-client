@@ -99,7 +99,6 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
    * @param <V> serializable type of the mapped value
    */
   static class FileDataStore<V extends Serializable> extends AbstractMemoryDataStore<V> {
-  static class FileDataStore<V extends Serializable> extends AbstractMemoryDataStore<V> {
 
     /** File to store data. */
     private final File dataFile;
