@@ -123,29 +123,53 @@ public final class ApacheHttpTransport extends HttpTransport {
    * @since 1.30
    */
   public static HttpClient newDefaultHttpClient() {
+    return newDefaultHttpClientBuilder().build();
+  }
+
+  /**
+   * Creates a new Apache HTTP client builder that is used by the
+   * {@link #ApacheHttpTransport()} constructor.
+   *
+   * <p>
+   * Settings:
+   * </p>
+   * <ul>
+   * <li>The client connection manager is set to {@link PoolingHttpClientConnectionManager}.</li>
+   * <li>The socket buffer size is set to 8192 using {@link SocketConfig}.</li>
+   * <li><The retry mechanism is turned off using
+   * {@link HttpClientBuilder#disableRedirectHandling}.</li>
+   * <li>The route planner uses {@link SystemDefaultRoutePlanner} with
+   * {@link ProxySelector#getDefault()}, which uses the proxy settings from <a
+   * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
+   * properties</a>.</li>
+   * </ul>
+   *
+   * @return new instance of the Apache HTTP client
+   * @since 1.31
+   */
+  public static HttpClientBuilder newDefaultHttpClientBuilder() {
     // Set socket buffer sizes to 8192
     SocketConfig socketConfig =
-        SocketConfig.custom()
-            .setRcvBufSize(8192)
-            .setSndBufSize(8192)
-            .build();
+            SocketConfig.custom()
+                    .setRcvBufSize(8192)
+                    .setSndBufSize(8192)
+                    .build();
 
     PoolingHttpClientConnectionManager connectionManager =
-        new PoolingHttpClientConnectionManager(-1, TimeUnit.MILLISECONDS);
+            new PoolingHttpClientConnectionManager(-1, TimeUnit.MILLISECONDS);
     // Disable the stale connection check (previously configured in the HttpConnectionParams
     connectionManager.setValidateAfterInactivity(-1);
 
     return HttpClientBuilder.create()
-        .useSystemProperties()
-        .setSSLSocketFactory(SSLConnectionSocketFactory.getSocketFactory())
-        .setDefaultSocketConfig(socketConfig)
-        .setMaxConnTotal(200)
-        .setMaxConnPerRoute(20)
-        .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
-        .setConnectionManager(connectionManager)
-        .disableRedirectHandling()
-        .disableAutomaticRetries()
-        .build();
+            .useSystemProperties()
+            .setSSLSocketFactory(SSLConnectionSocketFactory.getSocketFactory())
+            .setDefaultSocketConfig(socketConfig)
+            .setMaxConnTotal(200)
+            .setMaxConnPerRoute(20)
+            .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
+            .setConnectionManager(connectionManager)
+            .disableRedirectHandling()
+            .disableAutomaticRetries();
   }
 
   @Override
