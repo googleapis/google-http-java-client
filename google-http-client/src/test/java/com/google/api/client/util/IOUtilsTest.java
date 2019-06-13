@@ -16,6 +16,7 @@ package com.google.api.client.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import junit.framework.TestCase;
 
 /**
@@ -42,24 +43,14 @@ public class IOUtilsTest extends TestCase {
     assertFalse(IOUtils.isSymbolicLink(file));
   }
 
-  public void testIsSymbolicLink_true() throws IOException, InterruptedException {
+  public void testIsSymbolicLink_true() throws IOException {
     File file = File.createTempFile("tmp", null);
     file.deleteOnExit();
     File file2 = new File(file.getCanonicalPath() + "2");
     file2.deleteOnExit();
-    try {
-      Process process =
-          Runtime.getRuntime()
-              .exec(new String[] {"ln", "-s", file.getCanonicalPath(), file2.getCanonicalPath()});
-      process.waitFor();
-      process.destroy();
-    } catch (IOException e) {
-      // ignore because ln command may not be defined
-      return;
-    }
-    // multiple versions of jdk6 cannot detect the symbolic link. Consider support best-effort on
-    // jdk6
-    boolean jdk6 = System.getProperty("java.version").startsWith("1.6.0_");
-    assertTrue(IOUtils.isSymbolicLink(file2) || jdk6);
+    Files.createSymbolicLink(file2.toPath(), file.toPath());
+
+    assertTrue(IOUtils.isSymbolicLink(file2));
   }
 }
+
