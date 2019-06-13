@@ -1124,7 +1124,7 @@ public final class HttpRequest {
   /**
    * {@link Beta} <br>
    * Executes this request asynchronously using {@link #executeAsync(Executor)} in a single separate
-   * thread using {@link Executors#newFixedThreadPool(int)} with size of 1.
+   * thread using {@link Executors#newFixedThreadPool(int)}.
    *
    * @return A future for accessing the results of the asynchronous request.
    * @since 1.13
