@@ -17,7 +17,6 @@ package com.google.api.client.extensions.appengine.http;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.appengine.api.urlfetch.HTTPHeader;
 import com.google.appengine.api.urlfetch.HTTPResponse;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;

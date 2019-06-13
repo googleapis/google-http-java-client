@@ -1,7 +1,12 @@
 package com.google.api.client.http.javanet;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.InputStreamContent;
+import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.http.javanet.NetHttpRequest.OutputWriter;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.javanet.MockHttpURLConnection;
@@ -10,11 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.util.concurrent.TimeoutException;
 import org.junit.Test;
 
@@ -22,9 +22,11 @@ public class NetHttpRequestTest {
 
   static class SleepingOutputWriter implements OutputWriter {
     private long sleepTimeInMs;
+
     public SleepingOutputWriter(long sleepTimeInMs) {
       this.sleepTimeInMs = sleepTimeInMs;
     }
+
     @Override
     public void write(OutputStream outputStream, StreamingContent content) throws IOException {
       try {
@@ -37,21 +39,22 @@ public class NetHttpRequestTest {
 
   @Test
   public void testHangingWrite() throws InterruptedException {
-    Thread thread = new Thread() {
-      @Override
-      public void run() {
-        try {
-          postWithTimeout(0);
-        } catch (IOException e) {
-          // expected to be interrupted
-          assertEquals(e.getCause().getClass(), InterruptedException.class);
-          return;
-        } catch (Exception e) {
-          fail();
-        }
-        fail("should be interrupted before here");
-      }
-    };
+    Thread thread =
+        new Thread() {
+          @Override
+          public void run() {
+            try {
+              postWithTimeout(0);
+            } catch (IOException e) {
+              // expected to be interrupted
+              assertEquals(e.getCause().getClass(), InterruptedException.class);
+              return;
+            } catch (Exception e) {
+              fail();
+            }
+            fail("should be interrupted before here");
+          }
+        };
 
     thread.start();
     Thread.sleep(1000);
@@ -82,4 +85,122 @@ public class NetHttpRequestTest {
     request.execute(new SleepingOutputWriter(5000L));
   }
 
+  @Test
+  public void testInterruptedWriteWithResponse() throws Exception {
+    MockHttpURLConnection connection =
+        new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL)) {
+          @Override
+          public OutputStream getOutputStream() throws IOException {
+            return new OutputStream() {
+              @Override
+              public void write(int b) throws IOException {
+                throw new IOException("Error writing request body to server");
+              }
+            };
+          }
+        };
+    connection.setResponseCode(401);
+    connection.setRequestMethod("POST");
+    NetHttpRequest request = new NetHttpRequest(connection);
+    InputStream is = NetHttpRequestTest.class.getClassLoader().getResourceAsStream("file.txt");
+    HttpContent content = new InputStreamContent("text/plain", is);
+    request.setStreamingContent(content);
+
+    LowLevelHttpResponse response = request.execute();
+    assertEquals(401, response.getStatusCode());
+  }
+
+  @Test
+  public void testInterruptedWriteWithoutResponse() throws Exception {
+    MockHttpURLConnection connection =
+        new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL)) {
+          @Override
+          public OutputStream getOutputStream() throws IOException {
+            return new OutputStream() {
+              @Override
+              public void write(int b) throws IOException {
+                throw new IOException("Error writing request body to server");
+              }
+            };
+          }
+        };
+    connection.setRequestMethod("POST");
+    NetHttpRequest request = new NetHttpRequest(connection);
+    InputStream is = NetHttpRequestTest.class.getClassLoader().getResourceAsStream("file.txt");
+    HttpContent content = new InputStreamContent("text/plain", is);
+    request.setStreamingContent(content);
+
+    try {
+      request.execute();
+      fail("Expected to throw an IOException");
+    } catch (IOException e) {
+      assertEquals("Error writing request body to server", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testInterruptedWriteErrorOnResponse() throws Exception {
+    MockHttpURLConnection connection =
+        new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL)) {
+          @Override
+          public OutputStream getOutputStream() throws IOException {
+            return new OutputStream() {
+              @Override
+              public void write(int b) throws IOException {
+                throw new IOException("Error writing request body to server");
+              }
+            };
+          }
+
+          @Override
+          public int getResponseCode() throws IOException {
+            throw new IOException("Error parsing response code");
+          }
+        };
+    connection.setRequestMethod("POST");
+    NetHttpRequest request = new NetHttpRequest(connection);
+    InputStream is = NetHttpRequestTest.class.getClassLoader().getResourceAsStream("file.txt");
+    HttpContent content = new InputStreamContent("text/plain", is);
+    request.setStreamingContent(content);
+
+    try {
+      request.execute();
+      fail("Expected to throw an IOException");
+    } catch (IOException e) {
+      assertEquals("Error writing request body to server", e.getMessage());
+    }
+  }
+
+  @Test
+  public void testErrorOnClose() throws Exception {
+    MockHttpURLConnection connection =
+        new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL)) {
+          @Override
+          public OutputStream getOutputStream() throws IOException {
+            return new OutputStream() {
+              @Override
+              public void write(int b) throws IOException {
+                return;
+              }
+
+              @Override
+              public void close() throws IOException {
+                throw new IOException("Error during close");
+              }
+            };
+          }
+        };
+    connection.setRequestMethod("POST");
+    NetHttpRequest request = new NetHttpRequest(connection);
+    InputStream is = NetHttpRequestTest.class.getClassLoader().getResourceAsStream("file.txt");
+    HttpContent content = new InputStreamContent("text/plain", is);
+    request.setStreamingContent(content);
+
+    try {
+      request.execute();
+      fail("Expected to throw an IOException");
+    } catch (IOException e) {
+      assertEquals("Error during close", e.getMessage());
+    }
+  }
 }

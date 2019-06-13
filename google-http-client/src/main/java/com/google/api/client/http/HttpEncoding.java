@@ -15,16 +15,13 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.StreamingContent;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
  * HTTP content encoding.
  *
- * <p>
- * Implementations don't need to be thread-safe.
- * </p>
+ * <p>Implementations don't need to be thread-safe.
  *
  * @since 1.14
  * @author Yaniv Inbar
@@ -37,11 +34,9 @@ public interface HttpEncoding {
   /**
    * Encodes the streaming content into the output stream.
    *
-   * <p>
-   * Implementations must not close the output stream, and instead should flush the output stream.
-   * Some callers may assume that the the output stream has not been closed, and will fail to work
-   * if it has been closed.
-   * </p>
+   * <p>Implementations must not close the output stream, and instead should flush the output
+   * stream. Some callers may assume that the output stream has not been closed, and will fail to
+   * work if it has been closed.
    *
    * @param content streaming content
    * @param out output stream

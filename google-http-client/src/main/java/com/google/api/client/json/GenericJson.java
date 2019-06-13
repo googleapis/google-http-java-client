@@ -17,22 +17,18 @@ package com.google.api.client.json;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Throwables;
-
 import java.io.IOException;
 import java.util.concurrent.ConcurrentMap;
 
 /**
  * Generic JSON data that stores all unknown key name/value pairs.
  *
- * <p>
- * Subclasses can declare fields for known data keys using the {@link Key} annotation. Each field
+ * <p>Subclasses can declare fields for known data keys using the {@link Key} annotation. Each field
  * can be of any visibility (private, package private, protected, or public) and must not be static.
  * {@code null} unknown data key names are not allowed, but {@code null} data values are allowed.
  *
- * <p>
- * Implementation is not thread-safe. For a thread-safe choice instead use an implementation of
+ * <p>Implementation is not thread-safe. For a thread-safe choice instead use an implementation of
  * {@link ConcurrentMap}.
- * </p>
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -73,8 +69,8 @@ public class GenericJson extends GenericData implements Cloneable {
   }
 
   /**
-   * Returns a pretty-printed serialized JSON string representation or {@link #toString()} if
-   * {@link #getFactory()} is {@code null}.
+   * Returns a pretty-printed serialized JSON string representation or {@link #toString()} if {@link
+   * #getFactory()} is {@code null}.
    *
    * @since 1.6
    */

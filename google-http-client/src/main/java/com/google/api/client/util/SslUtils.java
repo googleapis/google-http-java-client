@@ -19,7 +19,6 @@ import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -96,11 +95,10 @@ public final class SslUtils {
    * given trust store.
    *
    * @param sslContext SSL context (for example {@link SSLContext#getInstance})
-   * @param trustStore key store for certificates to trust (for example
-   *        {@link SecurityUtils#getJavaKeyStore()})
-   * @param trustManagerFactory trust manager factory (for example
-   *        {@link #getPkixTrustManagerFactory()})
-   *
+   * @param trustStore key store for certificates to trust (for example {@link
+   *     SecurityUtils#getJavaKeyStore()})
+   * @param trustManagerFactory trust manager factory (for example {@link
+   *     #getPkixTrustManagerFactory()})
    * @since 1.14
    */
   public static SSLContext initSslContext(
@@ -112,43 +110,40 @@ public final class SslUtils {
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Returns an SSL context in which all X.509 certificates are trusted.
    *
-   * <p>
-   * Be careful! Disabling SSL certificate validation is dangerous and should only be done in
+   * <p>Be careful! Disabling SSL certificate validation is dangerous and should only be done in
    * testing environments.
-   * </p>
    */
   @Beta
   public static SSLContext trustAllSSLContext() throws GeneralSecurityException {
-    TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
+    TrustManager[] trustAllCerts =
+        new TrustManager[] {
+          new X509TrustManager() {
 
-      public void checkClientTrusted(X509Certificate[] chain, String authType)
-          throws CertificateException {
-      }
+            public void checkClientTrusted(X509Certificate[] chain, String authType)
+                throws CertificateException {}
 
-      public void checkServerTrusted(X509Certificate[] chain, String authType)
-          throws CertificateException {
-      }
+            public void checkServerTrusted(X509Certificate[] chain, String authType)
+                throws CertificateException {}
 
-      public X509Certificate[] getAcceptedIssuers() {
-        return null;
-      }
-    }};
+            public X509Certificate[] getAcceptedIssuers() {
+              return null;
+            }
+          }
+        };
     SSLContext context = getTlsSslContext();
     context.init(null, trustAllCerts, null);
     return context;
   }
 
   /**
-   * {@link Beta} <br/>
+   * {@link Beta} <br>
    * Returns a verifier that trusts all host names.
    *
-   * <p>
-   * Be careful! Disabling host name verification is dangerous and should only be done in testing
+   * <p>Be careful! Disabling host name verification is dangerous and should only be done in testing
    * environments.
-   * </p>
    */
   @Beta
   public static HostnameVerifier trustAllHostnameVerifier() {
@@ -160,6 +155,5 @@ public final class SslUtils {
     };
   }
 
-  private SslUtils() {
-  }
+  private SslUtils() {}
 }

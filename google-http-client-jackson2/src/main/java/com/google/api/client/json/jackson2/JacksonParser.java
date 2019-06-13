@@ -16,7 +16,6 @@ package com.google.api.client.json.jackson2;
 
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -24,9 +23,7 @@ import java.math.BigInteger;
 /**
  * Low-level JSON serializer implementation based on Jackson.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @author Yaniv Inbar
  */

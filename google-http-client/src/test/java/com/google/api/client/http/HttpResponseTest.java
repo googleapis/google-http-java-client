@@ -29,6 +29,7 @@ import java.lang.reflect.Type;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.logging.Level;
+import java.util.zip.GZIPInputStream;
 import junit.framework.TestCase;
 
 /**
@@ -38,8 +39,7 @@ import junit.framework.TestCase;
  */
 public class HttpResponseTest extends TestCase {
 
-  public HttpResponseTest() {
-  }
+  public HttpResponseTest() {}
 
   public HttpResponseTest(String name) {
     super(name);
@@ -57,20 +57,21 @@ public class HttpResponseTest extends TestCase {
   private static final String SAMPLE2 = "123abc";
 
   public void testParseAsString_utf8() throws Exception {
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
-        return new MockLowLevelHttpRequest() {
+    HttpTransport transport =
+        new MockHttpTransport() {
           @Override
-          public LowLevelHttpResponse execute() throws IOException {
-            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
-            result.setContentType(Json.MEDIA_TYPE);
-            result.setContent(SAMPLE);
-            return result;
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setContentType(Json.MEDIA_TYPE);
+                result.setContent(SAMPLE);
+                return result;
+              }
+            };
           }
         };
-      }
-    };
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
@@ -78,19 +79,20 @@ public class HttpResponseTest extends TestCase {
   }
 
   public void testParseAsString_noContentType() throws Exception {
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
-        return new MockLowLevelHttpRequest() {
+    HttpTransport transport =
+        new MockHttpTransport() {
           @Override
-          public LowLevelHttpResponse execute() throws IOException {
-            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
-            result.setContent(SAMPLE2);
-            return result;
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setContent(SAMPLE2);
+                return result;
+              }
+            };
           }
         };
-      }
-    };
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
@@ -106,13 +108,14 @@ public class HttpResponseTest extends TestCase {
   }
 
   private void subtestStatusCode_negative(boolean throwExceptionOnExecuteError) throws Exception {
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
-        return new MockLowLevelHttpRequest().setResponse(
-            new MockLowLevelHttpResponse().setStatusCode(-1));
-      }
-    };
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest()
+                .setResponse(new MockLowLevelHttpResponse().setStatusCode(-1));
+          }
+        };
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setThrowExceptionOnExecuteError(throwExceptionOnExecuteError);
@@ -130,40 +133,38 @@ public class HttpResponseTest extends TestCase {
 
   public static class MyHeaders extends HttpHeaders {
 
-    @Key
-    public String foo;
+    @Key public String foo;
 
-    @Key
-    public Object obj;
+    @Key public Object obj;
 
-    @Key
-    String[] r;
+    @Key String[] r;
   }
 
   static final String ETAG_VALUE = "\"abc\"";
 
   public void testHeaderParsing() throws Exception {
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
-        return new MockLowLevelHttpRequest() {
+    HttpTransport transport =
+        new MockHttpTransport() {
           @Override
-          public LowLevelHttpResponse execute() throws IOException {
-            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
-            result.addHeader("accept", "value");
-            result.addHeader("foo", "bar");
-            result.addHeader("goo", "car");
-            result.addHeader("hoo", "dar");
-            result.addHeader("hoo", "far");
-            result.addHeader("obj", "o");
-            result.addHeader("r", "a1");
-            result.addHeader("r", "a2");
-            result.addHeader("ETAG", ETAG_VALUE);
-            return result;
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.addHeader("accept", "value");
+                result.addHeader("foo", "bar");
+                result.addHeader("goo", "car");
+                result.addHeader("hoo", "dar");
+                result.addHeader("hoo", "far");
+                result.addHeader("obj", "o");
+                result.addHeader("r", "a1");
+                result.addHeader("r", "a2");
+                result.addHeader("ETAG", ETAG_VALUE);
+                return result;
+              }
+            };
           }
         };
-      }
-    };
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.setResponseHeaders(new MyHeaders());
@@ -179,8 +180,11 @@ public class HttpResponseTest extends TestCase {
 
   public void testParseAs_noParser() throws Exception {
     try {
-      new MockHttpTransport().createRequestFactory()
-          .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL).execute().parseAs(Object.class);
+      new MockHttpTransport()
+          .createRequestFactory()
+          .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL)
+          .execute()
+          .parseAs(Object.class);
       fail("expected " + NullPointerException.class);
     } catch (NullPointerException e) {
       // expected
@@ -190,30 +194,36 @@ public class HttpResponseTest extends TestCase {
   public void testParseAs_classNoContent() throws Exception {
     final MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
 
-    for (final int status : new int[] {
-        HttpStatusCodes.STATUS_CODE_NO_CONTENT, HttpStatusCodes.STATUS_CODE_NOT_MODIFIED, 102}) {
-      HttpTransport transport = new MockHttpTransport() {
-        @Override
-        public LowLevelHttpRequest buildRequest(String method, final String url) throws IOException {
-          return new MockLowLevelHttpRequest() {
+    for (final int status :
+        new int[] {
+          HttpStatusCodes.STATUS_CODE_NO_CONTENT, HttpStatusCodes.STATUS_CODE_NOT_MODIFIED, 102
+        }) {
+      HttpTransport transport =
+          new MockHttpTransport() {
             @Override
-            public LowLevelHttpResponse execute() throws IOException {
-              result.setStatusCode(status);
-              result.setContentType(null);
-              result.setContent(new ByteArrayInputStream(new byte[0]));
-              return result;
+            public LowLevelHttpRequest buildRequest(String method, final String url)
+                throws IOException {
+              return new MockLowLevelHttpRequest() {
+                @Override
+                public LowLevelHttpResponse execute() throws IOException {
+                  result.setStatusCode(status);
+                  result.setContentType(null);
+                  result.setContent(new ByteArrayInputStream(new byte[0]));
+                  return result;
+                }
+              };
             }
           };
-        }
-      };
 
       // Confirm that 'null' is returned when getting the response object of a
       // request with no message body.
-      Object parsed = transport.createRequestFactory()
-          .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL)
-          .setThrowExceptionOnExecuteError(false)
-          .execute()
-          .parseAs(Object.class);
+      Object parsed =
+          transport
+              .createRequestFactory()
+              .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL)
+              .setThrowExceptionOnExecuteError(false)
+              .execute()
+              .parseAs(Object.class);
       assertNull(parsed);
     }
   }
@@ -221,49 +231,56 @@ public class HttpResponseTest extends TestCase {
   public void testParseAs_typeNoContent() throws Exception {
     final MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
 
-    for (final int status : new int[] {
-        HttpStatusCodes.STATUS_CODE_NO_CONTENT, HttpStatusCodes.STATUS_CODE_NOT_MODIFIED, 102}) {
-      HttpTransport transport = new MockHttpTransport() {
-        @Override
-        public LowLevelHttpRequest buildRequest(String method, final String url) throws IOException {
-          return new MockLowLevelHttpRequest() {
+    for (final int status :
+        new int[] {
+          HttpStatusCodes.STATUS_CODE_NO_CONTENT, HttpStatusCodes.STATUS_CODE_NOT_MODIFIED, 102
+        }) {
+      HttpTransport transport =
+          new MockHttpTransport() {
             @Override
-            public LowLevelHttpResponse execute() throws IOException {
-              result.setStatusCode(status);
-              result.setContentType(null);
-              result.setContent(new ByteArrayInputStream(new byte[0]));
-              return result;
+            public LowLevelHttpRequest buildRequest(String method, final String url)
+                throws IOException {
+              return new MockLowLevelHttpRequest() {
+                @Override
+                public LowLevelHttpResponse execute() throws IOException {
+                  result.setStatusCode(status);
+                  result.setContentType(null);
+                  result.setContent(new ByteArrayInputStream(new byte[0]));
+                  return result;
+                }
+              };
             }
           };
-        }
-      };
 
       // Confirm that 'null' is returned when getting the response object of a
       // request with no message body.
-      Object parsed = transport.createRequestFactory()
-          .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL)
-          .setThrowExceptionOnExecuteError(false)
-          .execute()
-          .parseAs((Type) Object.class);
+      Object parsed =
+          transport
+              .createRequestFactory()
+              .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL)
+              .setThrowExceptionOnExecuteError(false)
+              .execute()
+              .parseAs((Type) Object.class);
       assertNull(parsed);
     }
   }
 
   public void testDownload() throws Exception {
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
-        return new MockLowLevelHttpRequest() {
+    HttpTransport transport =
+        new MockHttpTransport() {
           @Override
-          public LowLevelHttpResponse execute() throws IOException {
-            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
-            result.setContentType(Json.MEDIA_TYPE);
-            result.setContent(SAMPLE);
-            return result;
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setContentType(Json.MEDIA_TYPE);
+                result.setContent(SAMPLE);
+                return result;
+              }
+            };
           }
         };
-      }
-    };
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
@@ -273,22 +290,22 @@ public class HttpResponseTest extends TestCase {
   }
 
   public void testDisconnectWithContent() throws Exception {
-    final MockLowLevelHttpResponse lowLevelHttpResponse =
-        new MockLowLevelHttpResponse();
+    final MockLowLevelHttpResponse lowLevelHttpResponse = new MockLowLevelHttpResponse();
 
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
-        return new MockLowLevelHttpRequest() {
+    HttpTransport transport =
+        new MockHttpTransport() {
           @Override
-          public LowLevelHttpResponse execute() throws IOException {
-            lowLevelHttpResponse.setContentType(Json.MEDIA_TYPE);
-            lowLevelHttpResponse.setContent(SAMPLE);
-            return lowLevelHttpResponse;
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                lowLevelHttpResponse.setContentType(Json.MEDIA_TYPE);
+                lowLevelHttpResponse.setContent(SAMPLE);
+                return lowLevelHttpResponse;
+              }
+            };
           }
         };
-      }
-    };
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
@@ -303,20 +320,20 @@ public class HttpResponseTest extends TestCase {
   }
 
   public void testDisconnectWithNoContent() throws Exception {
-    final MockLowLevelHttpResponse lowLevelHttpResponse =
-        new MockLowLevelHttpResponse();
+    final MockLowLevelHttpResponse lowLevelHttpResponse = new MockLowLevelHttpResponse();
 
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
-        return new MockLowLevelHttpRequest() {
+    HttpTransport transport =
+        new MockHttpTransport() {
           @Override
-          public LowLevelHttpResponse execute() throws IOException {
-            return lowLevelHttpResponse;
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                return lowLevelHttpResponse;
+              }
+            };
           }
         };
-      }
-    };
     HttpRequest request =
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
@@ -345,26 +362,38 @@ public class HttpResponseTest extends TestCase {
     Arrays.fill(a, 'x');
     String big = new String(a);
     String formated18kInteger = NumberFormat.getInstance().format(18000);
-    subtestContentLoggingLimit(big, Integer.MAX_VALUE, true, String.format("Total: %s bytes", formated18kInteger), big);
-    subtestContentLoggingLimit(big, 4, true, String.format("Total: %s bytes (logging first 4 bytes)", formated18kInteger), "xxxx");
+    subtestContentLoggingLimit(
+        big, Integer.MAX_VALUE, true, String.format("Total: %s bytes", formated18kInteger), big);
+    subtestContentLoggingLimit(
+        big,
+        4,
+        true,
+        String.format("Total: %s bytes (logging first 4 bytes)", formated18kInteger),
+        "xxxx");
   }
 
-  public void subtestContentLoggingLimit(final String content, int contentLoggingLimit,
-      boolean loggingEnabled, String... expectedMessages) throws Exception {
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildRequest(String method, final String url) throws IOException {
-        return new MockLowLevelHttpRequest() {
+  public void subtestContentLoggingLimit(
+      final String content,
+      int contentLoggingLimit,
+      boolean loggingEnabled,
+      String... expectedMessages)
+      throws Exception {
+    HttpTransport transport =
+        new MockHttpTransport() {
           @Override
-          public LowLevelHttpResponse execute() throws IOException {
-            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
-            result.setContent(content);
-            result.setContentType("text/plain");
-            return result;
+          public LowLevelHttpRequest buildRequest(String method, final String url)
+              throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setContent(content);
+                result.setContentType("text/plain");
+                return result;
+              }
+            };
           }
         };
-      }
-    };
     HttpTransport.LOGGER.setLevel(Level.CONFIG);
 
     HttpRequest request =
@@ -381,23 +410,51 @@ public class HttpResponseTest extends TestCase {
   }
 
   public void testGetContent_gzipNoContent() throws IOException {
-    HttpTransport transport = new MockHttpTransport() {
-      @Override
-      public LowLevelHttpRequest buildRequest(String method, final String url) throws IOException {
-        return new MockLowLevelHttpRequest() {
+    HttpTransport transport =
+        new MockHttpTransport() {
           @Override
-          public LowLevelHttpResponse execute() throws IOException {
-            MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
-            result.setContent("");
-            result.setContentEncoding("gzip");
-            result.setContentType("text/plain");
-            return result;
+          public LowLevelHttpRequest buildRequest(String method, final String url)
+              throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setContent("");
+                result.setContentEncoding("gzip");
+                result.setContentType("text/plain");
+                return result;
+              }
+            };
           }
         };
-      }
-    };
     HttpRequest request =
         transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
     request.execute().getContent();
+  }
+
+  public void testGetContent_gzipEncoding_ReturnRawStream() throws IOException {
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, final String url)
+              throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setContent("");
+                result.setContentEncoding("gzip");
+                result.setContentType("text/plain");
+                return result;
+              }
+            };
+          }
+        };
+    HttpRequest request =
+        transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    request.setResponseReturnRawInputStream(true);
+    assertFalse(
+        "it should not decompress stream",
+        request.execute().getContent() instanceof GZIPInputStream);
   }
 }

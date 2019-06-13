@@ -19,6 +19,4 @@
  * @since 1.3
  * @author Yaniv Inbar
  */
-
 package com.google.api.client.json.gson;
-

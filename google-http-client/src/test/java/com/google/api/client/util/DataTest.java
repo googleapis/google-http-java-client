@@ -14,6 +14,7 @@
 
 package com.google.api.client.util;
 
+import com.google.common.collect.ImmutableMap;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -66,6 +67,12 @@ public class DataTest extends TestCase {
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
     }
+  }
+
+  public void testNullOfTemplateTypes() {
+    String nullValue = Data.nullOf(String.class);
+    Map<String, String> nullField = ImmutableMap.of("v", nullValue);
+    assertEquals(nullValue, nullField.get("v"));
   }
 
   public void testIsNull() {
@@ -203,29 +210,41 @@ public class DataTest extends TestCase {
     assertEquals('a', Data.parsePrimitiveValue(Character.class, "a"));
     assertEquals(true, Data.parsePrimitiveValue(boolean.class, "true"));
     assertEquals(true, Data.parsePrimitiveValue(Boolean.class, "true"));
-    assertEquals(new Byte(Byte.MAX_VALUE),
+    assertEquals(
+        new Byte(Byte.MAX_VALUE),
         Data.parsePrimitiveValue(Byte.class, String.valueOf(Byte.MAX_VALUE)));
-    assertEquals(new Byte(Byte.MAX_VALUE),
+    assertEquals(
+        new Byte(Byte.MAX_VALUE),
         Data.parsePrimitiveValue(byte.class, String.valueOf(Byte.MAX_VALUE)));
-    assertEquals(new Short(Short.MAX_VALUE),
+    assertEquals(
+        new Short(Short.MAX_VALUE),
         Data.parsePrimitiveValue(Short.class, String.valueOf(Short.MAX_VALUE)));
-    assertEquals(new Short(Short.MAX_VALUE),
+    assertEquals(
+        new Short(Short.MAX_VALUE),
         Data.parsePrimitiveValue(short.class, String.valueOf(Short.MAX_VALUE)));
-    assertEquals(new Integer(Integer.MAX_VALUE),
+    assertEquals(
+        new Integer(Integer.MAX_VALUE),
         Data.parsePrimitiveValue(Integer.class, String.valueOf(Integer.MAX_VALUE)));
-    assertEquals(new Integer(Integer.MAX_VALUE),
+    assertEquals(
+        new Integer(Integer.MAX_VALUE),
         Data.parsePrimitiveValue(int.class, String.valueOf(Integer.MAX_VALUE)));
-    assertEquals(new Long(Long.MAX_VALUE),
+    assertEquals(
+        new Long(Long.MAX_VALUE),
         Data.parsePrimitiveValue(Long.class, String.valueOf(Long.MAX_VALUE)));
-    assertEquals(new Long(Long.MAX_VALUE),
+    assertEquals(
+        new Long(Long.MAX_VALUE),
         Data.parsePrimitiveValue(long.class, String.valueOf(Long.MAX_VALUE)));
-    assertEquals(new Float(Float.MAX_VALUE),
+    assertEquals(
+        new Float(Float.MAX_VALUE),
         Data.parsePrimitiveValue(Float.class, String.valueOf(Float.MAX_VALUE)));
-    assertEquals(new Float(Float.MAX_VALUE),
+    assertEquals(
+        new Float(Float.MAX_VALUE),
         Data.parsePrimitiveValue(float.class, String.valueOf(Float.MAX_VALUE)));
-    assertEquals(new Double(Double.MAX_VALUE),
+    assertEquals(
+        new Double(Double.MAX_VALUE),
         Data.parsePrimitiveValue(Double.class, String.valueOf(Double.MAX_VALUE)));
-    assertEquals(new Double(Double.MAX_VALUE),
+    assertEquals(
+        new Double(Double.MAX_VALUE),
         Data.parsePrimitiveValue(double.class, String.valueOf(Double.MAX_VALUE)));
     BigInteger bigint = BigInteger.valueOf(Long.MAX_VALUE);
     assertEquals(
@@ -242,6 +261,25 @@ public class DataTest extends TestCase {
       // expected
     }
     assertNull(Data.parsePrimitiveValue(Void.class, "abc"));
+    assertNull(Data.parsePrimitiveValue(Enum.class, null));
+  }
+
+  private enum MyEnum {
+    A("a");
+    private final String s;
+
+    MyEnum(String s) {
+      this.s = s;
+    }
+  }
+
+  public void testParsePrimitiveValueWithUnknownEnum() {
+    try {
+      Data.parsePrimitiveValue(MyEnum.class, "foo");
+      fail("expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      // expected
+    }
   }
 
   static class Resolve<X, T extends Number> {
@@ -249,57 +287,59 @@ public class DataTest extends TestCase {
     public X x;
   }
 
-  static class IntegerResolve extends Resolve<Boolean, Integer> {
-  }
+  static class IntegerResolve extends Resolve<Boolean, Integer> {}
 
-  static class MedResolve<T extends Number> extends Resolve<Boolean, T> {
-  }
+  static class MedResolve<T extends Number> extends Resolve<Boolean, T> {}
 
-  static class DoubleResolve extends MedResolve<Double> {
-  }
+  static class DoubleResolve extends MedResolve<Double> {}
 
-  static class Med2Resolve<T extends Number> extends MedResolve<T> {
-  }
+  static class Med2Resolve<T extends Number> extends MedResolve<T> {}
 
-  static class LongResolve extends Med2Resolve<Long> {
-  }
+  static class LongResolve extends Med2Resolve<Long> {}
 
-  static class ArrayResolve extends Resolve<Boolean[], Integer> {
-  }
+  static class ArrayResolve extends Resolve<Boolean[], Integer> {}
 
-  static class ParameterizedResolve extends Resolve<Collection<Integer>, Integer> {
-  }
+  static class ParameterizedResolve extends Resolve<Collection<Integer>, Integer> {}
 
-  static class MedXResolve<Y extends Number, X extends Y> extends Resolve<X, Integer> {
-  }
+  static class MedXResolve<Y extends Number, X extends Y> extends Resolve<X, Integer> {}
 
   public void testResolveWildcardTypeOrTypeVariable() throws Exception {
     // t
     TypeVariable<?> tTypeVar = (TypeVariable<?>) Resolve.class.getField("t").getGenericType();
     assertEquals(
         Number.class, resolveWildcardTypeOrTypeVariable(new Object().getClass(), tTypeVar));
-    assertEquals(Number.class,
+    assertEquals(
+        Number.class,
         resolveWildcardTypeOrTypeVariable(new Resolve<Boolean, Double>().getClass(), tTypeVar));
-    assertEquals(Integer.class,
+    assertEquals(
+        Integer.class,
         resolveWildcardTypeOrTypeVariable(new IntegerResolve().getClass(), tTypeVar));
     assertEquals(
         Long.class, resolveWildcardTypeOrTypeVariable(new LongResolve().getClass(), tTypeVar));
     assertEquals(
         Double.class, resolveWildcardTypeOrTypeVariable(new DoubleResolve().getClass(), tTypeVar));
     // partially resolved
-    assertEquals(Number.class,
+    assertEquals(
+        Number.class,
         resolveWildcardTypeOrTypeVariable(new MedResolve<Double>().getClass(), tTypeVar));
     // x
     TypeVariable<?> xTypeVar = (TypeVariable<?>) Resolve.class.getField("x").getGenericType();
     assertEquals(
         Object.class, resolveWildcardTypeOrTypeVariable(new Object().getClass(), xTypeVar));
-    assertEquals(Boolean.class, Types.getArrayComponentType(
-        resolveWildcardTypeOrTypeVariable(new ArrayResolve().getClass(), xTypeVar)));
     assertEquals(
-        Collection.class, Types.getRawClass((ParameterizedType) resolveWildcardTypeOrTypeVariable(
-            new ParameterizedResolve().getClass(), xTypeVar)));
-    assertEquals(Number.class, resolveWildcardTypeOrTypeVariable(
-        new MedXResolve<Integer, Integer>().getClass(), xTypeVar));
+        Boolean.class,
+        Types.getArrayComponentType(
+            resolveWildcardTypeOrTypeVariable(new ArrayResolve().getClass(), xTypeVar)));
+    assertEquals(
+        Collection.class,
+        Types.getRawClass(
+            (ParameterizedType)
+                resolveWildcardTypeOrTypeVariable(
+                    new ParameterizedResolve().getClass(), xTypeVar)));
+    assertEquals(
+        Number.class,
+        resolveWildcardTypeOrTypeVariable(
+            new MedXResolve<Integer, Integer>().getClass(), xTypeVar));
   }
 
   private static Type resolveWildcardTypeOrTypeVariable(

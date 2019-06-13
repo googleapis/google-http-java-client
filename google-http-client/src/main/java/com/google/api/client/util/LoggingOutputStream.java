@@ -14,7 +14,6 @@
 
 package com.google.api.client.util;
 
-
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -38,7 +37,7 @@ public class LoggingOutputStream extends FilterOutputStream {
    * @param logger logger
    * @param loggingLevel logging level
    * @param contentLoggingLimit maximum number of bytes to log (may be {@code 0} to avoid logging
-   *        content)
+   *     content)
    */
   public LoggingOutputStream(
       OutputStream outputStream, Logger logger, Level loggingLevel, int contentLoggingLimit) {

@@ -13,7 +13,7 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
+ * {@link com.google.api.client.util.Beta} <br>
  * JSON-RPC 2.0 as specified in <a
  * href="http://groups.google.com/group/json-rpc/web/json-rpc-2-0">JSON-RPC 2.0 Specification</a>
  * and <a href="http://groups.google.com/group/json-rpc/web/json-rpc-over-http">JSON-RPC over
@@ -24,4 +24,3 @@
  */
 @com.google.api.client.util.Beta
 package com.google.api.client.json.rpc2;
-

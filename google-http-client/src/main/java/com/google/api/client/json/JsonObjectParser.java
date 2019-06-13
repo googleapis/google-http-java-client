@@ -17,7 +17,6 @@ package com.google.api.client.json;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.Sets;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -31,19 +30,15 @@ import java.util.Set;
 /**
  * Parses JSON data into an data class of key/value pairs.
  *
- * <p>
- * Implementation is thread-safe.
- * </p>
+ * <p>Implementation is thread-safe.
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>
- *<code>
-  static void setParser(HttpRequest request) {
-    request.setParser(new JsonObjectParser(new JacksonFactory()));
-  }
+ * <code>
+ * static void setParser(HttpRequest request) {
+ * request.setParser(new JsonObjectParser(new JacksonFactory()));
+ * }
  * </code>
  * </pre>
  *
@@ -58,16 +53,13 @@ public class JsonObjectParser implements ObjectParser {
   /** Wrapper keys for the JSON content or empty for none. */
   private final Set<String> wrapperKeys;
 
-  /**
-   * @param jsonFactory JSON factory
-   */
+  /** @param jsonFactory JSON factory */
   public JsonObjectParser(JsonFactory jsonFactory) {
     this(new Builder(jsonFactory));
   }
 
   /**
    * @param builder builder
-   *
    * @since 1.14
    */
   protected JsonObjectParser(Builder builder) {
@@ -124,8 +116,10 @@ public class JsonObjectParser implements ObjectParser {
     boolean failed = true;
     try {
       String match = parser.skipToKey(wrapperKeys);
-      Preconditions.checkArgument(match != null && parser.getCurrentToken() != JsonToken.END_OBJECT,
-          "wrapper key(s) not found: %s", wrapperKeys);
+      Preconditions.checkArgument(
+          match != null && parser.getCurrentToken() != JsonToken.END_OBJECT,
+          "wrapper key(s) not found: %s",
+          wrapperKeys);
       failed = false;
     } finally {
       if (failed) {
@@ -137,9 +131,7 @@ public class JsonObjectParser implements ObjectParser {
   /**
    * Builder.
    *
-   * <p>
-   * Implementation is not thread-safe.
-   * </p>
+   * <p>Implementation is not thread-safe.
    *
    * @since 1.14
    */
@@ -151,9 +143,7 @@ public class JsonObjectParser implements ObjectParser {
     /** Wrapper keys for the JSON content or empty for none. */
     Collection<String> wrapperKeys = Sets.newHashSet();
 
-    /**
-     * @param jsonFactory JSON factory
-     */
+    /** @param jsonFactory JSON factory */
     public Builder(JsonFactory jsonFactory) {
       this.jsonFactory = Preconditions.checkNotNull(jsonFactory);
     }
@@ -176,10 +166,8 @@ public class JsonObjectParser implements ObjectParser {
     /**
      * Sets the wrapper keys for the JSON content.
      *
-     * <p>
-     * Overriding is only supported for the purpose of calling the super implementation and changing
-     * the return type, but nothing else.
-     * </p>
+     * <p>Overriding is only supported for the purpose of calling the super implementation and
+     * changing the return type, but nothing else.
      */
     public Builder setWrapperKeys(Collection<String> wrapperKeys) {
       this.wrapperKeys = wrapperKeys;

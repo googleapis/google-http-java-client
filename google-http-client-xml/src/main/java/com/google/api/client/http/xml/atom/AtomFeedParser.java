@@ -28,12 +28,10 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Atom feed pull parser when the Atom entry class is known in advance.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @param <T> feed type
  * @param <E> entry type
@@ -53,8 +51,12 @@ public final class AtomFeedParser<T, E> extends AbstractAtomFeedParser<T> {
    * @param feedClass feed class to parse
    * @since 1.5
    */
-  public AtomFeedParser(XmlNamespaceDictionary namespaceDictionary, XmlPullParser parser,
-      InputStream inputStream, Class<T> feedClass, Class<E> entryClass) {
+  public AtomFeedParser(
+      XmlNamespaceDictionary namespaceDictionary,
+      XmlPullParser parser,
+      InputStream inputStream,
+      Class<T> feedClass,
+      Class<E> entryClass) {
     super(namespaceDictionary, parser, inputStream, feedClass);
     this.entryClass = Preconditions.checkNotNull(entryClass);
   }
@@ -94,8 +96,11 @@ public final class AtomFeedParser<T, E> extends AbstractAtomFeedParser<T> {
    * @throws IOException I/O exception
    * @throws XmlPullParserException XML pull parser exception
    */
-  public static <T, E> AtomFeedParser<T, E> create(HttpResponse response,
-      XmlNamespaceDictionary namespaceDictionary, Class<T> feedClass, Class<E> entryClass)
+  public static <T, E> AtomFeedParser<T, E> create(
+      HttpResponse response,
+      XmlNamespaceDictionary namespaceDictionary,
+      Class<T> feedClass,
+      Class<E> entryClass)
       throws IOException, XmlPullParserException {
     InputStream content = response.getContent();
     try {

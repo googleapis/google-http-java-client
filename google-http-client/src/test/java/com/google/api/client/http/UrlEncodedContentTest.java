@@ -35,10 +35,8 @@ public class UrlEncodedContentTest extends TestCase {
   public void testWriteTo() throws IOException {
     subtestWriteTo("a=x", ArrayMap.of("a", "x"));
     subtestWriteTo("noval", ArrayMap.of("noval", ""));
-    subtestWriteTo(
-        "multi=a&multi=b&multi=c", ArrayMap.of("multi", Arrays.asList("a", "b", "c")));
-    subtestWriteTo(
-        "multi=a&multi=b&multi=c", ArrayMap.of("multi", new String[] {"a", "b", "c"}));
+    subtestWriteTo("multi=a&multi=b&multi=c", ArrayMap.of("multi", Arrays.asList("a", "b", "c")));
+    subtestWriteTo("multi=a&multi=b&multi=c", ArrayMap.of("multi", new String[] {"a", "b", "c"}));
     // https://github.com/googleapis/google-http-java-client/issues/202
     final Map<String, String> params = new LinkedHashMap<String, String>();
     params.put("username", "un");
@@ -54,8 +52,10 @@ public class UrlEncodedContentTest extends TestCase {
   }
 
   public void testGetContent() throws Exception {
-    HttpRequest request = new MockHttpTransport().createRequestFactory()
-        .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    HttpRequest request =
+        new MockHttpTransport()
+            .createRequestFactory()
+            .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     UrlEncodedContent content = UrlEncodedContent.getContent(request);
     assertNotNull(content);
     assertTrue(content.getData() instanceof Map);

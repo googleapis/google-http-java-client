@@ -17,17 +17,14 @@ package com.google.api.client.testing.http;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Mock for {@link HttpContent}.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @author Yaniv Inbar
  * @since 1.3
@@ -73,9 +70,7 @@ public class MockHttpContent implements HttpContent {
   /**
    * Sets the HTTP content.
    *
-   * <p>
-   * Default value is an empty byte array.
-   * </p>
+   * <p>Default value is an empty byte array.
    *
    * @since 1.5
    */
@@ -87,9 +82,7 @@ public class MockHttpContent implements HttpContent {
   /**
    * Returns the HTTP content length or {@code -1} for unknown.
    *
-   * <p>
-   * Default value is {@code -1}.
-   * </p>
+   * <p>Default value is {@code -1}.
    *
    * @since 1.5
    */

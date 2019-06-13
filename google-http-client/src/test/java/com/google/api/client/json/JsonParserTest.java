@@ -14,10 +14,8 @@
 
 package com.google.api.client.json;
 
-
 import com.google.api.client.testing.json.MockJsonFactory;
 import com.google.api.client.testing.json.MockJsonParser;
-
 import junit.framework.TestCase;
 
 /**

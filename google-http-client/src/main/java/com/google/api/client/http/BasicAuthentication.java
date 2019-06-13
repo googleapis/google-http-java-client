@@ -15,19 +15,16 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Preconditions;
-
 import java.io.IOException;
 
 /**
  * Basic authentication HTTP request initializer as specified in <a
  * href="http://tools.ietf.org/html/rfc2617#section-2">Basic Authentication Scheme</a>
  *
- * <p>
- * Implementation is immutable and thread-safe. It can be used as either an HTTP request initializer
- * or an HTTP request execute interceptor. {@link #initialize(HttpRequest)} only sets itself as the
- * interceptor. Authentication is actually done in {@link #intercept(HttpRequest)}, which is
- * implemented using {@link HttpHeaders#setBasicAuthentication(String, String)}.
- * </p>
+ * <p>Implementation is immutable and thread-safe. It can be used as either an HTTP request
+ * initializer or an HTTP request execute interceptor. {@link #initialize(HttpRequest)} only sets
+ * itself as the interceptor. Authentication is actually done in {@link #intercept(HttpRequest)},
+ * which is implemented using {@link HttpHeaders#setBasicAuthentication(String, String)}.
  *
  * @since 1.7
  * @author Yaniv Inbar

@@ -1,0 +1,19 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "packageRules": [
+    {
+      "packagePatterns": ["^com.google.guava:guava"],
+      "groupName": "Guava packages"
+    },
+    {
+      "packagePatterns": ["^com.google.appengine:appengine-"],
+      "groupName": "AppEngine packages"
+    },
+    {
+      "packagePatterns": ["^io.opencensus:opencensus-"],
+      "groupName": "OpenCensus packages"
+    }
+  ]
+}

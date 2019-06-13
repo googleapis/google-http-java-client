@@ -24,32 +24,26 @@ import java.io.IOException;
 import org.xmlpull.v1.XmlSerializer;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Serializes Atom XML HTTP content based on the data key/value mapping object for an Atom entry.
  *
- * <p>
- * Default value for {@link #getType()} is {@link Atom#MEDIA_TYPE}.
- * </p>
+ * <p>Default value for {@link #getType()} is {@link Atom#MEDIA_TYPE}.
  *
- * <p>
- * Sample usages:
- * </p>
+ * <p>Sample usages:
  *
  * <pre>
-  static void setAtomEntryContent(
-      HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object entry) {
-    request.setContent(AtomContent.forEntry(namespaceDictionary, entry));
-  }
-
-  static void setAtomBatchContent(
-      HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object batchFeed) {
-    request.setContent(AtomContent.forFeed(namespaceDictionary, batchFeed));
-  }
+ * static void setAtomEntryContent(
+ * HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object entry) {
+ * request.setContent(AtomContent.forEntry(namespaceDictionary, entry));
+ * }
+ *
+ * static void setAtomBatchContent(
+ * HttpRequest request, XmlNamespaceDictionary namespaceDictionary, Object batchFeed) {
+ * request.setContent(AtomContent.forFeed(namespaceDictionary, batchFeed));
+ * }
  * </pre>
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @since 1.4
  * @author Yaniv Inbar

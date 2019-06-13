@@ -25,12 +25,10 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Abstract base class for an Atom feed parser when the feed type is known in advance.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @param <T> feed type
  * @since 1.0
@@ -61,8 +59,11 @@ public abstract class AbstractAtomFeedParser<T> {
    * @param feedClass feed class to parse
    * @since 1.5
    */
-  protected AbstractAtomFeedParser(XmlNamespaceDictionary namespaceDictionary, XmlPullParser parser,
-      InputStream inputStream, Class<T> feedClass) {
+  protected AbstractAtomFeedParser(
+      XmlNamespaceDictionary namespaceDictionary,
+      XmlPullParser parser,
+      InputStream inputStream,
+      Class<T> feedClass) {
     this.namespaceDictionary = Preconditions.checkNotNull(namespaceDictionary);
     this.parser = Preconditions.checkNotNull(parser);
     this.inputStream = Preconditions.checkNotNull(inputStream);

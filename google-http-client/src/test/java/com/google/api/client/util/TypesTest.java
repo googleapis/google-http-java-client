@@ -14,7 +14,6 @@
 
 package com.google.api.client.util;
 
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
@@ -49,8 +48,7 @@ public class TypesTest extends TestCase {
     assertFalse(Types.isAssignableToOrFrom(String.class, List.class));
   }
 
-  static class Foo {
-  }
+  static class Foo {}
 
   public void testNewInstance() {
     assertEquals(Object.class, Types.newInstance(Object.class).getClass());
@@ -74,8 +72,7 @@ public class TypesTest extends TestCase {
   }
 
   @SuppressWarnings("serial")
-  static class IntegerList extends ArrayList<Integer> {
-  }
+  static class IntegerList extends ArrayList<Integer> {}
 
   static class WildcardBounds {
     public Collection<?> any;
@@ -101,26 +98,19 @@ public class TypesTest extends TestCase {
     public X x;
   }
 
-  static class IntegerResolve extends Resolve<Boolean, Integer> {
-  }
+  static class IntegerResolve extends Resolve<Boolean, Integer> {}
 
-  static class MedResolve<T extends Number> extends Resolve<Boolean, T> {
-  }
+  static class MedResolve<T extends Number> extends Resolve<Boolean, T> {}
 
-  static class DoubleResolve extends MedResolve<Double> {
-  }
+  static class DoubleResolve extends MedResolve<Double> {}
 
-  static class Med2Resolve<T extends Number> extends MedResolve<T> {
-  }
+  static class Med2Resolve<T extends Number> extends MedResolve<T> {}
 
-  static class LongResolve extends Med2Resolve<Long> {
-  }
+  static class LongResolve extends Med2Resolve<Long> {}
 
-  static class ArrayResolve extends Resolve<Boolean[], Integer> {
-  }
+  static class ArrayResolve extends Resolve<Boolean[], Integer> {}
 
-  static class ParameterizedResolve extends Resolve<Collection<Integer>, Integer> {
-  }
+  static class ParameterizedResolve extends Resolve<Collection<Integer>, Integer> {}
 
   public void testResolveTypeVariable() throws Exception {
     // t
@@ -131,16 +121,21 @@ public class TypesTest extends TestCase {
     assertEquals(Long.class, resolveTypeVariable(new LongResolve().getClass(), tTypeVar));
     assertEquals(Double.class, resolveTypeVariable(new DoubleResolve().getClass(), tTypeVar));
     // partially resolved
-    assertEquals(MedResolve.class,
+    assertEquals(
+        MedResolve.class,
         ((TypeVariable<?>) resolveTypeVariable(new MedResolve<Double>().getClass(), tTypeVar))
             .getGenericDeclaration());
     // x
     TypeVariable<?> xTypeVar = (TypeVariable<?>) Resolve.class.getField("x").getGenericType();
     assertNull(resolveTypeVariable(new Object().getClass(), xTypeVar));
-    assertEquals(Boolean.class,
+    assertEquals(
+        Boolean.class,
         Types.getArrayComponentType(resolveTypeVariable(new ArrayResolve().getClass(), xTypeVar)));
-    assertEquals(Collection.class, Types.getRawClass(
-        (ParameterizedType) resolveTypeVariable(new ParameterizedResolve().getClass(), xTypeVar)));
+    assertEquals(
+        Collection.class,
+        Types.getRawClass(
+            (ParameterizedType)
+                resolveTypeVariable(new ParameterizedResolve().getClass(), xTypeVar)));
   }
 
   private static Type resolveTypeVariable(Type context, TypeVariable<?> typeVariable) {
@@ -150,8 +145,10 @@ public class TypesTest extends TestCase {
   public class A<T> {
     public Iterable<String> i;
     public ArrayList<String> a;
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     public ArrayList aNoType;
+
     public Stack<? extends Number> wild;
     public Vector<Integer[]> arr;
     public Vector<T[]> tarr;
@@ -160,30 +157,38 @@ public class TypesTest extends TestCase {
     public ArrayList<T> atv;
   }
 
-  public class B extends A<DateTime> {
-  }
+  public class B extends A<DateTime> {}
 
   public void testGetIterableParameter() throws Exception {
-    assertEquals("T",
+    assertEquals(
+        "T",
         ((TypeVariable<?>) Types.getIterableParameter(A.class.getField("tv").getGenericType()))
             .getName());
-    assertEquals("T",
+    assertEquals(
+        "T",
         ((TypeVariable<?>) Types.getIterableParameter(A.class.getField("atv").getGenericType()))
             .getName());
     assertEquals(String.class, Types.getIterableParameter(A.class.getField("i").getGenericType()));
     assertEquals(String.class, Types.getIterableParameter(A.class.getField("a").getGenericType()));
-    assertEquals("E",
+    assertEquals(
+        "E",
         ((TypeVariable<?>) Types.getIterableParameter(A.class.getField("aNoType").getGenericType()))
             .getName());
-    assertEquals(Integer.class, Types.getArrayComponentType(
-        Types.getIterableParameter(A.class.getField("arr").getGenericType())));
-    assertEquals("T",
+    assertEquals(
+        Integer.class,
+        Types.getArrayComponentType(
+            Types.getIterableParameter(A.class.getField("arr").getGenericType())));
+    assertEquals(
+        "T",
         ((GenericArrayType) Types.getIterableParameter(A.class.getField("tarr").getGenericType()))
-            .getGenericComponentType().toString());
-    assertEquals(ArrayList.class,
+            .getGenericComponentType()
+            .toString());
+    assertEquals(
+        ArrayList.class,
         ((ParameterizedType) Types.getIterableParameter(A.class.getField("list").getGenericType()))
             .getRawType());
-    assertEquals(Number.class,
+    assertEquals(
+        Number.class,
         ((WildcardType) Types.getIterableParameter(A.class.getField("wild").getGenericType()))
             .getUpperBounds()[0]);
   }
@@ -191,8 +196,10 @@ public class TypesTest extends TestCase {
   public class C<T> {
     public Map<String, String> i;
     public ArrayMap<String, String> a;
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     public ArrayMap aNoType;
+
     public TreeMap<String, ? extends Number> wild;
     public Vector<Integer[]> arr;
     public HashMap<String, T[]> tarr;
@@ -201,29 +208,38 @@ public class TypesTest extends TestCase {
     public ArrayMap<String, T> atv;
   }
 
-  public class D extends C<DateTime> {
-  }
+  public class D extends C<DateTime> {}
 
   public void testGetMapParameter() throws Exception {
-    assertEquals("T",
+    assertEquals(
+        "T",
         ((TypeVariable<?>) Types.getMapValueParameter(C.class.getField("tv").getGenericType()))
             .getName());
-    assertEquals("T",
+    assertEquals(
+        "T",
         ((TypeVariable<?>) Types.getMapValueParameter(C.class.getField("atv").getGenericType()))
             .getName());
     assertEquals(String.class, Types.getMapValueParameter(C.class.getField("i").getGenericType()));
     assertEquals(String.class, Types.getMapValueParameter(C.class.getField("a").getGenericType()));
-    assertEquals("V",
+    assertEquals(
+        "V",
         ((TypeVariable<?>) Types.getMapValueParameter(C.class.getField("aNoType").getGenericType()))
             .getName());
-    assertEquals(Integer.class, Types.getArrayComponentType(
-        Types.getIterableParameter(A.class.getField("arr").getGenericType())));
-    assertEquals("T", ((GenericArrayType) Types.getMapValueParameter(
-        C.class.getField("tarr").getGenericType())).getGenericComponentType().toString());
-    assertEquals(ArrayList.class,
+    assertEquals(
+        Integer.class,
+        Types.getArrayComponentType(
+            Types.getIterableParameter(A.class.getField("arr").getGenericType())));
+    assertEquals(
+        "T",
+        ((GenericArrayType) Types.getMapValueParameter(C.class.getField("tarr").getGenericType()))
+            .getGenericComponentType()
+            .toString());
+    assertEquals(
+        ArrayList.class,
         ((ParameterizedType) Types.getMapValueParameter(C.class.getField("list").getGenericType()))
             .getRawType());
-    assertEquals(Number.class,
+    assertEquals(
+        Number.class,
         ((WildcardType) Types.getMapValueParameter(C.class.getField("wild").getGenericType()))
             .getUpperBounds()[0]);
   }
@@ -237,10 +253,13 @@ public class TypesTest extends TestCase {
 
   public void testToArray() {
     assertTrue(
-        Arrays.equals(new String[] {"a", "b"},
+        Arrays.equals(
+            new String[] {"a", "b"},
             (String[]) Types.toArray(ImmutableList.of("a", "b"), String.class)));
-    assertTrue(Arrays.equals(
-        new Integer[] {1, 2}, (Integer[]) Types.toArray(ImmutableList.of(1, 2), Integer.class)));
+    assertTrue(
+        Arrays.equals(
+            new Integer[] {1, 2},
+            (Integer[]) Types.toArray(ImmutableList.of(1, 2), Integer.class)));
     assertTrue(
         Arrays.equals(new int[] {1, 2}, (int[]) Types.toArray(ImmutableList.of(1, 2), int.class)));
     int[][] arr = (int[][]) Types.toArray(ImmutableList.of(new int[] {1, 2}), int[].class);

@@ -17,10 +17,8 @@ package com.google.api.client.util;
 /**
  * Nano clock which can be used to measure elapsed time in nanoseconds.
  *
- * <p>
- * The default system implementation can be accessed at {@link #SYSTEM}. Alternative implementations
- * may be used for testing.
- * </p>
+ * <p>The default system implementation can be accessed at {@link #SYSTEM}. Alternative
+ * implementations may be used for testing.
  *
  * @since 1.14
  * @author Yaniv Inbar
@@ -36,9 +34,10 @@ public interface NanoClock {
   /**
    * Provides the default System implementation of a nano clock by using {@link System#nanoTime()}.
    */
-  NanoClock SYSTEM = new NanoClock() {
-    public long nanoTime() {
-      return System.nanoTime();
-    }
-  };
+  NanoClock SYSTEM =
+      new NanoClock() {
+        public long nanoTime() {
+          return System.nanoTime();
+        }
+      };
 }

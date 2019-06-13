@@ -22,24 +22,23 @@ import java.lang.annotation.Target;
 /**
  * Use this annotation to specify that a field is a data key, optionally providing the data key name
  * to use.
- * <p>
- * If the data key name is not specified, the default is the Java field's name. For example:
- * </p>
+ *
+ * <p>If the data key name is not specified, the default is the Java field's name. For example:
  *
  * <pre><code>
-  public class A {
-
-    // uses data key name of "dataKeyNameMatchesFieldName"
-    &#64;Key
-    public String dataKeyNameMatchesFieldName;
-
-    // uses data key name of "some_other_name"
-    &#64;Key("some_other_name")
-    private String dataKeyNameIsOverriden;
-
-    // not a data key
-    private String notADataKey;
-  }
+ * public class A {
+ *
+ * // uses data key name of "dataKeyNameMatchesFieldName"
+ * &#64;Key
+ * public String dataKeyNameMatchesFieldName;
+ *
+ * // uses data key name of "some_other_name"
+ * &#64;Key("some_other_name")
+ * private String dataKeyNameIsOverridden;
+ *
+ * // not a data key
+ * private String notADataKey;
+ * }
  * </code></pre>
  *
  * @since 1.0

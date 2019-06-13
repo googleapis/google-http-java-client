@@ -34,8 +34,7 @@ import junit.framework.TestCase;
  */
 public class UrlEncodedParserTest extends TestCase {
 
-  public UrlEncodedParserTest() {
-  }
+  public UrlEncodedParserTest() {}
 
   public UrlEncodedParserTest(String name) {
     super(name);
@@ -43,36 +42,32 @@ public class UrlEncodedParserTest extends TestCase {
 
   public static class Simple {
 
-    @Key
-    Void v;
+    @Key Void v;
 
-    @Key
-    String a;
+    @Key String a;
 
-    @Key
-    String b;
+    @Key String b;
 
-    @Key
-    String c;
+    @Key String c;
 
-    @Key
-    List<String> q;
+    @Key List<String> q;
 
-    @Key
-    String[] r;
+    @Key String[] r;
 
-    @Key
-    Object o;
+    @Key Object o;
 
     @Override
     public boolean equals(Object obj) {
       Simple other = (Simple) obj;
-      return Objects.equal(a, other.a) && Objects.equal(b, other.b) && Objects.equal(c, other.c)
-          && Objects.equal(q, other.q) && Arrays.equals(r, other.r) && Objects.equal(o, other.o);
+      return Objects.equal(a, other.a)
+          && Objects.equal(b, other.b)
+          && Objects.equal(c, other.c)
+          && Objects.equal(q, other.q)
+          && Arrays.equals(r, other.r)
+          && Objects.equal(o, other.o);
     }
 
-    public Simple() {
-    }
+    public Simple() {}
 
     @Override
     public String toString() {
@@ -88,20 +83,15 @@ public class UrlEncodedParserTest extends TestCase {
   }
 
   public static class Generic extends GenericData {
-    @Key
-    String a;
+    @Key String a;
 
-    @Key
-    String b;
+    @Key String b;
 
-    @Key
-    String c;
+    @Key String c;
 
-    @Key
-    List<String> q;
+    @Key List<String> q;
 
-    @Key
-    Object o;
+    @Key Object o;
 
     @Override
     public Generic set(String fieldName, Object value) {
@@ -169,7 +159,6 @@ public class UrlEncodedParserTest extends TestCase {
   }
 
   public enum E {
-
     @Value
     VALUE,
     @Value("other")
@@ -177,10 +166,8 @@ public class UrlEncodedParserTest extends TestCase {
   }
 
   public static class EnumValue extends GenericData {
-    @Key
-    public E value;
-    @Key
-    public E otherValue;
+    @Key public E value;
+    @Key public E otherValue;
 
     @Override
     public EnumValue set(String fieldName, Object value) {

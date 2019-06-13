@@ -21,40 +21,35 @@ import java.lang.annotation.Target;
 /**
  * Use this annotation to indicate that a public API (class, method or field) is beta.
  *
- * <p>
- * Beta API is subject to incompatible changes or removal in the future. It may also mean
- * that the server features it depends on are potentially subject to breakage at any time.
- * </p>
+ * <p>Beta API is subject to incompatible changes or removal in the future. It may also mean that
+ * the server features it depends on are potentially subject to breakage at any time.
  *
- * <p>
- * That API is exempt from any compatibility guarantees made by its containing library. Read
+ * <p>That API is exempt from any compatibility guarantees made by its containing library. Read
  * carefully the JavaDoc of the API bearing this annotation for better understanding of the risk.
- * </p>
  *
- * <p>
- * To provide a smoother upgrade path when we make incompatible changes to beta API,
- * whenever possible we try to deprecate the old beta API in the first minor release, and
- * then remove it in the second minor release.
- * </p>
+ * <p>To provide a smoother upgrade path when we make incompatible changes to beta API, whenever
+ * possible we try to deprecate the old beta API in the first minor release, and then remove it in
+ * the second minor release.
  *
- * <p>
- * It is generally inadvisable for other non-beta libraries to use beta API from
- * this library. The problem is that other libraries don't have control over the version of this
- * library being used in client applications, and if the wrong version of this library is used, it
- * has the potential to break client applications.
- * </p>
+ * <p>It is generally inadvisable for other non-beta libraries to use beta API from this library.
+ * The problem is that other libraries don't have control over the version of this library being
+ * used in client applications, and if the wrong version of this library is used, it has the
+ * potential to break client applications.
  *
- * <p>
- * You may use the google-http-client-findbugs plugin to find usages of API bearing this annotation.
- * </p>
+ * <p>You may use the google-http-client-findbugs plugin to find usages of API bearing this
+ * annotation.
  *
  * @since 1.15
  * @author Eyal Peled
  */
-@Target(value = {
-    ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
-    ElementType.TYPE, ElementType.PACKAGE})
+@Target(
+    value = {
+      ElementType.ANNOTATION_TYPE,
+      ElementType.CONSTRUCTOR,
+      ElementType.FIELD,
+      ElementType.METHOD,
+      ElementType.TYPE,
+      ElementType.PACKAGE
+    })
 @Documented
-public @interface Beta {
-
-}
+public @interface Beta {}

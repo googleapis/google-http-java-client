@@ -9,7 +9,7 @@
   </parent>
   <groupId>com.google.http-client</groupId>
   <artifactId>google-http-client-parent</artifactId>
-  <version>1.27.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
+  <version>1.30.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
   <packaging>pom</packaging>
   <name>Parent for the Google HTTP Client Library for Java</name>
 
@@ -21,10 +21,6 @@
   </issueManagement>
 
   <inceptionYear>2011</inceptionYear>
-
-  <prerequisites>
-    <maven>3.5.4</maven>
-  </prerequisites>
 
   <scm>
     <connection>scm:git:https://github.com/googleapis/google-http-java-client.git</connection>
@@ -61,13 +57,10 @@
     <module>google-http-client-assembly</module>
     <module>google-http-client-appengine</module>
     <module>google-http-client-android</module>
-    <module>google-http-client-apache</module>
-    <module>google-http-client-apache-legacy</module>
+    <module>google-http-client-apache-v2</module>
     <module>google-http-client-protobuf</module>
     <module>google-http-client-gson</module>
-    <module>google-http-client-jackson</module>
     <module>google-http-client-jackson2</module>
-    <module>google-http-client-jdo</module>
     <module>google-http-client-xml</module>
 
     <module>google-http-client-findbugs</module>
@@ -126,7 +119,7 @@
       <dependency>
         <groupId>com.google.truth</groupId>
         <artifactId>truth</artifactId>
-        <version>0.42</version>
+        <version>0.45</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -155,11 +148,6 @@
         <version>${project.httpclient.version}</version>
       </dependency>
       <dependency>
-        <groupId>commons-codec</groupId>
-        <artifactId>commons-codec</artifactId>
-        <version>${project.commons-codec.version}</version>
-      </dependency>
-      <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>${project.guava.version}</version>
@@ -182,22 +170,22 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-apache</artifactId>
-        <version>${project.version}</version>
+        <artifactId>google-http-client-apache-v2</artifactId>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-appengine</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-android</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
@@ -207,37 +195,27 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-gson</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-jackson</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-jackson2</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-jdo</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-xml</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-findbugs</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-test</artifactId>
-        <version>${project.version}</version>
+        <version>${project.http-client.version}</version>
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
@@ -245,34 +223,14 @@
         <version>1.10.19</version>
       </dependency>
       <dependency>
-        <groupId>javax.jdo</groupId>
-        <artifactId>jdo2-api</artifactId>
-        <version>${project.jdo2-api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.datanucleus</groupId>
-        <artifactId>datanucleus-core</artifactId>
-        <version>${project.datanucleus-core.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.datanucleus</groupId>
-        <artifactId>datanucleus-api-jdo</artifactId>
-        <version>${project.datanucleus-api-jdo.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.datanucleus</groupId>
-        <artifactId>datanucleus-rdbms</artifactId>
-        <version>${project.datanucleus-rdbms.version}</version>
-      </dependency>
-      <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
-        <version>5.1.18</version>
+        <version>8.0.16</version>
       </dependency>
       <dependency>
         <groupId>com.google.j2objc</groupId>
         <artifactId>j2objc-annotations</artifactId>
-        <version>1.1</version>
+        <version>1.3</version>
       </dependency>
       <dependency>
         <groupId>io.opencensus</groupId>
@@ -294,12 +252,12 @@
         <plugin>
           <groupId>org.sonatype.plugins</groupId>
           <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>1.6.6</version>
+          <version>1.6.8</version>
           <extensions>true</extensions>
           <configuration>
             <serverId>ossrh</serverId>
             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-            <autoReleaseAfterClose>false</autoReleaseAfterClose>
+            <autoReleaseAfterClose>${deploy.autorelease}</autoReleaseAfterClose>
           </configuration>
         </plugin>
         <plugin>
@@ -326,7 +284,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>2.2.1</version>
+          <version>3.1.0</version>
           <executions>
             <execution>
               <id>attach-sources</id>
@@ -339,7 +297,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.0.1</version>
+          <version>3.1.0</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>
@@ -352,7 +310,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
+          <version>3.1.2</version>
           <executions>
             <execution>
               <goals>
@@ -363,15 +321,16 @@
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.19.1</version>
+          <version>3.0.0-M3</version>
           <configuration>
             <argLine>-Xmx1024m</argLine>
             <reportNameSuffix>sponge_log</reportNameSuffix>
           </configuration>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>2.6</version>
+          <version>3.0.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -386,25 +345,45 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>animal-sniffer-maven-plugin</artifactId>
-          <version>1.9</version>
+          <version>1.17</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>2.7</version>
+          <version>3.0.0</version>
         </plugin>
         <plugin>
-          <groupId>org.datanucleus</groupId>
-          <artifactId>maven-datanucleus-plugin</artifactId>
-          <version>${project.datanucleus-maven-plugin.version}</version>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.7.1</version>
         </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M2</version><executions>
+        <execution>
+          <id>enforce-maven</id>
+          <goals>
+            <goal>enforce</goal>
+          </goals>
+          <configuration>
+            <rules>
+              <requireMavenVersion>
+                <version>[3.5.4,4.0.0)</version>
+              </requireMavenVersion>
+            </rules>
+          </configuration>
+        </execution>
+      </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <doclint>none</doclint>
+          <source>7</source>
         </configuration>
         <executions>
           <execution>
@@ -417,11 +396,9 @@
               <links>
                 <link>http://download.oracle.com/javase/7/docs/api/</link>
                 <link>http://cloud.google.com/appengine/docs/java/javadoc</link>
-                <link>https://jar-download.com/artifacts/org.codehaus.jackson/jackson-core-asl/${project.jackson-core-asl.version}/documentation</link>
                 <link>http://fasterxml.github.com/jackson-core/javadoc/${project.jackson-core2.version}/</link>
-                <link>https://www.javadoc.io/doc/com.google.code.gson/gson/${project.gson.version}</link>
+                <link>https://static.javadoc.io/doc/com.google.code.gson/gson/${project.gson.version}</link>
                 <link>https://google.github.io/guava/releases/${project.guava.version}/api/docs/</link>
-                <link>https://commons.apache.org/proper/commons-codec/archives/${project.commons-codec.version}/apidocs/</link>
               </links>
               <doctitle>Google HTTP Client Library for Java ${project.version}</doctitle>
               <excludePackageNames>com.google.api.client.findbugs:com.google.api.client.test.:com.google.api.services</excludePackageNames>
@@ -448,16 +425,8 @@
                   <packages>com.google.api.client.json.gson*</packages>
                 </group>
                 <group>
-                  <title>google-http-client-jackson</title>
-                  <packages>com.google.api.client.json.jackson.*</packages>
-                </group>
-                <group>
                   <title>google-http-client-jackson2</title>
                   <packages>com.google.api.client.json.jackson2.*</packages>
-                </group>
-                <group>
-                  <title>google-http-client-jdo</title>
-                  <packages>com.google.api.client.extensions.jdo*</packages>
                 </group>
                 <group>
                   <title>google-http-client-xml</title>
@@ -473,9 +442,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
-          <configLocation>checkstyle.xml</configLocation>
+          <configLocation>${project.root-directory}/checkstyle.xml</configLocation>
           <consoleOutput>true</consoleOutput>
-          <suppressionsLocation>${basedir}/../checkstyle-suppressions.xml</suppressionsLocation>
+          <suppressionsLocation>${project.root-directory}/checkstyle-suppressions.xml</suppressionsLocation>
         </configuration>
         <executions>
           <execution>
@@ -494,7 +463,7 @@
             <plugin>
               <groupId>com.google.http-client</groupId>
               <artifactId>google-http-client-findbugs</artifactId>
-              <version>${project.version}</version>
+              <version>${project.http-client.version}</version>
             </plugin>
           </plugins>
         </configuration>
@@ -533,12 +502,35 @@
           </execution>
         </executions>
       </plugin>
+      <!-- Build the dependencies report at package time (needed for the assembly artifact). -->
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>dependencies</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
       </plugin>
+      <plugin>
+        <groupId>com.coveo</groupId>
+        <artifactId>fmt-maven-plugin</artifactId>
+        <version>2.9</version>
+        <configuration>
+          <style>google</style>
+          <verbose>true</verbose>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+
   <properties>
     <!--
       NOTE: if you make a change to these versions, you MUST make the same change to:
@@ -549,24 +541,20 @@
       - google-api-java-client/google-api-client-assembly/android-properties (make the filenames match the version here)
       - Internally, update the default features.json file
     -->
-    <project.appengine.version>1.9.64</project.appengine.version>
+    <project.http-client.version>1.30.2-SNAPSHOT</project.http-client.version><!-- {x-version-update:google-http-client-parent:current} -->
+    <project.appengine.version>1.9.71</project.appengine.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.jsr305.version>3.0.2</project.jsr305.version>
-    <project.gson.version>2.1</project.gson.version>
-    <project.jackson-core-asl.version>1.9.13</project.jackson-core-asl.version>
-    <project.jackson-core2.version>2.9.6</project.jackson-core2.version>
-    <project.protobuf-java.version>2.6.1</project.protobuf-java.version>
+    <project.gson.version>2.8.5</project.gson.version>
+    <project.jackson-core2.version>2.9.9</project.jackson-core2.version>
+    <project.protobuf-java.version>3.6.1</project.protobuf-java.version>
     <project.guava.version>26.0-android</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
-    <project.commons-logging.version>1.1.1</project.commons-logging.version>
-    <project.commons-codec.version>1.11</project.commons-codec.version>
-    <project.httpclient.version>4.5.5</project.httpclient.version>
-    <project.jdo2-api.version>2.3-eb</project.jdo2-api.version>
-    <project.datanucleus-core.version>3.2.2</project.datanucleus-core.version>
-    <project.datanucleus-api-jdo.version>3.2.1</project.datanucleus-api-jdo.version>
-    <project.datanucleus-rdbms.version>3.2.1</project.datanucleus-rdbms.version>
-    <project.datanucleus-maven-plugin.version>4.0.3</project.datanucleus-maven-plugin.version>
-    <project.opencensus.version>0.18.0</project.opencensus.version>
+    <project.commons-logging.version>1.2</project.commons-logging.version>
+    <project.httpclient.version>4.5.9</project.httpclient.version>
+    <project.opencensus.version>0.21.0</project.opencensus.version>
+    <project.root-directory>..</project.root-directory>
+    <deploy.autorelease>false</deploy.autorelease>
   </properties>
 
   <profiles>
@@ -602,6 +590,18 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <!-- set project.root-directory property based on where we are -->
+    <profile>
+      <id>root-directory</id>
+      <activation>
+        <file>
+          <exists>checkstyle-suppressions.xml</exists>
+        </file>
+      </activation>
+      <properties>
+        <project.root-directory>.</project.root-directory>
+      </properties>
     </profile>
   </profiles>
 </project>

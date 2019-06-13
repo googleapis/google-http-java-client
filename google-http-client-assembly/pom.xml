@@ -4,12 +4,12 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.27.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
+    <version>1.30.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>com.google.http-client</groupId>
   <artifactId>google-http-client-assembly</artifactId>
-  <version>1.27.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-assembly:current} -->
+  <version>1.30.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-assembly:current} -->
   <packaging>pom</packaging>
   <name>Assembly for the Google HTTP Client Library for Java</name>
 
@@ -20,15 +20,15 @@
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-appengine</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-android</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-protobuf</artifactId>
+      <artifactId>google-http-client-apache-v2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-appengine</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
@@ -36,15 +36,11 @@
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-jackson</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-jackson2</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-jdo</artifactId>
+      <artifactId>google-http-client-protobuf</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
@@ -53,19 +49,6 @@
   </dependencies>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <configuration>
-            <descriptors>
-              <descriptor>assembly.xml</descriptor>
-            </descriptors>
-            <finalName>google-http-java-client</finalName>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -79,7 +62,7 @@
             <configuration>
               <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
               <outputDirectory>${project.build.directory}/libs</outputDirectory>
-              <excludeArtifactIds>android,opengl-api,xmlParserAPIs,commons-codec,json</excludeArtifactIds>
+              <excludeArtifactIds>android,opengl-api,xmlParserAPIs,json</excludeArtifactIds>
             </configuration>
           </execution>
           <execution>
@@ -92,7 +75,7 @@
               <classifier>sources</classifier>
               <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
               <outputDirectory>${project.build.directory}/libs-sources</outputDirectory>
-              <excludeArtifactIds>android,opengl-api,xmlParserAPIs,commons-codec,json</excludeArtifactIds>
+              <excludeArtifactIds>android,opengl-api,xmlParserAPIs,json</excludeArtifactIds>
             </configuration>
           </execution>
         </executions>
@@ -108,6 +91,12 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <descriptors>
+            <descriptor>assembly.xml</descriptor>
+          </descriptors>
+          <finalName>google-http-java-client</finalName>
+        </configuration>
       </plugin>
     </plugins>
   </build>

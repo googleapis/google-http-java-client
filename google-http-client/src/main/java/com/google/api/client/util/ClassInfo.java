@@ -24,14 +24,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeSet;
-import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Computes class information to determine data key name/value pairs associated with the class.
  *
- * <p>
- * Implementation is thread-safe.
- * </p>
+ * <p>Implementation is thread-safe.
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -39,11 +38,12 @@ import java.util.WeakHashMap;
 public final class ClassInfo {
 
   /** Class information cache, with case-sensitive field names. */
-  private static final Map<Class<?>, ClassInfo> CACHE = new WeakHashMap<Class<?>, ClassInfo>();
+  private static final ConcurrentMap<Class<?>, ClassInfo> CACHE =
+      new ConcurrentHashMap<Class<?>, ClassInfo>();
 
   /** Class information cache, with case-insensitive fields names. */
-  private static final Map<Class<?>, ClassInfo> CACHE_IGNORE_CASE =
-      new WeakHashMap<Class<?>, ClassInfo>();
+  private static final ConcurrentMap<Class<?>, ClassInfo> CACHE_IGNORE_CASE =
+      new ConcurrentHashMap<Class<?>, ClassInfo>();
 
   /** Class. */
   private final Class<?> clazz;
@@ -83,16 +83,15 @@ public final class ClassInfo {
     if (underlyingClass == null) {
       return null;
     }
-    final Map<Class<?>, ClassInfo> cache = ignoreCase ? CACHE_IGNORE_CASE : CACHE;
-    ClassInfo classInfo;
-    synchronized (cache) {
-      classInfo = cache.get(underlyingClass);
-      if (classInfo == null) {
-        classInfo = new ClassInfo(underlyingClass, ignoreCase);
-        cache.put(underlyingClass, classInfo);
-      }
-    }
-    return classInfo;
+    final ConcurrentMap<Class<?>, ClassInfo> cache = ignoreCase ? CACHE_IGNORE_CASE : CACHE;
+
+    // Logic copied from ConcurrentMap.computeIfAbsent
+    ClassInfo v, newValue;
+    return ((v = cache.get(underlyingClass)) == null
+            && (newValue = new ClassInfo(underlyingClass, ignoreCase)) != null
+            && (v = cache.putIfAbsent(underlyingClass, newValue)) == null)
+        ? newValue
+        : v;
   }
 
   /**
@@ -150,8 +149,8 @@ public final class ClassInfo {
   }
 
   /**
-   * Returns an unmodifiable sorted set (with any possible {@code null} member first) of
-   * {@link FieldInfo#getName() names}.
+   * Returns an unmodifiable sorted set (with any possible {@code null} member first) of {@link
+   * FieldInfo#getName() names}.
    */
   public Collection<String> getNames() {
     return names;
@@ -163,11 +162,15 @@ public final class ClassInfo {
     Preconditions.checkArgument(
         !ignoreCase || !srcClass.isEnum(), "cannot ignore case on an enum: " + srcClass);
     // name set has a special comparator to keep null first
-    TreeSet<String> nameSet = new TreeSet<String>(new Comparator<String>() {
-      public int compare(String s0, String s1) {
-        return Objects.equal(s0, s1) ? 0 : s0 == null ? -1 : s1 == null ? 1 : s0.compareTo(s1);
-      }
-    });
+    TreeSet<String> nameSet =
+        new TreeSet<String>(
+            new Comparator<String>() {
+              public int compare(String s0, String s1) {
+                return Objects.equal(s0, s1)
+                    ? 0
+                    : s0 == null ? -1 : s1 == null ? 1 : s0.compareTo(s1);
+              }
+            });
     // iterate over declared fields
     for (Field field : srcClass.getDeclaredFields()) {
       FieldInfo fieldInfo = FieldInfo.of(field);
@@ -179,7 +182,8 @@ public final class ClassInfo {
         fieldName = fieldName.toLowerCase(Locale.US).intern();
       }
       FieldInfo conflictingFieldInfo = nameToFieldInfoMap.get(fieldName);
-      Preconditions.checkArgument(conflictingFieldInfo == null,
+      Preconditions.checkArgument(
+          conflictingFieldInfo == null,
           "two fields have the same %sname <%s>: %s and %s",
           ignoreCase ? "case-insensitive " : "",
           fieldName,
@@ -200,17 +204,18 @@ public final class ClassInfo {
         }
       }
     }
-    names = nameSet.isEmpty() ? Collections.<String>emptyList() : Collections.unmodifiableList(
-        new ArrayList<String>(nameSet));
+    names =
+        nameSet.isEmpty()
+            ? Collections.<String>emptyList()
+            : Collections.unmodifiableList(new ArrayList<String>(nameSet));
   }
 
   /**
    * Returns an unmodifiable collection of the {@code FieldInfo}s for this class, without any
    * guarantee of order.
    *
-   * <p>
-   * If you need sorted order, instead use {@link #getNames()} with {@link #getFieldInfo(String)}.
-   * </p>
+   * <p>If you need sorted order, instead use {@link #getNames()} with {@link
+   * #getFieldInfo(String)}.
    *
    * @since 1.16
    */

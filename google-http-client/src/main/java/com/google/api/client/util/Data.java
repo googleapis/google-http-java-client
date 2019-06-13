@@ -83,6 +83,7 @@ public class Data {
   /** Cache of the magic null object for the given Java class. */
   private static final ConcurrentHashMap<Class<?>, Object> NULL_CACHE =
       new ConcurrentHashMap<Class<?>, Object>();
+
   static {
     // special cases for some primitives
     NULL_CACHE.put(Boolean.class, NULL_BOOLEAN);
@@ -108,39 +109,50 @@ public class Data {
    * @throws IllegalArgumentException if unable to create a new instance
    */
   public static <T> T nullOf(Class<T> objClass) {
+    // ConcurrentMap.computeIfAbsent is explicitly NOT used in the following logic. The
+    // ConcurrentHashMap implementation of that method BLOCKS if the mappingFunction triggers
+    // modification of the map which createNullInstance can do depending on the state of class
+    // loading.
     Object result = NULL_CACHE.get(objClass);
     if (result == null) {
-      synchronized (NULL_CACHE) {
-        result = NULL_CACHE.get(objClass);
-        if (result == null) {
-          if (objClass.isArray()) {
-            // arrays are special because we need to compute both the dimension and component type
-            int dims = 0;
-            Class<?> componentType = objClass;
-            do {
-              componentType = componentType.getComponentType();
-              dims++;
-            } while (componentType.isArray());
-            result = Array.newInstance(componentType, new int[dims]);
-          } else if (objClass.isEnum()) {
-            // enum requires look for constant with @NullValue
-            FieldInfo fieldInfo = ClassInfo.of(objClass).getFieldInfo(null);
-            Preconditions.checkNotNull(
-                fieldInfo, "enum missing constant with @NullValue annotation: %s", objClass);
-            @SuppressWarnings({"unchecked", "rawtypes"})
-            Enum e = fieldInfo.<Enum>enumValue();
-            result = e;
-          } else {
-            // other classes are simpler
-            result = Types.newInstance(objClass);
-          }
-          NULL_CACHE.put(objClass, result);
-        }
+      // If nullOf is called concurrently for the same class createNullInstance may be executed
+      // multiple times. However putIfAbsent ensures that no matter what the concurrent access
+      // pattern looks like callers always get a singleton instance returned. Since
+      // createNullInstance has no side-effects beyond triggering class loading this multiple-call
+      // pattern is safe.
+      Object newValue = createNullInstance(objClass);
+      result = NULL_CACHE.putIfAbsent(objClass, newValue);
+      if (result == null) {
+        result = newValue;
       }
     }
     @SuppressWarnings("unchecked")
     T tResult = (T) result;
     return tResult;
+  }
+
+  private static Object createNullInstance(Class<?> objClass) {
+    if (objClass.isArray()) {
+      // arrays are special because we need to compute both the dimension and component type
+      int dims = 0;
+      Class<?> componentType = objClass;
+      do {
+        componentType = componentType.getComponentType();
+        dims++;
+      } while (componentType.isArray());
+      return Array.newInstance(componentType, new int[dims]);
+    }
+    if (objClass.isEnum()) {
+      // enum requires look for constant with @NullValue
+      FieldInfo fieldInfo = ClassInfo.of(objClass).getFieldInfo(null);
+      Preconditions.checkNotNull(
+          fieldInfo, "enum missing constant with @NullValue annotation: %s", objClass);
+      @SuppressWarnings({"unchecked", "rawtypes"})
+      Enum e = fieldInfo.<Enum>enumValue();
+      return e;
+    }
+    // other classes are simpler
+    return Types.newInstance(objClass);
   }
 
   /**
@@ -159,17 +171,15 @@ public class Data {
    * Returns the map to use for the given data that is treated as a map from string key to some
    * value.
    *
-   * <p>
-   * If the input is {@code null}, it returns an empty map. If the input is a map, it simply returns
-   * the input. Otherwise, it will create a map view using reflection that is backed by the object,
-   * so that any changes to the map will be reflected on the object. The map keys of that map view
-   * are based on the {@link Key} annotation, and null is not a possible map value, although the
-   * magic null instance is possible (see {@link #nullOf(Class)} and {@link #isNull(Object)}).
-   * Iteration order of the data keys is based on the sorted (ascending) key names of the declared
-   * fields. Note that since the map view is backed by the object, and that the object may change,
-   * many methods in the map view must recompute the field values using reflection, for example
-   * {@link Map#size()} must check the number of non-null fields.
-   * </p>
+   * <p>If the input is {@code null}, it returns an empty map. If the input is a map, it simply
+   * returns the input. Otherwise, it will create a map view using reflection that is backed by the
+   * object, so that any changes to the map will be reflected on the object. The map keys of that
+   * map view are based on the {@link Key} annotation, and null is not a possible map value,
+   * although the magic null instance is possible (see {@link #nullOf(Class)} and {@link
+   * #isNull(Object)}). Iteration order of the data keys is based on the sorted (ascending) key
+   * names of the declared fields. Note that since the map view is backed by the object, and that
+   * the object may change, many methods in the map view must recompute the field values using
+   * reflection, for example {@link Map#size()} must check the number of non-null fields.
    *
    * @param data any key value data, represented by an object or a map, or {@code null}
    * @return key/value map to use
@@ -190,16 +200,14 @@ public class Data {
   /**
    * Returns a deep clone of the given key/value data, such that the result is a completely
    * independent copy.
-   * <p>
-   * This should not be used directly in the implementation of {@code Object.clone()}. Instead use
-   * {@link #deepCopy(Object, Object)} for that purpose.
-   * </p>
-   * <p>
-   * Final fields cannot be changed and therefore their value won't be copied.
-   * </p>
+   *
+   * <p>This should not be used directly in the implementation of {@code Object.clone()}. Instead
+   * use {@link #deepCopy(Object, Object)} for that purpose.
+   *
+   * <p>Final fields cannot be changed and therefore their value won't be copied.
    *
    * @param data key/value data object or map to clone or {@code null} for a {@code null} return
-   *        value
+   *     value
    * @return deep clone or {@code null} for {@code null} input
    */
   @SuppressWarnings("unchecked")
@@ -236,30 +244,27 @@ public class Data {
    * Makes a deep copy of the given source object into the destination object that is assumed to be
    * constructed using {@code Object.clone()}.
    *
-   * <p>
-   * Example usage of this method in {@code Object.clone()}:
-   * </p>
+   * <p>Example usage of this method in {@code Object.clone()}:
    *
    * <pre>
-  &#64;Override
-  public MyObject clone() {
-    try {
-      &#64;SuppressWarnings("unchecked")
-      MyObject result = (MyObject) super.clone();
-      Data.deepCopy(this, result);
-      return result;
-    } catch (CloneNotSupportedException e) {
-      throw new IllegalStateException(e);
-    }
-  }
+   * &#64;Override
+   * public MyObject clone() {
+   * try {
+   * &#64;SuppressWarnings("unchecked")
+   * MyObject result = (MyObject) super.clone();
+   * Data.deepCopy(this, result);
+   * return result;
+   * } catch (CloneNotSupportedException e) {
+   * throw new IllegalStateException(e);
+   * }
+   * }
    * </pre>
-   * <p>
-   * Final fields cannot be changed and therefore their value won't be copied.
-   * </p>
+   *
+   * <p>Final fields cannot be changed and therefore their value won't be copied.
    *
    * @param src source object
    * @param dest destination object of identical type as source object, and any contained arrays
-   *        must be the same length
+   *     must be the same length
    */
   public static void deepCopy(Object src, Object dest) {
     Class<?> srcClass = src.getClass();
@@ -332,12 +337,10 @@ public class Data {
    * Returns whether the given type is one of the supported primitive classes like number and
    * date/time, or is a wildcard of one.
    *
-   * <p>
-   * A primitive class is any class for whom {@link Class#isPrimitive()} is true, as well as any
-   * classes of type: {@link Character}, {@link String}, {@link Integer}, {@link Long},
-   * {@link Short}, {@link Byte}, {@link Float}, {@link Double}, {@link BigInteger},
-   * {@link BigDecimal}, {@link Boolean}, and {@link DateTime}.
-   * </p>
+   * <p>A primitive class is any class for whom {@link Class#isPrimitive()} is true, as well as any
+   * classes of type: {@link Character}, {@link String}, {@link Integer}, {@link Long}, {@link
+   * Short}, {@link Byte}, {@link Float}, {@link Double}, {@link BigInteger}, {@link BigDecimal},
+   * {@link Boolean}, and {@link DateTime}.
    *
    * @param type type or {@code null} for {@code false} result
    * @return whether it is a primitive
@@ -351,16 +354,24 @@ public class Data {
       return false;
     }
     Class<?> typeClass = (Class<?>) type;
-    return typeClass.isPrimitive() || typeClass == Character.class || typeClass == String.class
-        || typeClass == Integer.class || typeClass == Long.class || typeClass == Short.class
-        || typeClass == Byte.class || typeClass == Float.class || typeClass == Double.class
-        || typeClass == BigInteger.class || typeClass == BigDecimal.class
-        || typeClass == DateTime.class || typeClass == Boolean.class;
+    return typeClass.isPrimitive()
+        || typeClass == Character.class
+        || typeClass == String.class
+        || typeClass == Integer.class
+        || typeClass == Long.class
+        || typeClass == Short.class
+        || typeClass == Byte.class
+        || typeClass == Float.class
+        || typeClass == Double.class
+        || typeClass == BigInteger.class
+        || typeClass == BigDecimal.class
+        || typeClass == DateTime.class
+        || typeClass == Boolean.class;
   }
 
   /**
-   * Returns whether to given value is {@code null} or its class is primitive as defined by
-   * {@link Data#isPrimitive(Type)}.
+   * Returns whether to given value is {@code null} or its class is primitive as defined by {@link
+   * Data#isPrimitive(Type)}.
    */
   public static boolean isValueOfPrimitiveType(Object fieldValue) {
     return fieldValue == null || Data.isPrimitive(fieldValue.getClass());
@@ -368,29 +379,27 @@ public class Data {
 
   /**
    * Parses the given string value based on the given primitive type.
-   * <p>
-   * Types are parsed as follows:
-   * </p>
+   *
+   * <p>Types are parsed as follows:
+   *
    * <ul>
-   * <li>{@link Void}: null</li>
-   * <li>{@code null} or is assignable from {@link String} (like {@link Object}): no parsing</li>
-   * <li>{@code char} or {@link Character}: {@link String#charAt(int) String.charAt}(0) (requires
-   * length to be exactly 1)</li>
-   * <li>{@code boolean} or {@link Boolean}: {@link Boolean#valueOf(String)}</li>
-   * <li>{@code byte} or {@link Byte}: {@link Byte#valueOf(String)}</li>
-   * <li>{@code short} or {@link Short}: {@link Short#valueOf(String)}</li>
-   * <li>{@code int} or {@link Integer}: {@link Integer#valueOf(String)}</li>
-   * <li>{@code long} or {@link Long}: {@link Long#valueOf(String)}</li>
-   * <li>{@code float} or {@link Float}: {@link Float#valueOf(String)}</li>
-   * <li>{@code double} or {@link Double}: {@link Double#valueOf(String)}</li>
-   * <li>{@link BigInteger}: {@link BigInteger#BigInteger(String) BigInteger(String)}</li>
-   * <li>{@link BigDecimal}: {@link BigDecimal#BigDecimal(String) BigDecimal(String)}</li>
-   * <li>{@link DateTime}: {@link DateTime#parseRfc3339(String)}</li>
+   *   <li>{@link Void}: null
+   *   <li>{@code null} or is assignable from {@link String} (like {@link Object}): no parsing
+   *   <li>{@code char} or {@link Character}: {@link String#charAt(int) String.charAt}(0) (requires
+   *       length to be exactly 1)
+   *   <li>{@code boolean} or {@link Boolean}: {@link Boolean#valueOf(String)}
+   *   <li>{@code byte} or {@link Byte}: {@link Byte#valueOf(String)}
+   *   <li>{@code short} or {@link Short}: {@link Short#valueOf(String)}
+   *   <li>{@code int} or {@link Integer}: {@link Integer#valueOf(String)}
+   *   <li>{@code long} or {@link Long}: {@link Long#valueOf(String)}
+   *   <li>{@code float} or {@link Float}: {@link Float#valueOf(String)}
+   *   <li>{@code double} or {@link Double}: {@link Double#valueOf(String)}
+   *   <li>{@link BigInteger}: {@link BigInteger#BigInteger(String) BigInteger(String)}
+   *   <li>{@link BigDecimal}: {@link BigDecimal#BigDecimal(String) BigDecimal(String)}
+   *   <li>{@link DateTime}: {@link DateTime#parseRfc3339(String)}
    * </ul>
    *
-   * <p>
-   * Note that this may not be the right behavior for some use cases.
-   * </p>
+   * <p>Note that this may not be the right behavior for some use cases.
    *
    * @param type primitive type or {@code null} to parse as a string
    * @param stringValue string value to parse or {@code null} for {@code null} result
@@ -403,7 +412,8 @@ public class Data {
       if (primitiveClass == Void.class) {
         return null;
       }
-      if (stringValue == null || primitiveClass == null
+      if (stringValue == null
+          || primitiveClass == null
           || primitiveClass.isAssignableFrom(String.class)) {
         return stringValue;
       }
@@ -446,8 +456,8 @@ public class Data {
       }
       if (primitiveClass.isEnum()) {
         if (!ClassInfo.of(primitiveClass).names.contains(stringValue)) {
-          throw new IllegalArgumentException(String.format("given enum name %s not part of " +
-              "enumeration", stringValue));
+          throw new IllegalArgumentException(
+              String.format("given enum name %s not part of " + "enumeration", stringValue));
         }
         @SuppressWarnings({"unchecked", "rawtypes"})
         Enum result = ClassInfo.of(primitiveClass).getFieldInfo(stringValue).<Enum>enumValue();
@@ -459,15 +469,16 @@ public class Data {
 
   /**
    * Returns a new collection instance for the given type.
-   * <p>
-   * Creates a new collection instance specified for the first input collection class that matches
-   * as follows:
+   *
+   * <p>Creates a new collection instance specified for the first input collection class that
+   * matches as follows:
+   *
    * <ul>
-   * <li>{@code null} or an array or assignable from {@link ArrayList} (like {@link List} or
-   * {@link Collection} or {@link Object}): returns an {@link ArrayList}</li>
-   * <li>assignable from {@link HashSet}: returns a {@link HashSet}</li>
-   * <li>assignable from {@link TreeSet}: returns a {@link TreeSet}</li>
-   * <li>else: calls {@link Types#newInstance(Class)}</li>
+   *   <li>{@code null} or an array or assignable from {@link ArrayList} (like {@link List} or
+   *       {@link Collection} or {@link Object}): returns an {@link ArrayList}
+   *   <li>assignable from {@link HashSet}: returns a {@link HashSet}
+   *   <li>assignable from {@link TreeSet}: returns a {@link TreeSet}
+   *   <li>else: calls {@link Types#newInstance(Class)}
    * </ul>
    *
    * @param type type or {@code null} for {@link ArrayList}.
@@ -482,8 +493,10 @@ public class Data {
       type = ((ParameterizedType) type).getRawType();
     }
     Class<?> collectionClass = type instanceof Class<?> ? (Class<?>) type : null;
-    if (type == null || type instanceof GenericArrayType || collectionClass != null
-        && (collectionClass.isArray() || collectionClass.isAssignableFrom(ArrayList.class))) {
+    if (type == null
+        || type instanceof GenericArrayType
+        || collectionClass != null
+            && (collectionClass.isArray() || collectionClass.isAssignableFrom(ArrayList.class))) {
       return new ArrayList<Object>();
     }
     if (collectionClass == null) {
@@ -502,14 +515,14 @@ public class Data {
 
   /**
    * Returns a new instance of a map based on the given field class.
-   * <p>
-   * Creates a new map instance specified for the first input map class that matches as follows:
-   * </p>
+   *
+   * <p>Creates a new map instance specified for the first input map class that matches as follows:
+   *
    * <ul>
-   * <li>{@code null} or assignable from {@link ArrayMap} (like {@link Map} or {@link Object}):
-   * returns an {@link ArrayMap}</li>
-   * <li>assignable from {@link TreeMap} (like {@link SortedMap}): returns a {@link TreeMap}</li>
-   * <li>else: calls {@link Types#newInstance(Class)}</li>
+   *   <li>{@code null} or assignable from {@link ArrayMap} (like {@link Map} or {@link Object}):
+   *       returns an {@link ArrayMap}
+   *   <li>assignable from {@link TreeMap} (like {@link SortedMap}): returns a {@link TreeMap}
+   *   <li>else: calls {@link Types#newInstance(Class)}
    * </ul>
    *
    * @param mapClass field class
@@ -533,10 +546,10 @@ public class Data {
    * resolved.
    *
    * @param context context list, ordering from least specific to most specific type context, for
-   *        example container class and then its field
+   *     example container class and then its field
    * @param type type or {@code null} for {@code null} result
    * @return resolved type (which may be class, parameterized type, or generic array type, but not
-   *         wildcard type or type variable) or {@code null} for {@code null} input
+   *     wildcard type or type variable) or {@code null} for {@code null} input
    */
   public static Type resolveWildcardTypeOrTypeVariable(List<Type> context, Type type) {
     // first deal with a wildcard, e.g. ? extends Number

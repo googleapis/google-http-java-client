@@ -17,18 +17,15 @@ package com.google.api.client.testing.json;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Mock for {@link JsonGenerator}.
  *
- * <p>
- * Implementation is thread-safe.
- * </p>
+ * <p>Implementation is thread-safe.
  *
  * @author rmistry@google.com (Ravi Mistry)
  * @since 1.15 (since 1.11 as com.google.api.client.testing.http.json.MockJsonGenerator)
@@ -48,70 +45,53 @@ public class MockJsonGenerator extends JsonGenerator {
   }
 
   @Override
-  public void flush() throws IOException {
-  }
+  public void flush() throws IOException {}
 
   @Override
-  public void close() throws IOException {
-  }
+  public void close() throws IOException {}
 
   @Override
-  public void writeStartArray() throws IOException {
-  }
+  public void writeStartArray() throws IOException {}
 
   @Override
-  public void writeEndArray() throws IOException {
-  }
+  public void writeEndArray() throws IOException {}
 
   @Override
-  public void writeStartObject() throws IOException {
-  }
+  public void writeStartObject() throws IOException {}
 
   @Override
-  public void writeEndObject() throws IOException {
-  }
+  public void writeEndObject() throws IOException {}
 
   @Override
-  public void writeFieldName(String name) throws IOException {
-  }
+  public void writeFieldName(String name) throws IOException {}
 
   @Override
-  public void writeNull() throws IOException {
-  }
+  public void writeNull() throws IOException {}
 
   @Override
-  public void writeString(String value) throws IOException {
-  }
+  public void writeString(String value) throws IOException {}
 
   @Override
-  public void writeBoolean(boolean state) throws IOException {
-  }
+  public void writeBoolean(boolean state) throws IOException {}
 
   @Override
-  public void writeNumber(int v) throws IOException {
-  }
+  public void writeNumber(int v) throws IOException {}
 
   @Override
-  public void writeNumber(long v) throws IOException {
-  }
+  public void writeNumber(long v) throws IOException {}
 
   @Override
-  public void writeNumber(BigInteger v) throws IOException {
-  }
+  public void writeNumber(BigInteger v) throws IOException {}
 
   @Override
-  public void writeNumber(float v) throws IOException {
-  }
+  public void writeNumber(float v) throws IOException {}
 
   @Override
-  public void writeNumber(double v) throws IOException {
-  }
+  public void writeNumber(double v) throws IOException {}
 
   @Override
-  public void writeNumber(BigDecimal v) throws IOException {
-  }
+  public void writeNumber(BigDecimal v) throws IOException {}
 
   @Override
-  public void writeNumber(String encodedValue) throws IOException {
-  }
+  public void writeNumber(String encodedValue) throws IOException {}
 }

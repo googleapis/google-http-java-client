@@ -25,22 +25,17 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Memory-efficient map of keys to values with list-style random-access semantics.
  *
- * <p>
- * Supports null keys and values. Conceptually, the keys and values are stored in a simpler array in
- * order to minimize memory use and provide for fast access to a key/value at a certain index (for
- * example {@link #getKey(int)}). However, traditional mapping operations like {@link #get(Object)}
- * and {@link #put(Object, Object)} are slower because they need to look up all key/value pairs in
- * the worst case.
- * </p>
+ * <p>Supports null keys and values. Conceptually, the keys and values are stored in a simpler array
+ * in order to minimize memory use and provide for fast access to a key/value at a certain index
+ * (for example {@link #getKey(int)}). However, traditional mapping operations like {@link
+ * #get(Object)} and {@link #put(Object, Object)} are slower because they need to look up all
+ * key/value pairs in the worst case.
  *
- * <p>
- * Implementation is not thread-safe. For a thread-safe choice instead use an implementation of
+ * <p>Implementation is not thread-safe. For a thread-safe choice instead use an implementation of
  * {@link ConcurrentMap}.
- * </p>
  *
  * @param <K> the type of keys maintained by this map
  * @param <V> the type of mapped values
- *
  * @since 1.0
  * @author Yaniv Inbar
  */
@@ -71,8 +66,8 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
    * Returns a new instance of an array map of the given key value pairs in alternating order. For
    * example: {@code ArrayMap<String, String> map = ArrayMap.of("key1", "value1", "key2", "value2",
    * ...);}.
-   * <p>
-   * WARNING: there is no compile-time checking of the {@code keyValuePairs} parameter to ensure
+   *
+   * <p>WARNING: there is no compile-time checking of the {@code keyValuePairs} parameter to ensure
    * that the keys or values have the correct type, so if the wrong type is passed in, any problems
    * will occur at runtime. Also, there is no checking that the keys are unique, which the caller
    * must ensure is true.
@@ -116,10 +111,10 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
 
   /**
    * Sets the key/value mapping at the given index, overriding any existing key/value mapping.
-   * <p>
-   * There is no checking done to ensure that the key does not already exist. Therefore, this method
-   * is dangerous to call unless the caller can be certain the key does not already exist in the
-   * map.
+   *
+   * <p>There is no checking done to ensure that the key does not already exist. Therefore, this
+   * method is dangerous to call unless the caller can be certain the key does not already exist in
+   * the map.
    *
    * @return previous value or {@code null} for none
    * @throws IndexOutOfBoundsException if index is negative
@@ -224,9 +219,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
     setDataCapacity(this.size << 1);
   }
 
-  /**
-   * Ensures that the capacity of the internal arrays is at least a given capacity.
-   */
+  /** Ensures that the capacity of the internal arrays is at least a given capacity. */
   public final void ensureCapacity(int minCapacity) {
     if (minCapacity < 0) {
       throw new IndexOutOfBoundsException();
@@ -276,9 +269,7 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
     return result;
   }
 
-  /**
-   * Returns the data index of the given key or {@code -2} if there is no such key.
-   */
+  /** Returns the data index of the given key or {@code -2} if there is no such key. */
   private int getDataIndexOfKey(Object key) {
     int dataSize = this.size << 1;
     Object[] data = this.data;

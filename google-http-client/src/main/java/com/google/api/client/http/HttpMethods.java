@@ -52,6 +52,5 @@ public final class HttpMethods {
   /** HTTP TRACE method. */
   public static final String TRACE = "TRACE";
 
-  private HttpMethods() {
-  }
+  private HttpMethods() {}
 }

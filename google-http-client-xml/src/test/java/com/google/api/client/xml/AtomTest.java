@@ -17,6 +17,14 @@ package com.google.api.client.xml;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+
+import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.xml.atom.AtomFeedParser;
+import com.google.api.client.util.Charsets;
+import com.google.api.client.util.Key;
+import com.google.api.client.xml.atom.AbstractAtomFeedParser;
+import com.google.api.client.xml.atom.Atom;
+import com.google.common.io.Resources;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -25,13 +33,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xmlpull.v1.XmlPullParser;
-import com.google.api.client.http.HttpHeaders;
-import com.google.api.client.http.xml.atom.AtomFeedParser;
-import com.google.api.client.util.Charsets;
-import com.google.api.client.util.Key;
-import com.google.api.client.xml.atom.AbstractAtomFeedParser;
-import com.google.api.client.xml.atom.Atom;
-import com.google.common.io.Resources;
 
 /**
  * Tests {@link Atom}.
@@ -41,29 +42,27 @@ import com.google.common.io.Resources;
  */
 public class AtomTest {
 
+  private static final String SAMPLE_FEED =
+      "<?xml version=\"1.0\" encoding=\"utf-8\"?><feed "
+          + "xmlns=\"http://www.w3.org/2005/Atom\">  <title>Example Feed</title>  <link href"
+          + "=\"http://example.org/\"/>  <updated>2003-12-13T18:31:02Z</updated>  <author>    "
+          + "<name>John Doe</name>  </author>  <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6"
+          + "</id>  <entry>    <title>Atom-Powered Robots Run Amok</title>    <link href=\"http"
+          + "://example.org/2003/12/13/atom03\"/>   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa"
+          + "-80da344efa6a</id>    <updated>2003-12-13T18:30:02Z</updated>    <summary>Some text"
+          + ".</summary>  </entry><entry>    <title>Atom-Powered Robots Run Amok!</title>    <link"
+          + " href=\"http://example.org/2003/12/13/atom02\"/>  <id>urn:uuid:1225c695-cfb8-4ebb"
+          + "-aaaa-80da344efa62</id>    <updated>2003-12-13T18:32:02Z</updated>    <summary>Some "
+          + "other text.</summary>  </entry></feed>";
 
-  private static final String SAMPLE_FEED = "<?xml version=\"1.0\" encoding=\"utf-8\"?><feed " +
-      "xmlns=\"http://www.w3.org/2005/Atom\">  <title>Example Feed</title>  <link href" +
-      "=\"http://example.org/\"/>  <updated>2003-12-13T18:31:02Z</updated>  <author>    " +
-      "<name>John Doe</name>  </author>  <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6" +
-      "</id>  <entry>    <title>Atom-Powered Robots Run Amok</title>    <link href=\"http" +
-      "://example.org/2003/12/13/atom03\"/>   <id>urn:uuid:1225c695-cfb8-4ebb-aaaa" +
-      "-80da344efa6a</id>    <updated>2003-12-13T18:30:02Z</updated>    <summary>Some text" +
-      ".</summary>  </entry><entry>    <title>Atom-Powered Robots Run Amok!</title>    <link" +
-      " href=\"http://example.org/2003/12/13/atom02\"/>  <id>urn:uuid:1225c695-cfb8-4ebb" +
-      "-aaaa-80da344efa62</id>    <updated>2003-12-13T18:32:02Z</updated>    <summary>Some " +
-      "other text.</summary>  </entry></feed>";
-
-  /**
-   * Test for checking the Slug Header
-   */
+  /** Test for checking the Slug Header */
   @Test
   public void testSetSlugHeader() {
     HttpHeaders headers = new HttpHeaders();
     assertNull(headers.get("Slug"));
     subtestSetSlugHeader(headers, "value", "value");
-    subtestSetSlugHeader(headers, " !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~", " !\"#$&'()*+,-./:;" +
-        "<=>?@[\\]^_`{|}~");
+    subtestSetSlugHeader(
+        headers, " !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~", " !\"#$&'()*+,-./:;" + "<=>?@[\\]^_`{|}~");
     subtestSetSlugHeader(headers, "%D7%99%D7%A0%D7%99%D7%91", "יניב");
     subtestSetSlugHeader(headers, null, null);
   }
@@ -74,8 +73,8 @@ public class AtomTest {
     if (value == null) {
       assertNull(headers.get("Slug"));
     } else {
-      Assert.assertArrayEquals(new String[]{expectedValue},
-          ((List<String>) headers.get("Slug")).toArray());
+      Assert.assertArrayEquals(
+          new String[] {expectedValue}, ((List<String>) headers.get("Slug")).toArray());
     }
   }
 
@@ -83,7 +82,7 @@ public class AtomTest {
    * This tests parses a simple Atom Feed given as a constant. All elements are asserted, to see if
    * everything works fine. For parsing a dedicated {@link AtomFeedParser} is used.
    *
-   * The purpose of this test is to test the {@link AtomFeedParser#parseFeed} and {@link
+   * <p>The purpose of this test is to test the {@link AtomFeedParser#parseFeed} and {@link
    * AtomFeedParser#parseNextEntry} and see if the mapping of the XML element to the entity classes
    * is done correctly.
    */
@@ -94,8 +93,9 @@ public class AtomTest {
     parser.setInput(new StringReader(SAMPLE_FEED));
     InputStream stream = new ByteArrayInputStream(SAMPLE_FEED.getBytes());
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
-    AbstractAtomFeedParser atomParser = new AtomFeedParser<Feed, FeedEntry>(namespaceDictionary,
-        parser, stream, Feed.class, FeedEntry.class);
+    AbstractAtomFeedParser atomParser =
+        new AtomFeedParser<Feed, FeedEntry>(
+            namespaceDictionary, parser, stream, Feed.class, FeedEntry.class);
 
     Feed feed = (Feed) atomParser.parseFeed();
     assertEquals("John Doe", feed.author.name);
@@ -105,7 +105,7 @@ public class AtomTest {
     assertEquals("http://example.org/", feed.link.href);
 
     FeedEntry entry1 = (FeedEntry) atomParser.parseNextEntry();
-    //assertNotNull(feed.entry);
+    // assertNotNull(feed.entry);
     assertEquals("urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a", entry1.id);
     assertEquals("2003-12-13T18:30:02Z", entry1.updated);
     assertEquals("Some text.", entry1.summary);
@@ -126,10 +126,10 @@ public class AtomTest {
   }
 
   /**
-   * Tests of a constant string to see if the data structure can be parsed using the standard
-   * method {@link Xml#parseElement}
+   * Tests of a constant string to see if the data structure can be parsed using the standard method
+   * {@link Xml#parseElement}
    *
-   * The purpose of this test is to assert, if the parsed elements are correctly parsed using a
+   * <p>The purpose of this test is to assert, if the parsed elements are correctly parsed using a
    * {@link AtomFeedParser}.
    */
   @Test
@@ -149,7 +149,7 @@ public class AtomTest {
     assertEquals("http://example.org/", feed.link.href);
 
     FeedEntry entry1 = feed.entry[0];
-    //assertNotNull(feed.entry);
+    // assertNotNull(feed.entry);
     assertEquals("urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a", entry1.id);
     assertEquals("2003-12-13T18:30:02Z", entry1.updated);
     assertEquals("Some text.", entry1.summary);
@@ -168,7 +168,7 @@ public class AtomTest {
    * Read an XML ATOM Feed from a file to a string and assert if all the {@link FeedEntry}s are
    * present. No detailed assertion of each element
    *
-   * The purpose of this test is to read a bunch of elements which contain additional elements
+   * <p>The purpose of this test is to read a bunch of elements which contain additional elements
    * (HTML in this case), that are not part of the {@link FeedEntry} and to see if there is an issue
    * if we parse some more entries.
    */
@@ -179,8 +179,13 @@ public class AtomTest {
     String read = Resources.toString(url, Charsets.UTF_8);
     parser.setInput(new StringReader(read));
     XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary();
-    AbstractAtomFeedParser atomParser = new AtomFeedParser<Feed, FeedEntry>(namespaceDictionary,
-        parser, new ByteArrayInputStream(read.getBytes()), Feed.class, FeedEntry.class);
+    AbstractAtomFeedParser atomParser =
+        new AtomFeedParser<Feed, FeedEntry>(
+            namespaceDictionary,
+            parser,
+            new ByteArrayInputStream(read.getBytes()),
+            Feed.class,
+            FeedEntry.class);
     Feed feed = (Feed) atomParser.parseFeed();
     assertNotNull(feed);
 
@@ -204,9 +209,11 @@ public class AtomTest {
     assertNotNull(entry.link);
     assertNotNull(entry.updated);
     assertNotNull(entry.content);
-    assertEquals("aäb cde fgh ijk lmn oöpoöp tuü vwx yz AÄBC DEF GHI JKL MNO ÖPQ RST UÜV WXYZ " +
-            "!\"§ $%& /() =?* '<> #|; ²³~ @`´ ©«» ¼× {} aäb cde fgh ijk lmn oöp qrsß tuü vwx yz " +
-            "AÄBC DEF GHI JKL MNO", entry.content);
+    assertEquals(
+        "aäb cde fgh ijk lmn oöpoöp tuü vwx yz AÄBC DEF GHI JKL MNO ÖPQ RST UÜV WXYZ "
+            + "!\"§ $%& /() =?* '<> #|; ²³~ @`´ ©«» ¼× {} aäb cde fgh ijk lmn oöp qrsß tuü vwx yz "
+            + "AÄBC DEF GHI JKL MNO",
+        entry.content);
 
     // validate feed 3 -- Missing Content
     entry = (FeedEntry) atomParser.parseNextEntry();
@@ -245,22 +252,14 @@ public class AtomTest {
     atomParser.close();
   }
 
-  /**
-   * Feed Element to map the XML to
-   */
+  /** Feed Element to map the XML to */
   public static class Feed {
-    @Key
-    private String title;
-    @Key
-    private Link link;
-    @Key
-    private String updated;
-    @Key
-    private Author author;
-    @Key
-    private String id;
-    @Key
-    private FeedEntry[] entry;
+    @Key private String title;
+    @Key private Link link;
+    @Key private String updated;
+    @Key private Author author;
+    @Key private String id;
+    @Key private FeedEntry[] entry;
   }
 
   /**
@@ -268,8 +267,7 @@ public class AtomTest {
    * this needs to be public.
    */
   public static class Author {
-    @Key
-    private String name;
+    @Key private String name;
   }
 
   /**
@@ -282,22 +280,15 @@ public class AtomTest {
   }
 
   /**
-   * Entry Element to cover the Entries of a Atom {@link Feed}. As this is sub-element,
-   * this needs to be public.
+   * Entry Element to cover the Entries of a Atom {@link Feed}. As this is sub-element, this needs
+   * to be public.
    */
   public static class FeedEntry {
-    @Key
-    private String title;
-    @Key
-    private Link link;
-    @Key
-    private String updated;
-    @Key
-    private String summary;
-    @Key
-    private String id;
-    @Key
-    private String content;
+    @Key private String title;
+    @Key private Link link;
+    @Key private String updated;
+    @Key private String summary;
+    @Key private String id;
+    @Key private String content;
   }
 }
-

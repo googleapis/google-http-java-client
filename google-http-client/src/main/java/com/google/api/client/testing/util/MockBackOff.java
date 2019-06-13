@@ -17,16 +17,13 @@ package com.google.api.client.testing.util;
 import com.google.api.client.util.BackOff;
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.Preconditions;
-
 import java.io.IOException;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Mock for {@link BackOff} that always returns a fixed number.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @author Yaniv Inbar
  * @since 1.15
@@ -58,10 +55,8 @@ public class MockBackOff implements BackOff {
   /**
    * Sets the fixed back-off milliseconds (defaults to {@code 0}).
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public MockBackOff setBackOffMillis(long backOffMillis) {
     Preconditions.checkArgument(backOffMillis == STOP || backOffMillis >= 0);
@@ -72,10 +67,8 @@ public class MockBackOff implements BackOff {
   /**
    * Sets the maximum number of tries before returning {@link #STOP} (defaults to {@code 10}).
    *
-   * <p>
-   * Overriding is only supported for the purpose of calling the super implementation and changing
-   * the return type, but nothing else.
-   * </p>
+   * <p>Overriding is only supported for the purpose of calling the super implementation and
+   * changing the return type, but nothing else.
    */
   public MockBackOff setMaxTries(int maxTries) {
     Preconditions.checkArgument(maxTries >= 0);

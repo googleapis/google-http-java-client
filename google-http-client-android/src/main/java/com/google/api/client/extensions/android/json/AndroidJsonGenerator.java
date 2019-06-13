@@ -24,12 +24,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Low-level JSON serializer implementation based on GSON.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @author Yaniv Inbar
  */

@@ -13,7 +13,7 @@
  */
 
 /**
- * {@link com.google.api.client.util.Beta} <br/>
+ * {@link com.google.api.client.util.Beta} <br>
  * Utilities for Android HTTP transport.
  *
  * @since 1.11

@@ -34,12 +34,15 @@ public class JsonWebSignatureTest extends TestCase {
     header.setAlgorithm("RS256");
     header.setType("JWT");
     JsonWebToken.Payload payload = new JsonWebToken.Payload();
-    payload.setIssuer("issuer")
-        .setAudience("audience").setIssuedAtTimeSeconds(0L).setExpirationTimeSeconds(3600L);
+    payload
+        .setIssuer("issuer")
+        .setAudience("audience")
+        .setIssuedAtTimeSeconds(0L)
+        .setExpirationTimeSeconds(3600L);
     RSAPrivateKey privateKey = SecurityTestUtils.newRsaPrivateKey();
     assertEquals(
         "..kDmKaHNYByLmqAi9ROeLcFmZM7W_emsceKvDZiEGAo-ineCunC6_Nb0HEpAuzIidV-LYTMHS3BvI49KFz9gi6hI3"
-        + "ZndDL5EzplpFJo1ZclVk1_hLn94P2OTAkZ4ydsTfus6Bl98EbCkInpF_2t5Fr8OaHxCZCDdDU7W5DSnOsx4",
+            + "ZndDL5EzplpFJo1ZclVk1_hLn94P2OTAkZ4ydsTfus6Bl98EbCkInpF_2t5Fr8OaHxCZCDdDU7W5DSnOsx4",
         JsonWebSignature.signUsingRsaSha256(privateKey, new MockJsonFactory(), header, payload));
   }
 

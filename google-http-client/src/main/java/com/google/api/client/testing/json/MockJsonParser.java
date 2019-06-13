@@ -18,18 +18,15 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Mock for {@link JsonParser}.
  *
- * <p>
- * Implementation is thread-safe.
- * </p>
+ * <p>Implementation is thread-safe.
  *
  * @author rmistry@google.com (Ravi Mistry)
  * @since 1.15 (since 1.11 as com.google.api.client.testing.http.json.MockJsonParser)

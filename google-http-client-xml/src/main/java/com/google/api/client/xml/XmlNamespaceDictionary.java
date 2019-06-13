@@ -32,31 +32,26 @@ import java.util.TreeSet;
 import org.xmlpull.v1.XmlSerializer;
 
 /**
- * {@link Beta} <br/>
+ * {@link Beta} <br>
  * Thread-safe XML namespace dictionary that provides a one-to-one map of namespace alias to URI.
  *
- * <p>
- * Implementation is thread-safe. For maximum efficiency, applications should use a single
+ * <p>Implementation is thread-safe. For maximum efficiency, applications should use a single
  * globally-shared instance of the XML namespace dictionary.
- * </p>
  *
- * <p>
- * A namespace alias is uniquely mapped to a single namespace URI, and a namespace URI is uniquely
- * mapped to a single namespace alias. In other words, it is not possible to have duplicates.
- * </p>
+ * <p>A namespace alias is uniquely mapped to a single namespace URI, and a namespace URI is
+ * uniquely mapped to a single namespace alias. In other words, it is not possible to have
+ * duplicates.
  *
- * <p>
- * Sample usage:
- * </p>
+ * <p>Sample usage:
  *
  * <pre>{@code
-  static final XmlNamespaceDictionary DICTIONARY = new XmlNamespaceDictionary()
-      .set("", "http://www.w3.org/2005/Atom")
-      .set("activity", "http://activitystrea.ms/spec/1.0/")
-      .set("georss", "http://www.georss.org/georss")
-      .set("media", "http://search.yahoo.com/mrss/")
-      .set("thr", "http://purl.org/syndication/thread/1.0");
- *}</pre>
+ * static final XmlNamespaceDictionary DICTIONARY = new XmlNamespaceDictionary()
+ * .set("", "http://www.w3.org/2005/Atom")
+ * .set("activity", "http://activitystrea.ms/spec/1.0/")
+ * .set("georss", "http://www.georss.org/georss")
+ * .set("media", "http://search.yahoo.com/mrss/")
+ * .set("thr", "http://purl.org/syndication/thread/1.0");
+ * }</pre>
  *
  * @since 1.0
  * @author Yaniv Inbar
@@ -119,12 +114,10 @@ public final class XmlNamespaceDictionary {
   /**
    * Adds a namespace of the given alias and URI.
    *
-   * <p>
-   * If the uri is {@code null}, the namespace alias will be removed. Similarly, if the alias is
+   * <p>If the uri is {@code null}, the namespace alias will be removed. Similarly, if the alias is
    * {@code null}, the namespace URI will be removed. Otherwise, if the alias is already mapped to a
    * different URI, it will be remapped to the new URI. Similarly, if a URI is already mapped to a
    * different alias, it will be remapped to the new alias.
-   * </p>
    *
    * @param alias alias or {@code null} to remove the namespace URI
    * @param uri namespace URI or {@code null} to remove the namespace alias
@@ -141,8 +134,9 @@ public final class XmlNamespaceDictionary {
     } else if (alias == null) {
       previousAlias = namespaceUriToAliasMap.remove(uri);
     } else {
-      previousUri = namespaceAliasToUriMap.put(
-          Preconditions.checkNotNull(alias), Preconditions.checkNotNull(uri));
+      previousUri =
+          namespaceAliasToUriMap.put(
+              Preconditions.checkNotNull(alias), Preconditions.checkNotNull(uri));
       if (!uri.equals(previousUri)) {
         previousAlias = namespaceUriToAliasMap.put(uri, alias);
       } else {
@@ -162,9 +156,9 @@ public final class XmlNamespaceDictionary {
    * Shows a debug string representation of an element data object of key/value pairs.
    *
    * @param element element data object ({@link GenericXml}, {@link Map}, or any object with public
-   *        fields)
+   *     fields)
    * @param elementName optional XML element local name prefixed by its namespace alias -- for
-   *        example {@code "atom:entry"} -- or {@code null} to make up something
+   *     example {@code "atom:entry"} -- or {@code null} to make up something
    */
   public String toStringOf(String elementName, Object element) {
     try {
@@ -182,7 +176,7 @@ public final class XmlNamespaceDictionary {
    * Shows a debug string representation of an element data object of key/value pairs.
    *
    * @param element element data object ({@link GenericXml}, {@link Map}, or any object with public
-   *        fields)
+   *     fields)
    * @param elementNamespaceUri XML namespace URI or {@code null} for no namespace
    * @param elementLocalName XML local name
    * @throws IOException I/O exception
@@ -197,7 +191,7 @@ public final class XmlNamespaceDictionary {
    * Shows a debug string representation of an element data object of key/value pairs.
    *
    * @param element element data object ({@link GenericXml}, {@link Map}, or any object with public
-   *        fields)
+   *     fields)
    * @param elementName XML element local name prefixed by its namespace alias
    * @throws IOException I/O exception
    */
@@ -206,11 +200,16 @@ public final class XmlNamespaceDictionary {
     serialize(serializer, elementName, element, true);
   }
 
-  private void serialize(XmlSerializer serializer, String elementNamespaceUri,
-      String elementLocalName, Object element, boolean errorOnUnknown) throws IOException {
+  private void serialize(
+      XmlSerializer serializer,
+      String elementNamespaceUri,
+      String elementLocalName,
+      Object element,
+      boolean errorOnUnknown)
+      throws IOException {
     String elementAlias = elementNamespaceUri == null ? null : getAliasForUri(elementNamespaceUri);
-    startDoc(serializer, element, errorOnUnknown, elementAlias).serialize(
-        serializer, elementNamespaceUri, elementLocalName);
+    startDoc(serializer, element, errorOnUnknown, elementAlias)
+        .serialize(serializer, elementNamespaceUri, elementLocalName);
     serializer.endDocument();
   }
 
@@ -257,7 +256,7 @@ public final class XmlNamespaceDictionary {
             aliases.add(alias);
           }
           Class<?> valueClass = value.getClass();
-          if (!isAttribute && !Data.isPrimitive(valueClass)  && !valueClass.isEnum() ) {
+          if (!isAttribute && !Data.isPrimitive(valueClass) && !valueClass.isEnum()) {
             if (value instanceof Iterable<?> || valueClass.isArray()) {
               for (Object subValue : Types.iterableOf(value)) {
                 computeAliases(subValue, aliases);
@@ -275,18 +274,16 @@ public final class XmlNamespaceDictionary {
    * Returns the namespace URI to use for serialization for a given namespace alias, possibly using
    * a predictable made-up namespace URI if the alias is not recognized.
    *
-   * <p>
-   * Specifically, if the namespace alias is not recognized, the namespace URI returned will be
+   * <p>Specifically, if the namespace alias is not recognized, the namespace URI returned will be
    * {@code "http://unknown/"} plus the alias, unless {@code errorOnUnknown} is {@code true} in
    * which case it will throw an {@link IllegalArgumentException}.
-   * </p>
    *
    * @param errorOnUnknown whether to thrown an exception if the namespace alias is not recognized
    * @param alias namespace alias
    * @return namespace URI, using a predictable made-up namespace URI if the namespace alias is not
-   *         recognized
+   *     recognized
    * @throws IllegalArgumentException if the namespace alias is not recognized and {@code
-   *         errorOnUnkown} is {@code true}
+   *     errorOnUnknown} is {@code true}
    */
   String getNamespaceUriForAliasHandlingUnknown(boolean errorOnUnknown, String alias) {
     String result = getUriForAlias(alias);
@@ -307,10 +304,12 @@ public final class XmlNamespaceDictionary {
    */
   String getNamespaceAliasForUriErrorOnUnknown(String namespaceUri) {
     String result = getAliasForUri(namespaceUri);
-    Preconditions.checkArgument(result != null,
+    Preconditions.checkArgument(
+        result != null,
         "invalid XML: no alias declared for namesapce <%s>; "
             + "work-around by setting XML namepace directly by calling the set method of %s",
-        namespaceUri, XmlNamespaceDictionary.class.getName());
+        namespaceUri,
+        XmlNamespaceDictionary.class.getName());
     return result;
   }
 
@@ -328,8 +327,8 @@ public final class XmlNamespaceDictionary {
       Class<?> valueClass = elementValue.getClass();
       if (Data.isPrimitive(valueClass) && !Data.isNull(elementValue)) {
         textValue = elementValue;
-      } else if (valueClass.isEnum() && !Data.isNull(elementValue)){
-        textValue =  elementValue;
+      } else if (valueClass.isEnum() && !Data.isNull(elementValue)) {
+        textValue = elementValue;
       } else {
         for (Map.Entry<String, Object> entry : Data.mapOf(elementValue).entrySet()) {
           Object fieldValue = entry.getValue();
@@ -377,8 +376,11 @@ public final class XmlNamespaceDictionary {
         String attributeName = attributeNames.get(i);
         int colon = attributeName.indexOf(':');
         String attributeLocalName = attributeName.substring(colon + 1);
-        String attributeNamespaceUri = colon == -1 ? null : getNamespaceUriForAliasHandlingUnknown(
-            errorOnUnknown, attributeName.substring(0, colon));
+        String attributeNamespaceUri =
+            colon == -1
+                ? null
+                : getNamespaceUriForAliasHandlingUnknown(
+                    errorOnUnknown, attributeName.substring(0, colon));
         serializer.attribute(
             attributeNamespaceUri, attributeLocalName, toSerializedValue(attributeValues.get(i)));
       }
@@ -395,13 +397,13 @@ public final class XmlNamespaceDictionary {
         if (subElementValue instanceof Iterable<?> || valueClass.isArray()) {
           for (Object subElement : Types.iterableOf(subElementValue)) {
             if (subElement != null && !Data.isNull(subElement)) {
-              new ElementSerializer(subElement, errorOnUnknown).serialize(
-                  serializer, subElementName);
+              new ElementSerializer(subElement, errorOnUnknown)
+                  .serialize(serializer, subElementName);
             }
           }
         } else {
-          new ElementSerializer(subElementValue, errorOnUnknown).serialize(
-              serializer, subElementName);
+          new ElementSerializer(subElementValue, errorOnUnknown)
+              .serialize(serializer, subElementName);
         }
       }
       serializer.endTag(elementNamespaceUri, elementLocalName);

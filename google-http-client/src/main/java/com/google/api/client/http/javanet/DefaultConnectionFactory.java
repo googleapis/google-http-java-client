@@ -19,8 +19,8 @@ public class DefaultConnectionFactory implements ConnectionFactory {
 
   /**
    * @param proxy HTTP proxy or {@code null} to use the proxy settings from <a
-   *        href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">
-   *        system properties</a>
+   *     href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">
+   *     system properties</a>
    */
   public DefaultConnectionFactory(Proxy proxy) {
     this.proxy = proxy;

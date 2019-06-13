@@ -34,8 +34,7 @@ import junit.framework.TestCase;
  */
 public class HttpHeadersTest extends TestCase {
 
-  public HttpHeadersTest() {
-  }
+  public HttpHeadersTest() {}
 
   public HttpHeadersTest(String name) {
     super(name);
@@ -50,29 +49,21 @@ public class HttpHeadersTest extends TestCase {
 
   public static class MyHeaders extends HttpHeaders {
 
-    @Key
-    public String foo;
+    @Key public String foo;
 
-    @Key
-    Object objNum;
+    @Key Object objNum;
 
-    @Key
-    Object objList;
+    @Key Object objList;
 
-    @Key
-    long someLong;
+    @Key long someLong;
 
-    @Key
-    List<String> list;
+    @Key List<String> list;
 
-    @Key
-    String[] r;
+    @Key String[] r;
 
-    @Key
-    E value;
+    @Key E value;
 
-    @Key
-    E otherValue;
+    @Key E otherValue;
   }
 
   public void testSerializeHeaders() throws Exception {
@@ -86,6 +77,8 @@ public class HttpHeadersTest extends TestCase {
     myHeaders.setAcceptEncoding(null);
     myHeaders.setContentLength(Long.MAX_VALUE);
     myHeaders.setUserAgent("foo");
+    myHeaders.addWarning("warn0");
+    myHeaders.addWarning("warn1");
     myHeaders.set("a", "b");
     myHeaders.value = E.VALUE;
     myHeaders.otherValue = E.OTHER_VALUE;
@@ -103,10 +96,12 @@ public class HttpHeadersTest extends TestCase {
     assertEquals(ImmutableList.of("a1", "a2"), lowLevelRequest.getHeaderValues("r"));
     assertTrue(lowLevelRequest.getHeaderValues("accept-encoding").isEmpty());
     assertEquals(ImmutableList.of("foo"), lowLevelRequest.getHeaderValues("user-agent"));
+    assertEquals(ImmutableList.of("warn0", "warn1"), lowLevelRequest.getHeaderValues("warning"));
     assertEquals(ImmutableList.of("b"), lowLevelRequest.getHeaderValues("a"));
     assertEquals(ImmutableList.of("VALUE"), lowLevelRequest.getHeaderValues("value"));
     assertEquals(ImmutableList.of("other"), lowLevelRequest.getHeaderValues("othervalue"));
-    assertEquals(ImmutableList.of(String.valueOf(Long.MAX_VALUE)),
+    assertEquals(
+        ImmutableList.of(String.valueOf(Long.MAX_VALUE)),
         lowLevelRequest.getHeaderValues("content-length"));
 
     HttpHeaders.serializeHeadersForMultipartRequests(myHeaders, null, null, writer);
@@ -128,6 +123,8 @@ public class HttpHeadersTest extends TestCase {
     expectedOutput.append("someLong: 0\r\n");
     expectedOutput.append("User-Agent: foo\r\n");
     expectedOutput.append("value: VALUE\r\n");
+    expectedOutput.append("Warning: warn0\r\n");
+    expectedOutput.append("Warning: warn1\r\n");
     expectedOutput.append("a: b\r\n");
 
     assertEquals(expectedOutput.toString(), outputStream.toString());
@@ -139,6 +136,8 @@ public class HttpHeadersTest extends TestCase {
     rawHeaders.setContentLength(Long.MAX_VALUE);
     rawHeaders.setContentType("foo/bar");
     rawHeaders.setUserAgent("FooBar");
+    rawHeaders.addWarning("warn0");
+    rawHeaders.addWarning("warn1");
     rawHeaders.set("foo", "bar");
     rawHeaders.set("someLong", "5");
     rawHeaders.set("list", ImmutableList.of("a", "b", "c"));
@@ -154,6 +153,8 @@ public class HttpHeadersTest extends TestCase {
     assertEquals(Long.MAX_VALUE, myHeaders.getContentLength().longValue());
     assertEquals("foo/bar", myHeaders.getContentType());
     assertEquals("FooBar", myHeaders.getUserAgent());
+    assertEquals("warn0", myHeaders.getWarning().get(0));
+    assertEquals("warn1", myHeaders.getWarning().get(1));
     assertEquals("bar", myHeaders.foo);
     assertEquals(5, myHeaders.someLong);
     assertEquals(ImmutableList.of("5"), myHeaders.objNum);
@@ -197,6 +198,7 @@ public class HttpHeadersTest extends TestCase {
     myHeaders.setAcceptEncoding(null);
     myHeaders.setContentLength(Long.MAX_VALUE);
     myHeaders.setUserAgent("foo");
+    myHeaders.addWarning("warn");
     myHeaders.set("a", "b");
     myHeaders.value = E.VALUE;
     myHeaders.otherValue = E.OTHER_VALUE;
@@ -207,6 +209,7 @@ public class HttpHeadersTest extends TestCase {
     assertEquals("a1", myHeaders.getFirstHeaderStringValue("r"));
     assertNull(myHeaders.getFirstHeaderStringValue("accept-encoding"));
     assertEquals("foo", myHeaders.getFirstHeaderStringValue("user-agent"));
+    assertEquals("warn", myHeaders.getFirstHeaderStringValue("warning"));
     assertEquals("b", myHeaders.getFirstHeaderStringValue("a"));
     assertEquals("VALUE", myHeaders.getFirstHeaderStringValue("value"));
     assertEquals("other", myHeaders.getFirstHeaderStringValue("othervalue"));
@@ -219,10 +222,12 @@ public class HttpHeadersTest extends TestCase {
     assertEquals(ImmutableList.of("a1", "a2"), myHeaders.getHeaderStringValues("r"));
     assertTrue(myHeaders.getHeaderStringValues("accept-encoding").isEmpty());
     assertEquals(ImmutableList.of("foo"), myHeaders.getHeaderStringValues("user-agent"));
+    assertEquals(ImmutableList.of("warn"), myHeaders.getHeaderStringValues("warning"));
     assertEquals(ImmutableList.of("b"), myHeaders.getHeaderStringValues("a"));
     assertEquals(ImmutableList.of("VALUE"), myHeaders.getHeaderStringValues("value"));
     assertEquals(ImmutableList.of("other"), myHeaders.getHeaderStringValues("othervalue"));
-    assertEquals(ImmutableList.of(String.valueOf(Long.MAX_VALUE)),
+    assertEquals(
+        ImmutableList.of(String.valueOf(Long.MAX_VALUE)),
         myHeaders.getHeaderStringValues("content-length"));
   }
 
@@ -232,8 +237,10 @@ public class HttpHeadersTest extends TestCase {
   }
 
   public void testParseAge() throws Exception {
-    MockLowLevelHttpResponse httpResponse = new MockLowLevelHttpResponse().setHeaderNames(
-        Arrays.asList("Age")).setHeaderValues(Arrays.asList("3456"));
+    MockLowLevelHttpResponse httpResponse =
+        new MockLowLevelHttpResponse()
+            .setHeaderNames(Arrays.asList("Age"))
+            .setHeaderValues(Arrays.asList("3456"));
 
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.fromHttpResponse(httpResponse, null);
@@ -241,9 +248,10 @@ public class HttpHeadersTest extends TestCase {
   }
 
   public void testFromHttpResponse_normalFlow() throws Exception {
-    MockLowLevelHttpResponse httpResponse = new MockLowLevelHttpResponse().setHeaderNames(
-        Arrays.asList("Content-Type", "Slug"))
-        .setHeaderValues(Arrays.asList("foo/bar", "123456789"));
+    MockLowLevelHttpResponse httpResponse =
+        new MockLowLevelHttpResponse()
+            .setHeaderNames(Arrays.asList("Content-Type", "Slug"))
+            .setHeaderValues(Arrays.asList("foo/bar", "123456789"));
 
     // Test the normal HttpHeaders class
     HttpHeaders httpHeaders = new HttpHeaders();
@@ -259,9 +267,10 @@ public class HttpHeadersTest extends TestCase {
   }
 
   public void testFromHttpResponse_doubleConvert() throws Exception {
-    MockLowLevelHttpResponse httpResponse = new MockLowLevelHttpResponse().setHeaderNames(
-        Arrays.asList("Content-Type", "Slug"))
-        .setHeaderValues(Arrays.asList("foo/bar", "123456789"));
+    MockLowLevelHttpResponse httpResponse =
+        new MockLowLevelHttpResponse()
+            .setHeaderNames(Arrays.asList("Content-Type", "Slug"))
+            .setHeaderValues(Arrays.asList("foo/bar", "123456789"));
 
     // Test the normal HttpHeaders class
     SlugHeaders slugHeaders = new SlugHeaders();
@@ -279,21 +288,24 @@ public class HttpHeadersTest extends TestCase {
   public void testFromHttpResponse_clearOldValue() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.put("Foo", "oldValue");
-    headers.fromHttpResponse(new MockLowLevelHttpResponse().setHeaderNames(Arrays.asList("Foo"))
-        .setHeaderValues(Arrays.asList("newvalue")), null);
+    headers.fromHttpResponse(
+        new MockLowLevelHttpResponse()
+            .setHeaderNames(Arrays.asList("Foo"))
+            .setHeaderValues(Arrays.asList("newvalue")),
+        null);
     assertEquals(Arrays.asList("newvalue"), headers.get("Foo"));
   }
 
   public static class V extends HttpHeaders {
-    @Key
-    Void v;
-    @Key
-    String s;
+    @Key Void v;
+    @Key String s;
   }
 
   public void testFromHttpResponse_void(String value) throws Exception {
-    MockLowLevelHttpResponse httpResponse = new MockLowLevelHttpResponse().setHeaderNames(
-        Arrays.asList("v", "v", "s")).setHeaderValues(Arrays.asList("ignore", "ignore2", "svalue"));
+    MockLowLevelHttpResponse httpResponse =
+        new MockLowLevelHttpResponse()
+            .setHeaderNames(Arrays.asList("v", "v", "s"))
+            .setHeaderValues(Arrays.asList("ignore", "ignore2", "svalue"));
     V v = new V();
     v.fromHttpResponse(httpResponse, null);
     assertNull(v.v);

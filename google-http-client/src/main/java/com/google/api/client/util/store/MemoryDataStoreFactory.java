@@ -14,17 +14,13 @@
 
 package com.google.api.client.util.store;
 
-
-
 import java.io.IOException;
 import java.io.Serializable;
 
 /**
  * Thread-safe in-memory implementation of a data store factory.
  *
- * <p>
- * For convenience, a default global instance is provided in {@link #getDefaultInstance()}.
- * </p>
+ * <p>For convenience, a default global instance is provided in {@link #getDefaultInstance()}.
  *
  * @since 1.16
  * @author Yaniv Inbar

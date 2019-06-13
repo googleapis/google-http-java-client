@@ -48,13 +48,66 @@ public class GenericDataTest extends TestCase {
     }
   }
 
+  private class GenericData1 extends GenericData {
+    public GenericData1() {
+      super(EnumSet.of(Flags.IGNORE_CASE));
+    }
+
+    @Key("FieldA")
+    public String fieldA;
+  }
+
+  private class GenericData2 extends GenericData {
+    public GenericData2() {
+      super(EnumSet.of(Flags.IGNORE_CASE));
+    }
+
+    @Key("FieldA")
+    public String fieldA;
+  }
+
+  public void testEquals_Symmetric() {
+    GenericData actual = new GenericData1();
+    actual.set("fieldA", "bar");
+    GenericData expected = new GenericData2();
+    // Test that objects are equal.
+    expected.set("fieldA", "bar");
+    assertNotSame(expected, actual);
+    assertTrue(expected.equals(expected) && actual.equals(actual));
+    // Test that objects not are equal.
+    expected.set("fieldA", "far");
+    assertFalse(expected.equals(actual) || actual.equals(expected));
+    assertFalse(expected.hashCode() == actual.hashCode());
+  }
+
+  public void testEquals_SymmetricWithSameClass() {
+    GenericData actual = new MyData();
+    actual.set("fieldA", "bar");
+    GenericData expected = new MyData();
+    // Test that objects are equal.
+    expected.set("fieldA", "bar");
+    assertNotSame(expected, actual);
+    assertTrue(expected.equals(expected) && actual.equals(actual));
+    assertTrue(expected.hashCode() == expected.hashCode());
+  }
+
+  public void testNotEquals_SymmetricWithSameClass() {
+    GenericData actual = new MyData();
+    actual.set("fieldA", "bar");
+    GenericData expected = new MyData();
+    // Test that objects are not equal.
+    expected.set("fieldA", "far");
+    assertNotSame(expected, actual);
+    assertFalse(expected.equals(actual) || actual.equals(expected));
+    assertFalse(expected.hashCode() == actual.hashCode());
+  }
 
   public void testClone_changingEntrySet() {
     GenericData data = new GenericData();
-    assertEquals("{}", data.toString());
+    assertEquals("GenericData{classInfo=[], {}}", data.toString());
     GenericData clone = data.clone();
     clone.set("foo", "bar");
-    assertEquals("{foo=bar}", clone.toString());
+    assertEquals("GenericData{classInfo=[], {foo=bar}}", clone.toString());
   }
 
   public void testSetIgnoreCase_unknownKey() {

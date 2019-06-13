@@ -23,9 +23,7 @@ import java.util.logging.Logger;
  * Wraps another streaming content without modifying the content, but also logging content using
  * {@link LoggingOutputStream}.
  *
- * <p>
- * Implementation is not thread-safe.
- * </p>
+ * <p>Implementation is not thread-safe.
  *
  * @author Yaniv Inbar
  * @since 1.14

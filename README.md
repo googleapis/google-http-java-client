@@ -13,15 +13,15 @@ content. The JSON and XML libraries are also fully pluggable, and they include s
 
 The library supports the following Java environments:
 
-- Java 6 (or higher)
+- Java 7 (or higher)
 - Android 4.0 (Ice Cream Sandwich) (or higher)
 - GoogleAppEngine Google App Engine
 
 The following related projects are built on the Google HTTP Client Library for Java:
 
-- [Google OAuth Client Library for Java](https://github.com/google/google-oauth-java-client),
+- [Google OAuth Client Library for Java](https://github.com/googleapis/google-oauth-java-client),
 for the OAuth 2.0 and OAuth 1.0a authorization standards.
-- [Google APIs Client Library for Java](https://github.com/google/google-api-java-client), for
+- [Google APIs Client Library for Java](https://github.com/googleapis/google-api-java-client), for
 access to Google APIs.
 
 This is an open-source library, and
@@ -32,8 +32,8 @@ are welcome.
 
 - [Developer's Guide](https://developers.google.com/api-client-library/java/google-http-java-client/)
 - [Setup Instructions](https://developers.google.com/api-client-library/java/google-http-java-client/setup)
-- [JavaDoc](https://developers.google.com/api-client-library/java/google-http-java-client/reference/index)
-- [Release Notes](https://developers.google.com/api-client-library/java/google-http-java-client/release-notes)
+- [JavaDoc](https://googleapis.dev/java/google-http-client/latest/)
+- [Release Notes](https://github.com/googleapis/google-http-java-client/releases)
 - [Support (Questions, Bugs)](https://developers.google.com/api-client-library/java/google-http-java-client/support)
 
 ## CI Status
@@ -47,16 +47,3 @@ Java 11 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/
 ## Links
 
 - [Discuss](https://groups.google.com/group/google-http-java-client)
-
-## Notice: Ending Java 6 Support
-
-Please note: since Java 6 extended support is being ended this December by Oracle, we will begin
-ending Java 6 support in early 2019, with release 1.28.0 as a tentative goal. Users may stay still
-use these libraries in Java 6 projects for some time, but going forward we will not ensure that
-these libraries work in such an environment. After 1.28.0, our supported versions will include Java
-7 and onward.
-
-For Android users, we will continue our 4.0 support.
-
-For questions or concerns, please file an issue in the GitHub repository.
-

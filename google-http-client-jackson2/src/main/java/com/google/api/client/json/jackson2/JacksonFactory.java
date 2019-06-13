@@ -19,7 +19,6 @@ import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Preconditions;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,10 +29,8 @@ import java.nio.charset.Charset;
 /**
  * Low-level JSON library implementation based on Jackson 2.
  *
- * <p>
- * Implementation is thread-safe, and sub-classes must be thread-safe. For maximum efficiency,
+ * <p>Implementation is thread-safe, and sub-classes must be thread-safe. For maximum efficiency,
  * applications should use a single globally-shared instance of the JSON factory.
- * </p>
  *
  * @since 1.11
  * @author Yaniv Inbar
@@ -43,6 +40,7 @@ public final class JacksonFactory extends JsonFactory {
   /** JSON factory. */
   private final com.fasterxml.jackson.core.JsonFactory factory =
       new com.fasterxml.jackson.core.JsonFactory();
+
   {
     // don't auto-close JSON content in order to ensure consistent behavior across JSON factories
     // TODO(rmistry): Should we disable the JsonGenerator.Feature.AUTO_CLOSE_TARGET feature?
