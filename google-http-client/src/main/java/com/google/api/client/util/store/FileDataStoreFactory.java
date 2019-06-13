@@ -16,14 +16,10 @@ package com.google.api.client.util.store;
 
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Maps;
-<<<<<<< HEAD
 
 import com.google.common.base.StandardSystemProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-=======
-import com.google.api.client.util.Throwables;
->>>>>>> master
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
