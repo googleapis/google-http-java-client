@@ -40,7 +40,7 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
     // disable redirects as google-http-client handles redirects
     this.requestConfig = RequestConfig.custom()
         .setRedirectsEnabled(false)
-        // TODO: configure in HttpClientBuilder when available
+        // TODO(chingor): configure in HttpClientBuilder when available
         .setStaleConnectionCheckEnabled(false);
   }
 
