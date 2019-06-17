@@ -53,7 +53,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * <p>
  *
  * <p>If a JSON map is encountered while using a destination class of type Map, then an {@link
- * ArrayMap} is used by default for the parsed values.
+ * java.util.ArrayMap} is used by default for the parsed values.
  *
  * @since 1.3
  * @author Yaniv Inbar
