@@ -16,14 +16,26 @@ package com.google.api.client.util.store;
 
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Maps;
-import com.google.api.client.util.Throwables;
+
+import com.google.common.base.StandardSystemProperty;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.AclEntry;
+import java.nio.file.attribute.AclEntryPermission;
+import java.nio.file.attribute.AclEntryType;
+import java.nio.file.attribute.AclFileAttributeView;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.UserPrincipal;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -40,6 +52,9 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
   private static final Logger LOGGER = Logger.getLogger(FileDataStoreFactory.class.getName());
 
+  private static final boolean IS_WINDOWS = StandardSystemProperty.OS_NAME.value()
+      .startsWith("WINDOWS");
+
   /** Directory to store data. */
   private final File dataDirectory;
 
@@ -55,7 +70,12 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
     if (!dataDirectory.exists() && !dataDirectory.mkdirs()) {
       throw new IOException("unable to create directory: " + dataDirectory);
     }
-    setPermissionsToOwnerOnly(dataDirectory);
+
+    if (IS_WINDOWS) {
+      setPermissionsToOwnerOnlyWindows(dataDirectory);
+    } else {
+      setPermissionsToOwnerOnly(dataDirectory);
+    }
   }
 
   /** Returns the data directory. */
@@ -117,38 +137,55 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
    * @throws IOException
    */
   static void setPermissionsToOwnerOnly(File file) throws IOException {
-    // Disable access by other users if O/S allows it and set file permissions to readable and
-    // writable by user. Use reflection since JDK 1.5 will not have these methods
+    Set permissions = new HashSet<PosixFilePermission>();
+    permissions.add(PosixFilePermission.OWNER_READ);
+    permissions.add(PosixFilePermission.OWNER_WRITE);
+    permissions.add(PosixFilePermission.OWNER_EXECUTE);
     try {
-      Method setReadable = File.class.getMethod("setReadable", boolean.class, boolean.class);
-      Method setWritable = File.class.getMethod("setWritable", boolean.class, boolean.class);
-      Method setExecutable = File.class.getMethod("setExecutable", boolean.class, boolean.class);
-      if (!(Boolean) setReadable.invoke(file, false, false)
-          || !(Boolean) setWritable.invoke(file, false, false)
-          || !(Boolean) setExecutable.invoke(file, false, false)) {
-        LOGGER.warning("unable to change permissions for everybody: " + file);
-      }
-      if (!(Boolean) setReadable.invoke(file, true, true)
-          || !(Boolean) setWritable.invoke(file, true, true)
-          || !(Boolean) setExecutable.invoke(file, true, true)) {
-        LOGGER.warning("unable to change permissions for owner: " + file);
-      }
-    } catch (InvocationTargetException exception) {
-      Throwable cause = exception.getCause();
-      Throwables.propagateIfPossible(cause, IOException.class);
-      // shouldn't reach this point, but just in case...
-      throw new RuntimeException(cause);
-    } catch (NoSuchMethodException exception) {
-      LOGGER.warning(
-          "Unable to set permissions for "
-              + file
-              + ", likely because you are running a version of Java prior to 1.6");
+      Files.setPosixFilePermissions(Paths.get(file.getAbsolutePath()), permissions);
+    } catch (UnsupportedOperationException exception) {
+      LOGGER.warning("Unable to set permissions for " + file
+          + ", because you are running on a non-POSIX file system.");
     } catch (SecurityException exception) {
-      // ignored
-    } catch (IllegalAccessException exception) {
       // ignored
     } catch (IllegalArgumentException exception) {
       // ignored
     }
+  }
+
+  static void setPermissionsToOwnerOnlyWindows(File file) throws IOException {
+    Path path = Paths.get(file.getAbsolutePath());
+    UserPrincipal owner = path.getFileSystem().getUserPrincipalLookupService()
+        .lookupPrincipalByName("OWNER@");
+
+    // get view
+    AclFileAttributeView view = Files.getFileAttributeView(path, AclFileAttributeView.class);
+
+    // All available entries
+    Set<AclEntryPermission> permissions = ImmutableSet.of(
+        AclEntryPermission.APPEND_DATA,
+        AclEntryPermission.DELETE,
+        AclEntryPermission.DELETE_CHILD,
+        AclEntryPermission.READ_ACL,
+        AclEntryPermission.READ_ATTRIBUTES,
+        AclEntryPermission.READ_DATA,
+        AclEntryPermission.READ_NAMED_ATTRS,
+        AclEntryPermission.SYNCHRONIZE,
+        AclEntryPermission.WRITE_ACL,
+        AclEntryPermission.WRITE_ATTRIBUTES,
+        AclEntryPermission.WRITE_DATA,
+        AclEntryPermission.WRITE_NAMED_ATTRS,
+        AclEntryPermission.WRITE_OWNER
+    );
+
+    // create ACL to give owner everything
+    AclEntry entry = AclEntry.newBuilder()
+        .setType(AclEntryType.ALLOW)
+        .setPrincipal(owner)
+        .setPermissions(permissions)
+        .build();
+
+    // Overwrite the ACL with only this permission
+    view.setAcl(ImmutableList.of(entry));
   }
 }
