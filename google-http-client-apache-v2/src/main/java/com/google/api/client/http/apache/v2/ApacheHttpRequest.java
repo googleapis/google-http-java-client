@@ -33,11 +33,15 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
 
   private RequestConfig.Builder requestConfig;
 
+  @SuppressWarnings("deprecation")
   ApacheHttpRequest(HttpClient httpClient, HttpRequestBase request) {
     this.httpClient = httpClient;
     this.request = request;
     // disable redirects as google-http-client handles redirects
-    this.requestConfig = RequestConfig.custom().setRedirectsEnabled(false);
+    this.requestConfig = RequestConfig.custom()
+        .setRedirectsEnabled(false)
+        // TODO(chingor): configure in HttpClientBuilder when available
+        .setStaleConnectionCheckEnabled(false);
   }
 
   @Override
