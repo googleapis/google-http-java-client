@@ -155,19 +155,14 @@ public final class ApacheHttpTransport extends HttpTransport {
                     .setSndBufSize(8192)
                     .build();
 
-    PoolingHttpClientConnectionManager connectionManager =
-            new PoolingHttpClientConnectionManager(-1, TimeUnit.MILLISECONDS);
-    // Disable the stale connection check (previously configured in the HttpConnectionParams
-    connectionManager.setValidateAfterInactivity(-1);
-
     return HttpClientBuilder.create()
             .useSystemProperties()
             .setSSLSocketFactory(SSLConnectionSocketFactory.getSocketFactory())
             .setDefaultSocketConfig(socketConfig)
             .setMaxConnTotal(200)
             .setMaxConnPerRoute(20)
+            .setConnectionTimeToLive(-1, TimeUnit.MILLISECONDS)
             .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
-            .setConnectionManager(connectionManager)
             .disableRedirectHandling()
             .disableAutomaticRetries();
   }
