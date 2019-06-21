@@ -45,7 +45,9 @@ pushd target/site/apidocs
 python3 -m docuploader create-metadata \
   --name ${NAME} \
   --version ${VERSION} \
-  --language java
+  --language java \
+  --github-repository https://github.com/googleapis/google-http-java-client \
+  --issue-tracker https://github.com/googleapis/google-http-java-client/issues \
 
 # upload docs
 python3 -m docuploader upload . \
