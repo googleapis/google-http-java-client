@@ -36,10 +36,6 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>findbugs</artifactId>
       <version>3.0.1</version>
@@ -57,6 +53,11 @@
           <groupId>com.google.code.findbugs</groupId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>bcel-findbugs</artifactId>
+      <version>6.0</version>
     </dependency>
   </dependencies>
 </project>
