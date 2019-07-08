@@ -32,13 +32,17 @@
            <skip>true</skip>
          </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <!-- This is needed for Javadoc linking, but is not used in the compiled bytecode -->
+          <ignoredUnusedDeclaredDependencies>com.google.http-client:google-http-client</ignoredUnusedDeclaredDependencies>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <dependencies>
-    <dependency>
-      <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client</artifactId>
-    </dependency>
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>findbugs</artifactId>
@@ -57,6 +61,15 @@
           <groupId>com.google.code.findbugs</groupId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>bcel-findbugs</artifactId>
+      <version>6.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client</artifactId>
     </dependency>
   </dependencies>
 </project>

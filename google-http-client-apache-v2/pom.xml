@@ -18,7 +18,6 @@
         <configuration>
           <links>
             <link>https://download.oracle.com/javase/7/docs/api/</link>
-            <link>https://jar-download.com/artifacts/org.codehaus.jackson/jackson-core-asl/${project.jackson-core-asl.version}/documentation</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
@@ -88,23 +87,17 @@
       <artifactId>google-http-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <scope>test</scope>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
+      <artifactId>httpcore</artifactId>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>

@@ -148,6 +148,11 @@
         <version>${project.httpclient.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpcore</artifactId>
+        <version>${project.httpcore.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>${project.guava.version}</version>
@@ -357,6 +362,11 @@
           <artifactId>maven-site-plugin</artifactId>
           <version>3.7.1</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.1.1</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -552,6 +562,7 @@
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.commons-logging.version>1.2</project.commons-logging.version>
     <project.httpclient.version>4.5.9</project.httpclient.version>
+    <project.httpcore.version>4.4.11</project.httpcore.version>
     <project.opencensus.version>0.21.0</project.opencensus.version>
     <project.root-directory>..</project.root-directory>
     <deploy.autorelease>false</deploy.autorelease>

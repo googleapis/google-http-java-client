@@ -48,6 +48,14 @@
           </signature>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <!-- This artifact is needed by appengine-testing, but is not declared as a dependency -->
+          <ignoredUnusedDeclaredDependencies>com.google.appengine:appengine-api-stubs</ignoredUnusedDeclaredDependencies>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <dependencies>
@@ -78,11 +86,6 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
