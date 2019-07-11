@@ -20,6 +20,7 @@ import com.google.api.client.util.LoggingInputStream;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,13 +46,19 @@ import java.util.zip.GZIPInputStream;
  * response.disconnect();
  * }
  * </pre>
+ * or
+ * <pre>
+ * try (HttpResponse response = request.execute()) {
+ * // process the HTTP response object
+ * }
+ * </pre>
  *
  * <p>Implementation is not thread-safe.
  *
  * @since 1.0
  * @author Yaniv Inbar
  */
-public final class HttpResponse {
+public final class HttpResponse implements Closeable {
 
   /** HTTP response content or {@code null} before {@link #getContent()}. */
   private InputStream content;
@@ -398,9 +405,19 @@ public final class HttpResponse {
    * Close the HTTP response content using {@link #ignore}, and disconnect using {@link
    * LowLevelHttpResponse#disconnect()}.
    *
+   * @see #close()
    * @since 1.4
    */
   public void disconnect() throws IOException {
+    close();
+  }
+
+  /**
+   * Close the HTTP response content using {@link #ignore}, and disconnect using {@link
+   * LowLevelHttpResponse#disconnect()}.
+   */
+  @Override
+  public void close() throws IOException {
     ignore();
     response.disconnect();
   }
