@@ -331,7 +331,8 @@ public final class HttpResponse {
           if (!returnRawInputStream
               && contentEncoding != null
               && contentEncoding.contains("gzip")) {
-            lowLevelResponseContent = new GZIPInputStream(lowLevelResponseContent);
+            lowLevelResponseContent = new ConsumingInputStream(
+                new GZIPInputStream(lowLevelResponseContent));
           }
           // logging (wrap content with LoggingInputStream)
           Logger logger = HttpTransport.LOGGER;
@@ -354,6 +355,44 @@ public final class HttpResponse {
       contentRead = true;
     }
     return content;
+  }
+
+  static class ConsumingInputStream extends InputStream {
+    private InputStream inputStream;
+    private boolean closed = false;
+
+    private ConsumingInputStream(InputStream inputStream) {
+      this.inputStream = Preconditions.checkNotNull(inputStream);
+    }
+
+    @Override
+    public int read() throws IOException {
+      return inputStream.read();
+    }
+
+    @Override
+    public int read(byte[] b, int off, int len) throws IOException {
+      return inputStream.read(b, off, len);
+    }
+
+    @Override
+    public void close() throws IOException {
+      if (!closed && inputStream != null) {
+        try {
+          drainInputStream(this);
+          inputStream.close();
+        } finally {
+          this.closed = true;
+        }
+      }
+    }
+
+    static void drainInputStream(final InputStream inputStream) throws IOException {
+      byte buffer[] = new byte[1024];
+      while (inputStream.read(buffer) >= 0) {
+        // do nothing
+      }
+    }
   }
 
   /**
