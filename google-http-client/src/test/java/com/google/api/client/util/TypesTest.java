@@ -115,27 +115,26 @@ public class TypesTest extends TestCase {
   public void testResolveTypeVariable() throws Exception {
     // t
     TypeVariable<?> tTypeVar = (TypeVariable<?>) Resolve.class.getField("t").getGenericType();
-    assertNull(resolveTypeVariable(new Object().getClass(), tTypeVar));
-    assertNull(resolveTypeVariable(new Resolve<Boolean, Double>().getClass(), tTypeVar));
-    assertEquals(Integer.class, resolveTypeVariable(new IntegerResolve().getClass(), tTypeVar));
-    assertEquals(Long.class, resolveTypeVariable(new LongResolve().getClass(), tTypeVar));
-    assertEquals(Double.class, resolveTypeVariable(new DoubleResolve().getClass(), tTypeVar));
+    assertNull(resolveTypeVariable(Object.class, tTypeVar));
+    assertNull(resolveTypeVariable(Resolve.class, tTypeVar));
+    assertEquals(Integer.class, resolveTypeVariable(IntegerResolve.class, tTypeVar));
+    assertEquals(Long.class, resolveTypeVariable(LongResolve.class, tTypeVar));
+    assertEquals(Double.class, resolveTypeVariable(DoubleResolve.class, tTypeVar));
     // partially resolved
     assertEquals(
         MedResolve.class,
-        ((TypeVariable<?>) resolveTypeVariable(new MedResolve<Double>().getClass(), tTypeVar))
+        ((TypeVariable<?>) resolveTypeVariable(MedResolve.class, tTypeVar))
             .getGenericDeclaration());
     // x
     TypeVariable<?> xTypeVar = (TypeVariable<?>) Resolve.class.getField("x").getGenericType();
-    assertNull(resolveTypeVariable(new Object().getClass(), xTypeVar));
+    assertNull(resolveTypeVariable(Object.class, xTypeVar));
     assertEquals(
         Boolean.class,
-        Types.getArrayComponentType(resolveTypeVariable(new ArrayResolve().getClass(), xTypeVar)));
+        Types.getArrayComponentType(resolveTypeVariable(ArrayResolve.class, xTypeVar)));
     assertEquals(
         Collection.class,
         Types.getRawClass(
-            (ParameterizedType)
-                resolveTypeVariable(new ParameterizedResolve().getClass(), xTypeVar)));
+            (ParameterizedType) resolveTypeVariable(ParameterizedResolve.class, xTypeVar)));
   }
 
   private static Type resolveTypeVariable(Type context, TypeVariable<?> typeVariable) {

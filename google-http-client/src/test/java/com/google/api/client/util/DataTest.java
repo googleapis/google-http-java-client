@@ -306,40 +306,26 @@ public class DataTest extends TestCase {
   public void testResolveWildcardTypeOrTypeVariable() throws Exception {
     // t
     TypeVariable<?> tTypeVar = (TypeVariable<?>) Resolve.class.getField("t").getGenericType();
-    assertEquals(
-        Number.class, resolveWildcardTypeOrTypeVariable(new Object().getClass(), tTypeVar));
-    assertEquals(
-        Number.class,
-        resolveWildcardTypeOrTypeVariable(new Resolve<Boolean, Double>().getClass(), tTypeVar));
-    assertEquals(
-        Integer.class,
-        resolveWildcardTypeOrTypeVariable(new IntegerResolve().getClass(), tTypeVar));
-    assertEquals(
-        Long.class, resolveWildcardTypeOrTypeVariable(new LongResolve().getClass(), tTypeVar));
-    assertEquals(
-        Double.class, resolveWildcardTypeOrTypeVariable(new DoubleResolve().getClass(), tTypeVar));
+    assertEquals(Number.class, resolveWildcardTypeOrTypeVariable(Object.class, tTypeVar));
+    assertEquals(Number.class, resolveWildcardTypeOrTypeVariable(Resolve.class, tTypeVar));
+    assertEquals(Integer.class, resolveWildcardTypeOrTypeVariable(IntegerResolve.class, tTypeVar));
+    assertEquals(Long.class, resolveWildcardTypeOrTypeVariable(LongResolve.class, tTypeVar));
+    assertEquals(Double.class, resolveWildcardTypeOrTypeVariable(DoubleResolve.class, tTypeVar));
     // partially resolved
-    assertEquals(
-        Number.class,
-        resolveWildcardTypeOrTypeVariable(new MedResolve<Double>().getClass(), tTypeVar));
+    assertEquals(Number.class, resolveWildcardTypeOrTypeVariable(MedResolve.class, tTypeVar));
     // x
     TypeVariable<?> xTypeVar = (TypeVariable<?>) Resolve.class.getField("x").getGenericType();
-    assertEquals(
-        Object.class, resolveWildcardTypeOrTypeVariable(new Object().getClass(), xTypeVar));
+    assertEquals(Object.class, resolveWildcardTypeOrTypeVariable(Object.class, xTypeVar));
     assertEquals(
         Boolean.class,
         Types.getArrayComponentType(
-            resolveWildcardTypeOrTypeVariable(new ArrayResolve().getClass(), xTypeVar)));
+            resolveWildcardTypeOrTypeVariable(ArrayResolve.class, xTypeVar)));
     assertEquals(
         Collection.class,
         Types.getRawClass(
             (ParameterizedType)
-                resolveWildcardTypeOrTypeVariable(
-                    new ParameterizedResolve().getClass(), xTypeVar)));
-    assertEquals(
-        Number.class,
-        resolveWildcardTypeOrTypeVariable(
-            new MedXResolve<Integer, Integer>().getClass(), xTypeVar));
+                resolveWildcardTypeOrTypeVariable(ParameterizedResolve.class, xTypeVar)));
+    assertEquals(Number.class, resolveWildcardTypeOrTypeVariable(MedXResolve.class, xTypeVar));
   }
 
   private static Type resolveWildcardTypeOrTypeVariable(
