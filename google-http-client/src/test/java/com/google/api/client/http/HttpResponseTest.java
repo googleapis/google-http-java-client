@@ -33,7 +33,6 @@ import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import junit.framework.TestCase;
-import sun.net.www.http.ChunkedInputStream;
 
 /**
  * Tests {@link HttpResponse}.
