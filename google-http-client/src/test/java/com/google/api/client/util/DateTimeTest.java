@@ -14,10 +14,6 @@
 
 package com.google.api.client.util;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import com.google.api.client.util.DateTime.SecondsAndNanos;
 import java.util.Date;
 import java.util.HashMap;
@@ -155,7 +151,7 @@ public class DateTimeTest extends TestCase {
     assertEquals(
         DateTime.parseRfc3339(
             "2018-12-31T23:59:59.999999999Z"), // This value would be rounded up prior to version
-                                               // 1.30.2
+        // 1.30.2
         DateTime.parseRfc3339("2018-12-31T23:59:59.999Z"));
     assertEquals(
         DateTime.parseRfc3339(
@@ -224,14 +220,14 @@ public class DateTimeTest extends TestCase {
 
     for (Entry<String, SecondsAndNanos> entry : map.entrySet()) {
       SecondsAndNanos gTimestamp = DateTime.parseRfc3339ToSecondsAndNanos(entry.getKey());
-      assertThat(
+      assertEquals(
           "Seconds for " + entry + " do not match",
           gTimestamp.getSeconds(),
-          is(equalTo(entry.getValue().getSeconds())));
-      assertThat(
+          entry.getValue().getSeconds());
+      assertEquals(
           "Nanos for " + entry + " do not match",
           gTimestamp.getNanos(),
-          is(equalTo(entry.getValue().getNanos())));
+          entry.getValue().getNanos());
     }
   }
 
