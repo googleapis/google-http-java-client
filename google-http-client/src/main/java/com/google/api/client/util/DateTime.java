@@ -14,12 +14,15 @@
 
 package com.google.api.client.util;
 
+import com.google.common.base.Strings;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,12 +42,12 @@ public final class DateTime implements Serializable {
   private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
 
   /** Regular expression for parsing RFC3339 date/times. */
-  private static final Pattern RFC3339_PATTERN =
-      Pattern.compile(
-          "^(\\d{4})-(\\d{2})-(\\d{2})" // yyyy-MM-dd
-              + "([Tt](\\d{2}):(\\d{2}):(\\d{2})(\\.\\d+)?)?" // 'T'HH:mm:ss.milliseconds
-              + "([Zz]|([+-])(\\d{2}):(\\d{2}))?"); // 'Z' or time zone shift HH:mm following '+' or
-                                                    // '-'
+  private static final String RFC3339_REGEX =
+      "(\\d{4})-(\\d{2})-(\\d{2})" // yyyy-MM-dd
+          + "([Tt](\\d{2}):(\\d{2}):(\\d{2})(\\.\\d{1,9})?)?" // 'T'HH:mm:ss.nanoseconds
+          + "([Zz]|([+-])(\\d{2}):(\\d{2}))?"; // 'Z' or time zone shift HH:mm following '+' or '-'
+
+  private static final Pattern RFC3339_PATTERN = Pattern.compile(RFC3339_REGEX);
 
   /**
    * Date/time value expressed as the number of ms since the Unix epoch.
@@ -260,6 +263,11 @@ public final class DateTime implements Serializable {
    * NumberFormatException}. Also, in accordance with the RFC3339 standard, any number of
    * milliseconds digits is now allowed.
    *
+   * <p>Any time information beyond millisecond precision will be truncated. Prior to version 1.30.2
+   * this method did not have a well-defined behavior of what would happen with any time information
+   * beyond millisecond precision. This could cause some values with more than millisecond precision
+   * to be rounded up instead of truncated.
+   *
    * <p>For the date-only case, the time zone is ignored and the hourOfDay, minute, second, and
    * millisecond parameters are set to zero.
    *
@@ -269,6 +277,98 @@ public final class DateTime implements Serializable {
    *     time zone shift but no time.
    */
   public static DateTime parseRfc3339(String str) throws NumberFormatException {
+    return parseRfc3339WithNanoSeconds(str).toDateTime();
+  }
+
+  /**
+   * Parses an RFC3339 timestamp to a pair of seconds and nanoseconds since Unix Epoch.
+   *
+   * @param str Date/time string in RFC3339 format
+   * @throws NumberFormatException if {@code str} doesn't match the RFC3339 standard format; an
+   *     exception is thrown if {@code str} doesn't match {@code RFC3339_REGEX} or if it contains a
+   *     time zone shift but no time.
+   */
+  public static SecondsAndNanos parseRfc3339ToSecondsAndNanos(String str)
+      throws NumberFormatException {
+    return parseRfc3339WithNanoSeconds(str).toSecondsAndNanos();
+  }
+
+  /** A timestamp represented as the number of seconds and nanoseconds since Epoch. */
+  public static final class SecondsAndNanos implements Serializable {
+    private final long seconds;
+    private final int nanos;
+
+    public static SecondsAndNanos ofSecondsAndNanos(long seconds, int nanos) {
+      return new SecondsAndNanos(seconds, nanos);
+    }
+
+    private SecondsAndNanos(long seconds, int nanos) {
+      this.seconds = seconds;
+      this.nanos = nanos;
+    }
+
+    public long getSeconds() {
+      return seconds;
+    }
+
+    public int getNanos() {
+      return nanos;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+      SecondsAndNanos that = (SecondsAndNanos) o;
+      return seconds == that.seconds && nanos == that.nanos;
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(seconds, nanos);
+    }
+
+    @Override
+    public String toString() {
+      return String.format("Seconds: %d, Nanos: %d", seconds, nanos);
+    }
+  }
+
+  /** Result of parsing a Rfc3339 string. */
+  private static class Rfc3339ParseResult implements Serializable {
+    private final long seconds;
+    private final int nanos;
+    private final boolean timeGiven;
+    private final Integer tzShift;
+
+    private Rfc3339ParseResult(long seconds, int nanos, boolean timeGiven, Integer tzShift) {
+      this.seconds = seconds;
+      this.nanos = nanos;
+      this.timeGiven = timeGiven;
+      this.tzShift = tzShift;
+    }
+
+    /**
+     * Convert this {@link Rfc3339ParseResult} to a {@link DateTime} with millisecond precision. Any
+     * fraction of a millisecond will be truncated.
+     */
+    private DateTime toDateTime() {
+      long seconds = TimeUnit.SECONDS.toMillis(this.seconds);
+      long nanos = TimeUnit.NANOSECONDS.toMillis(this.nanos);
+      return new DateTime(!timeGiven, seconds + nanos, tzShift);
+    }
+
+    private SecondsAndNanos toSecondsAndNanos() {
+      return new SecondsAndNanos(seconds, nanos);
+    }
+  }
+
+  private static Rfc3339ParseResult parseRfc3339WithNanoSeconds(String str)
+      throws NumberFormatException {
     Matcher matcher = RFC3339_PATTERN.matcher(str);
     if (!matcher.matches()) {
       throw new NumberFormatException("Invalid date/time format: " + str);
@@ -283,7 +383,7 @@ public final class DateTime implements Serializable {
     int hourOfDay = 0;
     int minute = 0;
     int second = 0;
-    int milliseconds = 0;
+    int nanoseconds = 0;
     Integer tzShiftInteger = null;
 
     if (isTzShiftGiven && !isTimeGiven) {
@@ -297,34 +397,32 @@ public final class DateTime implements Serializable {
       hourOfDay = Integer.parseInt(matcher.group(5)); // HH
       minute = Integer.parseInt(matcher.group(6)); // mm
       second = Integer.parseInt(matcher.group(7)); // ss
-      if (matcher.group(8) != null) { // contains .milliseconds?
-        milliseconds = Integer.parseInt(matcher.group(8).substring(1)); // milliseconds
-        // The number of digits after the dot may not be 3. Need to renormalize.
-        int fractionDigits = matcher.group(8).substring(1).length() - 3;
-        milliseconds = (int) ((float) milliseconds / Math.pow(10, fractionDigits));
+      if (matcher.group(8) != null) { // contains .nanoseconds?
+        String fraction = Strings.padEnd(matcher.group(8).substring(1), 9, '0');
+        nanoseconds = Integer.parseInt(fraction);
       }
     }
     Calendar dateTime = new GregorianCalendar(GMT);
     dateTime.set(year, month, day, hourOfDay, minute, second);
-    dateTime.set(Calendar.MILLISECOND, milliseconds);
     long value = dateTime.getTimeInMillis();
 
     if (isTimeGiven && isTzShiftGiven) {
-      int tzShift;
-      if (Character.toUpperCase(tzShiftRegexGroup.charAt(0)) == 'Z') {
-        tzShift = 0;
-      } else {
-        tzShift =
+      if (Character.toUpperCase(tzShiftRegexGroup.charAt(0)) != 'Z') {
+        int tzShift =
             Integer.parseInt(matcher.group(11)) * 60 // time zone shift HH
                 + Integer.parseInt(matcher.group(12)); // time zone shift mm
         if (matcher.group(10).charAt(0) == '-') { // time zone shift + or -
           tzShift = -tzShift;
         }
         value -= tzShift * 60000L; // e.g. if 1 hour ahead of UTC, subtract an hour to get UTC time
+        tzShiftInteger = tzShift;
+      } else {
+        tzShiftInteger = 0;
       }
-      tzShiftInteger = tzShift;
     }
-    return new DateTime(!isTimeGiven, value, tzShiftInteger);
+    // convert to seconds and nanoseconds
+    long secondsSinceEpoch = value / 1000L;
+    return new Rfc3339ParseResult(secondsSinceEpoch, nanoseconds, isTimeGiven, tzShiftInteger);
   }
 
   /** Appends a zero-padded number to a string builder. */
