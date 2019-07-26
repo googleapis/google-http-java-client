@@ -263,10 +263,7 @@ public final class DateTime implements Serializable {
    * NumberFormatException}. Also, in accordance with the RFC3339 standard, any number of
    * milliseconds digits is now allowed.
    *
-   * <p>Any time information beyond millisecond precision will be truncated. Prior to version 1.30.2
-   * this method did not have a well-defined behavior of what would happen with any time information
-   * beyond millisecond precision. This could cause some values with more than millisecond precision
-   * to be rounded up instead of truncated.
+   * <p>Any time information beyond millisecond precision is truncated.
    *
    * <p>For the date-only case, the time zone is ignored and the hourOfDay, minute, second, and
    * millisecond parameters are set to zero.
@@ -284,12 +281,12 @@ public final class DateTime implements Serializable {
    * Parses an RFC3339 timestamp to a pair of seconds and nanoseconds since Unix Epoch.
    *
    * @param str Date/time string in RFC3339 format
-   * @throws NumberFormatException if {@code str} doesn't match the RFC3339 standard format; an
+   * @throws IllegalArgumentException if {@code str} doesn't match the RFC3339 standard format; an
    *     exception is thrown if {@code str} doesn't match {@code RFC3339_REGEX} or if it contains a
    *     time zone shift but no time.
    */
   public static SecondsAndNanos parseRfc3339ToSecondsAndNanos(String str)
-      throws NumberFormatException {
+      throws IllegalArgumentException {
     return parseRfc3339WithNanoSeconds(str).toSecondsAndNanos();
   }
 
