@@ -229,8 +229,8 @@ public class DateTimeTest extends TestCase {
   private void assertParsedRfc3339(String input, SecondsAndNanos expected) {
     SecondsAndNanos actual = DateTime.parseRfc3339ToSecondsAndNanos(input);
     assertEquals(
-        "Seconds for " + input + " do not match", actual.getSeconds(), expected.getSeconds());
-    assertEquals("Nanos for " + input + " do not match", actual.getNanos(), expected.getNanos());
+        "Seconds for " + input + " do not match", expected.getSeconds(), actual.getSeconds());
+    assertEquals("Nanos for " + input + " do not match", expected.getNanos(), actual.getNanos());
   }
 
   public void testParseAndFormatRfc3339() {
