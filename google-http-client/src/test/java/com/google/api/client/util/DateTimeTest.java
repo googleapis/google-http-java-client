@@ -16,9 +16,6 @@ package com.google.api.client.util;
 
 import com.google.api.client.util.DateTime.SecondsAndNanos;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TimeZone;
 import junit.framework.TestCase;
 
@@ -187,48 +184,53 @@ public class DateTimeTest extends TestCase {
    * </pre>
    */
   public void testParseRfc3339ToSecondsAndNanos() {
-    Map<String, SecondsAndNanos> map = new HashMap<>();
-    map.put("2018-03-01T10:11:12.999Z", SecondsAndNanos.ofSecondsAndNanos(1519899072L, 999000000));
-    map.put("2018-10-28T02:00:00+02:00", SecondsAndNanos.ofSecondsAndNanos(1540684800L, 0));
-    map.put("2018-10-28T03:00:00+01:00", SecondsAndNanos.ofSecondsAndNanos(1540692000L, 0));
-    map.put("2018-01-01T00:00:00.000000001Z", SecondsAndNanos.ofSecondsAndNanos(1514764800L, 1));
-    map.put("2018-10-28T02:00:00Z", SecondsAndNanos.ofSecondsAndNanos(1540692000L, 0));
-    map.put(
+    assertParsedRfc3339(
+        "2018-03-01T10:11:12.999Z", SecondsAndNanos.ofSecondsAndNanos(1519899072L, 999000000));
+    assertParsedRfc3339(
+        "2018-10-28T02:00:00+02:00", SecondsAndNanos.ofSecondsAndNanos(1540684800L, 0));
+    assertParsedRfc3339(
+        "2018-10-28T03:00:00+01:00", SecondsAndNanos.ofSecondsAndNanos(1540692000L, 0));
+    assertParsedRfc3339(
+        "2018-01-01T00:00:00.000000001Z", SecondsAndNanos.ofSecondsAndNanos(1514764800L, 1));
+    assertParsedRfc3339("2018-10-28T02:00:00Z", SecondsAndNanos.ofSecondsAndNanos(1540692000L, 0));
+    assertParsedRfc3339(
         "2018-12-31T23:59:59.999999999Z",
         SecondsAndNanos.ofSecondsAndNanos(1546300799L, 999999999));
-    map.put("2018-03-01T10:11:12.9999Z", SecondsAndNanos.ofSecondsAndNanos(1519899072L, 999900000));
-    map.put("2018-03-01T10:11:12.000000001Z", SecondsAndNanos.ofSecondsAndNanos(1519899072L, 1));
-    map.put(
+    assertParsedRfc3339(
+        "2018-03-01T10:11:12.9999Z", SecondsAndNanos.ofSecondsAndNanos(1519899072L, 999900000));
+    assertParsedRfc3339(
+        "2018-03-01T10:11:12.000000001Z", SecondsAndNanos.ofSecondsAndNanos(1519899072L, 1));
+    assertParsedRfc3339(
         "2018-03-01T10:11:12.100000000Z",
         SecondsAndNanos.ofSecondsAndNanos(1519899072L, 100000000));
-    map.put(
+    assertParsedRfc3339(
         "2018-03-01T10:11:12.100000001Z",
         SecondsAndNanos.ofSecondsAndNanos(1519899072L, 100000001));
-    map.put("2018-03-01T10:11:12-10:00", SecondsAndNanos.ofSecondsAndNanos(1519935072L, 0));
-    map.put(
+    assertParsedRfc3339(
+        "2018-03-01T10:11:12-10:00", SecondsAndNanos.ofSecondsAndNanos(1519935072L, 0));
+    assertParsedRfc3339(
         "2018-03-01T10:11:12.999999999Z",
         SecondsAndNanos.ofSecondsAndNanos(1519899072L, 999999999));
-    map.put("2018-03-01T10:11:12-12:00", SecondsAndNanos.ofSecondsAndNanos(1519942272L, 0));
-    map.put("2018-10-28T03:00:00Z", SecondsAndNanos.ofSecondsAndNanos(1540695600L, 0));
-    map.put("2018-10-28T02:30:00Z", SecondsAndNanos.ofSecondsAndNanos(1540693800L, 0));
-    map.put("2018-03-01T10:11:12.123Z", SecondsAndNanos.ofSecondsAndNanos(1519899072L, 123000000));
-    map.put("2018-10-28T02:30:00+02:00", SecondsAndNanos.ofSecondsAndNanos(1540686600L, 0));
-    map.put(
+    assertParsedRfc3339(
+        "2018-03-01T10:11:12-12:00", SecondsAndNanos.ofSecondsAndNanos(1519942272L, 0));
+    assertParsedRfc3339("2018-10-28T03:00:00Z", SecondsAndNanos.ofSecondsAndNanos(1540695600L, 0));
+    assertParsedRfc3339("2018-10-28T02:30:00Z", SecondsAndNanos.ofSecondsAndNanos(1540693800L, 0));
+    assertParsedRfc3339(
+        "2018-03-01T10:11:12.123Z", SecondsAndNanos.ofSecondsAndNanos(1519899072L, 123000000));
+    assertParsedRfc3339(
+        "2018-10-28T02:30:00+02:00", SecondsAndNanos.ofSecondsAndNanos(1540686600L, 0));
+    assertParsedRfc3339(
         "2018-03-01T10:11:12.123456789Z",
         SecondsAndNanos.ofSecondsAndNanos(1519899072L, 123456789));
-    map.put("2018-03-01T10:11:12.1000Z", SecondsAndNanos.ofSecondsAndNanos(1519899072L, 100000000));
+    assertParsedRfc3339(
+        "2018-03-01T10:11:12.1000Z", SecondsAndNanos.ofSecondsAndNanos(1519899072L, 100000000));
+  }
 
-    for (Entry<String, SecondsAndNanos> entry : map.entrySet()) {
-      SecondsAndNanos gTimestamp = DateTime.parseRfc3339ToSecondsAndNanos(entry.getKey());
-      assertEquals(
-          "Seconds for " + entry + " do not match",
-          gTimestamp.getSeconds(),
-          entry.getValue().getSeconds());
-      assertEquals(
-          "Nanos for " + entry + " do not match",
-          gTimestamp.getNanos(),
-          entry.getValue().getNanos());
-    }
+  private void assertParsedRfc3339(String input, SecondsAndNanos expected) {
+    SecondsAndNanos actual = DateTime.parseRfc3339ToSecondsAndNanos(input);
+    assertEquals(
+        "Seconds for " + input + " do not match", actual.getSeconds(), expected.getSeconds());
+    assertEquals("Nanos for " + input + " do not match", actual.getNanos(), expected.getNanos());
   }
 
   public void testParseAndFormatRfc3339() {
