@@ -24,4 +24,5 @@ s.copy(templates, excludes=[
     "java.header",
     "checkstyle.xml",
     "renovate.json",
+    "license-checks.xml",
 ])
