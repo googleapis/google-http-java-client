@@ -14,20 +14,17 @@
 # limitations under the License.
 
 set -eo pipefail
-# Display commands being run.
-set -x
 
-cd github/google-http-java-client/
+source $(dirname "$0")/common.sh
+MAVEN_SETTINGS_FILE=$(realpath $(dirname "$0")/../../)/settings.xml
+pushd $(dirname "$0")/../../
 
-# Print out Java version
-java -version
-echo ${JOB_TYPE}
+setup_environment_secrets
+create_settings_xml_file "settings.xml"
 
-mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgcloud.download.skip=true -B -V
-
-# Kokoro job cloud-opensource-java/ubuntu/linkage-monitor-gcs creates this JAR
-JAR=linkage-monitor-latest-all-deps.jar
-curl -v -O "https://storage.googleapis.com/cloud-opensource-java-linkage-monitor/${JAR}"
-
-# Fails if there's new linkage errors compared with baseline
-java -jar ${JAR} com.google.cloud:libraries-bom
+mvn clean install deploy -B \
+  --settings ${MAVEN_SETTINGS_FILE} \
+  -DperformRelease=true \
+  -Dgpg.executable=gpg \
+  -Dgpg.passphrase=${GPG_PASSPHRASE} \
+  -Dgpg.homedir=${GPG_HOMEDIR}

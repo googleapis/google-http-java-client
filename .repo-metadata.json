@@ -1,0 +1,10 @@
+{
+  "name": "google-http-client",
+  "name_pretty": "Google HTTP Java Client",
+  "client_documentation": "https://googleapis.dev/java/google-http-client/latest/",
+  "release_level": "ga",
+  "language": "java",
+  "repo": "googleapis/google-http-java-client",
+  "repo_short": "google-http-java-client",
+  "distribution_name": "google-http-java-client"
+}
