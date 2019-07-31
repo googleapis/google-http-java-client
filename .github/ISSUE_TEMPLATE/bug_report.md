@@ -46,6 +46,6 @@ Any relevant stacktrace here.
 #### Any additional information below
 
 
-Making sure to follow these steps will guarantee the quickest resolution possible.
+Following these steps guarantees the quickest resolution possible.
 
 Thanks!
