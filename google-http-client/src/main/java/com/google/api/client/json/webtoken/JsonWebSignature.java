@@ -482,6 +482,11 @@ public class JsonWebSignature extends JsonWebToken {
     return signedContentBytes;
   }
 
+  /** Returns the URLsafe base64 encoded JWS token */
+  public String getRawToken() {
+    return super.getRawToken() + "." + Base64.encodeBase64URLSafeString(getSignatureBytes());
+  }
+
   /**
    * Parses the given JWS token string and returns the parsed {@link JsonWebSignature}.
    *

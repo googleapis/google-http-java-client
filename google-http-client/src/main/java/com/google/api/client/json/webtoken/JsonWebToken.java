@@ -15,6 +15,7 @@
 package com.google.api.client.json.webtoken;
 
 import com.google.api.client.json.GenericJson;
+import com.google.api.client.util.Base64;
 import com.google.api.client.util.Key;
 import com.google.api.client.util.Objects;
 import com.google.api.client.util.Preconditions;
@@ -359,6 +360,12 @@ public class JsonWebToken {
   @Override
   public String toString() {
     return Objects.toStringHelper(this).add("header", header).add("payload", payload).toString();
+  }
+
+  public String getRawToken() {
+    return Base64.encodeBase64URLSafeString(header.toString().getBytes())
+        + "."
+        + Base64.encodeBase64URLSafeString(payload.toString().getBytes());
   }
 
   /**
