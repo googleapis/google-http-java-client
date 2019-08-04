@@ -49,8 +49,8 @@ public class JsonWebSignatureTest extends TestCase {
   public void testRawToken() throws Exception {
     String rawToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ikp"
         + "vaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-    JsonWebSignature jws = JsonWebSignature.parse(new MockJsonFactory(), rawToken);
-    assertEquals(jws.getRawToken(), rawToken);
+    JsonWebSignature signature = JsonWebSignature.parse(new MockJsonFactory(), rawToken);
+    assertEquals(signature.getRawToken(), rawToken);
   }
 
   private X509Certificate verifyX509WithCaCert(TestCertificates.CertData caCert) throws Exception {
