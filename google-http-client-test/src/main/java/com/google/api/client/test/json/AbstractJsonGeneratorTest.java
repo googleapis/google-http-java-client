@@ -38,7 +38,7 @@ public abstract class AbstractJsonGeneratorTest extends TestCase {
     StringWriter writer = new StringWriter();
     JsonGenerator generator = newGenerator(writer);
 
-    Map m = new HashMap<String, String>();
+    Map<String, String> m = new HashMap<String, String>();
     m.put("a", "b");
 
     generator.serialize(m);

@@ -15,11 +15,14 @@
 package com.google.api.client.util;
 
 import com.google.api.client.util.GenericData.Flags;
+
+import junit.framework.TestCase;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import junit.framework.Assert;
-import junit.framework.TestCase;
+
+import org.junit.Assert;
 
 /**
  * Tests {@link GenericData}.
@@ -191,7 +194,7 @@ public class GenericDataTest extends TestCase {
     MyData data = new MyData();
     data.put("fieldB", "value1");
     assertEquals("value1", data.fieldB.get(0));
-    List<String> list = new ArrayList();
+    List<String> list = new ArrayList<>();
     list.add("value2");
     data.put("fieldB", list);
     assertEquals(list, data.fieldB);

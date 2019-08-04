@@ -81,7 +81,6 @@ public final class NetHttpTransport extends HttpTransport {
 
   private static final String SHOULD_USE_PROXY_FLAG = "com.google.api.client.should_use_proxy";
 
-  /** Factory to produce connections from {@link URL}s */
   private final ConnectionFactory connectionFactory;
 
   /** SSL socket factory or {@code null} for the default. */

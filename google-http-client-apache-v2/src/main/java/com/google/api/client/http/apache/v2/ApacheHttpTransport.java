@@ -16,17 +16,9 @@ package com.google.api.client.http.apache.v2;
 
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.util.Preconditions;
-import com.google.api.client.util.SecurityUtils;
-import com.google.api.client.util.SslUtils;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.ProxySelector;
-import java.security.GeneralSecurityException;
-import java.security.KeyStore;
-import java.security.cert.CertificateFactory;
 import java.util.concurrent.TimeUnit;
-import javax.net.ssl.SSLContext;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
