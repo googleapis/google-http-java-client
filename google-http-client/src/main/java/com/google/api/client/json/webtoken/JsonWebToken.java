@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Google Inc.
+ * Copyright 2012 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * <a href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-08">JSON Web Token (JWT)</a>.
+ * <a href="https://tools.ietf.org/html/rfc7519">JSON Web Token (JWT)</a>.
  *
  * <p>Implementation is not thread-safe.
  *
@@ -47,8 +47,8 @@ public class JsonWebToken {
   }
 
   /**
-   * Header as specified in <a
-   * href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-08#section-5">JWT Header</a>.
+   * Header as specified in 
+   * <a href="https://tools.ietf.org/html/rfc7519#section-5">JWT Header</a>.
    */
   public static class Header extends GenericJson {
 
@@ -115,8 +115,8 @@ public class JsonWebToken {
   }
 
   /**
-   * Payload as specified in <a
-   * href="http://tools.ietf.org/html/draft-ietf-oauth-json-web-token-08#section-4.1">Reserved Claim
+   * Payload as specified in 
+   * <a href="https://tools.ietf.org/html/rfc7519#section-4.1">Reserved Claim
    * Names</a>.
    */
   public static class Payload extends GenericJson {
