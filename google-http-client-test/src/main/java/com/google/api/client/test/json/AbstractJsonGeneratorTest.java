@@ -38,10 +38,10 @@ public abstract class AbstractJsonGeneratorTest extends TestCase {
     StringWriter writer = new StringWriter();
     JsonGenerator generator = newGenerator(writer);
 
-    Map m = new HashMap<String, String>();
-    m.put("a", "b");
+    Map<String, String> map = new HashMap<String, String>();
+    map.put("a", "b");
 
-    generator.serialize(m);
+    generator.serialize(map);
     generator.close();
     assertEquals("{\"a\":\"b\"}", writer.toString());
   }
@@ -50,10 +50,10 @@ public abstract class AbstractJsonGeneratorTest extends TestCase {
     StringWriter writer = new StringWriter();
     JsonGenerator generator = newGenerator(writer);
 
-    Map m = new IterableMap();
-    m.put("a", "b");
+    Map<String, String> map = new IterableMap();
+    map.put("a", "b");
 
-    generator.serialize(m);
+    generator.serialize(map);
     generator.close();
     assertEquals("{\"a\":\"b\"}", writer.toString());
   }

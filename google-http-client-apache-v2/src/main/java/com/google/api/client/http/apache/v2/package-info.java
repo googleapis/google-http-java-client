@@ -13,7 +13,7 @@
  */
 
 /**
- * HTTP Transport library for Google API's based on Apache HTTP Client version 4.5+
+ * HTTP Transport library for Google API's based on Apache HTTP Client version 4.5+.
  *
  * @since 1.30
  * @author Yaniv Inbar

@@ -115,7 +115,6 @@ public class FieldInfo {
   /** Field. */
   private final Field field;
 
-  /** Setters Method for field */
   private final Method[] setters;
 
   /**

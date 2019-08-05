@@ -30,9 +30,9 @@ public abstract class AbstractJsonParserTest extends TestCase {
 
   protected abstract JsonFactory newJsonFactory();
 
-  private static String TEST_JSON =
+  private static final String TEST_JSON =
       "{\"strValue\": \"bar\", \"intValue\": 123, \"boolValue\": false}";
-  private static String TEST_JSON_BIG_DECIMAL = "{\"bigDecimalValue\": 1559341956102}";
+  private static final String TEST_JSON_BIG_DECIMAL = "{\"bigDecimalValue\": 1559341956102}";
 
   public void testParse_basic() throws IOException {
     JsonObjectParser parser = new JsonObjectParser(newJsonFactory());
