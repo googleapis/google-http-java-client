@@ -17,13 +17,15 @@ nosetests.xml
 
 # Mr Developer
 .mr.developer.cfg
-.project
+
+**/.project
 .pydevproject
 *.iml
 .idea
 .settings
 .DS_Store
-.classpath
+**/.classpath
+**/.checkstyle
 
 # Built documentation
 docs/

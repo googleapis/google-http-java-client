@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Google Inc.
+ * Copyright 2012 Google LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -38,15 +38,14 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 /**
- * <a href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-11">JSON Web Signature
- * (JWS)</a>.
+ * <a href="https://tools.ietf.org/html/rfc7515">JSON Web Signature(JWS)</a>.
  *
  * <p>Sample usage:
  *
  * <pre>
  * public static void printPayload(JsonFactory jsonFactory, String tokenString) throws IOException {
- * JsonWebSignature jws = JsonWebSignature.parse(jsonFactory, tokenString);
- * System.out.println(jws.getPayload());
+ *   JsonWebSignature jws = JsonWebSignature.parse(jsonFactory, tokenString);
+ *   System.out.println(jws.getPayload());
  * }
  * </pre>
  *
@@ -67,7 +66,7 @@ public class JsonWebSignature extends JsonWebToken {
    * @param header header
    * @param payload payload
    * @param signatureBytes bytes of the signature
-   * @param signedContentBytes bytes of the signature content
+   * @param signedContentBytes bytes of the signed content
    */
   public JsonWebSignature(
       Header header, Payload payload, byte[] signatureBytes, byte[] signedContentBytes) {
@@ -77,8 +76,8 @@ public class JsonWebSignature extends JsonWebToken {
   }
 
   /**
-   * Header as specified in <a
-   * href="http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-11#section-4.1">Reserved
+   * Header as specified in 
+   * <a href="https://tools.ietf.org/html/rfc7515#section-4.1">Reserved
    * Header Parameter Names</a>.
    */
   public static class Header extends JsonWebToken.Header {
@@ -406,11 +405,11 @@ public class JsonWebSignature extends JsonWebToken {
    *
    * <p>The leaf certificate of the certificate chain must be an SSL server certificate.
    *
-   * @param trustManager Trust manager used to verify the X509 certificate chain embedded in this
-   *     message.
-   * @return The signature certificate if the signature could be verified, null otherwise.
+   * @param trustManager trust manager used to verify the X509 certificate chain embedded in this
+   *     message
+   * @return the signature certificate if the signature could be verified, null otherwise
    * @throws GeneralSecurityException
-   * @since 1.19.1.
+   * @since 1.19.1
    */
   @Beta
   public final X509Certificate verifySignature(X509TrustManager trustManager)
@@ -441,7 +440,7 @@ public class JsonWebSignature extends JsonWebToken {
    *
    * <p>The leaf certificate of the certificate chain must be an SSL server certificate.
    *
-   * @return The signature certificate if the signature could be verified, null otherwise.
+   * @return the signature certificate if the signature could be verified, null otherwise
    * @throws GeneralSecurityException
    * @since 1.19.1.
    */
