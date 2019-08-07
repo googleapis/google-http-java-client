@@ -4,13 +4,13 @@
 <differences>
   <difference>
     <differenceType>7002</differenceType>
-    <className>com/google/api/client/json/webtoken/JsonWebSignature/Header</className>
-    <methodName>java.lang.String getX509Certificate()</methodName>
+    <className>com/google/api/client/json/webtoken/*</className>
+    <method>java.lang.String getX509Certificate()</method>
   </difference>
   <difference>
     <differenceType>7002</differenceType>
-    <className>com/google/api/client/json/webtoken/JsonWebSignature/Header</className>
-    <methodName>com.google.api.client.json.webtoken.JsonWebSignature$Header setX509Certificate(java.lang.String)</methodName>
+    <className>com/google/api/client/json/webtoken/*</className>
+    <method>com.google.api.client.json.webtoken.JsonWebSignature$Header setX509Certificate(java.lang.String)</method>
   </difference>
 
   <!-- 8001 (Class removed): className -->
