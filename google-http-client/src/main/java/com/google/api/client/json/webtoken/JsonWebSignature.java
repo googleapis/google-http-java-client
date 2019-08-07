@@ -32,6 +32,7 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
@@ -471,14 +472,14 @@ public class JsonWebSignature extends JsonWebToken {
     }
   }
 
-  /** Returns the modifiable array of bytes of the signature. */
+  /** Returns the bytes of the signature. */
   public final byte[] getSignatureBytes() {
-    return signatureBytes;
+    return Arrays.copyOf(signatureBytes, signatureBytes.length);
   }
 
-  /** Returns the modifiable array of bytes of the signature content. */
+  /** Returns the bytes of the signature content. */
   public final byte[] getSignedContentBytes() {
-    return signedContentBytes;
+    return Arrays.copyOf(signedContentBytes, signedContentBytes.length);
   }
 
   /**

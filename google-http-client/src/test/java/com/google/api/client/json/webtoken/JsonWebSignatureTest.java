@@ -17,9 +17,15 @@ package com.google.api.client.json.webtoken;
 import com.google.api.client.testing.json.MockJsonFactory;
 import com.google.api.client.testing.json.webtoken.TestCertificates;
 import com.google.api.client.testing.util.SecurityTestUtils;
+
+import java.io.IOException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import javax.net.ssl.X509TrustManager;
+
+import org.junit.Assert;
+import org.junit.Test;
+
 import junit.framework.TestCase;
 
 /**
@@ -29,6 +35,7 @@ import junit.framework.TestCase;
  */
 public class JsonWebSignatureTest extends TestCase {
 
+  @Test
   public void testSign() throws Exception {
     JsonWebSignature.Header header = new JsonWebSignature.Header();
     header.setAlgorithm("RS256");
@@ -51,13 +58,34 @@ public class JsonWebSignatureTest extends TestCase {
     X509TrustManager trustManager = caCert.getTrustManager();
     return signature.verifySignature(trustManager);
   }
+  
+  @Test
+  public void testImmutableSignatureBytes() throws IOException {
+    JsonWebSignature signature = TestCertificates.getJsonWebSignature();
+    byte[] bytes = signature.getSignatureBytes();
+    bytes[0] = (byte) (bytes[0] + 1);
+    byte[] bytes2 = signature.getSignatureBytes();
+    Assert.assertNotEquals(bytes2[0], bytes[0]);
+  }
+  
+  @Test
+  public void testImmutableSignedContentBytes() throws IOException {
+    JsonWebSignature signature = TestCertificates.getJsonWebSignature();
+    byte[] bytes = signature.getSignedContentBytes();
+    bytes[0] = (byte) (bytes[0] + 1);
+    byte[] bytes2 = signature.getSignedContentBytes();
+    Assert.assertNotEquals(bytes2[0], bytes[0]);
+  }
 
+
+  @Test
   public void testVerifyX509() throws Exception {
     X509Certificate signatureCert = verifyX509WithCaCert(TestCertificates.CA_CERT);
     assertNotNull(signatureCert);
     assertTrue(signatureCert.getSubjectDN().getName().startsWith("CN=foo.bar.com"));
   }
 
+  @Test
   public void testVerifyX509WrongCa() throws Exception {
     assertNull(verifyX509WithCaCert(TestCertificates.BOGUS_CA_CERT));
   }
