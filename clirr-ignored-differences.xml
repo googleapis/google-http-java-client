@@ -5,12 +5,12 @@
   <difference>
     <differenceType>7002</differenceType>
     <className>com/google/api/client/json/webtoken/JsonWebSignature/Header</className>
-    <methodName>String getX509Certificate()</methodName>
+    <methodName>java.lang.String getX509Certificate()</methodName>
   </difference>
   <difference>
     <differenceType>7002</differenceType>
     <className>com/google/api/client/json/webtoken/JsonWebSignature/Header</className>
-    <methodName>Header setX509Certificate(String)</methodName>
+    <methodName>com.google.api.client.json.webtoken.JsonWebSignature$Header setX509Certificate(java.lang.String)</methodName>
   </difference>
 
   <!-- 8001 (Class removed): className -->
