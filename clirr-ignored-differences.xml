@@ -2,6 +2,17 @@
 <!-- see http://www.mojohaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
 
 <differences>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/json/webtoken/JsonWebSignature/Header</className>
+    <methodName>getX509Certificate</methodName>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/api/client/json/webtoken/JsonWebSignature/Header</className>
+    <methodName>setX509Certificate</methodName>
+  </difference>
+
   <!-- 8001 (Class removed): className -->
   <difference>
     <differenceType>8001</differenceType>
