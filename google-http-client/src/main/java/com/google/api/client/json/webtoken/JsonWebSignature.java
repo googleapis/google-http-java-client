@@ -279,21 +279,6 @@ public class JsonWebSignature extends JsonWebToken {
 
     /**
      * Returns the X.509 certificate chain header parameter contains the X.509 public key
-     * certificate or corresponding to the key used to digitally sign the JWS or {@code null} for
-     * none.
-     *
-     * <p>@deprecated Since release 1.19.1, replaced by {@link #getX509Certificates()}.
-     */
-    @Deprecated
-    public final String getX509Certificate() {
-      if (x509Certificates == null || x509Certificates.isEmpty()) {
-        return null;
-      }
-      return x509Certificates.get(0);
-    }
-
-    /**
-     * Returns the X.509 certificate chain header parameter contains the X.509 public key
      * certificate or certificate chain corresponding to the key used to digitally sign the JWS or
      * {@code null} for none.
      *
@@ -301,24 +286,6 @@ public class JsonWebSignature extends JsonWebToken {
      */
     public final List<String> getX509Certificates() {
       return new ArrayList<>(x509Certificates);
-    }
-
-    /**
-     * Sets the X.509 certificate chain header parameter contains the X.509 public key certificate
-     * corresponding to the key used to digitally sign the JWS or {@code null} for none.
-     *
-     * <p>Overriding is only supported for the purpose of calling the super implementation and
-     * changing the return type, but nothing else.
-     *
-     * <p>@deprecated Since release 1.19.1, replaced by {@link #setX509Certificates(List
-     * x509Certificates)}.
-     */
-    @Deprecated
-    public Header setX509Certificate(String x509Certificate) {
-      ArrayList<String> x509Certificates = new ArrayList<String>();
-      x509Certificates.add(x509Certificate);
-      this.x509Certificates = x509Certificates;
-      return this;
     }
 
     /**
