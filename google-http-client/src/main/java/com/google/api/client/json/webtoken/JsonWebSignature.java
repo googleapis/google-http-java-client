@@ -136,7 +136,7 @@ public class JsonWebSignature extends JsonWebToken {
      * @since 1.19.1.
      */
     @Key("x5c")
-    private List<String> x509Certificates;
+    private ArrayList<String> x509Certificates;
 
     /**
      * Array listing the header parameter names that define extensions that are used in the JWS
@@ -300,7 +300,7 @@ public class JsonWebSignature extends JsonWebToken {
      * @since 1.19.1.
      */
     public final List<String> getX509Certificates() {
-      return x509Certificates;
+      return new ArrayList<>(x509Certificates);
     }
 
     /**
@@ -332,22 +332,25 @@ public class JsonWebSignature extends JsonWebToken {
      * @since 1.19.1.
      */
     public Header setX509Certificates(List<String> x509Certificates) {
-      this.x509Certificates = x509Certificates;
+      this.x509Certificates = new ArrayList<>(x509Certificates);
       return this;
     }
 
     /**
-     * Returns the array listing the header parameter names that define extensions that are used in
+     * Returns an array listing the header parameter names that define extensions used in
      * the JWS header that MUST be understood and processed or {@code null} for none.
      *
      * @since 1.16
      */
     public final List<String> getCritical() {
-      return critical;
+      if (critical == null || critical.isEmpty()) {
+        return null;
+      }
+      return new ArrayList<>(critical);
     }
 
     /**
-     * Sets the array listing the header parameter names that define extensions that are used in the
+     * Sets the header parameter names that define extensions used in the
      * JWS header that MUST be understood and processed or {@code null} for none.
      *
      * <p>Overriding is only supported for the purpose of calling the super implementation and
@@ -356,7 +359,7 @@ public class JsonWebSignature extends JsonWebToken {
      * @since 1.16
      */
     public Header setCritical(List<String> critical) {
-      this.critical = critical;
+      this.critical = new ArrayList<>(critical);
       return this;
     }
 

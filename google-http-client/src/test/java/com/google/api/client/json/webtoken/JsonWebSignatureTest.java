@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.net.ssl.X509TrustManager;
 
 import org.junit.Assert;
@@ -76,7 +79,29 @@ public class JsonWebSignatureTest {
     byte[] bytes2 = signature.getSignedContentBytes();
     Assert.assertNotEquals(bytes2[0], bytes[0]);
   }
+  
+  @Test
+  public void testImmutableCertificates() throws IOException {
+    JsonWebSignature signature = TestCertificates.getJsonWebSignature();
+    List<String> certificates = signature.getHeader().getX509Certificates();
+    certificates.set(0, "foo");
+    Assert.assertNotEquals("foo", signature.getHeader().getX509Certificates().get(0));
+  }
+  
+  @Test
+  public void testImmutableCritical() throws IOException {
+    JsonWebSignature signature = TestCertificates.getJsonWebSignature();
+    List<String> critical = new ArrayList<>();
+    signature.getHeader().setCritical(critical);
+    critical.add("bar");
+    Assert.assertNull(signature.getHeader().getCritical());
+  }
 
+  @Test
+  public void testCriticalNullForNone() throws IOException {
+    JsonWebSignature signature = TestCertificates.getJsonWebSignature();
+    Assert.assertNull(signature.getHeader().getCritical());
+  }
 
   @Test
   public void testVerifyX509() throws Exception {
