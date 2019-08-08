@@ -100,19 +100,6 @@ public class MockHttpTransport extends HttpTransport {
   }
 
   /**
-   * Returns an instance of a new builder.
-   *
-   * <p>
-   *
-   * @deprecated (to be removed in the future) Use {@link Builder#Builder()} instead.
-   * @since 1.5
-   */
-  @Deprecated
-  public static Builder builder() {
-    return new Builder();
-  }
-
-  /**
    * {@link Beta} <br>
    * Builder for {@link MockHttpTransport}.
    *
