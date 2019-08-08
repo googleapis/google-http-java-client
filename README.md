@@ -19,19 +19,29 @@ The library supports the following Java environments:
 
 The following related projects are built on the Google HTTP Client Library for Java:
 
-- [Google OAuth Client Library for Java](https://github.com/googleapis/google-oauth-java-client),
-for the OAuth 2.0 and OAuth 1.0a authorization standards.
-- [Google APIs Client Library for Java](https://github.com/googleapis/google-api-java-client), for
-access to Google APIs.
+- [Google OAuth Client Library for Java][google-oauth-client], for the OAuth 2.0 and OAuth 1.0a
+authorization standards.
+- [Google APIs Client Library for Java][google-api-client], for access to Google APIs.
 
-This is an open-source library, and
-[contributions](https://developers.google.com/api-client-library/java/google-http-java-client/contribute)
-are welcome.
+This is an open-source library, and [contributions][contributions] are welcome.
+
+## Beta Features
+
+Features marked with the `@Beta` annotation at the class or method level are subject to change. They
+might be modified in any way, or even removed, in any major release. You should not use beta
+features if your code is a library itself (that is, if your code is used on the `CLASSPATH` of users
+outside your own control).
+
+## Deprecated Features
+
+Deprecated non-beta features will be removed eighteen months after the release in which they are
+first deprecated. You must fix your usages before this time. If you don't, any type of breakage
+might result, and you are not guaranteed a compilation error.
 
 ## Documentation
 
-- [Developer's Guide](https://developers.google.com/api-client-library/java/google-http-java-client/)
-- [Setup Instructions](https://developers.google.com/api-client-library/java/google-http-java-client/setup)
+- [Developer's Guide](https://github.com/googleapis/google-http-java-client/wiki)
+- [Setup Instructions](https://github.com/googleapis/google-http-java-client/wiki/Setup-Instructions)
 - [JavaDoc](https://googleapis.dev/java/google-http-client/latest/)
 - [Release Notes](https://github.com/googleapis/google-http-java-client/releases)
 - [Support (Questions, Bugs)](https://developers.google.com/api-client-library/java/google-http-java-client/support)
@@ -44,6 +54,7 @@ Java 7 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/b
 Java 8 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java8.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java8.html)
 Java 11 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java11.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java11.html)
 
-## Links
 
-- [Discuss](https://groups.google.com/group/google-http-java-client)
+[google-oauth-client]: https://github.com/googleapis/google-oauth-java-client
+[google-api-client]: https://github.com/googleapis/google-api-java-client
+[contributions]: CONTRIBUTING.md
