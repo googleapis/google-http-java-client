@@ -55,6 +55,16 @@
           </execution>
         </executions>
       </plugin>
+     <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>  
+            <manifestEntries>
+              <Automatic-Module-Name>com.google.api.client.json.gson</Automatic-Module-Name>
+            </manifestEntries>
+          </archive> 
+        </configuration>
+      </plugin> 
     </plugins>
   </build>
   <dependencies>
