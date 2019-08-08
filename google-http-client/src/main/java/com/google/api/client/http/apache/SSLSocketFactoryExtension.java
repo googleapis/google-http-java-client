@@ -28,7 +28,7 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 
 /**
  * Implementation of SSL socket factory that extends Apache's implementation to provide
- * functionality missing from the Android SDK that  is available in Apache HTTP Client.
+ * functionality missing from the Android SDK that is available in Apache HTTP Client.
  *
  * @author Yaniv Inbar
  */
