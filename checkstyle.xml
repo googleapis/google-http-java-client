@@ -57,6 +57,12 @@ page at http://checkstyle.sourceforge.net/config.html -->
       <property name="tokens" value="STATIC_IMPORT, IMPORT"/>
     </module>
 
+    <module name="CustomImportOrder">
+      <property name="sortImportsInGroupAlphabetically" value="true"/>
+      <property name="separateLineBetweenGroups" value="true"/>
+      <property name="customImportOrderRules" value="STATIC###THIRD_PARTY_PACKAGE"/>
+    </module>
+
     <!--
 
     JAVADOC CHECKS
