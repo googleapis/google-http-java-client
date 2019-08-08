@@ -56,6 +56,16 @@
           <ignoredUnusedDeclaredDependencies>com.google.appengine:appengine-api-stubs</ignoredUnusedDeclaredDependencies>
         </configuration>
       </plugin>
+       <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>  
+            <manifestEntries>
+              <Automatic-Module-Name>com.google.api.client.extensions.appengine</Automatic-Module-Name>
+            </manifestEntries>
+          </archive> 
+        </configuration>
+      </plugin> 
     </plugins>
   </build>
   <dependencies>
