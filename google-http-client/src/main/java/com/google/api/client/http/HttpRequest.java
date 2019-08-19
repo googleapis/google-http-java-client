@@ -1013,6 +1013,7 @@ public final class HttpRequest {
         if (!retryOnExecuteIOException
             && (ioExceptionHandler == null
                 || !ioExceptionHandler.handleIOException(this, retryRequest))) {
+          span.end(OpenCensusUtils.getEndSpanOptions(response == null ? null : response.getStatusCode()));
           throw e;
         }
         // Save the exception in case the retries do not work and we need to re-throw it later.
