@@ -1,6 +1,7 @@
 package com.google.api.client.http;
 
 import com.google.api.client.testing.http.MockHttpTransport;
+import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import io.opencensus.common.Functions;
 import io.opencensus.testing.export.TestHandler;
@@ -15,7 +16,6 @@ import org.junit.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import static com.google.api.client.http.OpenCensusUtils.SPAN_NAME_HTTP_REQUEST_EXECUTE;
 import static org.junit.Assert.*;
@@ -41,7 +41,7 @@ public class HttpRequestTracingTest {
   }
 
   @Test(timeout = 20_000L)
-  public void testExecute_spanClosureOnException() throws IOException {
+  public void executeCreatesSpan() throws IOException {
     MockLowLevelHttpResponse mockResponse = new MockLowLevelHttpResponse()
         .setStatusCode(200);
     HttpTransport transport = new MockHttpTransport.Builder()
@@ -49,8 +49,9 @@ public class HttpRequestTracingTest {
         .build();
     HttpRequest request = new HttpRequestFactory(transport, null)
         .buildGetRequest(new GenericUrl("https://google.com/"));
-    HttpResponse response = request.execute();
+    request.execute();
 
+    // This call blocks - we set a timeout on this test to ensure we don't wait forever
     List<SpanData> spans = testHandler.waitForExport(1);
     assertEquals(1, spans.size());
     SpanData span = spans.get(0);
@@ -75,6 +76,49 @@ public class HttpRequestTracingTest {
     // Ensure we correctly record the span status as OK
     assertEquals(Status.OK, span.getStatus());
   }
+
+  @Test(timeout = 20_000L)
+  public void executeExceptionCreatesSpan() throws IOException {
+    HttpTransport transport = new MockHttpTransport.Builder()
+        .setLowLevelHttpRequest(new MockLowLevelHttpRequest() {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            throw new IOException("some IOException");
+          }
+        })
+        .build();
+    HttpRequest request = new HttpRequestFactory(transport, null)
+        .buildGetRequest(new GenericUrl("https://google.com/"));
+
+    try {
+      request.execute();
+      fail("expected to throw an IOException");
+    } catch (IOException expected) {
+    }
+
+    // This call blocks - we set a timeout on this test to ensure we don't wait forever
+    List<SpanData> spans = testHandler.waitForExport(1);
+    assertEquals(1, spans.size());
+    SpanData span = spans.get(0);
+
+    // Ensure the span name is set
+    assertEquals(SPAN_NAME_HTTP_REQUEST_EXECUTE, span.getName());
+
+    // Ensure we have basic span attributes
+    assertAttributeEquals(span, "http.path", "/");
+    assertAttributeEquals(span, "http.host", "google.com");
+    assertAttributeEquals(span, "http.url", "https://google.com/");
+    assertAttributeEquals(span, "http.method", "GET");
+
+    // Ensure we have a single annotation for starting the first attempt
+    assertEquals(1, span.getAnnotations().getEvents().size());
+
+    // Ensure we have 2 message events, SENT and RECEIVED
+    assertEquals(1, span.getMessageEvents().getEvents().size());
+    assertEquals(MessageEvent.Type.SENT, span.getMessageEvents().getEvents().get(0).getEvent().getType());
+
+    // Ensure we correctly record the span status as OK
+    assertEquals(Status.UNKNOWN, span.getStatus());  }
 
   void assertAttributeEquals(SpanData span, String attributeName, String expectedValue) {
     Object attributeValue = span.getAttributes().getAttributeMap().get(attributeName);
