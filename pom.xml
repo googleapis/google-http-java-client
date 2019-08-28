@@ -242,6 +242,16 @@
         <artifactId>opencensus-contrib-http-util</artifactId>
         <version>${project.opencensus.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.opencensus</groupId>
+        <artifactId>opencensus-impl</artifactId>
+        <version>${project.opencensus.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.opencensus</groupId>
+        <artifactId>opencensus-testing</artifactId>
+        <version>${project.opencensus.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
