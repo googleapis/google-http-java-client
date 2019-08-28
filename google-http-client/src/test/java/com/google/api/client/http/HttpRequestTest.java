@@ -1222,13 +1222,9 @@ public class HttpRequestTest extends TestCase {
     for (String message : recorder.messages()) {
       if (message.startsWith("curl")) {
         found = true;
-        assertEquals(
-            "curl -v --compressed -H 'Accept-Encoding: gzip' -H 'User-Agent: "
-                + "Google-HTTP-Java-Client/"
-                + HttpRequest.VERSION
-                + " (gzip)"
-                + "' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c'",
-            message);
+        assert(message.contains("curl -v --compressed -H 'Accept-Encoding: gzip'"));
+        assert(message.contains("-H 'User-Agent: Google-HTTP-Java-Client/" + HttpRequest.VERSION + " (gzip)'"));
+        assert(message.contains("' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c'"));
       }
     }
     assertTrue(found);
@@ -1253,16 +1249,13 @@ public class HttpRequestTest extends TestCase {
         .execute();
 
     boolean found = false;
-    final String expectedCurlLog =
-        "curl -v --compressed -X POST -H 'Accept-Encoding: gzip' "
-            + "-H 'User-Agent: "
-            + HttpRequest.USER_AGENT_SUFFIX
-            + "' -H 'Content-Type: text/plain; charset=UTF-8' -H 'Content-Encoding: gzip' "
-            + "-d '@-' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c' << $$$";
     for (String message : recorder.messages()) {
       if (message.startsWith("curl")) {
         found = true;
-        assertEquals(expectedCurlLog, message);
+        assert(message.contains("curl -v --compressed -X POST -H 'Accept-Encoding: gzip'"));
+        assert(message.contains("-H 'User-Agent: " + HttpRequest.USER_AGENT_SUFFIX + "'"));
+        assert(message.contains("-H 'Content-Type: text/plain; charset=UTF-8' -H 'Content-Encoding: gzip'"));
+        assert(message.contains("-d '@-' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c' << $$$"));
       }
     }
     assertTrue(found);
