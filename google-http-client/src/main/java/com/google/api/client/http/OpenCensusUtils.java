@@ -179,6 +179,13 @@ public class OpenCensusUtils {
     return builder.build();
   }
 
+  static EndSpanOptions getEndSpanOptionsForResponse(@Nullable HttpResponse response) {
+    if (response != null) {
+      return getEndSpanOptions(response.getStatusCode());
+    }
+    return getEndSpanOptions(null);
+  }
+
   /**
    * Records a new message event which contains the size of the request content. Note that the size
    * represents the message size in application layer, i.e., content-length.
