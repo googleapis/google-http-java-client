@@ -25,13 +25,18 @@ import io.opencensus.trace.Tracing;
 import io.opencensus.trace.config.TraceParams;
 import io.opencensus.trace.export.SpanData;
 import io.opencensus.trace.samplers.Samplers;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.List;
 
 import static com.google.api.client.http.OpenCensusUtils.SPAN_NAME_HTTP_REQUEST_EXECUTE;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class HttpRequestTracingTest {
   private static final TestHandler testHandler = new TestHandler();
@@ -86,7 +91,7 @@ public class HttpRequestTracingTest {
     assertEquals(MessageEvent.Type.SENT, span.getMessageEvents().getEvents().get(0).getEvent().getType());
     assertEquals(MessageEvent.Type.RECEIVED, span.getMessageEvents().getEvents().get(1).getEvent().getType());
 
-    // Ensure we correctly record the span status as OK
+    // Ensure we record the span status as OK
     assertEquals(Status.OK, span.getStatus());
   }
 
@@ -130,7 +135,7 @@ public class HttpRequestTracingTest {
     assertEquals(1, span.getMessageEvents().getEvents().size());
     assertEquals(MessageEvent.Type.SENT, span.getMessageEvents().getEvents().get(0).getEvent().getType());
 
-    // Ensure we correctly record the span status as OK
+    // Ensure we record the span status as UNKNOWN
     assertEquals(Status.UNKNOWN, span.getStatus());  }
 
   void assertAttributeEquals(SpanData span, String attributeName, String expectedValue) {
