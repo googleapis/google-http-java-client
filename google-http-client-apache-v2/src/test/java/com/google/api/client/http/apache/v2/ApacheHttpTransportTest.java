@@ -22,6 +22,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.ByteArrayStreamingContent;
 import java.io.IOException;
@@ -37,6 +39,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.protocol.HttpContext;
@@ -174,5 +177,19 @@ public class ApacheHttpTransportTest {
       assertEquals("cancelling request", exception.getMessage());
     }
     assertTrue("Expected to have called our test interceptor", interceptorCalled.get());
+  }
+
+  @Test(timeout = 1000L)
+  public void testConnectTimeout() {
+    HttpTransport httpTransport = new ApacheHttpTransport();
+    GenericUrl url = new GenericUrl("http://google.com:81");
+    try {
+      httpTransport.createRequestFactory().buildGetRequest(url).setConnectTimeout(10).execute();
+      fail("should have thrown an exception");
+    } catch (HttpHostConnectException expected) {
+      // expected
+    } catch (IOException e) {
+      fail("unexpected IOException: " + e.getClass().getName());
+    }
   }
 }
