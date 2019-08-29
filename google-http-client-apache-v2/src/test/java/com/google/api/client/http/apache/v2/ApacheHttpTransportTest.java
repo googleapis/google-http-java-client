@@ -22,10 +22,17 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.ByteArrayStreamingContent;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.http.Header;
@@ -174,5 +181,33 @@ public class ApacheHttpTransportTest {
       assertEquals("cancelling request", exception.getMessage());
     }
     assertTrue("Expected to have called our test interceptor", interceptorCalled.get());
+  }
+
+  @Test
+  public void testNormalizedUrl() throws IOException {
+    int port = 8000 + new Random().nextInt(1000);
+    HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+    server.createContext(
+        "/",
+        new HttpHandler() {
+          @Override
+          public void handle(HttpExchange httpExchange) throws IOException {
+            byte[] response = httpExchange.getRequestURI().toString().getBytes();
+            httpExchange.sendResponseHeaders(200, response.length);
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(response);
+            os.close();
+          }
+        });
+    server.start();
+
+    ApacheHttpTransport transport = new ApacheHttpTransport();
+    com.google.api.client.http.HttpResponse response =
+        transport
+            .createRequestFactory()
+            .buildGetRequest(new GenericUrl("http://localhost:" + port + "/foo//bar"))
+            .execute();
+    assertEquals(200, response.getStatusCode());
+    assertEquals("/foo//bar", response.parseAsString());
   }
 }
