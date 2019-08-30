@@ -194,9 +194,9 @@ public class ApacheHttpTransportTest {
           public void handle(HttpExchange httpExchange) throws IOException {
             byte[] response = httpExchange.getRequestURI().toString().getBytes();
             httpExchange.sendResponseHeaders(200, response.length);
-            OutputStream os = httpExchange.getResponseBody();
-            os.write(response);
-            os.close();
+            try (OutputStream out = httpExchange.getResponseBody()) {
+              out.write(response);
+            }
           }
         });
     server.start();
