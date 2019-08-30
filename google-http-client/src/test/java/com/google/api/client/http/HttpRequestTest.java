@@ -32,6 +32,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
+import java.util.regex.Pattern;
 import junit.framework.TestCase;
 
 import java.io.ByteArrayInputStream;
@@ -1088,6 +1089,11 @@ public class HttpRequestTest extends TestCase {
     } catch (IllegalArgumentException e) {
       // Expected
     }
+  }
+
+  public void testVersion() {
+    Pattern semverPattern = Pattern.compile("\\d+\\.\\d+\\.\\d+(-SNAPSHOT)?");
+    assertTrue(semverPattern.matcher(HttpRequest.VERSION).matches());
   }
 
   public void testUserAgent() {
