@@ -40,8 +40,8 @@ might result, and you are not guaranteed a compilation error.
 
 ## Documentation
 
-- [Developer's Guide](https://github.com/googleapis/google-http-java-client/wiki)
-- [Setup Instructions](https://github.com/googleapis/google-http-java-client/wiki/Setup-Instructions)
+- [Developer's Guide](https://googleapis.github.io/google-http-java-client/)
+- [Setup Instructions](https://googleapis.github.io/google-http-java-client/setup.html)
 - [JavaDoc](https://googleapis.dev/java/google-http-client/latest/)
 - [Release Notes](https://github.com/googleapis/google-http-java-client/releases)
 - [Support (Questions, Bugs)](https://developers.google.com/api-client-library/java/google-http-java-client/support)
