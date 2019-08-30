@@ -4,9 +4,13 @@ title: HTTP Unit Testing
 
 # HTTP Unit Testing
 
-When writing unit tests using this HTTP framework, don't make requests to a real server. Instead, mock the HTTP transport and inject fake HTTP requests and responses. The [pluggable HTTP transport layer](https://github.com/googleapis/google-http-java-client/wiki/HTTP-Transport) of the Google HTTP Client Library for Java makes this flexible and simple to do.
+When writing unit tests using this HTTP framework, don't make requests to a real server. Instead,
+mock the HTTP transport and inject fake HTTP requests and responses. The
+[pluggable HTTP transport layer][transport] of the Google HTTP Client Library for Java makes this
+flexible and simple to do.
 
-Also, some useful testing utilities are included in the [`com.google.api.client.testing.http`](https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/testing/http/package-summary.html) package (`@Beta`).
+Also, some useful testing utilities are included in the
+[`com.google.api.client.testing.http`][testing-package] package (`@Beta`).
 
 The following simple example generates a basic `HttpResponse`:
 
@@ -39,4 +43,10 @@ HttpRequest request = transport.createRequestFactory().buildGetRequest(HttpTesti
 HttpResponse response = request.execute();
 ```
 
-For more examples, see the [`HttpResponseTest.java`](https://github.com/googleapis/google-http-java-client/blob/master/google-http-client/src/test/java/com/google/api/client/http/HttpResponseTest.java) and [`HttpRequestTest.java`](https://github.com/googleapis/google-http-java-client/blob/master/google-http-client/src/test/java/com/google/api/client/http/HttpRequestTest.java) files.
+For more examples, see the [`HttpResponseTest.java`][http-response-test] and
+[`HttpRequestTest.java`][http-request-test] files.
+
+[transport]: https://googleapis.github.io/google-http-java-client/http-transport.html
+[testing-package]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/testing/http/package-summary.html
+[http-response-test]: https://github.com/googleapis/google-http-java-client/blob/master/google-http-client/src/test/java/com/google/api/client/http/HttpResponseTest.java
+[http-request-test]: https://github.com/googleapis/google-http-java-client/blob/master/google-http-client/src/test/java/com/google/api/client/http/HttpRequestTest.java

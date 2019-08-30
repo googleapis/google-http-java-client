@@ -6,17 +6,29 @@ title: JSON
 
 ## Pluggable streaming library
 
-A fully pluggable JSON streaming library abstraction allows you to take advantage of the native platform's built-in JSON library support (for example the JSON library that is built into Android Honeycomb). The streaming library enables you to write optimized code for efficient memory usage that minimizes parsing and serialization time.
+A fully pluggable JSON streaming library abstraction allows you to take advantage of the native
+platform's built-in JSON library support (for example the JSON library that is built into Android
+Honeycomb). The streaming library enables you to write optimized code for efficient memory usage
+that minimizes parsing and serialization time.
 
-A big advantage of this JSON library is that the choice of low-level streaming library is fully pluggable. There are three built-in choices, all of which extend [`JsonFactory`](https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/json/JsonFactory.html). You can easily plug in your own implementation.
+A big advantage of this JSON library is that the choice of low-level streaming library is fully
+pluggable. There are three built-in choices, all of which extend [`JsonFactory`][json-factory]. You
+can easily plug in your own implementation.
 
-* [`JacksonFactory`](https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/json/jackson2/JacksonFactory.html): Based on the popular [Jackson](https://github.com/FasterXML/jackson) library, which is considered the fastest in terms of parsing/serialization speed. Our JSON library provides JacksonFactory implementations based on Jackson 2.
-* [`GsonFactory`](https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/json/gson/GsonFactory.html): Based on the [Google GSON](https://github.com/google/gson) library, which is a lighter-weight option (small size) that is also fairly fast, though not as fast as Jackson.
-* [`AndroidJsonFactory`](https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/extensions/android/json/AndroidJsonFactory.html) (`@Beta`): Based on the JSON library built into Android Honeycomb (SDK 3.0) and higher, and that is identical to the Google GSON library.
+* [`JacksonFactory`][jackson-factory]: Based on the popular [Jackson][jackson] library, which is
+considered the fastest in terms of parsing/serialization speed. Our JSON library provides
+`JsonFactory` implementations based on Jackson 2.
+* [`GsonFactory`][gson-factory]: Based on the [Google GSON][gson] library, which is a lighter-weight
+option (small size) that is also fairly fast, though not as fast as Jackson.
+* [`AndroidJsonFactory`][android-json-factory] (`@Beta`): Based on the JSON library built into
+Android Honeycomb (SDK 3.0) and higher, and that is identical to the Google GSON library.
 
 ## User-defined JSON data models
 
-User-defined JSON data models allow you to define Plain Old Java Objects (POJOs) and define how the library parses and serializes them to and from JSON. The code snippets below are part of a more complete example, [googleplus-simple-cmdline-sample](https://github.com/googleapis/google-http-java-client/tree/master/samples/googleplus-simple-cmdline-sample), which demonstrates these concepts.
+User-defined JSON data models allow you to define Plain Old Java Objects (POJOs) and define how the
+library parses and serializes them to and from JSON. The code snippets below are part of a more
+complete example, [googleplus-simple-cmdline-sample][google-plus-sample], which demonstrates these
+concepts.
 
 ### Example
 
@@ -127,7 +139,8 @@ public static class PlusOners {
 }
 ```
 
-A fully supported [HTTP JSON parser](https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/json/JsonParser.html) makes it easy to parse HTTP responses to objects of these user defined classes:
+A fully supported [HTTP JSON parser][json-parser] makes it easy to parse HTTP responses to objects
+of these user defined classes:
 
 ```java
 private static void parseResponse(HttpResponse response) throws IOException {
@@ -149,13 +162,18 @@ private static void parseResponse(HttpResponse response) throws IOException {
 
 ### Key annotation
 
-Use the [`@Key`](https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/util/Key.html) annotation to indicate fields that need to be parsed from or serialized to JSON. By default, the `@Key` annotation uses the Java field name as the JSON key. To override this, specify the value of the `@Key` annotation.
+Use the [`@Key`][key-annotation] annotation to indicate fields that need to be parsed from or
+serialized to JSON. By default, the `@Key` annotation uses the Java field name as the JSON key. To
+override this, specify the value of the `@Key` annotation.
 
-Fields that don't have the `@Key` annotation are considered internal data and are not parsed from or serialized to JSON.
+Fields that don't have the `@Key` annotation are considered internal data and are not parsed from or
+serialized to JSON.
 
 ### Visibility
 
-Visibility of the fields does not matter, nor does the existence of the getter or setter methods. So for example, the following alternative representation for `PlusOners` would work in the example given above:
+Visibility of the fields does not matter, nor does the existence of the getter or setter methods. So
+for example, the following alternative representation for `PlusOners` would work in the example
+given above:
 
 ```java
 /** People who +1'd an activity. */
@@ -169,19 +187,28 @@ public static class AlternativePlusOnersWithPublicField {
 
 ### GenericJson
 
-Normally only the fields you declare are parsed when a JSON response is parsed. The actual Google+ activity feed response contains a lot of content that we are not using in our example. The JSON parser skips that other content when parsing the response from Google+.
+Normally only the fields you declare are parsed when a JSON response is parsed. The actual Google+
+activity feed response contains a lot of content that we are not using in our example. The JSON
+parser skips that other content when parsing the response from Google+.
 
-To retain the other content, declare your class to extend [`GenericJson`](https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/json/GenericJson.html). Notice that `GenericJson` implements [`Map`](https://docs.oracle.com/javase/7/docs/api/java/util/Map.html), so we can use the `get` and `put` methods to set JSON content. See [`googleplus-simple-cmdline-sample`](https://github.com/googleapis/google-http-java-client/tree/master/samples/googleplus-simple-cmdline-sample) for an example of how it was used in the `Activity` class above.
+To retain the other content, declare your class to extend [`GenericJson`][generic-json]. Notice that
+`GenericJson` implements [`Map`][map], so we can use the `get` and `put` methods to set JSON
+content. See [`googleplus-simple-cmdline-sample`][google-plus-sample] for an example of how it was
+used in the `Activity` class above.
 
 ### Map
 
-The JSON library supports any implementation of `Map`, which works similarly to `GenericJson`. The downside, of course, is that you lose the static type information for the fields.
+The JSON library supports any implementation of `Map`, which works similarly to `GenericJson`. The
+downside, of course, is that you lose the static type information for the fields.
 
 ### JSON null
 
-One advantage of this JSON library is its ability to support JSON nulls and distinguish them from undeclared JSON keys. Although JSON nulls are relatively rare, when they do occur they often cause confusion.
+One advantage of this JSON library is its ability to support JSON nulls and distinguish them from
+undeclared JSON keys. Although JSON nulls are relatively rare, when they do occur they often cause
+confusion.
 
-Google+ doesn't use JSON null values, so the following example uses fictitious JSON data to illustrate what can happen:
+Google+ doesn't use JSON null values, so the following example uses fictitious JSON data to
+illustrate what can happen:
 
 ```json
 {
@@ -212,7 +239,11 @@ public class Item {
 }
 ```
 
-For items 2 and 3, what should be in the value field? The problem is that there is no obvious way in Java to distinguish between a JSON key that is undeclared and a JSON key whose value is JSON null. This JSON library solves the problem by using Java null for the common case of an undeclared JSON key, and a special "magic" instance of String ([`Data.NULL_STRING`](https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/util/Data.html#NULL_STRING)) to identify it as a JSON null rather than a normal value.
+For items 2 and 3, what should be in the value field? The problem is that there is no obvious way in
+Java to distinguish between a JSON key that is undeclared and a JSON key whose value is JSON null.
+This JSON library solves the problem by using Java null for the common case of an undeclared JSON
+key, and a special "magic" instance of String ([`Data.NULL_STRING`][null-string]) to identify it as
+a JSON null rather than a normal value.
 
 The following example shows how you might take advantage of this functionality:
 
@@ -230,3 +261,16 @@ private static void show(List<Item> items) {
   }
 }
 ```
+
+[json-factory]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/json/JsonFactory.html
+[jackson-factory]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/json/jackson2/JacksonFactory.html
+[jackson]: https://github.com/FasterXML/jackson
+[gson-factory]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/json/gson/GsonFactory.html
+[gson]: https://github.com/google/gson
+[android-json-factory]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/extensions/android/json/AndroidJsonFactory.html
+[google-plus-sample]: https://github.com/googleapis/google-http-java-client/tree/master/samples/googleplus-simple-cmdline-sample
+[json-parser]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/json/JsonParser.html
+[key-annotation]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/util/Key.html
+[generic-json]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/json/GenericJson.html
+[map]: https://docs.oracle.com/javase/7/docs/api/java/util/Map.html
+[null-string]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/util/Data.html#NULL_STRING

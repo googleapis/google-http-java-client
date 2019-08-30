@@ -4,13 +4,18 @@ title: Setup Instructions
 
 # Setup Instructions
 
-You can download the Google HTTP Client Library for Java and its dependencies in a zip file, or you can use a dependency manager such as Maven or gradle to install the necessary jars from the Maven Central repository.
+You can download the Google HTTP Client Library for Java and its dependencies in a zip file, or you
+can use a dependency manager such as Maven or gradle to install the necessary jars from the Maven
+Central repository.
 
 ## Maven
 
-The Google HTTP Client Library for Java is in the central Maven repository. The Maven `groupId` for all artifacts for this library is `com.google.http-client`.
+The Google HTTP Client Library for Java is in the central Maven repository. The Maven `groupId` for
+all artifacts for this library is `com.google.http-client`.
 
-To ensure all dependency versions work together and to avoid having to manually choose and specify versions for each dependency, we recommend first importing the `com.google.cloud:libraries-bom` in the `dependencyManagement` section of your `pom.xml`:
+To ensure all dependency versions work together and to avoid having to manually choose and specify
+versions for each dependency, we recommend first importing the `com.google.cloud:libraries-bom` in
+the `dependencyManagement` section of your `pom.xml`:
 
 ```xml
 <dependencyManagement>
@@ -26,7 +31,9 @@ To ensure all dependency versions work together and to avoid having to manually 
 </dependencyManagement>
 ```
 
-Then you add the individual dependencies you need without version numbers to the `dependencies` section:
+Then you add the individual dependencies you need without version numbers to the `dependencies`
+section:
+
 ```xml
 <dependency>
   <groupId>com.google.http-client</groupId>
@@ -62,7 +69,11 @@ On Android, you may need to explicitly exclude unused dependencies:
 
 ## Download the library with dependencies
 
-Download the latest assembly zip file from Maven Central and extract it on your computer. This zip contains the client library class jar files and the associated source jar files for each artifact and their dependencies. You can find dependency graphs and licenses for the different libraries in the dependencies folder. For more details about the contents of the download, see the contained `readme.html` file.
+Download the latest assembly zip file from Maven Central and extract it on your computer. This zip
+contains the client library class jar files and the associated source jar files for each artifact
+and their dependencies. You can find dependency graphs and licenses for the different libraries in
+the dependencies folder. For more details about the contents of the download, see the contained
+`readme.html` file.
 
 
 
