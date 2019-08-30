@@ -185,8 +185,7 @@ public class ApacheHttpTransportTest {
 
   @Test
   public void testNormalizedUrl() throws IOException {
-    int port = 8000 + new Random().nextInt(1000);
-    HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+    HttpServer server = HttpServer.create(new InetSocketAddress(0), 0);
     server.createContext(
         "/",
         new HttpHandler() {
@@ -202,10 +201,12 @@ public class ApacheHttpTransportTest {
     server.start();
 
     ApacheHttpTransport transport = new ApacheHttpTransport();
+    GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
+    testUrl.setPort(server.getAddress().getPort());
     com.google.api.client.http.HttpResponse response =
         transport
             .createRequestFactory()
-            .buildGetRequest(new GenericUrl("http://localhost:" + port + "/foo//bar"))
+            .buildGetRequest(testUrl)
             .execute();
     assertEquals(200, response.getStatusCode());
     assertEquals("/foo//bar", response.parseAsString());
