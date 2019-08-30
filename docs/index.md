@@ -11,7 +11,7 @@ Java library for accessing any resource on the web via HTTP. The library has the
 features:
 
 - Pluggable HTTP transport abstraction that allows you to use any low-level library such as
-java.net.HttpURLConnection, Apache HTTP Client, or URL Fetch on Google App Engine.
+`java.net.HttpURLConnection`, Apache HTTP Client, or URL Fetch on Google App Engine.
 - Efficient JSON and XML data models for parsing and serialization of HTTP response and request
 content. The JSON and XML libraries are also fully pluggable, and they include support for
 [Jackson](https://github.com/FasterXML/jackson) and Android's GSON libraries for JSON.
