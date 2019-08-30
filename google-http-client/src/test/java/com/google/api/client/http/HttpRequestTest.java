@@ -1092,6 +1092,7 @@ public class HttpRequestTest extends TestCase {
   }
 
   public void testVersion() {
+    assertNotNull("version constant should not be null", HttpRequest.VERSION);
     Pattern semverPattern = Pattern.compile("\\d+\\.\\d+\\.\\d+(-SNAPSHOT)?");
     assertTrue(semverPattern.matcher(HttpRequest.VERSION).matches());
   }
