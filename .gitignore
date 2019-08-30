@@ -27,8 +27,5 @@ nosetests.xml
 **/.classpath
 **/.checkstyle
 
-# Built documentation
-docs/
-
 # Python utilities
 *.pyc
