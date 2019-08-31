@@ -185,7 +185,7 @@ public class ApacheHttpTransportTest {
     assertTrue("Expected to have called our test interceptor", interceptorCalled.get());
   }
 
-  @Test(timeout = 1000L)
+  @Test(timeout = 2000L)
   public void testConnectTimeout() {
     HttpTransport httpTransport = new ApacheHttpTransport();
     GenericUrl url = new GenericUrl("http://google.com:81");
