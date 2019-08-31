@@ -190,7 +190,7 @@ public class ApacheHttpTransportTest {
     HttpTransport httpTransport = new ApacheHttpTransport();
     GenericUrl url = new GenericUrl("http://google.com:81");
     try {
-      httpTransport.createRequestFactory().buildGetRequest(url).setConnectTimeout(5).execute();
+      httpTransport.createRequestFactory().buildGetRequest(url).setConnectTimeout(100).execute();
       fail("should have thrown an exception");
     } catch (HttpHostConnectException expected) {
       // expected
