@@ -185,12 +185,12 @@ public class ApacheHttpTransportTest {
     assertTrue("Expected to have called our test interceptor", interceptorCalled.get());
   }
 
-  @Test(timeout = 2000L)
+  @Test(timeout = 10_000L)
   public void testConnectTimeout() {
     HttpTransport httpTransport = new ApacheHttpTransport();
     GenericUrl url = new GenericUrl("http://google.com:81");
     try {
-      httpTransport.createRequestFactory().buildGetRequest(url).setConnectTimeout(10).execute();
+      httpTransport.createRequestFactory().buildGetRequest(url).setConnectTimeout(5).execute();
       fail("should have thrown an exception");
     } catch (HttpHostConnectException expected) {
       // expected
