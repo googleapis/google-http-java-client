@@ -52,7 +52,7 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
 
   @Override
   public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
-    requestConfig.setConnectionRequestTimeout(connectTimeout)
+    requestConfig.setConnectTimeout(connectTimeout)
         .setSocketTimeout(readTimeout);
   }
 
