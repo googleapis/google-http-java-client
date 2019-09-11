@@ -7,6 +7,7 @@
   <version>1.32.0</version><!-- {x-version-update:google-http-client-parent:current} -->
   <packaging>pom</packaging>
   <name>Parent for the Google HTTP Client Library for Java</name>
+  <description>Google HTTP Client Library for Java</description>
 
   <url>https://github.com/googleapis/google-http-java-client</url>
 
@@ -27,6 +28,14 @@
     <name>Google</name>
     <url>http://www.google.com/</url>
   </organization>
+
+  <developers>
+    <developer>
+      <id>chingor</id>
+      <name>Jeff Ching</name>
+      <email>chingor@google.com</email>
+    </developer>
+  </developers>
 
   <licenses>
     <license>
