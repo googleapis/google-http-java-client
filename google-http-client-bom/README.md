@@ -12,7 +12,7 @@ To use it in Maven, add the following to your `pom.xml`:
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-bom</artifactId>
-      <version>1.31.0</version>
+      <version>1.32.0</version>
       <type>pom</type>
       <scope>import</scope>
     </dependency>
