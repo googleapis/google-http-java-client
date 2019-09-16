@@ -4,7 +4,7 @@
   <groupId>google-http-client</groupId>
   <artifactId>google-http-client-android-test</artifactId>
   <name>Test project for google-http-client-android.</name>
-  <version>1.32.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-android-test:current} -->
+  <version>1.32.1</version><!-- {x-version-update:google-http-client-android-test:current} -->
   <packaging>apk</packaging>
 
   <build>
