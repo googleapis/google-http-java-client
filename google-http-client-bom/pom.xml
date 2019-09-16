@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.http-client</groupId>
   <artifactId>google-http-client-bom</artifactId>
-  <version>1.32.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-bom:current} -->
+  <version>1.32.1</version><!-- {x-version-update:google-http-client-bom:current} -->
   <packaging>pom</packaging>
 
   <name>Google HTTP Client Library for Java BOM</name>
