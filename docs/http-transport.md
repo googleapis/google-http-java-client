@@ -86,7 +86,7 @@ that also, use `Level.ALL` instead of `Level.CONFIG`.
 ## Handling HTTP error responses
 
 When an HTTP error response (an HTTP status code of 300 or higher) is received,
-[`HttpRequest.execute()`][request-execute] throws an [`HttpResponseException`][response-exeception].
+[`HttpRequest.execute()`][request-execute] throws an [`HttpResponseException`][response-exception].
 Here's an example usage:
 
 ```java
