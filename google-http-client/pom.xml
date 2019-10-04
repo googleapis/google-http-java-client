@@ -121,14 +121,6 @@
       <groupId>com.google.j2objc</groupId>
       <artifactId>j2objc-annotations</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.opencensus</groupId>
-      <artifactId>opencensus-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.opencensus</groupId>
-      <artifactId>opencensus-contrib-http-util</artifactId>
-    </dependency>
 
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -148,16 +140,6 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.opencensus</groupId>
-      <artifactId>opencensus-impl</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.opencensus</groupId>
-      <artifactId>opencensus-testing</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
