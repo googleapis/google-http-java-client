@@ -16,8 +16,8 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Preconditions;
 import com.google.common.io.ByteStreams;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -26,30 +26,19 @@ import java.io.InputStream;
  * discarded on {@link InputStream#close()}. This ensures that the underlying connection has the
  * option to be reused.
  */
-final class ConsumingInputStream extends InputStream {
-  private InputStream inputStream;
+final class ConsumingInputStream extends FilterInputStream {
   private boolean closed = false;
 
   ConsumingInputStream(InputStream inputStream) {
-    this.inputStream = Preconditions.checkNotNull(inputStream);
-  }
-
-  @Override
-  public int read() throws IOException {
-    return inputStream.read();
-  }
-
-  @Override
-  public int read(byte[] b, int off, int len) throws IOException {
-    return inputStream.read(b, off, len);
+    super(inputStream);
   }
 
   @Override
   public void close() throws IOException {
-    if (!closed && inputStream != null) {
+    if (!closed && in != null) {
       try {
         ByteStreams.exhaust(this);
-        inputStream.close();
+        super.in.close();
       } finally {
         this.closed = true;
       }
