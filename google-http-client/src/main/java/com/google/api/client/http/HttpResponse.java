@@ -80,6 +80,12 @@ public final class HttpResponse {
   /** Whether {@link #getContent()} should return raw input stream. */
   private final boolean returnRawInputStream;
 
+  /** Content encoding for GZip */
+  private static final String CONTENT_ENCODING_GZIP = "gzip";
+
+  /** Content encoding for GZip HTTP 1.1 */
+  private static final String CONTENT_ENCODING_XGZIP = "x-gzip";
+
   /**
    * Determines the limit to the content size that will be logged during {@link #getContent()}.
    *
@@ -330,7 +336,8 @@ public final class HttpResponse {
           String contentEncoding = this.contentEncoding;
           if (!returnRawInputStream
               && contentEncoding != null
-              && contentEncoding.contains("gzip")) {
+              && (CONTENT_ENCODING_GZIP.equalsIgnoreCase(contentEncoding.trim())
+                  || CONTENT_ENCODING_XGZIP.equalsIgnoreCase(contentEncoding.trim()))) {
             lowLevelResponseContent = new GZIPInputStream(lowLevelResponseContent);
           }
           // logging (wrap content with LoggingInputStream)
