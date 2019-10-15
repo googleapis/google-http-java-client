@@ -245,21 +245,31 @@
         <groupId>io.opencensus</groupId>
         <artifactId>opencensus-api</artifactId>
         <version>${project.opencensus.version}</version>
+        <optional>true</optional>
       </dependency>
       <dependency>
         <groupId>io.opencensus</groupId>
         <artifactId>opencensus-contrib-http-util</artifactId>
         <version>${project.opencensus.version}</version>
+        <optional>true</optional>
       </dependency>
       <dependency>
         <groupId>io.opencensus</groupId>
         <artifactId>opencensus-impl</artifactId>
         <version>${project.opencensus.version}</version>
+        <optional>true</optional>
       </dependency>
       <dependency>
         <groupId>io.opencensus</groupId>
         <artifactId>opencensus-testing</artifactId>
         <version>${project.opencensus.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.opencensus</groupId>
+        <artifactId>opencensus-impl-core</artifactId>
+        <version>${project.opencensus.version}</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
