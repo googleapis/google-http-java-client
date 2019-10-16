@@ -853,7 +853,7 @@ public final class HttpRequest {
       }
       // build low-level HTTP request
       String urlString = url.build();
-      span.addCommonHTTPAttributes(requestMethod, url.getHost(), url.getRawPath(), urlString);
+      span.addCommonHttpAttributes(requestMethod, url.getHost(), url.getRawPath(), urlString);
 
       LowLevelHttpRequest lowLevelHttpRequest = transport.buildRequest(requestMethod, urlString);
       Logger logger = HttpTransport.LOGGER;
