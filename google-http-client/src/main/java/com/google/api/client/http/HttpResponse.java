@@ -331,7 +331,8 @@ public final class HttpResponse {
           if (!returnRawInputStream
               && contentEncoding != null
               && contentEncoding.contains("gzip")) {
-            lowLevelResponseContent = new GZIPInputStream(lowLevelResponseContent);
+            lowLevelResponseContent =
+                new ConsumingInputStream(new GZIPInputStream(lowLevelResponseContent));
           }
           // logging (wrap content with LoggingInputStream)
           Logger logger = HttpTransport.LOGGER;
