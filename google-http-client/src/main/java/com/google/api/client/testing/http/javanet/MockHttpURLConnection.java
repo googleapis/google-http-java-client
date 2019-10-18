@@ -49,22 +49,6 @@ public class MockHttpURLConnection extends HttpURLConnection {
    */
   private OutputStream outputStream = new ByteArrayOutputStream(0);
 
-  /**
-   * The input byte array which represents the content when the status code is less then {@code
-   * 400}.
-   *
-   * @deprecated As of 1.20. Use {@link #setInputStream(InputStream)} instead.
-   */
-  @Deprecated public static final byte[] INPUT_BUF = new byte[1];
-
-  /**
-   * The error byte array which represents the content when the status code is greater or equal to
-   * {@code 400}.
-   *
-   * @deprecated As of 1.20. Use {@link #setErrorStream(InputStream)} instead.
-   */
-  @Deprecated public static final byte[] ERROR_BUF = new byte[5];
-
   /** The input stream. */
   private InputStream inputStream = null;
 
