@@ -336,9 +336,10 @@ public final class HttpResponse {
           String contentEncoding = this.contentEncoding;
           if (!returnRawInputStream
               && contentEncoding != null
-              && (CONTENT_ENCODING_GZIP.equalsIgnoreCase(contentEncoding.trim())
-                  || CONTENT_ENCODING_XGZIP.equalsIgnoreCase(contentEncoding.trim()))) {
-            lowLevelResponseContent = new GZIPInputStream(lowLevelResponseContent);
+                  && (CONTENT_ENCODING_GZIP.equalsIgnoreCase(contentEncoding.trim())
+                      || CONTENT_ENCODING_XGZIP.equalsIgnoreCase(contentEncoding.trim()))) {
+            lowLevelResponseContent =
+                new ConsumingInputStream(new GZIPInputStream(lowLevelResponseContent));
           }
           // logging (wrap content with LoggingInputStream)
           Logger logger = HttpTransport.LOGGER;
