@@ -83,7 +83,7 @@ public final class HttpResponse {
   /** Content encoding for GZip */
   private static final String CONTENT_ENCODING_GZIP = "gzip";
 
-  /** Content encoding for GZip HTTP 1.1 */
+  /** Content encoding for GZip (legacy) */
   private static final String CONTENT_ENCODING_XGZIP = "x-gzip";
 
   /**
@@ -333,13 +333,12 @@ public final class HttpResponse {
         boolean contentProcessed = false;
         try {
           // gzip encoding (wrap content with GZipInputStream)
-          String contentEncoding = this.contentEncoding;
           if (!returnRawInputStream
-              && contentEncoding != null
-                  && (CONTENT_ENCODING_GZIP.equalsIgnoreCase(contentEncoding.trim())
-                      || CONTENT_ENCODING_XGZIP.equalsIgnoreCase(contentEncoding.trim()))) {
+                  && this.contentEncoding != null
+                  && (CONTENT_ENCODING_GZIP.equalsIgnoreCase(this.contentEncoding.trim())
+                      || CONTENT_ENCODING_XGZIP.equalsIgnoreCase(this.contentEncoding.trim()))) {
             lowLevelResponseContent =
-                new ConsumingInputStream(new GZIPInputStream(lowLevelResponseContent));
+                    new ConsumingInputStream(new GZIPInputStream(lowLevelResponseContent));
           }
           // logging (wrap content with LoggingInputStream)
           Logger logger = HttpTransport.LOGGER;
