@@ -503,20 +503,19 @@ public class HttpResponseTest extends TestCase {
     mockResponse.setContentType("text/plain");
 
     HttpTransport transport =
-            new MockHttpTransport() {
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, final String url)
+              throws IOException {
+            return new MockLowLevelHttpRequest() {
               @Override
-              public LowLevelHttpRequest buildRequest(String method, final String url)
-                      throws IOException {
-                return new MockLowLevelHttpRequest() {
-                  @Override
-                  public LowLevelHttpResponse execute() throws IOException {
-                    return mockResponse;
-                  }
-                };
+              public LowLevelHttpResponse execute() throws IOException {
+                return mockResponse;
               }
             };
-    HttpRequest request =
-            transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
+          }
+        };
+    HttpRequest request = transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
     // If gzip was used on this response, an exception would be thrown
     HttpResponse response = request.execute();
     assertEquals("abcd", response.parseAsString());

@@ -334,11 +334,11 @@ public final class HttpResponse {
         try {
           // gzip encoding (wrap content with GZipInputStream)
           if (!returnRawInputStream
-                  && this.contentEncoding != null
-                  && (CONTENT_ENCODING_GZIP.equalsIgnoreCase(this.contentEncoding.trim())
-                      || CONTENT_ENCODING_XGZIP.equalsIgnoreCase(this.contentEncoding.trim()))) {
+              && this.contentEncoding != null
+              && (CONTENT_ENCODING_GZIP.equals(this.contentEncoding.trim())
+              || CONTENT_ENCODING_XGZIP.equals(this.contentEncoding.trim()))) {
             lowLevelResponseContent =
-                    new ConsumingInputStream(new GZIPInputStream(lowLevelResponseContent));
+                new ConsumingInputStream(new GZIPInputStream(lowLevelResponseContent));
           }
           // logging (wrap content with LoggingInputStream)
           Logger logger = HttpTransport.LOGGER;
