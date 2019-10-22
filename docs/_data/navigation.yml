@@ -17,3 +17,5 @@ toc:
     url: exponential-backoff.html
   - page: Unit Testing
     url: unit-testing.html
+  - page: Support
+    url: support.html
