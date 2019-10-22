@@ -9,6 +9,8 @@ toc:
     url: android.html
   - page: Google App Engine
     url: google-app-engine.html
+  - page: HTTP Transport
+    url: http-transport.html
   - page: JSON
     url: json.html
   - page: Exponential Backoff

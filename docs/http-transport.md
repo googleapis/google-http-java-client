@@ -125,7 +125,7 @@ HttpRequestFactory requestFactory = transport.createRequestFactory(new MyInitial
 [http-url-connection]: http://docs.oracle.com/javase/7/docs/api/java/net/HttpURLConnection.html
 [apache-http-transport]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/http/apache/v2/ApacheHttpTransport.html
 [apache-http-client]: http://hc.apache.org/httpcomponents-client-ga/index.html
-[url=fetch-transport]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/extensions/appengine/http/UrlFetchTransport.html
+[url-fetch-transport]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/extensions/appengine/http/UrlFetchTransport.html
 [url-fetch]: https://cloud.google.com/appengine/docs/java/javadoc/com/google/appengine/api/urlfetch/package-summary
 [logger]: https://docs.oracle.com/javase/7/docs/api/java/util/logging/Logger.html
 [logging-properties]: https://github.com/google/google-http-java-client/blob/master/samples/googleplus-simple-cmdline-sample/logging.properties
