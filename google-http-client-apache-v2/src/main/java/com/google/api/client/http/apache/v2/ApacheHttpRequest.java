@@ -40,6 +40,7 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
     // disable redirects as google-http-client handles redirects
     this.requestConfig = RequestConfig.custom()
         .setRedirectsEnabled(false)
+        .setNormalizeUri(false)
         // TODO(chingor): configure in HttpClientBuilder when available
         .setStaleConnectionCheckEnabled(false);
   }
@@ -51,7 +52,7 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
 
   @Override
   public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
-    requestConfig.setConnectionRequestTimeout(connectTimeout)
+    requestConfig.setConnectTimeout(connectTimeout)
         .setSocketTimeout(readTimeout);
   }
 

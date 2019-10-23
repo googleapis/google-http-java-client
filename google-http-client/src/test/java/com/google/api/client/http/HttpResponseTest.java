@@ -26,10 +26,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import junit.framework.TestCase;
 
 /**
@@ -456,5 +458,41 @@ public class HttpResponseTest extends TestCase {
     assertFalse(
         "it should not decompress stream",
         request.execute().getContent() instanceof GZIPInputStream);
+  }
+
+  public void testGetContent_gzipEncoding_finishReading() throws IOException {
+    byte[] dataToCompress = "abcd".getBytes(StandardCharsets.UTF_8);
+    byte[] mockBytes;
+    try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream(dataToCompress.length)) {
+      GZIPOutputStream zipStream = new GZIPOutputStream((byteStream));
+      zipStream.write(dataToCompress);
+      zipStream.close();
+      mockBytes = byteStream.toByteArray();
+    }
+    final MockLowLevelHttpResponse mockResponse = new MockLowLevelHttpResponse();
+    mockResponse.setContent(mockBytes);
+    mockResponse.setContentEncoding("gzip");
+    mockResponse.setContentType("text/plain");
+
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, final String url)
+              throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                return mockResponse;
+              }
+            };
+          }
+        };
+    HttpRequest request =
+        transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    HttpResponse response = request.execute();
+    TestableByteArrayInputStream output = (TestableByteArrayInputStream) mockResponse.getContent();
+    assertFalse(output.isClosed());
+    assertEquals("abcd", response.parseAsString());
+    assertTrue(output.isClosed());
   }
 }

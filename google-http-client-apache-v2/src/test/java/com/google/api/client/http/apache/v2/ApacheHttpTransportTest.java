@@ -18,14 +18,23 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.ByteArrayStreamingContent;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.http.Header;
@@ -37,6 +46,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.protocol.HttpContext;
@@ -174,5 +185,55 @@ public class ApacheHttpTransportTest {
       assertEquals("cancelling request", exception.getMessage());
     }
     assertTrue("Expected to have called our test interceptor", interceptorCalled.get());
+  }
+
+  @Test(timeout = 10_000L)
+  public void testConnectTimeout() {
+    // Apache HttpClient doesn't appear to behave correctly on windows
+    assumeTrue(!isWindows());
+
+    HttpTransport httpTransport = new ApacheHttpTransport();
+    GenericUrl url = new GenericUrl("http://google.com:81");
+    try {
+      httpTransport.createRequestFactory().buildGetRequest(url).setConnectTimeout(100).execute();
+      fail("should have thrown an exception");
+    } catch (HttpHostConnectException | ConnectTimeoutException expected) {
+      // expected
+    } catch (IOException e) {
+      fail("unexpected IOException: " + e.getClass().getName());
+    }
+  }
+
+  @Test
+  public void testNormalizedUrl() throws IOException {
+    HttpServer server = HttpServer.create(new InetSocketAddress(0), 0);
+    server.createContext(
+        "/",
+        new HttpHandler() {
+          @Override
+          public void handle(HttpExchange httpExchange) throws IOException {
+            byte[] response = httpExchange.getRequestURI().toString().getBytes();
+            httpExchange.sendResponseHeaders(200, response.length);
+            try (OutputStream out = httpExchange.getResponseBody()) {
+              out.write(response);
+            }
+          }
+        });
+    server.start();
+
+    ApacheHttpTransport transport = new ApacheHttpTransport();
+    GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
+    testUrl.setPort(server.getAddress().getPort());
+    com.google.api.client.http.HttpResponse response =
+        transport
+            .createRequestFactory()
+            .buildGetRequest(testUrl)
+            .execute();
+    assertEquals(200, response.getStatusCode());
+    assertEquals("/foo//bar", response.parseAsString());
+  }
+
+  private boolean isWindows() {
+    return System.getProperty("os.name").startsWith("Windows");
   }
 }
