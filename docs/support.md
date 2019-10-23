@@ -4,14 +4,14 @@ title: Support
 
 # Support
 
-## The Google HTTP Client Library for Java community
+## The Google HTTP Client Library for Java Community
 
 ### Ask development questions
 
 Ask  questions on StackOverflow:
 
 * Use the [google-api][so-google-api] tag, and optionally [java][so-java] or [android][so-android]
-  or [java google-app-engine][go-java-gae].
+  or [java google-app-engine][so-java-gae].
 * You can also use the [google-http-java-client][so-http-client] tag.
 * For tips on asking StackOverflow questions, see [How to Ask][so-how-to-ask].
 
