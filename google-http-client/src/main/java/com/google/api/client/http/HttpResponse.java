@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -333,12 +334,12 @@ public final class HttpResponse {
         boolean contentProcessed = false;
         try {
           // gzip encoding (wrap content with GZipInputStream)
-          if (!returnRawInputStream
-              && this.contentEncoding != null
-              && (CONTENT_ENCODING_GZIP.equals(this.contentEncoding.trim())
-              || CONTENT_ENCODING_XGZIP.equals(this.contentEncoding.trim()))) {
-            lowLevelResponseContent =
-                new ConsumingInputStream(new GZIPInputStream(lowLevelResponseContent));
+          if (!returnRawInputStream && this.contentEncoding != null) {
+            final String oontentEncoding = this.contentEncoding.trim().toLowerCase(Locale.ENGLISH);
+            if (CONTENT_ENCODING_GZIP.equals(oontentEncoding) || CONTENT_ENCODING_XGZIP.equals(oontentEncoding)) {
+              lowLevelResponseContent =
+                  new ConsumingInputStream(new GZIPInputStream(lowLevelResponseContent));
+            }
           }
           // logging (wrap content with LoggingInputStream)
           Logger logger = HttpTransport.LOGGER;

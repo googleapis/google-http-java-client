@@ -29,6 +29,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -461,6 +462,21 @@ public class HttpResponseTest extends TestCase {
   }
 
   public void testGetContent_gzipEncoding_finishReading() throws IOException {
+    do_testGetContent_gzipEncoding_finishReading("gzip");
+  }
+
+  public void testGetContent_gzipEncoding_finishReadingWithUppercaseContentEncoding() throws IOException {
+    do_testGetContent_gzipEncoding_finishReading("GZIP");
+  }
+
+  public void testGetContent_gzipEncoding_finishReadingWithDifferentDefaultLocaleAndUppercaseContentEncoding() throws IOException {
+    Locale originalDefaultLocale = Locale.getDefault();
+    Locale.setDefault(Locale.JAPAN);
+    do_testGetContent_gzipEncoding_finishReading("GZIP");
+    Locale.setDefault(originalDefaultLocale);
+  }
+
+  private void do_testGetContent_gzipEncoding_finishReading(String contentEncoding) throws IOException {
     byte[] dataToCompress = "abcd".getBytes(StandardCharsets.UTF_8);
     byte[] mockBytes;
     try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream(dataToCompress.length)) {
@@ -471,7 +487,7 @@ public class HttpResponseTest extends TestCase {
     }
     final MockLowLevelHttpResponse mockResponse = new MockLowLevelHttpResponse();
     mockResponse.setContent(mockBytes);
-    mockResponse.setContentEncoding("gzip");
+    mockResponse.setContentEncoding(contentEncoding);
     mockResponse.setContentType("text/plain");
 
     HttpTransport transport =
