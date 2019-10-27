@@ -335,8 +335,8 @@ public final class HttpResponse {
         try {
           // gzip encoding (wrap content with GZipInputStream)
           if (!returnRawInputStream && this.contentEncoding != null) {
-            final String oontentEncoding = this.contentEncoding.trim().toLowerCase(Locale.ENGLISH);
-            if (CONTENT_ENCODING_GZIP.equals(oontentEncoding) || CONTENT_ENCODING_XGZIP.equals(oontentEncoding)) {
+            String oontentencoding = this.contentEncoding.trim().toLowerCase(Locale.ENGLISH);
+            if (CONTENT_ENCODING_GZIP.equals(oontentencoding) || CONTENT_ENCODING_XGZIP.equals(oontentencoding)) {
               lowLevelResponseContent =
                   new ConsumingInputStream(new GZIPInputStream(lowLevelResponseContent));
             }
