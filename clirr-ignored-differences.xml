@@ -16,6 +16,16 @@
      <className>com/google/api/client/testing/http/MockHttpTransport</className>
      <method>com.google.api.client.testing.http.MockHttpTransport$Builder builder()</method>
   </difference>
+  <difference>
+    <differenceType>6001</differenceType>
+    <className>com/google/api/client/testing/http/javanet/MockHttpURLConnection</className>
+    <field>INPUT_BUF</field>
+  </difference>
+  <difference>
+    <differenceType>6001</differenceType>
+    <className>com/google/api/client/testing/http/javanet/MockHttpURLConnection</className>
+    <field>ERROR_BUF</field>
+  </difference>
   <!-- 8001 (Class removed): className -->
   <difference>
     <differenceType>8001</differenceType>
