@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -79,6 +80,12 @@ public final class HttpResponse {
 
   /** Whether {@link #getContent()} should return raw input stream. */
   private final boolean returnRawInputStream;
+
+  /** Content encoding for GZip */
+  private static final String CONTENT_ENCODING_GZIP = "gzip";
+
+  /** Content encoding for GZip (legacy) */
+  private static final String CONTENT_ENCODING_XGZIP = "x-gzip";
 
   /**
    * Determines the limit to the content size that will be logged during {@link #getContent()}.
@@ -327,12 +334,12 @@ public final class HttpResponse {
         boolean contentProcessed = false;
         try {
           // gzip encoding (wrap content with GZipInputStream)
-          String contentEncoding = this.contentEncoding;
-          if (!returnRawInputStream
-              && contentEncoding != null
-              && contentEncoding.contains("gzip")) {
-            lowLevelResponseContent =
-                new ConsumingInputStream(new GZIPInputStream(lowLevelResponseContent));
+          if (!returnRawInputStream && this.contentEncoding != null) {
+            String oontentencoding = this.contentEncoding.trim().toLowerCase(Locale.ENGLISH);
+            if (CONTENT_ENCODING_GZIP.equals(oontentencoding) || CONTENT_ENCODING_XGZIP.equals(oontentencoding)) {
+              lowLevelResponseContent =
+                  new ConsumingInputStream(new GZIPInputStream(lowLevelResponseContent));
+            }
           }
           // logging (wrap content with LoggingInputStream)
           Logger logger = HttpTransport.LOGGER;
