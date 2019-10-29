@@ -471,16 +471,21 @@ public class HttpResponseTest extends TestCase {
 
   public void testGetContent_gzipEncoding_finishReadingWithDifferentDefaultLocaleAndUppercaseContentEncoding() throws IOException {
     Locale originalDefaultLocale = Locale.getDefault();
-    Locale.setDefault(Locale.JAPAN);
-    do_testGetContent_gzipEncoding_finishReading("GZIP");
-    Locale.setDefault(originalDefaultLocale);
+    try {
+      Locale.setDefault(Locale.forLanguageTag("tr-TR"));
+      do_testGetContent_gzipEncoding_finishReading("GZIP");
+    } finally {
+      Locale.setDefault(originalDefaultLocale);
+    }
   }
 
   private void do_testGetContent_gzipEncoding_finishReading(String contentEncoding) throws IOException {
     byte[] dataToCompress = "abcd".getBytes(StandardCharsets.UTF_8);
     byte[] mockBytes;
-    try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream(dataToCompress.length)) {
-      GZIPOutputStream zipStream = new GZIPOutputStream((byteStream));
+    try (
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream(dataToCompress.length);
+        GZIPOutputStream zipStream = new GZIPOutputStream((byteStream))
+    ) {
       zipStream.write(dataToCompress);
       zipStream.close();
       mockBytes = byteStream.toByteArray();
@@ -506,10 +511,11 @@ public class HttpResponseTest extends TestCase {
     HttpRequest request =
         transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
-    TestableByteArrayInputStream output = (TestableByteArrayInputStream) mockResponse.getContent();
-    assertFalse(output.isClosed());
-    assertEquals("abcd", response.parseAsString());
-    assertTrue(output.isClosed());
+    try (TestableByteArrayInputStream output = (TestableByteArrayInputStream) mockResponse.getContent()) {
+      assertFalse(output.isClosed());
+      assertEquals("abcd", response.parseAsString());
+      assertTrue(output.isClosed());
+    }
   }
 
   public void testGetContent_otherEncodingWithgzipInItsName_GzipIsNotUsed() throws IOException {
