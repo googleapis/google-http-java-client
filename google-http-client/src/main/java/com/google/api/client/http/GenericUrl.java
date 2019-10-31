@@ -380,6 +380,22 @@ public class GenericUrl extends GenericData {
   }
 
   /**
+   * Returns the URI for the given encoded URL.
+   *
+   * <p>Any {@link URISyntaxException} is wrapped in an {@link IllegalArgumentException}.
+   *
+   * @param encodedUrl encoded URL
+   * @return URI
+   */
+  private static URI toURI(String encodedUrl) {
+    try {
+      return new URI(encodedUrl);
+    } catch (URISyntaxException e) {
+      throw new IllegalArgumentException(e);
+    }
+  }
+
+  /**
    * Constructs the URL based on the string representation of the URL from {@link #build()}.
    *
    * <p>Any {@link MalformedURLException} is wrapped in an {@link IllegalArgumentException}.
@@ -570,22 +586,6 @@ public class GenericUrl extends GenericData {
       buf.append('=').append(stringValue);
     }
     return first;
-  }
-
-  /**
-   * Returns the URI for the given encoded URL.
-   *
-   * <p>Any {@link URISyntaxException} is wrapped in an {@link IllegalArgumentException}.
-   *
-   * @param encodedUrl encoded URL
-   * @return URI
-   */
-  private static URI toURI(String encodedUrl) {
-    try {
-      return new URI(encodedUrl);
-    } catch (URISyntaxException e) {
-      throw new IllegalArgumentException(e);
-    }
   }
 
   /**

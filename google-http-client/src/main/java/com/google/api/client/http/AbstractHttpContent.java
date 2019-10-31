@@ -111,11 +111,6 @@ public abstract class AbstractHttpContent implements HttpContent {
     return computeLength(this);
   }
 
-  /** Default implementation returns {@code true}, but subclasses may override. */
-  public boolean retrySupported() {
-    return true;
-  }
-
   /**
    * Returns the computed content length based using {@link IOUtils#computeLength(StreamingContent)}
    * or instead {@code -1} if {@link HttpContent#retrySupported()} is {@code false} because the
@@ -130,5 +125,10 @@ public abstract class AbstractHttpContent implements HttpContent {
       return -1;
     }
     return IOUtils.computeLength(content);
+  }
+
+  /** Default implementation returns {@code true}, but subclasses may override. */
+  public boolean retrySupported() {
+    return true;
   }
 }

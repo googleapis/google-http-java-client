@@ -116,6 +116,17 @@ public abstract class HttpTransport {
   }
 
   /**
+   * Builds a low level HTTP request for the given HTTP method.
+   *
+   * @param method HTTP method
+   * @param url URL
+   * @return new low level HTTP request
+   * @throws IllegalArgumentException if HTTP method is not supported
+   * @since 1.12
+   */
+  protected abstract LowLevelHttpRequest buildRequest(String method, String url) throws IOException;
+
+  /**
    * Returns whether a specified HTTP method is supported by this transport.
    *
    * <p>Default implementation returns true if and only if the request method is {@code "DELETE"},
@@ -128,17 +139,6 @@ public abstract class HttpTransport {
   public boolean supportsMethod(String method) throws IOException {
     return Arrays.binarySearch(SUPPORTED_METHODS, method) >= 0;
   }
-
-  /**
-   * Builds a low level HTTP request for the given HTTP method.
-   *
-   * @param method HTTP method
-   * @param url URL
-   * @return new low level HTTP request
-   * @throws IllegalArgumentException if HTTP method is not supported
-   * @since 1.12
-   */
-  protected abstract LowLevelHttpRequest buildRequest(String method, String url) throws IOException;
 
   /**
    * Default implementation does nothing, but subclasses may override to possibly release allocated

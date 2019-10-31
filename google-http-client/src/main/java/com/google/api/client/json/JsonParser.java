@@ -168,6 +168,41 @@ public abstract class JsonParser implements Closeable {
   }
 
   /**
+   * Parse a JSON Object from the given JSON parser -- which is closed after parsing completes --
+   * into the given destination object.
+   *
+   * <p>Before this method is called, the parser must either point to the start or end of a JSON
+   * object or to a field name.
+   *
+   * @param destination destination object
+   * @since 1.15
+   */
+  public final void parseAndClose(Object destination) throws IOException {
+    parseAndClose(destination, null);
+  }
+
+  /**
+   * {@link Beta} <br>
+   * Parse a JSON Object from the given JSON parser -- which is closed after parsing completes --
+   * into the given destination object, optionally using the given parser customizer.
+   *
+   * <p>Before this method is called, the parser must either point to the start or end of a JSON
+   * object or to a field name.
+   *
+   * @param destination destination object
+   * @param customizeParser optional parser customizer or {@code null} for none
+   */
+  @Beta
+  public final void parseAndClose(Object destination, CustomizeJsonParser customizeParser)
+          throws IOException {
+    try {
+      parse(destination, customizeParser);
+    } finally {
+      close();
+    }
+  }
+
+  /**
    * Skips the values of all keys in the current object until it finds the given key.
    *
    * <p>Before this method is called, the parser must either point to the start or end of a JSON
@@ -244,41 +279,6 @@ public abstract class JsonParser implements Closeable {
         break;
     }
     return currentToken;
-  }
-
-  /**
-   * Parse a JSON Object from the given JSON parser -- which is closed after parsing completes --
-   * into the given destination object.
-   *
-   * <p>Before this method is called, the parser must either point to the start or end of a JSON
-   * object or to a field name.
-   *
-   * @param destination destination object
-   * @since 1.15
-   */
-  public final void parseAndClose(Object destination) throws IOException {
-    parseAndClose(destination, null);
-  }
-
-  /**
-   * {@link Beta} <br>
-   * Parse a JSON Object from the given JSON parser -- which is closed after parsing completes --
-   * into the given destination object, optionally using the given parser customizer.
-   *
-   * <p>Before this method is called, the parser must either point to the start or end of a JSON
-   * object or to a field name.
-   *
-   * @param destination destination object
-   * @param customizeParser optional parser customizer or {@code null} for none
-   */
-  @Beta
-  public final void parseAndClose(Object destination, CustomizeJsonParser customizeParser)
-      throws IOException {
-    try {
-      parse(destination, customizeParser);
-    } finally {
-      close();
-    }
   }
 
   /**

@@ -170,6 +170,16 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
     return removeFromDataIndexOfKey(index << 1);
   }
 
+  /**
+   * Removes the key-value pair of the given key, or ignore if the key cannot be found.
+   *
+   * @return previous value or {@code null} for none
+   */
+  @Override
+  public final V remove(Object key) {
+    return removeFromDataIndexOfKey(getDataIndexOfKey(key));
+  }
+
   /** Returns whether there is a mapping for the given key. */
   @Override
   public final boolean containsKey(Object key) {
@@ -202,16 +212,6 @@ public class ArrayMap<K, V> extends AbstractMap<K, V> implements Cloneable {
       index = this.size;
     }
     return set(index, key, value);
-  }
-
-  /**
-   * Removes the key-value pair of the given key, or ignore if the key cannot be found.
-   *
-   * @return previous value or {@code null} for none
-   */
-  @Override
-  public final V remove(Object key) {
-    return removeFromDataIndexOfKey(getDataIndexOfKey(key));
   }
 
   /** Trims the internal array storage to minimize memory usage. */

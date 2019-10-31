@@ -151,18 +151,6 @@ public final class ApacheHttpTransport extends HttpTransport {
         SSLSocketFactory.getSocketFactory(), newDefaultHttpParams(), ProxySelector.getDefault());
   }
 
-  /** Returns a new instance of the default HTTP parameters we use. */
-  static HttpParams newDefaultHttpParams() {
-    HttpParams params = new BasicHttpParams();
-    // Turn off stale checking. Our connections break all the time anyway,
-    // and it's not worth it to pay the penalty of checking every time.
-    HttpConnectionParams.setStaleCheckingEnabled(params, false);
-    HttpConnectionParams.setSocketBufferSize(params, 8192);
-    ConnManagerParams.setMaxTotalConnections(params, 200);
-    ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(20));
-    return params;
-  }
-
   /**
    * Creates a new instance of the Apache HTTP client that is used by the {@link
    * #ApacheHttpTransport()} constructor.
@@ -186,6 +174,18 @@ public final class ApacheHttpTransport extends HttpTransport {
       defaultHttpClient.setRoutePlanner(new ProxySelectorRoutePlanner(registry, proxySelector));
     }
     return defaultHttpClient;
+  }
+
+  /** Returns a new instance of the default HTTP parameters we use. */
+  static HttpParams newDefaultHttpParams() {
+    HttpParams params = new BasicHttpParams();
+    // Turn off stale checking. Our connections break all the time anyway,
+    // and it's not worth it to pay the penalty of checking every time.
+    HttpConnectionParams.setStaleCheckingEnabled(params, false);
+    HttpConnectionParams.setSocketBufferSize(params, 8192);
+    ConnManagerParams.setMaxTotalConnections(params, 200);
+    ConnManagerParams.setMaxConnectionsPerRoute(params, new ConnPerRouteBean(20));
+    return params;
   }
 
   @Override

@@ -429,6 +429,20 @@ public final class HttpResponse {
   }
 
   /**
+   * Parses the content of the HTTP response from {@link #getContent()} and reads it into a data
+   * type of key/value pairs using the parser returned by {@link HttpRequest#getParser()}.
+   *
+   * @return parsed data type instance or {@code null} for no content
+   * @since 1.10
+   */
+  public Object parseAs(Type dataType) throws IOException {
+    if (!hasMessageBody()) {
+      return null;
+    }
+    return request.getParser().parseAndClose(getContent(), getContentCharset(), dataType);
+  }
+
+  /**
    * Returns whether this response contains a message body as specified in {@href
    * http://tools.ietf.org/html/rfc2616#section-4.3}, calling {@link #ignore()} if {@code false}.
    */
@@ -442,20 +456,6 @@ public final class HttpResponse {
       return false;
     }
     return true;
-  }
-
-  /**
-   * Parses the content of the HTTP response from {@link #getContent()} and reads it into a data
-   * type of key/value pairs using the parser returned by {@link HttpRequest#getParser()}.
-   *
-   * @return parsed data type instance or {@code null} for no content
-   * @since 1.10
-   */
-  public Object parseAs(Type dataType) throws IOException {
-    if (!hasMessageBody()) {
-      return null;
-    }
-    return request.getParser().parseAndClose(getContent(), getContentCharset(), dataType);
   }
 
   /**

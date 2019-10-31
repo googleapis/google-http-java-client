@@ -108,6 +108,16 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
   }
 
   /**
+   * Sets the input stream content of HTTP response or {@code null} for none.
+   *
+   * @since 1.5
+   */
+  public MockLowLevelHttpResponse setContent(InputStream content) {
+    this.content = content;
+    return this;
+  }
+
+  /**
    * Sets the content to {@code null} and the content length to 0. Note that the result will have a
    * content length header whose value is 0.
    *
@@ -213,16 +223,6 @@ public class MockLowLevelHttpResponse extends LowLevelHttpResponse {
    */
   public MockLowLevelHttpResponse setHeaderValues(List<String> headerValues) {
     this.headerValues = Preconditions.checkNotNull(headerValues);
-    return this;
-  }
-
-  /**
-   * Sets the input stream content of HTTP response or {@code null} for none.
-   *
-   * @since 1.5
-   */
-  public MockLowLevelHttpResponse setContent(InputStream content) {
-    this.content = content;
     return this;
   }
 

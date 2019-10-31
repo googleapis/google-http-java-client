@@ -36,20 +36,6 @@ public final class Lists {
   }
 
   /**
-   * Creates an {@code ArrayList} instance backed by an array of the <i>exact</i> size specified;
-   * equivalent to {@link ArrayList#ArrayList(int)}.
-   *
-   * @param initialArraySize the exact size of the initial backing array for the returned array list
-   *     ({@code ArrayList} documentation calls this value the "capacity")
-   * @return a new, empty {@code ArrayList} which is guaranteed not to resize itself unless its size
-   *     reaches {@code initialArraySize + 1}
-   * @throws IllegalArgumentException if {@code initialArraySize} is negative
-   */
-  public static <E> ArrayList<E> newArrayListWithCapacity(int initialArraySize) {
-    return new ArrayList<E>(initialArraySize);
-  }
-
-  /**
    * Returns a new mutable {@code ArrayList} instance containing the given elements.
    *
    * @param elements the elements that the list should contain, in order
@@ -73,6 +59,20 @@ public final class Lists {
       list.add(elements.next());
     }
     return list;
+  }
+
+  /**
+   * Creates an {@code ArrayList} instance backed by an array of the <i>exact</i> size specified;
+   * equivalent to {@link ArrayList#ArrayList(int)}.
+   *
+   * @param initialArraySize the exact size of the initial backing array for the returned array list
+   *     ({@code ArrayList} documentation calls this value the "capacity")
+   * @return a new, empty {@code ArrayList} which is guaranteed not to resize itself unless its size
+   *     reaches {@code initialArraySize + 1}
+   * @throws IllegalArgumentException if {@code initialArraySize} is negative
+   */
+  public static <E> ArrayList<E> newArrayListWithCapacity(int initialArraySize) {
+    return new ArrayList<E>(initialArraySize);
   }
 
   private Lists() {}

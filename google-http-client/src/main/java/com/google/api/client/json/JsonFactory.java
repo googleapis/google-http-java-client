@@ -110,6 +110,18 @@ public abstract class JsonFactory {
   }
 
   /**
+   * Returns a serialized JSON string representation for the given item using {@link
+   * JsonGenerator#serialize(Object)}.
+   *
+   * @param item data key/value pairs
+   * @param pretty whether to return a pretty representation
+   * @return serialized JSON string representation
+   */
+  private String toString(Object item, boolean pretty) throws IOException {
+    return toByteStream(item, pretty).toString("UTF-8");
+  }
+
+  /**
    * Returns a pretty-printed serialized JSON string representation for the given item using {@link
    * JsonGenerator#serialize(Object)} with {@link JsonGenerator#enablePrettyPrint()}.
    *
@@ -135,18 +147,6 @@ public abstract class JsonFactory {
    */
   public final byte[] toByteArray(Object item) throws IOException {
     return toByteStream(item, false).toByteArray();
-  }
-
-  /**
-   * Returns a serialized JSON string representation for the given item using {@link
-   * JsonGenerator#serialize(Object)}.
-   *
-   * @param item data key/value pairs
-   * @param pretty whether to return a pretty representation
-   * @return serialized JSON string representation
-   */
-  private String toString(Object item, boolean pretty) throws IOException {
-    return toByteStream(item, pretty).toString("UTF-8");
   }
 
   /**
