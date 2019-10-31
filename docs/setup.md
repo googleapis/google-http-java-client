@@ -23,7 +23,7 @@ the `dependencyManagement` section of your `pom.xml`:
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>libraries-bom</artifactId>
-      <version>2.7.1</version>
+      <version>2.8.0</version>
       <type>pom</type>
       <scope>import</scope>
      </dependency>
@@ -74,7 +74,3 @@ contains the client library class jar files and the associated source jar files 
 and their dependencies. You can find dependency graphs and licenses for the different libraries in
 the dependencies folder. For more details about the contents of the download, see the contained
 `readme.html` file.
-
-
-
-
