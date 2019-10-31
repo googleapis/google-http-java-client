@@ -41,7 +41,7 @@ public class TestableByteArrayInputStream extends ByteArrayInputStream {
    * @param offset offset in the buffer of the first byte to read
    * @param length maximum number of bytes to read from the buffer
    */
-  public TestableByteArrayInputStream(byte buf[], int offset, int length) {
+  public TestableByteArrayInputStream(byte[] buf, int offset, int length) {
     super(buf);
   }
 
