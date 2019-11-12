@@ -80,7 +80,11 @@ public class GenericUrl extends GenericData {
   /** Fragment component or {@code null} for none. */
   private String fragment;
 
-  /** When true the URL is used `as is` (without encoding, decoding and escaping)
+  /**
+    * If true, the URL string originally given is used as is (without encoding, decoding and
+    * escaping) whenever referenced; otherwise, part of the URL string may be encoded or decoded as
+    * deemed appropriate or necessary.
+    */
   private boolean verbatim;
 
   public GenericUrl() {}
