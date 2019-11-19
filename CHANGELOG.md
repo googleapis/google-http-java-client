@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.33.1](https://www.github.com/googleapis/google-http-java-client/compare/v1.33.0...v1.33.1) (2019-11-19)
+
+
+### Bug Fixes
+
+* redirect on 308 (Permanent Redirect) too ([#876](https://www.github.com/googleapis/google-http-java-client/issues/876)) ([501ede8](https://www.github.com/googleapis/google-http-java-client/commit/501ede83ef332207f0ed67c3d7120b20a1416cec))
+
 ## [1.32.2](https://www.github.com/googleapis/google-http-java-client/compare/v1.32.1...v1.32.2) (2019-10-29)
 
 
