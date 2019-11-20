@@ -318,7 +318,7 @@ public class UriTemplate {
     }
     if (addUnusedParamsAsQueryParams) {
       // Add the parameters remaining in the variableMap as query parameters.
-      GenericUrl.addQueryParams(variableMap.entrySet(), pathBuf);
+      GenericUrl.addQueryParams(variableMap.entrySet(), pathBuf, false);
     }
     return pathBuf.toString();
   }

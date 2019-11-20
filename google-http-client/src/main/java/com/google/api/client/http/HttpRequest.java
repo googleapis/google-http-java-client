@@ -141,7 +141,7 @@ public final class HttpRequest {
 
   /** HTTP request URL. */
   private GenericUrl url;
-
+  
   /** Timeout in milliseconds to establish a connection or {@code 0} for an infinite timeout. */
   private int connectTimeout = 20 * 1000;
 
@@ -172,8 +172,11 @@ public final class HttpRequest {
   /** The {@link BackOffPolicy} to use between retry attempts or {@code null} for none. */
   @Deprecated @Beta private BackOffPolicy backOffPolicy;
 
-  /** Whether to automatically follow redirects ({@code true} by default). */
+ /** Whether to automatically follow redirects ({@code true} by default). */
   private boolean followRedirects = true;
+
+  /** Whether to use raw redirect URLs ({@code false} by default). */
+  private boolean useRawRedirectUrls = false;
 
   /**
    * Whether to throw an exception at the end of {@link #execute()} on an HTTP error code (non-2XX)
@@ -696,6 +699,23 @@ public final class HttpRequest {
   }
 
   /**
+   * Return whether to use raw redirect URLs. 
+   */
+  public boolean getUseRawRedirectUrls() {
+    return useRawRedirectUrls;
+  }
+
+  /**
+   * Sets whether to use raw redirect URLs. 
+   *
+   * <p>The default value is {@code false}.
+   */
+  public HttpRequest setUseRawRedirectUrls(boolean useRawRedirectUrls) {
+    this.useRawRedirectUrls = useRawRedirectUrls;
+    return this;
+  }
+
+  /**
    * Returns whether to throw an exception at the end of {@link #execute()} on an HTTP error code
    * (non-2XX) after all retries and response handlers have been exhausted.
    *
@@ -1159,7 +1179,7 @@ public final class HttpRequest {
         && HttpStatusCodes.isRedirect(statusCode)
         && redirectLocation != null) {
       // resolve the redirect location relative to the current location
-      setUrl(new GenericUrl(url.toURL(redirectLocation)));
+      setUrl(new GenericUrl(url.toURL(redirectLocation), useRawRedirectUrls));
       // on 303 change method to GET
       if (statusCode == HttpStatusCodes.STATUS_CODE_SEE_OTHER) {
         setRequestMethod(HttpMethods.GET);

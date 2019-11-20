@@ -150,6 +150,10 @@ public class GenericUrlTest extends TestCase {
     public TestUrl(String encodedUrl) {
       super(encodedUrl);
     }
+
+    public TestUrl(String encodedUrl, boolean verbatim) {
+      super(encodedUrl, verbatim);
+    }
   }
 
   private static final String FULL =
@@ -191,6 +195,12 @@ public class GenericUrlTest extends TestCase {
     assertNull(url.hidden);
     assertEquals("bar", url.get("foo"));
     assertEquals("bar", url.foo);
+  }
+
+  public void testParse_full_verbatim() {
+    TestUrl url = new TestUrl(FULL, true);
+    assertNull(url.hidden);
+    assertEquals("Go%3D%23/%25%26%20?%3Co%3Egle", url.getFirst("q"));
   }
 
   public void testConstructor_url() throws MalformedURLException {
@@ -473,7 +483,7 @@ public class GenericUrlTest extends TestCase {
   }
 
   private void subtestToPathParts(String encodedPath, String... expectedDecodedParts) {
-    List<String> result = GenericUrl.toPathParts(encodedPath);
+    List<String> result = GenericUrl.toPathParts(encodedPath, false);
     if (encodedPath == null) {
       assertNull(result);
     } else {
