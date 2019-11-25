@@ -15,6 +15,7 @@
 package com.google.api.client.util;
 
 import com.google.api.client.util.DateTime.SecondsAndNanos;
+
 import java.util.Date;
 import java.util.TimeZone;
 import junit.framework.TestCase;
@@ -27,12 +28,6 @@ import junit.framework.TestCase;
 public class DateTimeTest extends TestCase {
 
   private TimeZone originalTimeZone;
-
-  public DateTimeTest() {}
-
-  public DateTimeTest(String testName) {
-    super(testName);
-  }
 
   @Override
   protected void setUp() throws Exception {
@@ -225,8 +220,18 @@ public class DateTimeTest extends TestCase {
     assertParsedRfc3339(
         "2018-03-01T10:11:12.1000Z", SecondsAndNanos.ofSecondsAndNanos(1519899072L, 100000000));
   }
+  
+  public void testEpoch() {
+    assertParsedRfc3339(
+        "1970-01-01T00:00:00.000Z", SecondsAndNanos.ofSecondsAndNanos(0, 0));
+  }
 
-  private void assertParsedRfc3339(String input, SecondsAndNanos expected) {
+  public void testOneSecondBeforeEpoch() {
+    assertParsedRfc3339(
+        "1969-12-31T23:59:59.000Z", SecondsAndNanos.ofSecondsAndNanos(-1, 0));
+  }
+
+  private static void assertParsedRfc3339(String input, SecondsAndNanos expected) {
     SecondsAndNanos actual = DateTime.parseRfc3339ToSecondsAndNanos(input);
     assertEquals(
         "Seconds for " + input + " do not match", expected.getSeconds(), actual.getSeconds());
@@ -249,7 +254,7 @@ public class DateTimeTest extends TestCase {
     assertEquals(expected, output);
   }
 
-  private void expectExceptionForParseRfc3339(String input) {
+  private static void expectExceptionForParseRfc3339(String input) {
     try {
       DateTime.parseRfc3339(input);
       fail("expected NumberFormatException");
