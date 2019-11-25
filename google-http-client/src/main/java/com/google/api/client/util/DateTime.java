@@ -273,7 +273,7 @@ public final class DateTime implements Serializable {
    *     exception is thrown if {@code str} doesn't match {@code RFC3339_REGEX} or if it contains a
    *     time zone shift but no time.
    */
-  public static DateTime parseRfc3339(String str) throws NumberFormatException {
+  public static DateTime parseRfc3339(String str) {
     return parseRfc3339WithNanoSeconds(str).toDateTime();
   }
 
@@ -285,9 +285,9 @@ public final class DateTime implements Serializable {
    *     exception is thrown if {@code str} doesn't match {@code RFC3339_REGEX} or if it contains a
    *     time zone shift but no time.
    */
-  public static SecondsAndNanos parseRfc3339ToSecondsAndNanos(String str)
-      throws IllegalArgumentException {
-    return parseRfc3339WithNanoSeconds(str).toSecondsAndNanos();
+  public static SecondsAndNanos parseRfc3339ToSecondsAndNanos(String str) {
+    Rfc3339ParseResult time = parseRfc3339WithNanoSeconds(str);
+    return time.toSecondsAndNanos();
   }
 
   /** A timestamp represented as the number of seconds and nanoseconds since Epoch. */
@@ -335,7 +335,7 @@ public final class DateTime implements Serializable {
     }
   }
 
-  /** Result of parsing a Rfc3339 string. */
+  /** Result of parsing an RFC 3339 string. */
   private static class Rfc3339ParseResult implements Serializable {
     private final long seconds;
     private final int nanos;
@@ -400,6 +400,7 @@ public final class DateTime implements Serializable {
       }
     }
     Calendar dateTime = new GregorianCalendar(GMT);
+    dateTime.clear();
     dateTime.set(year, month, day, hourOfDay, minute, second);
     long value = dateTime.getTimeInMillis();
 
