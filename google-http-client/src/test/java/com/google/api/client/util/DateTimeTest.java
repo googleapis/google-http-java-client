@@ -15,7 +15,6 @@
 package com.google.api.client.util;
 
 import com.google.api.client.util.DateTime.SecondsAndNanos;
-
 import java.util.Date;
 import java.util.TimeZone;
 import junit.framework.TestCase;
