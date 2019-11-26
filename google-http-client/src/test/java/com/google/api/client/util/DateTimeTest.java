@@ -148,6 +148,11 @@ public class DateTimeTest extends TestCase {
         DateTime.parseRfc3339(
             "2018-12-31T23:59:59.9999Z"), // This value would be truncated prior to version 1.30.2
         DateTime.parseRfc3339("2018-12-31T23:59:59.999Z"));
+
+    // The beginning of Gregorian Calendar
+    assertEquals(
+        -12219287774877L, // Result from Joda time's Instant.parse
+        DateTime.parseRfc3339("1582-10-15T01:23:45.123Z").getValue());
   }
 
   /**
