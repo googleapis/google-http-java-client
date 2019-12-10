@@ -215,7 +215,7 @@ public class NetHttpRequestTest {
     request.setContentEncoding("gzip");
     request.execute();
 
-    assertEquals(connection.getChunkLength(), 4096);
+    assertEquals(4096, connection.getChunkLength());
     assertNull(request.getRequestProperty("Content-Length"));
   }
 

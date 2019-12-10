@@ -57,7 +57,7 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
   @Override
   public LowLevelHttpResponse execute() throws IOException {
     if (getStreamingContent() != null) {
-      Preconditions.checkArgument(
+      Preconditions.checkState(
           request instanceof HttpEntityEnclosingRequest,
           "Apache HTTP client does not support %s requests with content.",
           request.getRequestLine().getMethod());
