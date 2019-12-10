@@ -16,6 +16,8 @@ package com.google.api.client.util.escape;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Utility functions for dealing with {@code CharEscaper}s, and some commonly used {@code
@@ -88,6 +90,59 @@ public final class CharEscapers {
       // UTF-8 encoding guaranteed to be supported by JVM
       throw new RuntimeException(e);
     }
+  }
+
+  /**
+   * Decodes the path component of a URI. This must be done via a method that does not try to
+   * convert + into spaces(the behavior of {@link java.net.URLDecoder#decode(String, String)}). This
+   * method will transform URI encoded value into their decoded symbols.
+   *
+   * <p>i.e: {@code decodePath("%3Co%3E")} would return {@code "<o>"}
+   *
+   * @param path the value to be decoded
+   * @return decoded version of {@code path}
+   */
+  public static String decodeUriPath(String path) {
+    if (path == null) {
+      return null;
+    }
+    ByteBuffer buf = null;
+    int length = path.length();
+    StringBuilder sb = new StringBuilder(length);
+
+    char c;
+    for (int i = 0; i < length; i++) {
+      c = path.charAt(i);
+      if (c == '%') {
+        if (i + 2 < length) {
+          if (buf == null) {
+            buf = ByteBuffer.allocate(Integer.SIZE / 8);
+          } else {
+            buf.clear();
+          }
+          try {
+            int v = Integer.parseInt(path.substring(i + 1, i + 3), 16);
+            if (v < 0) {
+              throw new IllegalArgumentException(
+                  "Illegal parsed value from escaped sequence, most be positive");
+            }
+            buf.put((byte) v);
+            i += 2;
+            sb.append(new String(buf.array(), 0, buf.position(), StandardCharsets.UTF_8));
+
+          } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(
+                "Illegal length following escape sequence, must be in the form %xy");
+          }
+
+        } else {
+          throw new IllegalArgumentException("Illegal remaining length following escape sequence");
+        }
+      } else {
+        sb.append(c);
+      }
+    }
+    return sb.toString();
   }
 
   /**
