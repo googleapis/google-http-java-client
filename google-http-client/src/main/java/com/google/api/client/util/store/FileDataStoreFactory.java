@@ -16,6 +16,7 @@ package com.google.api.client.util.store;
 
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Maps;
+
 import com.google.common.base.StandardSystemProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -51,8 +52,8 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
   private static final Logger LOGGER = Logger.getLogger(FileDataStoreFactory.class.getName());
 
-  private static final boolean IS_WINDOWS =
-      StandardSystemProperty.OS_NAME.value().startsWith("WINDOWS");
+  private static final boolean IS_WINDOWS = StandardSystemProperty.OS_NAME.value()
+      .startsWith("WINDOWS");
 
   /** Directory to store data. */
   private final File dataDirectory;
@@ -143,10 +144,8 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
     try {
       Files.setPosixFilePermissions(Paths.get(file.getAbsolutePath()), permissions);
     } catch (UnsupportedOperationException exception) {
-      LOGGER.warning(
-          "Unable to set permissions for "
-              + file
-              + ", because you are running on a non-POSIX file system.");
+      LOGGER.warning("Unable to set permissions for " + file
+          + ", because you are running on a non-POSIX file system.");
     } catch (SecurityException exception) {
       // ignored
     } catch (IllegalArgumentException exception) {
@@ -156,36 +155,35 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
   static void setPermissionsToOwnerOnlyWindows(File file) throws IOException {
     Path path = Paths.get(file.getAbsolutePath());
-    UserPrincipal owner =
-        path.getFileSystem().getUserPrincipalLookupService().lookupPrincipalByName("OWNER@");
+    UserPrincipal owner = path.getFileSystem().getUserPrincipalLookupService()
+        .lookupPrincipalByName("OWNER@");
 
     // get view
     AclFileAttributeView view = Files.getFileAttributeView(path, AclFileAttributeView.class);
 
     // All available entries
-    Set<AclEntryPermission> permissions =
-        ImmutableSet.of(
-            AclEntryPermission.APPEND_DATA,
-            AclEntryPermission.DELETE,
-            AclEntryPermission.DELETE_CHILD,
-            AclEntryPermission.READ_ACL,
-            AclEntryPermission.READ_ATTRIBUTES,
-            AclEntryPermission.READ_DATA,
-            AclEntryPermission.READ_NAMED_ATTRS,
-            AclEntryPermission.SYNCHRONIZE,
-            AclEntryPermission.WRITE_ACL,
-            AclEntryPermission.WRITE_ATTRIBUTES,
-            AclEntryPermission.WRITE_DATA,
-            AclEntryPermission.WRITE_NAMED_ATTRS,
-            AclEntryPermission.WRITE_OWNER);
+    Set<AclEntryPermission> permissions = ImmutableSet.of(
+        AclEntryPermission.APPEND_DATA,
+        AclEntryPermission.DELETE,
+        AclEntryPermission.DELETE_CHILD,
+        AclEntryPermission.READ_ACL,
+        AclEntryPermission.READ_ATTRIBUTES,
+        AclEntryPermission.READ_DATA,
+        AclEntryPermission.READ_NAMED_ATTRS,
+        AclEntryPermission.SYNCHRONIZE,
+        AclEntryPermission.WRITE_ACL,
+        AclEntryPermission.WRITE_ATTRIBUTES,
+        AclEntryPermission.WRITE_DATA,
+        AclEntryPermission.WRITE_NAMED_ATTRS,
+        AclEntryPermission.WRITE_OWNER
+    );
 
     // create ACL to give owner everything
-    AclEntry entry =
-        AclEntry.newBuilder()
-            .setType(AclEntryType.ALLOW)
-            .setPrincipal(owner)
-            .setPermissions(permissions)
-            .build();
+    AclEntry entry = AclEntry.newBuilder()
+        .setType(AclEntryType.ALLOW)
+        .setPrincipal(owner)
+        .setPermissions(permissions)
+        .build();
 
     // Overwrite the ACL with only this permission
     view.setAcl(ImmutableList.of(entry));

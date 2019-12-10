@@ -21,7 +21,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import org.apache.http.entity.AbstractHttpEntity;
 
-/** @author Yaniv Inbar */
+/**
+ * @author Yaniv Inbar
+ */
 final class ContentEntity extends AbstractHttpEntity {
 
   /** Content length or less than zero if not known. */

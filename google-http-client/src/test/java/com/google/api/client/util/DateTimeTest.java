@@ -224,13 +224,15 @@ public class DateTimeTest extends TestCase {
     assertParsedRfc3339(
         "2018-03-01T10:11:12.1000Z", SecondsAndNanos.ofSecondsAndNanos(1519899072L, 100000000));
   }
-
+  
   public void testEpoch() {
-    assertParsedRfc3339("1970-01-01T00:00:00.000Z", SecondsAndNanos.ofSecondsAndNanos(0, 0));
+    assertParsedRfc3339(
+        "1970-01-01T00:00:00.000Z", SecondsAndNanos.ofSecondsAndNanos(0, 0));
   }
 
   public void testOneSecondBeforeEpoch() {
-    assertParsedRfc3339("1969-12-31T23:59:59.000Z", SecondsAndNanos.ofSecondsAndNanos(-1, 0));
+    assertParsedRfc3339(
+        "1969-12-31T23:59:59.000Z", SecondsAndNanos.ofSecondsAndNanos(-1, 0));
   }
 
   private static void assertParsedRfc3339(String input, SecondsAndNanos expected) {

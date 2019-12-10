@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.http.Header;
@@ -125,8 +126,7 @@ public class ApacheHttpTransportTest {
       fail("expected " + IllegalArgumentException.class);
     } catch (IllegalArgumentException e) {
       // expected
-      assertEquals(
-          e.getMessage(),
+      assertEquals(e.getMessage(),
           "Apache HTTP client does not support " + method + " requests with content.");
     }
   }
@@ -142,18 +142,16 @@ public class ApacheHttpTransportTest {
   @Test
   public void testRequestShouldNotFollowRedirects() throws IOException {
     final AtomicInteger requestsAttempted = new AtomicInteger(0);
-    HttpRequestExecutor requestExecutor =
-        new HttpRequestExecutor() {
-          @Override
-          public HttpResponse execute(
-              HttpRequest request, HttpClientConnection connection, HttpContext context)
-              throws IOException, HttpException {
-            HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1, 302, null);
-            response.addHeader("location", "https://google.com/path");
-            requestsAttempted.incrementAndGet();
-            return response;
-          }
-        };
+    HttpRequestExecutor requestExecutor = new HttpRequestExecutor() {
+      @Override
+      public HttpResponse execute(HttpRequest request, HttpClientConnection connection,
+          HttpContext context) throws IOException, HttpException {
+        HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1, 302, null);
+        response.addHeader("location", "https://google.com/path");
+        requestsAttempted.incrementAndGet();
+        return response;
+      }
+    };
     HttpClient client = HttpClients.custom().setRequestExecutor(requestExecutor).build();
     ApacheHttpTransport transport = new ApacheHttpTransport(client);
     ApacheHttpRequest request = transport.buildRequest("GET", "https://google.com");
@@ -165,21 +163,17 @@ public class ApacheHttpTransportTest {
   @Test
   public void testRequestCanSetHeaders() {
     final AtomicBoolean interceptorCalled = new AtomicBoolean(false);
-    HttpClient client =
-        HttpClients.custom()
-            .addInterceptorFirst(
-                new HttpRequestInterceptor() {
-                  @Override
-                  public void process(HttpRequest request, HttpContext context)
-                      throws HttpException, IOException {
-                    Header header = request.getFirstHeader("foo");
-                    assertNotNull("Should have found header", header);
-                    assertEquals("bar", header.getValue());
-                    interceptorCalled.set(true);
-                    throw new IOException("cancelling request");
-                  }
-                })
-            .build();
+    HttpClient client = HttpClients.custom().addInterceptorFirst(new HttpRequestInterceptor() {
+      @Override
+      public void process(HttpRequest request, HttpContext context)
+          throws HttpException, IOException {
+        Header header = request.getFirstHeader("foo");
+        assertNotNull("Should have found header", header);
+        assertEquals("bar", header.getValue());
+        interceptorCalled.set(true);
+        throw new IOException("cancelling request");
+      }
+    }).build();
 
     ApacheHttpTransport transport = new ApacheHttpTransport(client);
     ApacheHttpRequest request = transport.buildRequest("GET", "https://google.com");
@@ -231,7 +225,10 @@ public class ApacheHttpTransportTest {
     GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
     testUrl.setPort(server.getAddress().getPort());
     com.google.api.client.http.HttpResponse response =
-        transport.createRequestFactory().buildGetRequest(testUrl).execute();
+        transport
+            .createRequestFactory()
+            .buildGetRequest(testUrl)
+            .execute();
     assertEquals(200, response.getStatusCode());
     assertEquals("/foo//bar", response.parseAsString());
   }

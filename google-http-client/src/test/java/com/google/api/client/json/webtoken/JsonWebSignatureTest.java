@@ -17,13 +17,16 @@ package com.google.api.client.json.webtoken;
 import com.google.api.client.testing.json.MockJsonFactory;
 import com.google.api.client.testing.json.webtoken.TestCertificates;
 import com.google.api.client.testing.util.SecurityTestUtils;
+
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.net.ssl.X509TrustManager;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -53,12 +56,12 @@ public class JsonWebSignatureTest {
   }
 
   private X509Certificate verifyX509WithCaCert(TestCertificates.CertData caCert)
-      throws IOException, GeneralSecurityException {
+     throws IOException, GeneralSecurityException {
     JsonWebSignature signature = TestCertificates.getJsonWebSignature();
     X509TrustManager trustManager = caCert.getTrustManager();
     return signature.verifySignature(trustManager);
   }
-
+  
   @Test
   public void testImmutableSignatureBytes() throws IOException {
     JsonWebSignature signature = TestCertificates.getJsonWebSignature();
@@ -67,7 +70,7 @@ public class JsonWebSignatureTest {
     byte[] bytes2 = signature.getSignatureBytes();
     Assert.assertNotEquals(bytes2[0], bytes[0]);
   }
-
+  
   @Test
   public void testImmutableSignedContentBytes() throws IOException {
     JsonWebSignature signature = TestCertificates.getJsonWebSignature();
@@ -76,7 +79,7 @@ public class JsonWebSignatureTest {
     byte[] bytes2 = signature.getSignedContentBytes();
     Assert.assertNotEquals(bytes2[0], bytes[0]);
   }
-
+  
   @Test
   public void testImmutableCertificates() throws IOException {
     JsonWebSignature signature = TestCertificates.getJsonWebSignature();
@@ -84,7 +87,7 @@ public class JsonWebSignatureTest {
     certificates.set(0, "foo");
     Assert.assertNotEquals("foo", signature.getHeader().getX509Certificates().get(0));
   }
-
+  
   @Test
   public void testImmutableCritical() throws IOException {
     JsonWebSignature signature = TestCertificates.getJsonWebSignature();
