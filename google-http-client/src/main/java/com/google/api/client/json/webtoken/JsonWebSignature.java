@@ -77,8 +77,7 @@ public class JsonWebSignature extends JsonWebToken {
   }
 
   /**
-   * Header as specified in 
-   * <a href="https://tools.ietf.org/html/rfc7515#section-4.1">Reserved
+   * Header as specified in <a href="https://tools.ietf.org/html/rfc7515#section-4.1">Reserved
    * Header Parameter Names</a>.
    */
   public static class Header extends JsonWebToken.Header {
@@ -304,8 +303,8 @@ public class JsonWebSignature extends JsonWebToken {
     }
 
     /**
-     * Returns an array listing the header parameter names that define extensions used in
-     * the JWS header that MUST be understood and processed or {@code null} for none.
+     * Returns an array listing the header parameter names that define extensions used in the JWS
+     * header that MUST be understood and processed or {@code null} for none.
      *
      * @since 1.16
      */
@@ -317,8 +316,8 @@ public class JsonWebSignature extends JsonWebToken {
     }
 
     /**
-     * Sets the header parameter names that define extensions used in the
-     * JWS header that MUST be understood and processed or {@code null} for none.
+     * Sets the header parameter names that define extensions used in the JWS header that MUST be
+     * understood and processed or {@code null} for none.
      *
      * <p>Overriding is only supported for the purpose of calling the super implementation and
      * changing the return type, but nothing else.

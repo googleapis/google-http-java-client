@@ -23,9 +23,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpRequestBase;
 
-/**
- * @author Yaniv Inbar
- */
+/** @author Yaniv Inbar */
 final class ApacheHttpRequest extends LowLevelHttpRequest {
   private final HttpClient httpClient;
 
@@ -38,11 +36,12 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
     this.httpClient = httpClient;
     this.request = request;
     // disable redirects as google-http-client handles redirects
-    this.requestConfig = RequestConfig.custom()
-        .setRedirectsEnabled(false)
-        .setNormalizeUri(false)
-        // TODO(chingor): configure in HttpClientBuilder when available
-        .setStaleConnectionCheckEnabled(false);
+    this.requestConfig =
+        RequestConfig.custom()
+            .setRedirectsEnabled(false)
+            .setNormalizeUri(false)
+            // TODO(chingor): configure in HttpClientBuilder when available
+            .setStaleConnectionCheckEnabled(false);
   }
 
   @Override
@@ -52,19 +51,22 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
 
   @Override
   public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
-    requestConfig.setConnectTimeout(connectTimeout)
-        .setSocketTimeout(readTimeout);
+    requestConfig.setConnectTimeout(connectTimeout).setSocketTimeout(readTimeout);
   }
 
   @Override
   public LowLevelHttpResponse execute() throws IOException {
     if (getStreamingContent() != null) {
-      Preconditions.checkArgument(request instanceof HttpEntityEnclosingRequest,
+      Preconditions.checkArgument(
+          request instanceof HttpEntityEnclosingRequest,
           "Apache HTTP client does not support %s requests with content.",
           request.getRequestLine().getMethod());
       ContentEntity entity = new ContentEntity(getContentLength(), getStreamingContent());
       entity.setContentEncoding(getContentEncoding());
       entity.setContentType(getContentType());
+      if (getContentLength() == -1) {
+        entity.setChunked(true);
+      }
       ((HttpEntityEnclosingRequest) request).setEntity(entity);
     }
     request.setConfig(requestConfig.build());

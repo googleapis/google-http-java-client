@@ -38,19 +38,15 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 /**
  * Thread-safe HTTP transport based on the Apache HTTP Client library.
  *
- * <p>
- * Implementation is thread-safe, as long as any parameter modification to the
- * {@link #getHttpClient() Apache HTTP Client} is only done at initialization time. For maximum
- * efficiency, applications should use a single globally-shared instance of the HTTP transport.
- * </p>
+ * <p>Implementation is thread-safe, as long as any parameter modification to the {@link
+ * #getHttpClient() Apache HTTP Client} is only done at initialization time. For maximum efficiency,
+ * applications should use a single globally-shared instance of the HTTP transport.
  *
- * <p>
- * Default settings are specified in {@link #newDefaultHttpClient()}. Use the
- * {@link #ApacheHttpTransport(HttpClient)} constructor to override the Apache HTTP Client used.
- * Please read the <a
+ * <p>Default settings are specified in {@link #newDefaultHttpClient()}. Use the {@link
+ * #ApacheHttpTransport(HttpClient)} constructor to override the Apache HTTP Client used. Please
+ * read the <a
  * href="http://hc.apache.org/httpcomponents-client-ga/tutorial/html/connmgmt.html">Apache HTTP
  * Client connection management tutorial</a> for more complex configuration options.
- * </p>
  *
  * @since 1.30
  * @author Yaniv Inbar
@@ -72,20 +68,18 @@ public final class ApacheHttpTransport extends HttpTransport {
   /**
    * Constructor that allows an alternative Apache HTTP client to be used.
    *
-   * <p>
-   * Note that in the previous version, we overrode several settings. However, we are no longer able
-   * to do so.
-   * </p>
+   * <p>Note that in the previous version, we overrode several settings. However, we are no longer
+   * able to do so.
    *
-   * <p>If you choose to provide your own Apache HttpClient implementation, be sure that</p>
+   * <p>If you choose to provide your own Apache HttpClient implementation, be sure that
+   *
    * <ul>
-   * <li>HTTP version is set to 1.1.</li>
-   * <li>Redirects are disabled (google-http-client handles redirects).</li>
-   * <li>Retries are disabled (google-http-client handles retries).</li>
+   *   <li>HTTP version is set to 1.1.
+   *   <li>Redirects are disabled (google-http-client handles redirects).
+   *   <li>Retries are disabled (google-http-client handles retries).
    * </ul>
    *
    * @param httpClient Apache HTTP client to use
-   *
    * @since 1.30
    */
   public ApacheHttpTransport(HttpClient httpClient) {
@@ -93,20 +87,19 @@ public final class ApacheHttpTransport extends HttpTransport {
   }
 
   /**
-   * Creates a new instance of the Apache HTTP client that is used by the
-   * {@link #ApacheHttpTransport()} constructor.
+   * Creates a new instance of the Apache HTTP client that is used by the {@link
+   * #ApacheHttpTransport()} constructor.
    *
-   * <p>
-   * Settings:
-   * </p>
+   * <p>Settings:
+   *
    * <ul>
-   * <li>The client connection manager is set to {@link PoolingHttpClientConnectionManager}.</li>
-   * <li><The retry mechanism is turned off using
-   * {@link HttpClientBuilder#disableRedirectHandling}.</li>
-   * <li>The route planner uses {@link SystemDefaultRoutePlanner} with
-   * {@link ProxySelector#getDefault()}, which uses the proxy settings from <a
-   * href="https://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
-   * properties</a>.</li>
+   *   <li>The client connection manager is set to {@link PoolingHttpClientConnectionManager}.
+   *   <li><The retry mechanism is turned off using {@link
+   *       HttpClientBuilder#disableRedirectHandling}.
+   *   <li>The route planner uses {@link SystemDefaultRoutePlanner} with {@link
+   *       ProxySelector#getDefault()}, which uses the proxy settings from <a
+   *       href="https://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
+   *       properties</a>.
    * </ul>
    *
    * @return new instance of the Apache HTTP client
@@ -117,20 +110,19 @@ public final class ApacheHttpTransport extends HttpTransport {
   }
 
   /**
-   * Creates a new Apache HTTP client builder that is used by the
-   * {@link #ApacheHttpTransport()} constructor.
+   * Creates a new Apache HTTP client builder that is used by the {@link #ApacheHttpTransport()}
+   * constructor.
    *
-   * <p>
-   * Settings:
-   * </p>
+   * <p>Settings:
+   *
    * <ul>
-   * <li>The client connection manager is set to {@link PoolingHttpClientConnectionManager}.</li>
-   * <li><The retry mechanism is turned off using
-   * {@link HttpClientBuilder#disableRedirectHandling}.</li>
-   * <li>The route planner uses {@link SystemDefaultRoutePlanner} with
-   * {@link ProxySelector#getDefault()}, which uses the proxy settings from <a
-   * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
-   * properties</a>.</li>
+   *   <li>The client connection manager is set to {@link PoolingHttpClientConnectionManager}.
+   *   <li><The retry mechanism is turned off using {@link
+   *       HttpClientBuilder#disableRedirectHandling}.
+   *   <li>The route planner uses {@link SystemDefaultRoutePlanner} with {@link
+   *       ProxySelector#getDefault()}, which uses the proxy settings from <a
+   *       href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
+   *       properties</a>.
    * </ul>
    *
    * @return new instance of the Apache HTTP client
@@ -139,14 +131,14 @@ public final class ApacheHttpTransport extends HttpTransport {
   public static HttpClientBuilder newDefaultHttpClientBuilder() {
 
     return HttpClientBuilder.create()
-            .useSystemProperties()
-            .setSSLSocketFactory(SSLConnectionSocketFactory.getSocketFactory())
-            .setMaxConnTotal(200)
-            .setMaxConnPerRoute(20)
-            .setConnectionTimeToLive(-1, TimeUnit.MILLISECONDS)
-            .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
-            .disableRedirectHandling()
-            .disableAutomaticRetries();
+        .useSystemProperties()
+        .setSSLSocketFactory(SSLConnectionSocketFactory.getSocketFactory())
+        .setMaxConnTotal(200)
+        .setMaxConnPerRoute(20)
+        .setConnectionTimeToLive(-1, TimeUnit.MILLISECONDS)
+        .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
+        .disableRedirectHandling()
+        .disableAutomaticRetries();
   }
 
   @Override

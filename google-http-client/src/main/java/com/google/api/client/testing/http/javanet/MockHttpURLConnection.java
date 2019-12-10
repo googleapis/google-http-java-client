@@ -201,4 +201,8 @@ public class MockHttpURLConnection extends HttpURLConnection {
     List<String> values = headers.get(name);
     return values == null ? null : values.get(0);
   }
+
+  public int getChunckLength() {
+    return chunkLength;
+  }
 }

@@ -53,4 +53,3 @@ public class IOUtilsTest extends TestCase {
     assertTrue(IOUtils.isSymbolicLink(file2));
   }
 }
-

@@ -49,6 +49,11 @@ final class NetHttpRequest extends LowLevelHttpRequest {
     connection.addRequestProperty(name, value);
   }
 
+  @VisibleForTesting
+  String getRequestProperty(String name) {
+    return connection.getRequestProperty(name);
+  }
+
   @Override
   public void setTimeout(int connectTimeout, int readTimeout) {
     connection.setReadTimeout(readTimeout);

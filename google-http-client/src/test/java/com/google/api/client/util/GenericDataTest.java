@@ -15,13 +15,10 @@
 package com.google.api.client.util;
 
 import com.google.api.client.util.GenericData.Flags;
-
-import junit.framework.TestCase;
-
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-
+import junit.framework.TestCase;
 import org.junit.Assert;
 
 /**

@@ -15,7 +15,6 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Beta;
-import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingStreamingContent;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Preconditions;
@@ -141,7 +140,7 @@ public final class HttpRequest {
 
   /** HTTP request URL. */
   private GenericUrl url;
-  
+
   /** Timeout in milliseconds to establish a connection or {@code 0} for an infinite timeout. */
   private int connectTimeout = 20 * 1000;
 
@@ -172,7 +171,7 @@ public final class HttpRequest {
   /** The {@link BackOffPolicy} to use between retry attempts or {@code null} for none. */
   @Deprecated @Beta private BackOffPolicy backOffPolicy;
 
- /** Whether to automatically follow redirects ({@code true} by default). */
+  /** Whether to automatically follow redirects ({@code true} by default). */
   private boolean followRedirects = true;
 
   /** Whether to use raw redirect URLs ({@code false} by default). */
@@ -698,15 +697,13 @@ public final class HttpRequest {
     return this;
   }
 
-  /**
-   * Return whether to use raw redirect URLs. 
-   */
+  /** Return whether to use raw redirect URLs. */
   public boolean getUseRawRedirectUrls() {
     return useRawRedirectUrls;
   }
 
   /**
-   * Sets whether to use raw redirect URLs. 
+   * Sets whether to use raw redirect URLs.
    *
    * <p>The default value is {@code false}.
    */
@@ -938,7 +935,7 @@ public final class HttpRequest {
       final boolean contentRetrySupported = streamingContent == null || content.retrySupported();
       if (streamingContent != null) {
         final String contentEncoding;
-        final long contentLength;
+        long contentLength = -1;
         final String contentType = content.getType();
         // log content
         if (loggable) {
@@ -953,7 +950,6 @@ public final class HttpRequest {
         } else {
           contentEncoding = encoding.getName();
           streamingContent = new HttpEncodingStreamingContent(streamingContent, encoding);
-          contentLength = contentRetrySupported ? IOUtils.computeLength(streamingContent) : -1;
         }
         // append content headers to log buffer
         if (loggable) {
@@ -1222,13 +1218,14 @@ public final class HttpRequest {
       span.putAttribute(key, AttributeValue.stringAttributeValue(value));
     }
   }
-  
+
   private static String getVersion() {
     String version = HttpRequest.class.getPackage().getImplementationVersion();
     // in a non-packaged environment (local), there's no implementation version to read
     if (version == null) {
       // fall back to reading from a properties file - note this value is expected to be cached
-      try (InputStream inputStream = HttpRequest.class.getResourceAsStream("/google-http-client.properties")) {
+      try (InputStream inputStream =
+          HttpRequest.class.getResourceAsStream("/google-http-client.properties")) {
         if (inputStream != null) {
           Properties properties = new Properties();
           properties.load(inputStream);
