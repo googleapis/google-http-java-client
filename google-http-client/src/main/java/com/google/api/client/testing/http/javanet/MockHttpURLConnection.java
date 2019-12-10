@@ -202,7 +202,7 @@ public class MockHttpURLConnection extends HttpURLConnection {
     return values == null ? null : values.get(0);
   }
 
-  public int getChunckLength() {
+  public int getChunkLength() {
     return chunkLength;
   }
 }
