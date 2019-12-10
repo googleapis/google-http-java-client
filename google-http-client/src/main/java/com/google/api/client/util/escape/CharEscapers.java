@@ -95,7 +95,7 @@ public final class CharEscapers {
   /**
    * Decodes the path component of a URI. This must be done via a method that does not try to
    * convert + into spaces(the behavior of {@link java.net.URLDecoder#decode(String, String)}). This
-   * method will transform URI encoded value into their decoded symbols.
+   * method transforms URI encoded values into their decoded symbols.
    *
    * <p>i.e: {@code decodePath("%3Co%3E")} would return {@code "<o>"}
    *
