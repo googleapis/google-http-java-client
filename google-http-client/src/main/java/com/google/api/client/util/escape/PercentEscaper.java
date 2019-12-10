@@ -62,7 +62,7 @@ public class PercentEscaper extends UnicodeEscaper {
    * specified in RFC 3986. Note that some of these characters do need to be escaped when used in
    * other parts of the URI.
    */
-  public static final String SAFEPATHCHARS_URLENCODER = "-_.!~*'()@:$&,;=";
+  public static final String SAFEPATHCHARS_URLENCODER = "-_.!~*'()@:$&,;=+";
 
   /**
    * Contains the save characters plus all reserved characters. This happens to be the safe path
