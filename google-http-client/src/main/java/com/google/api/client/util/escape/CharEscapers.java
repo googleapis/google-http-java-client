@@ -85,7 +85,7 @@ public final class CharEscapers {
    */
   public static String decodeUri(String uri) {
     try {
-      return URLDecoder.decode(uri, "UTF-8");
+      return URLDecoder.decode(uri, StandardCharsets.UTF_8.name());
     } catch (UnsupportedEncodingException e) {
       // UTF-8 encoding guaranteed to be supported by JVM
       throw new RuntimeException(e);
@@ -107,7 +107,7 @@ public final class CharEscapers {
       return null;
     }
     try {
-      return URLDecoder.decode(path.replace("+", "%2B"), "UTF-8");
+      return URLDecoder.decode(path.replace("+", "%2B"), StandardCharsets.UTF_8.name());
     } catch (UnsupportedEncodingException e) {
       // UTF-8 encoding guaranteed to be supported by JVM
       throw new RuntimeException(e);
