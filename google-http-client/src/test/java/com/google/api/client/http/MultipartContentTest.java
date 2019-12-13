@@ -26,55 +26,76 @@ import junit.framework.TestCase;
  */
 public class MultipartContentTest extends TestCase {
 
+  private static final String BOUNDARY = "__END_OF_PART__";
   private static final String CRLF = "\r\n";
   private static final String CONTENT_TYPE = Json.MEDIA_TYPE;
-  private static final String HEADERS =
-      "Content-Length: 3"
-          + CRLF
-          + "Content-Type: application/json; charset=UTF-8"
-          + CRLF
-          + "content-transfer-encoding: binary"
-          + CRLF;
+  private static final String HEADERS = headers("application/json; charset=UTF-8", "foo");
+
+  private static String headers(String contentType, String value) {
+      return "Content-Length: " + value.length() + CRLF
+          + "Content-Type: " + contentType + CRLF
+          + "content-transfer-encoding: binary" + CRLF;
+  }
+
+  public void testRandomContent() throws Exception {
+    MultipartContent content = new MultipartContent();
+    String boundaryString = content.getBoundary();
+    assertNotNull(boundaryString);
+    assertTrue(boundaryString.startsWith(BOUNDARY));
+    assertTrue(boundaryString.endsWith("__"));
+    assertEquals("multipart/related; boundary=" + boundaryString, content.getType());
+
+    final String[][] VALUES = new String[][] {
+            {"Hello world", "text/plain"},
+            {"<xml>Hi</xml>", "application/xml"},
+            {"{x:1,y:2}", "application/json"}
+    };
+    StringBuilder expectedContentSB = new StringBuilder();
+    for (String[] valueTypePair: VALUES) {
+      String contentValue = valueTypePair[0];
+      String contentType = valueTypePair[1];
+      content.addPart(new MultipartContent.Part(ByteArrayContent.fromString(contentType, contentValue)));
+      expectedContentSB.append("--").append(boundaryString).append(CRLF)
+              .append(headers(contentType, contentValue)).append(CRLF)
+              .append(contentValue).append(CRLF);
+    }
+    expectedContentSB.append("--").append(boundaryString).append("--").append(CRLF);
+    // write to string
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    content.writeTo(out);
+    String expectedContent = expectedContentSB.toString();
+    assertEquals(expectedContent, out.toString());
+    assertEquals(StringUtils.getBytesUtf8(expectedContent).length, content.getLength());
+  }
 
   public void testContent() throws Exception {
-    subtestContent("--__END_OF_PART__--" + CRLF, null);
+    subtestContent("--" + BOUNDARY + "--" + CRLF, null);
     subtestContent(
-        "--__END_OF_PART__" + CRLF + HEADERS + CRLF + "foo" + CRLF + "--__END_OF_PART__--" + CRLF,
-        null,
+        "--" + BOUNDARY + CRLF
+                + HEADERS + CRLF
+                + "foo" + CRLF
+                + "--" + BOUNDARY + "--" + CRLF,
+            null,
         "foo");
     subtestContent(
-        "--__END_OF_PART__"
-            + CRLF
-            + HEADERS
-            + CRLF
-            + "foo"
-            + CRLF
-            + "--__END_OF_PART__"
-            + CRLF
-            + HEADERS
-            + CRLF
-            + "bar"
-            + CRLF
-            + "--__END_OF_PART__--"
-            + CRLF,
-        null,
+        "--" + BOUNDARY + CRLF
+            + HEADERS + CRLF
+            + "foo" + CRLF
+            + "--" + BOUNDARY + CRLF
+            + HEADERS + CRLF
+            + "bar" + CRLF
+            + "--" + BOUNDARY + "--" + CRLF,
+            null,
         "foo",
         "bar");
     subtestContent(
-        "--myboundary"
-            + CRLF
-            + HEADERS
-            + CRLF
-            + "foo"
-            + CRLF
-            + "--myboundary"
-            + CRLF
-            + HEADERS
-            + CRLF
-            + "bar"
-            + CRLF
-            + "--myboundary--"
-            + CRLF,
+        "--myboundary" + CRLF
+            + HEADERS + CRLF
+            + "foo" + CRLF
+            + "--myboundary" + CRLF
+            + HEADERS + CRLF
+            + "bar" + CRLF
+            + "--myboundary--" + CRLF,
         "myboundary",
         "foo",
         "bar");
@@ -83,7 +104,7 @@ public class MultipartContentTest extends TestCase {
   private void subtestContent(String expectedContent, String boundaryString, String... contents)
       throws Exception {
     // multipart content
-    MultipartContent content = new MultipartContent();
+    MultipartContent content = new MultipartContent(boundaryString == null ? BOUNDARY : boundaryString);
     for (String contentValue : contents) {
       content.addPart(
           new MultipartContent.Part(ByteArrayContent.fromString(CONTENT_TYPE, contentValue)));
@@ -98,7 +119,7 @@ public class MultipartContentTest extends TestCase {
     assertEquals(StringUtils.getBytesUtf8(expectedContent).length, content.getLength());
     assertEquals(
         boundaryString == null
-            ? "multipart/related; boundary=__END_OF_PART__"
+            ? "multipart/related; boundary=" + BOUNDARY
             : "multipart/related; boundary=" + boundaryString,
         content.getType());
   }
