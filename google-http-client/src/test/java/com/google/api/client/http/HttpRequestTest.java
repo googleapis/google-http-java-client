@@ -987,7 +987,7 @@ public class HttpRequestTest extends TestCase {
             if (expectGZip) {
               assertEquals(HttpEncodingStreamingContent.class, getStreamingContent().getClass());
               assertEquals("gzip", getContentEncoding());
-              assertEquals(25, getContentLength());
+              assertEquals(-1, getContentLength());
             } else {
               assertFalse(
                   getStreamingContent().getClass().equals(HttpEncodingStreamingContent.class));
@@ -1227,7 +1227,9 @@ public class HttpRequestTest extends TestCase {
       if (message.startsWith("curl")) {
         found = true;
         assertTrue(message.contains("curl -v --compressed -H 'Accept-Encoding: gzip'"));
-        assertTrue(message.contains("-H 'User-Agent: Google-HTTP-Java-Client/" + HttpRequest.VERSION + " (gzip)'"));
+        assertTrue(
+            message.contains(
+                "-H 'User-Agent: Google-HTTP-Java-Client/" + HttpRequest.VERSION + " (gzip)'"));
         assertTrue(message.contains("' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c'"));
       }
     }
@@ -1258,7 +1260,9 @@ public class HttpRequestTest extends TestCase {
         found = true;
         assertTrue(message.contains("curl -v --compressed -X POST -H 'Accept-Encoding: gzip'"));
         assertTrue(message.contains("-H 'User-Agent: " + HttpRequest.USER_AGENT_SUFFIX + "'"));
-        assertTrue(message.contains("-H 'Content-Type: text/plain; charset=UTF-8' -H 'Content-Encoding: gzip'"));
+        assertTrue(
+            message.contains(
+                "-H 'Content-Type: text/plain; charset=UTF-8' -H 'Content-Encoding: gzip'"));
         assertTrue(message.contains("-d '@-' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c' << $$$"));
       }
     }
