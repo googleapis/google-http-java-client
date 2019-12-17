@@ -81,10 +81,10 @@ public class GenericUrl extends GenericData {
   private String fragment;
 
   /**
-    * If true, the URL string originally given is used as is (without encoding, decoding and
-    * escaping) whenever referenced; otherwise, part of the URL string may be encoded or decoded as
-    * deemed appropriate or necessary.
-    */
+   * If true, the URL string originally given is used as is (without encoding, decoding and
+   * escaping) whenever referenced; otherwise, part of the URL string may be encoded or decoded as
+   * deemed appropriate or necessary.
+   */
   private boolean verbatim;
 
   public GenericUrl() {}
@@ -112,19 +112,19 @@ public class GenericUrl extends GenericData {
   /**
    * Constructs from an encoded URL.
    *
-   * <p>Any known query parameters with pre-defined fields as data keys are parsed based on
-   * their data type. Any unrecognized query parameter are always parsed as a string.
+   * <p>Any known query parameters with pre-defined fields as data keys are parsed based on their
+   * data type. Any unrecognized query parameter are always parsed as a string.
    *
    * <p>Any {@link MalformedURLException} is wrapped in an {@link IllegalArgumentException}.
    *
    * @param encodedUrl encoded URL, including any existing query parameters that should be parsed
-   * @param verbatim flag, to specify if URL should be used as is (without encoding, decoding and escaping)
+   * @param verbatim flag, to specify if URL should be used as is (without encoding, decoding and
+   *     escaping)
    * @throws IllegalArgumentException if URL has a syntax error
    */
   public GenericUrl(String encodedUrl, boolean verbatim) {
     this(parseURL(encodedUrl), verbatim);
   }
-
 
   /**
    * Constructs from a URI.
@@ -140,7 +140,8 @@ public class GenericUrl extends GenericData {
    * Constructs from a URI.
    *
    * @param uri URI
-   * @param verbatim flag, to specify if URL should be used as is (without encoding, decoding and escaping)
+   * @param verbatim flag, to specify if URL should be used as is (without encoding, decoding and
+   *     escaping)
    */
   public GenericUrl(URI uri, boolean verbatim) {
     this(
@@ -168,7 +169,8 @@ public class GenericUrl extends GenericData {
    * Constructs from a URL.
    *
    * @param url URL
-   * @param verbatim flag, to specify if URL should be used as is (without encoding, decoding and escaping)
+   * @param verbatim flag, to specify if URL should be used as is (without encoding, decoding and
+   *     escaping)
    * @since 1.14
    */
   public GenericUrl(URL url, boolean verbatim) {
@@ -209,7 +211,7 @@ public class GenericUrl extends GenericData {
         UrlEncodedParser.parse(query, this);
       }
       this.userInfo = userInfo != null ? CharEscapers.decodeUri(userInfo) : null;
-    } 
+    }
   }
 
   @Override
@@ -567,10 +569,11 @@ public class GenericUrl extends GenericData {
    *
    * @param encodedPath slash-prefixed encoded path, for example {@code
    *     "/m8/feeds/contacts/default/full"}
-   * @param verbatim flag, to specify if URL should be used as is (without encoding, decoding and escaping)
-   * @return path parts (decoded if not {@code verbatim}), with each part assumed to be preceded by a {@code '/'}, for example
-   *     {@code "", "m8", "feeds", "contacts", "default", "full"}, or {@code null} for {@code null}
-   *     or {@code ""} input
+   * @param verbatim flag, to specify if URL should be used as is (without encoding, decoding and
+   *     escaping)
+   * @return path parts (decoded if not {@code verbatim}), with each part assumed to be preceded by
+   *     a {@code '/'}, for example {@code "", "m8", "feeds", "contacts", "default", "full"}, or
+   *     {@code null} for {@code null} or {@code ""} input
    */
   public static List<String> toPathParts(String encodedPath, boolean verbatim) {
     if (encodedPath == null || encodedPath.length() == 0) {
@@ -588,7 +591,7 @@ public class GenericUrl extends GenericData {
       } else {
         sub = encodedPath.substring(cur);
       }
-      result.add(verbatim ? sub : CharEscapers.decodeUri(sub));
+      result.add(verbatim ? sub : CharEscapers.decodeUriPath(sub));
       cur = slash + 1;
     }
     return result;
@@ -608,13 +611,17 @@ public class GenericUrl extends GenericData {
   }
 
   /** Adds query parameters from the provided entrySet into the buffer. */
-  static void addQueryParams(Set<Entry<String, Object>> entrySet, StringBuilder buf, boolean verbatim) {
+  static void addQueryParams(
+      Set<Entry<String, Object>> entrySet, StringBuilder buf, boolean verbatim) {
     // (similar to UrlEncodedContent)
     boolean first = true;
     for (Map.Entry<String, Object> nameValueEntry : entrySet) {
       Object value = nameValueEntry.getValue();
       if (value != null) {
-        String name =  verbatim ? nameValueEntry.getKey() : CharEscapers.escapeUriQuery(nameValueEntry.getKey());
+        String name =
+            verbatim
+                ? nameValueEntry.getKey()
+                : CharEscapers.escapeUriQuery(nameValueEntry.getKey());
         if (value instanceof Collection<?>) {
           Collection<?> collectionValue = (Collection<?>) value;
           for (Object repeatedValue : collectionValue) {
@@ -627,7 +634,8 @@ public class GenericUrl extends GenericData {
     }
   }
 
-  private static boolean appendParam(boolean first, StringBuilder buf, String name, Object value, boolean verbatim) {
+  private static boolean appendParam(
+      boolean first, StringBuilder buf, String name, Object value, boolean verbatim) {
     if (first) {
       first = false;
       buf.append('?');
@@ -635,7 +643,8 @@ public class GenericUrl extends GenericData {
       buf.append('&');
     }
     buf.append(name);
-    String stringValue = verbatim ? value.toString() : CharEscapers.escapeUriQuery(value.toString());
+    String stringValue =
+        verbatim ? value.toString() : CharEscapers.escapeUriQuery(value.toString());
     if (stringValue.length() != 0) {
       buf.append('=').append(stringValue);
     }

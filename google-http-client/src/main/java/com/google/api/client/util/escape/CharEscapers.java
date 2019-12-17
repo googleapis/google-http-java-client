@@ -16,6 +16,8 @@ package com.google.api.client.util.escape;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Utility functions for dealing with {@code CharEscaper}s, and some commonly used {@code
@@ -83,7 +85,29 @@ public final class CharEscapers {
    */
   public static String decodeUri(String uri) {
     try {
-      return URLDecoder.decode(uri, "UTF-8");
+      return URLDecoder.decode(uri, StandardCharsets.UTF_8.name());
+    } catch (UnsupportedEncodingException e) {
+      // UTF-8 encoding guaranteed to be supported by JVM
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
+   * Decodes the path component of a URI. This must be done via a method that does not try to
+   * convert + into spaces(the behavior of {@link java.net.URLDecoder#decode(String, String)}). This
+   * method transforms URI encoded values into their decoded symbols.
+   *
+   * <p>i.e: {@code decodePath("%3Co%3E")} would return {@code "<o>"}
+   *
+   * @param path the value to be decoded
+   * @return decoded version of {@code path}
+   */
+  public static String decodeUriPath(String path) {
+    if (path == null) {
+      return null;
+    }
+    try {
+      return URLDecoder.decode(path.replace("+", "%2B"), StandardCharsets.UTF_8.name());
     } catch (UnsupportedEncodingException e) {
       // UTF-8 encoding guaranteed to be supported by JVM
       throw new RuntimeException(e);
