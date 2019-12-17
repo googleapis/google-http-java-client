@@ -31,10 +31,6 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-
-import java.util.regex.Pattern;
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -45,7 +41,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
-
+import java.util.regex.Pattern;
+import junit.framework.TestCase;
 import org.junit.Assert;
 
 /**
@@ -1266,5 +1263,15 @@ public class HttpRequestTest extends TestCase {
       }
     }
     assertTrue(found);
+  }
+
+  public void testVersion_matchesAcceptablePatterns() throws Exception {
+    String acceptableVersionPattern =
+        "unknown-version|(?:\\d+\\.\\d+\\.\\d+(?:-.*?)?(?:-SNAPSHOT)?)";
+    String version = HttpRequest.VERSION;
+    assertTrue(
+        String.format("the loaded version '%s' did not match the acceptable pattern", version),
+        version.matches(acceptableVersionPattern)
+    );
   }
 }
