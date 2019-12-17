@@ -150,11 +150,27 @@ public final class HttpResponse {
       contentType = request.getResponseHeaders().getContentType();
     }
     this.contentType = contentType;
-    mediaType = contentType == null ? null : new HttpMediaType(contentType);
+    this.mediaType = parseMediaType(contentType);
 
     // log from buffer
     if (loggable) {
       logger.config(logbuf.toString());
+    }
+  }
+
+  /**
+   * Returns an {@link HttpMediaType} object parsed from {@link #contentType}, or {@code null} if
+   * if {@link #contentType} cannot be parsed or {@link #contentType} is {@code null}.
+   */
+  private static HttpMediaType parseMediaType(String contentType) {
+    if (contentType == null) {
+      return null;
+    }
+    try {
+      return new HttpMediaType(contentType);
+    } catch (IllegalArgumentException e) {
+      // contentType is invalid and cannot be parsed.
+      return null;
     }
   }
 

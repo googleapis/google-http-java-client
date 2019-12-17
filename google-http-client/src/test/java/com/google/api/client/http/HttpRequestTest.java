@@ -1268,4 +1268,14 @@ public class HttpRequestTest extends TestCase {
     }
     assertTrue(found);
   }
+
+  public void testVersion_matchesAcceptablePatterns() throws Exception {
+    String acceptableVersionPattern =
+        "unknown-version|(?:\\d+\\.\\d+\\.\\d+(?:-.*?)?(?:-SNAPSHOT)?)";
+    String version = HttpRequest.VERSION;
+    assertTrue(
+        String.format("the loaded version '%s' did not match the acceptable pattern", version),
+        version.matches(acceptableVersionPattern)
+    );
+  }
 }

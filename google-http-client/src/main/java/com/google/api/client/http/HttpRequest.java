@@ -1220,20 +1220,17 @@ public final class HttpRequest {
   }
 
   private static String getVersion() {
-    String version = HttpRequest.class.getPackage().getImplementationVersion();
-    // in a non-packaged environment (local), there's no implementation version to read
-    if (version == null) {
-      // fall back to reading from a properties file - note this value is expected to be cached
-      try (InputStream inputStream =
-          HttpRequest.class.getResourceAsStream("/google-http-client.properties")) {
-        if (inputStream != null) {
-          Properties properties = new Properties();
-          properties.load(inputStream);
-          version = properties.getProperty("google-http-client.version");
-        }
-      } catch (IOException e) {
-        // ignore
+    // attempt to read the library's version from a properties file generated during the build
+    // this value should be read and cached for later use
+    String version = "unknown-version";
+    try (InputStream inputStream = HttpRequest.class.getResourceAsStream("/google-http-client.properties")) {
+      if (inputStream != null) {
+        final Properties properties = new Properties();
+        properties.load(inputStream);
+        version = properties.getProperty("google-http-client.version");
       }
+    } catch (IOException e) {
+      // ignore
     }
     return version;
   }
