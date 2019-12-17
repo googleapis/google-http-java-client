@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.34.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.33.0...v1.34.0) (2019-12-17)
+
+
+### Features
+
+* add option to pass redirect Location: header value as-is without encoding, decoding, or escaping ([#871](https://www.github.com/googleapis/google-http-java-client/issues/871)) ([2c4f49e](https://www.github.com/googleapis/google-http-java-client/commit/2c4f49e0e5f9c6b8f21f35edae373eaada87119b))
+* decode uri path components correctly ([#913](https://www.github.com/googleapis/google-http-java-client/issues/913)) ([7d4a048](https://www.github.com/googleapis/google-http-java-client/commit/7d4a048233d0d3e7c0266b7faaac9f61141aeef9)), closes [#398](https://www.github.com/googleapis/google-http-java-client/issues/398)
+* support chunked transfer encoding ([#910](https://www.github.com/googleapis/google-http-java-client/issues/910)) ([b8d6abe](https://www.github.com/googleapis/google-http-java-client/commit/b8d6abe0367bd497b68831263753ad262914aa97)), closes [#648](https://www.github.com/googleapis/google-http-java-client/issues/648)
+
+
+### Bug Fixes
+
+* redirect on 308 (Permanent Redirect) too ([#876](https://www.github.com/googleapis/google-http-java-client/issues/876)) ([501ede8](https://www.github.com/googleapis/google-http-java-client/commit/501ede83ef332207f0ed67c3d7120b20a1416cec))
+* set mediaType to null if contentType cannot be parsed ([#911](https://www.github.com/googleapis/google-http-java-client/issues/911)) ([7ea53eb](https://www.github.com/googleapis/google-http-java-client/commit/7ea53ebdb641a9611cbf5736c55f08a83606101e))
+* update HttpRequest#getVersion to use stable logic ([#919](https://www.github.com/googleapis/google-http-java-client/issues/919)) ([853ab4b](https://www.github.com/googleapis/google-http-java-client/commit/853ab4ba1bd81420f7b236c2c8f40c4a253a482e)), closes [#892](https://www.github.com/googleapis/google-http-java-client/issues/892)
+
 ## [1.32.2](https://www.github.com/googleapis/google-http-java-client/compare/v1.32.1...v1.32.2) (2019-10-29)
 
 
