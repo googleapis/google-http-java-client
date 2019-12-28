@@ -53,7 +53,7 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
   private static final Logger LOGGER = Logger.getLogger(FileDataStoreFactory.class.getName());
 
   private static final boolean IS_WINDOWS = StandardSystemProperty.OS_NAME.value()
-      .startsWith("WINDOWS");
+      .regionMatches(true, 0, "WINDOWS", 0, "WINDOWS".length());
 
   /** Directory to store data. */
   private final File dataDirectory;
