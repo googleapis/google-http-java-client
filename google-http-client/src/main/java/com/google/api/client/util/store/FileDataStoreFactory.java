@@ -32,6 +32,7 @@ import java.nio.file.attribute.AclEntry;
 import java.nio.file.attribute.AclEntryPermission;
 import java.nio.file.attribute.AclEntryType;
 import java.nio.file.attribute.AclFileAttributeView;
+import java.nio.file.attribute.FileOwnerAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserPrincipal;
 import java.util.HashSet;
@@ -155,8 +156,8 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
   static void setPermissionsToOwnerOnlyWindows(File file) throws IOException {
     Path path = Paths.get(file.getAbsolutePath());
-    UserPrincipal owner = path.getFileSystem().getUserPrincipalLookupService()
-        .lookupPrincipalByName("OWNER@");
+    FileOwnerAttributeView fileAttributeView = Files.getFileAttributeView(path, FileOwnerAttributeView.class);
+    UserPrincipal owner = fileAttributeView.getOwner();
 
     // get view
     AclFileAttributeView view = Files.getFileAttributeView(path, AclFileAttributeView.class);
