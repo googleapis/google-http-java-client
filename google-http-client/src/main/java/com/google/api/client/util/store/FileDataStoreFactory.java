@@ -36,6 +36,7 @@ import java.nio.file.attribute.FileOwnerAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserPrincipal;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -54,7 +55,7 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
   private static final Logger LOGGER = Logger.getLogger(FileDataStoreFactory.class.getName());
 
   private static final boolean IS_WINDOWS = StandardSystemProperty.OS_NAME.value()
-      .regionMatches(true, 0, "WINDOWS", 0, "WINDOWS".length());
+      .toLowerCase(Locale.ENGLISH).startsWith("windows");
 
   /** Directory to store data. */
   private final File dataDirectory;
