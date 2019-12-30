@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 
 /**
  * Serializes MIME multipart content as specified by <a
@@ -50,7 +51,7 @@ public class MultipartContent extends AbstractHttpContent {
   private ArrayList<Part> parts = new ArrayList<>();
 
   public MultipartContent() {
-    this("__END_OF_PART__" + java.util.UUID.randomUUID().toString() + "__");
+    this("__END_OF_PART__" + UUID.randomUUID().toString() + "__");
   }
 
   public MultipartContent(String boundary) {

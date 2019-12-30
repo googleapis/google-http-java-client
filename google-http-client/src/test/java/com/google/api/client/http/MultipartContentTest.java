@@ -15,6 +15,7 @@
 package com.google.api.client.http;
 
 import com.google.api.client.json.Json;
+import com.google.api.client.util.Charsets;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayOutputStream;
 import junit.framework.TestCase;
@@ -50,21 +51,21 @@ public class MultipartContentTest extends TestCase {
             {"<xml>Hi</xml>", "application/xml"},
             {"{x:1,y:2}", "application/json"}
     };
-    StringBuilder expectedContentSB = new StringBuilder();
+    StringBuilder expectedStringBuilder = new StringBuilder();
     for (String[] valueTypePair: VALUES) {
       String contentValue = valueTypePair[0];
       String contentType = valueTypePair[1];
       content.addPart(new MultipartContent.Part(ByteArrayContent.fromString(contentType, contentValue)));
-      expectedContentSB.append("--").append(boundaryString).append(CRLF)
+      expectedStringBuilder.append("--").append(boundaryString).append(CRLF)
               .append(headers(contentType, contentValue)).append(CRLF)
               .append(contentValue).append(CRLF);
     }
-    expectedContentSB.append("--").append(boundaryString).append("--").append(CRLF);
+    expectedStringBuilder.append("--").append(boundaryString).append("--").append(CRLF);
     // write to string
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     content.writeTo(out);
-    String expectedContent = expectedContentSB.toString();
-    assertEquals(expectedContent, out.toString());
+    String expectedContent = expectedStringBuilder.toString();
+    assertEquals(expectedContent, out.toString(Charsets.UTF_8.name()));
     assertEquals(StringUtils.getBytesUtf8(expectedContent).length, content.getLength());
   }
 
@@ -115,7 +116,7 @@ public class MultipartContentTest extends TestCase {
     // write to string
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     content.writeTo(out);
-    assertEquals(expectedContent, out.toString());
+    assertEquals(expectedContent, out.toString(Charsets.UTF_8.name()));
     assertEquals(StringUtils.getBytesUtf8(expectedContent).length, content.getLength());
     assertEquals(
         boundaryString == null
