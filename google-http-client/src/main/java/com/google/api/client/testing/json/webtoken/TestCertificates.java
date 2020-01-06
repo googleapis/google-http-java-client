@@ -240,7 +240,7 @@ public class TestCertificates {
    * {"foo":"bar"}
    * </pre>
    *
-   * The message is signed using {@code FOO_BAR_COM_KEY}.
+   * <p>The message is signed using {@code FOO_BAR_COM_KEY}.
    */
   public static final String JWS_SIGNATURE =
       "eyJhbGciOiJSUzI1NiIsIng1YyI6WyJNSUlDNlRDQ0FkRUNBU293RFFZSktvWklo"

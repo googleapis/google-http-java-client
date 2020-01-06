@@ -31,7 +31,7 @@ import java.io.IOException;
  *     retry_interval * (random value in range [1 - randomization_factor, 1 + randomization_factor])
  * </pre>
  *
- * In other words {@link #getNextBackOffMillis()} will range between the randomization factor
+ * <p>In other words {@link #getNextBackOffMillis()} will range between the randomization factor
  * percentage below and above the retry interval. For example, using 2 seconds as the base retry
  * interval and 0.5 as the randomization factor, the actual back off period used in the next retry
  * attempt will be between 1 and 3 seconds.
