@@ -65,10 +65,10 @@ public class PercentEscaper extends UnicodeEscaper {
   public static final String SAFEPATHCHARS_URLENCODER = "-_.!~*'()@:$&,;=+";
 
   /**
-   * Contains the save characters plus all reserved characters. This happens to be the safe path
-   * characters plus those characters which are reserved for URI segments, namely '+', '/', and '?'.
+   * Contains the safe characters plus all reserved characters. This happens to be the safe path
+   * characters plus those characters which are reserved for URI segments, namely '/' and '?'.
    */
-  public static final String SAFE_PLUS_RESERVED_CHARS_URLENCODER = SAFEPATHCHARS_URLENCODER + "+/?";
+  public static final String SAFE_PLUS_RESERVED_CHARS_URLENCODER = SAFEPATHCHARS_URLENCODER + "/?";
 
   /**
    * A string of characters that do not need to be encoded when used in URI user info part, as
