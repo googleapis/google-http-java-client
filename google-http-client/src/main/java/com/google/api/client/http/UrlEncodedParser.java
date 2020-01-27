@@ -83,7 +83,7 @@ public class UrlEncodedParser implements ObjectParser {
   public static void parse(String content, Object data) {
     parse(content, data, true);
   }
- 
+
   /**
    * Parses the given URL-encoded content into the given data object of data key name/value pairs
    * using {@link #parse(Reader, Object)}.
@@ -92,7 +92,7 @@ public class UrlEncodedParser implements ObjectParser {
    * @param data data key name/value pairs
    * @param decodeEnabled flag that specifies whether decoding should be enabled.
    */
-    public static void parse(String content, Object data, boolean decodeEnabled) {
+  public static void parse(String content, Object data, boolean decodeEnabled) {
     if (content == null) {
       return;
     }
@@ -103,6 +103,7 @@ public class UrlEncodedParser implements ObjectParser {
       throw Throwables.propagate(exception);
     }
   }
+
   /**
    * Parses the given URL-encoded content into the given data object of data key name/value pairs,
    * including support for repeating data key names.

@@ -89,10 +89,7 @@ public class GenericUrl extends GenericData {
   public GenericUrl() {}
 
   /**
-   * Constructs from an encoded URL.
-   *
-   * <p>Any known query parameters with pre-defined fields as data keys will be parsed based on
-   * their data type. Any unrecognized query parameter will always be parsed as a string.
+   * Constructs a GenericUrl from a URL encoded string.
    *
    * <p>Any {@link MalformedURLException} is wrapped in an {@link IllegalArgumentException}.
    *
@@ -102,17 +99,14 @@ public class GenericUrl extends GenericData {
    * compliant with, at least, RFC 3986.
    *
    * @param encodedUrl encoded URL, including any existing query parameters that should be parsed
-   * @throws IllegalArgumentException if URL has a syntax error
+   * @throws IllegalArgumentException if the URL has a syntax error
    */
   public GenericUrl(String encodedUrl) {
     this(encodedUrl, false);
   }
 
   /**
-   * Constructs from an encoded URL.
-   *
-   * <p>Any known query parameters with pre-defined fields as data keys are parsed based on their
-   * data type. Any unrecognized query parameter are always parsed as a string.
+   * Constructs a GenericUrl from a string.
    *
    * <p>Any {@link MalformedURLException} is wrapped in an {@link IllegalArgumentException}.
    *
@@ -215,7 +209,6 @@ public class GenericUrl extends GenericData {
 
   @Override
   public int hashCode() {
-    // TODO(yanivi): optimize?
     return build().hashCode();
   }
 
@@ -228,7 +221,6 @@ public class GenericUrl extends GenericData {
       return false;
     }
     GenericUrl other = (GenericUrl) obj;
-    // TODO(yanivi): optimize?
     return build().equals(other.build());
   }
 
