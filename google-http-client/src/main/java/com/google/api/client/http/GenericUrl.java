@@ -52,8 +52,7 @@ import java.util.Set;
  */
 public class GenericUrl extends GenericData {
 
-  private static final Escaper URI_FRAGMENT_ESCAPER =
-      new PercentEscaper("=&-_.!~*'()@:$,;/?:", false);
+  private static final Escaper URI_FRAGMENT_ESCAPER = new PercentEscaper("=&-_.!~*'()@:$,;/?:");
 
   /** Scheme (lowercase), for example {@code "https"}. */
   private String scheme;
