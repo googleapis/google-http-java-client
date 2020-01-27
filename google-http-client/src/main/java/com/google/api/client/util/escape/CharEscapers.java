@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010 Google Inc.
+
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -25,7 +26,7 @@ import java.nio.charset.StandardCharsets;
  */
 public final class CharEscapers {
 
-  private static final Escaper URI_ESCAPER =
+  private static final Escaper APPLICATION_X_WWW_FORM_URLENCODED =
       new PercentEscaper(PercentEscaper.SAFECHARS_URLENCODER, true);
 
   private static final Escaper URI_PATH_ESCAPER =
@@ -68,7 +69,7 @@ public final class CharEscapers {
    * </ul>
    */
   public static String escapeUri(String value) {
-    return URI_ESCAPER.escape(value);
+    return APPLICATION_X_WWW_FORM_URLENCODED.escape(value);
   }
 
   /**
