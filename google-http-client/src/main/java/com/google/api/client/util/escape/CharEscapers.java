@@ -72,11 +72,11 @@ public final class CharEscapers {
   }
 
   /**
-   * Percent-decodes a US-ASCII string into a Unicode string. UTF-8 encoding is used to determine
+   * Decodes application/x-www-form-urlencoded strings. The UTF-8 character set determines
    * what characters are represented by any consecutive sequences of the form "%<i>XX</i>".
    *
-   * <p>This replaces each occurrence of '+' with a space, ' '. So this method should not be used
-   * for non application/x-www-form-urlencoded strings such as host and path.
+   * <p>This replaces each occurrence of '+' with a space, ' '. This method should not be used
+   * for non-application/x-www-form-urlencoded strings such as host and path.
    *
    * @param uri a percent-encoded US-ASCII string
    * @return a string without any percent escapes or plus signs
