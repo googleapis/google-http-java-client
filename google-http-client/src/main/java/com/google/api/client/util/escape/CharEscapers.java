@@ -19,8 +19,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Utility functions for dealing with {@code CharEscaper}s, and some commonly used {@code
- * CharEscaper} instances.
+ * Utility functions for encoding and decoding URIs.
  *
  * @since 1.0
  */
@@ -80,7 +79,7 @@ public final class CharEscapers {
    * for non application/x-www-form-urlencoded strings such as host and path.
    *
    * @param uri a percent-encoded US-ASCII string
-   * @return a Unicode string
+   * @return a string without any percent escapes or plus signs
    */
   public static String decodeUri(String uri) {
     try {
