@@ -38,12 +38,11 @@ public class CharEscapersTest extends TestCase {
   }
 
   private void subtestDecodeUri_IllegalArgumentException(String input) {
-    boolean thrown = false;
     try {
       CharEscapers.decodeUriPath(input);
-    } catch (IllegalArgumentException e) {
-      thrown = true;
+      fail();
+    } catch (IllegalArgumentException expected) {
+      assertNotNull(expected.getMessage());
     }
-    assertTrue(thrown);
   }
 }
