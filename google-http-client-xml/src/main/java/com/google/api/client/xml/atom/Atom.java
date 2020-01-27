@@ -49,7 +49,7 @@ public final class Atom {
 
   /** Escaper for the {@code Slug} header. */
   private static final PercentEscaper SLUG_ESCAPER =
-      new PercentEscaper(" !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~", false);
+      new PercentEscaper(" !\"#$&'()*+,-./:;<=>?@[\\]^_`{|}~");
 
   static final class StopAtAtomEntry extends Xml.CustomizeParser {
 
