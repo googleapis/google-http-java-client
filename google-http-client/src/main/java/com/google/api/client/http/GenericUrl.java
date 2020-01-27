@@ -91,6 +91,9 @@ public class GenericUrl extends GenericData {
   /**
    * Constructs a GenericUrl from a URL encoded string.
    *
+   * <p>Any known query parameters with pre-defined fields as data keys will be parsed based on
+   * their data type. Any unrecognized query parameter will always be parsed as a string.
+   *
    * <p>Any {@link MalformedURLException} is wrapped in an {@link IllegalArgumentException}.
    *
    * <p>Upgrade warning: starting in version 1.18 this parses the encodedUrl using new
@@ -107,6 +110,9 @@ public class GenericUrl extends GenericData {
 
   /**
    * Constructs a GenericUrl from a string.
+   *
+   * <p>Any known query parameters with pre-defined fields as data keys will be parsed based on
+   * their data type. Any unrecognized query parameter will always be parsed as a string.
    *
    * <p>Any {@link MalformedURLException} is wrapped in an {@link IllegalArgumentException}.
    *
