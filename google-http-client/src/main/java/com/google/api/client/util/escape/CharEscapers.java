@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010 Google Inc.
+
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -19,27 +20,26 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Utility functions for dealing with {@code CharEscaper}s, and some commonly used {@code
- * CharEscaper} instances.
+ * Utility functions for encoding and decoding URIs.
  *
  * @since 1.0
  */
 public final class CharEscapers {
 
-  private static final Escaper URI_ESCAPER =
+  private static final Escaper APPLICATION_X_WWW_FORM_URLENCODED =
       new PercentEscaper(PercentEscaper.SAFECHARS_URLENCODER, true);
 
   private static final Escaper URI_PATH_ESCAPER =
-      new PercentEscaper(PercentEscaper.SAFEPATHCHARS_URLENCODER, false);
+      new PercentEscaper(PercentEscaper.SAFEPATHCHARS_URLENCODER);
 
   private static final Escaper URI_RESERVED_ESCAPER =
-      new PercentEscaper(PercentEscaper.SAFE_PLUS_RESERVED_CHARS_URLENCODER, false);
+      new PercentEscaper(PercentEscaper.SAFE_PLUS_RESERVED_CHARS_URLENCODER);
 
   private static final Escaper URI_USERINFO_ESCAPER =
-      new PercentEscaper(PercentEscaper.SAFEUSERINFOCHARS_URLENCODER, false);
+      new PercentEscaper(PercentEscaper.SAFEUSERINFOCHARS_URLENCODER);
 
   private static final Escaper URI_QUERY_STRING_ESCAPER =
-      new PercentEscaper(PercentEscaper.SAFEQUERYSTRINGCHARS_URLENCODER, false);
+      new PercentEscaper(PercentEscaper.SAFEQUERYSTRINGCHARS_URLENCODER);
 
   /**
    * Escapes the string value so it can be safely included in URIs. For details on escaping URIs,
@@ -69,18 +69,18 @@ public final class CharEscapers {
    * </ul>
    */
   public static String escapeUri(String value) {
-    return URI_ESCAPER.escape(value);
+    return APPLICATION_X_WWW_FORM_URLENCODED.escape(value);
   }
 
   /**
-   * Percent-decodes a US-ASCII string into a Unicode string. UTF-8 encoding is used to determine
+   * Decodes application/x-www-form-urlencoded strings. The UTF-8 character set determines
    * what characters are represented by any consecutive sequences of the form "%<i>XX</i>".
    *
-   * <p>This replaces each occurrence of '+' with a space, ' '. So this method should not be used
-   * for non application/x-www-form-urlencoded strings such as host and path.
+   * <p>This replaces each occurrence of '+' with a space, ' '. This method should not be used
+   * for non-application/x-www-form-urlencoded strings such as host and path.
    *
    * @param uri a percent-encoded US-ASCII string
-   * @return a Unicode string
+   * @return a string without any percent escapes or plus signs
    */
   public static String decodeUri(String uri) {
     try {
@@ -92,11 +92,11 @@ public final class CharEscapers {
   }
 
   /**
-   * Decodes the path component of a URI. This must be done via a method that does not try to
-   * convert + into spaces(the behavior of {@link java.net.URLDecoder#decode(String, String)}). This
+   * Decodes the path component of a URI. This does not 
+   * convert + into spaces (the behavior of {@link java.net.URLDecoder#decode(String, String)}). This
    * method transforms URI encoded values into their decoded symbols.
    *
-   * <p>i.e: {@code decodePath("%3Co%3E")} would return {@code "<o>"}
+   * <p>e.g. {@code decodePath("%3Co%3E")} returns {@code "<o>"}
    *
    * @param path the value to be decoded
    * @return decoded version of {@code path}
