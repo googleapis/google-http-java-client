@@ -41,7 +41,7 @@ contains an implementation of `JsonFactory` based on the Jackson2 API. This modu
 
 ## google-http-client-protobuf
 
-[Protocol buffer][protobuf] extensions to theGoogle HTTP Client Library for Java
+[Protocol buffer][protobuf] extensions to the Google HTTP Client Library for Java
 (`google-http-client-protobuf`) support protobuf data format. This module depends on `google-http-client`.
 
 ## google-http-client-xml
