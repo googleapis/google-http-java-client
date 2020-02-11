@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.34.2](https://www.github.com/googleapis/google-http-java-client/compare/v1.34.1...v1.34.2) (2020-02-11)
+
+
+### Documentation
+
+* bom 4.0.0 ([#970](https://www.github.com/googleapis/google-http-java-client/issues/970)) ([198453b](https://www.github.com/googleapis/google-http-java-client/commit/198453b8b9e0765439ac430deaf10ef9df084665))
+
 ### [1.34.1](https://www.github.com/googleapis/google-http-java-client/compare/v1.34.0...v1.34.1) (2020-01-26)
 
 
