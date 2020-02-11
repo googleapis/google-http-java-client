@@ -29,6 +29,9 @@ public final class CharEscapers {
   private static final Escaper APPLICATION_X_WWW_FORM_URLENCODED =
       new PercentEscaper(PercentEscaper.SAFECHARS_URLENCODER, true);
 
+  private static final Escaper URI_ESCAPER =
+      new PercentEscaper(PercentEscaper.SAFECHARS_URLENCODER, false);
+
   private static final Escaper URI_PATH_ESCAPER =
       new PercentEscaper(PercentEscaper.SAFEPATHCHARS_URLENCODER);
 
@@ -42,8 +45,13 @@ public final class CharEscapers {
       new PercentEscaper(PercentEscaper.SAFEQUERYSTRINGCHARS_URLENCODER);
 
   /**
-   * Escapes the string value so it can be safely included in URIs. For details on escaping URIs,
-   * see <a href="http://tools.ietf.org/html/rfc3986#section-2.4">RFC 3986 - section 2.4</a>.
+   * Escapes the string value so it can be safely included in application/x-www-form-urlencoded
+   * data. This is not appropriate for generic URI escaping. In particular it encodes
+   * the space character as a plus sign instead of percent escaping it, in 
+   * contravention of the URI specification.
+   * For details on application/x-www-form-urlencoded encoding see the 
+   * see <a href="https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1">HTML 4
+   * specification, section 17.13.4.1</a>.
    *
    * <p>When encoding a String, the following rules apply:
    *
@@ -68,8 +76,35 @@ public final class CharEscapers {
    *   <li>{@link java.net.URLEncoder#encode(String, String)} with the encoding name "UTF-8"
    * </ul>
    */
+  @Deprecated
   public static String escapeUri(String value) {
     return APPLICATION_X_WWW_FORM_URLENCODED.escape(value);
+  }
+  
+    /**
+   * Escapes the string value so it can be safely included in any part of a URI.
+   * For details on escaping URIs,
+   * see <a href="http://tools.ietf.org/html/rfc3986#section-2.4">RFC 3986 - section 2.4</a>.
+   *
+   * <p>When encoding a String, the following rules apply:
+   *
+   * <ul>
+   *   <li>The alphanumeric characters "a" through "z", "A" through "Z" and "0" through "9" remain
+   *       the same.
+   *   <li>The special characters ".", "-", "*", and "_" remain the same.
+   *   <li>The space character " " is converted into "%20".
+   *   <li>All other characters are converted into one or more bytes using UTF-8 encoding and each
+   *       byte is then represented by the 3-character string "%XY", where "XY" is the two-digit,
+   *       uppercase, hexadecimal representation of the byte value.
+   * </ul>
+   *
+   * <p><b>Note</b>: Unlike other escapers, URI escapers produce uppercase hexadecimal sequences.
+   * From <a href="http://tools.ietf.org/html/rfc3986">RFC 3986</a>:<br>
+   * <i>"URI producers and normalizers should use uppercase hexadecimal digits for all
+   * percent-encodings."</i>
+   */
+  public static String escapeUriConformant(String value) {
+    return URI_ESCAPER.escape(value);
   }
 
   /**
@@ -144,7 +179,7 @@ public final class CharEscapers {
 
   /**
    * Escapes a URI path but retains all reserved characters, including all general delimiters. That
-   * is the same as {@link #escapeUriPath(String)} except that it keeps '?', '+', and '/' unescaped.
+   * is the same as {@link #escapeUriPath(String)} except that it does not escape '?', '+', and '/'.
    */
   public static String escapeUriPathWithoutReserved(String value) {
     return URI_RESERVED_ESCAPER.escape(value);
