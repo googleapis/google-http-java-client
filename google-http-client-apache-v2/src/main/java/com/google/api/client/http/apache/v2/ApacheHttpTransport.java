@@ -29,7 +29,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpTrace;
-import org.apache.http.config.SocketConfig;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -74,7 +73,7 @@ public final class ApacheHttpTransport extends HttpTransport {
    * Constructor that allows an alternative Apache HTTP client to be used.
    *
    * <p>
-   * Note that in the previous version, we overrode several settings, however, we are no longer able
+   * Note that in the previous version, we overrode several settings. However, we are no longer able
    * to do so.
    * </p>
    *
@@ -102,12 +101,11 @@ public final class ApacheHttpTransport extends HttpTransport {
    * </p>
    * <ul>
    * <li>The client connection manager is set to {@link PoolingHttpClientConnectionManager}.</li>
-   * <li>The socket buffer size is set to 8192 using {@link SocketConfig}.</li>
    * <li><The retry mechanism is turned off using
    * {@link HttpClientBuilder#disableRedirectHandling}.</li>
    * <li>The route planner uses {@link SystemDefaultRoutePlanner} with
    * {@link ProxySelector#getDefault()}, which uses the proxy settings from <a
-   * href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
+   * href="https://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
    * properties</a>.</li>
    * </ul>
    *
@@ -127,7 +125,6 @@ public final class ApacheHttpTransport extends HttpTransport {
    * </p>
    * <ul>
    * <li>The client connection manager is set to {@link PoolingHttpClientConnectionManager}.</li>
-   * <li>The socket buffer size is set to 8192 using {@link SocketConfig}.</li>
    * <li><The retry mechanism is turned off using
    * {@link HttpClientBuilder#disableRedirectHandling}.</li>
    * <li>The route planner uses {@link SystemDefaultRoutePlanner} with
@@ -140,17 +137,10 @@ public final class ApacheHttpTransport extends HttpTransport {
    * @since 1.31
    */
   public static HttpClientBuilder newDefaultHttpClientBuilder() {
-    // Set socket buffer sizes to 8192
-    SocketConfig socketConfig =
-            SocketConfig.custom()
-                    .setRcvBufSize(8192)
-                    .setSndBufSize(8192)
-                    .build();
 
     return HttpClientBuilder.create()
             .useSystemProperties()
             .setSSLSocketFactory(SSLConnectionSocketFactory.getSocketFactory())
-            .setDefaultSocketConfig(socketConfig)
             .setMaxConnTotal(200)
             .setMaxConnPerRoute(20)
             .setConnectionTimeToLive(-1, TimeUnit.MILLISECONDS)

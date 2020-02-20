@@ -29,8 +29,6 @@ import java.io.OutputStream;
  * amount of content read from the input stream, you may use {@link ByteStreams#limit(InputStream,
  * long)}.
  *
- * <p>
- *
  * <p>Implementations don't need to be thread-safe.
  *
  * @since 1.4

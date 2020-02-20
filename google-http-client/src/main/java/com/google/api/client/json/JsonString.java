@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  * </code>
  * </pre>
  *
- * can be used for this JSON content:
+ * <p>can be used for this JSON content:
  *
  * <pre>
  * <code>
@@ -40,7 +40,7 @@ import java.lang.annotation.Target;
  * </code>
  * </pre>
  *
- * However, if instead the JSON content uses a JSON String to store the value, one needs to use the
+ * <p>However, if instead the JSON content uses a JSON String to store the value, one needs to use the
  * {@link JsonString} annotation. For example:
  *
  * <pre>
@@ -51,7 +51,7 @@ import java.lang.annotation.Target;
  * </code>
  * </pre>
  *
- * can be used for this JSON content:
+ * <p>can be used for this JSON content:
  *
  * <pre>
  * <code>

@@ -50,8 +50,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * <p>Implementation has no fields and therefore thread-safe, but sub-classes are not necessarily
  * thread-safe.
  *
- * <p>
- *
  * <p>If a JSON map is encountered while using a destination class of type Map, then an {@link
  * java.util.ArrayMap} is used by default for the parsed values.
  *

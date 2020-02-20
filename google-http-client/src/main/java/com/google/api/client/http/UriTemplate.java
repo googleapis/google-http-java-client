@@ -55,7 +55,7 @@ import java.util.Map;
  */
 public class UriTemplate {
 
-  static final Map<Character, CompositeOutput> COMPOSITE_PREFIXES =
+  private static final Map<Character, CompositeOutput> COMPOSITE_PREFIXES =
       new HashMap<Character, CompositeOutput>();
 
   static {
@@ -98,14 +98,14 @@ public class UriTemplate {
     private final boolean reservedExpansion;
 
     /**
-     * @param propertyPrefix The prefix of a parameter or {@code null} for none. In {+var} the
+     * @param propertyPrefix the prefix of a parameter or {@code null} for none. In {+var} the
      *     prefix is '+'
-     * @param outputPrefix The string that should be prefixed to the expanded template.
-     * @param explodeJoiner The delimiter used to join composite values.
-     * @param requiresVarAssignment Denotes whether or not the expanded template should contain an
-     *     assignment with the variable.
-     * @param reservedExpansion Reserved expansion allows pct-encoded triplets and characters in the
-     *     reserved set.
+     * @param outputPrefix the string that should be prefixed to the expanded template.
+     * @param explodeJoiner the delimiter used to join composite values.
+     * @param requiresVarAssignment denotes whether or not the expanded template should contain an
+     *     assignment with the variable
+     * @param reservedExpansion reserved expansion allows percent-encoded triplets and characters in the
+     *     reserved set
      */
     CompositeOutput(
         Character propertyPrefix,
@@ -149,25 +149,21 @@ public class UriTemplate {
     }
 
     /**
-     * Encodes the specified value. If reserved expansion is turned on then pct-encoded triplets and
+     * Encodes the specified value. If reserved expansion is turned on, then percent-encoded triplets and
      * characters are allowed in the reserved set.
      *
-     * @param value The string to be encoded.
-     * @return The encoded string.
+     * @param value the string to be encoded
+     * @return the encoded string
      */
-    String getEncodedValue(String value) {
+    private String getEncodedValue(String value) {
       String encodedValue;
       if (reservedExpansion) {
-        // Reserved expansion allows pct-encoded triplets and characters in the reserved set.
+        // Reserved expansion allows percent-encoded triplets and characters in the reserved set.
         encodedValue = CharEscapers.escapeUriPathWithoutReserved(value);
       } else {
-        encodedValue = CharEscapers.escapeUri(value);
+        encodedValue = CharEscapers.escapeUriConformant(value);
       }
       return encodedValue;
-    }
-
-    boolean getReservedExpansion() {
-      return reservedExpansion;
     }
   }
 
@@ -318,7 +314,7 @@ public class UriTemplate {
     }
     if (addUnusedParamsAsQueryParams) {
       // Add the parameters remaining in the variableMap as query parameters.
-      GenericUrl.addQueryParams(variableMap.entrySet(), pathBuf);
+      GenericUrl.addQueryParams(variableMap.entrySet(), pathBuf, false);
     }
     return pathBuf.toString();
   }
@@ -334,12 +330,12 @@ public class UriTemplate {
    * Expand the template of a composite list property. Eg: If d := ["red", "green", "blue"] then
    * {/d*} is expanded to "/red/green/blue"
    *
-   * @param varName The name of the variable the value corresponds to. Eg: "d"
-   * @param iterator The iterator over list values. Eg: ["red", "green", "blue"]
-   * @param containsExplodeModifier Set to true if the template contains the explode modifier "*"
-   * @param compositeOutput An instance of CompositeOutput. Contains information on how the
+   * @param varName the name of the variable the value corresponds to. E.g. "d"
+   * @param iterator the iterator over list values. E.g. ["red", "green", "blue"]
+   * @param containsExplodeModifiersSet to true if the template contains the explode modifier "*"
+   * @param compositeOutput an instance of CompositeOutput. Contains information on how the
    *     expansion should be done
-   * @return The expanded list template
+   * @return the expanded list template
    * @throws IllegalArgumentException if the required list path parameter is empty
    */
   private static String getListPropertyValue(
@@ -378,12 +374,11 @@ public class UriTemplate {
    * Expand the template of a composite map property. Eg: If d := [("semi", ";"),("dot",
    * "."),("comma", ",")] then {/d*} is expanded to "/semi=%3B/dot=./comma=%2C"
    *
-   * @param varName The name of the variable the value corresponds to. Eg: "d"
-   * @param map The map property value. Eg: [("semi", ";"),("dot", "."),("comma", ",")]
+   * @param varName the name of the variable the value corresponds to. Eg: "d"
+   * @param map the map property value. Eg: [("semi", ";"),("dot", "."),("comma", ",")]
    * @param containsExplodeModifier Set to true if the template contains the explode modifier "*"
-   * @param compositeOutput An instance of CompositeOutput. Contains information on how the
-   *     expansion should be done
-   * @return The expanded map template
+   * @param compositeOutput contains information on how the expansion should be done
+   * @return the expanded map template
    * @throws IllegalArgumentException if the required list path parameter is map
    */
   private static String getMapPropertyValue(

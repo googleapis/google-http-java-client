@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -79,6 +80,12 @@ public final class HttpResponse {
 
   /** Whether {@link #getContent()} should return raw input stream. */
   private final boolean returnRawInputStream;
+
+  /** Content encoding for GZip */
+  private static final String CONTENT_ENCODING_GZIP = "gzip";
+
+  /** Content encoding for GZip (legacy) */
+  private static final String CONTENT_ENCODING_XGZIP = "x-gzip";
 
   /**
    * Determines the limit to the content size that will be logged during {@link #getContent()}.
@@ -143,11 +150,27 @@ public final class HttpResponse {
       contentType = request.getResponseHeaders().getContentType();
     }
     this.contentType = contentType;
-    mediaType = contentType == null ? null : new HttpMediaType(contentType);
+    this.mediaType = parseMediaType(contentType);
 
     // log from buffer
     if (loggable) {
       logger.config(logbuf.toString());
+    }
+  }
+
+  /**
+   * Returns an {@link HttpMediaType} object parsed from {@link #contentType}, or {@code null} if
+   * if {@link #contentType} cannot be parsed or {@link #contentType} is {@code null}.
+   */
+  private static HttpMediaType parseMediaType(String contentType) {
+    if (contentType == null) {
+      return null;
+    }
+    try {
+      return new HttpMediaType(contentType);
+    } catch (IllegalArgumentException e) {
+      // contentType is invalid and cannot be parsed.
+      return null;
     }
   }
 
@@ -327,12 +350,12 @@ public final class HttpResponse {
         boolean contentProcessed = false;
         try {
           // gzip encoding (wrap content with GZipInputStream)
-          String contentEncoding = this.contentEncoding;
-          if (!returnRawInputStream
-              && contentEncoding != null
-              && contentEncoding.contains("gzip")) {
-            lowLevelResponseContent =
-                new ConsumingInputStream(new GZIPInputStream(lowLevelResponseContent));
+          if (!returnRawInputStream && this.contentEncoding != null) {
+            String oontentencoding = this.contentEncoding.trim().toLowerCase(Locale.ENGLISH);
+            if (CONTENT_ENCODING_GZIP.equals(oontentencoding) || CONTENT_ENCODING_XGZIP.equals(oontentencoding)) {
+              lowLevelResponseContent =
+                  new ConsumingInputStream(new GZIPInputStream(lowLevelResponseContent));
+            }
           }
           // logging (wrap content with LoggingInputStream)
           Logger logger = HttpTransport.LOGGER;

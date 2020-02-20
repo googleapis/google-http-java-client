@@ -58,11 +58,17 @@ public class UriTemplateTest extends TestCase {
     assertTrue(requestMap.containsKey("unused"));
   }
 
-  public void testExpanTemplates_basicEncodeValue() {
+  public void testExpandTemplates_basicEncodeValue() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz;def");
     assertEquals(";abc=xyz%3Bdef", UriTemplate.expand("{;abc}", requestMap, false));
     assertEquals("xyz;def", UriTemplate.expand("{+abc}", requestMap, false));
+  }
+
+  public void testExpandTemplates_encodeSpace() {
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
+    requestMap.put("abc", "xyz def");
+    assertEquals(";abc=xyz%20def", UriTemplate.expand("{;abc}", requestMap, false));
   }
 
   public void testExpandTemplates_noExpansionsWithQueryParams() {

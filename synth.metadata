@@ -1,5 +1,5 @@
 {
-  "updateTime": "2019-10-19T07:50:26.035482Z",
+  "updateTime": "2020-01-07T08:32:34.360210Z",
   "sources": [
     {
       "template": {
@@ -7,6 +7,1397 @@
         "origin": "synthtool.gcp",
         "version": "2019.10.17"
       }
+    }
+  ],
+  "newFiles": [
+    {
+      "path": ".repo-metadata.json"
+    },
+    {
+      "path": "checkstyle.xml"
+    },
+    {
+      "path": "renovate.json"
+    },
+    {
+      "path": "findbugs-exclude.xml"
+    },
+    {
+      "path": "synth.py"
+    },
+    {
+      "path": "CHANGELOG.md"
+    },
+    {
+      "path": "codecov.yaml"
+    },
+    {
+      "path": "LICENSE"
+    },
+    {
+      "path": "instructions.html"
+    },
+    {
+      "path": "checkstyle-suppressions.xml"
+    },
+    {
+      "path": ".gitignore"
+    },
+    {
+      "path": "pom.xml"
+    },
+    {
+      "path": "CODE_OF_CONDUCT.md"
+    },
+    {
+      "path": ".travis.yml"
+    },
+    {
+      "path": "synth.metadata"
+    },
+    {
+      "path": "README.md"
+    },
+    {
+      "path": "versions.txt"
+    },
+    {
+      "path": "CONTRIBUTING.md"
+    },
+    {
+      "path": "clirr-ignored-differences.xml"
+    },
+    {
+      "path": "google-http-client-assembly/readme.html"
+    },
+    {
+      "path": "google-http-client-assembly/LICENSE.txt"
+    },
+    {
+      "path": "google-http-client-assembly/pom.xml"
+    },
+    {
+      "path": "google-http-client-assembly/proguard-google-http-client.txt"
+    },
+    {
+      "path": "google-http-client-assembly/classpath-include"
+    },
+    {
+      "path": "google-http-client-assembly/assembly.xml"
+    },
+    {
+      "path": "google-http-client-assembly/licenses/CDDL-LICENSE.txt"
+    },
+    {
+      "path": "google-http-client-assembly/licenses/xpp3_LICENSE.txt"
+    },
+    {
+      "path": "google-http-client-assembly/licenses/APACHE-LICENSE.txt"
+    },
+    {
+      "path": "google-http-client-assembly/licenses/BSD-LICENSE.txt"
+    },
+    {
+      "path": "google-http-client-assembly/properties/google-http-client.jar.properties"
+    },
+    {
+      "path": "google-http-client-assembly/properties/google-http-client-android.jar.properties"
+    },
+    {
+      "path": "google-http-client-assembly/properties/google-http-client-gson.jar.properties"
+    },
+    {
+      "path": "google-http-client-assembly/properties/google-http-client-jackson2.jar.properties"
+    },
+    {
+      "path": "google-http-client-assembly/properties/protobuf-java.jar.properties"
+    },
+    {
+      "path": "google-http-client-assembly/properties/jackson-core.jar.properties"
+    },
+    {
+      "path": "google-http-client-assembly/properties/google-http-client-xml.jar.properties"
+    },
+    {
+      "path": "google-http-client-assembly/properties/gson.jar.properties"
+    },
+    {
+      "path": "google-http-client-assembly/properties/google-http-client-apache-v2.jar.properties"
+    },
+    {
+      "path": "google-http-client-assembly/properties/google-http-client-protobuf.jar.properties"
+    },
+    {
+      "path": "google-http-client-protobuf/pom.xml"
+    },
+    {
+      "path": "google-http-client-protobuf/src/test/proto/simple_proto.proto"
+    },
+    {
+      "path": "google-http-client-protobuf/src/test/java/com/google/api/client/protobuf/ProtocolBuffersTest.java"
+    },
+    {
+      "path": "google-http-client-protobuf/src/main/java/com/google/api/client/protobuf/ProtocolBuffers.java"
+    },
+    {
+      "path": "google-http-client-protobuf/src/main/java/com/google/api/client/protobuf/package-info.java"
+    },
+    {
+      "path": "google-http-client-protobuf/src/main/java/com/google/api/client/protobuf/ProtoObjectParser.java"
+    },
+    {
+      "path": "google-http-client-protobuf/src/main/java/com/google/api/client/http/protobuf/ProtoHttpContent.java"
+    },
+    {
+      "path": "google-http-client-protobuf/src/main/java/com/google/api/client/http/protobuf/package-info.java"
+    },
+    {
+      "path": "google-http-client-xml/pom.xml"
+    },
+    {
+      "path": "google-http-client-xml/src/test/resources/sample-atom.xml"
+    },
+    {
+      "path": "google-http-client-xml/src/test/java/com/google/api/client/xml/GenericXmlTest.java"
+    },
+    {
+      "path": "google-http-client-xml/src/test/java/com/google/api/client/xml/AtomTest.java"
+    },
+    {
+      "path": "google-http-client-xml/src/test/java/com/google/api/client/xml/XmlNamespaceDictionaryTest.java"
+    },
+    {
+      "path": "google-http-client-xml/src/test/java/com/google/api/client/xml/XmlEnumTest.java"
+    },
+    {
+      "path": "google-http-client-xml/src/test/java/com/google/api/client/xml/GenericXmlListTest.java"
+    },
+    {
+      "path": "google-http-client-xml/src/test/java/com/google/api/client/xml/XmlListTest.java"
+    },
+    {
+      "path": "google-http-client-xml/src/test/java/com/google/api/client/xml/XmlTest.java"
+    },
+    {
+      "path": "google-http-client-xml/src/main/java/com/google/api/client/xml/XmlNamespaceDictionary.java"
+    },
+    {
+      "path": "google-http-client-xml/src/main/java/com/google/api/client/xml/GenericXml.java"
+    },
+    {
+      "path": "google-http-client-xml/src/main/java/com/google/api/client/xml/Xml.java"
+    },
+    {
+      "path": "google-http-client-xml/src/main/java/com/google/api/client/xml/package-info.java"
+    },
+    {
+      "path": "google-http-client-xml/src/main/java/com/google/api/client/xml/XmlObjectParser.java"
+    },
+    {
+      "path": "google-http-client-xml/src/main/java/com/google/api/client/xml/atom/Atom.java"
+    },
+    {
+      "path": "google-http-client-xml/src/main/java/com/google/api/client/xml/atom/AbstractAtomFeedParser.java"
+    },
+    {
+      "path": "google-http-client-xml/src/main/java/com/google/api/client/xml/atom/package-info.java"
+    },
+    {
+      "path": "google-http-client-xml/src/main/java/com/google/api/client/http/xml/AbstractXmlHttpContent.java"
+    },
+    {
+      "path": "google-http-client-xml/src/main/java/com/google/api/client/http/xml/XmlHttpContent.java"
+    },
+    {
+      "path": "google-http-client-xml/src/main/java/com/google/api/client/http/xml/package-info.java"
+    },
+    {
+      "path": "google-http-client-xml/src/main/java/com/google/api/client/http/xml/atom/AtomFeedParser.java"
+    },
+    {
+      "path": "google-http-client-xml/src/main/java/com/google/api/client/http/xml/atom/package-info.java"
+    },
+    {
+      "path": "google-http-client-xml/src/main/java/com/google/api/client/http/xml/atom/AtomContent.java"
+    },
+    {
+      "path": "google-http-client-gson/pom.xml"
+    },
+    {
+      "path": "google-http-client-gson/src/test/java/com/google/api/client/json/gson/GsonParserTest.java"
+    },
+    {
+      "path": "google-http-client-gson/src/test/java/com/google/api/client/json/gson/GsonFactoryTest.java"
+    },
+    {
+      "path": "google-http-client-gson/src/test/java/com/google/api/client/json/gson/GsonGeneratorTest.java"
+    },
+    {
+      "path": "google-http-client-gson/src/main/java/com/google/api/client/json/gson/GsonFactory.java"
+    },
+    {
+      "path": "google-http-client-gson/src/main/java/com/google/api/client/json/gson/GsonGenerator.java"
+    },
+    {
+      "path": "google-http-client-gson/src/main/java/com/google/api/client/json/gson/package-info.java"
+    },
+    {
+      "path": "google-http-client-gson/src/main/java/com/google/api/client/json/gson/GsonParser.java"
+    },
+    {
+      "path": "google-http-client-jackson2/pom.xml"
+    },
+    {
+      "path": "google-http-client-jackson2/src/test/java/com/google/api/client/json/jackson2/JacksonFactoryTest.java"
+    },
+    {
+      "path": "google-http-client-jackson2/src/test/java/com/google/api/client/json/jackson2/JacksonGeneratorTest.java"
+    },
+    {
+      "path": "google-http-client-jackson2/src/test/java/com/google/api/client/json/jackson2/JacksonParserTest.java"
+    },
+    {
+      "path": "google-http-client-jackson2/src/main/java/com/google/api/client/json/jackson2/JacksonParser.java"
+    },
+    {
+      "path": "google-http-client-jackson2/src/main/java/com/google/api/client/json/jackson2/package-info.java"
+    },
+    {
+      "path": "google-http-client-jackson2/src/main/java/com/google/api/client/json/jackson2/JacksonFactory.java"
+    },
+    {
+      "path": "google-http-client-jackson2/src/main/java/com/google/api/client/json/jackson2/JacksonGenerator.java"
+    },
+    {
+      "path": "google-http-client-appengine/pom.xml"
+    },
+    {
+      "path": "google-http-client-appengine/src/test/java/com/google/api/client/extensions/appengine/datastore/AppEngineDataStoreFactoryTest.java"
+    },
+    {
+      "path": "google-http-client-appengine/src/test/java/com/google/api/client/extensions/appengine/datastore/AppEngineNoMemcacheDataStoreFactoryTest.java"
+    },
+    {
+      "path": "google-http-client-appengine/src/test/java/com/google/api/client/extensions/appengine/http/UrlFetchTransportTest.java"
+    },
+    {
+      "path": "google-http-client-appengine/src/main/java/com/google/api/client/extensions/appengine/datastore/package-info.java"
+    },
+    {
+      "path": "google-http-client-appengine/src/main/java/com/google/api/client/extensions/appengine/datastore/AppEngineDataStoreFactory.java"
+    },
+    {
+      "path": "google-http-client-appengine/src/main/java/com/google/api/client/extensions/appengine/http/UrlFetchTransport.java"
+    },
+    {
+      "path": "google-http-client-appengine/src/main/java/com/google/api/client/extensions/appengine/http/UrlFetchResponse.java"
+    },
+    {
+      "path": "google-http-client-appengine/src/main/java/com/google/api/client/extensions/appengine/http/package-info.java"
+    },
+    {
+      "path": "google-http-client-appengine/src/main/java/com/google/api/client/extensions/appengine/http/UrlFetchRequest.java"
+    },
+    {
+      "path": "samples/dailymotion-simple-cmdline-sample/logging.properties"
+    },
+    {
+      "path": "samples/dailymotion-simple-cmdline-sample/instructions.html"
+    },
+    {
+      "path": "samples/dailymotion-simple-cmdline-sample/pom.xml"
+    },
+    {
+      "path": "samples/dailymotion-simple-cmdline-sample/DailyMotionSample.launch"
+    },
+    {
+      "path": "samples/dailymotion-simple-cmdline-sample/.settings/org.eclipse.jdt.ui.prefs"
+    },
+    {
+      "path": "samples/dailymotion-simple-cmdline-sample/src/main/java/com/google/api/services/samples/dailymotion/cmdline/simple/DailyMotionSample.java"
+    },
+    {
+      "path": "google-http-client-android/AndroidManifest.xml"
+    },
+    {
+      "path": "google-http-client-android/project.properties"
+    },
+    {
+      "path": "google-http-client-android/pom.xml"
+    },
+    {
+      "path": "google-http-client-android/src/main/java/com/google/api/client/extensions/android/package-info.java"
+    },
+    {
+      "path": "google-http-client-android/src/main/java/com/google/api/client/extensions/android/AndroidUtils.java"
+    },
+    {
+      "path": "google-http-client-android/src/main/java/com/google/api/client/extensions/android/json/AndroidJsonParser.java"
+    },
+    {
+      "path": "google-http-client-android/src/main/java/com/google/api/client/extensions/android/json/AndroidJsonGenerator.java"
+    },
+    {
+      "path": "google-http-client-android/src/main/java/com/google/api/client/extensions/android/json/AndroidJsonFactory.java"
+    },
+    {
+      "path": "google-http-client-android/src/main/java/com/google/api/client/extensions/android/json/package-info.java"
+    },
+    {
+      "path": "google-http-client-android/src/main/java/com/google/api/client/extensions/android/http/AndroidHttp.java"
+    },
+    {
+      "path": "google-http-client-android/src/main/java/com/google/api/client/extensions/android/http/package-info.java"
+    },
+    {
+      "path": "google-http-client-test/pom.xml"
+    },
+    {
+      "path": "google-http-client-test/src/test/java/com/google/api/client/test/util/store/MemoryDataStoreFactoryTest.java"
+    },
+    {
+      "path": "google-http-client-test/src/test/java/com/google/api/client/test/util/store/FileDataStoreFactoryTest.java"
+    },
+    {
+      "path": "google-http-client-test/src/main/java/com/google/api/client/test/json/AbstractJsonFactoryTest.java"
+    },
+    {
+      "path": "google-http-client-test/src/main/java/com/google/api/client/test/json/package-info.java"
+    },
+    {
+      "path": "google-http-client-test/src/main/java/com/google/api/client/test/json/AbstractJsonGeneratorTest.java"
+    },
+    {
+      "path": "google-http-client-test/src/main/java/com/google/api/client/test/json/AbstractJsonParserTest.java"
+    },
+    {
+      "path": "google-http-client-test/src/main/java/com/google/api/client/test/util/store/AbstractDataStoreFactoryTest.java"
+    },
+    {
+      "path": "google-http-client-test/src/main/java/com/google/api/client/test/util/store/package-info.java"
+    },
+    {
+      "path": ".kokoro/build.bat"
+    },
+    {
+      "path": ".kokoro/build.sh"
+    },
+    {
+      "path": ".kokoro/dependencies.sh"
+    },
+    {
+      "path": ".kokoro/common.cfg"
+    },
+    {
+      "path": ".kokoro/trampoline.sh"
+    },
+    {
+      "path": ".kokoro/coerce_logs.sh"
+    },
+    {
+      "path": ".kokoro/linkage-monitor.sh"
+    },
+    {
+      "path": ".kokoro/continuous/dependencies.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/samples.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/java7.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/java8-osx.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/java10.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/java8-win.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/propose_release.sh"
+    },
+    {
+      "path": ".kokoro/continuous/lint.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/java11.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/common.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/propose_release.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/java8.cfg"
+    },
+    {
+      "path": ".kokoro/continuous/integration.cfg"
+    },
+    {
+      "path": ".kokoro/release/drop.sh"
+    },
+    {
+      "path": ".kokoro/release/stage.cfg"
+    },
+    {
+      "path": ".kokoro/release/promote.cfg"
+    },
+    {
+      "path": ".kokoro/release/publish_javadoc.cfg"
+    },
+    {
+      "path": ".kokoro/release/bump_snapshot.cfg"
+    },
+    {
+      "path": ".kokoro/release/promote.sh"
+    },
+    {
+      "path": ".kokoro/release/stage.sh"
+    },
+    {
+      "path": ".kokoro/release/snapshot.sh"
+    },
+    {
+      "path": ".kokoro/release/snapshot.cfg"
+    },
+    {
+      "path": ".kokoro/release/common.cfg"
+    },
+    {
+      "path": ".kokoro/release/bump_snapshot.sh"
+    },
+    {
+      "path": ".kokoro/release/common.sh"
+    },
+    {
+      "path": ".kokoro/release/drop.cfg"
+    },
+    {
+      "path": ".kokoro/release/publish_javadoc.sh"
+    },
+    {
+      "path": ".kokoro/presubmit/dependencies.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/samples.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/java7.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/java8-osx.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/linkage-monitor.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/java10.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/java8-win.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/lint.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/java11.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/common.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/clirr.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/java8.cfg"
+    },
+    {
+      "path": ".kokoro/presubmit/integration.cfg"
+    },
+    {
+      "path": ".kokoro/nightly/dependencies.cfg"
+    },
+    {
+      "path": ".kokoro/nightly/samples.cfg"
+    },
+    {
+      "path": ".kokoro/nightly/java7.cfg"
+    },
+    {
+      "path": ".kokoro/nightly/java8-osx.cfg"
+    },
+    {
+      "path": ".kokoro/nightly/java8-win.cfg"
+    },
+    {
+      "path": ".kokoro/nightly/lint.cfg"
+    },
+    {
+      "path": ".kokoro/nightly/java11.cfg"
+    },
+    {
+      "path": ".kokoro/nightly/common.cfg"
+    },
+    {
+      "path": ".kokoro/nightly/java8.cfg"
+    },
+    {
+      "path": ".kokoro/nightly/integration.cfg"
+    },
+    {
+      "path": "google-http-client/pom.xml"
+    },
+    {
+      "path": "google-http-client/src/test/resources/file.txt"
+    },
+    {
+      "path": "google-http-client/src/test/resources/com/google/api/client/util/secret.pem"
+    },
+    {
+      "path": "google-http-client/src/test/resources/com/google/api/client/util/secret.p12"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/json/GenericJsonTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/json/JsonParserTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/json/JsonObjectParserTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/json/webtoken/JsonWebSignatureTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/testing/http/MockHttpTransportTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/testing/http/MockLowLevelHttpRequestTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/testing/http/FixedClockTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/testing/http/javanet/MockHttpUrlConnectionTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/testing/util/MockBackOffTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/HttpMediaTypeTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/OpenCensusUtilsTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/GZipEncodingTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/ExponentialBackOffPolicyTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/EmptyContentTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/GenericUrlTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/HttpResponseExceptionTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/ConsumingInputStreamTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/MultipartContentTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/HttpRequestTracingTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/HttpResponseTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/HttpRequestTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/HttpHeadersTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/UriTemplateTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/HttpEncodingStreamingContentTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/AbstractHttpContentTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/HttpStatusCodesTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/HttpBackOffIOExpcetionHandlerTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/UrlEncodedParserTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/ByteArrayContentTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/UrlEncodedContentTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/HttpBackOffUnsuccessfulResponseHandlerTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/BasicAuthenticationTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/javanet/NetHttpRequestTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/javanet/NetHttpResponseTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/http/javanet/NetHttpTransportTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/ArrayMapTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/DataMapTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/NanoClockTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/LoggingStreamingContentTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/DataTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/TypesTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/ObjectsTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/ClassInfoTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/GenericDataTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/ExponentialBackOffTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/BackOffTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/DateTimeTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/IOUtilsTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/Base64Test.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/ClockTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/StringUtilsTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/SecurityUtilsTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/FieldInfoTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/PemReaderTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/BackOffUtilsTest.java"
+    },
+    {
+      "path": "google-http-client/src/test/java/com/google/api/client/util/escape/CharEscapersTest.java"
+    },
+    {
+      "path": "google-http-client/src/main/resources/google-http-client.properties"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/JsonParser.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/JsonGenerator.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/JsonFactory.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/JsonToken.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/Json.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/JsonObjectParser.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/GenericJson.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/JsonPolymorphicTypeMap.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/JsonString.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/CustomizeJsonParser.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/webtoken/JsonWebToken.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/webtoken/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/webtoken/JsonWebSignature.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/rpc2/JsonRpcRequest.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/json/rpc2/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/json/MockJsonFactory.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/json/MockJsonParser.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/json/MockJsonGenerator.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/json/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/json/webtoken/TestCertificates.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/json/webtoken/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/http/MockHttpTransport.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/http/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/http/MockLowLevelHttpResponse.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/http/MockHttpContent.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/http/FixedClock.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/http/HttpTesting.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/http/MockHttpUnsuccessfulResponseHandler.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/http/MockLowLevelHttpRequest.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/http/javanet/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/http/javanet/MockHttpURLConnection.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/http/apache/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/http/apache/MockHttpClient.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/util/MockBackOff.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/util/SecurityTestUtils.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/util/MockSleeper.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/util/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/util/TestableByteArrayOutputStream.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/util/TestableByteArrayInputStream.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/testing/util/LogRecordingHandler.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpResponseException.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/UrlEncodedParser.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/MultipartContent.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/BasicAuthentication.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpBackOffUnsuccessfulResponseHandler.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpUnsuccessfulResponseHandler.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpEncoding.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpEncodingStreamingContent.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpExecuteInterceptor.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/ByteArrayContent.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpRequest.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/EmptyContent.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/FileContent.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/LowLevelHttpRequest.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpStatusCodes.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/UriTemplate.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpBackOffIOExceptionHandler.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/GZipEncoding.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/OpenCensusUtils.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpContent.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpResponse.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpMediaType.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpIOExceptionHandler.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/UrlEncodedContent.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpMethods.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/ExponentialBackOffPolicy.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpRequestFactory.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/AbstractHttpContent.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/AbstractInputStreamContent.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/BackOffPolicy.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/InputStreamContent.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpHeaders.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/GenericUrl.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/LowLevelHttpResponse.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpResponseInterceptor.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/ConsumingInputStream.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpTransport.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/HttpRequestInitializer.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/json/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/json/JsonHttpContent.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/javanet/ConnectionFactory.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/javanet/NetHttpRequest.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/javanet/NetHttpTransport.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/javanet/NetHttpResponse.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/javanet/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/javanet/DefaultConnectionFactory.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/apache/HttpExtensionMethod.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/apache/ContentEntity.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/apache/ApacheHttpRequest.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/apache/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/apache/ApacheHttpResponse.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/apache/ApacheHttpTransport.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/http/apache/SSLSocketFactoryExtension.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/LoggingByteArrayOutputStream.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Maps.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/NullValue.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/StreamingContent.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/SslUtils.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Lists.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/GenericData.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Types.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Collections2.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Key.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/BackOff.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Joiner.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/ArrayMap.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Clock.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/ArrayValueMap.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/DateTime.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/StringUtils.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/ObjectParser.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Beta.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/LoggingOutputStream.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/LoggingInputStream.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/LoggingStreamingContent.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/ExponentialBackOff.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/ByteCountingOutputStream.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/ClassInfo.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Data.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/DataMap.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Sleeper.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Value.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/NanoClock.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/ByteArrayStreamingContent.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Throwables.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/IOUtils.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Charsets.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/SecurityUtils.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Objects.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/FieldInfo.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Base64.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/ByteStreams.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/BackOffUtils.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Preconditions.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Strings.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/PemReader.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/Sets.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/store/AbstractDataStore.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/store/DataStoreFactory.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/store/DataStoreUtils.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/store/AbstractDataStoreFactory.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/store/DataStore.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/store/MemoryDataStoreFactory.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/store/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/store/FileDataStoreFactory.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/store/AbstractMemoryDataStore.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/escape/Escaper.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/escape/CharEscapers.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/escape/Platform.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/escape/PercentEscaper.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/escape/package-info.java"
+    },
+    {
+      "path": "google-http-client/src/main/java/com/google/api/client/util/escape/UnicodeEscaper.java"
+    },
+    {
+      "path": ".github/CODEOWNERS"
+    },
+    {
+      "path": ".github/.release-please.yml"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE.md"
+    },
+    {
+      "path": ".github/release-please.yml"
+    },
+    {
+      "path": ".github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/bug_report.md"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/support_request.md"
+    },
+    {
+      "path": ".github/ISSUE_TEMPLATE/feature_request.md"
+    },
+    {
+      "path": "__pycache__/synth.cpython-36.pyc"
+    },
+    {
+      "path": "google-http-client-findbugs/pom.xml"
+    },
+    {
+      "path": "google-http-client-findbugs/src/main/resources/messages.xml"
+    },
+    {
+      "path": "google-http-client-findbugs/src/main/resources/bugrank.txt"
+    },
+    {
+      "path": "google-http-client-findbugs/src/main/resources/findbugs.xml"
+    },
+    {
+      "path": "google-http-client-findbugs/src/main/java/com/google/api/client/findbugs/BetaDetector.java"
+    },
+    {
+      "path": "google-http-client-findbugs/src/main/java/com/google/api/client/findbugs/package-info.java"
+    },
+    {
+      "path": "google-http-client-findbugs/google-http-client-findbugs-test/.project"
+    },
+    {
+      "path": "google-http-client-findbugs/google-http-client-findbugs-test/.classpath"
+    },
+    {
+      "path": "google-http-client-findbugs/google-http-client-findbugs-test/pom.xml"
+    },
+    {
+      "path": "google-http-client-findbugs/google-http-client-findbugs-test/.settings/org.eclipse.jdt.core.prefs"
+    },
+    {
+      "path": "google-http-client-findbugs/google-http-client-findbugs-test/.settings/org.eclipse.jdt.ui.prefs"
+    },
+    {
+      "path": "google-http-client-findbugs/google-http-client-findbugs-test/src/main/java/com/google/api/client/findbugs/test/BetaClass.java"
+    },
+    {
+      "path": "google-http-client-findbugs/google-http-client-findbugs-test/src/main/java/com/google/api/client/findbugs/test/BetaClass2.java"
+    },
+    {
+      "path": "google-http-client-findbugs/google-http-client-findbugs-test/src/main/java/com/google/api/client/findbugs/test/ClassWithBetaField.java"
+    },
+    {
+      "path": "google-http-client-findbugs/google-http-client-findbugs-test/src/main/java/com/google/api/client/findbugs/test/Test.java"
+    },
+    {
+      "path": "google-http-client-findbugs/google-http-client-findbugs-test/src/main/java/com/google/api/client/findbugs/test/ClassWithBetaMethod.java"
+    },
+    {
+      "path": ".git/index"
+    },
+    {
+      "path": ".git/packed-refs"
+    },
+    {
+      "path": ".git/HEAD"
+    },
+    {
+      "path": ".git/config"
+    },
+    {
+      "path": ".git/shallow"
+    },
+    {
+      "path": ".git/objects/pack/pack-05aa278ffdf8a410aeb04cb592a33d2cb1daf479.idx"
+    },
+    {
+      "path": ".git/objects/pack/pack-05aa278ffdf8a410aeb04cb592a33d2cb1daf479.pack"
+    },
+    {
+      "path": ".git/refs/remotes/origin/HEAD"
+    },
+    {
+      "path": ".git/refs/heads/autosynth"
+    },
+    {
+      "path": ".git/refs/heads/master"
+    },
+    {
+      "path": ".git/logs/HEAD"
+    },
+    {
+      "path": ".git/logs/refs/remotes/origin/HEAD"
+    },
+    {
+      "path": ".git/logs/refs/heads/autosynth"
+    },
+    {
+      "path": ".git/logs/refs/heads/master"
+    },
+    {
+      "path": "google-http-client-apache-v2/pom.xml"
+    },
+    {
+      "path": "google-http-client-apache-v2/src/test/java/com/google/api/client/http/apache/v2/ApacheHttpTransportTest.java"
+    },
+    {
+      "path": "google-http-client-apache-v2/src/test/java/com/google/api/client/http/apache/v2/ApacheHttpRequestTest.java"
+    },
+    {
+      "path": "google-http-client-apache-v2/src/main/java/com/google/api/client/http/apache/v2/HttpExtensionMethod.java"
+    },
+    {
+      "path": "google-http-client-apache-v2/src/main/java/com/google/api/client/http/apache/v2/ContentEntity.java"
+    },
+    {
+      "path": "google-http-client-apache-v2/src/main/java/com/google/api/client/http/apache/v2/ApacheHttpRequest.java"
+    },
+    {
+      "path": "google-http-client-apache-v2/src/main/java/com/google/api/client/http/apache/v2/package-info.java"
+    },
+    {
+      "path": "google-http-client-apache-v2/src/main/java/com/google/api/client/http/apache/v2/ApacheHttpResponse.java"
+    },
+    {
+      "path": "google-http-client-apache-v2/src/main/java/com/google/api/client/http/apache/v2/ApacheHttpTransport.java"
+    },
+    {
+      "path": "docs/index.md"
+    },
+    {
+      "path": "docs/exponential-backoff.md"
+    },
+    {
+      "path": "docs/_config.yml"
+    },
+    {
+      "path": "docs/android.md"
+    },
+    {
+      "path": "docs/component-modules.md"
+    },
+    {
+      "path": "docs/google-app-engine.md"
+    },
+    {
+      "path": "docs/support.md"
+    },
+    {
+      "path": "docs/http-transport.md"
+    },
+    {
+      "path": "docs/unit-testing.md"
+    },
+    {
+      "path": "docs/json.md"
+    },
+    {
+      "path": "docs/setup.md"
+    },
+    {
+      "path": "docs/_layouts/default.html"
+    },
+    {
+      "path": "docs/_data/navigation.yml"
+    },
+    {
+      "path": "google-http-client-android-test/AndroidManifest.xml"
+    },
+    {
+      "path": "google-http-client-android-test/pom.xml"
+    },
+    {
+      "path": "google-http-client-android-test/src/main/java/com/google/api/client/extensions/android/json/FakeTest.java"
+    },
+    {
+      "path": "google-http-client-android-test/src/main/java/com/google/api/client/extensions/android/json/AndroidJsonFactoryTest.java"
+    },
+    {
+      "path": "google-http-client-android-test/src/main/java/com/google/api/client/extensions/android/json/package-info.java"
+    },
+    {
+      "path": "google-http-client-bom/pom.xml"
+    },
+    {
+      "path": "google-http-client-bom/README.md"
     }
   ]
 }
