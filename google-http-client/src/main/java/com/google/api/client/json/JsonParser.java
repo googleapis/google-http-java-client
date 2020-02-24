@@ -717,7 +717,7 @@ public abstract class JsonParser implements Closeable {
     // value type is now null, class, parameterized type, or generic array type
     JsonToken token = getCurrentToken();
     try {
-      switch (getCurrentToken()) {
+      switch (token) {
         case START_ARRAY:
         case END_ARRAY:
           boolean isArray = Types.isArray(valueType);
