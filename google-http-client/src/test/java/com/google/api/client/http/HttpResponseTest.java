@@ -25,6 +25,7 @@ import com.google.api.client.util.Key;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
@@ -567,6 +568,12 @@ public class HttpResponseTest extends TestCase {
     ) {
       zipStream.write(dataToCompress);
       zipStream.close();
+
+      // GZIPInputStream uses a default buffer of 512B. Add enough content to exceed this
+      // limit, so that some content will be left in the connection.
+      for (int i = 0; i < 1024; i++) {
+        byteStream.write('7');
+      }
       mockBytes = byteStream.toByteArray();
     }
     final MockLowLevelHttpResponse mockResponse = new MockLowLevelHttpResponse();
@@ -594,6 +601,8 @@ public class HttpResponseTest extends TestCase {
       assertFalse(output.isClosed());
       assertEquals("abcd", response.parseAsString());
       assertTrue(output.isClosed());
+      // The underlying stream should be fully consumed, even if gzip only returns some of it.
+      assertEquals(-1, output.read());
     }
   }
 

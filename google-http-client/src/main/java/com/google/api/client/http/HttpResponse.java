@@ -353,8 +353,13 @@ public final class HttpResponse {
           if (!returnRawInputStream && this.contentEncoding != null) {
             String oontentencoding = this.contentEncoding.trim().toLowerCase(Locale.ENGLISH);
             if (CONTENT_ENCODING_GZIP.equals(oontentencoding) || CONTENT_ENCODING_XGZIP.equals(oontentencoding)) {
+              // Wrap the original stream in a ConsumingInputStream before passing it to
+              // GZIPInputStream.
+              // GZIPInputStream tends to leave content in the original stream (it will almost
+              // always leave the last chunk unconsumed in chunked responses). ConsumingInputStream
+              // ensures that any unconsumed bytes are read at close.
               lowLevelResponseContent =
-                  new ConsumingInputStream(new GZIPInputStream(lowLevelResponseContent));
+                  new GZIPInputStream(new ConsumingInputStream(lowLevelResponseContent));
             }
           }
           // logging (wrap content with LoggingInputStream)
