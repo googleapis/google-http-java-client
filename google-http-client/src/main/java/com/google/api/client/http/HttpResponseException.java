@@ -284,6 +284,13 @@ public class HttpResponseException extends IOException {
       }
       builder.append(statusMessage);
     }
+    HttpRequest request = response.getRequest();
+    if (request != null) {
+      if (builder.length() > 0) {
+        builder.append('\n');
+      }
+      builder.append("Request URL: ").append(request.getUrl());
+    }
     return builder;
   }
 }

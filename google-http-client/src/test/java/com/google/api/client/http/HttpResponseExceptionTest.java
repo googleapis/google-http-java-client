@@ -14,12 +14,15 @@
 
 package com.google.api.client.http;
 
+import static com.google.api.client.testing.http.HttpTesting.SIMPLE_GENERIC_URL;
+import static com.google.api.client.util.StringUtils.LINE_SEPARATOR;
+import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
+
 import com.google.api.client.http.HttpResponseException.Builder;
-import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
-import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,6 +30,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import junit.framework.TestCase;
+import org.junit.function.ThrowingRunnable;
 
 /**
  * Tests {@link HttpResponseException}.
@@ -37,12 +41,11 @@ public class HttpResponseExceptionTest extends TestCase {
 
   public void testConstructor() throws Exception {
     HttpTransport transport = new MockHttpTransport();
-    HttpRequest request =
-        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    HttpRequest request = transport.createRequestFactory().buildGetRequest(SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
     HttpHeaders headers = response.getHeaders();
     HttpResponseException e = new HttpResponseException(response);
-    assertEquals("200", e.getMessage());
+    assertThat(e).hasMessageThat().isEqualTo("200\nRequest URL: " + SIMPLE_GENERIC_URL);
     assertNull(e.getContent());
     assertEquals(200, e.getStatusCode());
     assertNull(e.getStatusMessage());
@@ -83,8 +86,7 @@ public class HttpResponseExceptionTest extends TestCase {
             };
           }
         };
-    HttpRequest request =
-        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    HttpRequest request = transport.createRequestFactory().buildGetRequest(SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
     HttpResponseException e = new HttpResponseException(response);
     assertEquals("OK", e.getStatusMessage());
@@ -105,14 +107,18 @@ public class HttpResponseExceptionTest extends TestCase {
             };
           }
         };
-    HttpRequest request =
-        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
-    try {
-      request.execute();
-      fail();
-    } catch (HttpResponseException e) {
-      assertEquals("", e.getMessage());
-    }
+    final HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(SIMPLE_GENERIC_URL);
+    HttpResponseException responseException =
+        assertThrows(
+            HttpResponseException.class,
+            new ThrowingRunnable() {
+              @Override
+              public void run() throws Throwable {
+                request.execute();
+              }
+            });
+    assertThat(responseException).hasMessageThat().isEqualTo("Request URL: " + SIMPLE_GENERIC_URL);
   }
 
   public void testConstructor_messageButNoStatusCode() throws Exception {
@@ -131,14 +137,20 @@ public class HttpResponseExceptionTest extends TestCase {
             };
           }
         };
-    HttpRequest request =
-        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
-    try {
-      request.execute();
-      fail();
-    } catch (HttpResponseException e) {
-      assertEquals("Foo", e.getMessage());
-    }
+    final HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(SIMPLE_GENERIC_URL);
+    HttpResponseException responseException =
+        assertThrows(
+            HttpResponseException.class,
+            new ThrowingRunnable() {
+              @Override
+              public void run() throws Throwable {
+                request.execute();
+              }
+            });
+    assertThat(responseException)
+        .hasMessageThat()
+        .isEqualTo("Foo\nRequest URL: " + SIMPLE_GENERIC_URL);
   }
 
   public void testComputeMessage() throws Exception {
@@ -156,10 +168,10 @@ public class HttpResponseExceptionTest extends TestCase {
             };
           }
         };
-    HttpRequest request =
-        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    HttpRequest request = transport.createRequestFactory().buildGetRequest(SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
-    assertEquals("200 Foo", HttpResponseException.computeMessageBuffer(response).toString());
+    assertThat(HttpResponseException.computeMessageBuffer(response).toString())
+        .isEqualTo("200 Foo\nRequest URL: " + SIMPLE_GENERIC_URL);
   }
 
   public void testThrown() throws Exception {
@@ -179,15 +191,25 @@ public class HttpResponseExceptionTest extends TestCase {
             };
           }
         };
-    HttpRequest request =
-        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
-    try {
-      request.execute();
-      fail();
-    } catch (HttpResponseException e) {
-      assertEquals(
-          "404 Not Found" + StringUtils.LINE_SEPARATOR + "Unable to find resource", e.getMessage());
-    }
+    final HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(SIMPLE_GENERIC_URL);
+    HttpResponseException responseException =
+        assertThrows(
+            HttpResponseException.class,
+            new ThrowingRunnable() {
+              @Override
+              public void run() throws Throwable {
+                request.execute();
+              }
+            });
+
+    assertThat(responseException)
+        .hasMessageThat()
+        .isEqualTo(
+            "404 Not Found\nRequest URL: "
+                + SIMPLE_GENERIC_URL
+                + LINE_SEPARATOR
+                + "Unable to find resource");
   }
 
   public void testInvalidCharset() throws Exception {
@@ -208,14 +230,21 @@ public class HttpResponseExceptionTest extends TestCase {
             };
           }
         };
-    HttpRequest request =
-        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
-    try {
-      request.execute();
-      fail();
-    } catch (HttpResponseException e) {
-      assertEquals("404 Not Found", e.getMessage());
-    }
+    final HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(SIMPLE_GENERIC_URL);
+    HttpResponseException responseException =
+        assertThrows(
+            HttpResponseException.class,
+            new ThrowingRunnable() {
+              @Override
+              public void run() throws Throwable {
+                request.execute();
+              }
+            });
+
+    assertThat(responseException)
+        .hasMessageThat()
+        .isEqualTo("404 Not Found\nRequest URL: " + SIMPLE_GENERIC_URL);
   }
 
   public void testUnsupportedCharset() throws Exception {
@@ -236,20 +265,25 @@ public class HttpResponseExceptionTest extends TestCase {
             };
           }
         };
-    HttpRequest request =
-        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
-    try {
-      request.execute();
-      fail();
-    } catch (HttpResponseException e) {
-      assertEquals("404 Not Found", e.getMessage());
-    }
+    final HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(SIMPLE_GENERIC_URL);
+    HttpResponseException responseException =
+        assertThrows(
+            HttpResponseException.class,
+            new ThrowingRunnable() {
+              @Override
+              public void run() throws Throwable {
+                request.execute();
+              }
+            });
+    assertThat(responseException)
+        .hasMessageThat()
+        .isEqualTo("404 Not Found\nRequest URL: " + SIMPLE_GENERIC_URL);
   }
 
   public void testSerialization() throws Exception {
     HttpTransport transport = new MockHttpTransport();
-    HttpRequest request =
-        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    HttpRequest request = transport.createRequestFactory().buildGetRequest(SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
     HttpResponseException e = new HttpResponseException(response);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
