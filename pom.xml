@@ -376,6 +376,11 @@
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.1.0</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>3.0.0-M3</version>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -393,6 +398,10 @@
               <requireMavenVersion>
                 <version>[3.5.2,4.0.0)</version>
               </requireMavenVersion>
+              <requireJavaVersion>
+                <version>[1.7,)</version>
+              </requireJavaVersion>
+              <requireUpperBoundDeps/>
             </rules>
           </configuration>
         </execution>
