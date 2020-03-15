@@ -289,7 +289,11 @@ public class HttpResponseException extends IOException {
       if (builder.length() > 0) {
         builder.append('\n');
       }
-      builder.append("Request URL: ").append(request.getUrl());
+      String requestMethod = request.getRequestMethod();
+      if (requestMethod != null) {
+        builder.append(requestMethod).append(' ');
+      }
+      builder.append(request.getUrl());
     }
     return builder;
   }
