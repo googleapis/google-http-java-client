@@ -18,8 +18,8 @@ content. The JSON and XML libraries are also fully pluggable, and they include s
 
 The library supports the following Java environments:
 
-- Java 7 (or higher)
-- Android 4.0 (Ice Cream Sandwich) (or higher)
+- Java 7 or higher
+- Android 4.4 (Kit Kat) or higher
 - Google App Engine
 
 The following related projects are built on the Google HTTP Client Library for Java:
