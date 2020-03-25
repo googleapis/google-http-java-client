@@ -32,9 +32,11 @@ import java.nio.file.attribute.AclEntry;
 import java.nio.file.attribute.AclEntryPermission;
 import java.nio.file.attribute.AclEntryType;
 import java.nio.file.attribute.AclFileAttributeView;
+import java.nio.file.attribute.FileOwnerAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserPrincipal;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -53,7 +55,7 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
   private static final Logger LOGGER = Logger.getLogger(FileDataStoreFactory.class.getName());
 
   private static final boolean IS_WINDOWS = StandardSystemProperty.OS_NAME.value()
-      .startsWith("WINDOWS");
+      .toLowerCase(Locale.ENGLISH).startsWith("windows");
 
   /** Directory to store data. */
   private final File dataDirectory;
@@ -155,8 +157,8 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
   static void setPermissionsToOwnerOnlyWindows(File file) throws IOException {
     Path path = Paths.get(file.getAbsolutePath());
-    UserPrincipal owner = path.getFileSystem().getUserPrincipalLookupService()
-        .lookupPrincipalByName("OWNER@");
+    FileOwnerAttributeView fileAttributeView = Files.getFileAttributeView(path, FileOwnerAttributeView.class);
+    UserPrincipal owner = fileAttributeView.getOwner();
 
     // get view
     AclFileAttributeView view = Files.getFileAttributeView(path, AclFileAttributeView.class);
