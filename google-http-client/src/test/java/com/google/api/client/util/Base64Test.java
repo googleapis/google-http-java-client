@@ -14,7 +14,7 @@
 
 package com.google.api.client.util;
 
-import java.nio.charset.StandardCharsets;
+import com.google.api.client.util.Charsets;
 import junit.framework.TestCase;
 
 /**
@@ -26,19 +26,19 @@ public class Base64Test extends TestCase {
 
   public void test_decodeBase64_withPadding() {
     String encoded = "Zm9vOmJhcg==";
-    assertEquals("foo:bar", new String(Base64.decodeBase64(encoded), StandardCharsets.UTF_8));
+    assertEquals("foo:bar", new String(Base64.decodeBase64(encoded), Charsets.UTF_8));
   }
 
   public void test_decodeBase64_withoutPadding() {
     String encoded = "Zm9vOmJhcg";
-    assertEquals("foo:bar", new String(Base64.decodeBase64(encoded), StandardCharsets.UTF_8));
+    assertEquals("foo:bar", new String(Base64.decodeBase64(encoded), Charsets.UTF_8));
   }
 
   public void test_decodeBase64_withTrailingWhitespace() {
     // Some internal use cases append extra space characters that apache-commons base64 decoding
     // previously handled.
     String encoded = "Zm9vOmJhcg==\r\n";
-    assertEquals("foo:bar", new String(Base64.decodeBase64(encoded), StandardCharsets.UTF_8));
+    assertEquals("foo:bar", new String(Base64.decodeBase64(encoded), Charsets.UTF_8));
   }
 
   public void test_decodeBase64_withNullBytes_shouldReturnNull() {

@@ -15,7 +15,7 @@
 package com.google.api.client.util;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
+import com.google.api.client.util.Charsets;
 
 /**
  * Utilities for strings.
@@ -48,7 +48,7 @@ public class StringUtils {
     if (string == null) {
       return null;
     }
-    return string.getBytes(StandardCharsets.UTF_8);
+    return string.getBytes(Charsets.UTF_8);
   }
 
   /**
@@ -66,7 +66,7 @@ public class StringUtils {
     if (bytes == null) {
       return null;
     }
-    return new String(bytes, StandardCharsets.UTF_8);
+    return new String(bytes, Charsets.UTF_8);
   }
 
   private StringUtils() {}

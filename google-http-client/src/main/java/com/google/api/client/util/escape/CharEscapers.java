@@ -15,9 +15,9 @@
 
 package com.google.api.client.util.escape;
 
+import com.google.api.client.util.Charsets;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Utility functions for encoding and decoding URIs.
@@ -119,7 +119,7 @@ public final class CharEscapers {
    */
   public static String decodeUri(String uri) {
     try {
-      return URLDecoder.decode(uri, StandardCharsets.UTF_8.name());
+      return URLDecoder.decode(uri, Charsets.UTF_8.name());
     } catch (UnsupportedEncodingException e) {
       // UTF-8 encoding guaranteed to be supported by JVM
       throw new RuntimeException(e);
@@ -141,7 +141,7 @@ public final class CharEscapers {
       return null;
     }
     try {
-      return URLDecoder.decode(path.replace("+", "%2B"), StandardCharsets.UTF_8.name());
+      return URLDecoder.decode(path.replace("+", "%2B"), Charsets.UTF_8.name());
     } catch (UnsupportedEncodingException e) {
       // UTF-8 encoding guaranteed to be supported by JVM
       throw new RuntimeException(e);

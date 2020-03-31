@@ -22,11 +22,11 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.testing.util.LogRecordingHandler;
 import com.google.api.client.testing.util.TestableByteArrayInputStream;
 import com.google.api.client.util.Key;
+import com.google.api.client.util.Charsets;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Locale;
@@ -559,7 +559,7 @@ public class HttpResponseTest extends TestCase {
   }
 
   private void do_testGetContent_gzipEncoding_finishReading(String contentEncoding) throws IOException {
-    byte[] dataToCompress = "abcd".getBytes(StandardCharsets.UTF_8);
+    byte[] dataToCompress = "abcd".getBytes(Charsets.UTF_8);
     byte[] mockBytes;
     try (
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream(dataToCompress.length);

@@ -9,12 +9,12 @@ import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.http.javanet.NetHttpRequest.OutputWriter;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.javanet.MockHttpURLConnection;
+import com.google.api.client.util.Charsets;
 import com.google.api.client.util.StreamingContent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeoutException;
 import org.junit.Test;
 
@@ -225,7 +225,7 @@ public class NetHttpRequestTest {
     connection.setRequestMethod("POST");
     NetHttpRequest request = new NetHttpRequest(connection);
     HttpContent content =
-        new ByteArrayContent("text/plain", "sample".getBytes(StandardCharsets.UTF_8));
+        new ByteArrayContent("text/plain", "sample".getBytes(Charsets.UTF_8));
     request.setStreamingContent(content);
     request.setContentLength(content.getLength());
     request.execute();
