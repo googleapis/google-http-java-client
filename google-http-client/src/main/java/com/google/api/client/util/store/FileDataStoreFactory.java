@@ -43,9 +43,8 @@ import java.util.logging.Logger;
 /**
  * Thread-safe file implementation of a credential store.
  *
- * <p>For security purposes, the file's permissions are set to be accessible only by the file's
- * owner. Note that Java 1.5 does not support manipulating file permissions, and must be done
- * manually or using the JNI.
+ * <p>For security purposes, the file's permissions are set such that the
+ * file is only accessible by the file's owner.
  *
  * @since 1.16
  * @author Yaniv Inbar
@@ -136,26 +135,21 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
    * executed by the file's owner.
    *
    * @param file the file's permissions to modify
-   * @throws IOException
+   * @throws IOException if the permissions can't be set
    */
-  static void setPermissionsToOwnerOnly(File file) throws IOException {
+  private static void setPermissionsToOwnerOnly(File file) throws IOException {
     Set permissions = new HashSet<PosixFilePermission>();
     permissions.add(PosixFilePermission.OWNER_READ);
     permissions.add(PosixFilePermission.OWNER_WRITE);
     permissions.add(PosixFilePermission.OWNER_EXECUTE);
     try {
       Files.setPosixFilePermissions(Paths.get(file.getAbsolutePath()), permissions);
-    } catch (UnsupportedOperationException exception) {
-      LOGGER.warning("Unable to set permissions for " + file
-          + ", because you are running on a non-POSIX file system.");
-    } catch (SecurityException exception) {
-      // ignored
-    } catch (IllegalArgumentException exception) {
-      // ignored
+    } catch (RuntimeException exception) {
+      throw new IOException("Unable to set permissions for " + file, exception);
     }
   }
 
-  static void setPermissionsToOwnerOnlyWindows(File file) throws IOException {
+  private static void setPermissionsToOwnerOnlyWindows(File file) throws IOException {
     Path path = Paths.get(file.getAbsolutePath());
     FileOwnerAttributeView fileAttributeView = Files.getFileAttributeView(path, FileOwnerAttributeView.class);
     UserPrincipal owner = fileAttributeView.getOwner();
@@ -188,6 +182,11 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
         .build();
 
     // Overwrite the ACL with only this permission
-    view.setAcl(ImmutableList.of(entry));
+    try {
+      view.setAcl(ImmutableList.of(entry));
+    } catch (SecurityException ex) {
+      throw new IOException("Unable to set permissions for " + file, ex);
+    }
+
   }
 }
