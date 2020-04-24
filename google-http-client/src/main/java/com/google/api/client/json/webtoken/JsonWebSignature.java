@@ -23,6 +23,7 @@ import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -349,30 +350,30 @@ public class JsonWebSignature extends JsonWebToken {
   /**
    * Verifies the signature of the content.
    *
-   * <p>Currently only {@code "RS256"} algorithm is verified, but others may be added in the future.
-   * For any other algorithm it returns {@code false}.
+   * <p>Currently only {@code "RS256"} and {@code "ES256"} algorithms are verified, but others may be added in the
+   * future. For any other algorithm it returns {@code false}.
    *
    * @param publicKey public key
    * @return whether the algorithm is recognized and it is verified
    * @throws GeneralSecurityException
    */
   public final boolean verifySignature(PublicKey publicKey) throws GeneralSecurityException {
-    Signature signatureAlg = null;
     String algorithm = getHeader().getAlgorithm();
     if ("RS256".equals(algorithm)) {
-      signatureAlg = SecurityUtils.getSha256WithRsaSignatureAlgorithm();
+      return SecurityUtils.verify(SecurityUtils.getSha256WithRsaSignatureAlgorithm(), publicKey, signatureBytes, signedContentBytes);
+    } else if ("ES256".equals(algorithm)) {
+      return SecurityUtils.verify(SecurityUtils.getEs256SignatureAlgorithm(), publicKey, DerEncoder.encode(signatureBytes), signedContentBytes);
     } else {
       return false;
     }
-    return SecurityUtils.verify(signatureAlg, publicKey, signatureBytes, signedContentBytes);
   }
 
   /**
    * {@link Beta} <br>
    * Verifies the signature of the content using the certificate chain embedded in the signature.
    *
-   * <p>Currently only {@code "RS256"} algorithm is verified, but others may be added in the future.
-   * For any other algorithm it returns {@code null}.
+   * <p>Currently only {@code "RS256"} and {@code "ES256"} algorithms are verified, but others may be added in the
+   * future. For any other algorithm it returns {@code null}.
    *
    * <p>The leaf certificate of the certificate chain must be an SSL server certificate.
    *
@@ -390,14 +391,13 @@ public class JsonWebSignature extends JsonWebToken {
       return null;
     }
     String algorithm = getHeader().getAlgorithm();
-    Signature signatureAlg = null;
     if ("RS256".equals(algorithm)) {
-      signatureAlg = SecurityUtils.getSha256WithRsaSignatureAlgorithm();
+      return SecurityUtils.verify(SecurityUtils.getSha256WithRsaSignatureAlgorithm(), trustManager, x509Certificates, signatureBytes, signedContentBytes);
+    } else if ("ES256".equals(algorithm)) {
+      return SecurityUtils.verify(SecurityUtils.getEs256SignatureAlgorithm(), trustManager, x509Certificates, DerEncoder.encode(signatureBytes), signedContentBytes);
     } else {
       return null;
     }
-    return SecurityUtils.verify(
-        signatureAlg, trustManager, x509Certificates, signatureBytes, signedContentBytes);
   }
 
   /**
@@ -573,5 +573,36 @@ public class JsonWebSignature extends JsonWebToken {
         SecurityUtils.sign(
             SecurityUtils.getSha256WithRsaSignatureAlgorithm(), privateKey, contentBytes);
     return content + "." + Base64.encodeBase64URLSafeString(signature);
+  }
+
+  static class DerEncoder {
+    private static byte DER_TAG_SIGNATURE_OBJECT = 0x30;
+    private static byte DER_TAG_ASN1_INTEGER = 0x02;
+
+    static byte[] encode(byte[] signature) {
+      // expect the signature to be 64 bytes long
+      com.google.common.base.Preconditions.checkState(signature.length == 64);
+
+      byte[] int1 = new BigInteger(1, Arrays.copyOfRange(signature, 0, 32)).toByteArray();
+      byte[] int2 = new BigInteger(1, Arrays.copyOfRange(signature, 32, 64)).toByteArray();
+      byte[] der = new byte[6 + int1.length + int2.length];
+
+      // Mark that this is a signature object
+      der[0] = DER_TAG_SIGNATURE_OBJECT;
+      der[1] = (byte) (der.length - 2);
+
+      // Start ASN1 integer and write the first 32 bits
+      der[2] = DER_TAG_ASN1_INTEGER;
+      der[3] = (byte) int1.length;
+      System.arraycopy(int1, 0, der, 4, int1.length);
+
+      // Start ASN1 integer and write the second 32 bits
+      int offset = int1.length + 4;
+      der[offset] = DER_TAG_ASN1_INTEGER;
+      der[offset + 1] = (byte) int2.length;
+      System.arraycopy(int2, 0, der, offset + 2, int2.length);
+
+      return der;
+    }
   }
 }

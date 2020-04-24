@@ -127,6 +127,11 @@ public final class SecurityUtils {
     return Signature.getInstance("SHA256withRSA");
   }
 
+  /** Returns the SHA-256 with ECDSA signature algorithm */
+  public static Signature getEs256SignatureAlgorithm() throws NoSuchAlgorithmException {
+    return Signature.getInstance("SHA256withECDSA");
+  }
+
   /**
    * Signs content using a private key.
    *
@@ -157,7 +162,7 @@ public final class SecurityUtils {
       throws InvalidKeyException, SignatureException {
     signatureAlgorithm.initVerify(publicKey);
     signatureAlgorithm.update(contentBytes);
-    // SignatureException may be thrown if we are tring the wrong key.
+    // SignatureException may be thrown if we are trying the wrong key.
     try {
       return signatureAlgorithm.verify(signatureBytes);
     } catch (SignatureException e) {
