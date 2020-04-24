@@ -23,6 +23,7 @@ import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -349,30 +350,30 @@ public class JsonWebSignature extends JsonWebToken {
   /**
    * Verifies the signature of the content.
    *
-   * <p>Currently only {@code "RS256"} algorithm is verified, but others may be added in the future.
-   * For any other algorithm it returns {@code false}.
+   * <p>Currently only {@code "RS256"} and {@code "ES256"} algorithms are verified, but others may be added in the
+   * future. For any other algorithm it returns {@code false}.
    *
    * @param publicKey public key
    * @return whether the algorithm is recognized and it is verified
    * @throws GeneralSecurityException
    */
   public final boolean verifySignature(PublicKey publicKey) throws GeneralSecurityException {
-    Signature signatureAlg = null;
     String algorithm = getHeader().getAlgorithm();
     if ("RS256".equals(algorithm)) {
-      signatureAlg = SecurityUtils.getSha256WithRsaSignatureAlgorithm();
+      return SecurityUtils.verify(SecurityUtils.getSha256WithRsaSignatureAlgorithm(), publicKey, signatureBytes, signedContentBytes);
+    } else if ("ES256".equals(algorithm)) {
+      return SecurityUtils.verify(SecurityUtils.getEs256SignatureAlgorithm(), publicKey, DerEncoder.encode(signatureBytes), signedContentBytes);
     } else {
       return false;
     }
-    return SecurityUtils.verify(signatureAlg, publicKey, signatureBytes, signedContentBytes);
   }
 
   /**
    * {@link Beta} <br>
    * Verifies the signature of the content using the certificate chain embedded in the signature.
    *
-   * <p>Currently only {@code "RS256"} algorithm is verified, but others may be added in the future.
-   * For any other algorithm it returns {@code null}.
+   * <p>Currently only {@code "RS256"} and {@code "ES256"} algorithms are verified, but others may be added in the
+   * future. For any other algorithm it returns {@code null}.
    *
    * <p>The leaf certificate of the certificate chain must be an SSL server certificate.
    *
@@ -390,14 +391,13 @@ public class JsonWebSignature extends JsonWebToken {
       return null;
     }
     String algorithm = getHeader().getAlgorithm();
-    Signature signatureAlg = null;
     if ("RS256".equals(algorithm)) {
-      signatureAlg = SecurityUtils.getSha256WithRsaSignatureAlgorithm();
+      return SecurityUtils.verify(SecurityUtils.getSha256WithRsaSignatureAlgorithm(), trustManager, x509Certificates, signatureBytes, signedContentBytes);
+    } else if ("ES256".equals(algorithm)) {
+      return SecurityUtils.verify(SecurityUtils.getEs256SignatureAlgorithm(), trustManager, x509Certificates, DerEncoder.encode(signatureBytes), signedContentBytes);
     } else {
       return null;
     }
-    return SecurityUtils.verify(
-        signatureAlg, trustManager, x509Certificates, signatureBytes, signedContentBytes);
   }
 
   /**

@@ -19,14 +19,27 @@ import com.google.api.client.testing.json.webtoken.TestCertificates;
 import com.google.api.client.testing.util.SecurityTestUtils;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.AlgorithmParameters;
 import java.security.GeneralSecurityException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
+import java.security.spec.ECGenParameterSpec;
+import java.security.spec.ECParameterSpec;
+import java.security.spec.ECPoint;
+import java.security.spec.ECPublicKeySpec;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.X509TrustManager;
 
+import com.google.api.client.util.Base64;
+import com.google.api.client.util.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -113,5 +126,39 @@ public class JsonWebSignatureTest {
   @Test
   public void testVerifyX509WrongCa() throws Exception {
     Assert.assertNull(verifyX509WithCaCert(TestCertificates.BOGUS_CA_CERT));
+  }
+
+  private static final String ES256_CONTENT = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Im1wZjBEQSJ9.eyJhdWQiOiIvcHJvamVjdHMvNjUyNTYyNzc2Nzk4L2FwcHMvY2xvdWQtc2FtcGxlcy10ZXN0cy1waHAtaWFwIiwiZW1haWwiOiJjaGluZ29yQGdvb2dsZS5jb20iLCJleHAiOjE1ODQwNDc2MTcsImdvb2dsZSI6eyJhY2Nlc3NfbGV2ZWxzIjpbImFjY2Vzc1BvbGljaWVzLzUxODU1MTI4MDkyNC9hY2Nlc3NMZXZlbHMvcmVjZW50U2VjdXJlQ29ubmVjdERhdGEiLCJhY2Nlc3NQb2xpY2llcy81MTg1NTEyODA5MjQvYWNjZXNzTGV2ZWxzL3Rlc3ROb09wIiwiYWNjZXNzUG9saWNpZXMvNTE4NTUxMjgwOTI0L2FjY2Vzc0xldmVscy9ldmFwb3JhdGlvblFhRGF0YUZ1bGx5VHJ1c3RlZCJdfSwiaGQiOiJnb29nbGUuY29tIiwiaWF0IjoxNTg0MDQ3MDE3LCJpc3MiOiJodHRwczovL2Nsb3VkLmdvb2dsZS5jb20vaWFwIiwic3ViIjoiYWNjb3VudHMuZ29vZ2xlLmNvbToxMTIxODE3MTI3NzEyMDE5NzI4OTEifQ";
+  private static final String ES256_SIGNATURE = "yKNtdFY5EKkRboYNexBdfugzLhC3VuGyFcuFYA8kgpxMqfyxa41zkML68hYKrWu2kOBTUW95UnbGpsIi_u1fiA";
+
+  // x, y values for keyId "mpf0DA" from https://www.gstatic.com/iap/verify/public_key-jwk
+  private static final String GOOGLE_ES256_X = "fHEdeT3a6KaC1kbwov73ZwB_SiUHEyKQwUUtMCEn0aI";
+  private static final String GOOGLE_ES256_Y = "QWOjwPhInNuPlqjxLQyhveXpWqOFcQPhZ3t-koMNbZI";
+
+  private PublicKey buildEs256PublicKey(String x, String y)
+      throws NoSuchAlgorithmException, InvalidParameterSpecException, InvalidKeySpecException {
+    AlgorithmParameters parameters = AlgorithmParameters.getInstance("EC");
+    parameters.init(new ECGenParameterSpec("secp256r1"));
+    ECPublicKeySpec ecPublicKeySpec = new ECPublicKeySpec(
+        new ECPoint(
+            new BigInteger(1, Base64.decodeBase64(x)),
+            new BigInteger(1, Base64.decodeBase64(y))
+        ),
+        parameters.getParameterSpec(ECParameterSpec.class)
+    );
+    KeyFactory keyFactory = KeyFactory.getInstance("EC");
+    return keyFactory.generatePublic(ecPublicKeySpec);
+  }
+
+  @Test
+  public void testVerifyES256() throws Exception {
+    PublicKey publicKey = buildEs256PublicKey(GOOGLE_ES256_X, GOOGLE_ES256_Y);
+    JsonWebSignature.Header header = new JsonWebSignature.Header();
+    header.setAlgorithm("ES256");
+    JsonWebSignature.Payload payload = new JsonWebToken.Payload();
+    byte[] signatureBytes = Base64.decodeBase64(ES256_SIGNATURE);
+    byte[] signedContentBytes = StringUtils.getBytesUtf8(ES256_CONTENT);
+    JsonWebSignature jsonWebSignature = new JsonWebSignature(header, payload, signatureBytes, signedContentBytes);
+    Assert.assertTrue(jsonWebSignature.verifySignature(publicKey));
   }
 }
