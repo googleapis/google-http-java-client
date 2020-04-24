@@ -581,7 +581,7 @@ public class JsonWebSignature extends JsonWebToken {
 
     static byte[] encode(byte[] signature) {
       // expect the signature to be 64 bytes long
-      com.google.common.base.Preconditions.checkState(signature.length == 64);
+      Preconditions.checkState(signature.length == 64);
 
       byte[] int1 = new BigInteger(1, Arrays.copyOfRange(signature, 0, 32)).toByteArray();
       byte[] int2 = new BigInteger(1, Arrays.copyOfRange(signature, 32, 64)).toByteArray();
