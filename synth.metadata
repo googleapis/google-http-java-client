@@ -11,7 +11,7 @@
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "3df869dd6eb546ef13beeb7a9efa6ee0226afafd"
+        "sha": "52638600f387deb98efb5f9c85fec39e82aa9052"
       }
     }
   ]
