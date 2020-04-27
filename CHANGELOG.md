@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.35.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.34.2...v1.35.0) (2020-04-27)
+
+
+### Features
+
+* add logic for verifying ES256 JsonWebSignatures ([#1033](https://www.github.com/googleapis/google-http-java-client/issues/1033)) ([bb4227f](https://www.github.com/googleapis/google-http-java-client/commit/bb4227f9daec44fc2976fa9947e2ff5ee07ed21a))
+
+
+### Bug Fixes
+
+* add linkage monitor plugin ([#1000](https://www.github.com/googleapis/google-http-java-client/issues/1000)) ([027c227](https://www.github.com/googleapis/google-http-java-client/commit/027c227e558164f77be204152fb47023850b543f))
+* Correctly handling chunked response streams with gzip ([#990](https://www.github.com/googleapis/google-http-java-client/issues/990)) ([1ba2197](https://www.github.com/googleapis/google-http-java-client/commit/1ba219743e65c89bc3fdb196acc5d2042e01f542)), closes [#367](https://www.github.com/googleapis/google-http-java-client/issues/367)
+* FileDataStoreFactory will throw IOException for any permissions errors ([#1012](https://www.github.com/googleapis/google-http-java-client/issues/1012)) ([fd33073](https://www.github.com/googleapis/google-http-java-client/commit/fd33073da3674997897d7a9057d1d0e9d42d7cd4))
+* include request method and URL into HttpResponseException message ([#1002](https://www.github.com/googleapis/google-http-java-client/issues/1002)) ([15111a1](https://www.github.com/googleapis/google-http-java-client/commit/15111a1001d6f72cb92cd2d76aaed6f1229bc14a))
+* incorrect check for Windows OS in FileDataStoreFactory ([#927](https://www.github.com/googleapis/google-http-java-client/issues/927)) ([8b4eabe](https://www.github.com/googleapis/google-http-java-client/commit/8b4eabe985794fc64ad6a4a53f8f96201cf73fb8))
+* reuse reference instead of calling getter twice ([#983](https://www.github.com/googleapis/google-http-java-client/issues/983)) ([1f66222](https://www.github.com/googleapis/google-http-java-client/commit/1f662224d7bee6e27e8d66975fda39feae0c9359)), closes [#982](https://www.github.com/googleapis/google-http-java-client/issues/982)
+* **android:** set minimum API level to 19 a.k.a. 4.4 Kit Kat ([#1016](https://www.github.com/googleapis/google-http-java-client/issues/1016)) ([b9a8023](https://www.github.com/googleapis/google-http-java-client/commit/b9a80232c9c8b16a3c3277458835f72e346f6b2c)), closes [#1015](https://www.github.com/googleapis/google-http-java-client/issues/1015)
+
+
+### Documentation
+
+* android 4.4 or later is required ([#1008](https://www.github.com/googleapis/google-http-java-client/issues/1008)) ([bcc41dd](https://www.github.com/googleapis/google-http-java-client/commit/bcc41dd615af41ae6fb58287931cbf9c2144a075))
+* libraries-bom 4.0.1 ([#976](https://www.github.com/googleapis/google-http-java-client/issues/976)) ([fc21dc4](https://www.github.com/googleapis/google-http-java-client/commit/fc21dc412566ef60d23f1f82db5caf3cfd5d447b))
+* libraries-bom 4.1.1 ([#984](https://www.github.com/googleapis/google-http-java-client/issues/984)) ([635c813](https://www.github.com/googleapis/google-http-java-client/commit/635c81352ae383b3abfe6d7c141d987a6944b3e9))
+* libraries-bom 5.2.0 ([#1032](https://www.github.com/googleapis/google-http-java-client/issues/1032)) ([ca34202](https://www.github.com/googleapis/google-http-java-client/commit/ca34202bfa077adb70313b6c4562c7a5d904e064))
+* require Android 4.4 ([#1007](https://www.github.com/googleapis/google-http-java-client/issues/1007)) ([f9d2bb0](https://www.github.com/googleapis/google-http-java-client/commit/f9d2bb030398fe09e3c47b84ea468603355e08e9))
+
+
+### Dependencies
+
+* httpclient 4.5.12 ([#991](https://www.github.com/googleapis/google-http-java-client/issues/991)) ([79bc1c7](https://www.github.com/googleapis/google-http-java-client/commit/79bc1c76ebd48d396a080ef715b9f07cd056b7ef))
+* update to Guava 29 ([#1024](https://www.github.com/googleapis/google-http-java-client/issues/1024)) ([ca9520f](https://www.github.com/googleapis/google-http-java-client/commit/ca9520f2da4babc5bbd28c828da1deb7dbdc87e5))
+
 ### [1.34.2](https://www.github.com/googleapis/google-http-java-client/compare/v1.34.1...v1.34.2) (2020-02-12)
 
 
