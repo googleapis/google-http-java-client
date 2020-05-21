@@ -1224,7 +1224,8 @@ public final class HttpRequest {
     // this value should be read and cached for later use
     String version = "unknown-version";
     try (InputStream inputStream =
-        HttpRequest.class.getResourceAsStream("/google-http-client.properties")) {
+        HttpRequest.class.getResourceAsStream(
+            "/com/google/api/client/http/google-http-client.properties")) {
       if (inputStream != null) {
         final Properties properties = new Properties();
         properties.load(inputStream);
