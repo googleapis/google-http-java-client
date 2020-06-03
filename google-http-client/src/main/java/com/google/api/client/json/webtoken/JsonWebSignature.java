@@ -23,14 +23,12 @@ import com.google.api.client.util.SecurityUtils;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.Signature;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,8 +76,7 @@ public class JsonWebSignature extends JsonWebToken {
   }
 
   /**
-   * Header as specified in 
-   * <a href="https://tools.ietf.org/html/rfc7515#section-4.1">Reserved
+   * Header as specified in <a href="https://tools.ietf.org/html/rfc7515#section-4.1">Reserved
    * Header Parameter Names</a>.
    */
   public static class Header extends JsonWebToken.Header {
@@ -305,8 +302,8 @@ public class JsonWebSignature extends JsonWebToken {
     }
 
     /**
-     * Returns an array listing the header parameter names that define extensions used in
-     * the JWS header that MUST be understood and processed or {@code null} for none.
+     * Returns an array listing the header parameter names that define extensions used in the JWS
+     * header that MUST be understood and processed or {@code null} for none.
      *
      * @since 1.16
      */
@@ -318,8 +315,8 @@ public class JsonWebSignature extends JsonWebToken {
     }
 
     /**
-     * Sets the header parameter names that define extensions used in the
-     * JWS header that MUST be understood and processed or {@code null} for none.
+     * Sets the header parameter names that define extensions used in the JWS header that MUST be
+     * understood and processed or {@code null} for none.
      *
      * <p>Overriding is only supported for the purpose of calling the super implementation and
      * changing the return type, but nothing else.
@@ -350,8 +347,8 @@ public class JsonWebSignature extends JsonWebToken {
   /**
    * Verifies the signature of the content.
    *
-   * <p>Currently only {@code "RS256"} and {@code "ES256"} algorithms are verified, but others may be added in the
-   * future. For any other algorithm it returns {@code false}.
+   * <p>Currently only {@code "RS256"} and {@code "ES256"} algorithms are verified, but others may
+   * be added in the future. For any other algorithm it returns {@code false}.
    *
    * @param publicKey public key
    * @return whether the algorithm is recognized and it is verified
@@ -360,9 +357,17 @@ public class JsonWebSignature extends JsonWebToken {
   public final boolean verifySignature(PublicKey publicKey) throws GeneralSecurityException {
     String algorithm = getHeader().getAlgorithm();
     if ("RS256".equals(algorithm)) {
-      return SecurityUtils.verify(SecurityUtils.getSha256WithRsaSignatureAlgorithm(), publicKey, signatureBytes, signedContentBytes);
+      return SecurityUtils.verify(
+          SecurityUtils.getSha256WithRsaSignatureAlgorithm(),
+          publicKey,
+          signatureBytes,
+          signedContentBytes);
     } else if ("ES256".equals(algorithm)) {
-      return SecurityUtils.verify(SecurityUtils.getEs256SignatureAlgorithm(), publicKey, DerEncoder.encode(signatureBytes), signedContentBytes);
+      return SecurityUtils.verify(
+          SecurityUtils.getEs256SignatureAlgorithm(),
+          publicKey,
+          DerEncoder.encode(signatureBytes),
+          signedContentBytes);
     } else {
       return false;
     }
@@ -372,8 +377,8 @@ public class JsonWebSignature extends JsonWebToken {
    * {@link Beta} <br>
    * Verifies the signature of the content using the certificate chain embedded in the signature.
    *
-   * <p>Currently only {@code "RS256"} and {@code "ES256"} algorithms are verified, but others may be added in the
-   * future. For any other algorithm it returns {@code null}.
+   * <p>Currently only {@code "RS256"} and {@code "ES256"} algorithms are verified, but others may
+   * be added in the future. For any other algorithm it returns {@code null}.
    *
    * <p>The leaf certificate of the certificate chain must be an SSL server certificate.
    *
@@ -392,9 +397,19 @@ public class JsonWebSignature extends JsonWebToken {
     }
     String algorithm = getHeader().getAlgorithm();
     if ("RS256".equals(algorithm)) {
-      return SecurityUtils.verify(SecurityUtils.getSha256WithRsaSignatureAlgorithm(), trustManager, x509Certificates, signatureBytes, signedContentBytes);
+      return SecurityUtils.verify(
+          SecurityUtils.getSha256WithRsaSignatureAlgorithm(),
+          trustManager,
+          x509Certificates,
+          signatureBytes,
+          signedContentBytes);
     } else if ("ES256".equals(algorithm)) {
-      return SecurityUtils.verify(SecurityUtils.getEs256SignatureAlgorithm(), trustManager, x509Certificates, DerEncoder.encode(signatureBytes), signedContentBytes);
+      return SecurityUtils.verify(
+          SecurityUtils.getEs256SignatureAlgorithm(),
+          trustManager,
+          x509Certificates,
+          DerEncoder.encode(signatureBytes),
+          signedContentBytes);
     } else {
       return null;
     }
