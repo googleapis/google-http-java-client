@@ -159,8 +159,8 @@ public final class HttpResponse {
   }
 
   /**
-   * Returns an {@link HttpMediaType} object parsed from {@link #contentType}, or {@code null} if
-   * if {@link #contentType} cannot be parsed or {@link #contentType} is {@code null}.
+   * Returns an {@link HttpMediaType} object parsed from {@link #contentType}, or {@code null} if if
+   * {@link #contentType} cannot be parsed or {@link #contentType} is {@code null}.
    */
   private static HttpMediaType parseMediaType(String contentType) {
     if (contentType == null) {
@@ -352,12 +352,14 @@ public final class HttpResponse {
           // gzip encoding (wrap content with GZipInputStream)
           if (!returnRawInputStream && this.contentEncoding != null) {
             String oontentencoding = this.contentEncoding.trim().toLowerCase(Locale.ENGLISH);
-            if (CONTENT_ENCODING_GZIP.equals(oontentencoding) || CONTENT_ENCODING_XGZIP.equals(oontentencoding)) {
+            if (CONTENT_ENCODING_GZIP.equals(oontentencoding)
+                || CONTENT_ENCODING_XGZIP.equals(oontentencoding)) {
               // Wrap the original stream in a ConsumingInputStream before passing it to
               // GZIPInputStream. The GZIPInputStream leaves content unconsumed in the original
               // stream (it almost always leaves the last chunk unconsumed in chunked responses).
               // ConsumingInputStream ensures that any unconsumed bytes are read at close.
-              // GZIPInputStream.close() --> ConsumingInputStream.close() --> exhaust(ConsumingInputStream)
+              // GZIPInputStream.close() --> ConsumingInputStream.close() -->
+              // exhaust(ConsumingInputStream)
               lowLevelResponseContent =
                   new GZIPInputStream(new ConsumingInputStream(lowLevelResponseContent));
             }

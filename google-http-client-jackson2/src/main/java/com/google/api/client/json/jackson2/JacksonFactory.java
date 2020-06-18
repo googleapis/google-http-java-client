@@ -29,8 +29,8 @@ import java.nio.charset.Charset;
 /**
  * Low-level JSON library implementation based on Jackson 2.
  *
- * <p>Implementation is thread-safe. For maximum efficiency,
- * applications should use a single globally-shared instance of the JSON factory.
+ * <p>Implementation is thread-safe. For maximum efficiency, applications should use a single
+ * globally-shared instance of the JSON factory.
  *
  * @since 1.11
  * @author Yaniv Inbar

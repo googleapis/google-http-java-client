@@ -16,7 +16,6 @@ package com.google.api.client.util.store;
 
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Maps;
-
 import com.google.common.base.StandardSystemProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -43,8 +42,8 @@ import java.util.logging.Logger;
 /**
  * Thread-safe file implementation of a credential store.
  *
- * <p>For security purposes, the file's permissions are set such that the
- * file is only accessible by the file's owner.
+ * <p>For security purposes, the file's permissions are set such that the file is only accessible by
+ * the file's owner.
  *
  * @since 1.16
  * @author Yaniv Inbar
@@ -53,8 +52,8 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
   private static final Logger LOGGER = Logger.getLogger(FileDataStoreFactory.class.getName());
 
-  private static final boolean IS_WINDOWS = StandardSystemProperty.OS_NAME.value()
-      .toLowerCase(Locale.ENGLISH).startsWith("windows");
+  private static final boolean IS_WINDOWS =
+      StandardSystemProperty.OS_NAME.value().toLowerCase(Locale.ENGLISH).startsWith("windows");
 
   /** Directory to store data. */
   private final File dataDirectory;
@@ -151,35 +150,37 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
   private static void setPermissionsToOwnerOnlyWindows(File file) throws IOException {
     Path path = Paths.get(file.getAbsolutePath());
-    FileOwnerAttributeView fileAttributeView = Files.getFileAttributeView(path, FileOwnerAttributeView.class);
+    FileOwnerAttributeView fileAttributeView =
+        Files.getFileAttributeView(path, FileOwnerAttributeView.class);
     UserPrincipal owner = fileAttributeView.getOwner();
 
     // get view
     AclFileAttributeView view = Files.getFileAttributeView(path, AclFileAttributeView.class);
 
     // All available entries
-    Set<AclEntryPermission> permissions = ImmutableSet.of(
-        AclEntryPermission.APPEND_DATA,
-        AclEntryPermission.DELETE,
-        AclEntryPermission.DELETE_CHILD,
-        AclEntryPermission.READ_ACL,
-        AclEntryPermission.READ_ATTRIBUTES,
-        AclEntryPermission.READ_DATA,
-        AclEntryPermission.READ_NAMED_ATTRS,
-        AclEntryPermission.SYNCHRONIZE,
-        AclEntryPermission.WRITE_ACL,
-        AclEntryPermission.WRITE_ATTRIBUTES,
-        AclEntryPermission.WRITE_DATA,
-        AclEntryPermission.WRITE_NAMED_ATTRS,
-        AclEntryPermission.WRITE_OWNER
-    );
+    Set<AclEntryPermission> permissions =
+        ImmutableSet.of(
+            AclEntryPermission.APPEND_DATA,
+            AclEntryPermission.DELETE,
+            AclEntryPermission.DELETE_CHILD,
+            AclEntryPermission.READ_ACL,
+            AclEntryPermission.READ_ATTRIBUTES,
+            AclEntryPermission.READ_DATA,
+            AclEntryPermission.READ_NAMED_ATTRS,
+            AclEntryPermission.SYNCHRONIZE,
+            AclEntryPermission.WRITE_ACL,
+            AclEntryPermission.WRITE_ATTRIBUTES,
+            AclEntryPermission.WRITE_DATA,
+            AclEntryPermission.WRITE_NAMED_ATTRS,
+            AclEntryPermission.WRITE_OWNER);
 
     // create ACL to give owner everything
-    AclEntry entry = AclEntry.newBuilder()
-        .setType(AclEntryType.ALLOW)
-        .setPrincipal(owner)
-        .setPermissions(permissions)
-        .build();
+    AclEntry entry =
+        AclEntry.newBuilder()
+            .setType(AclEntryType.ALLOW)
+            .setPrincipal(owner)
+            .setPermissions(permissions)
+            .build();
 
     // Overwrite the ACL with only this permission
     try {
@@ -187,6 +188,5 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
     } catch (SecurityException ex) {
       throw new IOException("Unable to set permissions for " + file, ex);
     }
-
   }
 }

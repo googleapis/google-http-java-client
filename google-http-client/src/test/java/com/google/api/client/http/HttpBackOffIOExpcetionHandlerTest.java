@@ -52,22 +52,25 @@ public class HttpBackOffIOExpcetionHandlerTest extends TestCase {
   public void testHandleIOException_returnsFalseAndThreadRemainsInterrupted_whenSleepIsInterrupted()
       throws Exception {
     final AtomicBoolean stillInterrupted = new AtomicBoolean(false);
-    Thread runningThread = new Thread() {
-      @Override
-      public void run() {
-        HttpBackOffIOExceptionHandler testTarget =
-            new HttpBackOffIOExceptionHandler(
-                new MockBackOff().setBackOffMillis(Long.MAX_VALUE) // Sleep until we interrupt it.
-                    .setMaxTries(1))
-                .setSleeper(Sleeper.DEFAULT); // Needs to be a real sleeper so we can interrupt it.
+    Thread runningThread =
+        new Thread() {
+          @Override
+          public void run() {
+            HttpBackOffIOExceptionHandler testTarget =
+                new HttpBackOffIOExceptionHandler(
+                        new MockBackOff()
+                            .setBackOffMillis(Long.MAX_VALUE) // Sleep until we interrupt it.
+                            .setMaxTries(1))
+                    .setSleeper(
+                        Sleeper.DEFAULT); // Needs to be a real sleeper so we can interrupt it.
 
-        try {
-          testTarget.handleIOException(null, /* retrySupported= */ true);
-        } catch (Exception ignored) {
-        }
-        stillInterrupted.set(Thread.currentThread().isInterrupted());
-      }
-    };
+            try {
+              testTarget.handleIOException(null, /* retrySupported= */ true);
+            } catch (Exception ignored) {
+            }
+            stillInterrupted.set(Thread.currentThread().isInterrupted());
+          }
+        };
     runningThread.start();
     // Give runningThread some time to start.
     Thread.sleep(500L);

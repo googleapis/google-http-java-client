@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2010 Google Inc.
+* Copyright (c) 2010 Google Inc.
 
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- */
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+* in compliance with the License. You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software distributed under the License
+* is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+* or implied. See the License for the specific language governing permissions and limitations under
+* the License.
+*/
 
 package com.google.api.client.util.escape;
 
@@ -46,12 +46,11 @@ public final class CharEscapers {
 
   /**
    * Escapes the string value so it can be safely included in application/x-www-form-urlencoded
-   * data. This is not appropriate for generic URI escaping. In particular it encodes
-   * the space character as a plus sign instead of percent escaping it, in 
-   * contravention of the URI specification.
-   * For details on application/x-www-form-urlencoded encoding see the 
-   * see <a href="https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1">HTML 4
-   * specification, section 17.13.4.1</a>.
+   * data. This is not appropriate for generic URI escaping. In particular it encodes the space
+   * character as a plus sign instead of percent escaping it, in contravention of the URI
+   * specification. For details on application/x-www-form-urlencoded encoding see the see <a
+   * href="https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1">HTML 4 specification,
+   * section 17.13.4.1</a>.
    *
    * <p>When encoding a String, the following rules apply:
    *
@@ -80,11 +79,11 @@ public final class CharEscapers {
   public static String escapeUri(String value) {
     return APPLICATION_X_WWW_FORM_URLENCODED.escape(value);
   }
-  
-    /**
-   * Escapes the string value so it can be safely included in any part of a URI.
-   * For details on escaping URIs,
-   * see <a href="http://tools.ietf.org/html/rfc3986#section-2.4">RFC 3986 - section 2.4</a>.
+
+  /**
+   * Escapes the string value so it can be safely included in any part of a URI. For details on
+   * escaping URIs, see <a href="http://tools.ietf.org/html/rfc3986#section-2.4">RFC 3986 - section
+   * 2.4</a>.
    *
    * <p>When encoding a String, the following rules apply:
    *
@@ -108,11 +107,11 @@ public final class CharEscapers {
   }
 
   /**
-   * Decodes application/x-www-form-urlencoded strings. The UTF-8 character set determines
-   * what characters are represented by any consecutive sequences of the form "%<i>XX</i>".
+   * Decodes application/x-www-form-urlencoded strings. The UTF-8 character set determines what
+   * characters are represented by any consecutive sequences of the form "%<i>XX</i>".
    *
-   * <p>This replaces each occurrence of '+' with a space, ' '. This method should not be used
-   * for non-application/x-www-form-urlencoded strings such as host and path.
+   * <p>This replaces each occurrence of '+' with a space, ' '. This method should not be used for
+   * non-application/x-www-form-urlencoded strings such as host and path.
    *
    * @param uri a percent-encoded US-ASCII string
    * @return a string without any percent escapes or plus signs
@@ -127,9 +126,9 @@ public final class CharEscapers {
   }
 
   /**
-   * Decodes the path component of a URI. This does not 
-   * convert + into spaces (the behavior of {@link java.net.URLDecoder#decode(String, String)}). This
-   * method transforms URI encoded values into their decoded symbols.
+   * Decodes the path component of a URI. This does not convert + into spaces (the behavior of
+   * {@link java.net.URLDecoder#decode(String, String)}). This method transforms URI encoded values
+   * into their decoded symbols.
    *
    * <p>e.g. {@code decodePath("%3Co%3E")} returns {@code "<o>"}
    *

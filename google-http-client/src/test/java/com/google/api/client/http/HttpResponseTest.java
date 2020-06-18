@@ -544,11 +544,14 @@ public class HttpResponseTest extends TestCase {
     do_testGetContent_gzipEncoding_finishReading("gzip");
   }
 
-  public void testGetContent_gzipEncoding_finishReadingWithUppercaseContentEncoding() throws IOException {
+  public void testGetContent_gzipEncoding_finishReadingWithUppercaseContentEncoding()
+      throws IOException {
     do_testGetContent_gzipEncoding_finishReading("GZIP");
   }
 
-  public void testGetContent_gzipEncoding_finishReadingWithDifferentDefaultLocaleAndUppercaseContentEncoding() throws IOException {
+  public void
+      testGetContent_gzipEncoding_finishReadingWithDifferentDefaultLocaleAndUppercaseContentEncoding()
+          throws IOException {
     Locale originalDefaultLocale = Locale.getDefault();
     try {
       Locale.setDefault(Locale.forLanguageTag("tr-TR"));
@@ -558,13 +561,12 @@ public class HttpResponseTest extends TestCase {
     }
   }
 
-  private void do_testGetContent_gzipEncoding_finishReading(String contentEncoding) throws IOException {
+  private void do_testGetContent_gzipEncoding_finishReading(String contentEncoding)
+      throws IOException {
     byte[] dataToCompress = "abcd".getBytes(StandardCharsets.UTF_8);
     byte[] mockBytes;
-    try (
-        ByteArrayOutputStream byteStream = new ByteArrayOutputStream(dataToCompress.length);
-        GZIPOutputStream zipStream = new GZIPOutputStream((byteStream))
-    ) {
+    try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream(dataToCompress.length);
+        GZIPOutputStream zipStream = new GZIPOutputStream((byteStream))) {
       zipStream.write(dataToCompress);
       zipStream.close();
 
@@ -596,7 +598,8 @@ public class HttpResponseTest extends TestCase {
     HttpRequest request =
         transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
-    try (TestableByteArrayInputStream output = (TestableByteArrayInputStream) mockResponse.getContent()) {
+    try (TestableByteArrayInputStream output =
+        (TestableByteArrayInputStream) mockResponse.getContent()) {
       assertFalse(output.isClosed());
       assertEquals("abcd", response.parseAsString());
       assertTrue(output.isClosed());
@@ -624,7 +627,8 @@ public class HttpResponseTest extends TestCase {
             };
           }
         };
-    HttpRequest request = transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    HttpRequest request =
+        transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
     // If gzip was used on this response, an exception would be thrown
     HttpResponse response = request.execute();
     assertEquals("abcd", response.parseAsString());

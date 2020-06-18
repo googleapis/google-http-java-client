@@ -73,23 +73,26 @@ public class HttpBackOffUnsuccessfulResponseHandlerTest extends TestCase {
   public void testHandleResponse_returnsFalseAndThreadRemainsInterrupted_whenSleepIsInterrupted()
       throws Exception {
     final AtomicBoolean stillInterrupted = new AtomicBoolean(false);
-    Thread runningThread = new Thread() {
-      @Override
-      public void run() {
-        HttpBackOffUnsuccessfulResponseHandler testTarget =
-            new HttpBackOffUnsuccessfulResponseHandler(
-                new MockBackOff().setBackOffMillis(Long.MAX_VALUE) // Sleep until we interrupt it.
-                    .setMaxTries(1))
-                .setSleeper(Sleeper.DEFAULT) // Needs to be a real sleeper so we can interrupt it.
-                .setBackOffRequired(BackOffRequired.ALWAYS);
+    Thread runningThread =
+        new Thread() {
+          @Override
+          public void run() {
+            HttpBackOffUnsuccessfulResponseHandler testTarget =
+                new HttpBackOffUnsuccessfulResponseHandler(
+                        new MockBackOff()
+                            .setBackOffMillis(Long.MAX_VALUE) // Sleep until we interrupt it.
+                            .setMaxTries(1))
+                    .setSleeper(
+                        Sleeper.DEFAULT) // Needs to be a real sleeper so we can interrupt it.
+                    .setBackOffRequired(BackOffRequired.ALWAYS);
 
-        try {
-          testTarget.handleResponse(null, null, /* retrySupported= */ true);
-        } catch (Exception ignored) {
-        }
-        stillInterrupted.set(Thread.currentThread().isInterrupted());
-      }
-    };
+            try {
+              testTarget.handleResponse(null, null, /* retrySupported= */ true);
+            } catch (Exception ignored) {
+            }
+            stillInterrupted.set(Thread.currentThread().isInterrupted());
+          }
+        };
     runningThread.start();
     // Give runningThread some time to start.
     Thread.sleep(500L);

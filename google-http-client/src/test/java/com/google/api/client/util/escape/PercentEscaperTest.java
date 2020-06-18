@@ -26,11 +26,10 @@ public class PercentEscaperTest {
     String actual = escaper.escape("Hello there");
     Assert.assertEquals("Hello%20there", actual);
   }
-  
+
   @Test
   public void testEscapeSpaceDefault() {
-    PercentEscaper escaper =
-        new PercentEscaper(PercentEscaper.SAFE_PLUS_RESERVED_CHARS_URLENCODER);
+    PercentEscaper escaper = new PercentEscaper(PercentEscaper.SAFE_PLUS_RESERVED_CHARS_URLENCODER);
     String actual = escaper.escape("Hello there");
     Assert.assertEquals("Hello%20there", actual);
   }

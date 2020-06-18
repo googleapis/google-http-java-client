@@ -36,7 +36,9 @@ import java.util.regex.Pattern;
  *
  * <p>Limitations:
  *
- * <p><ul>
+ * <p>
+ *
+ * <ul>
  *   <li>Assumes the PEM file section content is not encrypted and cannot handle the case of any
  *       headers inside the BEGIN and END tag.
  *   <li>It also ignores any attributes associated with any PEM file section.

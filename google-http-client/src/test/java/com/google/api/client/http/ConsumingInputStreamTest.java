@@ -27,7 +27,8 @@ public class ConsumingInputStreamTest {
 
   @Test
   public void testClose_drainsBytesOnClose() throws IOException {
-    MockInputStream mockInputStream = new MockInputStream("abc123".getBytes(StandardCharsets.UTF_8));
+    MockInputStream mockInputStream =
+        new MockInputStream("abc123".getBytes(StandardCharsets.UTF_8));
     InputStream consumingInputStream = new ConsumingInputStream(mockInputStream);
 
     assertEquals(6, mockInputStream.getBytesToRead());

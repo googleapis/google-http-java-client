@@ -1223,7 +1223,8 @@ public final class HttpRequest {
     // attempt to read the library's version from a properties file generated during the build
     // this value should be read and cached for later use
     String version = "unknown-version";
-    try (InputStream inputStream = HttpRequest.class.getResourceAsStream("/google-http-client.properties")) {
+    try (InputStream inputStream =
+        HttpRequest.class.getResourceAsStream("/google-http-client.properties")) {
       if (inputStream != null) {
         final Properties properties = new Properties();
         properties.load(inputStream);
