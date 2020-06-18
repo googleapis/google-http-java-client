@@ -97,11 +97,7 @@ public class HttpBackOffIOExceptionHandler implements HttpIOExceptionHandler {
     try {
       return BackOffUtils.next(sleeper, backOff);
     } catch (InterruptedException exception) {
-<<<<<<< HEAD
-      // Catching InterruptedException clears the thread interrupted bit.
-=======
       // Mark thread as interrupted since we cannot throw InterruptedException here.
->>>>>>> e66dee68... fix: reset the thread's interrupt bit after catching InterruptedException (#1005)
       Thread.currentThread().interrupt();
       return false;
     }
