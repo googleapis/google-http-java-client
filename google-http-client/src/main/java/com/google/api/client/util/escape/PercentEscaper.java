@@ -16,8 +16,7 @@ package com.google.api.client.util.escape;
 
 /**
  * A {@code UnicodeEscaper} that escapes some set of Java characters using the URI percent encoding
- * scheme. The set of safe characters (those which remain unescaped) is specified on
- * construction.
+ * scheme. The set of safe characters (those which remain unescaped) is specified on construction.
  *
  * <p>For details on escaping URIs for use in web pages, see <a
  * href="http://tools.ietf.org/html/rfc3986#section-2.4">RFC 3986 - section 2.4</a> and <a
@@ -29,25 +28,22 @@ package com.google.api.client.util.escape;
  *   <li>The alphanumeric characters "a" through "z", "A" through "Z" and "0" through "9" remain the
  *       same.
  *   <li>Any additionally specified safe characters remain the same.
- *   <li>If {@code plusForSpace} is true, the space character " " is converted into a plus
- *       sign "+".
- *   <li>All other characters are converted into one or more bytes using UTF-8 encoding. Each
- *       byte is then represented by the 3-character string "%XY", where "XY" is the two-digit,
+ *   <li>If {@code plusForSpace} is true, the space character " " is converted into a plus sign "+".
+ *   <li>All other characters are converted into one or more bytes using UTF-8 encoding. Each byte
+ *       is then represented by the 3-character string "%XY", where "XY" is the two-digit,
  *       uppercase, hexadecimal representation of the byte value.
  * </ul>
  *
- * <p>RFC 3986 defines the set of unreserved characters as "-", "_", "~", and "."
- * It goes on to state:
+ * <p>RFC 3986 defines the set of unreserved characters as "-", "_", "~", and "." It goes on to
+ * state:
  *
- * <p><q>URIs that differ in the replacement of an unreserved character with
-   its corresponding percent-encoded US-ASCII octet are equivalent: they
-   identify the same resource.  However, URI comparison implementations
-   do not always perform normalization prior to comparison (see Section
-   6).  For consistency, percent-encoded octets in the ranges of ALPHA
-   (%41-%5A and %61-%7A), DIGIT (%30-%39), hyphen (%2D), period (%2E),
-   underscore (%5F), or tilde (%7E) should not be created by URI
-   producers and, when found in a URI, should be decoded to their
-   corresponding unreserved characters by URI normalizers.</q>
+ * <p><q>URIs that differ in the replacement of an unreserved character with its corresponding
+ * percent-encoded US-ASCII octet are equivalent: they identify the same resource. However, URI
+ * comparison implementations do not always perform normalization prior to comparison (see Section
+ * 6). For consistency, percent-encoded octets in the ranges of ALPHA (%41-%5A and %61-%7A), DIGIT
+ * (%30-%39), hyphen (%2D), period (%2E), underscore (%5F), or tilde (%7E) should not be created by
+ * URI producers and, when found in a URI, should be decoded to their corresponding unreserved
+ * characters by URI normalizers.</q>
  *
  * <p><b>Note</b>: This escaper produces uppercase hexadecimal sequences. From <a
  * href="https://tools.ietf.org/html/rfc3986">RFC 3986</a>:<br>
@@ -103,10 +99,10 @@ public class PercentEscaper extends UnicodeEscaper {
    * escaped.
    */
   private final boolean[] safeOctets;
-  
+
   /**
-   * Constructs a URI escaper with the specified safe characters. The space
-   * character is escaped to %20 in accordance with the URI specification. 
+   * Constructs a URI escaper with the specified safe characters. The space character is escaped to
+   * %20 in accordance with the URI specification.
    *
    * @param safeChars a non null string specifying additional safe characters for this escaper (the
    *     ranges 0..9, a..z and A..Z are always safe and should not be specified here)
@@ -117,9 +113,9 @@ public class PercentEscaper extends UnicodeEscaper {
   }
 
   /**
-   * Constructs a URI escaper that converts all but the specified safe characters 
-   * into hexadecimal percent escapes. Optionally space characters can be converted into
-   * a plus sign {@code +} instead of {@code %20}. and optional handling of the space
+   * Constructs a URI escaper that converts all but the specified safe characters into hexadecimal
+   * percent escapes. Optionally space characters can be converted into a plus sign {@code +}
+   * instead of {@code %20}. and optional handling of the space
    *
    * @param safeChars a non null string specifying additional safe characters for this escaper. The
    *     ranges 0..9, a..z and A..Z are always safe and should not be specified here.
@@ -127,8 +123,8 @@ public class PercentEscaper extends UnicodeEscaper {
    * @throws IllegalArgumentException if safeChars includes characters that are always safe or
    *     characters that must always be escaped
    * @deprecated use {@code PercentEscaper(String safeChars)} instead which is the same as invoking
-   *     this method with plusForSpace set to false. Escaping spaces as plus signs does not
-   *     conform to the URI specification.
+   *     this method with plusForSpace set to false. Escaping spaces as plus signs does not conform
+   *     to the URI specification.
    */
   @Deprecated
   public PercentEscaper(String safeChars, boolean plusForSpace) {

@@ -17,16 +17,14 @@
 package com.google.api.client.json.webtoken;
 
 import com.google.api.client.util.Preconditions;
-
 import java.math.BigInteger;
 import java.util.Arrays;
 
 /**
  * Utilities for re-encoding a signature byte array with DER encoding.
  *
- * <p>Note: that this is not a general purpose encoder and currently only
- * handles 512 bit signatures. ES256 verification algorithms expect the
- * signature bytes in DER encoding.
+ * <p>Note: that this is not a general purpose encoder and currently only handles 512 bit
+ * signatures. ES256 verification algorithms expect the signature bytes in DER encoding.
  */
 public class DerEncoder {
   private static byte DER_TAG_SIGNATURE_OBJECT = 0x30;

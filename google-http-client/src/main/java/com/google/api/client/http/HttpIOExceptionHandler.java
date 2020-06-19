@@ -35,6 +35,7 @@ import java.io.IOException;
  * try {
  * return BackOffUtils.next(sleeper, backOff);
  * } catch (InterruptedException exception) {
+ * Thread.currentThread().interrupt();
  * return false;
  * }
  * }

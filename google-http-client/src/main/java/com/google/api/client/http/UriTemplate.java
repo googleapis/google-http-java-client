@@ -104,8 +104,8 @@ public class UriTemplate {
      * @param explodeJoiner the delimiter used to join composite values.
      * @param requiresVarAssignment denotes whether or not the expanded template should contain an
      *     assignment with the variable
-     * @param reservedExpansion reserved expansion allows percent-encoded triplets and characters in the
-     *     reserved set
+     * @param reservedExpansion reserved expansion allows percent-encoded triplets and characters in
+     *     the reserved set
      */
     CompositeOutput(
         Character propertyPrefix,
@@ -149,8 +149,8 @@ public class UriTemplate {
     }
 
     /**
-     * Encodes the specified value. If reserved expansion is turned on, then percent-encoded triplets and
-     * characters are allowed in the reserved set.
+     * Encodes the specified value. If reserved expansion is turned on, then percent-encoded
+     * triplets and characters are allowed in the reserved set.
      *
      * @param value the string to be encoded
      * @return the encoded string

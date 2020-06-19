@@ -32,9 +32,9 @@ import java.util.UUID;
  * and <a href="http://tools.ietf.org/html/rfc1521#section-7.2.2">RFC 2046: Multipurpose Internet
  * Mail Extensions: The Multipart/mixed (primary) subtype</a>.
  *
- * <p>By default the media type is {@code "multipart/related; boundary=__END_OF_PART__<random UUID>__"}, but this
- * may be customized by calling {@link #setMediaType(HttpMediaType)}, {@link #getMediaType()}, or
- * {@link #setBoundary(String)}.
+ * <p>By default the media type is {@code "multipart/related; boundary=__END_OF_PART__<random
+ * UUID>__"}, but this may be customized by calling {@link #setMediaType(HttpMediaType)}, {@link
+ * #getMediaType()}, or {@link #setBoundary(String)}.
  *
  * <p>Implementation is not thread-safe.
  *

@@ -15,28 +15,26 @@
 /**
  * Findbugs package which supports custom Google APIs Client library findbugs Plugins.
  *
- * Usage on pom.xml:
+ * <p>Usage on pom.xml:
  *
  * <pre>
-  &lt;plugin&gt;
-    &lt;groupId>org.codehaus.mojo&lt;/groupId&gt;
-    &lt;artifactId>findbugs-maven-plugin&lt;/artifactId&gt;
-    ...
-    &lt;configuration&gt;
-      &lt;plugins&gt;
-        &lt;plugin&gt;
-          &lt;groupId&gt;com.google.http-client&lt;/groupId&gt;
-          &lt;artifactId&gt;google-http-client-findbugs&lt;/artifactId&gt;
-          &lt;version&gt;${project.http.version}&lt;/version&gt;
-        &lt;/plugin&gt;
-       &lt;/plugins&gt;
-    &lt;/configuration&gt;
-    ...
-  &lt;/plugin&gt;
+ * &lt;plugin&gt;
+ * &lt;groupId>org.codehaus.mojo&lt;/groupId&gt;
+ * &lt;artifactId>findbugs-maven-plugin&lt;/artifactId&gt;
+ * ...
+ * &lt;configuration&gt;
+ * &lt;plugins&gt;
+ * &lt;plugin&gt;
+ * &lt;groupId&gt;com.google.http-client&lt;/groupId&gt;
+ * &lt;artifactId&gt;google-http-client-findbugs&lt;/artifactId&gt;
+ * &lt;version&gt;${project.http.version}&lt;/version&gt;
+ * &lt;/plugin&gt;
+ * &lt;/plugins&gt;
+ * &lt;/configuration&gt;
+ * ...
+ * &lt;/plugin&gt;
  * </pre>
  *
  * @author Eyal Peled
  */
-
 package com.google.api.client.findbugs;
-

@@ -124,10 +124,10 @@ public class UrlEncodedParser implements ObjectParser {
    * @param data data key name/value pairs
    * @since 1.14
    */
-    public static void parse(Reader reader, Object data) throws IOException {
-      parse(reader, data, true);
-    }
- 
+  public static void parse(Reader reader, Object data) throws IOException {
+    parse(reader, data, true);
+  }
+
   /**
    * Parses the given URL-encoded content into the given data object of data key name/value pairs,
    * including support for repeating data key names.
@@ -139,10 +139,9 @@ public class UrlEncodedParser implements ObjectParser {
    * They are parsed the same as "primitive" fields, except that the generic type parameter of the
    * collection is used as the {@link Class} parameter.
    *
-   * <p>If there is no declared field for an input parameter name, it is ignored unless the
-   * input {@code data} parameter is a {@link Map}. If it is a map, the parameter value is 
-   * stored either as a string, or as a {@link ArrayList}&lt;String&gt; in the case of repeated
-   * parameters.
+   * <p>If there is no declared field for an input parameter name, it is ignored unless the input
+   * {@code data} parameter is a {@link Map}. If it is a map, the parameter value is stored either
+   * as a string, or as a {@link ArrayList}&lt;String&gt; in the case of repeated parameters.
    *
    * @param reader URL-encoded reader
    * @param data data key name/value pairs
@@ -168,9 +167,13 @@ public class UrlEncodedParser implements ObjectParser {
           // falls through
         case '&':
           // parse name/value pair
-          String name = decodeEnabled ?  CharEscapers.decodeUri(nameWriter.toString()) : nameWriter.toString();
+          String name =
+              decodeEnabled ? CharEscapers.decodeUri(nameWriter.toString()) : nameWriter.toString();
           if (name.length() != 0) {
-            String stringValue = decodeEnabled ? CharEscapers.decodeUri(valueWriter.toString()) : valueWriter.toString();
+            String stringValue =
+                decodeEnabled
+                    ? CharEscapers.decodeUri(valueWriter.toString())
+                    : valueWriter.toString();
             // get the field from the type information
             FieldInfo fieldInfo = classInfo.getFieldInfo(name);
             if (fieldInfo != null) {

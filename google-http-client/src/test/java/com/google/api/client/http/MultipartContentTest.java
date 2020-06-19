@@ -33,9 +33,14 @@ public class MultipartContentTest extends TestCase {
   private static final String HEADERS = headers("application/json; charset=UTF-8", "foo");
 
   private static String headers(String contentType, String value) {
-      return "Content-Length: " + value.length() + CRLF
-          + "Content-Type: " + contentType + CRLF
-          + "content-transfer-encoding: binary" + CRLF;
+    return "Content-Length: "
+        + value.length()
+        + CRLF
+        + "Content-Type: "
+        + contentType
+        + CRLF
+        + "content-transfer-encoding: binary"
+        + CRLF;
   }
 
   public void testRandomContent() throws Exception {
@@ -46,19 +51,26 @@ public class MultipartContentTest extends TestCase {
     assertTrue(boundaryString.endsWith("__"));
     assertEquals("multipart/related; boundary=" + boundaryString, content.getType());
 
-    final String[][] VALUES = new String[][] {
-            {"Hello world", "text/plain"},
-            {"<xml>Hi</xml>", "application/xml"},
-            {"{x:1,y:2}", "application/json"}
-    };
+    final String[][] VALUES =
+        new String[][] {
+          {"Hello world", "text/plain"},
+          {"<xml>Hi</xml>", "application/xml"},
+          {"{x:1,y:2}", "application/json"}
+        };
     StringBuilder expectedStringBuilder = new StringBuilder();
-    for (String[] valueTypePair: VALUES) {
+    for (String[] valueTypePair : VALUES) {
       String contentValue = valueTypePair[0];
       String contentType = valueTypePair[1];
-      content.addPart(new MultipartContent.Part(ByteArrayContent.fromString(contentType, contentValue)));
-      expectedStringBuilder.append("--").append(boundaryString).append(CRLF)
-              .append(headers(contentType, contentValue)).append(CRLF)
-              .append(contentValue).append(CRLF);
+      content.addPart(
+          new MultipartContent.Part(ByteArrayContent.fromString(contentType, contentValue)));
+      expectedStringBuilder
+          .append("--")
+          .append(boundaryString)
+          .append(CRLF)
+          .append(headers(contentType, contentValue))
+          .append(CRLF)
+          .append(contentValue)
+          .append(CRLF);
     }
     expectedStringBuilder.append("--").append(boundaryString).append("--").append(CRLF);
     // write to string
@@ -72,31 +84,30 @@ public class MultipartContentTest extends TestCase {
   public void testContent() throws Exception {
     subtestContent("--" + BOUNDARY + "--" + CRLF, null);
     subtestContent(
-        "--" + BOUNDARY + CRLF
-                + HEADERS + CRLF
-                + "foo" + CRLF
-                + "--" + BOUNDARY + "--" + CRLF,
-            null,
+        "--" + BOUNDARY + CRLF + HEADERS + CRLF + "foo" + CRLF + "--" + BOUNDARY + "--" + CRLF,
+        null,
         "foo");
     subtestContent(
-        "--" + BOUNDARY + CRLF
-            + HEADERS + CRLF
-            + "foo" + CRLF
-            + "--" + BOUNDARY + CRLF
-            + HEADERS + CRLF
-            + "bar" + CRLF
-            + "--" + BOUNDARY + "--" + CRLF,
-            null,
+        "--" + BOUNDARY + CRLF + HEADERS + CRLF + "foo" + CRLF + "--" + BOUNDARY + CRLF + HEADERS
+            + CRLF + "bar" + CRLF + "--" + BOUNDARY + "--" + CRLF,
+        null,
         "foo",
         "bar");
     subtestContent(
-        "--myboundary" + CRLF
-            + HEADERS + CRLF
-            + "foo" + CRLF
-            + "--myboundary" + CRLF
-            + HEADERS + CRLF
-            + "bar" + CRLF
-            + "--myboundary--" + CRLF,
+        "--myboundary"
+            + CRLF
+            + HEADERS
+            + CRLF
+            + "foo"
+            + CRLF
+            + "--myboundary"
+            + CRLF
+            + HEADERS
+            + CRLF
+            + "bar"
+            + CRLF
+            + "--myboundary--"
+            + CRLF,
         "myboundary",
         "foo",
         "bar");
@@ -105,7 +116,8 @@ public class MultipartContentTest extends TestCase {
   private void subtestContent(String expectedContent, String boundaryString, String... contents)
       throws Exception {
     // multipart content
-    MultipartContent content = new MultipartContent(boundaryString == null ? BOUNDARY : boundaryString);
+    MultipartContent content =
+        new MultipartContent(boundaryString == null ? BOUNDARY : boundaryString);
     for (String contentValue : contents) {
       content.addPart(
           new MultipartContent.Part(ByteArrayContent.fromString(CONTENT_TYPE, contentValue)));

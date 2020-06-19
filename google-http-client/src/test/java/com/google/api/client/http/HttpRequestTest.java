@@ -1275,7 +1275,6 @@ public class HttpRequestTest extends TestCase {
     String version = HttpRequest.VERSION;
     assertTrue(
         String.format("the loaded version '%s' did not match the acceptable pattern", version),
-        version.matches(acceptableVersionPattern)
-    );
+        version.matches(acceptableVersionPattern));
   }
 }
