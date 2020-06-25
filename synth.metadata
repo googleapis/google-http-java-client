@@ -3,15 +3,15 @@
     {
       "git": {
         "name": ".",
-        "remote": "https://github.com/googleapis/google-http-java-client.git",
-        "sha": "1624d55f9864ff1253321e9bfe715e2f370cc27e"
+        "remote": "git@github.com:chingor13/google-http-java-client.git",
+        "sha": "b1353f8cc7aaf22a30b31bd2ac72248d3a3a0a5d"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "98c50772ec23295c64cf0d2ddf199ea52961fd4c"
+        "sha": "ce68c0e70d36c93ffcde96e9908fb4d94aa4f2e4"
       }
     }
   ]
