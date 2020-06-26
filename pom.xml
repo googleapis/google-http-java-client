@@ -499,18 +499,32 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <configuration>
-          <signature>
-            <groupId>org.codehaus.mojo.signature</groupId>
-            <artifactId>java17</artifactId>
-            <version>1.0</version>
-          </signature>
-        </configuration>
         <executions>
           <execution>
+            <id>java7</id>
             <goals>
               <goal>check</goal>
             </goals>
+            <configuration>
+              <signature>
+                <groupId>org.codehaus.mojo.signature</groupId>
+                <artifactId>java17</artifactId>
+                <version>1.0</version>
+              </signature>
+            </configuration>
+          </execution>
+          <execution>
+            <id>android</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <signature>
+                <groupId>net.sf.androidscents.signature</groupId>
+                <artifactId>android-api-level-19</artifactId>
+                <version>4.4.2_r4</version>
+              </signature>
+            </configuration>
           </execution>
         </executions>
       </plugin>
