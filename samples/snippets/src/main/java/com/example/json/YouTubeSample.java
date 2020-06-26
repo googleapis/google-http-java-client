@@ -20,6 +20,7 @@ import com.google.api.client.util.Key;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class YouTubeSample {
   public static class ListResponse {
@@ -106,6 +107,9 @@ public class YouTubeSample {
     @Key
     private String description;
 
+    @Key
+    private Map<String, Thumbnail> thumbnails;
+
     public String getPublishedAt() {
       return publishedAt;
     }
@@ -120,6 +124,33 @@ public class YouTubeSample {
 
     public String getDescription() {
       return description;
+    }
+
+    public Map<String, Thumbnail> getThumbnails() {
+      return thumbnails;
+    }
+  }
+
+  public static class Thumbnail {
+    @Key
+    private String url;
+
+    @Key
+    private long width;
+
+    @Key
+    private long height;
+
+    public String getUrl() {
+      return url;
+    }
+
+    public long getWidth() {
+      return width;
+    }
+
+    public long getHeight() {
+      return height;
     }
   }
 

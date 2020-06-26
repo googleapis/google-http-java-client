@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -71,11 +72,23 @@ public class YouTubeSampleTest {
       assertNotNull(searchResult.getId());
       assertEquals("youtube#video", searchResult.getId().getKind());
       assertNotNull(searchResult.getId().getVideoId());
-      assertNotNull(searchResult.getSnippet());
-      assertNotNull(searchResult.getSnippet().getChannelId());
-      assertNotNull(searchResult.getSnippet().getDescription());
-      assertNotNull(searchResult.getSnippet().getTitle());
-      assertNotNull(searchResult.getSnippet().getPublishedAt());
+      YouTubeSample.Snippet snippet = searchResult.getSnippet();
+      assertNotNull(snippet);
+      assertNotNull(snippet.getChannelId());
+      assertNotNull(snippet.getDescription());
+      assertNotNull(snippet.getTitle());
+      assertNotNull(snippet.getPublishedAt());
+      Map<String, YouTubeSample.Thumbnail> thumbnails = snippet.getThumbnails();
+      assertNotNull(thumbnails);
+
+      for (Map.Entry<String, YouTubeSample.Thumbnail> entry : thumbnails.entrySet()) {
+        assertNotNull(entry.getKey());
+        YouTubeSample.Thumbnail thumbnail = entry.getValue();
+        assertNotNull(thumbnail);
+        assertNotNull(thumbnail.getUrl());
+        assertNotNull(thumbnail.getWidth());
+        assertNotNull(thumbnail.getHeight());
+      }
     }
   }
 }
