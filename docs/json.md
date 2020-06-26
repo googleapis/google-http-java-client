@@ -200,7 +200,7 @@ The following JSON snippet shows the relevant fields of a typical [YouTube video
 Here's one possible way to design the Java data classes to represent this:
 
 ```java
-class ListResponse {
+public static class ListResponse {
   @Key("items")
   private List<SearchResult> searchResults;
 
