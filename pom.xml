@@ -484,8 +484,7 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>clirr-maven-plugin</artifactId>
         <configuration>
-          <comparisonVersion>1.19.0</comparisonVersion>
-          <ignoredDifferencesFile>${basedir}/../clirr-ignored-differences.xml</ignoredDifferencesFile>
+          <ignoredDifferencesFile>clirr-ignored-differences.xml</ignoredDifferencesFile>
           <logResults>true</logResults>
         </configuration>
         <executions>
