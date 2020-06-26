@@ -100,6 +100,7 @@ The following JSON snippet shows the relevant fields of a typical [YouTube video
       "height": 360
      }
     }
+   }
   },
   {
    "kind": "youtube#searchResult",
