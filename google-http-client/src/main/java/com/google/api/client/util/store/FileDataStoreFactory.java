@@ -45,6 +45,10 @@ import java.util.logging.Logger;
  * <p>For security purposes, the file's permissions are set such that the file is only accessible by
  * the file's owner.
  *
+ * <p>Note: this class is not compatible with Android lower than API level 26 (Oreo). For an implementation
+ * compatible with Android < 26, please use com.google.api.client.extensions.android.util.store.FileDataStoreFactory
+ * which is provided by com.google.http-client:google-http-client-android.
+ *
  * @since 1.16
  * @author Yaniv Inbar
  */
