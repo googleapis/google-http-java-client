@@ -27,114 +27,303 @@ Android Honeycomb (SDK 3.0) and higher, and that is identical to the Google GSON
 
 User-defined JSON data models allow you to define Plain Old Java Objects (POJOs) and define how the
 library parses and serializes them to and from JSON. The code snippets below are part of a more
-complete example, [googleplus-simple-cmdline-sample][google-plus-sample], which demonstrates these
+complete example, [YouTube sample][youtube-sample], which demonstrates these
 concepts.
 
 ### Example
 
-The following JSON snippet shows the relevant fields of a typical Google+ activity feed:
+The following JSON snippet shows the relevant fields of a typical [YouTube video search][youtube-search]:
 
 ```json
 {
+ "kind": "youtube#searchListResponse",
+ "pageInfo": {
+  "totalResults": 1000000,
+  "resultsPerPage": 5
+ },
  "items": [
   {
-   "id": "z13lwnljpxjgt5wn222hcvzimtebslkul",
-   "url": "https://plus.google.com/116899029375914044550/posts/HYNhBAMeA7U",
-   "object": {
-    "content": "\u003cb\u003eWho will take the title of 2011 Angry Birds College Champ?\u003c/b\u003e\u003cbr /\u003e\u003cbr /\u003e\u003cbr /\u003eIt's the 2nd anniversary of Angry Birds this Sunday, December 11, and to celebrate this break-out game we're having an intercollegiate angry birds challenge for students to compete for the title of 2011 Angry Birds College Champion. Add \u003cspan class=\"proflinkWrapper\"\u003e\u003cspan class=\"proflinkPrefix\"\u003e+\u003c/span\u003e\u003ca href=\"https://plus.google.com/105912662528057048457\" class=\"proflink\" oid=\"105912662528057048457\"\u003eAngry Birds College Challenge\u003c/a\u003e\u003c/span\u003e to learn more. Good luck, and have fun!",
-    "plusoners": {
-     "totalItems": 27
+   "kind": "youtube#searchResult",
+   "id": {
+    "kind": "youtube#video",
+    "videoId": "e6Tudp5lqt8"
+   },
+   "snippet": {
+    "publishedAt": "2020-06-25T23:18:43Z",
+    "channelId": "UCKwGZZMrhNYKzucCtTPY2Nw",
+    "title": "Video 1 Title",
+    "description": "Video 1 Description",
+    "thumbnails": {
+     "default": {
+      "url": "https://i.ytimg.com/vi/e6Tudp5lqt8/default.jpg",
+      "width": 120,
+      "height": 90
+     },
+     "medium": {
+      "url": "https://i.ytimg.com/vi/e6Tudp5lqt8/mqdefault.jpg",
+      "width": 320,
+      "height": 180
+     },
+     "high": {
+      "url": "https://i.ytimg.com/vi/e6Tudp5lqt8/hqdefault.jpg",
+      "width": 480,
+      "height": 360
+     }
     }
    }
   },
   {
-   "id": "z13rtboyqt2sit45o04cdp3jxuf5cz2a3e4",
-   "url": "https://plus.google.com/116899029375914044550/posts/X8W8m9Hk5rE",
-   "object": {
-    "content": "CNN Heroes shines a spotlight on everyday people changing the world. Hear the top ten heroes' inspiring stories by tuning in to the CNN broadcast of "CNN Heroes: An All-Star Tribute" on Sunday, December 11, at 8pm ET/5 pm PT with host \u003cspan class=\"proflinkWrapper\"\u003e\u003cspan class=\"proflinkPrefix\"\u003e+\u003c/span\u003e\u003ca href=\"https://plus.google.com/106168900754103197479\" class=\"proflink\" oid=\"106168900754103197479\"\u003eAnderson Cooper 360\u003c/a\u003e\u003c/span\u003e, and donate to their causes online in a few simple steps with Google Wallet (formerly known as Google Checkout): \u003ca href=\"http://www.google.com/landing/cnnheroes/2011/\" \u003ehttp://www.google.com/landing/cnnheroes/2011/\u003c/a\u003e.",
-    "plusoners": {
-     "totalItems": 21
+   "kind": "youtube#searchResult",
+   "id": {
+    "kind": "youtube#video",
+    "videoId": "o-NtLpiMpw0"
+   },
+   "snippet": {
+    "publishedAt": "2020-06-25T17:28:52Z",
+    "channelId": "UClljAz6ZKy0XeViKsohdjqA",
+    "title": "Video Title 2",
+    "description": "Video 2 Description",
+    "thumbnails": {
+     "default": {
+      "url": "https://i.ytimg.com/vi/o-NtLpiMpw0/default.jpg",
+      "width": 120,
+      "height": 90
+     },
+     "medium": {
+      "url": "https://i.ytimg.com/vi/o-NtLpiMpw0/mqdefault.jpg",
+      "width": 320,
+      "height": 180
+     },
+     "high": {
+      "url": "https://i.ytimg.com/vi/o-NtLpiMpw0/hqdefault.jpg",
+      "width": 480,
+      "height": 360
+     }
+    }
+  },
+  {
+   "kind": "youtube#searchResult",
+   "id": {
+    "kind": "youtube#video",
+    "videoId": "TPAahzXZFZo"
+   },
+   "snippet": {
+    "publishedAt": "2020-06-26T15:45:00Z",
+    "channelId": "UCR4Yfr8HAZJd9X24dwuAt1Q",
+    "title": "Video 3 Title",
+    "description": "Video 3 Description",
+    "thumbnails": {
+     "default": {
+      "url": "https://i.ytimg.com/vi/TPAahzXZFZo/default.jpg",
+      "width": 120,
+      "height": 90
+     },
+     "medium": {
+      "url": "https://i.ytimg.com/vi/TPAahzXZFZo/mqdefault.jpg",
+      "width": 320,
+      "height": 180
+     },
+     "high": {
+      "url": "https://i.ytimg.com/vi/TPAahzXZFZo/hqdefault.jpg",
+      "width": 480,
+      "height": 360
+     }
     }
    }
   },
   {
-   "id": "z13wtpwpqvihhzeys04cdp3jxuf5cz2a3e4",
-   "url": "https://plus.google.com/116899029375914044550/posts/dBnaybdLgzU",
-   "object": {
-    "content": "Today we hosted one of our Big Tent events in The Hague. \u003cspan class=\"proflinkWrapper\"\u003e\u003cspan class=\"proflinkPrefix\"\u003e+\u003c/span\u003e\u003ca href=\"https://plus.google.com/104233435224873922474\" class=\"proflink\" oid=\"104233435224873922474\"\u003eEric Schmidt\u003c/a\u003e\u003c/span\u003e, Dutch Foreign Minister Uri Rosenthal, U.S. Secretary of State Hillary Clinton and many others came together to discuss free expression and the Internet. The Hague is our third Big Tent, a place where we bring together various viewpoints to discuss essential topics to the future of the Internet. Read more on the Official Google Blog here: \u003ca href=\"http://goo.gl/d9cSe\" \u003ehttp://goo.gl/d9cSe\u003c/a\u003e, and watch the video below for highlights from the day.",
-    "plusoners": {
-     "totalItems": 76
+   "kind": "youtube#searchResult",
+   "id": {
+    "kind": "youtube#video",
+    "videoId": "gBL-AelsdFk"
+   },
+   "snippet": {
+    "publishedAt": "2020-06-24T15:24:06Z",
+    "channelId": "UCFHZHhZaH7Rc_FOMIzUziJA",
+    "title": "Video 4 Title",
+    "description": "Video 4 Description",
+    "thumbnails": {
+     "default": {
+      "url": "https://i.ytimg.com/vi/gBL-AelsdFk/default.jpg",
+      "width": 120,
+      "height": 90
+     },
+     "medium": {
+      "url": "https://i.ytimg.com/vi/gBL-AelsdFk/mqdefault.jpg",
+      "width": 320,
+      "height": 180
+     },
+     "high": {
+      "url": "https://i.ytimg.com/vi/gBL-AelsdFk/hqdefault.jpg",
+      "width": 480,
+      "height": 360
+     }
+    }
+   }
+  },
+  {
+   "kind": "youtube#searchResult",
+   "id": {
+    "kind": "youtube#video",
+    "videoId": "9ofe8axKjH0"
+   },
+   "snippet": {
+    "publishedAt": "2020-06-26T11:59:32Z",
+    "channelId": "UCtNpbO2MtsVY4qW23WfnxGg",
+    "title": "Video 5 Title",
+    "description": "Video 5 Description",
+    "thumbnails": {
+     "default": {
+      "url": "https://i.ytimg.com/vi/9ofe8axKjH0/default.jpg",
+      "width": 120,
+      "height": 90
+     },
+     "medium": {
+      "url": "https://i.ytimg.com/vi/9ofe8axKjH0/mqdefault.jpg",
+      "width": 320,
+      "height": 180
+     },
+     "high": {
+      "url": "https://i.ytimg.com/vi/9ofe8axKjH0/hqdefault.jpg",
+      "width": 480,
+      "height": 360
+     }
     }
    }
   }
  ]
 }
+
 ```
 
 Here's one possible way to design the Java data classes to represent this:
 
 ```java
-/** Feed of Google+ activities. */
-public static class ActivityFeed {
-
-  /** List of Google+ activities. */
+class ListResponse {
   @Key("items")
-  private List<Activity> activities;
+  private List<SearchResult> searchResults;
 
-  public List<Activity> getActivities() {
-    return activities;
+  @Key
+  private PageInfo pageInfo;
+
+  public List<SearchResult> getSearchResults() {
+    return searchResults;
+  }
+
+  public PageInfo getPageInfo() {
+    return pageInfo;
   }
 }
 
-/** Google+ activity. */
-public static class Activity extends GenericJson {
+public static class PageInfo {
+  @Key
+  private long totalResults;
 
-  /** Activity URL. */
+  @Key
+  private long resultsPerPage;
+
+  public long getTotalResults() {
+    return totalResults;
+  }
+
+  public long getResultsPerPage() {
+    return resultsPerPage;
+  }
+}
+
+public static class SearchResult {
+  @Key
+  private String kind;
+
+  @Key("id")
+  private VideoId videoId;
+
+  @Key
+  private Snippet snippet;
+
+  public String getKind() {
+    return kind;
+  }
+
+  public VideoId getId() {
+    return videoId;
+  }
+
+  public Snippet getSnippet() {
+    return snippet;
+  }
+}
+
+public static class VideoId {
+  @Key
+  private String kind;
+
+  @Key
+  private String videoId;
+
+  public String getKind() {
+    return kind;
+  }
+
+  public String getVideoId() {
+    return videoId;
+  }
+}
+
+public static class Snippet {
+  @Key
+  private String publishedAt;
+
+  @Key
+  private String channelId;
+
+  @Key
+  private String title;
+
+  @Key
+  private String description;
+
+  public String getPublishedAt() {
+    return publishedAt;
+  }
+
+  public String getChannelId() {
+    return channelId;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public Map<String, Thumbnail> getThumbnails() {
+    return thumbnails;
+  }
+}
+
+public static class Thumbnail {
   @Key
   private String url;
+
+  @Key
+  private long width;
+
+  @Key
+  private long height;
 
   public String getUrl() {
     return url;
   }
 
-  /** Activity object. */
-  @Key("object")
-  private ActivityObject activityObject;
-
-  public ActivityObject getActivityObject() {
-    return activityObject;
-  }
-}
-
-/** Google+ activity object. */
-public static class ActivityObject {
-
-  /** HTML-formatted content. */
-  @Key
-  private String content;
-
-  public String getContent() {
-    return content;
+  public long getWidth() {
+    return width;
   }
 
-  /** People who +1'd this activity. */
-  @Key
-  private PlusOners plusoners;
-
-  public PlusOners getPlusOners() {
-    return plusoners;
-  }
-}
-
-/** People who +1'd an activity. */
-public static class PlusOners {
-
-  /** Total number of people who +1'd this activity. */
-  @Key
-  private long totalItems;
-
-  public long getTotalItems() {
-    return totalItems;
+  public long getHeight() {
+    return height;
   }
 }
 ```
@@ -143,20 +332,21 @@ A fully supported [HTTP JSON parser][json-parser] makes it easy to parse HTTP re
 of these user defined classes:
 
 ```java
-private static void parseResponse(HttpResponse response) throws IOException {
-  ActivityFeed feed = response.parseAs(ActivityFeed.class);
-  if (feed.getActivities().isEmpty()) {
-    System.out.println("No activities found.");
+public static ListResponse parseJson(HttpResponse httpResponse) throws IOException {
+  ListResponse listResponse = httpResponse.parseAs(ListResponse.class);
+  if (listResponse.getSearchResults().isEmpty()) {
+    System.out.println("No results found.");
   } else {
-    for (Activity activity : feed.getActivities()) {
+    for (SearchResult searchResult : listResponse.getSearchResults()) {
       System.out.println();
       System.out.println("-----------------------------------------------");
-      System.out.println("HTML Content: " + activity.getActivityObject().getContent());
-      System.out.println("+1's: " + activity.getActivityObject().getPlusOners().getTotalItems());
-      System.out.println("URL: " + activity.getUrl());
-      System.out.println("ID: " + activity.get("id"));
+      System.out.println("Kind: " + searchResult.getKind());
+      System.out.println("Video ID: " + searchResult.getId().getVideoId());
+      System.out.println("Title: " + searchResult.getSnippet().getTitle());
+      System.out.println("Description: " + searchResult.getSnippet().getDescription());
     }
   }
+  return listResponse;
 }
 ```
 
@@ -172,16 +362,16 @@ serialized to JSON.
 ### Visibility
 
 Visibility of the fields does not matter, nor does the existence of the getter or setter methods. So
-for example, the following alternative representation for `PlusOners` would work in the example
+for example, the following alternative representation for `VideoId` would work in the example
 given above:
 
 ```java
-/** People who +1'd an activity. */
-public static class AlternativePlusOnersWithPublicField {
-
-  /** Total number of people who +1'd this activity. */
+public static class VideoId {
   @Key
-  public long totalItems;
+  public String kind;
+
+  @Key
+  public String videoId;
 }
 ```
 
@@ -193,8 +383,8 @@ parser skips that other content when parsing the response from Google+.
 
 To retain the other content, declare your class to extend [`GenericJson`][generic-json]. Notice that
 `GenericJson` implements [`Map`][map], so we can use the `get` and `put` methods to set JSON
-content. See [`googleplus-simple-cmdline-sample`][google-plus-sample] for an example of how it was
-used in the `Activity` class above.
+content. See [`Youtube sample`][youtube-sample] for an example of how it was
+used in the `Snippet` class above.
 
 ### Map
 
@@ -268,7 +458,8 @@ private static void show(List<Item> items) {
 [gson-factory]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/json/gson/GsonFactory.html
 [gson]: https://github.com/google/gson
 [android-json-factory]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/extensions/android/json/AndroidJsonFactory.html
-[google-plus-sample]: https://github.com/googleapis/google-http-java-client/tree/master/samples/googleplus-simple-cmdline-sample
+[youtube-sample]: https://github.com/googleapis/google-http-java-client/tree/master/samples/snippets/src/main/java/com/example/json/YouTubeSample.java
+[youtube-search]: https://developers.google.com/youtube/v3/docs/search/list
 [json-parser]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/json/JsonParser.html
 [key-annotation]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/util/Key.html
 [generic-json]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/json/GenericJson.html
