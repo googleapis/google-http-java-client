@@ -24,13 +24,13 @@
   </properties>
 
 
-  <!-- [START google-http-client_install_with_bom] -->
+  <!-- [START google_http_client_install_with_bom] -->
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>libraries-bom</artifactId>
-        <version></version>
+        <version>8.0.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -42,8 +42,12 @@
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client</artifactId>
     </dependency>
-    <!-- [END google-http-client_install_with_bom] -->
-
+    <!-- START_EXCLUDE -->
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-gson</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -56,5 +60,13 @@
       <version>1.0.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-gson</artifactId>
+      <version>1.35.0</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- END_EXCLUDE -->
   </dependencies>
+  <!-- [END google_http_client_install_with_bom] -->
 </project>

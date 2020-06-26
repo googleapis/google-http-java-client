@@ -1,0 +1,182 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "XvAmSt9muXVVpoDkmSHjDBBqm48",
+  "nextPageToken": "CAUQAA",
+  "regionCode": "US",
+  "pageInfo": {
+    "totalResults": 1000000,
+    "resultsPerPage": 5
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "GVJEEWhNeZhHT8jtdV-r370b0AE",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "e6Tudp5lqt8"
+      },
+      "snippet": {
+        "publishedAt": "2020-06-25T23:18:43Z",
+        "channelId": "UCKwGZZMrhNYKzucCtTPY2Nw",
+        "title": "Title 1",
+        "description": "Description 1",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/e6Tudp5lqt8/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/e6Tudp5lqt8/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/e6Tudp5lqt8/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Some Channel Title",
+        "liveBroadcastContent": "none",
+        "publishTime": "2020-06-25T23:18:43Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "abDpn5ZXHCPTAHJUXYDZoDdVGKk",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "o-NtLpiMpw0"
+      },
+      "snippet": {
+        "publishedAt": "2020-06-25T17:28:52Z",
+        "channelId": "UClljAz6ZKy0XeViKsohdjqA",
+        "title": "Title 2",
+        "description": "Description 2",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/o-NtLpiMpw0/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/o-NtLpiMpw0/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/o-NtLpiMpw0/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Some Channel Title",
+        "liveBroadcastContent": "none",
+        "publishTime": "2020-06-25T17:28:52Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "u9pCK3-1ucRi_fZM9VAI22-xekY",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "TPAahzXZFZo"
+      },
+      "snippet": {
+        "publishedAt": "2020-06-26T15:45:00Z",
+        "channelId": "UCR4Yfr8HAZJd9X24dwuAt1Q",
+        "title": "Title 3",
+        "description": "Description 3",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/TPAahzXZFZo/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/TPAahzXZFZo/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/TPAahzXZFZo/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Some Channel Title",
+        "liveBroadcastContent": "none",
+        "publishTime": "2020-06-26T15:45:00Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "9SRI9WYkKwiaA8dLxuQ7Bs5d4TI",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "gBL-AelsdFk"
+      },
+      "snippet": {
+        "publishedAt": "2020-06-24T15:24:06Z",
+        "channelId": "UCFHZHhZaH7Rc_FOMIzUziJA",
+        "title": "Title 4",
+        "description": "Description 4",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/gBL-AelsdFk/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/gBL-AelsdFk/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/gBL-AelsdFk/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Some Channel Title",
+        "liveBroadcastContent": "none",
+        "publishTime": "2020-06-24T15:24:06Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "XQCpyLsFVEHMSpJPLK5hxhFnMks",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "9ofe8axKjH0"
+      },
+      "snippet": {
+        "publishedAt": "2020-06-26T11:59:32Z",
+        "channelId": "UCtNpbO2MtsVY4qW23WfnxGg",
+        "title": "Title 5",
+        "description": "Description 5",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/9ofe8axKjH0/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/9ofe8axKjH0/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/9ofe8axKjH0/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "Some Channel Title",
+        "liveBroadcastContent": "none",
+        "publishTime": "2020-06-26T11:59:32Z"
+      }
+    }
+  ]
+}
