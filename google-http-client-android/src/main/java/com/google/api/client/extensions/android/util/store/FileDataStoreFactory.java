@@ -17,7 +17,6 @@ package com.google.api.client.extensions.android.util.store;
 
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Maps;
-import com.google.api.client.util.Throwables;
 import com.google.api.client.util.store.AbstractDataStoreFactory;
 import com.google.api.client.util.store.AbstractMemoryDataStore;
 import com.google.api.client.util.store.DataStore;
@@ -26,8 +25,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
 /**
