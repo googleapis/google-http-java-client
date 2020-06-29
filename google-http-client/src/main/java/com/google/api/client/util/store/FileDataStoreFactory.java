@@ -66,7 +66,6 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
   /** @param dataDirectory data directory */
   public FileDataStoreFactory(File dataDirectory) throws IOException {
     dataDirectory = dataDirectory.getCanonicalFile();
-    this.dataDirectory = dataDirectory;
     // error if it is a symbolic link
     if (IOUtils.isSymbolicLink(dataDirectory)) {
       throw new IOException("unable to use a symbolic link: " + dataDirectory);
@@ -75,6 +74,7 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
     if (!dataDirectory.exists() && !dataDirectory.mkdirs()) {
       throw new IOException("unable to create directory: " + dataDirectory);
     }
+    this.dataDirectory = dataDirectory;
 
     if (IS_WINDOWS) {
       setPermissionsToOwnerOnlyWindows(dataDirectory);
