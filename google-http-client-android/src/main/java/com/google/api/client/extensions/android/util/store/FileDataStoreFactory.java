@@ -121,38 +121,22 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
    * executed by the file's owner.
    *
    * @param file the file's permissions to modify
-   * @throws IOException
    */
-  static void setPermissionsToOwnerOnly(File file) throws IOException {
+  static void setPermissionsToOwnerOnly(File file) {
     // Disable access by other users if O/S allows it and set file permissions to readable and
-    // writable by user. Use reflection since JDK 1.5 will not have these methods
+    // writable by user.
     try {
-      Method setReadable = File.class.getMethod("setReadable", boolean.class, boolean.class);
-      Method setWritable = File.class.getMethod("setWritable", boolean.class, boolean.class);
-      Method setExecutable = File.class.getMethod("setExecutable", boolean.class, boolean.class);
-      if (!(Boolean) setReadable.invoke(file, false, false)
-          || !(Boolean) setWritable.invoke(file, false, false)
-          || !(Boolean) setExecutable.invoke(file, false, false)) {
+      if (!file.setReadable(false, false)
+          || !file.setWritable(false, false)
+          || !file.setExecutable(false, false)) {
         LOGGER.warning("unable to change permissions for everybody: " + file);
       }
-      if (!(Boolean) setReadable.invoke(file, true, true)
-          || !(Boolean) setWritable.invoke(file, true, true)
-          || !(Boolean) setExecutable.invoke(file, true, true)) {
+      if (!file.setReadable(true, true)
+          || !file.setWritable(true, true)
+          || !file.setExecutable(true, true)) {
         LOGGER.warning("unable to change permissions for owner: " + file);
       }
-    } catch (InvocationTargetException exception) {
-      Throwable cause = exception.getCause();
-      Throwables.propagateIfPossible(cause, IOException.class);
-      // shouldn't reach this point, but just in case...
-      throw new RuntimeException(cause);
-    } catch (NoSuchMethodException exception) {
-      LOGGER.warning(
-          "Unable to set permissions for "
-              + file
-              + ", likely because you are running a version of Java prior to 1.6");
     } catch (SecurityException exception) {
-      // ignored
-    } catch (IllegalAccessException exception) {
       // ignored
     } catch (IllegalArgumentException exception) {
       // ignored
