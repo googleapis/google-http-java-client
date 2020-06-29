@@ -31,8 +31,7 @@ import java.util.logging.Logger;
  * Thread-safe file implementation of a credential store.
  *
  * <p>For security purposes, the file's permissions are set to be accessible only by the file's
- * owner. Note that Java 1.5 does not support manipulating file permissions, and must be done
- * manually or using the JNI.
+ * owner.
  *
  * <p>Note: This class was branched from the primary implementation in google-http-client to allow
  * the mainline implementation to support Windows file permissions.
