@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.36.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.35.0...v1.36.0) (2020-06-30)
+
+
+### Features
+
+* add Android 19 compatible FileDataStoreFactory implementation ([#1070](https://www.github.com/googleapis/google-http-java-client/issues/1070)) ([1150acd](https://www.github.com/googleapis/google-http-java-client/commit/1150acd38aa3139eea4f2f718545c20d2493877e))
+
+
+### Bug Fixes
+
+* restore the thread's interrupted status after catching InterruptedException ([#1005](https://www.github.com/googleapis/google-http-java-client/issues/1005)) ([#1006](https://www.github.com/googleapis/google-http-java-client/issues/1006)) ([0a73a46](https://www.github.com/googleapis/google-http-java-client/commit/0a73a4628b6ec4420db6b9cdbcc68899f3807c5b))
+
 ## [1.35.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.34.2...v1.35.0) (2020-04-27)
 
 
