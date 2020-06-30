@@ -45,6 +45,11 @@ import java.util.logging.Logger;
  * <p>For security purposes, the file's permissions are set such that the file is only accessible by
  * the file's owner.
  *
+ * <p>Note: this class is not compatible with Android lower than API level 26 (Oreo). For an
+ * implementation compatible with Android < 26, please use
+ * com.google.api.client.extensions.android.util.store.FileDataStoreFactory which is provided by
+ * com.google.http-client:google-http-client-android.
+ *
  * @since 1.16
  * @author Yaniv Inbar
  */
@@ -61,7 +66,6 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
   /** @param dataDirectory data directory */
   public FileDataStoreFactory(File dataDirectory) throws IOException {
     dataDirectory = dataDirectory.getCanonicalFile();
-    this.dataDirectory = dataDirectory;
     // error if it is a symbolic link
     if (IOUtils.isSymbolicLink(dataDirectory)) {
       throw new IOException("unable to use a symbolic link: " + dataDirectory);
@@ -70,6 +74,7 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
     if (!dataDirectory.exists() && !dataDirectory.mkdirs()) {
       throw new IOException("unable to create directory: " + dataDirectory);
     }
+    this.dataDirectory = dataDirectory;
 
     if (IS_WINDOWS) {
       setPermissionsToOwnerOnlyWindows(dataDirectory);

@@ -26,6 +26,23 @@
             <ignoredUnusedDeclaredDependencies>io.opencensus:opencensus-impl</ignoredUnusedDeclaredDependencies>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>animal-sniffer-maven-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>android</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <configuration>
+                <ignores>
+                  <ignore>java.nio.file.*</ignore>
+                </ignores>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
