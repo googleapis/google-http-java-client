@@ -53,7 +53,10 @@ public class UrlEncodedContent extends AbstractHttpContent {
   /** Use URI Path encoder flag. False by default (use legacy and deprecated escapeUri) */
   private boolean uriPathEncodingFlag;
 
-  /** @param data key name/value data */
+  /**
+   *  Initialize the UrlEncodedContent with the legacy and deprecated escapeUri encoder
+   *  @param data key name/value data
+   *  */
   public UrlEncodedContent(Object data) {
     super(UrlEncodedParser.MEDIA_TYPE);
     setData(data);
@@ -61,10 +64,11 @@ public class UrlEncodedContent extends AbstractHttpContent {
   }
 
   /**
+   * Initialize the UrlEncodedContent with our without the legacy and deprecated escapeUri encoder
    * @param data key name/value data
-   * @param useUriPathEncoding Escapes the string value so it can be safely included in URI path segments. For details on
-   *    * escaping URIs, see <a href="http://tools.ietf.org/html/rfc3986#section-2.4">RFC 3986 - section
-   *    * 2.4</a>
+   * @param useUriPathEncoding Escapes the string value so it can be safely included in URI path segments.
+   *     For details on escaping URIs, see <a href="http://tools.ietf.org/html/rfc3986#section-2.4">RFC 3986 -
+   *     section 2.4</a>
    */
   public UrlEncodedContent(Object data, Boolean useUriPathEncoding) {
     super(UrlEncodedParser.MEDIA_TYPE);
@@ -72,6 +76,7 @@ public class UrlEncodedContent extends AbstractHttpContent {
     this.uriPathEncodingFlag = useUriPathEncoding;
   }
 
+  @Override
   public void writeTo(OutputStream out) throws IOException {
     Writer writer = new BufferedWriter(new OutputStreamWriter(out, getCharset()));
     boolean first = true;
