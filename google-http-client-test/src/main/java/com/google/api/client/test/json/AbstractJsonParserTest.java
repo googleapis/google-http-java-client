@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+
+import com.google.api.client.util.Key;
 import junit.framework.TestCase;
 
 public abstract class AbstractJsonParserTest extends TestCase {
@@ -30,6 +32,18 @@ public abstract class AbstractJsonParserTest extends TestCase {
   private static final String TEST_JSON =
       "{\"strValue\": \"bar\", \"intValue\": 123, \"boolValue\": false}";
   private static final String TEST_JSON_BIG_DECIMAL = "{\"bigDecimalValue\": 1559341956102}";
+  private static final String TEST_JSON_NULL_VALUES = "{\"strValue\": null, \"intValue\": null, \"boolValue\": null}";
+
+  public static class TestModel extends GenericJson {
+    @Key
+    public String strValue;
+
+    @Key
+    public Integer intValue;
+
+    @Key
+    public Boolean boolValue;
+  }
 
   public void testParse_basic() throws IOException {
     JsonObjectParser parser = new JsonObjectParser(newJsonFactory());
@@ -44,6 +58,16 @@ public abstract class AbstractJsonParserTest extends TestCase {
     assertEquals(Boolean.FALSE, json.get("boolValue"));
   }
 
+  public void testParse_model() throws IOException {
+    JsonObjectParser parser = new JsonObjectParser(newJsonFactory());
+    InputStream inputStream = new ByteArrayInputStream(TEST_JSON.getBytes(StandardCharsets.UTF_8));
+    TestModel model = parser.parseAndClose(inputStream, StandardCharsets.UTF_8, TestModel.class);
+
+    assertEquals("bar", model.strValue);
+    assertEquals(Integer.valueOf(123), model.intValue);
+    assertFalse(model.boolValue);
+  }
+
   public void testParse_bigDecimal() throws IOException {
     JsonObjectParser parser = new JsonObjectParser(newJsonFactory());
     InputStream inputStream =
@@ -52,5 +76,17 @@ public abstract class AbstractJsonParserTest extends TestCase {
 
     assertTrue(json.get("bigDecimalValue") instanceof BigDecimal);
     assertEquals(new BigDecimal("1559341956102"), json.get("bigDecimalValue"));
+  }
+
+
+  public void testParse_null() throws IOException {
+    JsonObjectParser parser = new JsonObjectParser(newJsonFactory());
+    InputStream inputStream =
+        new ByteArrayInputStream(TEST_JSON_NULL_VALUES.getBytes(StandardCharsets.UTF_8));
+    TestModel model = parser.parseAndClose(inputStream, StandardCharsets.UTF_8, TestModel.class);
+
+    assertNull(model.strValue);
+    assertNull(model.intValue);
+    assertNull(model.boolValue);
   }
 }
