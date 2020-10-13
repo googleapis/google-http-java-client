@@ -54,9 +54,10 @@ public class UrlEncodedContent extends AbstractHttpContent {
   private boolean uriPathEncodingFlag;
 
   /**
-   *  Initialize the UrlEncodedContent with the legacy and deprecated escapeUri encoder
-   *  @param data key name/value data
-   *  */
+   * Initialize the UrlEncodedContent with the legacy and deprecated escapeUri encoder
+   *
+   * @param data key name/value data
+   */
   public UrlEncodedContent(Object data) {
     super(UrlEncodedParser.MEDIA_TYPE);
     setData(data);
@@ -65,10 +66,11 @@ public class UrlEncodedContent extends AbstractHttpContent {
 
   /**
    * Initialize the UrlEncodedContent with or without the legacy and deprecated escapeUri encoder
+   *
    * @param data key name/value data
-   * @param useUriPathEncoding escapes the string value so it can be safely included in URI path segments.
-   *     For details on escaping URIs, see <a href="http://tools.ietf.org/html/rfc3986#section-2.4">RFC 3986 -
-   *     section 2.4</a>
+   * @param useUriPathEncoding escapes the string value so it can be safely included in URI path
+   *     segments. For details on escaping URIs, see <a
+   *     href="http://tools.ietf.org/html/rfc3986#section-2.4">RFC 3986 - section 2.4</a>
    */
   public UrlEncodedContent(Object data, boolean useUriPathEncoding) {
     super(UrlEncodedParser.MEDIA_TYPE);
