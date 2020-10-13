@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.37.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.36.0...v1.37.0) (2020-10-13)
+
+
+### Features
+
+* add flag to allow UrlEncodedContent to use UriPath escaping ([#1100](https://www.github.com/googleapis/google-http-java-client/issues/1100)) ([9ab7016](https://www.github.com/googleapis/google-http-java-client/commit/9ab7016032327f6fb0f91970dfbd511b029dd949)), closes [#1098](https://www.github.com/googleapis/google-http-java-client/issues/1098)
+
+
+### Bug Fixes
+
+* make google-http-client.properties file shading friendly ([#1046](https://www.github.com/googleapis/google-http-java-client/issues/1046)) ([860bb05](https://www.github.com/googleapis/google-http-java-client/commit/860bb0541bcd7fc516cad14dd0d52481c7c7b414))
+
+
+### Dependencies
+
+* update protobuf-java to 3.13.0 ([#1093](https://www.github.com/googleapis/google-http-java-client/issues/1093)) ([b7e9663](https://www.github.com/googleapis/google-http-java-client/commit/b7e96632234e944e0e476dedfc822333716756bb))
+
+
+### Documentation
+
+* libraries-bom 12.0.0 ([#1136](https://www.github.com/googleapis/google-http-java-client/issues/1136)) ([450fcb2](https://www.github.com/googleapis/google-http-java-client/commit/450fcb2293cf3fa7c788cf0cc8ae48e865ae8de8))
+
 ## [1.36.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.35.0...v1.36.0) (2020-06-30)
 
 
