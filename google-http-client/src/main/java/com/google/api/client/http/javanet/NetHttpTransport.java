@@ -303,7 +303,7 @@ public final class NetHttpTransport extends HttpTransport {
      * @param keystorePassword password for keyStore parameter
      */
     public Builder trustCertificates(
-        KeyStore trustStore, KeyStore keyStore, char[] keystorePassword)
+        KeyStore trustStore, KeyStore keyStore, String keystorePassword)
         throws GeneralSecurityException {
       if (keyStore != null) {
         this.isMtls = true;

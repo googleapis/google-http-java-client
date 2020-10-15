@@ -129,11 +129,11 @@ public final class SslUtils {
       KeyStore trustStore,
       TrustManagerFactory trustManagerFactory,
       KeyStore keyStore,
-      char[] keystorePassword,
+      String keystorePassword,
       KeyManagerFactory keyManagerFactory)
       throws GeneralSecurityException {
     trustManagerFactory.init(trustStore);
-    keyManagerFactory.init(keyStore, keystorePassword);
+    keyManagerFactory.init(keyStore, keystorePassword.toCharArray());
     sslContext.init(
         keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
     return sslContext;
