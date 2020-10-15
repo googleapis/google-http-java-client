@@ -110,7 +110,10 @@ public final class NetHttpTransport extends HttpTransport {
    * @param isMtls Whether the transport is mTLS. Default value is {@code false}
    */
   NetHttpTransport(
-      Proxy proxy, SSLSocketFactory sslSocketFactory, HostnameVerifier hostnameVerifier, boolean isMtls) {
+      Proxy proxy,
+      SSLSocketFactory sslSocketFactory,
+      HostnameVerifier hostnameVerifier,
+      boolean isMtls) {
     this(new DefaultConnectionFactory(proxy), sslSocketFactory, hostnameVerifier, isMtls);
   }
 
@@ -291,24 +294,30 @@ public final class NetHttpTransport extends HttpTransport {
     }
 
     /**
-     * Sets the SSL socket factory based on a root certificate trust store and a client
-     * certificate key store.
+     * Sets the SSL socket factory based on a root certificate trust store and a client certificate
+     * key store.
      *
      * @param trustStore certificate trust store (use for example {@link SecurityUtils#loadKeyStore}
      *     or {@link SecurityUtils#loadKeyStoreFromCertificates})
      * @param keyStore key store for client certificate and key
      * @param keystorePassword password for keyStore parameter
      */
-    public Builder trustCertificates(KeyStore trustStore, KeyStore keyStore, char[] keystorePassword) throws GeneralSecurityException {
+    public Builder trustCertificates(
+        KeyStore trustStore, KeyStore keyStore, char[] keystorePassword)
+        throws GeneralSecurityException {
       if (keyStore != null) {
         this.isMtls = true;
       }
       SSLContext sslContext = SslUtils.getTlsSslContext();
-      SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory(),
-        keyStore, keystorePassword, SslUtils.getDefaultKeyManagerFactory());
+      SslUtils.initSslContext(
+          sslContext,
+          trustStore,
+          SslUtils.getPkixTrustManagerFactory(),
+          keyStore,
+          keystorePassword,
+          SslUtils.getDefaultKeyManagerFactory());
       return setSslSocketFactory(sslContext.getSocketFactory());
     }
-
 
     /**
      * {@link Beta} <br>

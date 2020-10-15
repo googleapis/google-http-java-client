@@ -121,16 +121,21 @@ public final class SslUtils {
    *     #getPkixTrustManagerFactory()})
    * @param keyStore key store for client certificate and key
    * @param keystorePassword password for keyStore parameter
-   * @param keyManagerFactory key manager factory (for example {@link 
+   * @param keyManagerFactory key manager factory (for example {@link
    *     #getDefaultKeyManagerFactory()})
    */
   public static SSLContext initSslContext(
-      SSLContext sslContext, KeyStore trustStore, TrustManagerFactory trustManagerFactory,
-      KeyStore keyStore, char[] keystorePassword, KeyManagerFactory keyManagerFactory)
+      SSLContext sslContext,
+      KeyStore trustStore,
+      TrustManagerFactory trustManagerFactory,
+      KeyStore keyStore,
+      char[] keystorePassword,
+      KeyManagerFactory keyManagerFactory)
       throws GeneralSecurityException {
     trustManagerFactory.init(trustStore);
     keyManagerFactory.init(keyStore, keystorePassword);
-    sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
+    sslContext.init(
+        keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
     return sslContext;
   }
 

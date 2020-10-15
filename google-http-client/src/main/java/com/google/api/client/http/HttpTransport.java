@@ -131,7 +131,7 @@ public abstract class HttpTransport {
 
   /**
    * Returns whether the transport is mTLS.
-   * 
+   *
    * @return boolean indicating if the transport is mTLS.
    */
   public boolean isMtls() {
