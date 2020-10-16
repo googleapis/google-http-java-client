@@ -305,7 +305,7 @@ public final class NetHttpTransport extends HttpTransport {
     public Builder trustCertificates(
         KeyStore trustStore, KeyStore keyStore, String keystorePassword)
         throws GeneralSecurityException {
-      if (keyStore != null) {
+      if (keyStore != null && keyStore.size() > 0) {
         this.isMtls = true;
       }
       SSLContext sslContext = SslUtils.getTlsSslContext();

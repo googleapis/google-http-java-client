@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.KeyStore;
 import junit.framework.TestCase;
 
 /**
@@ -35,6 +36,25 @@ public class NetHttpTransportTest extends TestCase {
   private static final String[] METHODS = {
     "GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"
   };
+
+  public void testMtls() throws Exception {
+    KeyStore trustStore = KeyStore.getInstance("JKS");
+    KeyStore keyStore = KeyStore.getInstance("PKCS12");
+    keyStore.load(
+        this.getClass()
+            .getClassLoader()
+            .getResourceAsStream("com/google/api/client/util/secret.p12"),
+        "notasecret".toCharArray());
+
+    NetHttpTransport transport =
+        new NetHttpTransport.Builder().trustCertificates(trustStore).build();
+    assertFalse(transport.isMtls());
+    transport =
+        new NetHttpTransport.Builder()
+            .trustCertificates(trustStore, keyStore, "notasecret")
+            .build();
+    assertTrue(transport.isMtls());
+  }
 
   public void testExecute_mock() throws Exception {
     for (String method : METHODS) {
