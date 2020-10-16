@@ -295,11 +295,11 @@ public final class NetHttpTransport extends HttpTransport {
 
     /**
      * Sets the SSL socket factory based on a root certificate trust store and a client certificate
-     * key store.
+     * key store. The client certificate key store will be used to establish mutual TLS.
      *
      * @param trustStore certificate trust store (use for example {@link SecurityUtils#loadKeyStore}
      *     or {@link SecurityUtils#loadKeyStoreFromCertificates})
-     * @param keyStore key store for client certificate and key
+     * @param keyStore key store for client certificate and key. It is used to establish mutual TLS.
      * @param keystorePassword password for keyStore parameter
      */
     public Builder trustCertificates(

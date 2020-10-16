@@ -37,9 +37,19 @@ public class NetHttpTransportTest extends TestCase {
     "GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"
   };
 
-  public void testMtls() throws Exception {
+  public void testNotMtlsWithoutClientCert() throws Exception {
+    KeyStore trustStore = KeyStore.getInstance("JKS");
+
+    NetHttpTransport transport =
+        new NetHttpTransport.Builder().trustCertificates(trustStore).build();
+    assertFalse(transport.isMtls());
+  }
+
+  public void testIsMtlsWithClientCert() throws Exception {
     KeyStore trustStore = KeyStore.getInstance("JKS");
     KeyStore keyStore = KeyStore.getInstance("PKCS12");
+
+    // Load client certificate and private key from secret.p12 file.
     keyStore.load(
         this.getClass()
             .getClassLoader()
@@ -47,9 +57,6 @@ public class NetHttpTransportTest extends TestCase {
         "notasecret".toCharArray());
 
     NetHttpTransport transport =
-        new NetHttpTransport.Builder().trustCertificates(trustStore).build();
-    assertFalse(transport.isMtls());
-    transport =
         new NetHttpTransport.Builder()
             .trustCertificates(trustStore, keyStore, "notasecret")
             .build();
