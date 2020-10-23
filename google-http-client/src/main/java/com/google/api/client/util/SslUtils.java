@@ -119,8 +119,8 @@ public final class SslUtils {
    *     SecurityUtils#getJavaKeyStore()})
    * @param trustManagerFactory trust manager factory (for example {@link
    *     #getPkixTrustManagerFactory()})
-   * @param keyStore key store for client certificate and key
-   * @param keystorePassword password for keyStore parameter
+   * @param mtlsKeyStore key store for client certificate and key to establish mutual TLS
+   * @param mtlsKeystorePassword password for mtlsKeyStore parameter
    * @param keyManagerFactory key manager factory (for example {@link
    *     #getDefaultKeyManagerFactory()})
    */
@@ -128,12 +128,12 @@ public final class SslUtils {
       SSLContext sslContext,
       KeyStore trustStore,
       TrustManagerFactory trustManagerFactory,
-      KeyStore keyStore,
-      String keystorePassword,
+      KeyStore mtlsKeyStore,
+      String mtlsKeystorePassword,
       KeyManagerFactory keyManagerFactory)
       throws GeneralSecurityException {
     trustManagerFactory.init(trustStore);
-    keyManagerFactory.init(keyStore, keystorePassword.toCharArray());
+    keyManagerFactory.init(mtlsKeyStore, mtlsKeystorePassword.toCharArray());
     sslContext.init(
         keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
     return sslContext;

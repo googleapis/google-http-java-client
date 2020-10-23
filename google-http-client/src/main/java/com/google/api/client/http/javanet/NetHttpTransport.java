@@ -299,13 +299,13 @@ public final class NetHttpTransport extends HttpTransport {
      *
      * @param trustStore certificate trust store (use for example {@link SecurityUtils#loadKeyStore}
      *     or {@link SecurityUtils#loadKeyStoreFromCertificates})
-     * @param keyStore key store for client certificate and key. It is used to establish mutual TLS.
-     * @param keystorePassword password for keyStore parameter
+     * @param mtlsKeyStore key store for client certificate and key to establish mutual TLS.
+     * @param mtlsKeystorePassword password for mtlsKeyStore parameter
      */
     public Builder trustCertificates(
-        KeyStore trustStore, KeyStore keyStore, String keystorePassword)
+        KeyStore trustStore, KeyStore mtlsKeyStore, String mtlsKeystorePassword)
         throws GeneralSecurityException {
-      if (keyStore != null && keyStore.size() > 0) {
+      if (mtlsKeyStore != null && mtlsKeyStore.size() > 0) {
         this.isMtls = true;
       }
       SSLContext sslContext = SslUtils.getTlsSslContext();
@@ -313,8 +313,8 @@ public final class NetHttpTransport extends HttpTransport {
           sslContext,
           trustStore,
           SslUtils.getPkixTrustManagerFactory(),
-          keyStore,
-          keystorePassword,
+          mtlsKeyStore,
+          mtlsKeystorePassword,
           SslUtils.getDefaultKeyManagerFactory());
       return setSslSocketFactory(sslContext.getSocketFactory());
     }
