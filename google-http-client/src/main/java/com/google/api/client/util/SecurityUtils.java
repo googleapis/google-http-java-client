@@ -17,6 +17,7 @@ package com.google.api.client.util;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -31,6 +32,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.List;
 import javax.net.ssl.X509TrustManager;
 
@@ -256,6 +258,63 @@ public final class SecurityUtils {
       keyStore.setCertificateEntry(String.valueOf(i), cert);
       i++;
     }
+  }
+
+  /**
+   * Create a keystore for mutual TLS with the certificate and private key provided.
+   *
+   * <p>certAndKey should have the following format:
+   *
+   * <pre>
+   * -----BEGIN CERTIFICATE-----
+   * ......
+   * -----END CERTIFICATE------
+   * ----BEGIN PRIVATE KEY-----
+   * ......
+   * -----END PRIVATE KEY-----
+   * </pre>
+   *
+   * @param certAndKey Concatenation of a x509 certificate PEM string and a PKCS#8 unencrypted
+   *     private key PEM string.
+   * @return keystore for mutual TLS.
+   */
+  public static KeyStore createMtlsKeyStore(String certAndKey)
+      throws GeneralSecurityException, IOException {
+    KeyStore keystore = KeyStore.getInstance("JKS");
+    try {
+      keystore.load(null);
+    } catch (IOException ignored) {
+      // shouldn't throw any exception to load a null keystore.
+    }
+
+    byte[] certAndKeyBytes = certAndKey.getBytes();
+
+    // Read the certificate.
+    InputStreamReader reader = new InputStreamReader(new ByteArrayInputStream(certAndKeyBytes));
+    PemReader.Section section = PemReader.readFirstSectionAndClose(reader, "CERTIFICATE");
+    if (section == null) {
+      throw new IllegalArgumentException("certificate is missing from certAndKey string");
+    }
+    CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+    X509Certificate cert =
+        (X509Certificate)
+            certFactory.generateCertificate(
+                new ByteArrayInputStream(section.getBase64DecodedBytes()));
+
+    // Read the private key.
+    reader = new InputStreamReader(new ByteArrayInputStream(certAndKeyBytes));
+    section = PemReader.readFirstSectionAndClose(reader, "PRIVATE KEY");
+    if (section == null) {
+      throw new IllegalArgumentException("private key is missing from certAndKey string");
+    }
+    PKCS8EncodedKeySpec keySpecPKCS8 = new PKCS8EncodedKeySpec(section.getBase64DecodedBytes());
+    PrivateKey key =
+        KeyFactory.getInstance(cert.getPublicKey().getAlgorithm()).generatePrivate(keySpecPKCS8);
+
+    // Fit the certificate and private key into the keystore.
+    keystore.setKeyEntry("alias", key, new char[] {}, new X509Certificate[] {cert});
+
+    return keystore;
   }
 
   private SecurityUtils() {}

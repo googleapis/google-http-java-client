@@ -14,9 +14,16 @@
 
 package com.google.api.client.util;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
+
 import com.google.api.client.testing.json.webtoken.TestCertificates;
 import com.google.api.client.testing.util.SecurityTestUtils;
+import com.google.common.io.Resources;
 import java.io.ByteArrayInputStream;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.cert.X509Certificate;
@@ -25,6 +32,7 @@ import java.util.ArrayList;
 import javax.net.ssl.X509TrustManager;
 import junit.framework.TestCase;
 import org.junit.Assert;
+import org.junit.function.ThrowingRunnable;
 
 /**
  * Tests {@link SecurityUtils}.
@@ -159,5 +167,52 @@ public class SecurityUtilsTest extends TestCase {
 
   public void testVerifyX509WrongCa() throws Exception {
     assertNull(verifyX509(TestCertificates.BOGUS_CA_CERT));
+  }
+
+  public void testCreateMtlsKeyStoreNoCert() throws Exception {
+    URL url = getClass().getClassLoader().getResource("com/google/api/client/util/privateKey.pem");
+    final String certMissing = Resources.toString(url, StandardCharsets.UTF_8);
+    IllegalArgumentException exception =
+        assertThrows(
+            IllegalArgumentException.class,
+            new ThrowingRunnable() {
+              @Override
+              public void run() throws Throwable {
+                SecurityUtils.createMtlsKeyStore(certMissing);
+              }
+            });
+    assertThat(exception)
+        .hasMessageThat()
+        .isEqualTo("certificate is missing from certAndKey string");
+  }
+
+  public void testCreateMtlsKeyStoreNoPrivateKey() throws Exception {
+    URL url = getClass().getClassLoader().getResource("com/google/api/client/util/cert.pem");
+    final String privateKeyMissing = Resources.toString(url, StandardCharsets.UTF_8);
+    IllegalArgumentException exception =
+        assertThrows(
+            IllegalArgumentException.class,
+            new ThrowingRunnable() {
+              @Override
+              public void run() throws Throwable {
+                SecurityUtils.createMtlsKeyStore(privateKeyMissing);
+              }
+            });
+    assertThat(exception)
+        .hasMessageThat()
+        .isEqualTo("private key is missing from certAndKey string");
+  }
+
+  public void testCreateMtlsKeyStoreSuccess() throws Exception {
+    URL url = getClass().getClassLoader().getResource("com/google/api/client/util/cert.pem");
+    String cert = Resources.toString(url, StandardCharsets.UTF_8);
+
+    url = getClass().getClassLoader().getResource("com/google/api/client/util/privateKey.pem");
+    String privateKey = Resources.toString(url, StandardCharsets.UTF_8);
+
+    String certAndKey = cert + "\n" + privateKey;
+    KeyStore mtlsKeyStore = SecurityUtils.createMtlsKeyStore(certAndKey);
+
+    assertEquals(mtlsKeyStore.size(), 1);
   }
 }
