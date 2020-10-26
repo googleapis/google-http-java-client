@@ -263,51 +263,48 @@ public final class SecurityUtils {
   /**
    * Create a keystore for mutual TLS with the certificate and private key provided.
    *
-   * <p>certAndKey should have the following format:
-   *
-   * <pre>
-   * -----BEGIN CERTIFICATE-----
-   * ......
-   * -----END CERTIFICATE------
-   * ----BEGIN PRIVATE KEY-----
-   * ......
-   * -----END PRIVATE KEY-----
-   * </pre>
-   *
-   * @param certAndKey Concatenation of a x509 certificate PEM string and a PKCS#8 unencrypted
-   *     private key PEM string.
+   * @param certAndKey Certificate and private key input stream. The stream should contain one
+   *     certificate and one unencrypted private key. If there are multiple certificates, only the
+   *     first certificate will be used.
    * @return keystore for mutual TLS.
    */
-  public static KeyStore createMtlsKeyStore(String certAndKey)
+  public static KeyStore createMtlsKeyStore(InputStream certAndKey)
       throws GeneralSecurityException, IOException {
     KeyStore keystore = KeyStore.getInstance("JKS");
-    try {
-      keystore.load(null);
-    } catch (IOException ignored) {
-      // shouldn't throw any exception to load a null keystore.
+    keystore.load(null);
+
+    PemReader.Section certSection = null;
+    PemReader.Section keySection = null;
+    PemReader reader = new PemReader(new InputStreamReader(certAndKey));
+
+    while (certSection == null || keySection == null) {
+      // Read the certificate and private key.
+      PemReader.Section section = reader.readNextSection();
+      if (section == null) {
+        break;
+      }
+
+      if ("CERTIFICATE".equals(section.getTitle())) {
+        certSection = section;
+      } else if ("PRIVATE KEY".equals(section.getTitle())) {
+        keySection = section;
+      }
     }
 
-    byte[] certAndKeyBytes = certAndKey.getBytes();
-
-    // Read the certificate.
-    InputStreamReader reader = new InputStreamReader(new ByteArrayInputStream(certAndKeyBytes));
-    PemReader.Section section = PemReader.readFirstSectionAndClose(reader, "CERTIFICATE");
-    if (section == null) {
+    if (certSection == null) {
       throw new IllegalArgumentException("certificate is missing from certAndKey string");
     }
+    if (keySection == null) {
+      throw new IllegalArgumentException("private key is missing from certAndKey string");
+    }
+
     CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
     X509Certificate cert =
         (X509Certificate)
             certFactory.generateCertificate(
-                new ByteArrayInputStream(section.getBase64DecodedBytes()));
+                new ByteArrayInputStream(certSection.getBase64DecodedBytes()));
 
-    // Read the private key.
-    reader = new InputStreamReader(new ByteArrayInputStream(certAndKeyBytes));
-    section = PemReader.readFirstSectionAndClose(reader, "PRIVATE KEY");
-    if (section == null) {
-      throw new IllegalArgumentException("private key is missing from certAndKey string");
-    }
-    PKCS8EncodedKeySpec keySpecPKCS8 = new PKCS8EncodedKeySpec(section.getBase64DecodedBytes());
+    PKCS8EncodedKeySpec keySpecPKCS8 = new PKCS8EncodedKeySpec(keySection.getBase64DecodedBytes());
     PrivateKey key =
         KeyFactory.getInstance(cert.getPublicKey().getAlgorithm()).generatePrivate(keySpecPKCS8);
 

@@ -21,6 +21,7 @@ import com.google.api.client.testing.json.webtoken.TestCertificates;
 import com.google.api.client.testing.util.SecurityTestUtils;
 import com.google.common.io.Resources;
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
@@ -170,8 +171,10 @@ public class SecurityUtilsTest extends TestCase {
   }
 
   public void testCreateMtlsKeyStoreNoCert() throws Exception {
-    URL url = getClass().getClassLoader().getResource("com/google/api/client/util/privateKey.pem");
-    final String certMissing = Resources.toString(url, StandardCharsets.UTF_8);
+    final InputStream certMissing =
+        getClass()
+            .getClassLoader()
+            .getResourceAsStream("com/google/api/client/util/privateKey.pem");
     IllegalArgumentException exception =
         assertThrows(
             IllegalArgumentException.class,
@@ -187,8 +190,8 @@ public class SecurityUtilsTest extends TestCase {
   }
 
   public void testCreateMtlsKeyStoreNoPrivateKey() throws Exception {
-    URL url = getClass().getClassLoader().getResource("com/google/api/client/util/cert.pem");
-    final String privateKeyMissing = Resources.toString(url, StandardCharsets.UTF_8);
+    final InputStream privateKeyMissing =
+        getClass().getClassLoader().getResourceAsStream("com/google/api/client/util/cert.pem");
     IllegalArgumentException exception =
         assertThrows(
             IllegalArgumentException.class,
@@ -210,7 +213,9 @@ public class SecurityUtilsTest extends TestCase {
     url = getClass().getClassLoader().getResource("com/google/api/client/util/privateKey.pem");
     String privateKey = Resources.toString(url, StandardCharsets.UTF_8);
 
-    String certAndKey = cert + "\n" + privateKey;
+    String certAndKeyString = privateKey + "\n" + cert;
+    ByteArrayInputStream certAndKey = new ByteArrayInputStream(certAndKeyString.getBytes());
+
     KeyStore mtlsKeyStore = SecurityUtils.createMtlsKeyStore(certAndKey);
 
     assertEquals(mtlsKeyStore.size(), 1);
