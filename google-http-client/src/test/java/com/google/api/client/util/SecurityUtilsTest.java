@@ -19,11 +19,8 @@ import static org.junit.Assert.assertThrows;
 
 import com.google.api.client.testing.json.webtoken.TestCertificates;
 import com.google.api.client.testing.util.SecurityTestUtils;
-import com.google.common.io.Resources;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Signature;
@@ -207,14 +204,10 @@ public class SecurityUtilsTest extends TestCase {
   }
 
   public void testCreateMtlsKeyStoreSuccess() throws Exception {
-    URL url = getClass().getClassLoader().getResource("com/google/api/client/util/cert.pem");
-    String cert = Resources.toString(url, StandardCharsets.UTF_8);
-
-    url = getClass().getClassLoader().getResource("com/google/api/client/util/privateKey.pem");
-    String privateKey = Resources.toString(url, StandardCharsets.UTF_8);
-
-    String certAndKeyString = privateKey + "\n" + cert;
-    ByteArrayInputStream certAndKey = new ByteArrayInputStream(certAndKeyString.getBytes());
+    InputStream certAndKey =
+        getClass()
+            .getClassLoader()
+            .getResourceAsStream("com/google/api/client/util/mtlsCertAndKey.pem");
 
     KeyStore mtlsKeyStore = SecurityUtils.createMtlsKeyStore(certAndKey);
 
