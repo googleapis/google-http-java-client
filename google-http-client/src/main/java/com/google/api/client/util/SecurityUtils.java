@@ -284,7 +284,7 @@ public final class SecurityUtils {
         break;
       }
 
-      if ("CERTIFICATE".equals(section.getTitle())) {
+      if (certSection == null && "CERTIFICATE".equals(section.getTitle())) {
         certSection = section;
       } else if ("PRIVATE KEY".equals(section.getTitle())) {
         keySection = section;

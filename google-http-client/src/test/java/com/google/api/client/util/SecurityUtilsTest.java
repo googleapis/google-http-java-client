@@ -14,9 +14,6 @@
 
 package com.google.api.client.util;
 
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertThrows;
-
 import com.google.api.client.testing.json.webtoken.TestCertificates;
 import com.google.api.client.testing.util.SecurityTestUtils;
 import java.io.ByteArrayInputStream;
@@ -30,7 +27,6 @@ import java.util.ArrayList;
 import javax.net.ssl.X509TrustManager;
 import junit.framework.TestCase;
 import org.junit.Assert;
-import org.junit.function.ThrowingRunnable;
 
 /**
  * Tests {@link SecurityUtils}.
@@ -172,35 +168,31 @@ public class SecurityUtilsTest extends TestCase {
         getClass()
             .getClassLoader()
             .getResourceAsStream("com/google/api/client/util/privateKey.pem");
-    IllegalArgumentException exception =
-        assertThrows(
-            IllegalArgumentException.class,
-            new ThrowingRunnable() {
-              @Override
-              public void run() throws Throwable {
-                SecurityUtils.createMtlsKeyStore(certMissing);
-              }
-            });
-    assertThat(exception)
-        .hasMessageThat()
-        .isEqualTo("certificate is missing from certAndKey string");
+
+    boolean thrown = false;
+    try {
+      SecurityUtils.createMtlsKeyStore(certMissing);
+      fail("should have thrown");
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("certificate is missing from certAndKey string"));
+      thrown = true;
+    }
+    assertTrue("should have caught an IllegalArgumentException", thrown);
   }
 
   public void testCreateMtlsKeyStoreNoPrivateKey() throws Exception {
     final InputStream privateKeyMissing =
         getClass().getClassLoader().getResourceAsStream("com/google/api/client/util/cert.pem");
-    IllegalArgumentException exception =
-        assertThrows(
-            IllegalArgumentException.class,
-            new ThrowingRunnable() {
-              @Override
-              public void run() throws Throwable {
-                SecurityUtils.createMtlsKeyStore(privateKeyMissing);
-              }
-            });
-    assertThat(exception)
-        .hasMessageThat()
-        .isEqualTo("private key is missing from certAndKey string");
+
+    boolean thrown = false;
+    try {
+      SecurityUtils.createMtlsKeyStore(privateKeyMissing);
+      fail("should have thrown");
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("private key is missing from certAndKey string"));
+      thrown = true;
+    }
+    assertTrue("should have caught an IllegalArgumentException", thrown);
   }
 
   public void testCreateMtlsKeyStoreSuccess() throws Exception {
