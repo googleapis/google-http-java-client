@@ -120,7 +120,7 @@ public final class SslUtils {
    * @param trustManagerFactory trust manager factory (for example {@link
    *     #getPkixTrustManagerFactory()})
    * @param mtlsKeyStore key store for client certificate and key to establish mutual TLS
-   * @param mtlsKeystorePassword password for mtlsKeyStore parameter
+   * @param mtlsKeyStorePassword password for mtlsKeyStore parameter
    * @param keyManagerFactory key manager factory (for example {@link
    *     #getDefaultKeyManagerFactory()})
    */
