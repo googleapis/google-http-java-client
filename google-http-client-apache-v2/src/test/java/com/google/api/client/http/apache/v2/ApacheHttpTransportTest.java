@@ -15,6 +15,7 @@
 package com.google.api.client.http.apache.v2;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -64,12 +65,14 @@ public class ApacheHttpTransportTest {
   public void testApacheHttpTransport() {
     ApacheHttpTransport transport = new ApacheHttpTransport();
     checkHttpTransport(transport);
+    assertFalse(transport.isMtls());
   }
 
   @Test
   public void testApacheHttpTransportWithParam() {
-    ApacheHttpTransport transport = new ApacheHttpTransport(HttpClients.custom().build());
+    ApacheHttpTransport transport = new ApacheHttpTransport(HttpClients.custom().build(), true);
     checkHttpTransport(transport);
+    assertTrue(transport.isMtls());
   }
 
   @Test
