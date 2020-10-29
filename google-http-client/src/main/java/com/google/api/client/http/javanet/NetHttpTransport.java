@@ -301,7 +301,7 @@ public final class NetHttpTransport extends HttpTransport {
      *     or {@link SecurityUtils#loadKeyStoreFromCertificates})
      * @param mtlsKeyStore key store for client certificate and key to establish mutual TLS. (use
      *     for example {@link SecurityUtils#createMtlsKeyStore(InputStream)})
-     * @param mtlsKeystorePassword password for mtlsKeyStore parameter
+     * @param mtlsKeyStorePassword password for mtlsKeyStore parameter
      */
     public Builder trustCertificates(
         KeyStore trustStore, KeyStore mtlsKeyStore, String mtlsKeyStorePassword)
