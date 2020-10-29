@@ -314,7 +314,7 @@ public final class NetHttpTransport extends HttpTransport {
           trustStore,
           SslUtils.getPkixTrustManagerFactory(),
           mtlsKeyStore,
-          mtlsKeystorePassword,
+          mtlsKeyStorePassword,
           SslUtils.getDefaultKeyManagerFactory());
       return setSslSocketFactory(sslContext.getSocketFactory());
     }
