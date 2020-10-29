@@ -129,7 +129,7 @@ public final class SslUtils {
       KeyStore trustStore,
       TrustManagerFactory trustManagerFactory,
       KeyStore mtlsKeyStore,
-      String mtlsKeystorePassword,
+      String mtlsKeyStorePassword,
       KeyManagerFactory keyManagerFactory)
       throws GeneralSecurityException {
     trustManagerFactory.init(trustStore);
