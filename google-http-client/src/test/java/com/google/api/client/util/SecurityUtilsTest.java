@@ -211,6 +211,6 @@ public class SecurityUtilsTest extends TestCase {
 
     KeyStore mtlsKeyStore = SecurityUtils.createMtlsKeyStore(certAndKey);
 
-    assertEquals(mtlsKeyStore.size(), 1);
+    assertEquals(1, mtlsKeyStore.size());
   }
 }
