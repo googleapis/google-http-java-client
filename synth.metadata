@@ -4,14 +4,14 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/google-http-java-client.git",
-        "sha": "a19e0c6c734d8467f9662973289641b1823684b0"
+        "sha": "a4e70f3a78a402705e6879ea367ff9bad23ee58d"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "7c5370937dd9ba9dcf9cd7d2af880a58b389b4f1"
+        "sha": "f68649c5f26bcff6817c6d21e90dac0fc71fef8e"
       }
     }
   ],
@@ -23,6 +23,7 @@
     ".github/PULL_REQUEST_TEMPLATE.md",
     ".github/readme/synth.py",
     ".github/release-please.yml",
+    ".github/snippet-bot.yml",
     ".github/trusted-contribution.yml",
     ".github/workflows/approve-readme.yaml",
     ".github/workflows/auto-release.yaml",
