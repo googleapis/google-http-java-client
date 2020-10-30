@@ -110,6 +110,7 @@ public final class SslUtils {
   }
 
   /**
+   * {@link Beta} <br>
    * Initializes the SSL context to the trust managers supplied by the trust manager factory for the
    * given trust store, and to the key managers supplied by the key manager factory for the given
    * key store.
@@ -123,7 +124,9 @@ public final class SslUtils {
    * @param mtlsKeyStorePassword password for mtlsKeyStore parameter
    * @param keyManagerFactory key manager factory (for example {@link
    *     #getDefaultKeyManagerFactory()})
+   * @since 1.38
    */
+  @Beta
   public static SSLContext initSslContext(
       SSLContext sslContext,
       KeyStore trustStore,
