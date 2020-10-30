@@ -152,6 +152,7 @@ public final class NetHttpTransport extends HttpTransport {
   }
 
   @Override
+  @Beta
   public boolean isMtls() {
     return this.isMtls;
   }
@@ -303,6 +304,7 @@ public final class NetHttpTransport extends HttpTransport {
      *     for example {@link SecurityUtils#createMtlsKeyStore(InputStream)})
      * @param mtlsKeyStorePassword password for mtlsKeyStore parameter
      */
+    @Beta
     public Builder trustCertificates(
         KeyStore trustStore, KeyStore mtlsKeyStore, String mtlsKeyStorePassword)
         throws GeneralSecurityException {

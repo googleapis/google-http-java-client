@@ -124,6 +124,7 @@ public final class SslUtils {
    * @param keyManagerFactory key manager factory (for example {@link
    *     #getDefaultKeyManagerFactory()})
    */
+  @Beta
   public static SSLContext initSslContext(
       SSLContext sslContext,
       KeyStore trustStore,

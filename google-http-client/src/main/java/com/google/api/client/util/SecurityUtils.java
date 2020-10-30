@@ -268,6 +268,7 @@ public final class SecurityUtils {
    *     first certificate will be used.
    * @return keystore for mutual TLS.
    */
+  @Beta
   public static KeyStore createMtlsKeyStore(InputStream certAndKey)
       throws GeneralSecurityException, IOException {
     KeyStore keystore = KeyStore.getInstance("JKS");
