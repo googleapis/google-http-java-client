@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
-import com.google.api.client.util.Beta;
-
 /**
  * Thread-safe abstract HTTP transport.
  *
@@ -136,7 +134,6 @@ public abstract class HttpTransport {
    *
    * @return boolean indicating if the transport is mTLS.
    */
-  @Beta
   public boolean isMtls() {
     return false;
   }

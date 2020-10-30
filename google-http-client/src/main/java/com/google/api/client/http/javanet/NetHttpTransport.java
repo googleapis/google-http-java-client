@@ -152,7 +152,6 @@ public final class NetHttpTransport extends HttpTransport {
   }
 
   @Override
-  @Beta
   public boolean isMtls() {
     return this.isMtls;
   }
@@ -295,6 +294,7 @@ public final class NetHttpTransport extends HttpTransport {
     }
 
     /**
+     * {@link Beta} <br>
      * Sets the SSL socket factory based on a root certificate trust store and a client certificate
      * key store. The client certificate key store will be used to establish mutual TLS.
      *
