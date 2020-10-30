@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.37.1](https://www.github.com/googleapis/google-http-java-client/compare/v1.37.0...v1.37.1) (2020-10-30)
+
+
+### Dependencies
+
+* guava 30.0-android ([#1151](https://www.github.com/googleapis/google-http-java-client/issues/1151)) ([969dbbf](https://www.github.com/googleapis/google-http-java-client/commit/969dbbf127708aff16309f82538aca6f0a651638))
+
 ## [1.37.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.36.0...v1.37.0) (2020-10-13)
 
 
