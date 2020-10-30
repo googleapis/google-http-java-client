@@ -268,6 +268,7 @@ public final class SecurityUtils {
    *     certificate and one unencrypted private key. If there are multiple certificates, only the
    *     first certificate will be used.
    * @return keystore for mutual TLS.
+   * @since 1.38
    */
   @Beta
   public static KeyStore createMtlsKeyStore(InputStream certAndKey)

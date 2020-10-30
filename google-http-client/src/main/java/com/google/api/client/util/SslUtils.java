@@ -124,6 +124,7 @@ public final class SslUtils {
    * @param mtlsKeyStorePassword password for mtlsKeyStore parameter
    * @param keyManagerFactory key manager factory (for example {@link
    *     #getDefaultKeyManagerFactory()})
+   * @since 1.38
    */
   @Beta
   public static SSLContext initSslContext(

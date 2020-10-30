@@ -108,6 +108,7 @@ public final class NetHttpTransport extends HttpTransport {
    * @param sslSocketFactory SSL socket factory or {@code null} for the default
    * @param hostnameVerifier host name verifier or {@code null} for the default
    * @param isMtls Whether the transport is mTLS. Default value is {@code false}
+   * @since 1.38
    */
   NetHttpTransport(
       Proxy proxy,
@@ -123,7 +124,7 @@ public final class NetHttpTransport extends HttpTransport {
    * @param sslSocketFactory SSL socket factory or {@code null} for the default
    * @param hostnameVerifier host name verifier or {@code null} for the default
    * @param isMtls Whether the transport is mTLS. Default value is {@code false}
-   * @since 1.20
+   * @since 1.38
    */
   NetHttpTransport(
       ConnectionFactory connectionFactory,
@@ -303,6 +304,7 @@ public final class NetHttpTransport extends HttpTransport {
      * @param mtlsKeyStore key store for client certificate and key to establish mutual TLS. (use
      *     for example {@link SecurityUtils#createMtlsKeyStore(InputStream)})
      * @param mtlsKeyStorePassword password for mtlsKeyStore parameter
+     * @since 1.38
      */
     @Beta
     public Builder trustCertificates(
