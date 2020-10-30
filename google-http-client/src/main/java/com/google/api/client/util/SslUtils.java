@@ -110,6 +110,36 @@ public final class SslUtils {
   }
 
   /**
+   * Initializes the SSL context to the trust managers supplied by the trust manager factory for the
+   * given trust store, and to the key managers supplied by the key manager factory for the given
+   * key store.
+   *
+   * @param sslContext SSL context (for example {@link SSLContext#getInstance})
+   * @param trustStore key store for certificates to trust (for example {@link
+   *     SecurityUtils#getJavaKeyStore()})
+   * @param trustManagerFactory trust manager factory (for example {@link
+   *     #getPkixTrustManagerFactory()})
+   * @param mtlsKeyStore key store for client certificate and key to establish mutual TLS
+   * @param mtlsKeyStorePassword password for mtlsKeyStore parameter
+   * @param keyManagerFactory key manager factory (for example {@link
+   *     #getDefaultKeyManagerFactory()})
+   */
+  public static SSLContext initSslContext(
+      SSLContext sslContext,
+      KeyStore trustStore,
+      TrustManagerFactory trustManagerFactory,
+      KeyStore mtlsKeyStore,
+      String mtlsKeyStorePassword,
+      KeyManagerFactory keyManagerFactory)
+      throws GeneralSecurityException {
+    trustManagerFactory.init(trustStore);
+    keyManagerFactory.init(mtlsKeyStore, mtlsKeyStorePassword.toCharArray());
+    sslContext.init(
+        keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
+    return sslContext;
+  }
+
+  /**
    * {@link Beta} <br>
    * Returns an SSL context in which all X.509 certificates are trusted.
    *

@@ -89,13 +89,16 @@ public final class NetHttpTransport extends HttpTransport {
   /** Host name verifier or {@code null} for the default. */
   private final HostnameVerifier hostnameVerifier;
 
+  /** Whether the transport is mTLS. Default value is {@code false}. */
+  private final boolean isMtls;
+
   /**
    * Constructor with the default behavior.
    *
    * <p>Instead use {@link Builder} to modify behavior.
    */
   public NetHttpTransport() {
-    this((ConnectionFactory) null, null, null);
+    this((ConnectionFactory) null, null, null, false);
   }
 
   /**
@@ -104,10 +107,14 @@ public final class NetHttpTransport extends HttpTransport {
    *     system properties</a>
    * @param sslSocketFactory SSL socket factory or {@code null} for the default
    * @param hostnameVerifier host name verifier or {@code null} for the default
+   * @param isMtls Whether the transport is mTLS. Default value is {@code false}
    */
   NetHttpTransport(
-      Proxy proxy, SSLSocketFactory sslSocketFactory, HostnameVerifier hostnameVerifier) {
-    this(new DefaultConnectionFactory(proxy), sslSocketFactory, hostnameVerifier);
+      Proxy proxy,
+      SSLSocketFactory sslSocketFactory,
+      HostnameVerifier hostnameVerifier,
+      boolean isMtls) {
+    this(new DefaultConnectionFactory(proxy), sslSocketFactory, hostnameVerifier, isMtls);
   }
 
   /**
@@ -115,15 +122,18 @@ public final class NetHttpTransport extends HttpTransport {
    *     {@link DefaultConnectionFactory} is used
    * @param sslSocketFactory SSL socket factory or {@code null} for the default
    * @param hostnameVerifier host name verifier or {@code null} for the default
+   * @param isMtls Whether the transport is mTLS. Default value is {@code false}
    * @since 1.20
    */
   NetHttpTransport(
       ConnectionFactory connectionFactory,
       SSLSocketFactory sslSocketFactory,
-      HostnameVerifier hostnameVerifier) {
+      HostnameVerifier hostnameVerifier,
+      boolean isMtls) {
     this.connectionFactory = getConnectionFactory(connectionFactory);
     this.sslSocketFactory = sslSocketFactory;
     this.hostnameVerifier = hostnameVerifier;
+    this.isMtls = isMtls;
   }
 
   private ConnectionFactory getConnectionFactory(ConnectionFactory connectionFactory) {
@@ -139,6 +149,11 @@ public final class NetHttpTransport extends HttpTransport {
   @Override
   public boolean supportsMethod(String method) {
     return Arrays.binarySearch(SUPPORTED_METHODS, method) >= 0;
+  }
+
+  @Override
+  public boolean isMtls() {
+    return this.isMtls;
   }
 
   @Override
@@ -188,6 +203,9 @@ public final class NetHttpTransport extends HttpTransport {
      * only used if proxy is unset.
      */
     private ConnectionFactory connectionFactory;
+
+    /** Whether the transport is mTLS. Default value is {@code false}. */
+    private boolean isMtls;
 
     /**
      * Sets the HTTP proxy or {@code null} to use the proxy settings from <a
@@ -276,6 +294,33 @@ public final class NetHttpTransport extends HttpTransport {
     }
 
     /**
+     * Sets the SSL socket factory based on a root certificate trust store and a client certificate
+     * key store. The client certificate key store will be used to establish mutual TLS.
+     *
+     * @param trustStore certificate trust store (use for example {@link SecurityUtils#loadKeyStore}
+     *     or {@link SecurityUtils#loadKeyStoreFromCertificates})
+     * @param mtlsKeyStore key store for client certificate and key to establish mutual TLS. (use
+     *     for example {@link SecurityUtils#createMtlsKeyStore(InputStream)})
+     * @param mtlsKeyStorePassword password for mtlsKeyStore parameter
+     */
+    public Builder trustCertificates(
+        KeyStore trustStore, KeyStore mtlsKeyStore, String mtlsKeyStorePassword)
+        throws GeneralSecurityException {
+      if (mtlsKeyStore != null && mtlsKeyStore.size() > 0) {
+        this.isMtls = true;
+      }
+      SSLContext sslContext = SslUtils.getTlsSslContext();
+      SslUtils.initSslContext(
+          sslContext,
+          trustStore,
+          SslUtils.getPkixTrustManagerFactory(),
+          mtlsKeyStore,
+          mtlsKeyStorePassword,
+          SslUtils.getDefaultKeyManagerFactory());
+      return setSslSocketFactory(sslContext.getSocketFactory());
+    }
+
+    /**
      * {@link Beta} <br>
      * Disables validating server SSL certificates by setting the SSL socket factory using {@link
      * SslUtils#trustAllSSLContext()} for the SSL context and {@link
@@ -319,8 +364,8 @@ public final class NetHttpTransport extends HttpTransport {
         setProxy(defaultProxy());
       }
       return this.proxy == null
-          ? new NetHttpTransport(connectionFactory, sslSocketFactory, hostnameVerifier)
-          : new NetHttpTransport(this.proxy, sslSocketFactory, hostnameVerifier);
+          ? new NetHttpTransport(connectionFactory, sslSocketFactory, hostnameVerifier, isMtls)
+          : new NetHttpTransport(this.proxy, sslSocketFactory, hostnameVerifier, isMtls);
     }
   }
 }
