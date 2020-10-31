@@ -16,6 +16,8 @@ package com.google.api.client.http.apache.v2;
 
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.util.Beta;
+
 import java.io.IOException;
 import java.net.ProxySelector;
 import java.util.concurrent.TimeUnit;
@@ -106,7 +108,9 @@ public final class ApacheHttpTransport extends HttpTransport {
    *
    * @param httpClient Apache HTTP client to use
    * @param isMtls If the HTTP client is mutual TLS
+   * @since 1.38
    */
+  @Beta
   public ApacheHttpTransport(HttpClient httpClient, boolean isMtls) {
     this.httpClient = httpClient;
     this.isMtls = isMtls;
