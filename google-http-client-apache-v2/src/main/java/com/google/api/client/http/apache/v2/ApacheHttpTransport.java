@@ -92,6 +92,7 @@ public final class ApacheHttpTransport extends HttpTransport {
   }
 
   /**
+   * {@link Beta} <br>
    * Constructor that allows an alternative Apache HTTP client to be used.
    *
    * <p>Note that in the previous version, we overrode several settings. However, we are no longer
