@@ -17,7 +17,6 @@ package com.google.api.client.http.apache.v2;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Beta;
-
 import java.io.IOException;
 import java.net.ProxySelector;
 import java.util.concurrent.TimeUnit;
