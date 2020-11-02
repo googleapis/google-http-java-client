@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.38.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.37.0...v1.38.0) (2020-11-02)
+
+
+### Features
+
+* add isMtls property to ApacheHttpTransport ([#1168](https://www.github.com/googleapis/google-http-java-client/issues/1168)) ([c416e20](https://www.github.com/googleapis/google-http-java-client/commit/c416e201c92a5c5fc1b1c59c5dd63e8ec1463f5f))
+* add mtls support for NetHttpTransport ([#1147](https://www.github.com/googleapis/google-http-java-client/issues/1147)) ([51762f2](https://www.github.com/googleapis/google-http-java-client/commit/51762f221ec8ab38da03149c8012e63aec0433dc))
+
+
+### Dependencies
+
+* guava 30.0-android ([#1151](https://www.github.com/googleapis/google-http-java-client/issues/1151)) ([969dbbf](https://www.github.com/googleapis/google-http-java-client/commit/969dbbf127708aff16309f82538aca6f0a651638))
+
+
+### Documentation
+
+* libraries-bom 13.4.0 ([#1170](https://www.github.com/googleapis/google-http-java-client/issues/1170)) ([6818a02](https://www.github.com/googleapis/google-http-java-client/commit/6818a02a15e1bef8e9f5ea56a4ecc2b8d0646f9b))
+
 ## [1.37.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.36.0...v1.37.0) (2020-10-13)
 
 
