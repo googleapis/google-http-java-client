@@ -16,6 +16,7 @@ package com.google.api.client.http.apache.v2;
 
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.util.Beta;
 import java.io.IOException;
 import java.net.ProxySelector;
 import java.util.concurrent.TimeUnit;
@@ -56,13 +57,16 @@ public final class ApacheHttpTransport extends HttpTransport {
   /** Apache HTTP client. */
   private final HttpClient httpClient;
 
+  /** If the HTTP client uses mTLS channel. */
+  private final boolean isMtls;
+
   /**
    * Constructor that uses {@link #newDefaultHttpClient()} for the Apache HTTP client.
    *
    * @since 1.30
    */
   public ApacheHttpTransport() {
-    this(newDefaultHttpClient());
+    this(newDefaultHttpClient(), false);
   }
 
   /**
@@ -84,6 +88,32 @@ public final class ApacheHttpTransport extends HttpTransport {
    */
   public ApacheHttpTransport(HttpClient httpClient) {
     this.httpClient = httpClient;
+    this.isMtls = false;
+  }
+
+  /**
+   * {@link Beta} <br>
+   * Constructor that allows an alternative Apache HTTP client to be used.
+   *
+   * <p>Note that in the previous version, we overrode several settings. However, we are no longer
+   * able to do so.
+   *
+   * <p>If you choose to provide your own Apache HttpClient implementation, be sure that
+   *
+   * <ul>
+   *   <li>HTTP version is set to 1.1.
+   *   <li>Redirects are disabled (google-http-client handles redirects).
+   *   <li>Retries are disabled (google-http-client handles retries).
+   * </ul>
+   *
+   * @param httpClient Apache HTTP client to use
+   * @param isMtls If the HTTP client is mutual TLS
+   * @since 1.38
+   */
+  @Beta
+  public ApacheHttpTransport(HttpClient httpClient, boolean isMtls) {
+    this.httpClient = httpClient;
+    this.isMtls = isMtls;
   }
 
   /**
@@ -191,5 +221,11 @@ public final class ApacheHttpTransport extends HttpTransport {
    */
   public HttpClient getHttpClient() {
     return httpClient;
+  }
+
+  /** Returns if the underlying HTTP client is mTLS. */
+  @Override
+  public boolean isMtls() {
+    return isMtls;
   }
 }
