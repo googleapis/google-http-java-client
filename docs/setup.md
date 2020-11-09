@@ -23,7 +23,7 @@ the `dependencyManagement` section of your `pom.xml`:
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>libraries-bom</artifactId>
-      <version>13.4.0</version>
+      <version>15.0.0</version>
       <type>pom</type>
       <scope>import</scope>
      </dependency>
