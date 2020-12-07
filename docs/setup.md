@@ -67,6 +67,14 @@ On Android, you may need to explicitly exclude unused dependencies:
 </dependency>
 ```
 
+## Gradle
+
+If you are using Gradle, add this to your dependencies:
+
+```
+compile 'com.google.http-client:google-http-client:[VERSION]'
+```
+
 ## Download the library with dependencies
 
 Download the latest assembly zip file from Maven Central and extract it on your computer. This zip
