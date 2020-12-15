@@ -21,5 +21,4 @@ jobs:
          -Denforcer.skip=true \
          -Dmaven.javadoc.skip=true \
          -Dgcloud.download.skip=true
-    - run: find /home/runner/work/_temp/_github_home/.m2 -name 'google-http*.pom'
     - uses: suztomo/cloud-opensource-java@v1
