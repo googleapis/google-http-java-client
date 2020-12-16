@@ -582,7 +582,6 @@
     <project.protobuf-java.version>3.14.0</project.protobuf-java.version>
     <project.guava.version>30.1-android</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
-    <project.commons-logging.version>1.2</project.commons-logging.version>
     <project.httpclient.version>4.5.13</project.httpclient.version>
     <project.httpcore.version>4.4.14</project.httpcore.version>
     <project.opencensus.version>0.24.0</project.opencensus.version>
