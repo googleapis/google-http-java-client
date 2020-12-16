@@ -14,7 +14,7 @@ The Google HTTP Client Library for Java is in the central Maven repository. The 
 all artifacts for this library is `com.google.http-client`.
 
 To ensure all dependency versions work together and to avoid having to manually choose and specify
-versions for each dependency, we recommend first importing the `com.google.cloud:libraries-bom` in
+versions for each dependency, first import the `com.google.cloud:libraries-bom` in
 the `dependencyManagement` section of your `pom.xml`:
 
 ```xml
@@ -23,7 +23,7 @@ the `dependencyManagement` section of your `pom.xml`:
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>libraries-bom</artifactId>
-      <version>16.1.0</version>
+      <version>16.2.0</version>
       <type>pom</type>
       <scope>import</scope>
      </dependency>
@@ -31,7 +31,7 @@ the `dependencyManagement` section of your `pom.xml`:
 </dependencyManagement>
 ```
 
-Then you add the individual dependencies you need without version numbers to the `dependencies`
+Then add the individual dependencies you need without version numbers to the `dependencies`
 section:
 
 ```xml
