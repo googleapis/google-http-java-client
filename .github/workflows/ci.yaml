@@ -21,4 +21,5 @@ jobs:
          -Denforcer.skip=true \
          -Dmaven.javadoc.skip=true \
          -Dgcloud.download.skip=true
+    # Does this fetch docker image from GitHub Container Registry?
     - uses: suztomo/cloud-opensource-java@v1
