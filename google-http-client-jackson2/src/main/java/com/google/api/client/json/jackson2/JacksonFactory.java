@@ -26,8 +26,8 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 
 /**
- * Low-level JSON library implementation based on GSON. For maximum efficiency,
- * applications should use a single globally-shared instance of the JSON factory.
+ * Low-level JSON library implementation based on GSON. For maximum efficiency, applications should
+ * use a single globally-shared instance of the JSON factory.
  *
  * <p>Implementation is thread-safe.
  *
@@ -84,5 +84,4 @@ public final class JacksonFactory extends JsonFactory {
   public JsonParser createJsonParser(String value) throws IOException {
     return factory.createJsonParser(value);
   }
-
 }

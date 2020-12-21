@@ -13,9 +13,8 @@
  */
 
 /**
- * Low-level implementation of the JSON parser library based on GSON;
- * not Jackson, despite the name. Included only for backwards compatibility.
- * Use com.google.api.client.json.gson instead.
+ * Low-level implementation of the JSON parser library based on GSON; not Jackson, despite the name.
+ * Included only for backwards compatibility. Use com.google.api.client.json.gson instead.
  *
  * @since 1.11
  * @author Yaniv Inbar

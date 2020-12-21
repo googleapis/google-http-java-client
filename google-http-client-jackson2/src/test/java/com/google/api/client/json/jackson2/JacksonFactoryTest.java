@@ -49,7 +49,6 @@ public class JacksonFactoryTest extends AbstractJsonFactoryTest {
           + "  ]"
           + "\n"
           + "}";
-  
 
   public JacksonFactoryTest(String name) {
     super(name);

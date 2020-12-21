@@ -28,8 +28,7 @@ import java.util.ArrayList;
  */
 public class GsonFactoryTest extends AbstractJsonFactoryTest {
 
-  private static final String JSON_ENTRY_PRETTY =
-      "{" + "\n" + "  \"title\": \"foo\"" + "\n" + "}";
+  private static final String JSON_ENTRY_PRETTY = "{" + "\n" + "  \"title\": \"foo\"" + "\n" + "}";
   private static final String JSON_FEED_PRETTY =
       "{"
           + "\n"
