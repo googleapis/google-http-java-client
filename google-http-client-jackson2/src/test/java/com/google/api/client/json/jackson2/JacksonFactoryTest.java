@@ -17,7 +17,6 @@ package com.google.api.client.json.jackson2;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.test.json.AbstractJsonFactoryTest;
-import com.google.api.client.util.StringUtils;
 import com.google.common.base.Charsets;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -29,22 +28,28 @@ import java.util.ArrayList;
  */
 public class JacksonFactoryTest extends AbstractJsonFactoryTest {
 
-  private static final String JSON_ENTRY_PRETTY =
-      "{" + StringUtils.LINE_SEPARATOR + "  \"title\" : \"foo\"" + StringUtils.LINE_SEPARATOR + "}";
+  private static final String JSON_ENTRY_PRETTY = "{\n  \"title\": \"foo\"\n}";
   private static final String JSON_FEED_PRETTY =
       "{"
-          + StringUtils.LINE_SEPARATOR
-          + "  \"entries\" : [ {"
-          + StringUtils.LINE_SEPARATOR
-          + "    \"title\" : \"foo\""
-          + StringUtils.LINE_SEPARATOR
-          + "  }, {"
-          + StringUtils.LINE_SEPARATOR
-          + "    \"title\" : \"bar\""
-          + StringUtils.LINE_SEPARATOR
-          + "  } ]"
-          + StringUtils.LINE_SEPARATOR
+          + "\n"
+          + "  \"entries\": ["
+          + "\n"
+          + "    {"
+          + "\n"
+          + "      \"title\": \"foo\""
+          + "\n"
+          + "    },"
+          + "\n"
+          + "    {"
+          + "\n"
+          + "      \"title\": \"bar\""
+          + "\n"
+          + "    }"
+          + "\n"
+          + "  ]"
+          + "\n"
           + "}";
+  
 
   public JacksonFactoryTest(String name) {
     super(name);

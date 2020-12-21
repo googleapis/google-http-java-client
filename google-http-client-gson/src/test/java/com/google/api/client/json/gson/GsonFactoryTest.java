@@ -28,29 +28,27 @@ import java.util.ArrayList;
  */
 public class GsonFactoryTest extends AbstractJsonFactoryTest {
 
-  private static final String GSON_LINE_SEPARATOR = "\n";
-
   private static final String JSON_ENTRY_PRETTY =
-      "{" + GSON_LINE_SEPARATOR + "  \"title\": \"foo\"" + GSON_LINE_SEPARATOR + "}";
+      "{" + "\n" + "  \"title\": \"foo\"" + "\n" + "}";
   private static final String JSON_FEED_PRETTY =
       "{"
-          + GSON_LINE_SEPARATOR
+          + "\n"
           + "  \"entries\": ["
-          + GSON_LINE_SEPARATOR
+          + "\n"
           + "    {"
-          + GSON_LINE_SEPARATOR
+          + "\n"
           + "      \"title\": \"foo\""
-          + GSON_LINE_SEPARATOR
+          + "\n"
           + "    },"
-          + GSON_LINE_SEPARATOR
+          + "\n"
           + "    {"
-          + GSON_LINE_SEPARATOR
+          + "\n"
           + "      \"title\": \"bar\""
-          + GSON_LINE_SEPARATOR
+          + "\n"
           + "    }"
-          + GSON_LINE_SEPARATOR
+          + "\n"
           + "  ]"
-          + GSON_LINE_SEPARATOR
+          + "\n"
           + "}";
 
   public GsonFactoryTest(String name) {
