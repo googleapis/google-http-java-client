@@ -15,11 +15,10 @@ jobs:
     - run: java -version
     - run: >
         mvn install -B -V \
-         -Duser.home=/home/runner/work/_temp/_github_home \
          -DskipTests=true \
          -Dclirr.skip=true \
          -Denforcer.skip=true \
          -Dmaven.javadoc.skip=true \
          -Dgcloud.download.skip=true
-    # Does this fetch docker image from GitHub Container Registry?
-    - uses: suztomo/cloud-opensource-java@v1
+    - uses: suztomo/cloud-opensource-java/linkage-monitor@v1-composite-run
+
