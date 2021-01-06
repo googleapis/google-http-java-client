@@ -575,10 +575,10 @@ public class Xml {
     valueType = Data.resolveWildcardTypeOrTypeVariable(context, valueType);
     if (valueType == Double.class || valueType == double.class) {
       if (value.equals("INF")) {
-        return new Double(Double.POSITIVE_INFINITY);
+        return Double.valueOf(Double.POSITIVE_INFINITY);
       }
       if (value.equals("-INF")) {
-        return new Double(Double.NEGATIVE_INFINITY);
+        return Double.valueOf(Double.NEGATIVE_INFINITY);
       }
     }
     if (valueType == Float.class || valueType == float.class) {

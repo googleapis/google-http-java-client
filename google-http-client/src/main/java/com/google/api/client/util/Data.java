@@ -45,36 +45,47 @@ public class Data {
   // NOTE: create new instances to avoid cache, e.g. new String()
 
   /** The single instance of the magic null object for a {@link Boolean}. */
+  @SuppressWarnings("deprecation")
   public static final Boolean NULL_BOOLEAN = new Boolean(true);
 
   /** The single instance of the magic null object for a {@link String}. */
+  @SuppressWarnings("deprecation")
   public static final String NULL_STRING = new String();
 
   /** The single instance of the magic null object for a {@link Character}. */
+  @SuppressWarnings("deprecation")
   public static final Character NULL_CHARACTER = new Character((char) 0);
 
   /** The single instance of the magic null object for a {@link Byte}. */
+  @SuppressWarnings("deprecation")
   public static final Byte NULL_BYTE = new Byte((byte) 0);
 
   /** The single instance of the magic null object for a {@link Short}. */
+  @SuppressWarnings("deprecation")
   public static final Short NULL_SHORT = new Short((short) 0);
 
   /** The single instance of the magic null object for a {@link Integer}. */
+  @SuppressWarnings("deprecation")
   public static final Integer NULL_INTEGER = new Integer(0);
 
   /** The single instance of the magic null object for a {@link Float}. */
+  @SuppressWarnings("deprecation")
   public static final Float NULL_FLOAT = new Float(0);
 
   /** The single instance of the magic null object for a {@link Long}. */
+  @SuppressWarnings("deprecation")
   public static final Long NULL_LONG = new Long(0);
 
   /** The single instance of the magic null object for a {@link Double}. */
+  @SuppressWarnings("deprecation")
   public static final Double NULL_DOUBLE = new Double(0);
 
   /** The single instance of the magic null object for a {@link BigInteger}. */
+  @SuppressWarnings("deprecation")
   public static final BigInteger NULL_BIG_INTEGER = new BigInteger("0");
 
   /** The single instance of the magic null object for a {@link BigDecimal}. */
+  @SuppressWarnings("deprecation")
   public static final BigDecimal NULL_BIG_DECIMAL = new BigDecimal("0");
 
   /** The single instance of the magic null object for a {@link DateTime}. */
