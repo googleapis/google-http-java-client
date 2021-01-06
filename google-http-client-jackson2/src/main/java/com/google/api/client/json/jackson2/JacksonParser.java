@@ -14,6 +14,7 @@
 
 package com.google.api.client.json.jackson2;
 
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
 import java.io.IOException;
@@ -30,14 +31,14 @@ import java.math.BigInteger;
 final class JacksonParser extends JsonParser {
 
   private final com.fasterxml.jackson.core.JsonParser parser;
-  private final JacksonFactory factory;
+  private final JsonFactory factory;
 
   @Override
-  public JacksonFactory getFactory() {
+  public JsonFactory getFactory() {
     return factory;
   }
 
-  JacksonParser(JacksonFactory factory, com.fasterxml.jackson.core.JsonParser parser) {
+  JacksonParser(JsonFactory factory, com.fasterxml.jackson.core.JsonParser parser) {
     this.factory = factory;
     this.parser = parser;
   }
@@ -49,7 +50,7 @@ final class JacksonParser extends JsonParser {
 
   @Override
   public JsonToken nextToken() throws IOException {
-    return JacksonFactory.convert(parser.nextToken());
+    return convert(parser.nextToken());
   }
 
   @Override
@@ -59,7 +60,7 @@ final class JacksonParser extends JsonParser {
 
   @Override
   public JsonToken getCurrentToken() {
-    return JacksonFactory.convert(parser.getCurrentToken());
+    return convert(parser.getCurrentToken());
   }
 
   @Override
@@ -111,5 +112,37 @@ final class JacksonParser extends JsonParser {
   @Override
   public long getLongValue() throws IOException {
     return parser.getLongValue();
+  }
+
+  private static JsonToken convert(com.fasterxml.jackson.core.JsonToken token) {
+    if (token == null) {
+      return null;
+    }
+    switch (token) {
+      case END_ARRAY:
+        return JsonToken.END_ARRAY;
+      case START_ARRAY:
+        return JsonToken.START_ARRAY;
+      case END_OBJECT:
+        return JsonToken.END_OBJECT;
+      case START_OBJECT:
+        return JsonToken.START_OBJECT;
+      case VALUE_FALSE:
+        return JsonToken.VALUE_FALSE;
+      case VALUE_TRUE:
+        return JsonToken.VALUE_TRUE;
+      case VALUE_NULL:
+        return JsonToken.VALUE_NULL;
+      case VALUE_STRING:
+        return JsonToken.VALUE_STRING;
+      case VALUE_NUMBER_FLOAT:
+        return JsonToken.VALUE_NUMBER_FLOAT;
+      case VALUE_NUMBER_INT:
+        return JsonToken.VALUE_NUMBER_INT;
+      case FIELD_NAME:
+        return JsonToken.FIELD_NAME;
+      default:
+        return JsonToken.NOT_AVAILABLE;
+    }
   }
 }
