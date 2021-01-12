@@ -1,5 +1,24 @@
 # Changelog
 
+### [1.38.1](https://www.github.com/googleapis/google-http-java-client/compare/v1.38.0...v1.38.1) (2021-01-12)
+
+
+### Bug Fixes
+
+* address some deprecation warnings in Java 9+ ([#1215](https://www.github.com/googleapis/google-http-java-client/issues/1215)) ([9f53a67](https://www.github.com/googleapis/google-http-java-client/commit/9f53a6788e20bbded1b5937a5e8fe19ace31beaa))
+* deprecate JacksonFactory in favor of GsonFactory to align with security team advice ([#1216](https://www.github.com/googleapis/google-http-java-client/issues/1216)) ([6b9b6c5](https://www.github.com/googleapis/google-http-java-client/commit/6b9b6c57734c4917394d0e256e745d69b61b5517))
+* JSON spec mandates UTF-8 ([#1220](https://www.github.com/googleapis/google-http-java-client/issues/1220)) ([adb2ea4](https://www.github.com/googleapis/google-http-java-client/commit/adb2ea41c4eee61174ec6e588dec576fc53169f6))
+
+
+### Documentation
+
+* BOM 15.0.0 ([#1177](https://www.github.com/googleapis/google-http-java-client/issues/1177)) ([125a697](https://www.github.com/googleapis/google-http-java-client/commit/125a697c5cb5535894e46fd59e73663c50f3a6fa))
+
+
+### Dependencies
+
+* update guava to 30.1-android ([#1199](https://www.github.com/googleapis/google-http-java-client/issues/1199)) ([7922dc0](https://www.github.com/googleapis/google-http-java-client/commit/7922dc0517bd82669a18b81af38e5ba211bc2e0b))
+
 ## [1.38.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.37.0...v1.38.0) (2020-11-02)
 
 
