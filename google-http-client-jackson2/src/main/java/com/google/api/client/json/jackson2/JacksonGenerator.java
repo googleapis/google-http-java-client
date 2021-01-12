@@ -14,6 +14,7 @@
 
 package com.google.api.client.json.jackson2;
 
+import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -28,14 +29,14 @@ import java.math.BigInteger;
  */
 final class JacksonGenerator extends JsonGenerator {
   private final com.fasterxml.jackson.core.JsonGenerator generator;
-  private final JacksonFactory factory;
+  private final JsonFactory factory;
 
   @Override
-  public JacksonFactory getFactory() {
+  public JsonFactory getFactory() {
     return factory;
   }
 
-  JacksonGenerator(JacksonFactory factory, com.fasterxml.jackson.core.JsonGenerator generator) {
+  JacksonGenerator(JsonFactory factory, com.fasterxml.jackson.core.JsonGenerator generator) {
     this.factory = factory;
     this.generator = generator;
   }
