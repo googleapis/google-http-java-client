@@ -18,7 +18,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.util.Beta;
-import com.google.api.client.util.Charsets;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.InputStream;
@@ -29,6 +28,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Low-level JSON library implementation based on GSON.
@@ -60,9 +60,7 @@ public class GsonFactory extends JsonFactory {
 
   @Override
   public JsonParser createJsonParser(InputStream in) {
-    // TODO(mlinder): Parser should try to detect the charset automatically when using GSON
-    // https://github.com/googleapis/google-http-java-client/issues/6
-    return createJsonParser(new InputStreamReader(in, Charsets.UTF_8));
+    return createJsonParser(new InputStreamReader(in, StandardCharsets.UTF_8));
   }
 
   @Override
