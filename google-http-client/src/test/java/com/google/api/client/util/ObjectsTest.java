@@ -34,7 +34,7 @@ public class ObjectsTest extends TestCase {
 
   public void testToString_oneIntegerField() {
     String toTest =
-        Objects.toStringHelper(new TestClass()).add("field1", new Integer(42)).toString();
+        Objects.toStringHelper(new TestClass()).add("field1", Integer.valueOf(42)).toString();
     assertEquals("TestClass{field1=42}", toTest);
   }
 
