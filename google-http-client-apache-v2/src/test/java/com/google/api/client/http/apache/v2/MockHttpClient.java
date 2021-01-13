@@ -12,10 +12,8 @@
  * the License.
  */
 
-package com.google.api.client.testing.http.apache;
+package com.google.api.client.http.apache.v2;
 
-import com.google.api.client.util.Beta;
-import com.google.api.client.util.Preconditions;
 import java.io.IOException;
 import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.HttpException;
@@ -40,16 +38,13 @@ import org.apache.http.protocol.HttpProcessor;
 import org.apache.http.protocol.HttpRequestExecutor;
 
 /**
- * {@link Beta} <br>
  * Mock for {@link HttpClient} that does not actually make any network calls.
  *
  * <p>Implementation is not thread-safe.
  *
- * @since 1.14
  * @author Yaniv Inbar
  */
-@Beta
-public class MockHttpClient extends DefaultHttpClient {
+class MockHttpClient extends DefaultHttpClient {
 
   /** HTTP response code to use. */
   int responseCode;
@@ -69,7 +64,6 @@ public class MockHttpClient extends DefaultHttpClient {
       UserTokenHandler stateHandler,
       HttpParams params) {
     return new RequestDirector() {
-      @Beta
       public HttpResponse execute(HttpHost target, HttpRequest request, HttpContext context)
           throws HttpException, IOException {
         return new BasicHttpResponse(HttpVersion.HTTP_1_1, responseCode, null);
@@ -84,7 +78,6 @@ public class MockHttpClient extends DefaultHttpClient {
 
   /** Sets the HTTP response code to use. */
   public MockHttpClient setResponseCode(int responseCode) {
-    Preconditions.checkArgument(responseCode >= 0);
     this.responseCode = responseCode;
     return this;
   }
