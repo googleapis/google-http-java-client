@@ -80,6 +80,7 @@ public class HttpRequestTracingTest {
     assertAttributeEquals(span, "http.host", "google.com");
     assertAttributeEquals(span, "http.url", "https://google.com/");
     assertAttributeEquals(span, "http.method", "GET");
+    assertAttributeEquals(span, "http.status_code", "200");
 
     // Ensure we have a single annotation for starting the first attempt
     assertEquals(1, span.getAnnotations().getEvents().size());
