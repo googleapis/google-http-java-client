@@ -41,6 +41,7 @@ import java.lang.annotation.Target;
  *
  * @since 1.15
  * @author Eyal Peled
+ * @deprecated use com.google.common.annotations.Beta
  */
 @Target(
     value = {
@@ -52,4 +53,5 @@ import java.lang.annotation.Target;
       ElementType.PACKAGE
     })
 @Documented
+@Deprecated
 public @interface Beta {}

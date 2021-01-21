@@ -19,12 +19,11 @@ import java.util.Collection;
 /**
  * Static utility methods pertaining to {@link Collection} instances.
  *
- * <p>NOTE: this is a copy of a subset of Guava's {@link com.google.common.collect.Collections2}.
- * The implementation must match as closely as possible to Guava's implementation.
- *
  * @since 1.14
  * @author Yaniv Inbar
+ * @deprecated use Guava's {@link com.google.common.collect.Collections2}
  */
+@Deprecated
 public final class Collections2 {
 
   /** Used to avoid http://bugs.sun.com/view_bug.do?bug_id=6558557. */

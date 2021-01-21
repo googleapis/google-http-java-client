@@ -22,12 +22,11 @@ import java.io.OutputStream;
 /**
  * Provides utility methods for working with byte arrays and I/O streams.
  *
- * <p>NOTE: this is a copy of a subset of Guava's {@link com.google.common.io.ByteStreams}. The
- * implementation must match as closely as possible to Guava's implementation.
- *
  * @since 1.14
  * @author Yaniv Inbar
+ * @deprecated use Guava's com.google.common.io.ByteStreams
  */
+@Deprecated
 public final class ByteStreams {
 
   private static final int BUF_SIZE = 0x1000; // 4K

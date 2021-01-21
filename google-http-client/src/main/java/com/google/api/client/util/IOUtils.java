@@ -54,7 +54,9 @@ public class IOUtils {
    *
    * @param inputStream source input stream
    * @param outputStream destination output stream
+   * @deprecated use {@link com.google.common.io.ByteStreams#copy(InputStream, OutputStream)}
    */
+  @Deprecated
   public static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
     copy(inputStream, outputStream, true);
   }
@@ -79,7 +81,9 @@ public class IOUtils {
    * @param inputStream source input stream
    * @param outputStream destination output stream
    * @param closeInputStream whether the input stream should be closed at the end of this method
+   * @deprecated use {@link com.google.common.io.ByteStreams#copy(InputStream, OutputStream)}
    */
+  @Deprecated
   public static void copy(
       InputStream inputStream, OutputStream outputStream, boolean closeInputStream)
       throws IOException {
@@ -173,6 +177,7 @@ public class IOUtils {
    * Returns whether the given file is a symbolic link.
    *
    * @since 1.16
+   * @deprecated use java.nio.file.Path#isSymbolicLink
    */
   public static boolean isSymbolicLink(File file) throws IOException {
     // first try using Java 7
