@@ -1012,7 +1012,9 @@ public final class HttpRequest {
         LowLevelHttpResponse lowLevelHttpResponse = lowLevelHttpRequest.execute();
         if (lowLevelHttpResponse != null) {
           OpenCensusUtils.recordReceivedMessageEvent(span, lowLevelHttpResponse.getContentLength());
-          span.putAttribute(HttpTraceAttributeConstants.HTTP_STATUS_CODE, AttributeValue.longAttributeValue(lowLevelHttpResponse.getStatusCode()));
+          span.putAttribute(
+              HttpTraceAttributeConstants.HTTP_STATUS_CODE,
+              AttributeValue.longAttributeValue(lowLevelHttpResponse.getStatusCode()));
         }
         // Flag used to indicate if an exception is thrown before the response is constructed.
         boolean responseConstructed = false;

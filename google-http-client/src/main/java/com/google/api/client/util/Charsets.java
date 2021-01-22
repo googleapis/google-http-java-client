@@ -15,6 +15,7 @@
 package com.google.api.client.util;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Contains constant definitions for some standard {@link Charset} instances that are guaranteed to
@@ -25,14 +26,16 @@ import java.nio.charset.Charset;
  *
  * @since 1.14
  * @author Yaniv Inbar
+ * @deprecated use java.nio.charset.StandardCharsets
  */
+@Deprecated
 public final class Charsets {
 
   /** UTF-8 charset. */
-  public static final Charset UTF_8 = Charset.forName("UTF-8");
+  public static final Charset UTF_8 = StandardCharsets.UTF_8;
 
   /** ISO-8859-1 charset. */
-  public static final Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
+  public static final Charset ISO_8859_1 = StandardCharsets.ISO_8859_1;
 
   private Charsets() {}
 }
