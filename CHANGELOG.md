@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.39.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.38.1...v1.39.0) (2021-02-01)
+
+
+### Features
+
+* add http.status_code attribute to all Spans that have at least a low level http response ([#986](https://www.github.com/googleapis/google-http-java-client/issues/986)) ([fb02042](https://www.github.com/googleapis/google-http-java-client/commit/fb02042ac216379820950879cea45d06eec5278c))
+
+
+### Bug Fixes
+
+* deprecate obsolete utility methods ([#1231](https://www.github.com/googleapis/google-http-java-client/issues/1231)) ([8f95371](https://www.github.com/googleapis/google-http-java-client/commit/8f95371cf5681fbc67bd598d74089f38742a1177))
+* remove unused logger ([#1228](https://www.github.com/googleapis/google-http-java-client/issues/1228)) ([779d383](https://www.github.com/googleapis/google-http-java-client/commit/779d3832ffce741b7c4055a14855ce8755695fce))
+
 ### [1.38.1](https://www.github.com/googleapis/google-http-java-client/compare/v1.38.0...v1.38.1) (2021-01-12)
 
 
