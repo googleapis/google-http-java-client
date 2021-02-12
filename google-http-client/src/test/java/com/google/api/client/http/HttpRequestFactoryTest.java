@@ -14,6 +14,8 @@
 
 package com.google.api.client.http;
 
+import java.io.IOException;
+
 import com.google.api.client.http.javanet.NetHttpTransport;
 
 import junit.framework.TestCase;
@@ -23,7 +25,7 @@ import junit.framework.TestCase;
  */
 public class HttpRequestFactoryTest extends TestCase {
 
-  public void testBuildRequest_urlShouldBeSet() throws Exception {
+  public void testBuildRequest_urlShouldBeSet() throws IllegalArgumentException, IOException {
     HttpRequestFactory requestFactory =
         new NetHttpTransport().createRequestFactory(
             new HttpRequestInitializer() {
