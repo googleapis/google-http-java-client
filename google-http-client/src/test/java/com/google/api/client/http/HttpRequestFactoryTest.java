@@ -14,29 +14,26 @@
 
 package com.google.api.client.http;
 
-import java.io.IOException;
-
 import com.google.api.client.http.javanet.NetHttpTransport;
-
+import java.io.IOException;
 import junit.framework.TestCase;
 
-/**
- * Tests {@link HttpRequestFactory}.
- */
+/** Tests {@link HttpRequestFactory}. */
 public class HttpRequestFactoryTest extends TestCase {
 
   public void testBuildRequest_urlShouldBeSet() throws IllegalArgumentException, IOException {
     HttpRequestFactory requestFactory =
-        new NetHttpTransport().createRequestFactory(
-            new HttpRequestInitializer() {
-              @Override
-              public void initialize(HttpRequest request) {
-                // Url should be set by buildRequest method before calling initialize. 
-                if (request.getUrl() == null) {
-                    throw new IllegalArgumentException("url is not set in request");
-                }
-              }
-            });
+        new NetHttpTransport()
+            .createRequestFactory(
+                new HttpRequestInitializer() {
+                  @Override
+                  public void initialize(HttpRequest request) {
+                    // Url should be set by buildRequest method before calling initialize.
+                    if (request.getUrl() == null) {
+                      throw new IllegalArgumentException("url is not set in request");
+                    }
+                  }
+                });
     GenericUrl url = new GenericUrl("https://foo.googleapis.com/");
     HttpRequest request = requestFactory.buildRequest("GET", url, null);
     assertEquals(url, request.getUrl());
