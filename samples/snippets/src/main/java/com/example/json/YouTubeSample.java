@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    https://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.example.json;
 
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.util.Key;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +27,7 @@ public class YouTubeSample {
     @Key("items")
     private List<SearchResult> searchResults;
 
-    @Key
-    private PageInfo pageInfo;
+    @Key private PageInfo pageInfo;
 
     public List<SearchResult> getSearchResults() {
       return searchResults;
@@ -40,11 +39,9 @@ public class YouTubeSample {
   }
 
   public static class PageInfo {
-    @Key
-    private long totalResults;
+    @Key private long totalResults;
 
-    @Key
-    private long resultsPerPage;
+    @Key private long resultsPerPage;
 
     public long getTotalResults() {
       return totalResults;
@@ -56,14 +53,12 @@ public class YouTubeSample {
   }
 
   public static class SearchResult {
-    @Key
-    private String kind;
+    @Key private String kind;
 
     @Key("id")
     private VideoId videoId;
 
-    @Key
-    private Snippet snippet;
+    @Key private Snippet snippet;
 
     public String getKind() {
       return kind;
@@ -79,11 +74,9 @@ public class YouTubeSample {
   }
 
   public static class VideoId {
-    @Key
-    private String kind;
+    @Key private String kind;
 
-    @Key
-    private String videoId;
+    @Key private String videoId;
 
     public String getKind() {
       return kind;
@@ -95,20 +88,15 @@ public class YouTubeSample {
   }
 
   public static class Snippet {
-    @Key
-    private String publishedAt;
+    @Key private String publishedAt;
 
-    @Key
-    private String channelId;
+    @Key private String channelId;
 
-    @Key
-    private String title;
+    @Key private String title;
 
-    @Key
-    private String description;
+    @Key private String description;
 
-    @Key
-    private Map<String, Thumbnail> thumbnails;
+    @Key private Map<String, Thumbnail> thumbnails;
 
     public String getPublishedAt() {
       return publishedAt;
@@ -132,14 +120,11 @@ public class YouTubeSample {
   }
 
   public static class Thumbnail {
-    @Key
-    private String url;
+    @Key private String url;
 
-    @Key
-    private long width;
+    @Key private long width;
 
-    @Key
-    private long height;
+    @Key private long height;
 
     public String getUrl() {
       return url;
@@ -170,5 +155,4 @@ public class YouTubeSample {
     }
     return listResponse;
   }
-
 }
