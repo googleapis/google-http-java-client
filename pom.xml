@@ -422,9 +422,8 @@
             <phase>site</phase>
             <configuration>
               <links>
-                <link>http://download.oracle.com/javase/7/docs/api/</link>
-                <link>http://cloud.google.com/appengine/docs/java/javadoc</link>
-                <link>http://fasterxml.github.com/jackson-core/javadoc/${project.jackson-core2.version}/</link>
+                <link>https://download.oracle.com/javase/7/docs/api/</link>
+                <link>https://cloud.google.com/appengine/docs/java/javadoc</link>
                 <link>https://static.javadoc.io/doc/com.google.code.gson/gson/${project.gson.version}</link>
                 <link>https://google.github.io/guava/releases/${project.guava.version}/api/docs/</link>
               </links>
