@@ -4,7 +4,7 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/google-http-java-client.git",
-        "sha": "8f95371cf5681fbc67bd598d74089f38742a1177"
+        "sha": "9e8fcfffc6d92505528aff0a89c169bf3e812c41"
       }
     },
     {
@@ -30,6 +30,7 @@
     ".github/workflows/approve-readme.yaml",
     ".github/workflows/auto-release.yaml",
     ".github/workflows/ci.yaml",
+    ".github/workflows/samples.yaml",
     ".kokoro/build.bat",
     ".kokoro/build.sh",
     ".kokoro/coerce_logs.sh",
