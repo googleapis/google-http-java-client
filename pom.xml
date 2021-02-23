@@ -256,6 +256,12 @@
         <artifactId>opencensus-testing</artifactId>
         <version>${project.opencensus.version}</version>
       </dependency>
+      <dependency>
+        <!-- We can remove this once Guava depends on the newer error_prone_annotations -->
+        <groupId>com.google.errorprone</groupId>
+        <artifactId>error_prone_annotations</artifactId>
+        <version>${project.errorprone.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -584,6 +590,7 @@
     <project.httpclient.version>4.5.13</project.httpclient.version>
     <project.httpcore.version>4.4.14</project.httpcore.version>
     <project.opencensus.version>0.28.0</project.opencensus.version>
+    <project.errorprone.version>2.5.1</project.errorprone.version>
     <project.root-directory>..</project.root-directory>
     <deploy.autorelease>false</deploy.autorelease>
   </properties>
