@@ -19,6 +19,6 @@ java.common_templates(excludes=[
     "README.md",
     "java.header",
     "checkstyle.xml",
-    "renovate.json",
     "license-checks.xml",
+    ".github/workflows/samples.yaml",
 ])
