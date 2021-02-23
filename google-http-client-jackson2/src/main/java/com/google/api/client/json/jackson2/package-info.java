@@ -13,8 +13,7 @@
  */
 
 /**
- * Low-level implementation of the JSON parser library based on the <a
- * href="http://wiki.fasterxml.com/JacksonRelease20">Jackson 2</a> JSON library.
+ * Low-level implementation of the JSON parser library based on the Jackson 2 JSON library.
  *
  * @since 1.11
  * @author Yaniv Inbar
