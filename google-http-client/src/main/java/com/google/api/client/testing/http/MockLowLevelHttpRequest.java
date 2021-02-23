@@ -18,13 +18,13 @@ import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.Beta;
-import com.google.api.client.util.Charsets;
 import com.google.api.client.util.IOUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -164,7 +164,7 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
     HttpMediaType mediaType = contentType != null ? new HttpMediaType(contentType) : null;
     Charset charset =
         mediaType == null || mediaType.getCharsetParameter() == null
-            ? Charsets.ISO_8859_1
+            ? StandardCharsets.ISO_8859_1
             : mediaType.getCharsetParameter();
     return out.toString(charset.name());
   }
