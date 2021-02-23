@@ -32,6 +32,8 @@ branchProtectionRules:
     - "units (8)"
     - "units (11)"
     - "windows"
+    - "dependencies (8)"
+    - "dependencies (11)"
     - "linkage-monitor"
     - "lint"
     - "clirr"
