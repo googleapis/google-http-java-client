@@ -257,7 +257,6 @@
         <version>${project.opencensus.version}</version>
       </dependency>
       <dependency>
-        <!-- We can remove this once Guava depends on the newer error_prone_annotations -->
         <groupId>com.google.errorprone</groupId>
         <artifactId>error_prone_annotations</artifactId>
         <version>${project.errorprone.version}</version>
