@@ -17,8 +17,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links>
-            <link>http://download.oracle.com/javase/7/docs/api/</link>
-            <link>http://fasterxml.github.com/jackson-core/javadoc/${project.jackson-core2.version}/</link>
+            <link>https://download.oracle.com/javase/7/docs/api/</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
