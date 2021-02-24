@@ -14,7 +14,6 @@
 
 package com.google.api.client.json;
 
-import com.google.api.client.util.Charsets;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +21,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Abstract low-level JSON factory.
@@ -159,7 +159,7 @@ public abstract class JsonFactory {
    */
   private ByteArrayOutputStream toByteStream(Object item, boolean pretty) throws IOException {
     ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-    JsonGenerator generator = createJsonGenerator(byteStream, Charsets.UTF_8);
+    JsonGenerator generator = createJsonGenerator(byteStream, StandardCharsets.UTF_8);
     if (pretty) {
       generator.enablePrettyPrint();
     }

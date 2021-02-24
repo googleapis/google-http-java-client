@@ -14,7 +14,6 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Charsets;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingInputStream;
 import com.google.api.client.util.Preconditions;
@@ -26,6 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -506,14 +506,14 @@ public final class HttpResponse {
   }
 
   /**
-   * Returns the {@link Charset} specified in the Content-Type of this response or the {@code
-   * "ISO-8859-1"} charset as a default.
+   * Returns the {@link Charset} specified in the Content-Type of this response or the ISO-8859-1
+   * charset as a default.
    *
    * @since 1.10
    */
   public Charset getContentCharset() {
     return mediaType == null || mediaType.getCharsetParameter() == null
-        ? Charsets.ISO_8859_1
+        ? StandardCharsets.ISO_8859_1
         : mediaType.getCharsetParameter();
   }
 }

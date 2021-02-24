@@ -15,9 +15,9 @@
 package com.google.api.client.http;
 
 import com.google.api.client.json.Json;
-import com.google.api.client.util.Charsets;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import junit.framework.TestCase;
 
 /**
@@ -77,7 +77,7 @@ public class MultipartContentTest extends TestCase {
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     content.writeTo(out);
     String expectedContent = expectedStringBuilder.toString();
-    assertEquals(expectedContent, out.toString(Charsets.UTF_8.name()));
+    assertEquals(expectedContent, out.toString(StandardCharsets.UTF_8.name()));
     assertEquals(StringUtils.getBytesUtf8(expectedContent).length, content.getLength());
   }
 
@@ -128,7 +128,7 @@ public class MultipartContentTest extends TestCase {
     // write to string
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     content.writeTo(out);
-    assertEquals(expectedContent, out.toString(Charsets.UTF_8.name()));
+    assertEquals(expectedContent, out.toString(StandardCharsets.UTF_8.name()));
     assertEquals(StringUtils.getBytesUtf8(expectedContent).length, content.getLength());
     assertEquals(
         boundaryString == null

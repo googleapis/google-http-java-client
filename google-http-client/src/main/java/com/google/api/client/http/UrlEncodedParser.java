@@ -15,7 +15,6 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.ArrayValueMap;
-import com.google.api.client.util.Charsets;
 import com.google.api.client.util.ClassInfo;
 import com.google.api.client.util.Data;
 import com.google.api.client.util.FieldInfo;
@@ -34,6 +33,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -72,7 +72,10 @@ public class UrlEncodedParser implements ObjectParser {
    * @since 1.13
    */
   public static final String MEDIA_TYPE =
-      new HttpMediaType(UrlEncodedParser.CONTENT_TYPE).setCharsetParameter(Charsets.UTF_8).build();
+      new HttpMediaType(UrlEncodedParser.CONTENT_TYPE)
+          .setCharsetParameter(StandardCharsets.UTF_8)
+          .build();
+
   /**
    * Parses the given URL-encoded content into the given data object of data key name/value pairs
    * using {@link #parse(Reader, Object)}.
