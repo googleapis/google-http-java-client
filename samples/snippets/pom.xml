@@ -63,7 +63,7 @@
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-gson</artifactId>
-      <version>1.38.1</version>
+      <version>1.39.0</version>
       <scope>test</scope>
     </dependency>
     <!-- END_EXCLUDE -->
