@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.39.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.38.1...v1.39.0) (2021-02-24)
+
+
+### Features
+
+* add http.status_code attribute to all Spans that have at least a low level http response ([#986](https://www.github.com/googleapis/google-http-java-client/issues/986)) ([fb02042](https://www.github.com/googleapis/google-http-java-client/commit/fb02042ac216379820950879cea45d06eec5278c))
+
+
+### Bug Fixes
+
+* deprecate obsolete utility methods ([#1231](https://www.github.com/googleapis/google-http-java-client/issues/1231)) ([8f95371](https://www.github.com/googleapis/google-http-java-client/commit/8f95371cf5681fbc67bd598d74089f38742a1177))
+* fix buildRequest setUrl order ([#1255](https://www.github.com/googleapis/google-http-java-client/issues/1255)) ([97ffee1](https://www.github.com/googleapis/google-http-java-client/commit/97ffee1a68af6637dd5d53fcd70e2ce02c9c9604))
+* refactor to use StandardCharsets ([#1243](https://www.github.com/googleapis/google-http-java-client/issues/1243)) ([03ec798](https://www.github.com/googleapis/google-http-java-client/commit/03ec798d7637ff454614415be7b324cd8dc7c77c))
+* remove old broken link ([#1275](https://www.github.com/googleapis/google-http-java-client/issues/1275)) ([12f80e0](https://www.github.com/googleapis/google-http-java-client/commit/12f80e09e71a41b967db548ab93cab2e3f4e549c)), closes [#1278](https://www.github.com/googleapis/google-http-java-client/issues/1278)
+* remove unused logger ([#1228](https://www.github.com/googleapis/google-http-java-client/issues/1228)) ([779d383](https://www.github.com/googleapis/google-http-java-client/commit/779d3832ffce741b7c4055a14855ce8755695fce))
+
+
+### Documentation
+
+* Jackson is unable to maintain stable Javadocs ([#1265](https://www.github.com/googleapis/google-http-java-client/issues/1265)) ([9e8fcff](https://www.github.com/googleapis/google-http-java-client/commit/9e8fcfffc6d92505528aff0a89c169bf3e812c41))
+
+
+### Dependencies
+
+* update dependency com.google.protobuf:protobuf-java to v3.15.1 ([#1270](https://www.github.com/googleapis/google-http-java-client/issues/1270)) ([213726a](https://www.github.com/googleapis/google-http-java-client/commit/213726a0b65f35fdc65713027833d22b553bbc20))
+* update dependency com.google.protobuf:protobuf-java to v3.15.2 ([#1284](https://www.github.com/googleapis/google-http-java-client/issues/1284)) ([dfa06bc](https://www.github.com/googleapis/google-http-java-client/commit/dfa06bca432f644a7146e3987555f19c5d1be7c5))
+* update OpenCensus to 0.28.0 for consistency with gRPC ([#1242](https://www.github.com/googleapis/google-http-java-client/issues/1242)) ([b810d53](https://www.github.com/googleapis/google-http-java-client/commit/b810d53c8f63380c1b4f398408cfb47c6ab134cc))
+* version manage error_prone_annotations to 2.5.1 ([#1268](https://www.github.com/googleapis/google-http-java-client/issues/1268)) ([6a95f6f](https://www.github.com/googleapis/google-http-java-client/commit/6a95f6f2494a9dafd968d212b15c9b329416864f))
+
 ### [1.38.1](https://www.github.com/googleapis/google-http-java-client/compare/v1.38.0...v1.38.1) (2021-01-12)
 
 
