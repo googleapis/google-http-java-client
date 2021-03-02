@@ -18,7 +18,6 @@ import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingInputStream;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
-import com.google.common.annotations.VisibleForTesting;
 
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
