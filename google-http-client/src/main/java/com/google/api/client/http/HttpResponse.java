@@ -520,7 +520,7 @@ public final class HttpResponse {
         return mediaType.getCharsetParameter();
       }
       // fallback to well-known charsets
-      if (mediaType.getType().equals("application") && mediaType.getSubType().equals("json")) {
+      if ("application".equals(mediaType.getType()) && "json".equals(mediaType.getSubType())) {
         // https://tools.ietf.org/html/rfc4627 - JSON must be encoded with UTF-8
         return StandardCharsets.UTF_8;
       }
