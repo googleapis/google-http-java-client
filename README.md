@@ -1,5 +1,9 @@
 # Google HTTP Client Library for Java
 
+[![Maven][maven-version-image]][maven-version-link]
+![Stability][stability-image]
+[![CI Status][ci-status-image]][ci-status-link]
+
 ## Description
 Written by Google, the Google HTTP Client Library for Java is a flexible, efficient, and powerful
 Java library for accessing any resource on the web via HTTP. The library has the following
@@ -46,15 +50,12 @@ might result, and you are not guaranteed a compilation error.
 - [Release Notes](https://github.com/googleapis/google-http-java-client/releases)
 - [Support (Questions, Bugs)](https://developers.google.com/api-client-library/java/google-http-java-client/support)
 
-## CI Status
-
-Java Version | Status
------------- | ------
-Java 7 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java7.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java7.html)
-Java 8 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java8.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java8.html)
-Java 11 | [![Kokoro CI](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java11.svg)](https://storage.googleapis.com/cloud-devrel-public/java/badges/google-http-java-client/java11.html)
-
-
 [google-oauth-client]: https://github.com/googleapis/google-oauth-java-client
 [google-api-client]: https://github.com/googleapis/google-api-java-client
 [contributions]: CONTRIBUTING.md
+
+[ci-status-image]: https://github.com/googleapis/google-http-java-client/actions/workflows/ci.yaml/badge.svg?event=push
+[ci-status-link]: https://github.com/googleapis/google-http-java-client/actions?query=event%3Apush
+[maven-version-image]: https://img.shields.io/maven-central/v/com.google.http-client/google-http-client.svg
+[maven-version-link]: https://search.maven.org/search?q=g:com.google.http-client%20AND%20a:google-http-client&core=gav
+[stability-image]: https://img.shields.io/badge/stability-ga-green
