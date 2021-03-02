@@ -14,10 +14,10 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingInputStream;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
+import com.google.common.io.ByteStreams;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -414,7 +414,7 @@ public final class HttpResponse {
    */
   public void download(OutputStream outputStream) throws IOException {
     InputStream inputStream = getContent();
-    IOUtils.copy(inputStream, outputStream);
+    ByteStreams.copy(inputStream, outputStream);
   }
 
   /** Closes the content of the HTTP response from {@link #getContent()}, ignoring any content. */
@@ -501,7 +501,7 @@ public final class HttpResponse {
       return "";
     }
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    IOUtils.copy(content, out);
+    ByteStreams.copy(content, out);
     return out.toString(getContentCharset().name());
   }
 
