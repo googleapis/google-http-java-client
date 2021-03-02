@@ -18,7 +18,6 @@ import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingInputStream;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -526,5 +525,4 @@ public final class HttpResponse {
     }
     return StandardCharsets.ISO_8859_1;
   }
-
 }
