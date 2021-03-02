@@ -18,7 +18,8 @@ import com.google.api.client.http.HttpMediaType;
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.Beta;
-import com.google.api.client.util.IOUtils;
+import com.google.common.io.ByteStreams;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -157,7 +158,7 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
       InputStream contentInputStream =
           new GZIPInputStream(new ByteArrayInputStream(out.toByteArray()));
       out = new ByteArrayOutputStream();
-      IOUtils.copy(contentInputStream, out);
+      ByteStreams.copy(contentInputStream, out);
     }
     // determine charset parameter from content type
     String contentType = getContentType();

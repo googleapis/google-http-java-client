@@ -14,10 +14,11 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import com.google.common.io.ByteStreams;
 import junit.framework.TestCase;
 
 /**
@@ -61,7 +62,7 @@ public class ByteArrayContentTest extends TestCase {
     assertTrue(content.retrySupported());
     assertEquals(expected.length(), content.getLength());
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    IOUtils.copy(content.getInputStream(), out);
+    ByteStreams.copy(content.getInputStream(), out);
     assertEquals(expected, out.toString());
   }
 }
