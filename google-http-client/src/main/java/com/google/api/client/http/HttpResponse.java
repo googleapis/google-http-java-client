@@ -512,8 +512,17 @@ public final class HttpResponse {
    * @since 1.10
    */
   public Charset getContentCharset() {
-    return mediaType == null || mediaType.getCharsetParameter() == null
-        ? StandardCharsets.ISO_8859_1
-        : mediaType.getCharsetParameter();
+    if (mediaType != null) {
+      // use specified charset parameter from content/type header if available
+      if (mediaType.getCharsetParameter() != null) {
+        return mediaType.getCharsetParameter();
+      }
+      // fallback to well-known charsets
+      if ("application".equals(mediaType.getType()) && "json".equals(mediaType.getSubType())) {
+        // https://tools.ietf.org/html/rfc4627 - JSON must be encoded with UTF-8
+        return StandardCharsets.UTF_8;
+      }
+    }
+    return StandardCharsets.ISO_8859_1;
   }
 }
