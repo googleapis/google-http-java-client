@@ -351,9 +351,9 @@ public final class HttpResponse {
         try {
           // gzip encoding (wrap content with GZipInputStream)
           if (!returnRawInputStream && this.contentEncoding != null) {
-            String oontentencoding = this.contentEncoding.trim().toLowerCase(Locale.ENGLISH);
-            if (CONTENT_ENCODING_GZIP.equals(oontentencoding)
-                || CONTENT_ENCODING_XGZIP.equals(oontentencoding)) {
+            String contentencoding = this.contentEncoding.trim().toLowerCase(Locale.ENGLISH);
+            if (CONTENT_ENCODING_GZIP.equals(contentencoding)
+                || CONTENT_ENCODING_XGZIP.equals(contentencoding)) {
               // Wrap the original stream in a ConsumingInputStream before passing it to
               // GZIPInputStream. The GZIPInputStream leaves content unconsumed in the original
               // stream (it almost always leaves the last chunk unconsumed in chunked responses).
@@ -432,8 +432,10 @@ public final class HttpResponse {
    * @since 1.4
    */
   public void disconnect() throws IOException {
-    ignore();
+    // Close the connection before trying to close the InputStream content. If you are trying to
+    // disconnect, we shouldn't need to try to read any further content.
     response.disconnect();
+    ignore();
   }
 
   /**
