@@ -351,9 +351,9 @@ public final class HttpResponse {
         try {
           // gzip encoding (wrap content with GZipInputStream)
           if (!returnRawInputStream && this.contentEncoding != null) {
-            String contentencoding = this.contentEncoding.trim().toLowerCase(Locale.ENGLISH);
-            if (CONTENT_ENCODING_GZIP.equals(contentencoding)
-                || CONTENT_ENCODING_XGZIP.equals(contentencoding)) {
+            String contentEncoding = this.contentEncoding.trim().toLowerCase(Locale.ENGLISH);
+            if (CONTENT_ENCODING_GZIP.equals(contentEncoding)
+                || CONTENT_ENCODING_XGZIP.equals(contentEncoding)) {
               // Wrap the original stream in a ConsumingInputStream before passing it to
               // GZIPInputStream. The GZIPInputStream leaves content unconsumed in the original
               // stream (it almost always leaves the last chunk unconsumed in chunked responses).
