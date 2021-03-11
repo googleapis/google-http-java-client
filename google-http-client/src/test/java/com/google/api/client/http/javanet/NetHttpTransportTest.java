@@ -195,6 +195,8 @@ public class NetHttpTransportTest extends TestCase {
 
   @Test(timeout = 10_000L)
   public void testDisconnectShouldNotWaitToReadResponse() throws IOException {
+    // This handler waits for 100s before returning writing content. The test should
+    // timeout if disconnect waits for the response before closing the connection.
     final HttpHandler handler =
         new HttpHandler() {
           @Override
