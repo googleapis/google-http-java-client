@@ -35,6 +35,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.http.Header;
@@ -213,11 +215,32 @@ public class ApacheHttpTransportTest {
     }
   }
 
+  static class FakeServer implements AutoCloseable {
+    private final HttpServer server;
+    private final ExecutorService executorService;
+
+    public FakeServer(HttpHandler httpHandler) throws IOException {
+      this.server = HttpServer.create(new InetSocketAddress(0), 0);
+      this.executorService = Executors.newFixedThreadPool(1);
+      server.setExecutor(this.executorService);
+      server.createContext("/", httpHandler);
+      server.start();
+    }
+
+    public int getPort() {
+      return server.getAddress().getPort();
+    }
+
+    @Override
+    public void close() {
+      this.server.stop(0);
+      this.executorService.shutdownNow();
+    }
+  }
+
   @Test
   public void testNormalizedUrl() throws IOException {
-    HttpServer server = HttpServer.create(new InetSocketAddress(0), 0);
-    server.createContext(
-        "/",
+    final HttpHandler handler =
         new HttpHandler() {
           @Override
           public void handle(HttpExchange httpExchange) throws IOException {
@@ -227,19 +250,51 @@ public class ApacheHttpTransportTest {
               out.write(response);
             }
           }
-        });
-    server.start();
-
-    ApacheHttpTransport transport = new ApacheHttpTransport();
-    GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
-    testUrl.setPort(server.getAddress().getPort());
-    com.google.api.client.http.HttpResponse response =
-        transport.createRequestFactory().buildGetRequest(testUrl).execute();
-    assertEquals(200, response.getStatusCode());
-    assertEquals("/foo//bar", response.parseAsString());
+        };
+    try (FakeServer server = new FakeServer(handler)) {
+      HttpTransport transport = new ApacheHttpTransport();
+      GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
+      testUrl.setPort(server.getPort());
+      com.google.api.client.http.HttpResponse response =
+          transport.createRequestFactory().buildGetRequest(testUrl).execute();
+      assertEquals(200, response.getStatusCode());
+      assertEquals("/foo//bar", response.parseAsString());
+    }
   }
 
   private boolean isWindows() {
     return System.getProperty("os.name").startsWith("Windows");
+  }
+
+  @Test(timeout = 10_000L)
+  public void testDisconnectShouldNotWaitToReadResponse() throws IOException {
+    final HttpHandler handler =
+        new HttpHandler() {
+          @Override
+          public void handle(HttpExchange httpExchange) throws IOException {
+            byte[] response = httpExchange.getRequestURI().toString().getBytes();
+            httpExchange.sendResponseHeaders(200, response.length);
+
+            // Sleep for longer than the test timeout
+            try {
+              Thread.sleep(100_000);
+            } catch (InterruptedException e) {
+              throw new IOException("interrupted", e);
+            }
+            try (OutputStream out = httpExchange.getResponseBody()) {
+              out.write(response);
+            }
+          }
+        };
+
+    try (FakeServer server = new FakeServer(handler)) {
+      HttpTransport transport = new ApacheHttpTransport();
+      GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
+      testUrl.setPort(server.getPort());
+      com.google.api.client.http.HttpResponse response =
+          transport.createRequestFactory().buildGetRequest(testUrl).execute();
+      // disconnect should not wait to read the entire content
+      response.disconnect();
+    }
   }
 }
