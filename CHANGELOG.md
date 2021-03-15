@@ -1,5 +1,26 @@
 # Changelog
 
+### [1.39.1](https://www.github.com/googleapis/google-http-java-client/compare/v1.39.0...v1.39.1) (2021-03-15)
+
+
+### Bug Fixes
+
+* default application/json charset to utf-8 ([#1305](https://www.github.com/googleapis/google-http-java-client/issues/1305)) ([c4dfb48](https://www.github.com/googleapis/google-http-java-client/commit/c4dfb48cb8248564b19efdf1a4272eb6fafe3138)), closes [#1102](https://www.github.com/googleapis/google-http-java-client/issues/1102)
+* when disconnecting, close the underlying connection before the response InputStream ([#1315](https://www.github.com/googleapis/google-http-java-client/issues/1315)) ([f84ed59](https://www.github.com/googleapis/google-http-java-client/commit/f84ed5964f376ada5eb724a3d1f3ac526d31d9c5)), closes [#1303](https://www.github.com/googleapis/google-http-java-client/issues/1303)
+
+
+### Documentation
+
+* 19.0.0 libraries-bom ([#1312](https://www.github.com/googleapis/google-http-java-client/issues/1312)) ([62be21b](https://www.github.com/googleapis/google-http-java-client/commit/62be21b84a5394455d828b0f97f9e53352b8aa18))
+* update version ([#1296](https://www.github.com/googleapis/google-http-java-client/issues/1296)) ([f17755c](https://www.github.com/googleapis/google-http-java-client/commit/f17755cf5e8ccbf441131ebb13fe60028fb63850))
+
+
+### Dependencies
+
+* update dependency com.fasterxml.jackson.core:jackson-core to v2.12.2 ([#1309](https://www.github.com/googleapis/google-http-java-client/issues/1309)) ([aa7d703](https://www.github.com/googleapis/google-http-java-client/commit/aa7d703d94e5e34d849bc753cfe8bd332ff80443))
+* update dependency com.google.protobuf:protobuf-java to v3.15.3 ([#1301](https://www.github.com/googleapis/google-http-java-client/issues/1301)) ([1db338b](https://www.github.com/googleapis/google-http-java-client/commit/1db338b8b98465e03e93013b40fd8d821ac245c8))
+* update dependency com.google.protobuf:protobuf-java to v3.15.6 ([#1310](https://www.github.com/googleapis/google-http-java-client/issues/1310)) ([9cb50e4](https://www.github.com/googleapis/google-http-java-client/commit/9cb50e49e1cfc196b915465bb6ecbd90fb6d04d7))
+
 ## [1.39.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.38.1...v1.39.0) (2021-02-24)
 
 
