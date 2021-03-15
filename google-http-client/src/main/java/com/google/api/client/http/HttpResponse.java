@@ -419,9 +419,12 @@ public final class HttpResponse {
 
   /** Closes the content of the HTTP response from {@link #getContent()}, ignoring any content. */
   public void ignore() throws IOException {
-    InputStream content = getContent();
-    if (content != null) {
-      content.close();
+    if (this.response == null) {
+      return;
+    }
+    InputStream lowLevelResponseContent = this.response.getContent();
+    if (lowLevelResponseContent != null) {
+      lowLevelResponseContent.close();
     }
   }
 
