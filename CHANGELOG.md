@@ -1,5 +1,15 @@
 # Changelog
 
+### [1.39.2](https://www.github.com/googleapis/google-http-java-client/compare/v1.39.1...v1.39.2) (2021-04-09)
+
+
+### Dependencies
+
+* update dependency com.google.errorprone:error_prone_annotations to v2.6.0 ([#1327](https://www.github.com/googleapis/google-http-java-client/issues/1327)) ([3feef0c](https://www.github.com/googleapis/google-http-java-client/commit/3feef0ccd2ca298bdf136da14b4e4b864df423db))
+* update dependency com.google.protobuf:protobuf-java to v3.15.7 ([#1329](https://www.github.com/googleapis/google-http-java-client/issues/1329)) ([afbbb3f](https://www.github.com/googleapis/google-http-java-client/commit/afbbb3fe441a41e8f0d4ecdb3f46b798c708a46b))
+* update dependency com.google.protobuf:protobuf-java to v3.15.8 ([#1334](https://www.github.com/googleapis/google-http-java-client/issues/1334)) ([e10565a](https://www.github.com/googleapis/google-http-java-client/commit/e10565af31e531f7a1fbd8bbac0a9a69fbef5a80))
+* update Guava patch ([#1333](https://www.github.com/googleapis/google-http-java-client/issues/1333)) ([854942a](https://www.github.com/googleapis/google-http-java-client/commit/854942aff7302be77e6f62f9cf7b5dc5e1928c90))
+
 ### [1.39.1](https://www.github.com/googleapis/google-http-java-client/compare/v1.39.0...v1.39.1) (2021-03-15)
 
 
