@@ -57,12 +57,6 @@
       <filtered>true</filtered>
     </file>
     <file>
-      <source>properties/google-http-client-protobuf.jar.properties</source>
-      <destName>google-http-client-protobuf-${project.version}.jar.properties</destName>
-      <outputDirectory>google-http-java-client/libs</outputDirectory>
-      <filtered>true</filtered>
-    </file>
-    <file>
       <source>properties/google-http-client-xml.jar.properties</source>
       <destName>google-http-client-xml-${project.version}.jar.properties</destName>
       <outputDirectory>google-http-java-client/libs</outputDirectory>
@@ -77,12 +71,6 @@
     <file>
       <source>properties/jackson-core.jar.properties</source>
       <destName>jackson-core-${project.jackson-core2.version}.jar.properties</destName>
-      <outputDirectory>google-http-java-client/libs</outputDirectory>
-      <filtered>true</filtered>
-    </file>
-    <file>
-      <source>properties/protobuf-java.jar.properties</source>
-      <destName>protobuf-java-${project.protobuf-java.version}.jar.properties</destName>
       <outputDirectory>google-http-java-client/libs</outputDirectory>
       <filtered>true</filtered>
     </file>
@@ -110,11 +98,6 @@
     <file>
       <source>../google-http-client-jackson2/target/site/dependencies.html</source>
       <destName>google-http-client-jackson2-dependencies.html</destName>
-      <outputDirectory>google-http-java-client/dependencies</outputDirectory>
-    </file>
-    <file>
-      <source>../google-http-client-protobuf/target/site/dependencies.html</source>
-      <destName>google-http-client-protobuf-dependencies.html</destName>
       <outputDirectory>google-http-java-client/dependencies</outputDirectory>
     </file>
     <file>
