@@ -62,7 +62,6 @@
     <module>google-http-client-appengine</module>
     <module>google-http-client-android</module>
     <module>google-http-client-apache-v2</module>
-    <module>google-http-client-protobuf</module>
     <module>google-http-client-gson</module>
     <module>google-http-client-jackson2</module>
     <module>google-http-client-xml</module>
@@ -86,10 +85,6 @@
       <id>central</id>
       <name>Central Repository</name>
       <url>https://repo.maven.apache.org/maven2</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>protoc-plugin</id>
-      <url>https://dl.bintray.com/sergei-ivanov/maven/</url>
     </pluginRepository>
   </pluginRepositories>
 
@@ -177,11 +172,6 @@
         <version>${project.jsr305.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.google.protobuf</groupId>
-        <artifactId>protobuf-java</artifactId>
-        <version>${project.protobuf-java.version}</version>
-      </dependency>
-      <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client</artifactId>
         <version>${project.http-client.version}</version>
@@ -200,11 +190,6 @@
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-android</artifactId>
         <version>${project.http-client.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.http-client</groupId>
-        <artifactId>google-http-client-protobuf</artifactId>
-        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
@@ -449,10 +434,6 @@
                   <packages>com.google.api.client.extensions.android*</packages>
                 </group>
                 <group>
-                  <title>google-http-client-protobuf</title>
-                  <packages>com.google.api.client.protobuf*:com.google.api.client.http.protobuf*</packages>
-                </group>
-                <group>
                   <title>google-http-client-gson</title>
                   <packages>com.google.api.client.json.gson*</packages>
                 </group>
@@ -583,7 +564,6 @@
     <project.jsr305.version>3.0.2</project.jsr305.version>
     <project.gson.version>2.8.6</project.gson.version>
     <project.jackson-core2.version>2.12.2</project.jackson-core2.version>
-    <project.protobuf-java.version>3.15.3</project.protobuf-java.version>
     <project.guava.version>30.1-android</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.httpclient.version>4.5.13</project.httpclient.version>
