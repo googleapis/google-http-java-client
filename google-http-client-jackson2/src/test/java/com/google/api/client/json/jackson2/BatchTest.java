@@ -20,21 +20,27 @@
 package com.google.api.client.json.jackson2;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.batch.json.JsonBatchCallback;
 import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.HttpUnsuccessfulResponseHandler;
 import com.google.api.client.http.LowLevelHttpResponse;
+import com.google.api.client.json.Json;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.services.storage.Storage;
 import com.google.api.services.storage.model.StorageObject;
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -42,7 +48,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test to verify https://github.com/apache/beam/pull/14527#discussion_r613980011.
+ * Test to verify  https://github.com/apache/beam/pull/14527#discussion_r613980011.
  *
  * I wanted to put this in google-http-client module, but google-http-client-json dependency
  * would create a dependency cycle. Therefore I place this in this class.
@@ -53,8 +59,11 @@ public class BatchTest {
     return new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
   }
 
+  // This test case tries to simulate Beam's GcsUtilTest, where it reads the content of failed
+  // response and throws corresponding IOException after a retry on status code 429.
+  // https://github.com/apache/beam/pull/14527/files#diff-1b8fce5e4444d5c3e99bd0564a8848f9e6d232550efb67902bfeb5ac53819836R505
   @Test
-  public void testErrorContentRead() throws IOException {
+  public void testErrorContentReadRetry() throws IOException {
     String contentBoundary = "batch_foobarbaz";
     String contentBoundaryLine = "--" + contentBoundary;
     String endOfContentBoundaryLine = "--" + contentBoundary + "--";
@@ -75,7 +84,8 @@ public class BatchTest {
     when(mockResponse.getContentType()).thenReturn("multipart/mixed; boundary=" + contentBoundary);
 
     // 429: Too many requests, then 200: OK.
-    when(mockResponse.getStatusCode()).thenReturn(429, 200);
+    final int statusCode429_TooManyRequest = 429;
+    when(mockResponse.getStatusCode()).thenReturn(statusCode429_TooManyRequest, 200);
     when(mockResponse.getContent()).thenReturn(toStream("rateLimitExceeded"), toStream(content));
 
     MockHttpTransport mockTransport =
@@ -89,11 +99,77 @@ public class BatchTest {
                 })
             .build();
 
-    RetryHttpRequestInitializer httpRequestInitializer = new RetryHttpRequestInitializer();
+    HttpRequestInitializer httpRequestInitializer = new HttpRequestInitializer() {
+      @Override
+      public void initialize(HttpRequest request) throws IOException {
+        request.setUnsuccessfulResponseHandler(new HttpUnsuccessfulResponseHandler() {
+          @Override
+          public boolean handleResponse(HttpRequest request, HttpResponse response,
+              boolean supportsRetry) throws IOException {
+            // true to retry
+            boolean willRetry = response.getStatusCode() == statusCode429_TooManyRequest;
+            return willRetry;
+          }
+        });
+      }
+    };
     Storage storageClient = new Storage(mockTransport, JacksonFactory.getDefaultInstance(),
         httpRequestInitializer);
-
     BatchRequest batch = storageClient.batch(httpRequestInitializer);
+
+    Storage.Objects.Get getRequest =
+        storageClient.objects().get("testbucket", "testobject");
+
+    final GoogleJsonError[] capturedGoogleJsonError = new GoogleJsonError[1];
+    getRequest.queue(
+        batch,
+        new JsonBatchCallback<StorageObject>() {
+          @Override
+          public void onSuccess(StorageObject response, HttpHeaders httpHeaders)
+              throws IOException {
+            System.out.println("Got response: " + response);
+          }
+
+          @Override
+          public void onFailure(GoogleJsonError e, HttpHeaders httpHeaders) throws IOException {
+            System.out.println("Got error: " + e);
+            capturedGoogleJsonError[0] = e;
+          }
+        });
+
+    batch.execute();
+    assertNotNull(capturedGoogleJsonError[0]);
+
+    // From {"error":{"code":404}}
+    assertEquals(404, capturedGoogleJsonError[0].getCode());
+  }
+
+  @Test
+  public void testErrorContentRead_NoRetry() throws IOException {
+    final LowLevelHttpResponse mockResponse = Mockito.mock(LowLevelHttpResponse.class);
+    when(mockResponse.getContentType()).thenReturn(Json.MEDIA_TYPE);
+
+    // 429: Too many requests
+    when(mockResponse.getStatusCode()).thenReturn(429);
+
+    // This value is dummy
+    String contentInError = "{\"error\":{\"code\":429}}";
+    when(mockResponse.getContent()).thenReturn(toStream(contentInError));
+
+    MockHttpTransport mockTransport =
+        new MockHttpTransport.Builder()
+            .setLowLevelHttpRequest(
+                new MockLowLevelHttpRequest() {
+                  @Override
+                  public LowLevelHttpResponse execute() throws IOException {
+                    return mockResponse;
+                  }
+                })
+            .build();
+
+    // No retry
+    Storage storageClient = new Storage(mockTransport, JacksonFactory.getDefaultInstance(), null);
+    BatchRequest batch = storageClient.batch();
 
     Storage.Objects.Get getRequest =
         storageClient.objects().get("testbucket", "testobject");
@@ -117,7 +193,7 @@ public class BatchTest {
       batch.execute();
       fail("batch.execute should throw an exception");
     } catch (HttpResponseException ex) {
-      assertEquals("rateLimitExceeded", ex.getContent());
+      assertEquals(contentInError, ex.getContent());
     }
   }
 }
