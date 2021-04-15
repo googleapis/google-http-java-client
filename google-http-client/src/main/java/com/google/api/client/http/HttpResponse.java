@@ -429,8 +429,8 @@ public final class HttpResponse {
   }
 
   /**
-   * Disconnect using {@link LowLevelHttpResponse#disconnect()}, then 
-   * close the HTTP response content using {@link #ignore}.
+   * Disconnect using {@link LowLevelHttpResponse#disconnect()}, then close the HTTP response
+   * content using {@link #ignore}.
    *
    * @since 1.4
    */

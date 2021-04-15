@@ -20,7 +20,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeFalse;
-import static org.junit.Assume.assumeTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -282,15 +281,15 @@ public class ApacheHttpTransportTest {
       HttpTransport transport = new ApacheHttpTransport();
       GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
       testUrl.setPort(server.getPort());
-      com.google.api.client.http.HttpRequest getRequest = transport.createRequestFactory().buildGetRequest(testUrl);
+      com.google.api.client.http.HttpRequest getRequest =
+          transport.createRequestFactory().buildGetRequest(testUrl);
       getRequest.setThrowExceptionOnExecuteError(false);
-      com.google.api.client.http.HttpResponse response =
-          getRequest.execute();
+      com.google.api.client.http.HttpResponse response = getRequest.execute();
       assertEquals(403, response.getStatusCode());
       assertEquals("Forbidden", response.parseAsString());
     }
   }
-  
+
   @Test
   public void testReadErrorStream_withException() throws IOException {
     final HttpHandler handler =
@@ -308,7 +307,8 @@ public class ApacheHttpTransportTest {
       HttpTransport transport = new ApacheHttpTransport();
       GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
       testUrl.setPort(server.getPort());
-      com.google.api.client.http.HttpRequest getRequest = transport.createRequestFactory().buildGetRequest(testUrl);
+      com.google.api.client.http.HttpRequest getRequest =
+          transport.createRequestFactory().buildGetRequest(testUrl);
       try {
         getRequest.execute();
         Assert.fail();
@@ -317,7 +317,7 @@ public class ApacheHttpTransportTest {
       }
     }
   }
-  
+
   private boolean isWindows() {
     return System.getProperty("os.name").startsWith("Windows");
   }
