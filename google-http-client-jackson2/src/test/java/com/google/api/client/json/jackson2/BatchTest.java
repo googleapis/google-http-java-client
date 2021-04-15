@@ -27,7 +27,6 @@ import static org.mockito.Mockito.when;
 import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.batch.json.JsonBatchCallback;
 import com.google.api.client.googleapis.json.GoogleJsonError;
-import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -48,9 +47,9 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test to verify  https://github.com/apache/beam/pull/14527#discussion_r613980011.
+ * Test to verify https://github.com/apache/beam/pull/14527#discussion_r613980011.
  *
- * I wanted to put this in google-http-client module, but google-http-client-json dependency
+ * <p>I wanted to put this in google-http-client module, but google-http-client-json dependency
  * would create a dependency cycle. Therefore I place this in this class.
  */
 public class BatchTest {
@@ -81,7 +80,9 @@ public class BatchTest {
             + endOfContentBoundaryLine
             + "\n";
     final LowLevelHttpResponse mockResponse = Mockito.mock(LowLevelHttpResponse.class);
-    when(mockResponse.getContentType()).thenReturn("multipart/mixed; boundary=" + contentBoundary);
+    when(mockResponse.getContentType())
+        .thenReturn("text/plain;  charset=UTF-8")
+        .thenReturn("multipart/mixed; boundary=" + contentBoundary);
 
     // 429: Too many requests, then 200: OK.
     final int statusCode429_TooManyRequest = 429;
@@ -99,26 +100,28 @@ public class BatchTest {
                 })
             .build();
 
-    HttpRequestInitializer httpRequestInitializer = new HttpRequestInitializer() {
-      @Override
-      public void initialize(HttpRequest request) throws IOException {
-        request.setUnsuccessfulResponseHandler(new HttpUnsuccessfulResponseHandler() {
+    HttpRequestInitializer httpRequestInitializer =
+        new HttpRequestInitializer() {
           @Override
-          public boolean handleResponse(HttpRequest request, HttpResponse response,
-              boolean supportsRetry) throws IOException {
-            // true to retry
-            boolean willRetry = response.getStatusCode() == statusCode429_TooManyRequest;
-            return willRetry;
+          public void initialize(HttpRequest request) throws IOException {
+            request.setUnsuccessfulResponseHandler(
+                new HttpUnsuccessfulResponseHandler() {
+                  @Override
+                  public boolean handleResponse(
+                      HttpRequest request, HttpResponse response, boolean supportsRetry)
+                      throws IOException {
+                    // true to retry
+                    boolean willRetry = response.getStatusCode() == statusCode429_TooManyRequest;
+                    return willRetry;
+                  }
+                });
           }
-        });
-      }
-    };
-    Storage storageClient = new Storage(mockTransport, JacksonFactory.getDefaultInstance(),
-        httpRequestInitializer);
+        };
+    Storage storageClient =
+        new Storage(mockTransport, JacksonFactory.getDefaultInstance(), httpRequestInitializer);
     BatchRequest batch = storageClient.batch(httpRequestInitializer);
 
-    Storage.Objects.Get getRequest =
-        storageClient.objects().get("testbucket", "testobject");
+    Storage.Objects.Get getRequest = storageClient.objects().get("testbucket", "testobject");
 
     final GoogleJsonError[] capturedGoogleJsonError = new GoogleJsonError[1];
     getRequest.queue(
@@ -171,8 +174,7 @@ public class BatchTest {
     Storage storageClient = new Storage(mockTransport, JacksonFactory.getDefaultInstance(), null);
     BatchRequest batch = storageClient.batch();
 
-    Storage.Objects.Get getRequest =
-        storageClient.objects().get("testbucket", "testobject");
+    Storage.Objects.Get getRequest = storageClient.objects().get("testbucket", "testobject");
 
     getRequest.queue(
         batch,
