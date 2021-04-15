@@ -429,14 +429,14 @@ public final class HttpResponse {
   }
 
   /**
-   * Close the HTTP response content using {@link #ignore}, and disconnect using {@link
-   * LowLevelHttpResponse#disconnect()}.
+   * Disconnect using {@link LowLevelHttpResponse#disconnect()}, then 
+   * close the HTTP response content using {@link #ignore}.
    *
    * @since 1.4
    */
   public void disconnect() throws IOException {
     // Close the connection before trying to close the InputStream content. If you are trying to
-    // disconnect, we shouldn't need to try to read any further content.
+    // disconnect, we shouldn't need to read any further content.
     response.disconnect();
     ignore();
   }

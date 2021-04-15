@@ -19,12 +19,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.ByteArrayStreamingContent;
@@ -54,6 +56,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestExecutor;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -201,7 +204,7 @@ public class ApacheHttpTransportTest {
   @Test(timeout = 10_000L)
   public void testConnectTimeout() {
     // Apache HttpClient doesn't appear to behave correctly on windows
-    assumeTrue(!isWindows());
+    assumeFalse(isWindows());
 
     HttpTransport httpTransport = new ApacheHttpTransport();
     GenericUrl url = new GenericUrl("http://google.com:81");
@@ -215,11 +218,11 @@ public class ApacheHttpTransportTest {
     }
   }
 
-  static class FakeServer implements AutoCloseable {
+  private static class FakeServer implements AutoCloseable {
     private final HttpServer server;
     private final ExecutorService executorService;
 
-    public FakeServer(HttpHandler httpHandler) throws IOException {
+    FakeServer(HttpHandler httpHandler) throws IOException {
       this.server = HttpServer.create(new InetSocketAddress(0), 0);
       this.executorService = Executors.newFixedThreadPool(1);
       server.setExecutor(this.executorService);
@@ -262,6 +265,59 @@ public class ApacheHttpTransportTest {
     }
   }
 
+  @Test
+  public void testReadErrorStream() throws IOException {
+    final HttpHandler handler =
+        new HttpHandler() {
+          @Override
+          public void handle(HttpExchange httpExchange) throws IOException {
+            byte[] response = "Forbidden".getBytes(StandardCharsets.UTF_8);
+            httpExchange.sendResponseHeaders(403, response.length);
+            try (OutputStream out = httpExchange.getResponseBody()) {
+              out.write(response);
+            }
+          }
+        };
+    try (FakeServer server = new FakeServer(handler)) {
+      HttpTransport transport = new ApacheHttpTransport();
+      GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
+      testUrl.setPort(server.getPort());
+      com.google.api.client.http.HttpRequest getRequest = transport.createRequestFactory().buildGetRequest(testUrl);
+      getRequest.setThrowExceptionOnExecuteError(false);
+      com.google.api.client.http.HttpResponse response =
+          getRequest.execute();
+      assertEquals(403, response.getStatusCode());
+      assertEquals("Forbidden", response.parseAsString());
+    }
+  }
+  
+  @Test
+  public void testReadErrorStream_withException() throws IOException {
+    final HttpHandler handler =
+        new HttpHandler() {
+          @Override
+          public void handle(HttpExchange httpExchange) throws IOException {
+            byte[] response = "Forbidden".getBytes(StandardCharsets.UTF_8);
+            httpExchange.sendResponseHeaders(403, response.length);
+            try (OutputStream out = httpExchange.getResponseBody()) {
+              out.write(response);
+            }
+          }
+        };
+    try (FakeServer server = new FakeServer(handler)) {
+      HttpTransport transport = new ApacheHttpTransport();
+      GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
+      testUrl.setPort(server.getPort());
+      com.google.api.client.http.HttpRequest getRequest = transport.createRequestFactory().buildGetRequest(testUrl);
+      try {
+        getRequest.execute();
+        Assert.fail();
+      } catch (HttpResponseException ex) {
+        assertEquals("Forbidden", ex.getContent());
+      }
+    }
+  }
+  
   private boolean isWindows() {
     return System.getProperty("os.name").startsWith("Windows");
   }
