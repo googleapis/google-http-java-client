@@ -724,7 +724,7 @@
               <doclint>none</doclint>
               <show>protected</show>
               <nohelp>true</nohelp>
-              <source>8</source>
+              <source>7</source>
               <groups>
                 <group>
                   <title>google-http-client</title>
@@ -758,7 +758,6 @@
               <links>
                 <link>https://download.oracle.com/javase/7/docs/api/</link>
                 <link>https://cloud.google.com/appengine/docs/java/javadoc</link>
-                <link>https://javadoc.io/doc/com.google.code.gson/gson/${project.gson.version}/</link>
                 <link>https://google.github.io/guava/releases/${project.guava.version}/api/docs/</link>
               </links>
             </configuration>
