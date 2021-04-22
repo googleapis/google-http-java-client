@@ -691,5 +691,80 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>docFX</id>
+      <activation>
+        <property>
+          <!-- Activate with -P docFX -->
+          <name>docFX</name>
+        </property>
+      </activation>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.2.0</version>
+            <reportSets>
+              <reportSet>
+                <id>docFX</id>
+                <reports>
+                  <report>javadoc</report>
+                  <report>aggregate</report>
+                  <report>aggregate-jar</report>
+                </reports>
+              </reportSet>
+            </reportSets>
+            <configuration>
+              <doclet>com.microsoft.doclet.DocFxDoclet</doclet>
+              <useStandardDocletOptions>false</useStandardDocletOptions>
+              <docletPath>${env.KOKORO_GFILE_DIR}/docfx-doclet-1.0-SNAPSHOT-jar-with-dependencies-172556.jar</docletPath>
+              <additionalOptions>-outputpath ${project.build.directory}/docfx-yml</additionalOptions>
+              <doclint>none</doclint>
+              <show>protected</show>
+              <nohelp>true</nohelp>
+              <source>7</source>
+              <groups>
+                <group>
+                  <title>google-http-client</title>
+                  <packages>com.google.api.client.http*:com.google.api.client.json*:com.google.api.client.testing*:com.google.api.client.util*</packages>
+                </group>
+                <group>
+                  <title>google-http-client-appengine</title>
+                  <packages>com.google.api.client.extensions.appengine*</packages>
+                </group>
+                <group>
+                  <title>google-http-client-android</title>
+                  <packages>com.google.api.client.extensions.android*</packages>
+                </group>
+                <group>
+                  <title>google-http-client-protobuf</title>
+                  <packages>com.google.api.client.protobuf*:com.google.api.client.http.protobuf*</packages>
+                </group>
+                <group>
+                  <title>google-http-client-gson</title>
+                  <packages>com.google.api.client.json.gson*</packages>
+                </group>
+                <group>
+                  <title>google-http-client-jackson2</title>
+                  <packages>com.google.api.client.json.jackson2.*</packages>
+                </group>
+                <group>
+                  <title>google-http-client-xml</title>
+                  <packages>com.google.api.client.xml*:com.google.api.client.http.xml*</packages>
+                </group>
+              </groups>
+              <links>
+                <link>https://download.oracle.com/javase/7/docs/api/</link>
+                <link>https://cloud.google.com/appengine/docs/java/javadoc</link>
+                <link>https://www.javadoc.io/doc/com.google.code.gson/gson/${project.gson.version}</link>
+                <link>https://google.github.io/guava/releases/${project.guava.version}/api/docs/</link>
+              </links>
+            </configuration>
+          </plugin>
+        </plugins>
+      </reporting>
+    </profile>
   </profiles>
 </project>
