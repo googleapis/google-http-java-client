@@ -724,7 +724,7 @@
               <doclint>none</doclint>
               <show>protected</show>
               <nohelp>true</nohelp>
-              <source>7</source>
+              <source>8</source>
               <groups>
                 <group>
                   <title>google-http-client</title>
