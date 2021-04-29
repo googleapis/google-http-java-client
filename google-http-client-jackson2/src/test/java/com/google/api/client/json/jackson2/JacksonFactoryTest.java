@@ -20,6 +20,8 @@ import com.google.api.client.test.json.AbstractJsonFactoryTest;
 import com.google.api.client.util.StringUtils;
 import com.google.common.base.Charsets;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
@@ -78,5 +80,18 @@ public class JacksonFactoryTest extends AbstractJsonFactoryTest {
     JsonParser jp =
         newFactory().createJsonParser(new ByteArrayInputStream(jsonData), Charsets.UTF_8);
     assertEquals(123, jp.parse(Integer.class, true));
+  }
+  
+  public final void testGetByteValue() throws IOException {
+    byte[] jsonData = StandardCharsets.UTF_8.encode("123").array();
+    JsonParser jp =
+        newFactory().createJsonParser(new ByteArrayInputStream(jsonData), StandardCharsets.UTF_8);
+    
+    try {
+      jp.getByteValue();
+      fail("should throw IOException");
+    } catch (IOException ex) {
+      assertNotNull(ex.getMessage());
+    }
   }
 }
