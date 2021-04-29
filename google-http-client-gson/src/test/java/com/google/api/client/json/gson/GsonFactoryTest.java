@@ -83,10 +83,10 @@ public class GsonFactoryTest extends AbstractJsonFactoryTest {
     JsonParser parser = newFactory().createJsonParser("123");
     assertEquals(123, parser.parse(Integer.class, true));
   }
-  
+
   public final void testGetByteValue() throws IOException {
     JsonParser parser = newFactory().createJsonParser("123");
-    
+
     try {
       parser.getByteValue();
       fail("should throw IOException");
@@ -94,5 +94,4 @@ public class GsonFactoryTest extends AbstractJsonFactoryTest {
       assertNotNull(ex.getMessage());
     }
   }
-
 }
