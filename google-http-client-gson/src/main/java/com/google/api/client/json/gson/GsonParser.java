@@ -44,8 +44,7 @@ class GsonParser extends JsonParser {
   GsonParser(GsonFactory factory, JsonReader reader) {
     this.factory = factory;
     this.reader = reader;
-    // lenient to allow top-level values of any type
-    reader.setLenient(true);
+    reader.setLenient(false);
   }
 
   @Override
