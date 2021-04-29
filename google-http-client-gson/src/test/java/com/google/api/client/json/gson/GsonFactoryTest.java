@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Google Inc.
+ * Copyright 2010 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -17,9 +17,7 @@ package com.google.api.client.json.gson;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.test.json.AbstractJsonFactoryTest;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
@@ -82,20 +80,15 @@ public class GsonFactoryTest extends AbstractJsonFactoryTest {
   }
 
   public final void testParse_directValue() throws IOException {
-    byte[] jsonData = StandardCharsets.UTF_8.encode("123").array();
-    JsonParser jp =
-        newFactory().createJsonParser(new ByteArrayInputStream(jsonData), StandardCharsets.UTF_8);
-    
-    assertEquals(123, jp.parse(Integer.class, true));
+    JsonParser parser = newFactory().createJsonParser("123");
+    assertEquals(123, parser.parse(Integer.class, true));
   }
   
   public final void testGetByteValue() throws IOException {
-    byte[] jsonData = StandardCharsets.UTF_8.encode("123").array();
-    JsonParser jp =
-        newFactory().createJsonParser(new ByteArrayInputStream(jsonData), StandardCharsets.UTF_8);
+    JsonParser parser = newFactory().createJsonParser("123");
     
     try {
-      jp.getByteValue();
+      parser.getByteValue();
       fail("should throw IOException");
     } catch (IOException ex) {
       assertNotNull(ex.getMessage());
