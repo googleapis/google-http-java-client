@@ -1,0 +1,45 @@
+on:
+  # This should run for only pull requests for this repository's LTS branches
+  pull_request:
+    branches:
+      - '*-sp'
+name: LTS Library Test
+jobs:
+  lts-library-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Only the downstream of this libraries are needed
+        repository:
+          - beam
+          # - google-api-java-client This does not work for LTS BOM Test due to bintray decommission
+          - google-auth-library-java
+          - google-maps-services-java
+          - grpc-java
+          - java-bigquery
+          - java-bigtable-hbase
+          - java-monitoring
+          - java-pubsub
+          - java-spanner
+          - java-storage
+          - java-trace
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: Install this repository's artifacts to local Maven repository
+        run: |
+          mvn  --batch-mode --show-version --no-transfer-progress install \
+           -DskipTests=true \
+           -Dclirr.skip=true \
+           -Denforcer.skip=true \
+           -Dmaven.javadoc.skip=true \
+           -Dgcloud.download.skip=true
+      # The lts_tests branch has not merged to master but it hosts GitHub Actions.
+      - uses: GoogleCloudPlatform/cloud-opensource-java/lts-test@lts_tests
+        with:
+          repository: ${{ matrix.repository }}
+          version_override_key: http.version
+          version_override_value: 1.39.2
