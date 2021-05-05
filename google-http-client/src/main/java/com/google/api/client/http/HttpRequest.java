@@ -876,7 +876,7 @@ public final class HttpRequest {
       executeException = null;
 
       // run the interceptor
-      if (executeInterceptor != null) {
+      if (executeInterceptor == null) { // This code is wrong. Just for testing.
         executeInterceptor.intercept(this);
       }
       // build low-level HTTP request
