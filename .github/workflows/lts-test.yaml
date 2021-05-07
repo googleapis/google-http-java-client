@@ -29,6 +29,12 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 8
+      - id: find_library_version
+        name: Find the library version in this branch
+        run: |
+          sudo apt-get install libxml2-utils
+          VERSION=`sed -e 's/xmlns="[^\s\\]*"//' pom.xml | xmllint --xpath '/project/version/text()' -`
+          echo "::set-output name=version::${VERSION}"
       - name: Install this repository's artifacts to local Maven repository
         run: |
           mvn  --batch-mode --show-version --no-transfer-progress install \
@@ -42,4 +48,4 @@ jobs:
         with:
           repository: ${{ matrix.repository }}
           version_override_key: http.version
-          version_override_value: 1.39.2
+          version_override_value: ${{ steps.find_library_version.outputs.version }}
