@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.39.2-sp.1](https://www.github.com/googleapis/google-http-java-client/compare/1.39.2...v1.39.2-sp.1) (2021-05-12)
+
+
+### Features
+
+* configure initial sp version ([#1360](https://www.github.com/googleapis/google-http-java-client/issues/1360)) ([a60c1b6](https://www.github.com/googleapis/google-http-java-client/commit/a60c1b6581db8bc7ae81a9d5781814664f3b4d8a))
+
 ### [1.39.2](https://www.github.com/googleapis/google-http-java-client/compare/v1.39.1...v1.39.2) (2021-04-09)
 
 
