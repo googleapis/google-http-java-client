@@ -125,7 +125,7 @@
       <dependency>
         <groupId>com.google.errorprone</groupId>
         <artifactId>error_prone_annotations</artifactId>
-        <version>2.6.0</version>
+        <version>2.7.1</version>
       </dependency>
       <dependency>
         <groupId>com.google.appengine</groupId>
@@ -271,7 +271,7 @@
           <extensions>true</extensions>
           <configuration>
             <serverId>ossrh</serverId>
-            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+            <nexusUrl>https://google.oss.sonatype.org/</nexusUrl>
             <autoReleaseAfterClose>${deploy.autorelease}</autoReleaseAfterClose>
           </configuration>
         </plugin>
@@ -577,9 +577,9 @@
     <project.appengine.version>1.9.71</project.appengine.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.jsr305.version>3.0.2</project.jsr305.version>
-    <project.gson.version>2.8.6</project.gson.version>
+    <project.gson.version>2.8.7</project.gson.version>
     <project.jackson-core2.version>2.12.3</project.jackson-core2.version>
-    <project.protobuf-java.version>3.17.0</project.protobuf-java.version>
+    <project.protobuf-java.version>3.17.3</project.protobuf-java.version>
     <project.guava.version>30.1.1-android</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.httpclient.version>4.5.13</project.httpclient.version>
