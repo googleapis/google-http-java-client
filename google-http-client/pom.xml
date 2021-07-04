@@ -107,6 +107,11 @@
             </goals>   
           </execution>
         </executions>
+        <configuration>
+          <instructions>
+            <Import-Package>javax.annotation;resolution:=optional</Import-Package>
+          </instructions>
+        </configuration>
       </plugin>
     </plugins>
 
