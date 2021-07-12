@@ -22,9 +22,13 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.testing.util.LogRecordingHandler;
 import com.google.api.client.testing.util.TestableByteArrayInputStream;
 import com.google.api.client.util.Key;
+import com.google.common.io.ByteStreams;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FilterInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
@@ -59,6 +63,8 @@ public class HttpResponseTest extends TestCase {
   private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
   private static final String SAMPLE2 = "123abc";
   private static final String JSON_SAMPLE = "{\"foo\": \"ßar\"}";
+  private static final String ERROR_SAMPLE =
+      "{domain:'global',reason:'domainPolicy',message:'msg'}";
   private static final String VALID_CONTENT_TYPE = "text/plain";
   private static final String VALID_CONTENT_TYPE_WITH_PARAMS =
       "application/vnd.com.google.datastore.entity+json; charset=utf-8; version=v1; q=0.9";
@@ -543,7 +549,8 @@ public class HttpResponseTest extends TestCase {
         };
     HttpRequest request =
         transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
-    request.execute().getContent();
+    InputStream noContent = request.execute().getContent();
+    assertNull(noContent);
   }
 
   public void testGetContent_gzipEncoding_ReturnRawStream() throws IOException {
@@ -570,6 +577,9 @@ public class HttpResponseTest extends TestCase {
     assertFalse(
         "it should not decompress stream",
         request.execute().getContent() instanceof GZIPInputStream);
+    assertFalse(
+        "it should not buffer stream",
+        request.execute().getContent() instanceof BufferedInputStream);
   }
 
   public void testGetContent_gzipEncoding_finishReading() throws IOException {
@@ -664,5 +674,72 @@ public class HttpResponseTest extends TestCase {
     // If gzip was used on this response, an exception would be thrown
     HttpResponse response = request.execute();
     assertEquals("abcd", response.parseAsString());
+  }
+
+  public void testGetContent_bufferedContent() throws IOException {
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                // have to use gzip here because MockLowLevelHttpResponse.setContent()
+                // returns BufferedStream by itself, so test always success
+                byte[] dataToCompress = ERROR_SAMPLE.getBytes(StandardCharsets.UTF_8);
+                ByteArrayOutputStream content = new ByteArrayOutputStream(dataToCompress.length);
+                try (GZIPOutputStream zipStream = new GZIPOutputStream((content))) {
+                  zipStream.write(dataToCompress);
+                }
+
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setStatusCode(403);
+                result.setContentType(JSON_CONTENT_TYPE);
+                result.setContentEncoding("gzip");
+                result.setContent(content.toByteArray());
+
+                return result;
+              }
+            };
+          }
+        };
+    HttpRequest request =
+        transport
+            .createRequestFactory()
+            .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL)
+            .setThrowExceptionOnExecuteError(false);
+
+    HttpResponse response = request.execute();
+    InputStream content = response.getContent();
+    assertTrue(content.markSupported());
+
+    // inspect content like in HttpUnsuccessfulResponseHandler
+    try (RollbackInputStream is = new RollbackInputStream(content)) {
+      byte[] bytes = ByteStreams.toByteArray(is);
+      String text = new String(bytes, response.getContentCharset());
+      assertEquals(ERROR_SAMPLE, text);
+    }
+
+    // original response still parsable by HttpResponseException
+    HttpResponseException exception = new HttpResponseException(response);
+    assertEquals(exception.getStatusCode(), 403);
+    assertEquals(exception.getContent(), ERROR_SAMPLE);
+  }
+
+  static class RollbackInputStream extends FilterInputStream {
+    private boolean closed;
+
+    RollbackInputStream(InputStream in) {
+      super(in);
+      in.mark(8192); // big enough to keep most error messages
+    }
+
+    @Override
+    public void close() throws IOException {
+      if (!closed) {
+        closed = true;
+        in.reset();
+      }
+    }
   }
 }
