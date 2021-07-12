@@ -372,12 +372,13 @@ public final class HttpResponse {
                 new LoggingInputStream(
                     lowLevelResponseContent, logger, Level.CONFIG, contentLoggingLimit);
           }
-          if (!returnRawInputStream) {
+          if (returnRawInputStream) {
+            content = lowLevelResponseContent;
+          } else {
             // wrap the content with BufferedInputStream to support
             // mark()/reset() while error checking in error handlers
-            lowLevelResponseContent = new BufferedInputStream(lowLevelResponseContent);
+            content = new BufferedInputStream(lowLevelResponseContent);
           }
-          content = lowLevelResponseContent;
           contentProcessed = true;
         } catch (EOFException e) {
           // this may happen for example on a HEAD request since there no actual response data read
