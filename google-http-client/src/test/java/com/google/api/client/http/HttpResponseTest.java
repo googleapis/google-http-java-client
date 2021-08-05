@@ -68,6 +68,8 @@ public class HttpResponseTest extends TestCase {
   private static final String VALID_CONTENT_TYPE = "text/plain";
   private static final String VALID_CONTENT_TYPE_WITH_PARAMS =
       "application/vnd.com.google.datastore.entity+json; charset=utf-8; version=v1; q=0.9";
+  private static final String VALID_CONTENT_TYPE_WITHOUT_CHARSET =
+      "text/csv; version=v1; q=0.9";
   private static final String INVALID_CONTENT_TYPE = "!!!invalid!!!";
   private static final String JSON_CONTENT_TYPE = "application/json";
 
@@ -192,6 +194,32 @@ public class HttpResponseTest extends TestCase {
     assertEquals(INVALID_CONTENT_TYPE, response.getContentType());
     assertNull(response.getMediaType());
     assertEquals("ISO-8859-1", response.getContentCharset().name());
+  }
+
+  public void testParseAsString_validContentTypeWithoutCharSetWithParams() throws Exception {
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setContent(SAMPLE2);
+                result.setContentType(VALID_CONTENT_TYPE_WITHOUT_CHARSET);
+                return result;
+              }
+            };
+          }
+        };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+
+    HttpResponse response = request.execute();
+    assertEquals(SAMPLE2, response.parseAsString());
+    assertEquals(VALID_CONTENT_TYPE_WITHOUT_CHARSET, response.getContentType());
+    assertNotNull(response.getMediaType());
+    assertEquals("UTF-8", response.getContentCharset().name());
   }
 
   public void testParseAsString_jsonContentType() throws IOException {
