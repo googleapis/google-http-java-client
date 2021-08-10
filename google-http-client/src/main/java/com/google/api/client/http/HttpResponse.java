@@ -534,8 +534,9 @@ public final class HttpResponse {
         // https://tools.ietf.org/html/rfc4627 - JSON must be encoded with UTF-8
         return StandardCharsets.UTF_8;
       }
-       // fallback to well-kown charset for text/csv
+      // fallback to well-kown charset for text/csv
       if ("text".equals(mediaType.getType()) && "csv".equals(mediaType.getSubType())) {
+        // https://www.iana.org/assignments/media-types/text/csv - CSV must be encoded with UTF-8
         return StandardCharsets.UTF_8;
       }
     }
