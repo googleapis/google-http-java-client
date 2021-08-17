@@ -321,38 +321,4 @@ public class ApacheHttpTransportTest {
   private boolean isWindows() {
     return System.getProperty("os.name").startsWith("Windows");
   }
-
-  @Test(timeout = 10_000L)
-  public void testDisconnectShouldNotWaitToReadResponse() throws IOException {
-    // This handler waits for 100s before returning writing content. The test should
-    // timeout if disconnect waits for the response before closing the connection.
-    final HttpHandler handler =
-        new HttpHandler() {
-          @Override
-          public void handle(HttpExchange httpExchange) throws IOException {
-            byte[] response = httpExchange.getRequestURI().toString().getBytes();
-            httpExchange.sendResponseHeaders(200, response.length);
-
-            // Sleep for longer than the test timeout
-            try {
-              Thread.sleep(100_000);
-            } catch (InterruptedException e) {
-              throw new IOException("interrupted", e);
-            }
-            try (OutputStream out = httpExchange.getResponseBody()) {
-              out.write(response);
-            }
-          }
-        };
-
-    try (FakeServer server = new FakeServer(handler)) {
-      HttpTransport transport = new ApacheHttpTransport();
-      GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
-      testUrl.setPort(server.getPort());
-      com.google.api.client.http.HttpResponse response =
-          transport.createRequestFactory().buildGetRequest(testUrl).execute();
-      // disconnect should not wait to read the entire content
-      response.disconnect();
-    }
-  }
 }
