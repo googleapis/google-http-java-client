@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.40.1](https://www.github.com/googleapis/google-http-java-client/compare/v1.40.0...v1.40.1) (2021-08-26)
+
+
+### Bug Fixes
+
+* GSON parser now throws IOException on invalid JSON input ([#1355](https://www.github.com/googleapis/google-http-java-client/issues/1355)) ([0a505a7](https://www.github.com/googleapis/google-http-java-client/commit/0a505a7ce012efcce14af94aa130d0eab2ac89b6))
+
 ## [1.40.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.39.2...v1.40.0) (2021-08-20)
 
 
