@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Google Inc.
+ * Copyright 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -18,8 +18,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.test.json.AbstractJsonFactoryTest;
 import com.google.api.client.util.StringUtils;
-import com.google.common.base.Charsets;
-import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -74,9 +73,18 @@ public class JacksonFactoryTest extends AbstractJsonFactoryTest {
   }
 
   public final void testParse_directValue() throws Exception {
-    byte[] jsonData = Charsets.UTF_8.encode("123").array();
-    JsonParser jp =
-        newFactory().createJsonParser(new ByteArrayInputStream(jsonData), Charsets.UTF_8);
-    assertEquals(123, jp.parse(Integer.class, true));
+    JsonParser parser = newFactory().createJsonParser("123");
+    assertEquals(123, parser.parse(Integer.class, true));
+  }
+
+  public final void testGetByteValue() throws IOException {
+    JsonParser parser = newFactory().createJsonParser("123");
+
+    try {
+      parser.getByteValue();
+      fail("should throw IOException");
+    } catch (IOException ex) {
+      assertNotNull(ex.getMessage());
+    }
   }
 }
