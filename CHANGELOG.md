@@ -10,6 +10,7 @@
 
 ### Bug Fixes
 
+* GSON parser now throws IOException on invalid JSON input ([#1355](https://www.github.com/googleapis/google-http-java-client/issues/1355)) ([0a505a7](https://www.github.com/googleapis/google-http-java-client/commit/0a505a7ce012efcce14af94aa130d0eab2ac89b6))
 * Add shopt -s nullglob to dependencies script ([#1412](https://www.github.com/googleapis/google-http-java-client/issues/1412)) ([933b0bd](https://www.github.com/googleapis/google-http-java-client/commit/933b0bd386f413bd960f81c706edae81d9dc030a))
 * default charset to UTF-8 for text/csv if not specified ([#1423](https://www.github.com/googleapis/google-http-java-client/issues/1423)) ([26f3da4](https://www.github.com/googleapis/google-http-java-client/commit/26f3da4b6426625d0d88afdad525dbf99c65bc8b))
 * make depencence on javax.annotation optional ([#1323](https://www.github.com/googleapis/google-http-java-client/issues/1323)) ([#1405](https://www.github.com/googleapis/google-http-java-client/issues/1405)) ([4ccad0e](https://www.github.com/googleapis/google-http-java-client/commit/4ccad0e9f37adaf5adac469e8dec478eb424a410))
