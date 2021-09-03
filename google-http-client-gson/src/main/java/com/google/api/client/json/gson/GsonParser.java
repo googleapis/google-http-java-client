@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ class GsonParser extends JsonParser {
   private final JsonReader reader;
   private final GsonFactory factory;
 
-  private List<String> currentNameStack = new ArrayList<String>();
+  private List<String> currentNameStack = new LinkedList<String>();
   private JsonToken currentToken;
   private String currentText;
 
@@ -53,7 +54,7 @@ class GsonParser extends JsonParser {
 
   @Override
   public String getCurrentName() {
-    return currentNameStack.isEmpty() ? null : currentNameStack.get(currentNameStack.size() - 1);
+    return currentNameStack.isEmpty() ? null : currentNameStack.getLast();
   }
 
   @Override
@@ -158,7 +159,7 @@ class GsonParser extends JsonParser {
       case END_ARRAY:
         currentText = "]";
         currentToken = JsonToken.END_ARRAY;
-        currentNameStack.remove(currentNameStack.size() - 1);
+        currentNameStack.removeLast();
         reader.endArray();
         break;
       case BEGIN_OBJECT:
@@ -168,7 +169,7 @@ class GsonParser extends JsonParser {
       case END_OBJECT:
         currentText = "}";
         currentToken = JsonToken.END_OBJECT;
-        currentNameStack.remove(currentNameStack.size() - 1);
+        currentNameStack.removeLast();
         reader.endObject();
         break;
       case BOOLEAN:
@@ -199,7 +200,8 @@ class GsonParser extends JsonParser {
       case NAME:
         currentText = reader.nextName();
         currentToken = JsonToken.FIELD_NAME;
-        currentNameStack.set(currentNameStack.size() - 1, currentText);
+        currentNameStack.removeLast();
+        currentNameStack.add(currentText);
         break;
       default:
         currentText = null;
