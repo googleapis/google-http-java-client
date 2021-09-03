@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -135,7 +136,7 @@ public class FieldInfo {
 
   /** Creates list of setter methods for a field only in declaring class. */
   private Method[] settersMethodForField(Field field) {
-    List<Method> methods = new ArrayList<>();
+    List<Method> methods = new LinkedList<>();
     for (Method method : field.getDeclaringClass().getDeclaredMethods()) {
       if (Ascii.toLowerCase(method.getName()).equals("set" + Ascii.toLowerCase(field.getName()))
           && method.getParameterTypes().length == 1) {
