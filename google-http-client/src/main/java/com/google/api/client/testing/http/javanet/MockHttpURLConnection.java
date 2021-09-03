@@ -141,7 +141,7 @@ public class MockHttpURLConnection extends HttpURLConnection {
     if (headers.containsKey(name)) {
       headers.get(name).add(value);
     } else {
-      List<String> values = new ArrayList<String>();
+      List<String> values = new LinkedList<String>();
       values.add(value);
       headers.put(name, values);
     }
