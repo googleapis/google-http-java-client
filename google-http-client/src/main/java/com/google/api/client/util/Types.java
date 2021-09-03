@@ -23,6 +23,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -122,7 +123,7 @@ public class Types {
       Exception e, Class<?> clazz) {
     StringBuilder buf =
         new StringBuilder("unable to create new instance of class ").append(clazz.getName());
-    ArrayList<String> reasons = new ArrayList<String>();
+    LinkedList<String> reasons = new LinkedList<String>();
     if (clazz.isArray()) {
       reasons.add("because it is an array");
     } else if (clazz.isPrimitive()) {
