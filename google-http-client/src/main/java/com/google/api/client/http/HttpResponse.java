@@ -442,10 +442,8 @@ public final class HttpResponse {
    * @since 1.4
    */
   public void disconnect() throws IOException {
-    // Close the connection before trying to close the InputStream content. If you are trying to
-    // disconnect, we shouldn't need to read any further content.
-    response.disconnect();
     ignore();
+    response.disconnect();
   }
 
   /**
