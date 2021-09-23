@@ -19,12 +19,10 @@ import com.google.api.client.util.Beta;
 /** A class which contains {@link Beta} fields. */
 public class ClassWithBetaField {
 
-  @Beta
-  public int betaField;
+  @Beta public int betaField;
   public int field;
 
-  @Beta
-  public static final int betaStaticField = 10;
+  @Beta public static final int betaStaticField = 10;
   public static final int staticField = 20;
 
   public ClassWithBetaField() {
