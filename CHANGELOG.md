@@ -1,5 +1,19 @@
 # Changelog
 
+### [1.40.1](https://www.github.com/googleapis/google-http-java-client/compare/v1.40.0...v1.40.1) (2021-09-27)
+
+
+### Bug Fixes
+
+* add used packages to OSGI manifest again ([#1439](https://www.github.com/googleapis/google-http-java-client/issues/1439)) ([#1440](https://www.github.com/googleapis/google-http-java-client/issues/1440)) ([59fc8b0](https://www.github.com/googleapis/google-http-java-client/commit/59fc8b03e5518864c60ce4dd47664e8935da343b))
+
+
+### Dependencies
+
+* update dependency com.fasterxml.jackson.core:jackson-core to v2.12.5 ([#1437](https://www.github.com/googleapis/google-http-java-client/issues/1437)) ([0ce8467](https://www.github.com/googleapis/google-http-java-client/commit/0ce84676bfbe4cc8e237d5e33dfaa532b13e798c))
+* update dependency com.google.protobuf:protobuf-java to v3.18.0 ([#1454](https://www.github.com/googleapis/google-http-java-client/issues/1454)) ([cc63e41](https://www.github.com/googleapis/google-http-java-client/commit/cc63e41fac8295c7fea751191a6fe9537c1f70e3))
+* update project.appengine.version to v1.9.91 ([#1287](https://www.github.com/googleapis/google-http-java-client/issues/1287)) ([09ebf8d](https://www.github.com/googleapis/google-http-java-client/commit/09ebf8d7e3860f2b94a6fea0ef134c93904d4ed1))
+
 ## [1.40.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.39.2...v1.40.0) (2021-08-20)
 
 
