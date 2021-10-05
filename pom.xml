@@ -578,8 +578,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.jsr305.version>3.0.2</project.jsr305.version>
     <project.gson.version>2.8.8</project.gson.version>
-    <project.jackson-core2.version>2.12.5</project.jackson-core2.version>
-    <project.protobuf-java.version>3.18.0</project.protobuf-java.version>
+    <project.jackson-core2.version>2.13.0</project.jackson-core2.version>
+    <project.protobuf-java.version>3.18.1</project.protobuf-java.version>
     <project.guava.version>31.0.1-android</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.httpclient.version>4.5.13</project.httpclient.version>
@@ -719,7 +719,7 @@
             <configuration>
               <doclet>com.microsoft.doclet.DocFxDoclet</doclet>
               <useStandardDocletOptions>false</useStandardDocletOptions>
-              <docletPath>${env.KOKORO_GFILE_DIR}/java-docfx-doclet-1.2.0.jar</docletPath>
+              <docletPath>${env.KOKORO_GFILE_DIR}/java-docfx-doclet-1.2.1.jar</docletPath>
               <additionalOptions>
                 -outputpath ${project.build.directory}/docfx-yml
                 -projectname ${artifactId}
