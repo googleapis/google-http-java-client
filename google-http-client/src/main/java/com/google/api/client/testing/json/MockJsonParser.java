@@ -38,7 +38,7 @@ public class MockJsonParser extends JsonParser {
 
   private final JsonFactory factory;
 
-  MockJsonParser(JsonFactory factory) {
+  public MockJsonParser(JsonFactory factory) {
     this.factory = factory;
   }
 

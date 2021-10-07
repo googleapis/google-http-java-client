@@ -28,19 +28,33 @@ import org.junit.Assert;
  */
 public class GZipEncodingTest extends TestCase {
 
-  byte[] EXPECED_ZIPPED =
+  private static final byte[] EXPECED_ZIPPED =
+      new byte[] {
+        31, -117, 8, 0, 0, 0, 0, 0, 0, -1, -53, -49, -57, 13, 0, -30, -66, -14, 54, 28, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0
+      };
+
+  // TODO: remove when no longer using Java < 16: https://bugs.openjdk.java.net/browse/JDK-8244706
+  @Deprecated
+  private static final byte[] EXPECED_ZIPPED_BELOW_JAVA_16 =
       new byte[] {
         31, -117, 8, 0, 0, 0, 0, 0, 0, 0, -53, -49, -57, 13, 0, -30, -66, -14, 54, 28, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0
       };
 
   public void test() throws IOException {
+    // TODO: remove when no longer using Java < 16.
+    byte[] expected =
+        System.getProperty("java.version").compareTo("16") >= 0
+            ? EXPECED_ZIPPED
+            : EXPECED_ZIPPED_BELOW_JAVA_16;
+
     GZipEncoding encoding = new GZipEncoding();
     ByteArrayStreamingContent content =
         new ByteArrayStreamingContent(StringUtils.getBytesUtf8("oooooooooooooooooooooooooooo"));
     TestableByteArrayOutputStream out = new TestableByteArrayOutputStream();
     encoding.encode(content, out);
     assertFalse(out.isClosed());
-    Assert.assertArrayEquals(EXPECED_ZIPPED, out.getBuffer());
+    Assert.assertArrayEquals(expected, out.getBuffer());
   }
 }
