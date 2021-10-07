@@ -20,14 +20,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeFalse;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assume.assumeTrue;
 
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpResponse;
+import com.google.api.client.testing.http.apache.MockHttpClient;
 import com.google.api.client.util.ByteArrayStreamingContent;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -43,16 +42,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.http.Header;
 import org.apache.http.HttpClientConnection;
 import org.apache.http.HttpException;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestExecutor;
 import org.junit.Assert;
@@ -97,12 +102,104 @@ public class ApacheHttpTransportTest {
     // are read-only and we're testing that we built the client with the right configuration
   }
 
+  private static HttpClient mockHttpClient() {
+    return new HttpClient() {
+
+      @Override
+      public HttpParams getParams() {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public ClientConnectionManager getConnectionManager() {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public HttpResponse execute(HttpUriRequest request)
+          throws IOException, ClientProtocolException {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public HttpResponse execute(HttpUriRequest request, HttpContext context)
+          throws IOException, ClientProtocolException {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public HttpResponse execute(HttpHost target, HttpRequest request)
+          throws IOException, ClientProtocolException {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public HttpResponse execute(HttpHost target, HttpRequest request, HttpContext context)
+          throws IOException, ClientProtocolException {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public <T> T execute(HttpUriRequest request, ResponseHandler<? extends T> responseHandler)
+          throws IOException, ClientProtocolException {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public <T> T execute(
+          HttpUriRequest request, ResponseHandler<? extends T> responseHandler, HttpContext context)
+          throws IOException, ClientProtocolException {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public <T> T execute(
+          HttpHost target, HttpRequest request, ResponseHandler<? extends T> responseHandler)
+          throws IOException, ClientProtocolException {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public <T> T execute(
+          HttpHost target,
+          HttpRequest request,
+          ResponseHandler<? extends T> responseHandler,
+          HttpContext context)
+          throws IOException, ClientProtocolException {
+        // TODO Auto-generated method stub
+        return null;
+      }
+    };
+  }
+
+  private static class MockHttpResponse extends BasicHttpResponse implements CloseableHttpResponse {
+    public MockHttpResponse() {
+      super(HttpVersion.HTTP_1_1, 200, "OK");
+    }
+
+    @Override
+    public void close() throws IOException {}
+  }
+
   @Test
   public void testRequestsWithContent() throws IOException {
-    HttpClient mockClient = mock(HttpClient.class);
-    HttpResponse mockResponse = mock(HttpResponse.class);
-    when(mockClient.execute(any(HttpUriRequest.class))).thenReturn(mockResponse);
-
+    HttpClient mockClient =
+        new MockHttpClient() {
+          @Override
+          public CloseableHttpResponse execute(HttpUriRequest request)
+              throws IOException, ClientProtocolException {
+            return new MockHttpResponse();
+          }
+        };
     ApacheHttpTransport transport = new ApacheHttpTransport(mockClient);
 
     // Test GET.
@@ -204,6 +301,9 @@ public class ApacheHttpTransportTest {
   public void testConnectTimeout() {
     // Apache HttpClient doesn't appear to behave correctly on windows
     assumeFalse(isWindows());
+    // TODO(chanseok): Java 17 returns an IOException (SocketException: Network is unreachable).
+    // Figure out a way to verify connection timeout works on Java 17+.
+    assumeTrue(System.getProperty("java.version").compareTo("17") < 0);
 
     HttpTransport httpTransport = new ApacheHttpTransport();
     GenericUrl url = new GenericUrl("http://google.com:81");
@@ -213,7 +313,7 @@ public class ApacheHttpTransportTest {
     } catch (HttpHostConnectException | ConnectTimeoutException expected) {
       // expected
     } catch (IOException e) {
-      fail("unexpected IOException: " + e.getClass().getName());
+      fail("unexpected IOException: " + e.getClass().getName() + ": " + e.getMessage());
     }
   }
 
@@ -222,9 +322,9 @@ public class ApacheHttpTransportTest {
     private final ExecutorService executorService;
 
     FakeServer(HttpHandler httpHandler) throws IOException {
-      this.server = HttpServer.create(new InetSocketAddress(0), 0);
-      this.executorService = Executors.newFixedThreadPool(1);
-      server.setExecutor(this.executorService);
+      server = HttpServer.create(new InetSocketAddress(0), 0);
+      executorService = Executors.newFixedThreadPool(1);
+      server.setExecutor(executorService);
       server.createContext("/", httpHandler);
       server.start();
     }
@@ -235,8 +335,8 @@ public class ApacheHttpTransportTest {
 
     @Override
     public void close() {
-      this.server.stop(0);
-      this.executorService.shutdownNow();
+      server.stop(0);
+      executorService.shutdownNow();
     }
   }
 
