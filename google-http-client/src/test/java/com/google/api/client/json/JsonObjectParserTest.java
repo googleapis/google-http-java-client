@@ -14,17 +14,18 @@
 
 package com.google.api.client.json;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import com.google.api.client.testing.json.MockJsonFactory;
+import com.google.api.client.testing.json.MockJsonParser;
 import com.google.common.base.Charsets;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests for the {@link JsonObjectParser} class.
@@ -34,6 +35,7 @@ import junit.framework.TestCase;
  */
 public class JsonObjectParserTest extends TestCase {
 
+  @Test
   public void testConstructor_null() {
     try {
       new JsonObjectParser((JsonFactory) null);
@@ -42,36 +44,49 @@ public class JsonObjectParserTest extends TestCase {
     }
   }
 
+  @Test
   public void testParse_InputStream() throws Exception {
-    InputStream in = new ByteArrayInputStream(new byte[256]);
-    Charset utf8 = Charsets.UTF_8;
-    Type type = Integer[].class;
+    InputStream in = new ByteArrayInputStream(new byte[0]);
     Integer[] parsed = new Integer[1];
 
-    JsonParser mockJsonParser = mock(JsonParser.class);
-    when(mockJsonParser.parse(type, true)).thenReturn(parsed);
-
-    JsonFactory mockJsonFactory = mock(JsonFactory.class);
-    when(mockJsonFactory.createJsonParser(in, utf8)).thenReturn(mockJsonParser);
-
     // Test the JsonObjectParser
-    JsonObjectParser jop = new JsonObjectParser(mockJsonFactory);
-    assertEquals(parsed, jop.parseAndClose(in, utf8, type));
+    JsonObjectParser jop = new JsonObjectParser(setUpMockJsonFactory(Integer[].class, parsed));
+    assertEquals(parsed, jop.parseAndClose(in, Charsets.UTF_8, Integer[].class));
   }
 
+  @Test
   public void testParse_Reader() throws Exception {
     Reader in = new StringReader("something");
-    Type type = Integer[].class;
     Integer[] parsed = new Integer[1];
 
-    JsonParser mockJsonParser = mock(JsonParser.class);
-    when(mockJsonParser.parse(type, true)).thenReturn(parsed);
-
-    JsonFactory mockJsonFactory = mock(JsonFactory.class);
-    when(mockJsonFactory.createJsonParser(in)).thenReturn(mockJsonParser);
-
     // Test the JsonObjectParser
-    JsonObjectParser jop = new JsonObjectParser(mockJsonFactory);
-    assertEquals(parsed, jop.parseAndClose(in, type));
+    JsonObjectParser jop = new JsonObjectParser(setUpMockJsonFactory(Integer[].class, parsed));
+    assertEquals(parsed, jop.parseAndClose(in, Integer[].class));
+  }
+
+  // Mockito.mock() on JsonFactory and JsonParser fails with Java 17, so set them up manually.
+  private static final <T> JsonFactory setUpMockJsonFactory(
+      final Class<T> clazz, final T parsedResult) {
+    final MockJsonParser jsonParser =
+        new MockJsonParser(null) {
+          @Override
+          public Object parse(Type dataType, boolean close) throws IOException {
+            assertEquals(clazz, dataType);
+            return parsedResult;
+          }
+        };
+
+    return new MockJsonFactory() {
+      @Override
+      public JsonParser createJsonParser(Reader in) throws IOException {
+        return jsonParser;
+      }
+
+      @Override
+      public JsonParser createJsonParser(InputStream in, Charset charset) throws IOException {
+        assertEquals(Charsets.UTF_8, charset);
+        return jsonParser;
+      }
+    };
   }
 }
