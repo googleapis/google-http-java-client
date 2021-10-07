@@ -233,4 +233,17 @@ public class NetHttpRequestTest {
     assertEquals(connection.getChunkLength(), -1);
     assertEquals("6", request.getRequestProperty("Content-Length"));
   }
+
+  // see https://github.com/googleapis/google-http-java-client/issues/1471 for more details
+  @Test
+  public void testDeleteSetsContentLengthToZeroWithoutContent() throws Exception {
+    MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
+    connection.setRequestMethod("DELETE");
+    NetHttpRequest request = new NetHttpRequest(connection);
+    request.execute();
+
+    assertTrue(connection.doOutputCalled());
+    assertTrue(connection.isSetFixedLengthStreamingModeLongCalled());
+    assertFalse(connection.isSetFixedLengthStreamingModeIntCalled());
+  }
 }

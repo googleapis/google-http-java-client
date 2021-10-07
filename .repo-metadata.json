@@ -1,7 +1,7 @@
 {
   "name": "google-http-client",
   "name_pretty": "Google HTTP Java Client",
-  "client_documentation": "https://googleapis.dev/java/google-http-client/latest/",
+  "client_documentation": "https://cloud.google.com/java/docs/reference/google-http-client/latest/history",
   "release_level": "ga",
   "language": "java",
   "repo": "googleapis/google-http-java-client",
