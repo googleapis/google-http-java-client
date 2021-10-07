@@ -49,7 +49,7 @@ public class HttpEncodingStreamingContentTest extends TestCase {
             ? EXPECED_ZIPPED
             : EXPECED_ZIPPED_BELOW_JAVA_16;
 
-        GZipEncoding encoding = new GZipEncoding();
+    GZipEncoding encoding = new GZipEncoding();
     ByteArrayStreamingContent content =
         new ByteArrayStreamingContent(StringUtils.getBytesUtf8("oooooooooooooooooooooooooooo"));
     TestableByteArrayOutputStream out = new TestableByteArrayOutputStream();
