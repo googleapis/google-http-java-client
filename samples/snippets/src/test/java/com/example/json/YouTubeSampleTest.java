@@ -19,10 +19,6 @@ package com.example.json;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-import org.junit.Test;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
@@ -36,12 +32,17 @@ import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.common.base.Preconditions;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import org.junit.Test;
 
 public class YouTubeSampleTest {
 
   @Test
   public void testParsing() throws IOException {
-    final InputStream contents = getClass().getClassLoader().getResourceAsStream("youtube-search.json");
+    final InputStream contents =
+        getClass().getClassLoader().getResourceAsStream("youtube-search.json");
     Preconditions.checkNotNull(contents);
     HttpTransport transport =
         new MockHttpTransport() {

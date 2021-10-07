@@ -20,8 +20,7 @@ import com.google.api.client.util.Beta;
 @Beta
 public class BetaClass {
 
-  public void method() {
-  }
+  public void method() {}
 
   @Beta
   public void betaMethod() {
@@ -36,8 +35,7 @@ public class BetaClass {
 
   int field;
 
-  @Beta
-  int betaField;
+  @Beta int betaField;
 
   @Override
   public String toString() {
