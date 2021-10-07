@@ -42,6 +42,10 @@ public class MockHttpURLConnection extends HttpURLConnection {
 
   /** Whether {@link #doOutput} was called. */
   private boolean doOutputCalled;
+  /** Whether {@link #setFixedLengthStreamingMode(int)} was called. */
+  private boolean setFixedLengthStreamingModeIntCalled = false;
+  /** Whether {@link #setFixedLengthStreamingMode(long)} was called. */
+  private boolean setFixedLengthStreamingModeLongCalled = false;
 
   /**
    * Output stream or {@code null} to throw an {@link UnknownServiceException} when {@link
@@ -204,5 +208,25 @@ public class MockHttpURLConnection extends HttpURLConnection {
 
   public int getChunkLength() {
     return chunkLength;
+  }
+
+  @Override
+  public void setFixedLengthStreamingMode(int contentLength) {
+    this.setFixedLengthStreamingModeIntCalled = true;
+    super.setFixedLengthStreamingMode(contentLength);
+  }
+
+  @Override
+  public void setFixedLengthStreamingMode(long contentLength) {
+    this.setFixedLengthStreamingModeLongCalled = true;
+    super.setFixedLengthStreamingMode(contentLength);
+  }
+
+  public boolean isSetFixedLengthStreamingModeIntCalled() {
+    return setFixedLengthStreamingModeIntCalled;
+  }
+
+  public boolean isSetFixedLengthStreamingModeLongCalled() {
+    return setFixedLengthStreamingModeLongCalled;
   }
 }
