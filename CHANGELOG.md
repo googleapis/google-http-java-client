@@ -1,5 +1,23 @@
 # Changelog
 
+### [1.40.1](https://www.github.com/googleapis/google-http-java-client/compare/v1.40.0...v1.40.1) (2021-10-07)
+
+
+### Bug Fixes
+
+* add used packages to OSGI manifest again ([#1439](https://www.github.com/googleapis/google-http-java-client/issues/1439)) ([#1440](https://www.github.com/googleapis/google-http-java-client/issues/1440)) ([59fc8b0](https://www.github.com/googleapis/google-http-java-client/commit/59fc8b03e5518864c60ce4dd47664e8935da343b))
+* update NetHttpRequest to prevent silent retry of DELETE requests ([#1472](https://www.github.com/googleapis/google-http-java-client/issues/1472)) ([57ef11a](https://www.github.com/googleapis/google-http-java-client/commit/57ef11a0e1904bb932e5493a30f0a2ca2a2798cf)), closes [#1471](https://www.github.com/googleapis/google-http-java-client/issues/1471)
+
+
+### Dependencies
+
+* update dependency com.fasterxml.jackson.core:jackson-core to v2.12.5 ([#1437](https://www.github.com/googleapis/google-http-java-client/issues/1437)) ([0ce8467](https://www.github.com/googleapis/google-http-java-client/commit/0ce84676bfbe4cc8e237d5e33dfaa532b13e798c))
+* update dependency com.fasterxml.jackson.core:jackson-core to v2.13.0 ([#1469](https://www.github.com/googleapis/google-http-java-client/issues/1469)) ([7d9a042](https://www.github.com/googleapis/google-http-java-client/commit/7d9a042110b8879b592d7e80bd73e77c7a84d8b7))
+* update dependency com.google.protobuf:protobuf-java to v3.18.0 ([#1454](https://www.github.com/googleapis/google-http-java-client/issues/1454)) ([cc63e41](https://www.github.com/googleapis/google-http-java-client/commit/cc63e41fac8295c7fea751191a6fe9537c1f70e3))
+* update dependency com.google.protobuf:protobuf-java to v3.18.1 ([#1470](https://www.github.com/googleapis/google-http-java-client/issues/1470)) ([c36637a](https://www.github.com/googleapis/google-http-java-client/commit/c36637acbca536992349970664026cf145ad8964))
+* update dependency com.puppycrawl.tools:checkstyle to v9 ([#1441](https://www.github.com/googleapis/google-http-java-client/issues/1441)) ([a95cd97](https://www.github.com/googleapis/google-http-java-client/commit/a95cd9717fc8accd80252b12357971cb71887d90))
+* update project.appengine.version to v1.9.91 ([#1287](https://www.github.com/googleapis/google-http-java-client/issues/1287)) ([09ebf8d](https://www.github.com/googleapis/google-http-java-client/commit/09ebf8d7e3860f2b94a6fea0ef134c93904d4ed1))
+
 ## [1.40.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.39.2...v1.40.0) (2021-08-20)
 
 
