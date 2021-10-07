@@ -28,10 +28,12 @@ import java.util.zip.GZIPOutputStream;
  */
 public class GZipEncoding implements HttpEncoding {
 
+  @Override
   public String getName() {
     return "gzip";
   }
 
+  @Override
   public void encode(StreamingContent content, OutputStream out) throws IOException {
     // must not close the underlying output stream
     OutputStream out2 =
