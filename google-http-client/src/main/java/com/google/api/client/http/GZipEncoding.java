@@ -45,6 +45,7 @@ public class GZipEncoding implements HttpEncoding {
             try {
               flush();
             } catch (IOException ignored) {
+              // fall through
             }
           }
         };
