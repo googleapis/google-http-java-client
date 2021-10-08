@@ -16,7 +16,6 @@ package com.google.api.client.util.store;
 
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.Maps;
-
 import com.google.common.base.StandardSystemProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -32,28 +31,31 @@ import java.nio.file.attribute.AclEntry;
 import java.nio.file.attribute.AclEntryPermission;
 import java.nio.file.attribute.AclEntryType;
 import java.nio.file.attribute.AclFileAttributeView;
+import java.nio.file.attribute.FileOwnerAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserPrincipal;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * Thread-safe file implementation of a credential store.
  *
- * <p>For security purposes, the file's permissions are set to be accessible only by the file's
- * owner. Note that Java 1.5 does not support manipulating file permissions, and must be done
- * manually or using the JNI.
+ * <p>For security purposes, the file's permissions are set such that the file is only accessible by
+ * the file's owner.
+ *
+ * <p>Note: this class is not compatible with Android lower than API level 26 (Oreo). For an
+ * implementation compatible with Android < 26, please use
+ * com.google.api.client.extensions.android.util.store.FileDataStoreFactory which is provided by
+ * com.google.http-client:google-http-client-android.
  *
  * @since 1.16
  * @author Yaniv Inbar
  */
 public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
-  private static final Logger LOGGER = Logger.getLogger(FileDataStoreFactory.class.getName());
-
-  private static final boolean IS_WINDOWS = StandardSystemProperty.OS_NAME.value()
-      .startsWith("WINDOWS");
+  private static final boolean IS_WINDOWS =
+      StandardSystemProperty.OS_NAME.value().toLowerCase(Locale.ENGLISH).startsWith("windows");
 
   /** Directory to store data. */
   private final File dataDirectory;
@@ -61,7 +63,6 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
   /** @param dataDirectory data directory */
   public FileDataStoreFactory(File dataDirectory) throws IOException {
     dataDirectory = dataDirectory.getCanonicalFile();
-    this.dataDirectory = dataDirectory;
     // error if it is a symbolic link
     if (IOUtils.isSymbolicLink(dataDirectory)) {
       throw new IOException("unable to use a symbolic link: " + dataDirectory);
@@ -70,6 +71,7 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
     if (!dataDirectory.exists() && !dataDirectory.mkdirs()) {
       throw new IOException("unable to create directory: " + dataDirectory);
     }
+    this.dataDirectory = dataDirectory;
 
     if (IS_WINDOWS) {
       setPermissionsToOwnerOnlyWindows(dataDirectory);
@@ -134,58 +136,59 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
    * executed by the file's owner.
    *
    * @param file the file's permissions to modify
-   * @throws IOException
+   * @throws IOException if the permissions can't be set
    */
-  static void setPermissionsToOwnerOnly(File file) throws IOException {
+  private static void setPermissionsToOwnerOnly(File file) throws IOException {
     Set permissions = new HashSet<PosixFilePermission>();
     permissions.add(PosixFilePermission.OWNER_READ);
     permissions.add(PosixFilePermission.OWNER_WRITE);
     permissions.add(PosixFilePermission.OWNER_EXECUTE);
     try {
       Files.setPosixFilePermissions(Paths.get(file.getAbsolutePath()), permissions);
-    } catch (UnsupportedOperationException exception) {
-      LOGGER.warning("Unable to set permissions for " + file
-          + ", because you are running on a non-POSIX file system.");
-    } catch (SecurityException exception) {
-      // ignored
-    } catch (IllegalArgumentException exception) {
-      // ignored
+    } catch (RuntimeException exception) {
+      throw new IOException("Unable to set permissions for " + file, exception);
     }
   }
 
-  static void setPermissionsToOwnerOnlyWindows(File file) throws IOException {
+  private static void setPermissionsToOwnerOnlyWindows(File file) throws IOException {
     Path path = Paths.get(file.getAbsolutePath());
-    UserPrincipal owner = path.getFileSystem().getUserPrincipalLookupService()
-        .lookupPrincipalByName("OWNER@");
+    FileOwnerAttributeView fileAttributeView =
+        Files.getFileAttributeView(path, FileOwnerAttributeView.class);
+    UserPrincipal owner = fileAttributeView.getOwner();
 
     // get view
     AclFileAttributeView view = Files.getFileAttributeView(path, AclFileAttributeView.class);
 
     // All available entries
-    Set<AclEntryPermission> permissions = ImmutableSet.of(
-        AclEntryPermission.APPEND_DATA,
-        AclEntryPermission.DELETE,
-        AclEntryPermission.DELETE_CHILD,
-        AclEntryPermission.READ_ACL,
-        AclEntryPermission.READ_ATTRIBUTES,
-        AclEntryPermission.READ_DATA,
-        AclEntryPermission.READ_NAMED_ATTRS,
-        AclEntryPermission.SYNCHRONIZE,
-        AclEntryPermission.WRITE_ACL,
-        AclEntryPermission.WRITE_ATTRIBUTES,
-        AclEntryPermission.WRITE_DATA,
-        AclEntryPermission.WRITE_NAMED_ATTRS,
-        AclEntryPermission.WRITE_OWNER
-    );
+    Set<AclEntryPermission> permissions =
+        ImmutableSet.of(
+            AclEntryPermission.APPEND_DATA,
+            AclEntryPermission.DELETE,
+            AclEntryPermission.DELETE_CHILD,
+            AclEntryPermission.READ_ACL,
+            AclEntryPermission.READ_ATTRIBUTES,
+            AclEntryPermission.READ_DATA,
+            AclEntryPermission.READ_NAMED_ATTRS,
+            AclEntryPermission.SYNCHRONIZE,
+            AclEntryPermission.WRITE_ACL,
+            AclEntryPermission.WRITE_ATTRIBUTES,
+            AclEntryPermission.WRITE_DATA,
+            AclEntryPermission.WRITE_NAMED_ATTRS,
+            AclEntryPermission.WRITE_OWNER);
 
     // create ACL to give owner everything
-    AclEntry entry = AclEntry.newBuilder()
-        .setType(AclEntryType.ALLOW)
-        .setPrincipal(owner)
-        .setPermissions(permissions)
-        .build();
+    AclEntry entry =
+        AclEntry.newBuilder()
+            .setType(AclEntryType.ALLOW)
+            .setPrincipal(owner)
+            .setPermissions(permissions)
+            .build();
 
     // Overwrite the ACL with only this permission
-    view.setAcl(ImmutableList.of(entry));
+    try {
+      view.setAcl(ImmutableList.of(entry));
+    } catch (SecurityException ex) {
+      throw new IOException("Unable to set permissions for " + file, ex);
+    }
   }
 }

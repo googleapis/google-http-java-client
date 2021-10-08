@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
+    <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>dailymotion-simple-cmdline-sample</artifactId>
@@ -15,7 +15,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
+        <version>3.0.0</version>
         <executions>
           <execution>
             <goals>
@@ -95,7 +95,7 @@
               <dependency>
                 <groupId>com.puppycrawl.tools</groupId>
                 <artifactId>checkstyle</artifactId>
-                <version>8.23</version>
+                <version>9.0.1</version>
               </dependency>
             </dependencies>
             <configuration>

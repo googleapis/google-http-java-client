@@ -24,7 +24,9 @@ import java.io.OutputStream;
  *
  * @since 1.14
  * @author Yaniv Inbar
+ * @deprecated use com.google.common.io.ByteSink
  */
+@Deprecated
 public interface StreamingContent {
 
   /**

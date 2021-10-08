@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 
 /**
  * Serializes MIME multipart content as specified by <a
@@ -31,9 +32,9 @@ import java.util.Collections;
  * and <a href="http://tools.ietf.org/html/rfc1521#section-7.2.2">RFC 2046: Multipurpose Internet
  * Mail Extensions: The Multipart/mixed (primary) subtype</a>.
  *
- * <p>By default the media type is {@code "multipart/related; boundary=__END_OF_PART__"}, but this
- * may be customized by calling {@link #setMediaType(HttpMediaType)}, {@link #getMediaType()}, or
- * {@link #setBoundary(String)}.
+ * <p>By default the media type is {@code "multipart/related; boundary=__END_OF_PART__<random
+ * UUID>__"}, but this may be customized by calling {@link #setMediaType(HttpMediaType)}, {@link
+ * #getMediaType()}, or {@link #setBoundary(String)}.
  *
  * <p>Implementation is not thread-safe.
  *
@@ -47,10 +48,14 @@ public class MultipartContent extends AbstractHttpContent {
   private static final String TWO_DASHES = "--";
 
   /** Parts of the HTTP multipart request. */
-  private ArrayList<Part> parts = new ArrayList<Part>();
+  private ArrayList<Part> parts = new ArrayList<>();
 
   public MultipartContent() {
-    super(new HttpMediaType("multipart/related").setParameter("boundary", "__END_OF_PART__"));
+    this("__END_OF_PART__" + UUID.randomUUID().toString() + "__");
+  }
+
+  public MultipartContent(String boundary) {
+    super(new HttpMediaType("multipart/related").setParameter("boundary", boundary));
   }
 
   public void writeTo(OutputStream out) throws IOException {
@@ -152,7 +157,7 @@ public class MultipartContent extends AbstractHttpContent {
    * changing the return type, but nothing else.
    */
   public MultipartContent setParts(Collection<Part> parts) {
-    this.parts = new ArrayList<Part>(parts);
+    this.parts = new ArrayList<>(parts);
     return this;
   }
 
@@ -164,7 +169,7 @@ public class MultipartContent extends AbstractHttpContent {
    * changing the return type, but nothing else.
    */
   public MultipartContent setContentParts(Collection<? extends HttpContent> contentParts) {
-    this.parts = new ArrayList<Part>(contentParts.size());
+    this.parts = new ArrayList<>(contentParts.size());
     for (HttpContent contentPart : contentParts) {
       addPart(new Part(contentPart));
     }

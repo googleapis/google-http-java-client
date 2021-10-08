@@ -16,8 +16,7 @@ package com.google.api.client.util.escape;
 
 /**
  * A {@code UnicodeEscaper} that escapes some set of Java characters using the URI percent encoding
- * scheme. The set of safe characters (those which remain unescaped) can be specified on
- * construction.
+ * scheme. The set of safe characters (those which remain unescaped) is specified on construction.
  *
  * <p>For details on escaping URIs for use in web pages, see <a
  * href="http://tools.ietf.org/html/rfc3986#section-2.4">RFC 3986 - section 2.4</a> and <a
@@ -29,25 +28,25 @@ package com.google.api.client.util.escape;
  *   <li>The alphanumeric characters "a" through "z", "A" through "Z" and "0" through "9" remain the
  *       same.
  *   <li>Any additionally specified safe characters remain the same.
- *   <li>If {@code plusForSpace} was specified, the space character " " is converted into a plus
- *       sign "+".
- *   <li>All other characters are converted into one or more bytes using UTF-8 encoding and each
- *       byte is then represented by the 3-character string "%XY", where "XY" is the two-digit,
+ *   <li>If {@code plusForSpace} is true, the space character " " is converted into a plus sign "+".
+ *   <li>All other characters are converted into one or more bytes using UTF-8 encoding. Each byte
+ *       is then represented by the 3-character string "%XY", where "XY" is the two-digit,
  *       uppercase, hexadecimal representation of the byte value.
  * </ul>
  *
- * <p>RFC 2396 specifies the set of unreserved characters as "-", "_", ".", "!", "~", "*", "'", "("
- * and ")". It goes on to state:
+ * <p>RFC 3986 defines the set of unreserved characters as "-", "_", "~", and "." It goes on to
+ * state:
  *
- * <p><i>Unreserved characters can be escaped without changing the semantics of the URI, but this
- * should not be done unless the URI is being used in a context that does not allow the unescaped
- * character to appear.</i>
- *
- * <p>For performance reasons the only currently supported character encoding of this class is
- * UTF-8.
+ * <p><q>URIs that differ in the replacement of an unreserved character with its corresponding
+ * percent-encoded US-ASCII octet are equivalent: they identify the same resource. However, URI
+ * comparison implementations do not always perform normalization prior to comparison (see Section
+ * 6). For consistency, percent-encoded octets in the ranges of ALPHA (%41-%5A and %61-%7A), DIGIT
+ * (%30-%39), hyphen (%2D), period (%2E), underscore (%5F), or tilde (%7E) should not be created by
+ * URI producers and, when found in a URI, should be decoded to their corresponding unreserved
+ * characters by URI normalizers.</q>
  *
  * <p><b>Note</b>: This escaper produces uppercase hexadecimal sequences. From <a
- * href="http://tools.ietf.org/html/rfc3986">RFC 3986</a>:<br>
+ * href="https://tools.ietf.org/html/rfc3986">RFC 3986</a>:<br>
  * <i>"URI producers and normalizers should use uppercase hexadecimal digits for all
  * percent-encodings."</i>
  *
@@ -62,13 +61,13 @@ public class PercentEscaper extends UnicodeEscaper {
    * specified in RFC 3986. Note that some of these characters do need to be escaped when used in
    * other parts of the URI.
    */
-  public static final String SAFEPATHCHARS_URLENCODER = "-_.!~*'()@:$&,;=";
+  public static final String SAFEPATHCHARS_URLENCODER = "-_.!~*'()@:$&,;=+";
 
   /**
-   * Contains the save characters plus all reserved characters. This happens to be the safe path
-   * characters plus those characters which are reserved for URI segments, namely '+', '/', and '?'.
+   * Contains the safe characters plus all reserved characters. This happens to be the safe path
+   * characters plus those characters which are reserved for URI segments, namely '/' and '?'.
    */
-  public static final String SAFE_PLUS_RESERVED_CHARS_URLENCODER = SAFEPATHCHARS_URLENCODER + "+/?";
+  public static final String SAFE_PLUS_RESERVED_CHARS_URLENCODER = SAFEPATHCHARS_URLENCODER + "/?";
 
   /**
    * A string of characters that do not need to be encoded when used in URI user info part, as
@@ -102,19 +101,37 @@ public class PercentEscaper extends UnicodeEscaper {
   private final boolean[] safeOctets;
 
   /**
-   * Constructs a URI escaper with the specified safe characters and optional handling of the space
-   * character.
+   * Constructs a URI escaper with the specified safe characters. The space character is escaped to
+   * %20 in accordance with the URI specification.
    *
    * @param safeChars a non null string specifying additional safe characters for this escaper (the
    *     ranges 0..9, a..z and A..Z are always safe and should not be specified here)
-   * @param plusForSpace true if ASCII space should be escaped to {@code +} rather than {@code %20}
-   * @throws IllegalArgumentException if any of the parameters were invalid
+   * @throws IllegalArgumentException if any of the parameters are invalid
    */
+  public PercentEscaper(String safeChars) {
+    this(safeChars, false);
+  }
+
+  /**
+   * Constructs a URI escaper that converts all but the specified safe characters into hexadecimal
+   * percent escapes. Optionally space characters can be converted into a plus sign {@code +}
+   * instead of {@code %20}. and optional handling of the space
+   *
+   * @param safeChars a non null string specifying additional safe characters for this escaper. The
+   *     ranges 0..9, a..z and A..Z are always safe and should not be specified here.
+   * @param plusForSpace true if ASCII space should be escaped to {@code +} rather than {@code %20}
+   * @throws IllegalArgumentException if safeChars includes characters that are always safe or
+   *     characters that must always be escaped
+   * @deprecated use {@code PercentEscaper(String safeChars)} instead which is the same as invoking
+   *     this method with plusForSpace set to false. Escaping spaces as plus signs does not conform
+   *     to the URI specification.
+   */
+  @Deprecated
   public PercentEscaper(String safeChars, boolean plusForSpace) {
     // Avoid any misunderstandings about the behavior of this escaper
     if (safeChars.matches(".*[0-9A-Za-z].*")) {
       throw new IllegalArgumentException(
-          "Alphanumeric characters are always 'safe' and should not be " + "explicitly specified");
+          "Alphanumeric ASCII characters are always 'safe' and should not be " + "escaped.");
     }
     // Avoid ambiguous parameters. Safe characters are never modified so if
     // space is a safe character then setting plusForSpace is meaningless.

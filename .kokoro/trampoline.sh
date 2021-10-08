@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright 2018 Google Inc.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,4 +21,6 @@ function cleanup() {
     echo "cleanup";
 }
 trap cleanup EXIT
+
+$(dirname $0)/populate-secrets.sh # Secret Manager secrets.
 python3 "${KOKORO_GFILE_DIR}/trampoline_v1.py"

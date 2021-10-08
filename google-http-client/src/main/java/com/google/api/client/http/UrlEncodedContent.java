@@ -42,20 +42,43 @@ import java.util.Map;
  *
  * <p>Implementation is not thread-safe.
  *
- * @since 1.0
  * @author Yaniv Inbar
+ * @since 1.0
  */
 public class UrlEncodedContent extends AbstractHttpContent {
 
   /** Key name/value data. */
   private Object data;
 
-  /** @param data key name/value data */
+  /** Use URI Path encoder flag. False by default (use legacy and deprecated escapeUri) */
+  private boolean uriPathEncodingFlag;
+
+  /**
+   * Initialize the UrlEncodedContent with the legacy and deprecated escapeUri encoder
+   *
+   * @param data key name/value data
+   */
   public UrlEncodedContent(Object data) {
     super(UrlEncodedParser.MEDIA_TYPE);
     setData(data);
+    this.uriPathEncodingFlag = false;
   }
 
+  /**
+   * Initialize the UrlEncodedContent with or without the legacy and deprecated escapeUri encoder
+   *
+   * @param data key name/value data
+   * @param useUriPathEncoding escapes the string value so it can be safely included in URI path
+   *     segments. For details on escaping URIs, see <a
+   *     href="http://tools.ietf.org/html/rfc3986#section-2.4">RFC 3986 - section 2.4</a>
+   */
+  public UrlEncodedContent(Object data, boolean useUriPathEncoding) {
+    super(UrlEncodedParser.MEDIA_TYPE);
+    setData(data);
+    this.uriPathEncodingFlag = useUriPathEncoding;
+  }
+
+  @Override
   public void writeTo(OutputStream out) throws IOException {
     Writer writer = new BufferedWriter(new OutputStreamWriter(out, getCharset()));
     boolean first = true;
@@ -66,10 +89,10 @@ public class UrlEncodedContent extends AbstractHttpContent {
         Class<? extends Object> valueClass = value.getClass();
         if (value instanceof Iterable<?> || valueClass.isArray()) {
           for (Object repeatedValue : Types.iterableOf(value)) {
-            first = appendParam(first, writer, name, repeatedValue);
+            first = appendParam(first, writer, name, repeatedValue, this.uriPathEncodingFlag);
           }
         } else {
-          first = appendParam(first, writer, name, value);
+          first = appendParam(first, writer, name, value, this.uriPathEncodingFlag);
         }
       }
     }
@@ -125,7 +148,8 @@ public class UrlEncodedContent extends AbstractHttpContent {
     return result;
   }
 
-  private static boolean appendParam(boolean first, Writer writer, String name, Object value)
+  private static boolean appendParam(
+      boolean first, Writer writer, String name, Object value, boolean uriPathEncodingFlag)
       throws IOException {
     // ignore nulls
     if (value == null || Data.isNull(value)) {
@@ -139,8 +163,13 @@ public class UrlEncodedContent extends AbstractHttpContent {
     }
     writer.write(name);
     String stringValue =
-        CharEscapers.escapeUri(
-            value instanceof Enum<?> ? FieldInfo.of((Enum<?>) value).getName() : value.toString());
+        value instanceof Enum<?> ? FieldInfo.of((Enum<?>) value).getName() : value.toString();
+
+    if (uriPathEncodingFlag) {
+      stringValue = CharEscapers.escapeUriPath(stringValue);
+    } else {
+      stringValue = CharEscapers.escapeUri(stringValue);
+    }
     if (stringValue.length() != 0) {
       writer.write("=");
       writer.write(stringValue);

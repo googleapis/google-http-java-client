@@ -26,6 +26,5 @@ public class FakeTest extends TestCase {
     super(name);
   }
 
-  public final void test() throws Exception {
-  }
+  public final void test() throws Exception {}
 }

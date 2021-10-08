@@ -19,8 +19,7 @@ import com.google.api.client.util.Beta;
 /** A class which contains {@link Beta} methods. */
 public class ClassWithBetaMethod {
 
-  @Beta
-  int betaField = 10;
+  @Beta int betaField = 10;
 
   @Beta
   public void betaMethod() {

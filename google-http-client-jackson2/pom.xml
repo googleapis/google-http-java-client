@@ -4,11 +4,11 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
+    <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client-jackson2</artifactId>
-  <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-jackson2:current} -->
+  <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-jackson2:current} -->
   <name>Jackson 2 extensions to the Google HTTP Client Library for Java.</name>
 
   <build>
@@ -17,8 +17,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links>
-            <link>http://download.oracle.com/javase/7/docs/api/</link>
-            <link>http://fasterxml.github.com/jackson-core/javadoc/${project.jackson-core2.version}/</link>
+            <link>https://download.oracle.com/javase/7/docs/api/</link>
           </links>
           <doctitle>${project.name} ${project.version}</doctitle>
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
@@ -39,7 +38,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <id>add-test-source</id>
@@ -80,11 +79,6 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

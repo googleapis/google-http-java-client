@@ -1,9 +1,8 @@
 package com.google.api.client.http.javanet;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
+import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.client.http.LowLevelHttpResponse;
@@ -15,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeoutException;
 import org.junit.Test;
 
@@ -202,5 +202,48 @@ public class NetHttpRequestTest {
     } catch (IOException e) {
       assertEquals("Error during close", e.getMessage());
     }
+  }
+
+  @Test
+  public void testChunkedLengthSet() throws Exception {
+    MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
+    connection.setRequestMethod("POST");
+    NetHttpRequest request = new NetHttpRequest(connection);
+    InputStream is = NetHttpRequestTest.class.getClassLoader().getResourceAsStream("file.txt");
+    HttpContent content = new InputStreamContent("text/plain", is);
+    request.setStreamingContent(content);
+    request.setContentEncoding("gzip");
+    request.execute();
+
+    assertEquals(4096, connection.getChunkLength());
+    assertNull(request.getRequestProperty("Content-Length"));
+  }
+
+  @Test
+  public void testChunkedLengthNotSet() throws Exception {
+    MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
+    connection.setRequestMethod("POST");
+    NetHttpRequest request = new NetHttpRequest(connection);
+    HttpContent content =
+        new ByteArrayContent("text/plain", "sample".getBytes(StandardCharsets.UTF_8));
+    request.setStreamingContent(content);
+    request.setContentLength(content.getLength());
+    request.execute();
+
+    assertEquals(connection.getChunkLength(), -1);
+    assertEquals("6", request.getRequestProperty("Content-Length"));
+  }
+
+  // see https://github.com/googleapis/google-http-java-client/issues/1471 for more details
+  @Test
+  public void testDeleteSetsContentLengthToZeroWithoutContent() throws Exception {
+    MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
+    connection.setRequestMethod("DELETE");
+    NetHttpRequest request = new NetHttpRequest(connection);
+    request.execute();
+
+    assertTrue(connection.doOutputCalled());
+    assertTrue(connection.isSetFixedLengthStreamingModeLongCalled());
+    assertFalse(connection.isSetFixedLengthStreamingModeIntCalled());
   }
 }

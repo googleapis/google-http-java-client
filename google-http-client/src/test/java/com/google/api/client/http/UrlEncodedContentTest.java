@@ -33,19 +33,32 @@ import junit.framework.TestCase;
 public class UrlEncodedContentTest extends TestCase {
 
   public void testWriteTo() throws IOException {
-    subtestWriteTo("a=x", ArrayMap.of("a", "x"));
-    subtestWriteTo("noval", ArrayMap.of("noval", ""));
-    subtestWriteTo("multi=a&multi=b&multi=c", ArrayMap.of("multi", Arrays.asList("a", "b", "c")));
-    subtestWriteTo("multi=a&multi=b&multi=c", ArrayMap.of("multi", new String[] {"a", "b", "c"}));
+    subtestWriteTo("a=x", ArrayMap.of("a", "x"), false);
+    subtestWriteTo("noval", ArrayMap.of("noval", ""), false);
+    subtestWriteTo(
+        "multi=a&multi=b&multi=c", ArrayMap.of("multi", Arrays.asList("a", "b", "c")), false);
+    subtestWriteTo(
+        "multi=a&multi=b&multi=c", ArrayMap.of("multi", new String[] {"a", "b", "c"}), false);
     // https://github.com/googleapis/google-http-java-client/issues/202
     final Map<String, String> params = new LinkedHashMap<String, String>();
     params.put("username", "un");
     params.put("password", "password123;{}");
-    subtestWriteTo("username=un&password=password123%3B%7B%7D", params);
+    subtestWriteTo("username=un&password=password123%3B%7B%7D", params, false);
+    subtestWriteTo("additionkey=add%2Btion", ArrayMap.of("additionkey", "add+tion"), false);
+
+    subtestWriteTo("a=x", ArrayMap.of("a", "x"), true);
+    subtestWriteTo("noval", ArrayMap.of("noval", ""), true);
+    subtestWriteTo(
+        "multi=a&multi=b&multi=c", ArrayMap.of("multi", Arrays.asList("a", "b", "c")), true);
+    subtestWriteTo(
+        "multi=a&multi=b&multi=c", ArrayMap.of("multi", new String[] {"a", "b", "c"}), true);
+    subtestWriteTo("username=un&password=password123;%7B%7D", params, true);
+    subtestWriteTo("additionkey=add+tion", ArrayMap.of("additionkey", "add+tion"), true);
   }
 
-  private void subtestWriteTo(String expected, Object data) throws IOException {
-    UrlEncodedContent content = new UrlEncodedContent(data);
+  private void subtestWriteTo(String expected, Object data, boolean useEscapeUriPathEncoding)
+      throws IOException {
+    UrlEncodedContent content = new UrlEncodedContent(data, useEscapeUriPathEncoding);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     content.writeTo(out);
     assertEquals(expected, out.toString());

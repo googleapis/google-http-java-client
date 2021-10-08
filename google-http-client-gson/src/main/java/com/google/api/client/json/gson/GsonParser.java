@@ -17,7 +17,6 @@ package com.google.api.client.json.gson;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.JsonToken;
-import com.google.api.client.util.Preconditions;
 import com.google.gson.stream.JsonReader;
 import java.io.EOFException;
 import java.io.IOException;
@@ -44,8 +43,7 @@ class GsonParser extends JsonParser {
   GsonParser(GsonFactory factory, JsonReader reader) {
     this.factory = factory;
     this.reader = reader;
-    // lenient to allow top-level values of any type
-    reader.setLenient(true);
+    reader.setLenient(false);
   }
 
   @Override
@@ -69,56 +67,58 @@ class GsonParser extends JsonParser {
   }
 
   @Override
-  public byte getByteValue() {
+  public byte getByteValue() throws IOException {
     checkNumber();
     return Byte.parseByte(currentText);
   }
 
   @Override
-  public short getShortValue() {
+  public short getShortValue() throws IOException {
     checkNumber();
     return Short.parseShort(currentText);
   }
 
   @Override
-  public int getIntValue() {
+  public int getIntValue() throws IOException {
     checkNumber();
     return Integer.parseInt(currentText);
   }
 
   @Override
-  public float getFloatValue() {
+  public float getFloatValue() throws IOException {
     checkNumber();
     return Float.parseFloat(currentText);
   }
 
   @Override
-  public BigInteger getBigIntegerValue() {
+  public BigInteger getBigIntegerValue() throws IOException {
     checkNumber();
     return new BigInteger(currentText);
   }
 
   @Override
-  public BigDecimal getDecimalValue() {
+  public BigDecimal getDecimalValue() throws IOException {
     checkNumber();
     return new BigDecimal(currentText);
   }
 
   @Override
-  public double getDoubleValue() {
+  public double getDoubleValue() throws IOException {
     checkNumber();
     return Double.parseDouble(currentText);
   }
 
   @Override
-  public long getLongValue() {
+  public long getLongValue() throws IOException {
     checkNumber();
     return Long.parseLong(currentText);
   }
 
-  private void checkNumber() {
-    Preconditions.checkArgument(
-        currentToken == JsonToken.VALUE_NUMBER_INT || currentToken == JsonToken.VALUE_NUMBER_FLOAT);
+  private void checkNumber() throws IOException {
+    if (currentToken != JsonToken.VALUE_NUMBER_INT
+        && currentToken != JsonToken.VALUE_NUMBER_FLOAT) {
+      throw new IOException("Token is not a number");
+    }
   }
 
   @Override

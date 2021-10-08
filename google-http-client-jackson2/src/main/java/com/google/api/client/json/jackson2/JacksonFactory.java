@@ -17,7 +17,6 @@ package com.google.api.client.json.jackson2;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.JsonParser;
-import com.google.api.client.json.JsonToken;
 import com.google.api.client.util.Preconditions;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,12 +28,14 @@ import java.nio.charset.Charset;
 /**
  * Low-level JSON library implementation based on Jackson 2.
  *
- * <p>Implementation is thread-safe, and sub-classes must be thread-safe. For maximum efficiency,
- * applications should use a single globally-shared instance of the JSON factory.
+ * <p>Implementation is thread-safe. For maximum efficiency, applications should use a single
+ * globally-shared instance of the JSON factory.
  *
  * @since 1.11
  * @author Yaniv Inbar
+ * @deprecated use com.google.api.client.json.GsonFactory instead
  */
+@Deprecated
 public final class JacksonFactory extends JsonFactory {
 
   /** JSON factory. */
@@ -95,37 +96,5 @@ public final class JacksonFactory extends JsonFactory {
   public JsonParser createJsonParser(String value) throws IOException {
     Preconditions.checkNotNull(value);
     return new JacksonParser(this, factory.createJsonParser(value));
-  }
-
-  static JsonToken convert(com.fasterxml.jackson.core.JsonToken token) {
-    if (token == null) {
-      return null;
-    }
-    switch (token) {
-      case END_ARRAY:
-        return JsonToken.END_ARRAY;
-      case START_ARRAY:
-        return JsonToken.START_ARRAY;
-      case END_OBJECT:
-        return JsonToken.END_OBJECT;
-      case START_OBJECT:
-        return JsonToken.START_OBJECT;
-      case VALUE_FALSE:
-        return JsonToken.VALUE_FALSE;
-      case VALUE_TRUE:
-        return JsonToken.VALUE_TRUE;
-      case VALUE_NULL:
-        return JsonToken.VALUE_NULL;
-      case VALUE_STRING:
-        return JsonToken.VALUE_STRING;
-      case VALUE_NUMBER_FLOAT:
-        return JsonToken.VALUE_NUMBER_FLOAT;
-      case VALUE_NUMBER_INT:
-        return JsonToken.VALUE_NUMBER_INT;
-      case FIELD_NAME:
-        return JsonToken.FIELD_NAME;
-      default:
-        return JsonToken.NOT_AVAILABLE;
-    }
   }
 }

@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.http-client</groupId>
   <artifactId>google-http-client-bom</artifactId>
-  <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-bom:current} -->
+  <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-bom:current} -->
   <packaging>pom</packaging>
 
   <name>Google HTTP Client Library for Java BOM</name>
@@ -37,11 +37,11 @@
   <distributionManagement>
     <snapshotRepository>
       <id>sonatype-nexus-snapshots</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <url>https://google.oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
     <repository>
       <id>sonatype-nexus-staging</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      <url>https://google.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
     <site>
       <id>github-pages-site</id>
@@ -63,52 +63,52 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client</artifactId>
-        <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client:current} -->
+        <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-android</artifactId>
-        <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-android:current} -->
+        <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-android:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-apache-v2</artifactId>
-        <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-apache-v2:current} -->
+        <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-apache-v2:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-appengine</artifactId>
-        <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-appengine:current} -->
+        <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-appengine:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-findbugs</artifactId>
-        <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-findbugs:current} -->
+        <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-findbugs:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-gson</artifactId>
-        <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-gson:current} -->
+        <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-gson:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-jackson2</artifactId>
-        <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-jackson2:current} -->
+        <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-jackson2:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-protobuf</artifactId>
-        <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-protobuf:current} -->
+        <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-protobuf:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-test</artifactId>
-        <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-test:current} -->
+        <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-test:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-xml</artifactId>
-        <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-xml:current} -->
+        <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-xml:current} -->
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -121,14 +121,14 @@
         <extensions>true</extensions>
         <configuration>
           <serverId>sonatype-nexus-staging</serverId>
-          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <nexusUrl>https://google.oss.sonatype.org/</nexusUrl>
           <autoReleaseAfterClose>false</autoReleaseAfterClose>
         </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.1.1</version>
+        <version>3.3.1</version>
         <configuration>
           <skip>true</skip>
         </configuration>
@@ -136,10 +136,26 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-        <version>3.8.2</version>
+        <version>3.9.1</version>
         <configuration>
           <skip>true</skip>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.coveo</groupId>
+        <artifactId>fmt-maven-plugin</artifactId>
+        <version>2.9</version>
+        <configuration>
+          <style>google</style>
+          <verbose>true</verbose>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.google.googlejavaformat</groupId>
+            <artifactId>google-java-format</artifactId>
+            <version>1.7</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
@@ -158,7 +174,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.6</version>
+            <version>3.0.1</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>

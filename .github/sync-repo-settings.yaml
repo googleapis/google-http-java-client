@@ -1,0 +1,53 @@
+rebaseMergeAllowed: false
+squashMergeAllowed: true
+mergeCommitAllowed: false
+branchProtectionRules:
+  - pattern: main
+    isAdminEnforced: true
+    requiredApprovingReviewCount: 1
+    requiresCodeOwnerReviews: true
+    requiresStrictStatusChecks: false
+    requiredStatusCheckContexts:
+      - units (8)
+      - units (11)
+      - windows
+      - dependencies (8)
+      - dependencies (11)
+      - lint
+      - clirr
+      - cla/google
+  - pattern: 1.39.2-sp
+    isAdminEnforced: true
+    requiredApprovingReviewCount: 1
+    requiresCodeOwnerReviews: true
+    requiresStrictStatusChecks: false
+    requiredStatusCheckContexts:
+      - units (8)
+      - units (11)
+      - windows
+      - dependencies (8)
+      - dependencies (11)
+      - lint
+      - clirr
+      - cla/google
+  - pattern: 1.40.x
+    isAdminEnforced: true
+    requiredApprovingReviewCount: 1
+    requiresCodeOwnerReviews: true
+    requiresStrictStatusChecks: false
+    requiredStatusCheckContexts:
+      - units (8)
+      - units (11)
+      - windows
+      - dependencies (8)
+      - dependencies (11)
+      - lint
+      - clirr
+      - cla/google
+permissionRules:
+  - team: yoshi-admins
+    permission: admin
+  - team: yoshi-java-admins
+    permission: admin
+  - team: yoshi-java
+    permission: push

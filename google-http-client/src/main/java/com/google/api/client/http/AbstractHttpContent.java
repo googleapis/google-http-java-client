@@ -14,11 +14,11 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Charsets;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.StreamingContent;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Abstract implementation of an HTTP content with typical options.
@@ -87,13 +87,13 @@ public abstract class AbstractHttpContent implements HttpContent {
   }
 
   /**
-   * Returns the charset specified in the media type or {@code Charsets#UTF_8} if not specified.
+   * Returns the charset specified in the media type or ISO_8859_1 if not specified.
    *
    * @since 1.10
    */
   protected final Charset getCharset() {
     return mediaType == null || mediaType.getCharsetParameter() == null
-        ? Charsets.ISO_8859_1
+        ? StandardCharsets.ISO_8859_1
         : mediaType.getCharsetParameter();
   }
 

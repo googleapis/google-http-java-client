@@ -17,6 +17,7 @@ package com.google.api.client.util;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -31,6 +32,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.List;
 import javax.net.ssl.X509TrustManager;
 
@@ -127,6 +129,11 @@ public final class SecurityUtils {
     return Signature.getInstance("SHA256withRSA");
   }
 
+  /** Returns the SHA-256 with ECDSA signature algorithm */
+  public static Signature getEs256SignatureAlgorithm() throws NoSuchAlgorithmException {
+    return Signature.getInstance("SHA256withECDSA");
+  }
+
   /**
    * Signs content using a private key.
    *
@@ -157,7 +164,7 @@ public final class SecurityUtils {
       throws InvalidKeyException, SignatureException {
     signatureAlgorithm.initVerify(publicKey);
     signatureAlgorithm.update(contentBytes);
-    // SignatureException may be thrown if we are tring the wrong key.
+    // SignatureException may be thrown if we are trying the wrong key.
     try {
       return signatureAlgorithm.verify(signatureBytes);
     } catch (SignatureException e) {
@@ -251,6 +258,63 @@ public final class SecurityUtils {
       keyStore.setCertificateEntry(String.valueOf(i), cert);
       i++;
     }
+  }
+
+  /**
+   * {@link Beta} <br>
+   * Create a keystore for mutual TLS with the certificate and private key provided.
+   *
+   * @param certAndKey Certificate and private key input stream. The stream should contain one
+   *     certificate and one unencrypted private key. If there are multiple certificates, only the
+   *     first certificate will be used.
+   * @return keystore for mutual TLS.
+   * @since 1.38
+   */
+  @Beta
+  public static KeyStore createMtlsKeyStore(InputStream certAndKey)
+      throws GeneralSecurityException, IOException {
+    KeyStore keystore = KeyStore.getInstance("JKS");
+    keystore.load(null);
+
+    PemReader.Section certSection = null;
+    PemReader.Section keySection = null;
+    PemReader reader = new PemReader(new InputStreamReader(certAndKey));
+
+    while (certSection == null || keySection == null) {
+      // Read the certificate and private key.
+      PemReader.Section section = reader.readNextSection();
+      if (section == null) {
+        break;
+      }
+
+      if (certSection == null && "CERTIFICATE".equals(section.getTitle())) {
+        certSection = section;
+      } else if ("PRIVATE KEY".equals(section.getTitle())) {
+        keySection = section;
+      }
+    }
+
+    if (certSection == null) {
+      throw new IllegalArgumentException("certificate is missing from certAndKey string");
+    }
+    if (keySection == null) {
+      throw new IllegalArgumentException("private key is missing from certAndKey string");
+    }
+
+    CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+    X509Certificate cert =
+        (X509Certificate)
+            certFactory.generateCertificate(
+                new ByteArrayInputStream(certSection.getBase64DecodedBytes()));
+
+    PKCS8EncodedKeySpec keySpecPKCS8 = new PKCS8EncodedKeySpec(keySection.getBase64DecodedBytes());
+    PrivateKey key =
+        KeyFactory.getInstance(cert.getPublicKey().getAlgorithm()).generatePrivate(keySpecPKCS8);
+
+    // Fit the certificate and private key into the keystore.
+    keystore.setKeyEntry("alias", key, new char[] {}, new X509Certificate[] {cert});
+
+    return keystore;
   }
 
   private SecurityUtils() {}

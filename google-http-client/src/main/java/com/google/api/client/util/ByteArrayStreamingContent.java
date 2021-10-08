@@ -24,7 +24,9 @@ import java.io.OutputStream;
  *
  * @since 1.14
  * @author Yaniv Inbar
+ * @deprecated use com.google.common.io.ByteSource
  */
+@Deprecated
 public class ByteArrayStreamingContent implements StreamingContent {
 
   /** Byte array content. */

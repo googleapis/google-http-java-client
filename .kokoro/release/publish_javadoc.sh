@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright 2019 Google Inc.
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,13 +31,13 @@ pushd $(dirname "$0")/../../
 python3 -m pip install gcp-docuploader
 
 # compile all packages
-mvn clean install -B -DskipTests=true
+mvn clean install -B -q -DskipTests=true
 
-NAME=google-http-client
-VERSION=$(grep ${NAME}: versions.txt | cut -d: -f3)
+export NAME=google-http-client
+export VERSION=$(grep ${NAME}: versions.txt | cut -d: -f3)
 
 # build the docs
-mvn site -B
+mvn site -B -q
 
 pushd target/site/apidocs
 
@@ -51,5 +51,3 @@ python3 -m docuploader create-metadata \
 python3 -m docuploader upload . \
   --credentials ${CREDENTIALS} \
   --staging-bucket ${STAGING_BUCKET}
-
-popd

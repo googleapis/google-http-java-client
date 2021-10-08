@@ -57,6 +57,9 @@ public class HttpStatusCodes {
   /** Status code for a resource that has temporarily moved to a new URI. */
   public static final int STATUS_CODE_TEMPORARY_REDIRECT = 307;
 
+  /** Status code for a resource that has permanently moved to a new URI. */
+  private static final int STATUS_CODE_PERMANENT_REDIRECT = 308;
+
   /** Status code for a request that could not be understood by the server. */
   public static final int STATUS_CODE_BAD_REQUEST = 400;
 
@@ -109,7 +112,7 @@ public class HttpStatusCodes {
 
   /**
    * Returns whether the given HTTP response status code is a redirect code {@code 301, 302, 303,
-   * 307}.
+   * 307, 308}.
    *
    * @since 1.11
    */
@@ -119,6 +122,7 @@ public class HttpStatusCodes {
       case HttpStatusCodes.STATUS_CODE_FOUND: // 302
       case HttpStatusCodes.STATUS_CODE_SEE_OTHER: // 303
       case HttpStatusCodes.STATUS_CODE_TEMPORARY_REDIRECT: // 307
+      case HttpStatusCodes.STATUS_CODE_PERMANENT_REDIRECT: // 308
         return true;
       default:
         return false;

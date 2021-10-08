@@ -84,13 +84,13 @@ public final class HttpRequestFactory {
   public HttpRequest buildRequest(String requestMethod, GenericUrl url, HttpContent content)
       throws IOException {
     HttpRequest request = transport.buildRequest();
+    if (url != null) {
+      request.setUrl(url);
+    }
     if (initializer != null) {
       initializer.initialize(request);
     }
     request.setRequestMethod(requestMethod);
-    if (url != null) {
-      request.setUrl(url);
-    }
     if (content != null) {
       request.setContent(content);
     }

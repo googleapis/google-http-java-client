@@ -17,6 +17,8 @@ package com.google.api.client.util;
 import com.google.api.client.testing.json.webtoken.TestCertificates;
 import com.google.api.client.testing.util.SecurityTestUtils;
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.cert.X509Certificate;
@@ -159,5 +161,48 @@ public class SecurityUtilsTest extends TestCase {
 
   public void testVerifyX509WrongCa() throws Exception {
     assertNull(verifyX509(TestCertificates.BOGUS_CA_CERT));
+  }
+
+  public void testCreateMtlsKeyStoreNoCert() throws Exception {
+    final InputStream certMissing =
+        getClass()
+            .getClassLoader()
+            .getResourceAsStream("com/google/api/client/util/privateKey.pem");
+
+    boolean thrown = false;
+    try {
+      SecurityUtils.createMtlsKeyStore(certMissing);
+      fail("should have thrown");
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("certificate is missing from certAndKey string"));
+      thrown = true;
+    }
+    assertTrue("should have caught an IllegalArgumentException", thrown);
+  }
+
+  public void testCreateMtlsKeyStoreNoPrivateKey() throws Exception {
+    final InputStream privateKeyMissing =
+        getClass().getClassLoader().getResourceAsStream("com/google/api/client/util/cert.pem");
+
+    boolean thrown = false;
+    try {
+      SecurityUtils.createMtlsKeyStore(privateKeyMissing);
+      fail("should have thrown");
+    } catch (IllegalArgumentException e) {
+      assertTrue(e.getMessage().contains("private key is missing from certAndKey string"));
+      thrown = true;
+    }
+    assertTrue("should have caught an IllegalArgumentException", thrown);
+  }
+
+  public void testCreateMtlsKeyStoreSuccess() throws Exception {
+    InputStream certAndKey =
+        getClass()
+            .getClassLoader()
+            .getResourceAsStream("com/google/api/client/util/mtlsCertAndKey.pem");
+
+    KeyStore mtlsKeyStore = SecurityUtils.createMtlsKeyStore(certAndKey);
+
+    assertEquals(1, mtlsKeyStore.size());
   }
 }

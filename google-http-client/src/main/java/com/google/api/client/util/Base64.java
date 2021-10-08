@@ -22,7 +22,9 @@ import com.google.common.io.BaseEncoding.DecodingException;
  *
  * @since 1.8
  * @author Yaniv Inbar
+ * @deprecated use com.google.common.io.BaseEncoding#base64
  */
+@Deprecated
 public class Base64 {
 
   /**

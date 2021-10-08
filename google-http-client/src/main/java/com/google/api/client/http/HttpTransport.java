@@ -141,6 +141,27 @@ public abstract class HttpTransport {
   }
 
   /**
+   * Returns whether the transport is mTLS.
+   *
+   * @return boolean indicating if the transport is mTLS.
+   * @since 1.38
+   */
+  public boolean isMtls() {
+    return false;
+  }
+
+  /**
+   * Builds a low level HTTP request for the given HTTP method.
+   *
+   * @param method HTTP method
+   * @param url URL
+   * @return new low level HTTP request
+   * @throws IllegalArgumentException if HTTP method is not supported
+   * @since 1.12
+   */
+  protected abstract LowLevelHttpRequest buildRequest(String method, String url) throws IOException;
+
+  /**
    * Default implementation does nothing, but subclasses may override to possibly release allocated
    * system resources or close connections.
    *

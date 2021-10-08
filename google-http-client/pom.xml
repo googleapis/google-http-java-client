@@ -4,11 +4,11 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
+    <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client</artifactId>
-  <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client:current} -->
+  <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client:current} -->
   <name>Google HTTP Client Library for Java</name>
   <description>
     Google HTTP Client Library for Java. Functionality that works on all supported Java platforms,
@@ -21,10 +21,27 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.1.1</version>
+          <version>3.1.2</version>
           <configuration>
             <ignoredUnusedDeclaredDependencies>io.opencensus:opencensus-impl</ignoredUnusedDeclaredDependencies>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>animal-sniffer-maven-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>android</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <configuration>
+                <ignores>
+                  <ignore>java.nio.file.*</ignore>
+                </ignores>
+              </configuration>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -90,6 +107,11 @@
             </goals>   
           </execution>
         </executions>
+        <configuration>
+          <instructions>
+            <Import-Package>javax.annotation;resolution:=optional,*</Import-Package>
+          </instructions>
+        </configuration>
       </plugin>
     </plugins>
 
@@ -143,11 +165,6 @@
     <dependency>
       <groupId>com.google.truth</groupId>
       <artifactId>truth</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -15,7 +15,6 @@
 package com.google.api.client.http;
 
 import com.google.api.client.util.Beta;
-import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingStreamingContent;
 import com.google.api.client.util.ObjectParser;
 import com.google.api.client.util.Preconditions;
@@ -174,6 +173,9 @@ public final class HttpRequest {
 
   /** Whether to automatically follow redirects ({@code true} by default). */
   private boolean followRedirects = true;
+
+  /** Whether to use raw redirect URLs ({@code false} by default). */
+  private boolean useRawRedirectUrls = false;
 
   /**
    * Whether to throw an exception at the end of {@link #execute()} on an HTTP error code (non-2XX)
@@ -695,6 +697,21 @@ public final class HttpRequest {
     return this;
   }
 
+  /** Return whether to use raw redirect URLs. */
+  public boolean getUseRawRedirectUrls() {
+    return useRawRedirectUrls;
+  }
+
+  /**
+   * Sets whether to use raw redirect URLs.
+   *
+   * <p>The default value is {@code false}.
+   */
+  public HttpRequest setUseRawRedirectUrls(boolean useRawRedirectUrls) {
+    this.useRawRedirectUrls = useRawRedirectUrls;
+    return this;
+  }
+
   /**
    * Returns whether to throw an exception at the end of {@link #execute()} on an HTTP error code
    * (non-2XX) after all retries and response handlers have been exhausted.
@@ -918,7 +935,7 @@ public final class HttpRequest {
       final boolean contentRetrySupported = streamingContent == null || content.retrySupported();
       if (streamingContent != null) {
         final String contentEncoding;
-        final long contentLength;
+        long contentLength = -1;
         final String contentType = content.getType();
         // log content
         if (loggable) {
@@ -933,7 +950,6 @@ public final class HttpRequest {
         } else {
           contentEncoding = encoding.getName();
           streamingContent = new HttpEncodingStreamingContent(streamingContent, encoding);
-          contentLength = contentRetrySupported ? IOUtils.computeLength(streamingContent) : -1;
         }
         // append content headers to log buffer
         if (loggable) {
@@ -996,6 +1012,9 @@ public final class HttpRequest {
         LowLevelHttpResponse lowLevelHttpResponse = lowLevelHttpRequest.execute();
         if (lowLevelHttpResponse != null) {
           OpenCensusUtils.recordReceivedMessageEvent(span, lowLevelHttpResponse.getContentLength());
+          span.putAttribute(
+              HttpTraceAttributeConstants.HTTP_STATUS_CODE,
+              AttributeValue.longAttributeValue(lowLevelHttpResponse.getStatusCode()));
         }
         // Flag used to indicate if an exception is thrown before the response is constructed.
         boolean responseConstructed = false;
@@ -1159,7 +1178,7 @@ public final class HttpRequest {
         && HttpStatusCodes.isRedirect(statusCode)
         && redirectLocation != null) {
       // resolve the redirect location relative to the current location
-      setUrl(new GenericUrl(url.toURL(redirectLocation)));
+      setUrl(new GenericUrl(url.toURL(redirectLocation), useRawRedirectUrls));
       // on 303 change method to GET
       if (statusCode == HttpStatusCodes.STATUS_CODE_SEE_OTHER) {
         setRequestMethod(HttpMethods.GET);
@@ -1202,21 +1221,21 @@ public final class HttpRequest {
       span.putAttribute(key, AttributeValue.stringAttributeValue(value));
     }
   }
-  
+
   private static String getVersion() {
-    String version = HttpRequest.class.getPackage().getImplementationVersion();
-    // in a non-packaged environment (local), there's no implementation version to read
-    if (version == null) {
-      // fall back to reading from a properties file - note this value is expected to be cached
-      try (InputStream inputStream = HttpRequest.class.getResourceAsStream("/google-http-client.properties")) {
-        if (inputStream != null) {
-          Properties properties = new Properties();
-          properties.load(inputStream);
-          version = properties.getProperty("google-http-client.version");
-        }
-      } catch (IOException e) {
-        // ignore
+    // attempt to read the library's version from a properties file generated during the build
+    // this value should be read and cached for later use
+    String version = "unknown-version";
+    try (InputStream inputStream =
+        HttpRequest.class.getResourceAsStream(
+            "/com/google/api/client/http/google-http-client.properties")) {
+      if (inputStream != null) {
+        final Properties properties = new Properties();
+        properties.load(inputStream);
+        version = properties.getProperty("google-http-client.version");
       }
+    } catch (IOException e) {
+      // ignore
     }
     return version;
   }

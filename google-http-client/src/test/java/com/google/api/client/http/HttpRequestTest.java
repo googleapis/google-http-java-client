@@ -31,10 +31,6 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-
-import java.util.regex.Pattern;
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -45,7 +41,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
-
+import java.util.regex.Pattern;
+import junit.framework.TestCase;
 import org.junit.Assert;
 
 /**
@@ -990,7 +987,7 @@ public class HttpRequestTest extends TestCase {
             if (expectGZip) {
               assertEquals(HttpEncodingStreamingContent.class, getStreamingContent().getClass());
               assertEquals("gzip", getContentEncoding());
-              assertEquals(25, getContentLength());
+              assertEquals(-1, getContentLength());
             } else {
               assertFalse(
                   getStreamingContent().getClass().equals(HttpEncodingStreamingContent.class));
@@ -1093,7 +1090,7 @@ public class HttpRequestTest extends TestCase {
 
   public void testVersion() {
     assertNotNull("version constant should not be null", HttpRequest.VERSION);
-    Pattern semverPattern = Pattern.compile("\\d+\\.\\d+\\.\\d+(-SNAPSHOT)?");
+    Pattern semverPattern = Pattern.compile("\\d+\\.\\d+\\.\\d+(-sp\\.\\d+)?(-SNAPSHOT)?");
     assertTrue(semverPattern.matcher(HttpRequest.VERSION).matches());
   }
 
@@ -1230,7 +1227,9 @@ public class HttpRequestTest extends TestCase {
       if (message.startsWith("curl")) {
         found = true;
         assertTrue(message.contains("curl -v --compressed -H 'Accept-Encoding: gzip'"));
-        assertTrue(message.contains("-H 'User-Agent: Google-HTTP-Java-Client/" + HttpRequest.VERSION + " (gzip)'"));
+        assertTrue(
+            message.contains(
+                "-H 'User-Agent: Google-HTTP-Java-Client/" + HttpRequest.VERSION + " (gzip)'"));
         assertTrue(message.contains("' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c'"));
       }
     }
@@ -1261,10 +1260,21 @@ public class HttpRequestTest extends TestCase {
         found = true;
         assertTrue(message.contains("curl -v --compressed -X POST -H 'Accept-Encoding: gzip'"));
         assertTrue(message.contains("-H 'User-Agent: " + HttpRequest.USER_AGENT_SUFFIX + "'"));
-        assertTrue(message.contains("-H 'Content-Type: text/plain; charset=UTF-8' -H 'Content-Encoding: gzip'"));
+        assertTrue(
+            message.contains(
+                "-H 'Content-Type: text/plain; charset=UTF-8' -H 'Content-Encoding: gzip'"));
         assertTrue(message.contains("-d '@-' -- 'http://google.com/#q=a'\"'\"'b'\"'\"'c' << $$$"));
       }
     }
     assertTrue(found);
+  }
+
+  public void testVersion_matchesAcceptablePatterns() throws Exception {
+    String acceptableVersionPattern =
+        "unknown-version|(?:\\d+\\.\\d+\\.\\d+(?:-.*?)?(?:-SNAPSHOT)?)";
+    String version = HttpRequest.VERSION;
+    assertTrue(
+        String.format("the loaded version '%s' did not match the acceptable pattern", version),
+        version.matches(acceptableVersionPattern));
   }
 }

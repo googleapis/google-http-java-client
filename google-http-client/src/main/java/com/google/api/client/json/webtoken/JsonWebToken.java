@@ -47,8 +47,7 @@ public class JsonWebToken {
   }
 
   /**
-   * Header as specified in 
-   * <a href="https://tools.ietf.org/html/rfc7519#section-5">JWT Header</a>.
+   * Header as specified in <a href="https://tools.ietf.org/html/rfc7519#section-5">JWT Header</a>.
    */
   public static class Header extends GenericJson {
 
@@ -115,9 +114,8 @@ public class JsonWebToken {
   }
 
   /**
-   * Payload as specified in 
-   * <a href="https://tools.ietf.org/html/rfc7519#section-4.1">Reserved Claim
-   * Names</a>.
+   * Payload as specified in <a href="https://tools.ietf.org/html/rfc7519#section-4.1">Reserved
+   * Claim Names</a>.
    */
   public static class Payload extends GenericJson {
 

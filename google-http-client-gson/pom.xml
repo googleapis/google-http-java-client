@@ -4,11 +4,11 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
+    <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client-gson</artifactId>
-  <version>1.33.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-gson:current} -->
+  <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-gson:current} -->
   <name>GSON extensions to the Google HTTP Client Library for Java.</name>
 
   <build>
@@ -39,7 +39,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <id>add-test-source</id>
@@ -80,11 +80,6 @@
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

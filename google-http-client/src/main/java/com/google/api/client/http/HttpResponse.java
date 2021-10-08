@@ -14,11 +14,11 @@
 
 package com.google.api.client.http;
 
-import com.google.api.client.util.Charsets;
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.LoggingInputStream;
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StringUtils;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -150,11 +151,27 @@ public final class HttpResponse {
       contentType = request.getResponseHeaders().getContentType();
     }
     this.contentType = contentType;
-    mediaType = contentType == null ? null : new HttpMediaType(contentType);
+    this.mediaType = parseMediaType(contentType);
 
     // log from buffer
     if (loggable) {
       logger.config(logbuf.toString());
+    }
+  }
+
+  /**
+   * Returns an {@link HttpMediaType} object parsed from {@link #contentType}, or {@code null} if if
+   * {@link #contentType} cannot be parsed or {@link #contentType} is {@code null}.
+   */
+  private static HttpMediaType parseMediaType(String contentType) {
+    if (contentType == null) {
+      return null;
+    }
+    try {
+      return new HttpMediaType(contentType);
+    } catch (IllegalArgumentException e) {
+      // contentType is invalid and cannot be parsed.
+      return null;
     }
   }
 
@@ -335,10 +352,17 @@ public final class HttpResponse {
         try {
           // gzip encoding (wrap content with GZipInputStream)
           if (!returnRawInputStream && this.contentEncoding != null) {
-            String oontentencoding = this.contentEncoding.trim().toLowerCase(Locale.ENGLISH);
-            if (CONTENT_ENCODING_GZIP.equals(oontentencoding) || CONTENT_ENCODING_XGZIP.equals(oontentencoding)) {
+            String contentEncoding = this.contentEncoding.trim().toLowerCase(Locale.ENGLISH);
+            if (CONTENT_ENCODING_GZIP.equals(contentEncoding)
+                || CONTENT_ENCODING_XGZIP.equals(contentEncoding)) {
+              // Wrap the original stream in a ConsumingInputStream before passing it to
+              // GZIPInputStream. The GZIPInputStream leaves content unconsumed in the original
+              // stream (it almost always leaves the last chunk unconsumed in chunked responses).
+              // ConsumingInputStream ensures that any unconsumed bytes are read at close.
+              // GZIPInputStream.close() --> ConsumingInputStream.close() -->
+              // exhaust(ConsumingInputStream)
               lowLevelResponseContent =
-                  new ConsumingInputStream(new GZIPInputStream(lowLevelResponseContent));
+                  new GZIPInputStream(new ConsumingInputStream(lowLevelResponseContent));
             }
           }
           // logging (wrap content with LoggingInputStream)
@@ -348,7 +372,13 @@ public final class HttpResponse {
                 new LoggingInputStream(
                     lowLevelResponseContent, logger, Level.CONFIG, contentLoggingLimit);
           }
-          content = lowLevelResponseContent;
+          if (returnRawInputStream) {
+            content = lowLevelResponseContent;
+          } else {
+            // wrap the content with BufferedInputStream to support
+            // mark()/reset() while error checking in error handlers
+            content = new BufferedInputStream(lowLevelResponseContent);
+          }
           contentProcessed = true;
         } catch (EOFException e) {
           // this may happen for example on a HEAD request since there no actual response data read
@@ -396,15 +426,18 @@ public final class HttpResponse {
 
   /** Closes the content of the HTTP response from {@link #getContent()}, ignoring any content. */
   public void ignore() throws IOException {
-    InputStream content = getContent();
-    if (content != null) {
-      content.close();
+    if (this.response == null) {
+      return;
+    }
+    InputStream lowLevelResponseContent = this.response.getContent();
+    if (lowLevelResponseContent != null) {
+      lowLevelResponseContent.close();
     }
   }
 
   /**
-   * Close the HTTP response content using {@link #ignore}, and disconnect using {@link
-   * LowLevelHttpResponse#disconnect()}.
+   * Disconnect using {@link LowLevelHttpResponse#disconnect()}, then close the HTTP response
+   * content using {@link #ignore}.
    *
    * @since 1.4
    */
@@ -483,14 +516,28 @@ public final class HttpResponse {
   }
 
   /**
-   * Returns the {@link Charset} specified in the Content-Type of this response or the {@code
-   * "ISO-8859-1"} charset as a default.
+   * Returns the {@link Charset} specified in the Content-Type of this response or the ISO-8859-1
+   * charset as a default.
    *
    * @since 1.10
    */
   public Charset getContentCharset() {
-    return mediaType == null || mediaType.getCharsetParameter() == null
-        ? Charsets.ISO_8859_1
-        : mediaType.getCharsetParameter();
+    if (mediaType != null) {
+      // use specified charset parameter from content/type header if available
+      if (mediaType.getCharsetParameter() != null) {
+        return mediaType.getCharsetParameter();
+      }
+      // fallback to well-known charsets
+      if ("application".equals(mediaType.getType()) && "json".equals(mediaType.getSubType())) {
+        // https://tools.ietf.org/html/rfc4627 - JSON must be encoded with UTF-8
+        return StandardCharsets.UTF_8;
+      }
+      // fallback to well-kown charset for text/csv
+      if ("text".equals(mediaType.getType()) && "csv".equals(mediaType.getSubType())) {
+        // https://www.iana.org/assignments/media-types/text/csv - CSV must be encoded with UTF-8
+        return StandardCharsets.UTF_8;
+      }
+    }
+    return StandardCharsets.ISO_8859_1;
   }
 }

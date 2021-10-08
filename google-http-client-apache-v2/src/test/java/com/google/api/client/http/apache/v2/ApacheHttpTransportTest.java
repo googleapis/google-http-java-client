@@ -15,17 +15,18 @@
 package com.google.api.client.http.apache.v2;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpResponse;
+import com.google.api.client.testing.http.apache.MockHttpClient;
 import com.google.api.client.util.ByteArrayStreamingContent;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -34,7 +35,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
-import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.http.Header;
@@ -44,7 +46,9 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.HttpHostConnectException;
@@ -52,6 +56,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestExecutor;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -61,16 +66,27 @@ import org.junit.Test;
  */
 public class ApacheHttpTransportTest {
 
+  private static class MockHttpResponse extends BasicHttpResponse implements CloseableHttpResponse {
+    public MockHttpResponse() {
+      super(HttpVersion.HTTP_1_1, 200, "OK");
+    }
+
+    @Override
+    public void close() throws IOException {}
+  }
+
   @Test
   public void testApacheHttpTransport() {
     ApacheHttpTransport transport = new ApacheHttpTransport();
     checkHttpTransport(transport);
+    assertFalse(transport.isMtls());
   }
 
   @Test
   public void testApacheHttpTransportWithParam() {
-    ApacheHttpTransport transport = new ApacheHttpTransport(HttpClients.custom().build());
+    ApacheHttpTransport transport = new ApacheHttpTransport(HttpClients.custom().build(), true);
     checkHttpTransport(transport);
+    assertTrue(transport.isMtls());
   }
 
   @Test
@@ -93,10 +109,14 @@ public class ApacheHttpTransportTest {
 
   @Test
   public void testRequestsWithContent() throws IOException {
-    HttpClient mockClient = mock(HttpClient.class);
-    HttpResponse mockResponse = mock(HttpResponse.class);
-    when(mockClient.execute(any(HttpUriRequest.class))).thenReturn(mockResponse);
-
+    HttpClient mockClient =
+        new MockHttpClient() {
+          @Override
+          public CloseableHttpResponse execute(HttpUriRequest request)
+              throws IOException, ClientProtocolException {
+            return new MockHttpResponse();
+          }
+        };
     ApacheHttpTransport transport = new ApacheHttpTransport(mockClient);
 
     // Test GET.
@@ -123,10 +143,11 @@ public class ApacheHttpTransportTest {
       throws IOException {
     try {
       execute(request);
-      fail("expected " + IllegalArgumentException.class);
-    } catch (IllegalArgumentException e) {
+      fail("expected " + IllegalStateException.class);
+    } catch (IllegalStateException e) {
       // expected
-      assertEquals(e.getMessage(),
+      assertEquals(
+          e.getMessage(),
           "Apache HTTP client does not support " + method + " requests with content.");
     }
   }
@@ -142,16 +163,18 @@ public class ApacheHttpTransportTest {
   @Test
   public void testRequestShouldNotFollowRedirects() throws IOException {
     final AtomicInteger requestsAttempted = new AtomicInteger(0);
-    HttpRequestExecutor requestExecutor = new HttpRequestExecutor() {
-      @Override
-      public HttpResponse execute(HttpRequest request, HttpClientConnection connection,
-          HttpContext context) throws IOException, HttpException {
-        HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1, 302, null);
-        response.addHeader("location", "https://google.com/path");
-        requestsAttempted.incrementAndGet();
-        return response;
-      }
-    };
+    HttpRequestExecutor requestExecutor =
+        new HttpRequestExecutor() {
+          @Override
+          public HttpResponse execute(
+              HttpRequest request, HttpClientConnection connection, HttpContext context)
+              throws IOException, HttpException {
+            HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1, 302, null);
+            response.addHeader("location", "https://google.com/path");
+            requestsAttempted.incrementAndGet();
+            return response;
+          }
+        };
     HttpClient client = HttpClients.custom().setRequestExecutor(requestExecutor).build();
     ApacheHttpTransport transport = new ApacheHttpTransport(client);
     ApacheHttpRequest request = transport.buildRequest("GET", "https://google.com");
@@ -163,17 +186,21 @@ public class ApacheHttpTransportTest {
   @Test
   public void testRequestCanSetHeaders() {
     final AtomicBoolean interceptorCalled = new AtomicBoolean(false);
-    HttpClient client = HttpClients.custom().addInterceptorFirst(new HttpRequestInterceptor() {
-      @Override
-      public void process(HttpRequest request, HttpContext context)
-          throws HttpException, IOException {
-        Header header = request.getFirstHeader("foo");
-        assertNotNull("Should have found header", header);
-        assertEquals("bar", header.getValue());
-        interceptorCalled.set(true);
-        throw new IOException("cancelling request");
-      }
-    }).build();
+    HttpClient client =
+        HttpClients.custom()
+            .addInterceptorFirst(
+                new HttpRequestInterceptor() {
+                  @Override
+                  public void process(HttpRequest request, HttpContext context)
+                      throws HttpException, IOException {
+                    Header header = request.getFirstHeader("foo");
+                    assertNotNull("Should have found header", header);
+                    assertEquals("bar", header.getValue());
+                    interceptorCalled.set(true);
+                    throw new IOException("cancelling request");
+                  }
+                })
+            .build();
 
     ApacheHttpTransport transport = new ApacheHttpTransport(client);
     ApacheHttpRequest request = transport.buildRequest("GET", "https://google.com");
@@ -190,7 +217,10 @@ public class ApacheHttpTransportTest {
   @Test(timeout = 10_000L)
   public void testConnectTimeout() {
     // Apache HttpClient doesn't appear to behave correctly on windows
-    assumeTrue(!isWindows());
+    assumeFalse(isWindows());
+    // TODO(chanseok): Java 17 returns an IOException (SocketException: Network is unreachable).
+    // Figure out a way to verify connection timeout works on Java 17+.
+    assumeTrue(System.getProperty("java.version").compareTo("17") < 0);
 
     HttpTransport httpTransport = new ApacheHttpTransport();
     GenericUrl url = new GenericUrl("http://google.com:81");
@@ -200,15 +230,36 @@ public class ApacheHttpTransportTest {
     } catch (HttpHostConnectException | ConnectTimeoutException expected) {
       // expected
     } catch (IOException e) {
-      fail("unexpected IOException: " + e.getClass().getName());
+      fail("unexpected IOException: " + e.getClass().getName() + ": " + e.getMessage());
+    }
+  }
+
+  private static class FakeServer implements AutoCloseable {
+    private final HttpServer server;
+    private final ExecutorService executorService;
+
+    FakeServer(HttpHandler httpHandler) throws IOException {
+      server = HttpServer.create(new InetSocketAddress(0), 0);
+      executorService = Executors.newFixedThreadPool(1);
+      server.setExecutor(executorService);
+      server.createContext("/", httpHandler);
+      server.start();
+    }
+
+    public int getPort() {
+      return server.getAddress().getPort();
+    }
+
+    @Override
+    public void close() {
+      server.stop(0);
+      executorService.shutdownNow();
     }
   }
 
   @Test
   public void testNormalizedUrl() throws IOException {
-    HttpServer server = HttpServer.create(new InetSocketAddress(0), 0);
-    server.createContext(
-        "/",
+    final HttpHandler handler =
         new HttpHandler() {
           @Override
           public void handle(HttpExchange httpExchange) throws IOException {
@@ -218,19 +269,70 @@ public class ApacheHttpTransportTest {
               out.write(response);
             }
           }
-        });
-    server.start();
+        };
+    try (FakeServer server = new FakeServer(handler)) {
+      HttpTransport transport = new ApacheHttpTransport();
+      GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
+      testUrl.setPort(server.getPort());
+      com.google.api.client.http.HttpResponse response =
+          transport.createRequestFactory().buildGetRequest(testUrl).execute();
+      assertEquals(200, response.getStatusCode());
+      assertEquals("/foo//bar", response.parseAsString());
+    }
+  }
 
-    ApacheHttpTransport transport = new ApacheHttpTransport();
-    GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
-    testUrl.setPort(server.getAddress().getPort());
-    com.google.api.client.http.HttpResponse response =
-        transport
-            .createRequestFactory()
-            .buildGetRequest(testUrl)
-            .execute();
-    assertEquals(200, response.getStatusCode());
-    assertEquals("/foo//bar", response.parseAsString());
+  @Test
+  public void testReadErrorStream() throws IOException {
+    final HttpHandler handler =
+        new HttpHandler() {
+          @Override
+          public void handle(HttpExchange httpExchange) throws IOException {
+            byte[] response = "Forbidden".getBytes(StandardCharsets.UTF_8);
+            httpExchange.sendResponseHeaders(403, response.length);
+            try (OutputStream out = httpExchange.getResponseBody()) {
+              out.write(response);
+            }
+          }
+        };
+    try (FakeServer server = new FakeServer(handler)) {
+      HttpTransport transport = new ApacheHttpTransport();
+      GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
+      testUrl.setPort(server.getPort());
+      com.google.api.client.http.HttpRequest getRequest =
+          transport.createRequestFactory().buildGetRequest(testUrl);
+      getRequest.setThrowExceptionOnExecuteError(false);
+      com.google.api.client.http.HttpResponse response = getRequest.execute();
+      assertEquals(403, response.getStatusCode());
+      assertEquals("Forbidden", response.parseAsString());
+    }
+  }
+
+  @Test
+  public void testReadErrorStream_withException() throws IOException {
+    final HttpHandler handler =
+        new HttpHandler() {
+          @Override
+          public void handle(HttpExchange httpExchange) throws IOException {
+            byte[] response = "Forbidden".getBytes(StandardCharsets.UTF_8);
+            httpExchange.sendResponseHeaders(403, response.length);
+            try (OutputStream out = httpExchange.getResponseBody()) {
+              out.write(response);
+            }
+          }
+        };
+    try (FakeServer server = new FakeServer(handler)) {
+      HttpTransport transport = new ApacheHttpTransport();
+      GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
+      testUrl.setPort(server.getPort());
+      com.google.api.client.http.HttpRequest getRequest =
+          transport.createRequestFactory().buildGetRequest(testUrl);
+      try {
+        getRequest.execute();
+        Assert.fail();
+      } catch (HttpResponseException ex) {
+        assertEquals("Forbidden", ex.getContent());
+      }
+    }
   }
 
   private boolean isWindows() {

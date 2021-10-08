@@ -128,7 +128,8 @@ public class HttpBackOffUnsuccessfulResponseHandler implements HttpUnsuccessfulR
       try {
         return BackOffUtils.next(sleeper, backOff);
       } catch (InterruptedException exception) {
-        // ignore
+        // Mark thread as interrupted since we cannot throw InterruptedException here.
+        Thread.currentThread().interrupt();
       }
     }
     return false;

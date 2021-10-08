@@ -49,6 +49,11 @@ final class NetHttpRequest extends LowLevelHttpRequest {
     connection.addRequestProperty(name, value);
   }
 
+  @VisibleForTesting
+  String getRequestProperty(String name) {
+    return connection.getRequestProperty(name);
+  }
+
   @Override
   public void setTimeout(int connectTimeout, int readTimeout) {
     connection.setReadTimeout(readTimeout);
@@ -136,6 +141,9 @@ final class NetHttpRequest extends LowLevelHttpRequest {
         Preconditions.checkArgument(
             contentLength == 0, "%s with non-zero content length is not supported", requestMethod);
       }
+    } else if ("DELETE".equals(connection.getRequestMethod())) {
+      connection.setDoOutput(true);
+      connection.setFixedLengthStreamingMode(0L);
     }
     // connect
     boolean successfulConnection = false;

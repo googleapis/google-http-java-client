@@ -22,9 +22,13 @@ import com.google.api.client.testing.http.MockLowLevelHttpResponse;
 import com.google.api.client.testing.util.LogRecordingHandler;
 import com.google.api.client.testing.util.TestableByteArrayInputStream;
 import com.google.api.client.util.Key;
+import com.google.common.io.ByteStreams;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FilterInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
@@ -58,6 +62,15 @@ public class HttpResponseTest extends TestCase {
 
   private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
   private static final String SAMPLE2 = "123abc";
+  private static final String JSON_SAMPLE = "{\"foo\": \"ßar\"}";
+  private static final String ERROR_SAMPLE =
+      "{domain:'global',reason:'domainPolicy',message:'msg'}";
+  private static final String VALID_CONTENT_TYPE = "text/plain";
+  private static final String VALID_CONTENT_TYPE_WITH_PARAMS =
+      "application/vnd.com.google.datastore.entity+json; charset=utf-8; version=v1; q=0.9";
+  private static final String VALID_CONTENT_TYPE_WITHOUT_CHARSET = "text/csv; version=v1; q=0.9";
+  private static final String INVALID_CONTENT_TYPE = "!!!invalid!!!";
+  private static final String JSON_CONTENT_TYPE = "application/json";
 
   public void testParseAsString_utf8() throws Exception {
     HttpTransport transport =
@@ -79,6 +92,7 @@ public class HttpResponseTest extends TestCase {
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
     assertEquals(SAMPLE, response.parseAsString());
+    assertEquals("UTF-8", response.getContentCharset().name());
   }
 
   public void testParseAsString_noContentType() throws Exception {
@@ -100,6 +114,136 @@ public class HttpResponseTest extends TestCase {
         transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
     assertEquals(SAMPLE2, response.parseAsString());
+    assertEquals("ISO-8859-1", response.getContentCharset().name());
+  }
+
+  public void testParseAsString_validContentType() throws Exception {
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setContent(SAMPLE2);
+                result.setContentType(VALID_CONTENT_TYPE);
+                return result;
+              }
+            };
+          }
+        };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+
+    HttpResponse response = request.execute();
+    assertEquals(SAMPLE2, response.parseAsString());
+    assertEquals(VALID_CONTENT_TYPE, response.getContentType());
+    assertNotNull(response.getMediaType());
+    assertEquals("ISO-8859-1", response.getContentCharset().name());
+  }
+
+  public void testParseAsString_validContentTypeWithParams() throws Exception {
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setContent(SAMPLE2);
+                result.setContentType(VALID_CONTENT_TYPE_WITH_PARAMS);
+                return result;
+              }
+            };
+          }
+        };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+
+    HttpResponse response = request.execute();
+    assertEquals(SAMPLE2, response.parseAsString());
+    assertEquals(VALID_CONTENT_TYPE_WITH_PARAMS, response.getContentType());
+    assertNotNull(response.getMediaType());
+    assertEquals("UTF-8", response.getContentCharset().name());
+  }
+
+  public void testParseAsString_invalidContentType() throws Exception {
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setContent(SAMPLE2);
+                result.setContentType(INVALID_CONTENT_TYPE);
+                return result;
+              }
+            };
+          }
+        };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+
+    HttpResponse response = request.execute();
+    assertEquals(SAMPLE2, response.parseAsString());
+    assertEquals(INVALID_CONTENT_TYPE, response.getContentType());
+    assertNull(response.getMediaType());
+    assertEquals("ISO-8859-1", response.getContentCharset().name());
+  }
+
+  public void testParseAsString_validContentTypeWithoutCharSetWithParams() throws Exception {
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setContent(SAMPLE2);
+                result.setContentType(VALID_CONTENT_TYPE_WITHOUT_CHARSET);
+                return result;
+              }
+            };
+          }
+        };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+
+    HttpResponse response = request.execute();
+    assertEquals(SAMPLE2, response.parseAsString());
+    assertEquals(VALID_CONTENT_TYPE_WITHOUT_CHARSET, response.getContentType());
+    assertNotNull(response.getMediaType());
+    assertEquals("UTF-8", response.getContentCharset().name());
+  }
+
+  public void testParseAsString_jsonContentType() throws IOException {
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setContent(JSON_SAMPLE);
+                result.setContentType(JSON_CONTENT_TYPE);
+                return result;
+              }
+            };
+          }
+        };
+    HttpRequest request =
+        transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+
+    HttpResponse response = request.execute();
+    assertEquals(JSON_SAMPLE, response.parseAsString());
+    assertEquals(JSON_CONTENT_TYPE, response.getContentType());
+    assertEquals("UTF-8", response.getContentCharset().name());
   }
 
   public void testStatusCode_negative_dontThrowException() throws Exception {
@@ -432,7 +576,8 @@ public class HttpResponseTest extends TestCase {
         };
     HttpRequest request =
         transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
-    request.execute().getContent();
+    InputStream noContent = request.execute().getContent();
+    assertNull(noContent);
   }
 
   public void testGetContent_gzipEncoding_ReturnRawStream() throws IOException {
@@ -459,17 +604,23 @@ public class HttpResponseTest extends TestCase {
     assertFalse(
         "it should not decompress stream",
         request.execute().getContent() instanceof GZIPInputStream);
+    assertFalse(
+        "it should not buffer stream",
+        request.execute().getContent() instanceof BufferedInputStream);
   }
 
   public void testGetContent_gzipEncoding_finishReading() throws IOException {
     do_testGetContent_gzipEncoding_finishReading("gzip");
   }
 
-  public void testGetContent_gzipEncoding_finishReadingWithUppercaseContentEncoding() throws IOException {
+  public void testGetContent_gzipEncoding_finishReadingWithUppercaseContentEncoding()
+      throws IOException {
     do_testGetContent_gzipEncoding_finishReading("GZIP");
   }
 
-  public void testGetContent_gzipEncoding_finishReadingWithDifferentDefaultLocaleAndUppercaseContentEncoding() throws IOException {
+  public void
+      testGetContent_gzipEncoding_finishReadingWithDifferentDefaultLocaleAndUppercaseContentEncoding()
+          throws IOException {
     Locale originalDefaultLocale = Locale.getDefault();
     try {
       Locale.setDefault(Locale.forLanguageTag("tr-TR"));
@@ -479,15 +630,20 @@ public class HttpResponseTest extends TestCase {
     }
   }
 
-  private void do_testGetContent_gzipEncoding_finishReading(String contentEncoding) throws IOException {
+  private void do_testGetContent_gzipEncoding_finishReading(String contentEncoding)
+      throws IOException {
     byte[] dataToCompress = "abcd".getBytes(StandardCharsets.UTF_8);
     byte[] mockBytes;
-    try (
-        ByteArrayOutputStream byteStream = new ByteArrayOutputStream(dataToCompress.length);
-        GZIPOutputStream zipStream = new GZIPOutputStream((byteStream))
-    ) {
+    try (ByteArrayOutputStream byteStream = new ByteArrayOutputStream(dataToCompress.length);
+        GZIPOutputStream zipStream = new GZIPOutputStream((byteStream))) {
       zipStream.write(dataToCompress);
       zipStream.close();
+
+      // GZIPInputStream uses a default buffer of 512B. Add enough content to exceed this
+      // limit, so that some content will be left in the connection.
+      for (int i = 0; i < 1024; i++) {
+        byteStream.write('7');
+      }
       mockBytes = byteStream.toByteArray();
     }
     final MockLowLevelHttpResponse mockResponse = new MockLowLevelHttpResponse();
@@ -511,10 +667,13 @@ public class HttpResponseTest extends TestCase {
     HttpRequest request =
         transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
     HttpResponse response = request.execute();
-    try (TestableByteArrayInputStream output = (TestableByteArrayInputStream) mockResponse.getContent()) {
+    try (TestableByteArrayInputStream output =
+        (TestableByteArrayInputStream) mockResponse.getContent()) {
       assertFalse(output.isClosed());
       assertEquals("abcd", response.parseAsString());
       assertTrue(output.isClosed());
+      // The underlying stream should be fully consumed, even if gzip only returns some of it.
+      assertEquals(-1, output.read());
     }
   }
 
@@ -537,9 +696,77 @@ public class HttpResponseTest extends TestCase {
             };
           }
         };
-    HttpRequest request = transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
+    HttpRequest request =
+        transport.createRequestFactory().buildHeadRequest(HttpTesting.SIMPLE_GENERIC_URL);
     // If gzip was used on this response, an exception would be thrown
     HttpResponse response = request.execute();
     assertEquals("abcd", response.parseAsString());
+  }
+
+  public void testGetContent_bufferedContent() throws IOException {
+    HttpTransport transport =
+        new MockHttpTransport() {
+          @Override
+          public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+            return new MockLowLevelHttpRequest() {
+              @Override
+              public LowLevelHttpResponse execute() throws IOException {
+                // have to use gzip here because MockLowLevelHttpResponse.setContent()
+                // returns BufferedStream by itself, so test always success
+                byte[] dataToCompress = ERROR_SAMPLE.getBytes(StandardCharsets.UTF_8);
+                ByteArrayOutputStream content = new ByteArrayOutputStream(dataToCompress.length);
+                try (GZIPOutputStream zipStream = new GZIPOutputStream((content))) {
+                  zipStream.write(dataToCompress);
+                }
+
+                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                result.setStatusCode(403);
+                result.setContentType(JSON_CONTENT_TYPE);
+                result.setContentEncoding("gzip");
+                result.setContent(content.toByteArray());
+
+                return result;
+              }
+            };
+          }
+        };
+    HttpRequest request =
+        transport
+            .createRequestFactory()
+            .buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL)
+            .setThrowExceptionOnExecuteError(false);
+
+    HttpResponse response = request.execute();
+    InputStream content = response.getContent();
+    assertTrue(content.markSupported());
+
+    // inspect content like in HttpUnsuccessfulResponseHandler
+    try (RollbackInputStream is = new RollbackInputStream(content)) {
+      byte[] bytes = ByteStreams.toByteArray(is);
+      String text = new String(bytes, response.getContentCharset());
+      assertEquals(ERROR_SAMPLE, text);
+    }
+
+    // original response still parsable by HttpResponseException
+    HttpResponseException exception = new HttpResponseException(response);
+    assertEquals(exception.getStatusCode(), 403);
+    assertEquals(exception.getContent(), ERROR_SAMPLE);
+  }
+
+  static class RollbackInputStream extends FilterInputStream {
+    private boolean closed;
+
+    RollbackInputStream(InputStream in) {
+      super(in);
+      in.mark(8192); // big enough to keep most error messages
+    }
+
+    @Override
+    public void close() throws IOException {
+      if (!closed) {
+        closed = true;
+        in.reset();
+      }
+    }
   }
 }
