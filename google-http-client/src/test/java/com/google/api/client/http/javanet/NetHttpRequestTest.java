@@ -15,8 +15,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
 import org.junit.Test;
+import javax.annotation.Nullable;
 
 public class NetHttpRequestTest {
 
@@ -44,7 +47,7 @@ public class NetHttpRequestTest {
           @Override
           public void run() {
             try {
-              postWithTimeout(0);
+              postWithTimeout(0, null);
             } catch (IOException e) {
               // expected to be interrupted
               assertEquals(e.getCause().getClass(), InterruptedException.class);
@@ -63,9 +66,9 @@ public class NetHttpRequestTest {
   }
 
   @Test(timeout = 1000)
-  public void testOutputStreamWriteTimeout() throws Exception {
+  public void testOutputStreamWriteTimeout() {
     try {
-      postWithTimeout(100);
+      postWithTimeout(100, null);
       fail("should have timed out");
     } catch (IOException e) {
       assertEquals(e.getCause().getClass(), TimeoutException.class);
@@ -74,10 +77,25 @@ public class NetHttpRequestTest {
     }
   }
 
-  private static void postWithTimeout(int timeout) throws Exception {
+  @Test(timeout = 1000)
+  public void testOutputStreamWriteTimeoutWithCustomExecutor() {
+    ExecutorService customWriteTimeoutExecutor = Executors.newSingleThreadExecutor();
+    try {
+      postWithTimeout(100, customWriteTimeoutExecutor);
+      fail("should have timed out");
+    } catch (IOException e) {
+      assertEquals(e.getCause().getClass(), TimeoutException.class);
+      assertFalse(customWriteTimeoutExecutor.isTerminated());
+    } catch (Exception e) {
+      fail("Expected an IOException not a " + e.getCause().getClass().getName());
+    }
+  }
+
+  private static void postWithTimeout(int timeout, @Nullable ExecutorService writeTimeoutExecutor) throws Exception {
     MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
     connection.setRequestMethod("POST");
     NetHttpRequest request = new NetHttpRequest(connection);
+    request.setWriteTimeoutExecutor(writeTimeoutExecutor);
     InputStream is = NetHttpRequestTest.class.getClassLoader().getResourceAsStream("file.txt");
     HttpContent content = new InputStreamContent("text/plain", is);
     request.setStreamingContent(content);
