@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.39.2-sp.2](https://www.github.com/googleapis/google-http-java-client/compare/1.39.2-sp.1...v1.39.2-sp.2) (2021-11-09)
+
+
+### Dependencies
+
+* update dependency com.google.code.gson:gson to v2.8.9 ([#1499](https://www.github.com/googleapis/google-http-java-client/issues/1499)) ([4d19789](https://www.github.com/googleapis/google-http-java-client/commit/4d197891df77eb3efcf35c33a0bae724b12eea82))
+
 ### [1.39.2-sp.1](https://www.github.com/googleapis/google-http-java-client/compare/1.39.2...v1.39.2-sp.1) (2021-05-12)
 
 
