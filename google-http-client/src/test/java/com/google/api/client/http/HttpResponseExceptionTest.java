@@ -29,7 +29,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+
+import com.google.api.client.util.ExponentialBackOff;
 import junit.framework.TestCase;
+import org.junit.Assert;
 import org.junit.function.ThrowingRunnable;
 
 /**
@@ -208,6 +211,8 @@ public class HttpResponseExceptionTest extends TestCase {
                 + SIMPLE_GENERIC_URL
                 + LINE_SEPARATOR
                 + "Unable to find resource");
+    // no retries expected
+    assertEquals(1, responseException.getAttemptCount());
   }
 
   public void testInvalidCharset() throws Exception {
@@ -244,6 +249,50 @@ public class HttpResponseExceptionTest extends TestCase {
         .hasMessageThat()
         .isEqualTo("404 Not Found\nGET " + SIMPLE_GENERIC_URL);
   }
+
+
+    public void testWithNoBackOff() throws Exception {
+        HttpTransport fakeTransport =
+                new MockHttpTransport() {
+                    @Override
+                    public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+                        return new MockLowLevelHttpRequest() {
+                            @Override
+                            public LowLevelHttpResponse execute() throws IOException {
+                                MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
+                                result.setStatusCode(HttpStatusCodes.STATUS_CODE_SERVER_ERROR);
+                                result.setReasonPhrase("Error");
+                                result.setContent("Unknown Error");
+                                return result;
+                            }
+                        };
+                    }
+                };
+        ExponentialBackOff backoff = new ExponentialBackOff.Builder().build();
+        final HttpRequest request =
+                fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://not/used"));
+        request.setUnsuccessfulResponseHandler(new HttpBackOffUnsuccessfulResponseHandler(backoff)
+                .setBackOffRequired(
+                        new HttpBackOffUnsuccessfulResponseHandler.BackOffRequired() {
+                            public boolean isRequired(HttpResponse response) {
+                                return true;
+                            }
+                        }));
+        request.setNumberOfRetries(1);
+        HttpResponseException responseException =
+                assertThrows(
+                        HttpResponseException.class,
+                        new ThrowingRunnable() {
+                            @Override
+                            public void run() throws Throwable {
+                                request.execute();
+                            }
+                        });
+
+        Assert.assertEquals(500, responseException.getStatusCode());
+        // original request and 1 retry - total 2
+        assertEquals(2, responseException.getAttemptCount());
+    }
 
   public void testUnsupportedCharset() throws Exception {
     HttpTransport transport =
