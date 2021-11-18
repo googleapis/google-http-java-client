@@ -1113,7 +1113,9 @@ public final class HttpRequest {
     // throw an exception if unsuccessful response
     if (throwExceptionOnExecuteError && !response.isSuccessStatusCode()) {
       try {
-        throw new HttpResponseException.Builder(response).setAttemptCount(numRetries - retriesRemaining).build();
+        throw new HttpResponseException.Builder(response)
+            .setAttemptCount(numRetries - retriesRemaining)
+            .build();
       } finally {
         response.disconnect();
       }
