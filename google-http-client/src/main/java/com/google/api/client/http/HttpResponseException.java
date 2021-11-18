@@ -126,7 +126,7 @@ public class HttpResponseException extends IOException {
   }
 
   /** 
-   * Returns the retry count 
+   * Returns the attempt count
    * 
    * @since 1.41
   */
@@ -284,7 +284,7 @@ public class HttpResponseException extends IOException {
     /**
      * Sets the attempt count for the related HTTP request execution.
      */
-    public Builder setRetryCount(int attemptCount) {
+    public Builder setAttemptCount(int attemptCount) {
       Preconditions.checkArgument(attemptCount >= 0);
       this.attemptCount = attemptCount;
       return this;
