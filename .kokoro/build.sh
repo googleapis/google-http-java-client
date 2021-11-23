@@ -51,7 +51,7 @@ test)
     RETURN_CODE=$?
     ;;
 lint)
-    mvn com.coveo:fmt-maven-plugin:check
+    mvn com.coveo:fmt-maven-plugin:check -Dverbose=true
     RETURN_CODE=$?
     ;;
 javadoc)
