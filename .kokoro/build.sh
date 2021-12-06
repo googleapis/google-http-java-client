@@ -71,7 +71,7 @@ integration)
     ;;
 graalvm)
     # Run Unit and Integration Tests with Native Image
-    mvn test -Pnative -Penable-integration-tests
+    mvn -ntp -Pnative -Penable-integration-tests test
     RETURN_CODE=$?
     ;;
 samples)
@@ -91,7 +91,6 @@ samples)
 
         pushd ${SAMPLES_DIR}
         mvn -B \
-          -Penable-samples \
           -ntp \
           -DtrimStackTrace=false \
           -Dclirr.skip=true \
