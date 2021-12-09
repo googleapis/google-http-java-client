@@ -42,6 +42,9 @@ public class HttpResponseException extends IOException {
   /** HTTP response content or {@code null} for none. */
   private final String content;
 
+  /** Number of attempts performed */
+  private final int attemptCount;
+
   /**
    * Constructor that constructs a detail message from the given HTTP response that includes the
    * status code, status message and HTTP response content.
@@ -73,6 +76,7 @@ public class HttpResponseException extends IOException {
     statusMessage = builder.statusMessage;
     headers = builder.headers;
     content = builder.content;
+    attemptCount = builder.attemptCount;
   }
 
   /**
@@ -122,6 +126,15 @@ public class HttpResponseException extends IOException {
   }
 
   /**
+   * Returns the attempt count
+   *
+   * @since 1.41
+   */
+  public final int getAttemptCount() {
+    return attemptCount;
+  }
+
+  /**
    * Builder.
    *
    * <p>Implementation is not thread safe.
@@ -144,6 +157,9 @@ public class HttpResponseException extends IOException {
 
     /** Detail message to use or {@code null} for none. */
     String message;
+
+    /** Number of attempts performed */
+    int attemptCount;
 
     /**
      * @param statusCode HTTP status code
@@ -257,6 +273,18 @@ public class HttpResponseException extends IOException {
      */
     public Builder setContent(String content) {
       this.content = content;
+      return this;
+    }
+
+    /** Returns the request attempt count */
+    public final int getAttemptCount() {
+      return attemptCount;
+    }
+
+    /** Sets the attempt count for the related HTTP request execution. */
+    public Builder setAttemptCount(int attemptCount) {
+      Preconditions.checkArgument(attemptCount >= 0);
+      this.attemptCount = attemptCount;
       return this;
     }
 
