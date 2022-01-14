@@ -1,10 +1,11 @@
 {
-  "name": "google-http-client",
+  "api_shortname": "google-http-client",
   "name_pretty": "Google HTTP Java Client",
   "client_documentation": "https://cloud.google.com/java/docs/reference/google-http-client/latest/history",
-  "release_level": "ga",
+  "release_level": "stable",
   "language": "java",
   "repo": "googleapis/google-http-java-client",
   "repo_short": "google-http-java-client",
+  "library_type": "CORE",
   "distribution_name": "com.google.http-client:google-http-client"
 }
