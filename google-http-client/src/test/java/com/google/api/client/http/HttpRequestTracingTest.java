@@ -44,9 +44,7 @@ public class HttpRequestTracingTest {
   public void setupTestTracer() {
     Tracing.getExportComponent().getSpanExporter().registerHandler("test", testHandler);
     TraceParams params =
-        Tracing.getTraceConfig()
-            .getActiveTraceParams()
-            .toBuilder()
+        Tracing.getTraceConfig().getActiveTraceParams().toBuilder()
             .setSampler(Samplers.alwaysSample())
             .build();
     Tracing.getTraceConfig().updateActiveTraceParams(params);
