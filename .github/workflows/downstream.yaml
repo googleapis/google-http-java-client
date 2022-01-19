@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [17]
+        java: [8]
         repo:
         - accessapproval
         - accesscontextmanager
