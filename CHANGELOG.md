@@ -1,5 +1,18 @@
 # Changelog
 
+### [1.41.1](https://github.com/googleapis/google-http-java-client/compare/v1.41.0...v1.41.1) (2022-01-21)
+
+
+### Dependencies
+
+* update dependency com.fasterxml.jackson.core:jackson-core to v2.13.1 ([#1527](https://github.com/googleapis/google-http-java-client/issues/1527)) ([7750398](https://github.com/googleapis/google-http-java-client/commit/7750398d6f4d6e447bfe078092f5cb146f747e50))
+* update dependency com.google.protobuf:protobuf-java to v3.19.3 ([#1549](https://github.com/googleapis/google-http-java-client/issues/1549)) ([50c0765](https://github.com/googleapis/google-http-java-client/commit/50c0765f1eadbf7aef2dccf5f78ab62e2533c6f6))
+* update dependency com.puppycrawl.tools:checkstyle to v9.2.1 ([#1532](https://github.com/googleapis/google-http-java-client/issues/1532)) ([e13eebd](https://github.com/googleapis/google-http-java-client/commit/e13eebd288afbde3aa7bdc0229c2d0db90ebbd4c))
+* update dependency kr.motd.maven:os-maven-plugin to v1.7.0 ([#1547](https://github.com/googleapis/google-http-java-client/issues/1547)) ([8df0dbe](https://github.com/googleapis/google-http-java-client/commit/8df0dbe53521e918985e8f4882392cd2e0a0a1c3))
+* update dependency org.apache.felix:maven-bundle-plugin to v5 ([#1548](https://github.com/googleapis/google-http-java-client/issues/1548)) ([ac10b6c](https://github.com/googleapis/google-http-java-client/commit/ac10b6c9fbe4986b8bf130d9f83ae77e84d74e5f))
+* update project.appengine.version to v1.9.94 ([#1557](https://github.com/googleapis/google-http-java-client/issues/1557)) ([05c78f4](https://github.com/googleapis/google-http-java-client/commit/05c78f4bee92cc501aa084ad970ed6ac9c0e0444))
+* update project.opencensus.version to v0.30.0 ([#1526](https://github.com/googleapis/google-http-java-client/issues/1526)) ([318e54a](https://github.com/googleapis/google-http-java-client/commit/318e54ae9be6bfeb4f5af0af0cb954031d95d1f9))
+
 ## [1.41.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.40.1...v1.41.0) (2022-01-05)
 
 
