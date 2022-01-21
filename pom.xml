@@ -276,7 +276,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
+          <version>3.9.0</version>
           <configuration>
             <source>1.7</source>
             <target>1.7</target>
@@ -315,7 +315,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.2.2</version>
           <executions>
             <execution>
               <goals>
@@ -350,7 +350,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>animal-sniffer-maven-plugin</artifactId>
-          <version>1.17</version>
+          <version>1.20</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -561,17 +561,17 @@
       - Internally, update the default features.json file
     -->
     <project.http-client.version>1.41.1-SNAPSHOT</project.http-client.version><!-- {x-version-update:google-http-client-parent:current} -->
-    <project.appengine.version>1.9.93</project.appengine.version>
+    <project.appengine.version>1.9.94</project.appengine.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.jsr305.version>3.0.2</project.jsr305.version>
     <project.gson.version>2.8.9</project.gson.version>
-    <project.jackson-core2.version>2.13.0</project.jackson-core2.version>
-    <project.protobuf-java.version>3.19.2</project.protobuf-java.version>
+    <project.jackson-core2.version>2.13.1</project.jackson-core2.version>
+    <project.protobuf-java.version>3.19.3</project.protobuf-java.version>
     <project.guava.version>30.1.1-android</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.httpclient.version>4.5.13</project.httpclient.version>
     <project.httpcore.version>4.4.15</project.httpcore.version>
-    <project.opencensus.version>0.28.0</project.opencensus.version>
+    <project.opencensus.version>0.30.0</project.opencensus.version>
     <project.root-directory>..</project.root-directory>
     <deploy.autorelease>false</deploy.autorelease>
   </properties>
@@ -659,7 +659,7 @@
               <dependency>
                 <groupId>com.puppycrawl.tools</groupId>
                 <artifactId>checkstyle</artifactId>
-                <version>9.2</version>
+                <version>9.2.1</version>
               </dependency>
             </dependencies>
             <configuration>
