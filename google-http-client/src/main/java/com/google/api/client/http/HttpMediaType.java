@@ -26,7 +26,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * <a href="http://tools.ietf.org/html/rfc2616#section-3.7">HTTP Media-type as specified in the HTTP RFC</a>
+ * <a href="http://tools.ietf.org/html/rfc2616#section-3.7">HTTP Media-type as specified in the HTTP
+ * RFC</a>
  *
  * <p>Implementation is not thread-safe.
  *
