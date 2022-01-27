@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.41.2](https://github.com/googleapis/google-http-java-client/compare/v1.41.1...v1.41.2) (2022-01-27)
+
+
+### Dependencies
+
+* **java:** update actions/github-script action to v5 ([#1339](https://github.com/googleapis/google-http-java-client/issues/1339)) ([#1561](https://github.com/googleapis/google-http-java-client/issues/1561)) ([c5dbec1](https://github.com/googleapis/google-http-java-client/commit/c5dbec1bbfb5f26f952cb8d80f607327594ab7a8))
+* update dependency com.google.errorprone:error_prone_annotations to v2.11.0 ([#1560](https://github.com/googleapis/google-http-java-client/issues/1560)) ([d9609b0](https://github.com/googleapis/google-http-java-client/commit/d9609b00089952d816deffa178640bfcae1f2c3a))
+
 ### [1.41.1](https://github.com/googleapis/google-http-java-client/compare/v1.41.0...v1.41.1) (2022-01-21)
 
 
