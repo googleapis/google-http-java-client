@@ -1,5 +1,14 @@
 # Changelog
 
+### [1.41.3](https://github.com/googleapis/google-http-java-client/compare/v1.41.2...v1.41.3) (2022-02-09)
+
+
+### Dependencies
+
+* update dependency com.google.protobuf:protobuf-java to v3.19.4 ([#1568](https://github.com/googleapis/google-http-java-client/issues/1568)) ([416e5d7](https://github.com/googleapis/google-http-java-client/commit/416e5d7146ad145e3d5140110144b5119c6126df))
+* update dependency com.puppycrawl.tools:checkstyle to v9.3 ([#1569](https://github.com/googleapis/google-http-java-client/issues/1569)) ([9c7ade8](https://github.com/googleapis/google-http-java-client/commit/9c7ade85eceb2dc348e1f9aa0637d0509d634160))
+* update project.opencensus.version to v0.31.0 ([#1563](https://github.com/googleapis/google-http-java-client/issues/1563)) ([0f9d2b7](https://github.com/googleapis/google-http-java-client/commit/0f9d2b77ae23ea143b5b8caaa21af6548ca92345))
+
 ### [1.41.2](https://github.com/googleapis/google-http-java-client/compare/v1.41.1...v1.41.2) (2022-01-27)
 
 
