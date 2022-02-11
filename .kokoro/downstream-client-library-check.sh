@@ -25,7 +25,7 @@ scriptDir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 ## cd to the parent directory, i.e. the root of the git repo
 cd ${scriptDir}/..
 
-# Make java core library artifacts available for 'mvn validate' at the bottom
+# Make java core library artifacts available for 'mvn verify' at the bottom
 mvn verify install -B -V -ntp -fae \
 -DskipTests=true \
 -Dmaven.javadoc.skip=true \
