@@ -27,7 +27,7 @@ jobs:
       matrix:
         java: [8, 11, 17]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: actions/setup-java@v2
       with:
         distribution: zulu
@@ -39,7 +39,7 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: actions/setup-java@v2
       with:
         distribution: zulu
@@ -54,7 +54,7 @@ jobs:
       matrix:
         java: [8, 11, 17]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: actions/setup-java@v2
       with:
         distribution: zulu
@@ -64,7 +64,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: actions/setup-java@v2
       with:
         distribution: zulu
@@ -76,7 +76,7 @@ jobs:
   clirr:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: actions/setup-java@v2
       with:
         distribution: zulu
