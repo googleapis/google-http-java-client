@@ -13,7 +13,6 @@ branchProtectionRules:
       - windows
       - dependencies (8)
       - dependencies (11)
-      - lint
       - clirr
       - cla/google
   - pattern: 1.39.2-sp
