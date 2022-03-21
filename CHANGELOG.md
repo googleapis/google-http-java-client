@@ -1,5 +1,19 @@
 # Changelog
 
+### [1.41.5](https://github.com/googleapis/google-http-java-client/compare/v1.41.4...v1.41.5) (2022-03-21)
+
+
+### Documentation
+
+* **deps:** libraries-bom 24.4.0 release ([#1596](https://github.com/googleapis/google-http-java-client/issues/1596)) ([327fe12](https://github.com/googleapis/google-http-java-client/commit/327fe12a122ebb4022a2da55694217233a2badaf))
+
+
+### Dependencies
+
+* update actions/checkout action to v3 ([#1593](https://github.com/googleapis/google-http-java-client/issues/1593)) ([92002c0](https://github.com/googleapis/google-http-java-client/commit/92002c07d60b738657383e2484f56abc1cde6920))
+* update dependency com.fasterxml.jackson.core:jackson-core to v2.13.2 ([#1598](https://github.com/googleapis/google-http-java-client/issues/1598)) ([41ac833](https://github.com/googleapis/google-http-java-client/commit/41ac833249e18cbbd304f825b12202e51bebec85))
+* update project.appengine.version to v2 (major) ([#1597](https://github.com/googleapis/google-http-java-client/issues/1597)) ([c06cf95](https://github.com/googleapis/google-http-java-client/commit/c06cf95f9b1be77e2229c3b2f78ece0789eaec15))
+
 ### [1.41.4](https://github.com/googleapis/google-http-java-client/compare/v1.41.3...v1.41.4) (2022-02-11)
 
 
