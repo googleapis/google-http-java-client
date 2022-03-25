@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.41.2</version><!-- {x-version-update:google-http-client-parent:current} -->
+    <version>1.41.6-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>dailymotion-simple-cmdline-sample</artifactId>
@@ -95,7 +95,7 @@
               <dependency>
                 <groupId>com.puppycrawl.tools</groupId>
                 <artifactId>checkstyle</artifactId>
-                <version>9.2.1</version>
+                <version>9.3</version>
               </dependency>
             </dependencies>
             <configuration>

@@ -1,5 +1,35 @@
 # Changelog
 
+### [1.41.5](https://github.com/googleapis/google-http-java-client/compare/v1.41.4...v1.41.5) (2022-03-21)
+
+
+### Documentation
+
+* **deps:** libraries-bom 24.4.0 release ([#1596](https://github.com/googleapis/google-http-java-client/issues/1596)) ([327fe12](https://github.com/googleapis/google-http-java-client/commit/327fe12a122ebb4022a2da55694217233a2badaf))
+
+
+### Dependencies
+
+* update actions/checkout action to v3 ([#1593](https://github.com/googleapis/google-http-java-client/issues/1593)) ([92002c0](https://github.com/googleapis/google-http-java-client/commit/92002c07d60b738657383e2484f56abc1cde6920))
+* update dependency com.fasterxml.jackson.core:jackson-core to v2.13.2 ([#1598](https://github.com/googleapis/google-http-java-client/issues/1598)) ([41ac833](https://github.com/googleapis/google-http-java-client/commit/41ac833249e18cbbd304f825b12202e51bebec85))
+* update project.appengine.version to v2 (major) ([#1597](https://github.com/googleapis/google-http-java-client/issues/1597)) ([c06cf95](https://github.com/googleapis/google-http-java-client/commit/c06cf95f9b1be77e2229c3b2f78ece0789eaec15))
+
+### [1.41.4](https://github.com/googleapis/google-http-java-client/compare/v1.41.3...v1.41.4) (2022-02-11)
+
+
+### Dependencies
+
+* update dependency com.google.code.gson:gson to v2.9.0 ([#1582](https://github.com/googleapis/google-http-java-client/issues/1582)) ([8772778](https://github.com/googleapis/google-http-java-client/commit/877277821dad65545518b06123e6e7b9801147a1))
+
+### [1.41.3](https://github.com/googleapis/google-http-java-client/compare/v1.41.2...v1.41.3) (2022-02-09)
+
+
+### Dependencies
+
+* update dependency com.google.protobuf:protobuf-java to v3.19.4 ([#1568](https://github.com/googleapis/google-http-java-client/issues/1568)) ([416e5d7](https://github.com/googleapis/google-http-java-client/commit/416e5d7146ad145e3d5140110144b5119c6126df))
+* update dependency com.puppycrawl.tools:checkstyle to v9.3 ([#1569](https://github.com/googleapis/google-http-java-client/issues/1569)) ([9c7ade8](https://github.com/googleapis/google-http-java-client/commit/9c7ade85eceb2dc348e1f9aa0637d0509d634160))
+* update project.opencensus.version to v0.31.0 ([#1563](https://github.com/googleapis/google-http-java-client/issues/1563)) ([0f9d2b7](https://github.com/googleapis/google-http-java-client/commit/0f9d2b77ae23ea143b5b8caaa21af6548ca92345))
+
 ### [1.41.2](https://github.com/googleapis/google-http-java-client/compare/v1.41.1...v1.41.2) (2022-01-27)
 
 
