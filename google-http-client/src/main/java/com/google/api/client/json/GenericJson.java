@@ -53,7 +53,7 @@ public class GenericJson extends GenericData implements Cloneable {
    * @since 1.6
    */
   public final void setFactory(JsonFactory factory) {
-    this.jsonFactory = factory;
+    this.jsonFactory = factory; 
   }
 
   @Override
