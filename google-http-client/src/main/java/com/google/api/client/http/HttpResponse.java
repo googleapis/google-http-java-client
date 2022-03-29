@@ -30,7 +30,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.GZIPInputStream;
 
 /**
  * HTTP response.
@@ -362,7 +361,7 @@ public final class HttpResponse {
               // GZIPInputStream.close() --> ConsumingInputStream.close() -->
               // exhaust(ConsumingInputStream)
               lowLevelResponseContent =
-                  new GZIPInputStream(new ConsumingInputStream(lowLevelResponseContent));
+                  GzipSupport.newGzipInputStream(new ConsumingInputStream(lowLevelResponseContent));
             }
           }
           // logging (wrap content with LoggingInputStream)
