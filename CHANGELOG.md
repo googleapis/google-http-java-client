@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.41.8](https://github.com/googleapis/google-http-java-client/compare/v1.41.7...v1.41.8) (2022-04-29)
+
+
+### Dependencies
+
+* downgrade appengine to 1.9.X ([#1645](https://github.com/googleapis/google-http-java-client/issues/1645)) ([da9dd8b](https://github.com/googleapis/google-http-java-client/commit/da9dd8bca97cc10712ce24054d2edd3d5ac2e571))
+
 ### [1.41.7](https://github.com/googleapis/google-http-java-client/compare/v1.41.6...v1.41.7) (2022-04-11)
 
 
