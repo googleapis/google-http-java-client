@@ -88,7 +88,7 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-gson</artifactId>
-        <version>1.41.8-SNAPSHOT</version><!-- {x-version-update:google-http-client-gson:current} -->
+        <version>1.41.8</version><!-- {x-version-update:google-http-client-gson:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
