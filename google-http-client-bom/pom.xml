@@ -73,7 +73,7 @@
       <dependency>
         <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-apache-v2</artifactId>
-        <version>1.41.8-SNAPSHOT</version><!-- {x-version-update:google-http-client-apache-v2:current} -->
+        <version>1.41.8</version><!-- {x-version-update:google-http-client-apache-v2:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
