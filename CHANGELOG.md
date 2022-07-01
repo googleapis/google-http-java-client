@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.42.1](https://github.com/googleapis/google-http-java-client/compare/v1.42.0...v1.42.1) (2022-06-30)
+
+
+### Dependencies
+
+* update dependency com.google.protobuf:protobuf-java to v3.21.2 ([#1676](https://github.com/googleapis/google-http-java-client/issues/1676)) ([d7638ec](https://github.com/googleapis/google-http-java-client/commit/d7638ec8a3e626790f33f4fb04889fe4dfb31575))
+
 ## [1.42.0](https://github.com/googleapis/google-http-java-client/compare/v1.41.7...v1.42.0) (2022-06-09)
 
 
