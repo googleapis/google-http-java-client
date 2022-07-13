@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.42.2](https://github.com/googleapis/google-http-java-client/compare/v1.42.1...v1.42.2) (2022-07-13)
+
+
+### Bug Fixes
+
+* enable longpaths support for windows test ([#1485](https://github.com/googleapis/google-http-java-client/issues/1485)) ([#1684](https://github.com/googleapis/google-http-java-client/issues/1684)) ([9d789f5](https://github.com/googleapis/google-http-java-client/commit/9d789f511b907c3970ed9845a4c092fe5458755d))
+
 ## [1.42.1](https://github.com/googleapis/google-http-java-client/compare/v1.42.0...v1.42.1) (2022-06-30)
 
 
