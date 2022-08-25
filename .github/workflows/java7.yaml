@@ -20,7 +20,8 @@ on:
   pull_request:
 name: ci
 jobs:
-  units:
+  units-java7:
+    name: unit tests with Java 7
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
