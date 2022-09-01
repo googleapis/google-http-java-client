@@ -14,6 +14,7 @@
 
 package com.google.api.client.util;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
@@ -101,6 +102,7 @@ public final class SslUtils {
    *     #getPkixTrustManagerFactory()})
    * @since 1.14
    */
+  @CanIgnoreReturnValue
   public static SSLContext initSslContext(
       SSLContext sslContext, KeyStore trustStore, TrustManagerFactory trustManagerFactory)
       throws GeneralSecurityException {
