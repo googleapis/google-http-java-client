@@ -1,5 +1,140 @@
 # Changelog
 
+## [1.42.2](https://github.com/googleapis/google-http-java-client/compare/v1.42.1...v1.42.2) (2022-07-13)
+
+
+### Bug Fixes
+
+* enable longpaths support for windows test ([#1485](https://github.com/googleapis/google-http-java-client/issues/1485)) ([#1684](https://github.com/googleapis/google-http-java-client/issues/1684)) ([9d789f5](https://github.com/googleapis/google-http-java-client/commit/9d789f511b907c3970ed9845a4c092fe5458755d))
+
+## [1.42.1](https://github.com/googleapis/google-http-java-client/compare/v1.42.0...v1.42.1) (2022-06-30)
+
+
+### Dependencies
+
+* update dependency com.google.protobuf:protobuf-java to v3.21.2 ([#1676](https://github.com/googleapis/google-http-java-client/issues/1676)) ([d7638ec](https://github.com/googleapis/google-http-java-client/commit/d7638ec8a3e626790f33f4fb04889fe4dfb31575))
+
+## [1.42.0](https://github.com/googleapis/google-http-java-client/compare/v1.41.7...v1.42.0) (2022-06-09)
+
+
+### Features
+
+* add build scripts for native image testing in Java 17 ([#1440](https://github.com/googleapis/google-http-java-client/issues/1440)) ([#1666](https://github.com/googleapis/google-http-java-client/issues/1666)) ([05d4019](https://github.com/googleapis/google-http-java-client/commit/05d40193d40097e5a793154a0951f2577fc80f04))
+* next release from main branch is 1.42.0 ([#1633](https://github.com/googleapis/google-http-java-client/issues/1633)) ([9acb1ab](https://github.com/googleapis/google-http-java-client/commit/9acb1abaa97392174dd35c5e0e68346f8f653b5b))
+
+
+### Dependencies
+
+* update dependency com.fasterxml.jackson.core:jackson-core to v2.13.3 ([#1665](https://github.com/googleapis/google-http-java-client/issues/1665)) ([e4f0959](https://github.com/googleapis/google-http-java-client/commit/e4f095997050047d9a6cc20f034f5ef744aefd44))
+* update dependency com.google.errorprone:error_prone_annotations to v2.13.0 ([#1630](https://github.com/googleapis/google-http-java-client/issues/1630)) ([bf777b3](https://github.com/googleapis/google-http-java-client/commit/bf777b364c8aafec09c486dc965587eae90549df))
+* update dependency com.google.errorprone:error_prone_annotations to v2.13.1 ([#1632](https://github.com/googleapis/google-http-java-client/issues/1632)) ([9e46cd8](https://github.com/googleapis/google-http-java-client/commit/9e46cd85ed1c14161f6473f926802bf281edc4ad))
+* update dependency com.google.errorprone:error_prone_annotations to v2.14.0 ([#1667](https://github.com/googleapis/google-http-java-client/issues/1667)) ([3516e18](https://github.com/googleapis/google-http-java-client/commit/3516e185b811d1935eebce31ba65da4813f7e998))
+* update dependency com.google.protobuf:protobuf-java to v3.20.1 ([#1639](https://github.com/googleapis/google-http-java-client/issues/1639)) ([90a99e2](https://github.com/googleapis/google-http-java-client/commit/90a99e27b053f5dc6078d6d8cd9bfe150237e2b4))
+* update dependency com.google.protobuf:protobuf-java to v3.21.0 ([#1668](https://github.com/googleapis/google-http-java-client/issues/1668)) ([babbe94](https://github.com/googleapis/google-http-java-client/commit/babbe94104710db7b4b428756d7db6c069674ff1))
+* update dependency com.google.protobuf:protobuf-java to v3.21.1 ([#1669](https://github.com/googleapis/google-http-java-client/issues/1669)) ([30ec091](https://github.com/googleapis/google-http-java-client/commit/30ec091faea7b5ec9f130cb3fdee396e9923a4b9))
+* update dependency org.apache.felix:maven-bundle-plugin to v5.1.6 ([#1643](https://github.com/googleapis/google-http-java-client/issues/1643)) ([8547f5f](https://github.com/googleapis/google-http-java-client/commit/8547f5fff9b27782162b0b6f0db7445c02918a45))
+* update project.appengine.version to v2.0.5 ([#1662](https://github.com/googleapis/google-http-java-client/issues/1662)) ([2c82c0d](https://github.com/googleapis/google-http-java-client/commit/2c82c0d4da1162cbc6950cdd6b2f4472b884db13))
+* update project.opencensus.version to v0.31.1 ([#1644](https://github.com/googleapis/google-http-java-client/issues/1644)) ([3c65a07](https://github.com/googleapis/google-http-java-client/commit/3c65a07c14d2bf7aa6cce25122df85670955d459))
+
+### [1.41.7](https://github.com/googleapis/google-http-java-client/compare/v1.41.6...v1.41.7) (2022-04-11)
+
+
+### Dependencies
+
+* revert dependency com.google.protobuf:protobuf-java to v3.19.4 ([#1626](https://github.com/googleapis/google-http-java-client/issues/1626)) ([076433f](https://github.com/googleapis/google-http-java-client/commit/076433f3c233a757f31d5fa39bb6cedbb43b8361))
+
+### [1.41.6](https://github.com/googleapis/google-http-java-client/compare/v1.41.5...v1.41.6) (2022-04-06)
+
+
+### Bug Fixes
+
+* `Content-Encoding: gzip` along with `Transfer-Encoding: chunked` sometimes terminates early ([#1608](https://github.com/googleapis/google-http-java-client/issues/1608)) ([941da8b](https://github.com/googleapis/google-http-java-client/commit/941da8badf64068d11a53ac57a4ba35b2ad13490))
+
+
+### Dependencies
+
+* update dependency com.google.errorprone:error_prone_annotations to v2.12.1 ([#1622](https://github.com/googleapis/google-http-java-client/issues/1622)) ([4e1101d](https://github.com/googleapis/google-http-java-client/commit/4e1101d7674cb5715b88a00750cdd5286a9ae077))
+* update dependency com.google.protobuf:protobuf-java to v3.20.0 ([#1621](https://github.com/googleapis/google-http-java-client/issues/1621)) ([640dc40](https://github.com/googleapis/google-http-java-client/commit/640dc4080249b65e5cabb7e1ae6cd9cd5b11bd8e))
+
+### [1.41.5](https://github.com/googleapis/google-http-java-client/compare/v1.41.4...v1.41.5) (2022-03-21)
+
+
+### Documentation
+
+* **deps:** libraries-bom 24.4.0 release ([#1596](https://github.com/googleapis/google-http-java-client/issues/1596)) ([327fe12](https://github.com/googleapis/google-http-java-client/commit/327fe12a122ebb4022a2da55694217233a2badaf))
+
+
+### Dependencies
+
+* update actions/checkout action to v3 ([#1593](https://github.com/googleapis/google-http-java-client/issues/1593)) ([92002c0](https://github.com/googleapis/google-http-java-client/commit/92002c07d60b738657383e2484f56abc1cde6920))
+* update dependency com.fasterxml.jackson.core:jackson-core to v2.13.2 ([#1598](https://github.com/googleapis/google-http-java-client/issues/1598)) ([41ac833](https://github.com/googleapis/google-http-java-client/commit/41ac833249e18cbbd304f825b12202e51bebec85))
+* update project.appengine.version to v2 (major) ([#1597](https://github.com/googleapis/google-http-java-client/issues/1597)) ([c06cf95](https://github.com/googleapis/google-http-java-client/commit/c06cf95f9b1be77e2229c3b2f78ece0789eaec15))
+
+### [1.41.4](https://github.com/googleapis/google-http-java-client/compare/v1.41.3...v1.41.4) (2022-02-11)
+
+
+### Dependencies
+
+* update dependency com.google.code.gson:gson to v2.9.0 ([#1582](https://github.com/googleapis/google-http-java-client/issues/1582)) ([8772778](https://github.com/googleapis/google-http-java-client/commit/877277821dad65545518b06123e6e7b9801147a1))
+
+### [1.41.3](https://github.com/googleapis/google-http-java-client/compare/v1.41.2...v1.41.3) (2022-02-09)
+
+
+### Dependencies
+
+* update dependency com.google.protobuf:protobuf-java to v3.19.4 ([#1568](https://github.com/googleapis/google-http-java-client/issues/1568)) ([416e5d7](https://github.com/googleapis/google-http-java-client/commit/416e5d7146ad145e3d5140110144b5119c6126df))
+* update dependency com.puppycrawl.tools:checkstyle to v9.3 ([#1569](https://github.com/googleapis/google-http-java-client/issues/1569)) ([9c7ade8](https://github.com/googleapis/google-http-java-client/commit/9c7ade85eceb2dc348e1f9aa0637d0509d634160))
+* update project.opencensus.version to v0.31.0 ([#1563](https://github.com/googleapis/google-http-java-client/issues/1563)) ([0f9d2b7](https://github.com/googleapis/google-http-java-client/commit/0f9d2b77ae23ea143b5b8caaa21af6548ca92345))
+
+### [1.41.2](https://github.com/googleapis/google-http-java-client/compare/v1.41.1...v1.41.2) (2022-01-27)
+
+
+### Dependencies
+
+* **java:** update actions/github-script action to v5 ([#1339](https://github.com/googleapis/google-http-java-client/issues/1339)) ([#1561](https://github.com/googleapis/google-http-java-client/issues/1561)) ([c5dbec1](https://github.com/googleapis/google-http-java-client/commit/c5dbec1bbfb5f26f952cb8d80f607327594ab7a8))
+* update dependency com.google.errorprone:error_prone_annotations to v2.11.0 ([#1560](https://github.com/googleapis/google-http-java-client/issues/1560)) ([d9609b0](https://github.com/googleapis/google-http-java-client/commit/d9609b00089952d816deffa178640bfcae1f2c3a))
+
+### [1.41.1](https://github.com/googleapis/google-http-java-client/compare/v1.41.0...v1.41.1) (2022-01-21)
+
+
+### Dependencies
+
+* update dependency com.fasterxml.jackson.core:jackson-core to v2.13.1 ([#1527](https://github.com/googleapis/google-http-java-client/issues/1527)) ([7750398](https://github.com/googleapis/google-http-java-client/commit/7750398d6f4d6e447bfe078092f5cb146f747e50))
+* update dependency com.google.protobuf:protobuf-java to v3.19.3 ([#1549](https://github.com/googleapis/google-http-java-client/issues/1549)) ([50c0765](https://github.com/googleapis/google-http-java-client/commit/50c0765f1eadbf7aef2dccf5f78ab62e2533c6f6))
+* update dependency com.puppycrawl.tools:checkstyle to v9.2.1 ([#1532](https://github.com/googleapis/google-http-java-client/issues/1532)) ([e13eebd](https://github.com/googleapis/google-http-java-client/commit/e13eebd288afbde3aa7bdc0229c2d0db90ebbd4c))
+* update dependency kr.motd.maven:os-maven-plugin to v1.7.0 ([#1547](https://github.com/googleapis/google-http-java-client/issues/1547)) ([8df0dbe](https://github.com/googleapis/google-http-java-client/commit/8df0dbe53521e918985e8f4882392cd2e0a0a1c3))
+* update dependency org.apache.felix:maven-bundle-plugin to v5 ([#1548](https://github.com/googleapis/google-http-java-client/issues/1548)) ([ac10b6c](https://github.com/googleapis/google-http-java-client/commit/ac10b6c9fbe4986b8bf130d9f83ae77e84d74e5f))
+* update project.appengine.version to v1.9.94 ([#1557](https://github.com/googleapis/google-http-java-client/issues/1557)) ([05c78f4](https://github.com/googleapis/google-http-java-client/commit/05c78f4bee92cc501aa084ad970ed6ac9c0e0444))
+* update project.opencensus.version to v0.30.0 ([#1526](https://github.com/googleapis/google-http-java-client/issues/1526)) ([318e54a](https://github.com/googleapis/google-http-java-client/commit/318e54ae9be6bfeb4f5af0af0cb954031d95d1f9))
+
+## [1.41.0](https://www.github.com/googleapis/google-http-java-client/compare/v1.40.1...v1.41.0) (2022-01-05)
+
+
+### Features
+
+* add AttemptCount to HttpResponseException ([#1505](https://www.github.com/googleapis/google-http-java-client/issues/1505)) ([ea0f6c0](https://www.github.com/googleapis/google-http-java-client/commit/ea0f6c0f58e8abffae1362feb344a9309d6d814e))
+* next release from main branch is 1.41.0 ([#1478](https://www.github.com/googleapis/google-http-java-client/issues/1478)) ([3ad4831](https://www.github.com/googleapis/google-http-java-client/commit/3ad4831da00579f534ff7eb7de3a0386068902ba))
+
+
+### Bug Fixes
+
+* **java:** add -ntp flag to native image testing command ([#1299](https://www.github.com/googleapis/google-http-java-client/issues/1299)) ([#1522](https://www.github.com/googleapis/google-http-java-client/issues/1522)) ([39f63c3](https://www.github.com/googleapis/google-http-java-client/commit/39f63c3ea255fe256391567e66ada7b4122b16f6))
+* **java:** java 17 dependency arguments ([#1266](https://www.github.com/googleapis/google-http-java-client/issues/1266)) ([#1489](https://www.github.com/googleapis/google-http-java-client/issues/1489)) ([4a26e18](https://www.github.com/googleapis/google-http-java-client/commit/4a26e1881075a4f361ec746c2444111c911a8d9f))
+
+
+### Dependencies
+
+* update dependency com.coveo:fmt-maven-plugin to v2.12 ([#1487](https://www.github.com/googleapis/google-http-java-client/issues/1487)) ([8b1b8f2](https://www.github.com/googleapis/google-http-java-client/commit/8b1b8f280774115d0521e0f5eada6dd0ef995ca2))
+* update dependency com.google.code.gson:gson to v2.8.9 ([#1492](https://www.github.com/googleapis/google-http-java-client/issues/1492)) ([6615933](https://www.github.com/googleapis/google-http-java-client/commit/6615933e3162969f16d8a0d887afe9f4011e9e5c))
+* update dependency com.google.errorprone:error_prone_annotations to v2.10.0 ([#1498](https://www.github.com/googleapis/google-http-java-client/issues/1498)) ([a6a73c2](https://www.github.com/googleapis/google-http-java-client/commit/a6a73c25104aa2074b0a2bcf021513f943c727d4))
+* update dependency com.google.protobuf:protobuf-java to v3.19.1 ([#1488](https://www.github.com/googleapis/google-http-java-client/issues/1488)) ([24e6c51](https://www.github.com/googleapis/google-http-java-client/commit/24e6c51112e42f12701b5213a4c5f96466d3f7e2))
+* update dependency com.google.protobuf:protobuf-java to v3.19.2 ([#1539](https://www.github.com/googleapis/google-http-java-client/issues/1539)) ([772370a](https://www.github.com/googleapis/google-http-java-client/commit/772370aad7269d30971a38b4471e534d1af9c45a))
+* update dependency com.puppycrawl.tools:checkstyle to v9.1 ([#1493](https://www.github.com/googleapis/google-http-java-client/issues/1493)) ([87b980b](https://www.github.com/googleapis/google-http-java-client/commit/87b980b72f7764aae2a1c5f38d321b25ed7471c4))
+* update dependency com.puppycrawl.tools:checkstyle to v9.2 ([#1510](https://www.github.com/googleapis/google-http-java-client/issues/1510)) ([0922b67](https://www.github.com/googleapis/google-http-java-client/commit/0922b670e4949ca45b2b25a2d89eea2818349a35))
+* update dependency org.apache.httpcomponents:httpcore to v4.4.15 ([#1523](https://www.github.com/googleapis/google-http-java-client/issues/1523)) ([6148d97](https://www.github.com/googleapis/google-http-java-client/commit/6148d9732a7bd745064d68706de75707a9acbb8f))
+* update project.appengine.version to v1.9.92 ([#1495](https://www.github.com/googleapis/google-http-java-client/issues/1495)) ([43c3b11](https://www.github.com/googleapis/google-http-java-client/commit/43c3b116a173d639a1214121e21ffea2fc32935c))
+* update project.appengine.version to v1.9.93 ([#1516](https://www.github.com/googleapis/google-http-java-client/issues/1516)) ([2fa47c6](https://www.github.com/googleapis/google-http-java-client/commit/2fa47c63e5422bf88fe1320e97e0f61265792d8a))
+
 ### [1.40.1](https://www.github.com/googleapis/google-http-java-client/compare/v1.40.0...v1.40.1) (2021-10-07)
 
 

@@ -58,4 +58,4 @@ might result, and you are not guaranteed a compilation error.
 [ci-status-link]: https://github.com/googleapis/google-http-java-client/actions?query=event%3Apush
 [maven-version-image]: https://img.shields.io/maven-central/v/com.google.http-client/google-http-client.svg
 [maven-version-link]: https://search.maven.org/search?q=g:com.google.http-client%20AND%20a:google-http-client&core=gav
-[stability-image]: https://img.shields.io/badge/stability-ga-green
+[stability-image]: https://img.shields.io/badge/stability-stable-green

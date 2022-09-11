@@ -4,11 +4,11 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
+    <version>1.42.3-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client</artifactId>
-  <version>1.40.2-SNAPSHOT</version><!-- {x-version-update:google-http-client:current} -->
+  <version>1.42.3-SNAPSHOT</version><!-- {x-version-update:google-http-client:current} -->
   <name>Google HTTP Client Library for Java</name>
   <description>
     Google HTTP Client Library for Java. Functionality that works on all supported Java platforms,
@@ -21,7 +21,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.1.2</version>
+          <version>3.3.0</version>
           <configuration>
             <ignoredUnusedDeclaredDependencies>io.opencensus:opencensus-impl</ignoredUnusedDeclaredDependencies>
           </configuration>
@@ -97,7 +97,7 @@
       <plugin>   
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <version>2.5.4</version>
+        <version>5.1.8</version>
         <executions>
           <execution>
             <id>bundle-manifest</id>
@@ -134,6 +134,10 @@
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.errorprone</groupId>
+      <artifactId>error_prone_annotations</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>

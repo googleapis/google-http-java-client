@@ -179,6 +179,7 @@ public class IOUtils {
    * @since 1.16
    * @deprecated use java.nio.file.Path#isSymbolicLink
    */
+  @Deprecated
   public static boolean isSymbolicLink(File file) throws IOException {
     // first try using Java 7
     try {
