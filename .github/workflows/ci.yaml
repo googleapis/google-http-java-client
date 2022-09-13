@@ -33,7 +33,9 @@ jobs:
         distribution: zulu
         java-version: ${{matrix.java}}
     - run: java -version
-    - run: mvn test -B -ntp -Dclirr.skip=true -Denforcer.skip=true
+    - run: .kokoro/build.sh
+      env:
+        JOB_TYPE: test
   windows:
     runs-on: windows-latest
     steps:
