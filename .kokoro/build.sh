@@ -29,12 +29,12 @@ echo ${JOB_TYPE}
 
 # attempt to install 3 times with exponential backoff (starting with 10 seconds)
 retry_with_backoff 3 10 \
-  mvn install -B -V -ntp \
+  mvn -X install -B -V -ntp \
     -DskipTests=true \
     -Dclirr.skip=true \
     -Denforcer.skip=true \
     -Dmaven.javadoc.skip=true \
-    -Dgcloud.download.skip=true \
+    -Dgcloud.download.skip=true
     -T 1C
 
 # if GOOGLE_APPLICATION_CREDENTIALS is specified as a relative path, prepend Kokoro root directory onto it
