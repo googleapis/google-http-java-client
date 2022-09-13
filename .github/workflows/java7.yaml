@@ -13,23 +13,23 @@
 # limitations under the License.
 # Github action job to test core java library features on
 # downstream client libraries before they are released.
-on:
-  push:
-    branches:
-    - main
-  pull_request:
-name: ci
-jobs:
-  units-java7:
-    name: unit tests with Java 7
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-java@v3
-      with:
-        distribution: zulu
-        java-version: 7
-    - run: java -version
-    - run: .kokoro/build.sh
-      env:
-        JOB_TYPE: test
+#on:
+#  push:
+#    branches:
+#    - main
+#  pull_request:
+#name: ci
+#jobs:
+#  units-java7:
+#    name: unit tests with Java 7
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@v3
+#    - uses: actions/setup-java@v3
+#      with:
+#        distribution: zulu
+#        java-version: 7
+#    - run: java -version
+#    - run: .kokoro/build.sh
+#      env:
+#        JOB_TYPE: test
