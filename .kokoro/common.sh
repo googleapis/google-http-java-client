@@ -17,8 +17,7 @@ function retry_with_backoff {
     attempts_left=$1
     sleep_seconds=$2
     shift 2
-    command=$@
-
+    command=$*
 
     # store current flag state
     flags=$-
