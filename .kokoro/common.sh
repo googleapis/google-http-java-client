@@ -58,7 +58,7 @@ function println() { printf '%s\n' "$(now) $*"; }
 
 ## Helper comment to trigger updated repo dependency release
 
-function setJava() {
-  export JAVA_HOME=$1
-  export PATH=${JAVA_HOME}/bin:$PATH
-}
+#function setJava() {
+#  export JAVA_HOME=$1
+#  export PATH=${JAVA_HOME}/bin:$PATH
+#}
