@@ -26,11 +26,10 @@ source ${scriptDir}/common.sh
 # Print out Maven & Java version
 mvn -v
 java -version
-echo ${JOB_TYPE}
 
-if [ ! -z "${JAVA8_HOME}" ]; then
-  setJava "${JAVA8_HOME}"
-fi
+#if [ ! -z "${JAVA7_HOME}" ]; then
+#  setJava "${JAVA7_HOME}"
+#fi
 
 # attempt to install 3 times with exponential backoff (starting with 10 seconds)
 retry_with_backoff 3 10 \
@@ -47,9 +46,9 @@ if [[ ! -z "${GOOGLE_APPLICATION_CREDENTIALS}" && "${GOOGLE_APPLICATION_CREDENTI
     export GOOGLE_APPLICATION_CREDENTIALS=$(realpath ${KOKORO_GFILE_DIR}/${GOOGLE_APPLICATION_CREDENTIALS})
 fi
 
-if [ ! -z "${JAVA7_HOME}" ]; then
-  setJava "${JAVA7_HOME}"
-fi
+#if [ ! -z "${JAVA8_HOME}" ]; then
+#  setJava "${JAVA8_HOME}"
+#fi
 
 RETURN_CODE=0
 set +e
