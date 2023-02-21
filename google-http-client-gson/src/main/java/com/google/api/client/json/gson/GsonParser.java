@@ -43,7 +43,7 @@ class GsonParser extends JsonParser {
   GsonParser(GsonFactory factory, JsonReader reader) {
     this.factory = factory;
     this.reader = reader;
-    reader.setLenient(false);
+    reader.setLenient(factory.getReadLeniency());
   }
 
   @Override

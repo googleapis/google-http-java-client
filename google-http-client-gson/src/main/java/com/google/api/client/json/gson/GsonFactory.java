@@ -52,6 +52,8 @@ public class GsonFactory extends JsonFactory {
     return InstanceHolder.INSTANCE;
   }
 
+  private boolean readLeniency = false;
+
   /** Holder for the result of {@link #getDefaultInstance()}. */
   @Beta
   static class InstanceHolder {
@@ -89,5 +91,17 @@ public class GsonFactory extends JsonFactory {
   @Override
   public JsonGenerator createJsonGenerator(Writer writer) {
     return new GsonGenerator(this, new JsonWriter(writer));
+  }
+
+  /** Returns true if it gives leniency to reading JSON value. */
+  boolean getReadLeniency() {
+    return readLeniency;
+  }
+
+  /** Returns copy of GsonFactory instance that is lenient when reading JSON value. */
+  public GsonFactory withReadLeniency() {
+    GsonFactory copy = new GsonFactory();
+    copy.readLeniency = true;
+    return copy;
   }
 }
