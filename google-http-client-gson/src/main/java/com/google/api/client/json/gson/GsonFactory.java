@@ -98,15 +98,15 @@ public class GsonFactory extends JsonFactory {
     return readLeniency;
   }
 
-  protected GsonFactory createCopy() {
+  private static GsonFactory newInstance(GsonFactory gsonFactory) {
     GsonFactory copy = new GsonFactory();
-    copy.readLeniency = this.readLeniency;
+    copy.readLeniency = gsonFactory.readLeniency;
     return copy;
   }
 
   /** Returns a copy of GsonFactory instance which is lenient when reading JSON value. */
   public GsonFactory withReadLeniency() {
-    GsonFactory copy = createCopy();
+    GsonFactory copy = newInstance(this);
     copy.readLeniency = true;
     return copy;
   }
