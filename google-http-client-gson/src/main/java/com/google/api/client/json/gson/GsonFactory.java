@@ -98,7 +98,7 @@ public class GsonFactory extends JsonFactory {
     return readLeniency;
   }
 
-  private GsonFactory createCopy() {
+  protected GsonFactory createCopy() {
     GsonFactory copy = new GsonFactory();
     copy.readLeniency = this.readLeniency;
     return copy;
