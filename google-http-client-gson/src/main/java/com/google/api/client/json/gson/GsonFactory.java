@@ -93,14 +93,20 @@ public class GsonFactory extends JsonFactory {
     return new GsonGenerator(this, new JsonWriter(writer));
   }
 
-  /** Returns true if it gives leniency to reading JSON value. */
+  /** Returns true if it is lenient to input JSON value. */
   boolean getReadLeniency() {
     return readLeniency;
   }
 
-  /** Returns copy of GsonFactory instance that is lenient when reading JSON value. */
-  public GsonFactory withReadLeniency() {
+  private GsonFactory createCopy() {
     GsonFactory copy = new GsonFactory();
+    copy.readLeniency = this.readLeniency;
+    return copy;
+  }
+
+  /** Returns a copy of GsonFactory instance which is lenient when reading JSON value. */
+  public GsonFactory withReadLeniency() {
+    GsonFactory copy = createCopy();
     copy.readLeniency = true;
     return copy;
   }

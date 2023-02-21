@@ -113,7 +113,7 @@ public class GsonFactoryTest extends AbstractJsonFactoryTest {
     assertEquals("foo", json.get("title"));
   }
 
-  public final void testReaderLeniency_not_lenient() throws IOException {
+  public final void testReaderLeniency_not_lenient_by_default() throws IOException {
     JsonObjectParser parser = new JsonObjectParser(GsonFactory.getDefaultInstance());
 
     try {
