@@ -53,7 +53,7 @@ public class GsonFactory extends JsonFactory {
   }
 
   /** Controls the behavior of leniency in reading JSON value */
-  protected boolean readLeniency = false;
+  private boolean readLeniency = false;
 
   /** Holder for the result of {@link #getDefaultInstance()}. */
   @Beta
@@ -99,21 +99,32 @@ public class GsonFactory extends JsonFactory {
     return readLeniency;
   }
 
-  private static GsonFactory newInstance(GsonFactory gsonFactory) {
-    GsonFactory copy = new GsonFactory();
-    copy.readLeniency = gsonFactory.readLeniency;
-    return copy;
+  /** Returns the builder * */
+  public static Builder builder() {
+    return new Builder();
   }
 
-  /**
-   * Returns a copy of GsonFactory instance which is lenient when reading JSON value.
-   *
-   * <p>Subclasses should not call this method. Set {@code readLeniency} field to {@code true}
-   * instead.
-   */
-  public GsonFactory withReadLeniency() {
-    GsonFactory copy = newInstance(this);
-    copy.readLeniency = true;
-    return copy;
+  /** Builder for GsonFactory. */
+  public static class Builder {
+    // Do not directly call this constructor
+    private Builder() {}
+
+    private boolean readLeniency = false;
+
+    /**
+     * Set to {@code true} when you want to the JSON parser to be lenient to reading JSON value. By
+     * default, it is {@code false}.
+     */
+    public Builder setReadLeniency(boolean readLeniency) {
+      this.readLeniency = readLeniency;
+      return this;
+    }
+
+    /** Builds GsonFactory instance. */
+    public GsonFactory build() {
+      GsonFactory instance = new GsonFactory();
+      instance.readLeniency = readLeniency;
+      return instance;
+    }
   }
 }

@@ -103,7 +103,7 @@ public class GsonFactoryTest extends AbstractJsonFactoryTest {
 
   public final void testReaderLeniency_lenient() throws IOException {
     JsonObjectParser parser =
-        new JsonObjectParser(GsonFactory.getDefaultInstance().withReadLeniency());
+        new JsonObjectParser(GsonFactory.builder().setReadLeniency(true).build());
 
     // This prefix in JSON body is used to prevent Cross-site script inclusion (XSSI).
     InputStream inputStream =
@@ -121,7 +121,7 @@ public class GsonFactoryTest extends AbstractJsonFactoryTest {
       InputStream inputStream =
           new ByteArrayInputStream((")]}'\n" + JSON_ENTRY_PRETTY).getBytes(StandardCharsets.UTF_8));
       parser.parseAndClose(inputStream, StandardCharsets.UTF_8, GenericJson.class);
-      fail("The read leniency should fail the malformed JSON input.");
+      fail("The read leniency should fail the JSON input with XSSI prefix.");
     } catch (MalformedJsonException ex) {
       assertNotNull(ex.getMessage());
     }
