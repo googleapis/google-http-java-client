@@ -61,6 +61,14 @@ public class GsonFactory extends JsonFactory {
     static final GsonFactory INSTANCE = new GsonFactory();
   }
 
+  // Keeping the default, non-arg constructor for backward compatibility. Users should use
+  // getDefaultInstance() or builder()
+  public GsonFactory() {}
+
+  private GsonFactory(Builder builder) {
+    readLeniency = builder.readLeniency;
+  }
+
   @Override
   public JsonParser createJsonParser(InputStream in) {
     return createJsonParser(new InputStreamReader(in, StandardCharsets.UTF_8));
@@ -122,9 +130,7 @@ public class GsonFactory extends JsonFactory {
 
     /** Builds GsonFactory instance. */
     public GsonFactory build() {
-      GsonFactory instance = new GsonFactory();
-      instance.readLeniency = readLeniency;
-      return instance;
+      return new GsonFactory(this);
     }
   }
 }
