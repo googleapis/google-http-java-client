@@ -62,7 +62,7 @@ public class GsonFactory extends JsonFactory {
   }
 
   // Keeping the default, non-arg constructor for backward compatibility. Users should use
-  // getDefaultInstance() or builder()
+  // getDefaultInstance() or builder() instead.
   public GsonFactory() {}
 
   private GsonFactory(Builder builder) {
@@ -113,7 +113,7 @@ public class GsonFactory extends JsonFactory {
   }
 
   /** Builder for GsonFactory. */
-  public static class Builder {
+  public static final class Builder {
     // Do not directly call this constructor
     private Builder() {}
 
