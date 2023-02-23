@@ -52,7 +52,8 @@ public class GsonFactory extends JsonFactory {
     return InstanceHolder.INSTANCE;
   }
 
-  private boolean readLeniency = false;
+  /** Controls the behavior of leniency in reading JSON value */
+  protected boolean readLeniency = false;
 
   /** Holder for the result of {@link #getDefaultInstance()}. */
   @Beta
@@ -104,7 +105,12 @@ public class GsonFactory extends JsonFactory {
     return copy;
   }
 
-  /** Returns a copy of GsonFactory instance which is lenient when reading JSON value. */
+  /**
+   * Returns a copy of GsonFactory instance which is lenient when reading JSON value.
+   *
+   * <p>Subclasses should not call this method. Set {@code readLeniency} field to {@code true}
+   * instead.
+   */
   public GsonFactory withReadLeniency() {
     GsonFactory copy = newInstance(this);
     copy.readLeniency = true;
