@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.43.0](https://github.com/googleapis/google-http-java-client/compare/v1.42.3...v1.43.0) (2023-02-24)
+
+
+### Features
+
+* GsonFactory to have read leniency option via `GsonFactory.builder().setReadLeniency(true).build()` ([00d61b9](https://github.com/googleapis/google-http-java-client/commit/00d61b96dff050ec4b061bead047239b21a48764))
+* Next release from main branch is 1.43.0 ([#1764](https://github.com/googleapis/google-http-java-client/issues/1764)) ([9fbae6c](https://github.com/googleapis/google-http-java-client/commit/9fbae6c0721cce7cb4a9042f8fed4823ce291e80))
+
+
+### Dependencies
+
+* Update dependency com.fasterxml.jackson.core:jackson-core to v2.14.0 ([#1774](https://github.com/googleapis/google-http-java-client/issues/1774)) ([dc41010](https://github.com/googleapis/google-http-java-client/commit/dc410107c98e06531021e5a44ac68ff7621dc47f))
+* Update dependency com.fasterxml.jackson.core:jackson-core to v2.14.1 ([#1785](https://github.com/googleapis/google-http-java-client/issues/1785)) ([234e7b5](https://github.com/googleapis/google-http-java-client/commit/234e7b53a1fc2f3b8a8b7a80a4c9fa9118dcbc37))
+* Update dependency com.fasterxml.jackson.core:jackson-core to v2.14.2 ([#1810](https://github.com/googleapis/google-http-java-client/issues/1810)) ([23094ff](https://github.com/googleapis/google-http-java-client/commit/23094ffa028acdee63ed868ea070d877f2c5ea95))
+* Update dependency com.google.code.gson:gson to v2.10.1 ([#1799](https://github.com/googleapis/google-http-java-client/issues/1799)) ([a114c7e](https://github.com/googleapis/google-http-java-client/commit/a114c7ed815216dccf165fc8763a768892a58723))
+* Update dependency com.google.errorprone:error_prone_annotations to v2.18.0 ([#1797](https://github.com/googleapis/google-http-java-client/issues/1797)) ([09f3607](https://github.com/googleapis/google-http-java-client/commit/09f360775001c035d4d26d29f9e28e5f47fb5bd5))
+* Update dependency com.google.protobuf:protobuf-java to v3.21.12 ([#1789](https://github.com/googleapis/google-http-java-client/issues/1789)) ([03b5b32](https://github.com/googleapis/google-http-java-client/commit/03b5b321f20543c354447f52669f05a9d1bd00b1))
+* Update dependency kr.motd.maven:os-maven-plugin to v1.7.1 ([#1777](https://github.com/googleapis/google-http-java-client/issues/1777)) ([3f318f4](https://github.com/googleapis/google-http-java-client/commit/3f318f44305d9b59aecbdd980abdad525ca47bf3))
+* Update dependency org.apache.httpcomponents:httpclient to v4.5.14 ([#1790](https://github.com/googleapis/google-http-java-client/issues/1790)) ([0664e17](https://github.com/googleapis/google-http-java-client/commit/0664e1744e0885a1cb8787481ccfbab0de845fe9))
+* Update dependency org.apache.httpcomponents:httpcore to v4.4.16 ([#1787](https://github.com/googleapis/google-http-java-client/issues/1787)) ([512aa23](https://github.com/googleapis/google-http-java-client/commit/512aa2398adf64b89e27b505de03b6e3f2a32875))
+* Update project.appengine.version to v2.0.10 ([#1773](https://github.com/googleapis/google-http-java-client/issues/1773)) ([5ddb634](https://github.com/googleapis/google-http-java-client/commit/5ddb634887601bfad64ac482643f65c820b55fd4))
+
 ## [1.42.3](https://github.com/googleapis/google-http-java-client/compare/v1.42.2...v1.42.3) (2022-10-27)
 
 
