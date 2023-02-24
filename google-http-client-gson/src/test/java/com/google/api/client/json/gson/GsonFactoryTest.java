@@ -14,10 +14,16 @@
 
 package com.google.api.client.json.gson;
 
+import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.test.json.AbstractJsonFactoryTest;
+import com.google.gson.stream.MalformedJsonException;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
@@ -91,6 +97,32 @@ public class GsonFactoryTest extends AbstractJsonFactoryTest {
       parser.getByteValue();
       fail("should throw IOException");
     } catch (IOException ex) {
+      assertNotNull(ex.getMessage());
+    }
+  }
+
+  public final void testReaderLeniency_lenient() throws IOException {
+    JsonObjectParser parser =
+        new JsonObjectParser(GsonFactory.builder().setReadLeniency(true).build());
+
+    // This prefix in JSON body is used to prevent Cross-site script inclusion (XSSI).
+    InputStream inputStream =
+        new ByteArrayInputStream((")]}'\n" + JSON_ENTRY_PRETTY).getBytes(StandardCharsets.UTF_8));
+    GenericJson json = parser.parseAndClose(inputStream, StandardCharsets.UTF_8, GenericJson.class);
+
+    assertEquals("foo", json.get("title"));
+  }
+
+  public final void testReaderLeniency_not_lenient_by_default() throws IOException {
+    JsonObjectParser parser = new JsonObjectParser(GsonFactory.getDefaultInstance());
+
+    try {
+      // This prefix in JSON body is used to prevent Cross-site script inclusion (XSSI).
+      InputStream inputStream =
+          new ByteArrayInputStream((")]}'\n" + JSON_ENTRY_PRETTY).getBytes(StandardCharsets.UTF_8));
+      parser.parseAndClose(inputStream, StandardCharsets.UTF_8, GenericJson.class);
+      fail("The read leniency should fail the JSON input with XSSI prefix.");
+    } catch (MalformedJsonException ex) {
       assertNotNull(ex.getMessage());
     }
   }
