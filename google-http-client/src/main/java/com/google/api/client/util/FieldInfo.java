@@ -145,8 +145,7 @@ public class FieldInfo {
         // add case-sensitive matches first in the list
         if (method.getName().equals(fieldSetter)) {
           methods.add(0, method);
-        } else if (Ascii.toLowerCase(method.getName())
-            .equals(Ascii.toLowerCase(fieldSetter))) {
+        } else if (Ascii.toLowerCase(method.getName()).equals(Ascii.toLowerCase(fieldSetter))) {
           methods.add(method);
         }
       }
