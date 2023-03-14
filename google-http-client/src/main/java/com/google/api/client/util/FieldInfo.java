@@ -134,12 +134,20 @@ public class FieldInfo {
   }
 
   /** Creates list of setter methods for a field only in declaring class. */
-  private Method[] settersMethodForField(Field field) {
+  private Method[] settersMethodForField(final Field field) {
     List<Method> methods = new ArrayList<>();
+    String fieldSetter = "set" + Ascii.toUpperCase(field.getName().substring(0, 1));
+    if (field.getName().length() > 1) {
+      fieldSetter += field.getName().substring(1);
+    }
     for (Method method : field.getDeclaringClass().getDeclaredMethods()) {
-      if (Ascii.toLowerCase(method.getName()).equals("set" + Ascii.toLowerCase(field.getName()))
-          && method.getParameterTypes().length == 1) {
-        methods.add(method);
+      if (method.getParameterTypes().length == 1) {
+        // add case-sensitive matches first in the list
+        if (method.getName().equals(fieldSetter)) {
+          methods.add(0, method);
+        } else if (Ascii.toLowerCase(method.getName()).equals(Ascii.toLowerCase(fieldSetter))) {
+          methods.add(method);
+        }
       }
     }
     return methods.toArray(new Method[0]);
@@ -216,15 +224,13 @@ public class FieldInfo {
    * value.
    */
   public void setValue(Object obj, Object value) {
-    if (setters.length > 0) {
-      for (Method method : setters) {
-        if (value == null || method.getParameterTypes()[0].isAssignableFrom(value.getClass())) {
-          try {
-            method.invoke(obj, value);
-            return;
-          } catch (IllegalAccessException | InvocationTargetException e) {
-            // try to set field directly
-          }
+    for (Method method : setters) {
+      if (value == null || method.getParameterTypes()[0].isAssignableFrom(value.getClass())) {
+        try {
+          method.invoke(obj, value);
+          return;
+        } catch (IllegalAccessException | InvocationTargetException e) {
+          // try to set field directly
         }
       }
     }
