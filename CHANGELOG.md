@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.43.1](https://github.com/googleapis/google-http-java-client/compare/v1.43.0...v1.43.1) (2023-03-14)
+
+
+### Bug Fixes
+
+* JSON deserialization setter case priority ([#1831](https://github.com/googleapis/google-http-java-client/issues/1831)) ([30182e1](https://github.com/googleapis/google-http-java-client/commit/30182e13e7b294b8a0771e47a84b0ed45a628a1f))
+
+
+### Dependencies
+
+* Update project.appengine.version to v2.0.12 ([#1816](https://github.com/googleapis/google-http-java-client/issues/1816)) ([ba84066](https://github.com/googleapis/google-http-java-client/commit/ba8406642c47045378153e5687667dda6c37c7be))
+
 ## [1.43.0](https://github.com/googleapis/google-http-java-client/compare/v1.42.3...v1.43.0) (2023-02-24)
 
 

@@ -14,6 +14,7 @@
 
 package com.google.api.client.util;
 
+import com.google.api.client.json.GenericJson;
 import junit.framework.TestCase;
 
 /**
@@ -48,5 +49,37 @@ public class FieldInfoTest extends TestCase {
     assertEquals(E.VALUE, FieldInfo.of(E.VALUE).<E>enumValue());
     assertEquals(E.OTHER_VALUE, FieldInfo.of(E.OTHER_VALUE).<E>enumValue());
     assertEquals(E.NULL, FieldInfo.of(E.NULL).<E>enumValue());
+  }
+
+  public static final class Data extends GenericJson {
+    @Key String passcode;
+    @Key String passCode;
+
+    public Data setPasscode(String passcode) {
+      this.passcode = passcode;
+      return this;
+    }
+
+    public Data setPassCode(String passCode) {
+      this.passCode = passCode;
+      return this;
+    }
+  }
+
+  public void testSetValueCaseSensitivityPriority() {
+    Data data = new Data();
+    data.setPasscode("pass1");
+    data.setPassCode("pass2");
+    data.set("passCode", "passX");
+
+    assertEquals(data.passcode, "pass1");
+    assertEquals(data.passCode, "passX");
+
+    data.setPasscode("pass1");
+    data.setPassCode("pass2");
+    data.set("passcode", "passX");
+
+    assertEquals(data.passcode, "passX");
+    assertEquals(data.passCode, "pass2");
   }
 }
