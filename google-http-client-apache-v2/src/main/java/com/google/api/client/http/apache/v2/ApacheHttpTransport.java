@@ -46,8 +46,8 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
  * <p>Default settings are specified in {@link #newDefaultHttpClient()}. Use the {@link
  * #ApacheHttpTransport(HttpClient)} constructor to override the Apache HTTP Client used. Please
  * read the <a
- * href="http://hc.apache.org/httpcomponents-client-ga/tutorial/html/connmgmt.html">Apache HTTP
- * Client connection management tutorial</a> for more complex configuration options.
+ * href="https://hc.apache.org/httpcomponents-client-4.5.x/current/tutorial/pdf/httpclient-tutorial.pdf">
+ * Apache HTTP Client connection management tutorial</a> for more complex configuration options.
  *
  * @since 1.30
  * @author Yaniv Inbar
