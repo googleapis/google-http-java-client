@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.ProxySelector;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
@@ -80,6 +81,7 @@ public final class NetHttpTransport extends HttpTransport {
   }
 
   private static final String SHOULD_USE_PROXY_FLAG = "com.google.api.client.should_use_proxy";
+  private static final String SHOULD_USE_PROXY_SELECTOR_FLAG = "com.google.api.client.should_use_proxy_selector";
 
   private final ConnectionFactory connectionFactory;
 
@@ -141,6 +143,8 @@ public final class NetHttpTransport extends HttpTransport {
     if (connectionFactory == null) {
       if (System.getProperty(SHOULD_USE_PROXY_FLAG) != null) {
         return new DefaultConnectionFactory(defaultProxy());
+      } else if(System.getProperty(SHOULD_USE_PROXY_SELECTOR_FLAG) != null) {
+          return new DefaultConnectionFactory(ProxySelector.getDefault());
       }
       return new DefaultConnectionFactory();
     }

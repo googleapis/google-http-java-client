@@ -3,6 +3,8 @@ package com.google.api.client.http.javanet;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
+import java.net.ProxySelector;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
@@ -12,9 +14,10 @@ import java.net.URL;
 public class DefaultConnectionFactory implements ConnectionFactory {
 
   private final Proxy proxy;
+  private final ProxySelector proxySelector;
 
   public DefaultConnectionFactory() {
-    this(null);
+    this((Proxy)null);
   }
 
   /**
@@ -23,11 +26,27 @@ public class DefaultConnectionFactory implements ConnectionFactory {
    *     system properties</a>
    */
   public DefaultConnectionFactory(Proxy proxy) {
+    this(proxy, null);
+  }
+
+  public DefaultConnectionFactory(ProxySelector proxySelector) {
+    this(null, proxySelector);
+  }
+
+  public DefaultConnectionFactory(Proxy proxy, ProxySelector proxySelector) {
     this.proxy = proxy;
+    this.proxySelector = proxySelector;
   }
 
   @Override
   public HttpURLConnection openConnection(URL url) throws IOException {
+    Proxy proxy = this.proxy;
+    if(proxySelector != null) {
+      try {
+        proxy = proxySelector.select(url.toURI()).get(0);
+      } catch (URISyntaxException e) {
+      }
+    }
     return (HttpURLConnection) (proxy == null ? url.openConnection() : url.openConnection(proxy));
   }
 }
