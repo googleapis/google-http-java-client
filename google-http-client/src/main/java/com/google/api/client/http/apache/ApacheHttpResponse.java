@@ -25,72 +25,74 @@ import org.apache.http.client.methods.HttpRequestBase;
 
 final class ApacheHttpResponse extends LowLevelHttpResponse {
 
-  private final HttpRequestBase request;
-  private final HttpResponse response;
+  private final HttpRequestBase httpRequestBase;
+  private final HttpResponse httpResponse;
   private final Header[] allHeaders;
 
-  ApacheHttpResponse(HttpRequestBase request, HttpResponse response) {
-    this.request = request;
-    this.response = response;
-    allHeaders = response.getAllHeaders();
+  ApacheHttpResponse(HttpRequestBase httpRequestBase, HttpResponse httpResponse) {
+    this.httpRequestBase=httpRequestBase;
+    this.httpResponse = httpResponse;
+    allHeaders = httpResponse.getAllHeaders();
   }
 
   @Override
   public int getStatusCode() {
-    StatusLine statusLine = response.getStatusLine();
+    StatusLine statusLine = httpResponse.getStatusLine();
     return statusLine == null ? 0 : statusLine.getStatusCode();
   }
 
   @Override
   public InputStream getContent() throws IOException {
-    HttpEntity entity = response.getEntity();
+    HttpEntity entity = httpResponse.getEntity();
     return entity == null ? null : entity.getContent();
   }
 
   @Override
   public String getContentEncoding() {
-    HttpEntity entity = response.getEntity();
-    if (entity != null) {
-      Header contentEncodingHeader = entity.getContentEncoding();
-      if (contentEncodingHeader != null) {
-        return contentEncodingHeader.getValue();
-      }
+    HttpEntity entity = httpResponse.getEntity();
+    if (entity == null) {
+      return null;
     }
-    return null;
+    Header contentEncodingHeader = entity.getContentEncoding();
+    if (contentEncodingHeader == null) {
+      return null;
+    }
+    return contentEncodingHeader.getValue();
   }
 
   @Override
   public long getContentLength() {
-    HttpEntity entity = response.getEntity();
+    HttpEntity entity = httpResponse.getEntity();
     return entity == null ? -1 : entity.getContentLength();
   }
 
   @Override
   public String getContentType() {
-    HttpEntity entity = response.getEntity();
-    if (entity != null) {
-      Header contentTypeHeader = entity.getContentType();
-      if (contentTypeHeader != null) {
-        return contentTypeHeader.getValue();
-      }
+    HttpEntity entity = httpResponse.getEntity();
+    if (entity == null) {
+      return null;
     }
-    return null;
+    Header contentTypeHeader = entity.getContentType();
+    if (contentTypeHeader == null) {
+      return null;
+    }
+    return contentTypeHeader.getValue();
   }
 
   @Override
   public String getReasonPhrase() {
-    StatusLine statusLine = response.getStatusLine();
+    StatusLine statusLine = httpResponse.getStatusLine();
     return statusLine == null ? null : statusLine.getReasonPhrase();
   }
 
   @Override
   public String getStatusLine() {
-    StatusLine statusLine = response.getStatusLine();
+    StatusLine statusLine = httpResponse.getStatusLine();
     return statusLine == null ? null : statusLine.toString();
   }
 
   public String getHeaderValue(String name) {
-    return response.getLastHeader(name).getValue();
+    return httpResponse.getLastHeader(name).getValue();
   }
 
   @Override
@@ -115,6 +117,14 @@ final class ApacheHttpResponse extends LowLevelHttpResponse {
    */
   @Override
   public void disconnect() {
-    request.abort();
+    httpRequestBase.abort();
+  }
+
+  private HttpEntity getEntity() {
+    return httpResponse.getEntity();
+  }
+
+  private Header getLastHeader(String name) {
+    return httpResponse.getLastHeader(name);
   }
 }

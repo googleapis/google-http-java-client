@@ -28,22 +28,21 @@ import org.apache.http.params.HttpParams;
 /** @author Yaniv Inbar */
 final class ApacheHttpRequest extends LowLevelHttpRequest {
   private final HttpClient httpClient;
+  private final HttpRequestBase httpRequest;
 
-  private final HttpRequestBase request;
-
-  ApacheHttpRequest(HttpClient httpClient, HttpRequestBase request) {
+  ApacheHttpRequest(HttpClient httpClient, HttpRequestBase httpRequest) {
     this.httpClient = httpClient;
-    this.request = request;
+    this.httpRequest = httpRequest;
   }
 
   @Override
-  public void addHeader(String name, String value) {
-    request.addHeader(name, value);
+  public void addHeader(String headerName, String headerValue) {
+    httpRequest.addHeader(headerName, headerValue);
   }
 
   @Override
   public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
-    HttpParams params = request.getParams();
+    HttpParams params = httpRequest.getParams();
     ConnManagerParams.setTimeout(params, connectTimeout);
     HttpConnectionParams.setConnectionTimeout(params, connectTimeout);
     HttpConnectionParams.setSoTimeout(params, readTimeout);
@@ -52,18 +51,30 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
   @Override
   public LowLevelHttpResponse execute() throws IOException {
     if (getStreamingContent() != null) {
+      boolean isHttpEntityEnclosingRequest = httpRequest instanceof HttpEntityEnclosingRequest;
       Preconditions.checkState(
-          request instanceof HttpEntityEnclosingRequest,
-          "Apache HTTP client does not support %s requests with content.",
-          request.getRequestLine().getMethod());
+              isHttpEntityEnclosingRequest,
+              "Apache HTTP client does not support %s requests with content.",
+              httpRequest.getRequestLine().getMethod()
+      );
+
       ContentEntity entity = new ContentEntity(getContentLength(), getStreamingContent());
-      entity.setContentEncoding(getContentEncoding());
-      entity.setContentType(getContentType());
-      if (getContentLength() == -1) {
-        entity.setChunked(true);
-      }
-      ((HttpEntityEnclosingRequest) request).setEntity(entity);
+      setRequestEntity(entity);
     }
-    return new ApacheHttpResponse(request, httpClient.execute(request));
+
+    return new ApacheHttpResponse(httpRequest, httpClient.execute(httpRequest));
   }
+
+  private void setRequestEntity(ContentEntity entity) {
+    entity.setContentEncoding(getContentEncoding());
+    entity.setContentType(getContentType());
+    if (getContentLength() == -1) {
+      entity.setChunked(true);
+    }
+
+    HttpEntityEnclosingRequest httpEntityEnclosingRequest = (HttpEntityEnclosingRequest) httpRequest;
+    httpEntityEnclosingRequest.setEntity(entity);
+  }
+
 }
+
