@@ -85,7 +85,7 @@ public final class NetHttpTransport extends HttpTransport {
 
 
   /** SSL socket factory or {@code null} for the default. */
-  private final SSLSocketFactory sslSocketFactory;
+  private final SSLSocketFactory sslSocketFactoryExtension;
 
   /** Host name verifier or {@code null} for the default. */
   private final HostnameVerifier hostnameVerifier;
@@ -106,35 +106,35 @@ public final class NetHttpTransport extends HttpTransport {
    * @param proxy HTTP proxy or {@code null} to use the proxy settings from <a
    *     href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">
    *     system properties</a>
-   * @param sslSocketFactory SSL socket factory or {@code null} for the default
+   * @param sslSocketFactoryExtension SSL socket factory or {@code null} for the default
    * @param hostnameVerifier host name verifier or {@code null} for the default
    * @param isMtls Whether the transport is mTLS. Default value is {@code false}
    * @since 1.38
    */
   NetHttpTransport(
       Proxy proxy,
-      SSLSocketFactory sslSocketFactory,
+      SSLSocketFactory sslSocketFactoryExtension,
       HostnameVerifier hostnameVerifier,
       boolean isMtls)
       {
-    this(new DefaultConnectionFactory(proxy), sslSocketFactory, hostnameVerifier, isMtls);
+    this(new DefaultConnectionFactory(proxy), sslSocketFactoryExtension, hostnameVerifier, isMtls);
   }
 
   /**
    * @param connectionFactory factory to produce connections from {@link URL}s; if {@code null} then
    *     {@link DefaultConnectionFactory} is used
-   * @param sslSocketFactory SSL socket factory or {@code null} for the default
+   * @param sslSocketFactoryExtension SSL socket factory or {@code null} for the default
    * @param hostnameVerifier host name verifier or {@code null} for the default
    * @param isMtls Whether the transport is mTLS. Default value is {@code false}
    * @since 1.38
    */
   NetHttpTransport(
       ConnectionFactory connectionFactory,
-      SSLSocketFactory sslSocketFactory,
+      SSLSocketFactory sslSocketFactoryExtension,
       HostnameVerifier hostnameVerifier,
       boolean isMtls) {
     this.defaultConnectionFactory.connectionFactory = defaultConnectionFactory.getConnectionFactory(defaultConnectionFactory.connectionFactory);
-    this.sslSocketFactory = sslSocketFactory;
+    this.sslSocketFactoryExtension = sslSocketFactoryExtension;
     this.hostnameVerifier = hostnameVerifier;
     this.isMtls = isMtls;
   }
@@ -314,10 +314,6 @@ public final class NetHttpTransport extends HttpTransport {
       return this;
     }
 
-    /** Returns the SSL socket factory. */
-    public SSLSocketFactory getSslSocketFactory() {
-      return sslSocketFactory;
-    }
 
     /** Sets the SSL socket factory or {@code null} for the default. */
     public Builder setSslSocketFactory(SSLSocketFactory sslSocketFactory) {
@@ -360,8 +356,8 @@ public final class NetHttpTransport extends HttpTransport {
       if (hostnameVerifier != null) {
         secureConnection.setHostnameVerifier(hostnameVerifier);
       }
-      if (sslSocketFactory != null) {
-        secureConnection.setSSLSocketFactory(sslSocketFactory);
+      if (sslSocketFactoryExtension != null) {
+        secureConnection.setSSLSocketFactory(sslSocketFactoryExtension);
       }
     }
     return new NetHttpRequest(connection);
