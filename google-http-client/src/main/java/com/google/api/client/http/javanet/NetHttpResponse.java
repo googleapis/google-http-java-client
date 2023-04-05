@@ -26,34 +26,47 @@ import java.util.Map;
 final class NetHttpResponse extends LowLevelHttpResponse {
 
   private final HttpURLConnection connection;
-  private final int responseCode;
-  private final String responseMessage;
+
   private final ArrayList<String> headerNames = new ArrayList<String>();
   private final ArrayList<String> headerValues = new ArrayList<String>();
 
-  NetHttpResponse(HttpURLConnection connection) throws IOException {
-    this.connection = connection;
+  private final HttpResponse httpResponse;
+
+  public NetHttpResponse(HttpURLConnection connection) throws IOException {
+    this.connection=connection;
     int responseCode = connection.getResponseCode();
-    this.responseCode = responseCode == -1 ? 0 : responseCode;
-    responseMessage = connection.getResponseMessage();
-    List<String> headerNames = this.headerNames;
-    List<String> headerValues = this.headerValues;
-    for (Map.Entry<String, List<String>> entry : connection.getHeaderFields().entrySet()) {
-      String key = entry.getKey();
-      if (key != null) {
-        for (String value : entry.getValue()) {
-          if (value != null) {
-            headerNames.add(key);
-            headerValues.add(value);
-          }
-        }
-      }
+    if(responseCode==-1)
+      responseCode=0;
+    if (responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
+      httpResponse = new NotFoundHttpResponse();
+    } else {
+      httpResponse = new OkHttpResponse(connection);
     }
+  }
+
+  public int getResponseCode() {
+
+    return httpResponse.getResponseCode();
+  }
+
+  public String getResponseMessage() {
+    return httpResponse.getResponseMessage();
+  }
+
+  public List<String> getHeaderNames() {
+    return httpResponse.getHeaderNames();
+  }
+
+  public List<String> getHeaderValues() {
+    return httpResponse.getHeaderValues();
   }
 
   @Override
   public int getStatusCode() {
-    return responseCode;
+    if(httpResponse.getResponseCode()==-1)
+      return 0;
+    else
+    return httpResponse.getResponseCode();
   }
 
   /**
@@ -105,7 +118,7 @@ final class NetHttpResponse extends LowLevelHttpResponse {
 
   @Override
   public String getReasonPhrase() {
-    return responseMessage;
+    return httpResponse.getResponseMessage();
   }
 
   @Override
