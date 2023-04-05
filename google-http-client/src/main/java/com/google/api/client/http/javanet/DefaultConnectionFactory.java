@@ -5,13 +5,16 @@ import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
 
+import static com.google.api.client.http.javanet.NetHttpTransport.defaultProxy;
+
 /**
  * Default implementation of {@link ConnectionFactory}, which simply attempts to open the connection
  * with an optional {@link Proxy}.
  */
 public class DefaultConnectionFactory implements ConnectionFactory {
-
+  ConnectionFactory connectionFactory;
   private final Proxy proxy;
+  private static final String SHOULD_USE_PROXY_FLAG = "com.google.api.client.should_use_proxy";
 
   public DefaultConnectionFactory() {
     this(null);
@@ -29,5 +32,15 @@ public class DefaultConnectionFactory implements ConnectionFactory {
   @Override
   public HttpURLConnection openConnection(URL url) throws IOException {
     return (HttpURLConnection) (proxy == null ? url.openConnection() : url.openConnection(proxy));
+  }
+
+  public ConnectionFactory getConnectionFactory(ConnectionFactory connectionFactory) {
+    if (connectionFactory == null) {
+      if (System.getProperty(SHOULD_USE_PROXY_FLAG) != null) {
+        return new DefaultConnectionFactory(defaultProxy());
+      }
+      return new DefaultConnectionFactory();
+    }
+    return connectionFactory;
   }
 }

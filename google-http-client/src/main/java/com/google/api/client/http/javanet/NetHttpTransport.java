@@ -53,7 +53,7 @@ import javax.net.ssl.SSLSocketFactory;
  * @author Yaniv Inbar
  */
 public final class NetHttpTransport extends HttpTransport {
-  private static Proxy defaultProxy() {
+  public static Proxy defaultProxy() {
     return new Proxy(
         Proxy.Type.HTTP,
         new InetSocketAddress(
@@ -81,7 +81,8 @@ public final class NetHttpTransport extends HttpTransport {
 
   private static final String SHOULD_USE_PROXY_FLAG = "com.google.api.client.should_use_proxy";
 
-  private final ConnectionFactory connectionFactory;
+  DefaultConnectionFactory defaultConnectionFactory=new DefaultConnectionFactory();
+
 
   /** SSL socket factory or {@code null} for the default. */
   private final SSLSocketFactory sslSocketFactory;
@@ -90,7 +91,7 @@ public final class NetHttpTransport extends HttpTransport {
   private final HostnameVerifier hostnameVerifier;
 
   /** Whether the transport is mTLS. Default value is {@code false}. */
-  private final boolean isMtls;
+  protected final boolean isMtls;
 
   /**
    * Constructor with the default behavior.
@@ -98,7 +99,7 @@ public final class NetHttpTransport extends HttpTransport {
    * <p>Instead use {@link Builder} to modify behavior.
    */
   public NetHttpTransport() {
-    this((ConnectionFactory) null, null, null, false);
+    this((DefaultConnectionFactory) null, null, null, false);
   }
 
   /**
@@ -114,7 +115,8 @@ public final class NetHttpTransport extends HttpTransport {
       Proxy proxy,
       SSLSocketFactory sslSocketFactory,
       HostnameVerifier hostnameVerifier,
-      boolean isMtls) {
+      boolean isMtls)
+      {
     this(new DefaultConnectionFactory(proxy), sslSocketFactory, hostnameVerifier, isMtls);
   }
 
@@ -131,21 +133,13 @@ public final class NetHttpTransport extends HttpTransport {
       SSLSocketFactory sslSocketFactory,
       HostnameVerifier hostnameVerifier,
       boolean isMtls) {
-    this.connectionFactory = getConnectionFactory(connectionFactory);
+    this.defaultConnectionFactory.connectionFactory = defaultConnectionFactory.getConnectionFactory(defaultConnectionFactory.connectionFactory);
     this.sslSocketFactory = sslSocketFactory;
     this.hostnameVerifier = hostnameVerifier;
     this.isMtls = isMtls;
   }
 
-  private ConnectionFactory getConnectionFactory(ConnectionFactory connectionFactory) {
-    if (connectionFactory == null) {
-      if (System.getProperty(SHOULD_USE_PROXY_FLAG) != null) {
-        return new DefaultConnectionFactory(defaultProxy());
-      }
-      return new DefaultConnectionFactory();
-    }
-    return connectionFactory;
-  }
+
 
   @Override
   public boolean supportsMethod(String method) {
@@ -155,26 +149,6 @@ public final class NetHttpTransport extends HttpTransport {
   @Override
   public boolean isMtls() {
     return this.isMtls;
-  }
-
-  @Override
-  protected NetHttpRequest buildRequest(String method, String url) throws IOException {
-    Preconditions.checkArgument(supportsMethod(method), "HTTP method %s not supported", method);
-    // connection with proxy settings
-    URL connUrl = new URL(url);
-    HttpURLConnection connection = connectionFactory.openConnection(connUrl);
-    connection.setRequestMethod(method);
-    // SSL settings
-    if (connection instanceof HttpsURLConnection) {
-      HttpsURLConnection secureConnection = (HttpsURLConnection) connection;
-      if (hostnameVerifier != null) {
-        secureConnection.setHostnameVerifier(hostnameVerifier);
-      }
-      if (sslSocketFactory != null) {
-        secureConnection.setSSLSocketFactory(sslSocketFactory);
-      }
-    }
-    return new NetHttpRequest(connection);
   }
 
   /**
@@ -253,7 +227,7 @@ public final class NetHttpTransport extends HttpTransport {
      * @since 1.14
      */
     public Builder trustCertificatesFromJavaKeyStore(InputStream keyStoreStream, String storePass)
-        throws GeneralSecurityException, IOException {
+            throws GeneralSecurityException, IOException {
       KeyStore trustStore = SecurityUtils.getJavaKeyStore();
       SecurityUtils.loadKeyStore(trustStore, keyStoreStream, storePass);
       return trustCertificates(trustStore);
@@ -273,11 +247,11 @@ public final class NetHttpTransport extends HttpTransport {
      * @since 1.14
      */
     public Builder trustCertificatesFromStream(InputStream certificateStream)
-        throws GeneralSecurityException, IOException {
+            throws GeneralSecurityException, IOException {
       KeyStore trustStore = SecurityUtils.getJavaKeyStore();
       trustStore.load(null, null);
       SecurityUtils.loadKeyStoreFromCertificates(
-          trustStore, SecurityUtils.getX509CertificateFactory(), certificateStream);
+              trustStore, SecurityUtils.getX509CertificateFactory(), certificateStream);
       return trustCertificates(trustStore);
     }
 
@@ -308,19 +282,19 @@ public final class NetHttpTransport extends HttpTransport {
      */
     @Beta
     public Builder trustCertificates(
-        KeyStore trustStore, KeyStore mtlsKeyStore, String mtlsKeyStorePassword)
-        throws GeneralSecurityException {
+            KeyStore trustStore, KeyStore mtlsKeyStore, String mtlsKeyStorePassword)
+            throws GeneralSecurityException {
       if (mtlsKeyStore != null && mtlsKeyStore.size() > 0) {
         this.isMtls = true;
       }
       SSLContext sslContext = SslUtils.getTlsSslContext();
       SslUtils.initSslContext(
-          sslContext,
-          trustStore,
-          SslUtils.getPkixTrustManagerFactory(),
-          mtlsKeyStore,
-          mtlsKeyStorePassword,
-          SslUtils.getDefaultKeyManagerFactory());
+              sslContext,
+              trustStore,
+              SslUtils.getPkixTrustManagerFactory(),
+              mtlsKeyStore,
+              mtlsKeyStorePassword,
+              SslUtils.getDefaultKeyManagerFactory());
       return setSslSocketFactory(sslContext.getSocketFactory());
     }
 
@@ -368,8 +342,28 @@ public final class NetHttpTransport extends HttpTransport {
         setProxy(defaultProxy());
       }
       return this.proxy == null
-          ? new NetHttpTransport(connectionFactory, sslSocketFactory, hostnameVerifier, isMtls)
-          : new NetHttpTransport(this.proxy, sslSocketFactory, hostnameVerifier, isMtls);
+              ? new NetHttpTransport(connectionFactory, sslSocketFactory, hostnameVerifier, isMtls)
+              : new NetHttpTransport(this.proxy, sslSocketFactory, hostnameVerifier, isMtls);
     }
+  }
+
+  @Override
+  protected NetHttpRequest buildRequest(String method, String url) throws IOException {
+    Preconditions.checkArgument(supportsMethod(method), "HTTP method %s not supported", method);
+    // connection with proxy settings
+    URL connUrl = new URL(url);
+    HttpURLConnection connection = defaultConnectionFactory.connectionFactory.openConnection(connUrl);
+    connection.setRequestMethod(method);
+    // SSL settings
+    if (connection instanceof HttpsURLConnection) {
+      HttpsURLConnection secureConnection = (HttpsURLConnection) connection;
+      if (hostnameVerifier != null) {
+        secureConnection.setHostnameVerifier(hostnameVerifier);
+      }
+      if (sslSocketFactory != null) {
+        secureConnection.setSSLSocketFactory(sslSocketFactory);
+      }
+    }
+    return new NetHttpRequest(connection);
   }
 }

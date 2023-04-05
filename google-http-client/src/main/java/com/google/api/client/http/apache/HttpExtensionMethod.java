@@ -12,8 +12,10 @@
 
 package com.google.api.client.http.apache;
 
-import com.google.api.client.util.Preconditions;
+
 import java.net.URI;
+
+import com.google.common.base.Preconditions;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 
 /**

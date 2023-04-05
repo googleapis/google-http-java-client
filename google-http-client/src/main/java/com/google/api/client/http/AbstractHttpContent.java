@@ -21,6 +21,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
+
  * Abstract implementation of an HTTP content with typical options.
  *
  * <p>Implementation is not thread-safe.
@@ -93,8 +94,8 @@ public abstract class AbstractHttpContent implements HttpContent {
    */
   protected final Charset getCharset() {
     return mediaType == null || mediaType.getCharsetParameter() == null
-        ? StandardCharsets.ISO_8859_1
-        : mediaType.getCharsetParameter();
+            ? StandardCharsets.ISO_8859_1
+            : mediaType.getCharsetParameter();
   }
 
   public String getType() {

@@ -31,6 +31,8 @@ public interface HttpContent extends StreamingContent {
   /** Returns the content length or less than zero if not known. */
   long getLength() throws IOException;
 
+
+
   /** Returns the content type or {@code null} for none. */
   String getType();
 

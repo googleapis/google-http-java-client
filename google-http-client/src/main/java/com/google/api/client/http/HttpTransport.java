@@ -71,6 +71,8 @@ import java.util.logging.Logger;
 public abstract class HttpTransport {
 
   static final Logger LOGGER = Logger.getLogger(HttpTransport.class.getName());
+  /** Whether the transport is mTLS. Default value is {@code false}. */
+
 
   /**
    * All valid request methods as specified in {@link #supportsMethod(String)}, sorted in ascending
@@ -83,6 +85,9 @@ public abstract class HttpTransport {
   static {
     Arrays.sort(SUPPORTED_METHODS);
   }
+
+
+
 
   /**
    * Returns a new instance of an HTTP request factory based on this HTTP transport.
