@@ -202,4 +202,12 @@ final class NetHttpRequest extends LowLevelHttpRequest {
       }
     }
   }
+
+  /**
+   * Disconnects the HttpURLConnection's connection
+   */
+  @Override
+  public void disconnect() {
+    connection.disconnect();
+  }
 }

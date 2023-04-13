@@ -160,4 +160,12 @@ public abstract class LowLevelHttpRequest {
 
   /** Executes the request and returns a low-level HTTP response object. */
   public abstract LowLevelHttpResponse execute() throws IOException;
+
+  /**
+   * Disconnects the underlying HTTP connection's stream
+   *
+   * <p>Default implementation does nothing, but subclasses should normally override.
+   * @since 1.43.2
+   */
+  public void disconnect() {}
 }

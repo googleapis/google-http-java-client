@@ -210,6 +210,9 @@ public final class HttpRequest {
    */
   private boolean responseReturnRawInputStream = false;
 
+  /** Underlying Transport specific HttpRequest that is created executing this request. */
+  private LowLevelHttpRequest lowLevelHttpRequest;
+
   /**
    * @param transport HTTP transport
    * @param requestMethod HTTP request method or {@code null} for none
@@ -812,6 +815,18 @@ public final class HttpRequest {
   }
 
   /**
+   * Disconnects the underlying lowLevelHttpRequest (disconnect functionality is
+   * determined by the Transport used). Null check is added as lowLevelHttpRequest
+   * is set on execute() call and calling disconnect() more than once should no-op.
+   */
+  public void disconnect() {
+    if (lowLevelHttpRequest != null) {
+      lowLevelHttpRequest.disconnect();
+      lowLevelHttpRequest = null;
+    }
+  }
+
+  /**
    * Execute the HTTP request and returns the HTTP response.
    *
    * <p>Note that regardless of the returned status code, the HTTP response content has not been
@@ -886,7 +901,7 @@ public final class HttpRequest {
       addSpanAttribute(span, HttpTraceAttributeConstants.HTTP_PATH, url.getRawPath());
       addSpanAttribute(span, HttpTraceAttributeConstants.HTTP_URL, urlString);
 
-      LowLevelHttpRequest lowLevelHttpRequest = transport.buildRequest(requestMethod, urlString);
+      lowLevelHttpRequest = transport.buildRequest(requestMethod, urlString);
       Logger logger = HttpTransport.LOGGER;
       boolean loggable = loggingEnabled && logger.isLoggable(Level.CONFIG);
       StringBuilder logbuf = null;
