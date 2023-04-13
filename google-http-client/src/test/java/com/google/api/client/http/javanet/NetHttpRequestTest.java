@@ -13,6 +13,7 @@ import com.google.api.client.util.StreamingContent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeoutException;
@@ -83,6 +84,7 @@ public class NetHttpRequestTest {
     request.setStreamingContent(content);
     request.setWriteTimeout(timeout);
     request.execute(new SleepingOutputWriter(5000L));
+    assertTrue(connection.isDisconnectCalled());
   }
 
   @Test
@@ -108,6 +110,7 @@ public class NetHttpRequestTest {
 
     LowLevelHttpResponse response = request.execute();
     assertEquals(401, response.getStatusCode());
+    assertFalse(connection.isDisconnectCalled());
   }
 
   @Test
@@ -135,6 +138,8 @@ public class NetHttpRequestTest {
       fail("Expected to throw an IOException");
     } catch (IOException e) {
       assertEquals("Error writing request body to server", e.getMessage());
+      // IOException when getting the OutputStream would prevent the connection from connecting
+      assertFalse(connection.isDisconnectCalled());
     }
   }
 
@@ -168,6 +173,8 @@ public class NetHttpRequestTest {
       fail("Expected to throw an IOException");
     } catch (IOException e) {
       assertEquals("Error writing request body to server", e.getMessage());
+      // IOException when writing would prevent the connection from connecting
+      assertFalse(connection.isDisconnectCalled());
     }
   }
 
@@ -201,6 +208,8 @@ public class NetHttpRequestTest {
       fail("Expected to throw an IOException");
     } catch (IOException e) {
       assertEquals("Error during close", e.getMessage());
+      // IOException when closing OutputStream would prevent the connection from connecting
+      assertFalse(connection.isDisconnectCalled());
     }
   }
 
@@ -217,6 +226,7 @@ public class NetHttpRequestTest {
 
     assertEquals(4096, connection.getChunkLength());
     assertNull(request.getRequestProperty("Content-Length"));
+    assertFalse(connection.isDisconnectCalled());
   }
 
   @Test
@@ -232,6 +242,7 @@ public class NetHttpRequestTest {
 
     assertEquals(connection.getChunkLength(), -1);
     assertEquals("6", request.getRequestProperty("Content-Length"));
+    assertFalse(connection.isDisconnectCalled());
   }
 
   // see https://github.com/googleapis/google-http-java-client/issues/1471 for more details
@@ -245,5 +256,17 @@ public class NetHttpRequestTest {
     assertTrue(connection.doOutputCalled());
     assertTrue(connection.isSetFixedLengthStreamingModeLongCalled());
     assertFalse(connection.isSetFixedLengthStreamingModeIntCalled());
+    assertFalse(connection.isDisconnectCalled());
+  }
+
+  @Test
+  public void testDisconnect() throws IOException {
+    MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
+    connection.setRequestMethod("DELETE");
+    NetHttpRequest request = new NetHttpRequest(connection);
+    request.execute();
+    request.disconnect();
+
+    assertTrue(connection.isDisconnectCalled());
   }
 }

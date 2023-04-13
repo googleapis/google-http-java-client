@@ -818,6 +818,10 @@ public final class HttpRequest {
    * Disconnects the underlying lowLevelHttpRequest (disconnect functionality is
    * determined by the Transport used). Null check is added as lowLevelHttpRequest
    * is set on execute() call and calling disconnect() more than once should no-op.
+   *
+   * <p>Normally the connection would be passed to the response and connection would
+   * be disconnected after the response is parsed. This is meant to be called to
+   * disconnect prior to the full response from being received.
    */
   public void disconnect() {
     if (lowLevelHttpRequest != null) {

@@ -154,7 +154,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
       return response;
     } finally {
       if (!successfulConnection) {
-        connection.disconnect();
+        disconnect();
       }
     }
   }

@@ -46,6 +46,8 @@ public class MockHttpURLConnection extends HttpURLConnection {
   private boolean setFixedLengthStreamingModeIntCalled = false;
   /** Whether {@link #setFixedLengthStreamingMode(long)} was called. */
   private boolean setFixedLengthStreamingModeLongCalled = false;
+  /** Whether {@link #disconnect()} was called */
+  private boolean disconnectCalled;
 
   /**
    * Output stream or {@code null} to throw an {@link UnknownServiceException} when {@link
@@ -83,7 +85,13 @@ public class MockHttpURLConnection extends HttpURLConnection {
   }
 
   @Override
-  public void disconnect() {}
+  public void disconnect() {
+    this.disconnectCalled = true;
+  }
+
+  public boolean isDisconnectCalled() {
+    return disconnectCalled;
+  }
 
   @Override
   public boolean usingProxy() {
