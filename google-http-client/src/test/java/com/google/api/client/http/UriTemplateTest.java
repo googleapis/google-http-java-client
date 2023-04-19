@@ -322,4 +322,30 @@ public class UriTemplateTest extends TestCase {
     SortedMap<String, Object> map = Maps.newTreeMap();
     assertEquals("", UriTemplate.expand("{?id,uid}", map, false));
   }
+
+  public void testExpandTemplates_reservedExpansion_mustNotEscapeReservedCharSet() {
+
+    String reservedSet = ":/?#[]@!$&'()*+,;=";
+
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
+    requestMap.put("var", reservedSet);
+
+    assertEquals(
+        "Reserved expansion must not escape chars from reserved set according to rfc6570#section-3.2.3",
+        reservedSet,
+        UriTemplate.expand("{+var}", requestMap, false));
+  }
+
+  public void testExpandTemplates_reservedExpansion_mustNotEscapeUnreservedCharSet() {
+
+    String unReservedSet = "-._~";
+
+    SortedMap<String, Object> requestMap = Maps.newTreeMap();
+    requestMap.put("var", unReservedSet);
+
+    assertEquals(
+        "Reserved expansion must not escape chars from unreserved set according to rfc6570#section-3.2.3",
+        unReservedSet,
+        UriTemplate.expand("{+var}", requestMap, false));
+  }
 }
