@@ -35,10 +35,10 @@ jobs:
       shell: bash
       run: |
         echo "Printing versions"
-        mvnw -B -ntp -V
+        ./mvnw -B -ntp -V
         echo "Building"
         # source inherits alias
-        mvnw install -B -V -ntp \
+        ./mvnw install -B -V -ntp \
             -DskipTests=true \
             -Dclirr.skip=true \
             -Denforcer.skip=true \
