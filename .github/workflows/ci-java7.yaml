@@ -31,8 +31,12 @@ jobs:
         version: 1.7
         architecture: x64
     - run: java -version
-    - run: |
+    - name: Build
+      shell: bash
+      run: |
         alias mvn=$(pwd)/mvnw
-        .kokoro/build.sh
+        mvn -V
+        # source inherits alias
+        source .kokoro/build.sh
       env:
         JOB_TYPE: test
