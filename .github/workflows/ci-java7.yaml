@@ -34,9 +34,16 @@ jobs:
     - name: Build
       shell: bash
       run: |
-        alias mvn=$(pwd)/mvnw
-        mvn -V
+        echo "Printing versions"
+        mvnw -B -ntp -V
+        echo "Building"
         # source inherits alias
-        source .kokoro/build.sh
+        mvnw install -B -V -ntp \
+            -DskipTests=true \
+            -Dclirr.skip=true \
+            -Denforcer.skip=true \
+            -Dmaven.javadoc.skip=true \
+            -Dgcloud.download.skip=true \
+            -T 1C
       env:
         JOB_TYPE: test
