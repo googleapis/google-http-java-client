@@ -31,19 +31,16 @@ jobs:
         version: 1.7
         architecture: x64
     - run: java -version
+    - name: Set up Maven
+      uses: stCarolas/setup-maven@v4.5
+      with:
+        maven-version: 3.6.3
     - name: Build
       shell: bash
       run: |
         echo "Printing versions"
-        ./mvnw -B -ntp -V
+        mvn -B -ntp -V
         echo "Building"
-        # source inherits alias
-        ./mvnw install -B -V -ntp \
-            -DskipTests=true \
-            -Dclirr.skip=true \
-            -Denforcer.skip=true \
-            -Dmaven.javadoc.skip=true \
-            -Dgcloud.download.skip=true \
-            -T 1C
+        .kokoro/build.sh
       env:
         JOB_TYPE: test
