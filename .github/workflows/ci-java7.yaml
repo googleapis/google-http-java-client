@@ -30,22 +30,27 @@ jobs:
       with:
         version: 1.7
         architecture: x64
-    - run: java -version
+    - run: |
+        java -version
+        # This value is used in "-Djvm=" later
+        echo "JAVA7_HOME=${JAVA_HOME}" >> $GITHUB_ENV
+    - uses: actions/setup-java@v3
+      with:
+        java-version: 17
+        distribution: temurin
     - name: Set up Maven
       uses: stCarolas/setup-maven@v4.5
       with:
-        # 3.5.4 works with Java 7
-        maven-version: 3.5.4
+        maven-version: 3.8.8
     - name: Build
       shell: bash
       run: |
-        # build.sh uses '-ntp' which doesn't work with Maven 3.5.4
-        mvn install --batch-mode --show-version \
-           -DskipTests=true \
-           -Dclirr.skip=true \
-           -Denforcer.skip=true \
-           -Dmaven.javadoc.skip=true \
-           -Dgcloud.download.skip=true \
-           -T 1C
-      env:
-        JOB_TYPE: test
+        # Leveraging surefire's jvm option, running the test on Java 7.
+        # Surefire plugin 2.22.2 is the last version for Java 7. Newer version would fail with 
+        # "UnsupportedClassVersionError: org/apache/maven/surefire/booter/ForkedBooter" error.
+        mvn --batch-mode --show-version -ntp test
+            --projects '!google-http-client-jackson2,!google-http-client-appengine,!samples/dailymotion-simple-cmdline-sample,!google-http-client-assembly' \
+            -Dclirr.skip=true -Denforcer.skip=true -Dmaven.javadoc.skip=true \
+            -Dgcloud.download.skip=true -T 1C \
+            -Dproject.surefire.version=2.22.2 \
+            -Djvm=${JAVA7_HOME}/bin/java

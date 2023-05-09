@@ -326,7 +326,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.0.0-M7</version>
+          <version>${project.surefire.version}</version>
           <configuration>
             <argLine>-Xmx1024m</argLine>
             <reportNameSuffix>sponge_log</reportNameSuffix>
@@ -581,6 +581,7 @@
     <project.httpcore.version>4.4.16</project.httpcore.version>
     <project.opencensus.version>0.31.1</project.opencensus.version>
     <project.root-directory>..</project.root-directory>
+    <project.surefire.version>3.0.0-M7</project.surefire.version>
     <deploy.autorelease>false</deploy.autorelease>
   </properties>
 
