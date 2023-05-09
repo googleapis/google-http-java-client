@@ -48,7 +48,13 @@ jobs:
         # Leveraging surefire's jvm option, running the test on Java 7.
         # Surefire plugin 2.22.2 is the last version for Java 7. Newer version would fail with 
         # "UnsupportedClassVersionError: org/apache/maven/surefire/booter/ForkedBooter" error.
-        mvn --batch-mode --show-version -ntp test
+        
+        # Why are these modules are skipped?
+        # google-http-client-jackson2 and google-http-client-appengine do not work with Java 7
+        # any more because of Jackson and appengine library are compiled for Java 8.
+        # dailymotion-simple-cmdline-sample and google-http-client-assembly depend on
+        # google-http-client-jackson2 
+        mvn --batch-mode --show-version -ntp test \
             --projects '!google-http-client-jackson2,!google-http-client-appengine,!samples/dailymotion-simple-cmdline-sample,!google-http-client-assembly' \
             -Dclirr.skip=true -Denforcer.skip=true -Dmaven.javadoc.skip=true \
             -Dgcloud.download.skip=true -T 1C \
