@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.43.2](https://github.com/googleapis/google-http-java-client/compare/v1.43.1...v1.43.2) (2023-05-09)
+
+
+### Bug Fixes
+
+* UriTemplate reserved expansion does not escape reserved chars ([#1844](https://github.com/googleapis/google-http-java-client/issues/1844)) ([91c46a9](https://github.com/googleapis/google-http-java-client/commit/91c46a99b0b9464d01b5aca2116bbe073b878725)), closes [#1838](https://github.com/googleapis/google-http-java-client/issues/1838)
+
 ## [1.43.1](https://github.com/googleapis/google-http-java-client/compare/v1.43.0...v1.43.1) (2023-03-14)
 
 
