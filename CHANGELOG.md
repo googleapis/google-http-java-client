@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.43.3](https://github.com/googleapis/google-http-java-client/compare/v1.43.2...v1.43.3) (2023-06-21)
+
+
+### Dependencies
+
+* Update dependency com.google.j2objc:j2objc-annotations to v2 ([#1805](https://github.com/googleapis/google-http-java-client/issues/1805)) ([00eb7b1](https://github.com/googleapis/google-http-java-client/commit/00eb7b1d6b29148ee76b4cf59be7bf8288cc5152))
+* Update doclet version to v1.9.0 ([#1853](https://github.com/googleapis/google-http-java-client/issues/1853)) ([eeea739](https://github.com/googleapis/google-http-java-client/commit/eeea739f855cdeaef2dd6c38246660723656dc36))
+
 ## [1.43.2](https://github.com/googleapis/google-http-java-client/compare/v1.43.1...v1.43.2) (2023-05-09)
 
 
