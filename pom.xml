@@ -66,6 +66,7 @@
     <module>google-http-client-gson</module>
     <module>google-http-client-jackson2</module>
     <module>google-http-client-xml</module>
+    <module>google-http-client-micrometer</module>
 
     <module>google-http-client-findbugs</module>
     <module>google-http-client-test</module>
@@ -251,6 +252,16 @@
         <groupId>io.opencensus</groupId>
         <artifactId>opencensus-testing</artifactId>
         <version>${project.opencensus.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.micrometer</groupId>
+        <artifactId>micrometer-observation</artifactId>
+        <version>${project.micrometer.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.micrometer</groupId>
+        <artifactId>micrometer-tracing-integration-test</artifactId>
+        <version>${project.micrometer-tracing.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -580,6 +591,8 @@
     <project.httpclient.version>4.5.14</project.httpclient.version>
     <project.httpcore.version>4.4.16</project.httpcore.version>
     <project.opencensus.version>0.31.1</project.opencensus.version>
+    <project.micrometer.version>1.11.4</project.micrometer.version>
+    <project.micrometer-tracing.version>1.1.5</project.micrometer-tracing.version>
     <project.root-directory>..</project.root-directory>
     <project.surefire.version>3.0.0-M7</project.surefire.version>
     <deploy.autorelease>false</deploy.autorelease>
