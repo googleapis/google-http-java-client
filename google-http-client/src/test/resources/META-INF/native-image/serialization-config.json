@@ -3,7 +3,11 @@
     {
       "name":"java.lang.String"
     },
-    {"name": "java.lang.Throwable"}
+    {"name": "java.lang.Throwable"},
+    {"name": "java.lang.Exception"},
+    {"name": "java.io.IOException"},
+    {"name": "java.lang.Object"},
+    {"name": "java.util.Collections$EmptyList"}
   ],
   "lambdaCapturingTypes":[
   ],

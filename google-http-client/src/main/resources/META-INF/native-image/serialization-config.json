@@ -1,0 +1,10 @@
+{
+  "types":[
+    {"name": "com.google.api.client.http.HttpResponseException"},
+    {"name": "java.lang.StackTraceElement"}
+  ],
+  "lambdaCapturingTypes":[
+  ],
+  "proxies":[
+  ]
+}

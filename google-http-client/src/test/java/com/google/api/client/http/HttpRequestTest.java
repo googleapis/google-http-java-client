@@ -960,6 +960,10 @@ public class HttpRequestTest extends TestCase {
     request.setHeaders(myHeaders);
     request.execute();
     // check headers
+    System.out.println("HELLLOO");
+    System.out.println(HttpTesting.SIMPLE_GENERIC_URL); // is fine
+    System.out.println(lowLevelRequest.getHeaderValues("foo"));
+    System.out.println("HELLLOO END");
     assertEquals(ImmutableList.of("bar"), lowLevelRequest.getHeaderValues("foo"));
     assertEquals(ImmutableList.of("a", "b", "c"), lowLevelRequest.getHeaderValues("list"));
     assertEquals(ImmutableList.of("a2", "b2", "c2"), lowLevelRequest.getHeaderValues("objlist"));

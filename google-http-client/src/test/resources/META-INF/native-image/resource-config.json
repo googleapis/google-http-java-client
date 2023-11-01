@@ -1,0 +1,10 @@
+{
+  "resources":[
+    {"pattern":"\\Qcom/google/api/client/util/privateKey.pem\\E"},
+    {"pattern":"\\Qcom/google/api/client/util/cert.pem\\E"},
+    {"pattern":"\\Qcom/google/api/client/util/mtlsCertAndKey.pem\\E"},
+    {"pattern": "\\Qfile.txt\\E"},
+    {"pattern": "\\Qcom/google/api/client/util/secret.pem\\E"},
+    {"pattern":  "\\Qcom/google/api/client/util/secret.p12\\E"}],
+  "bundles":[]
+}

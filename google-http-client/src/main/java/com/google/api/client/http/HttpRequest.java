@@ -506,6 +506,9 @@ public final class HttpRequest {
    * @since 1.5
    */
   public HttpRequest setHeaders(HttpHeaders headers) {
+    System.out.println("MY HEADERS");
+    System.out.println(headers);
+    System.out.println("END HEADERS");
     this.headers = Preconditions.checkNotNull(headers);
     return this;
   }

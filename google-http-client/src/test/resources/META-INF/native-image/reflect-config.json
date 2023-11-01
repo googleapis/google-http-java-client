@@ -45,6 +45,10 @@
   },
   {
     "name": "java.lang.Object",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true,
     "methods": [
       {
         "name": "<init>",
@@ -62,10 +66,36 @@
     ]
   },
   {
+    "name":  "java.util.List",
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name":  "java.util.Collections",
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
     "name": "com.google.api.client.util.FieldInfoTest$E",
     "queryAllDeclaredConstructors": true,
     "queryAllPublicConstructors": true,
     "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.FieldInfoTest$Data",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allPublicMethods": true,
     "allDeclaredFields": true
   },
   {
@@ -149,10 +179,11 @@
     "allDeclaredFields": true
   },
   {
-    "name": "com.google.api.client.http.HttpHeadersTest$MyHeaders",
+    "name": "com.google.api.client.http.HttpRequestTest$MyHeaders",
     "queryAllDeclaredConstructors": true,
     "queryAllPublicConstructors": true,
     "queryAllDeclaredMethods": true,
+    "allPublicMethods": true,
     "allDeclaredFields": true
   },
   {
@@ -170,10 +201,18 @@
     "allDeclaredFields": true
   },
   {
+    "name": "com.google.api.client.http.HttpHeadersTest$MyHeaders",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
     "name": "com.google.api.client.http.javanet.NetHttpRequestTest$SleepingOutputWriter",
     "queryAllDeclaredConstructors": true,
     "queryAllPublicConstructors": true,
     "queryAllDeclaredMethods": true,
+    "allPublicMethods": true,
     "allDeclaredFields": true
   },
   {
@@ -219,7 +258,7 @@
     "allDeclaredFields": true
   },
   {
-    "name": "com.google.api.client.http.GenericUrlTest$FieldTypesUrl",
+    "name": "com.google.api.client.http.GenericUrlTest$TestUrl",
     "queryAllDeclaredConstructors": true,
     "queryAllPublicConstructors": true,
     "queryAllDeclaredMethods": true,
@@ -234,6 +273,9 @@
   },
   {
     "name": "com.google.api.client.util.GenericDataTest$MyData",
+    "queryAllDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
     "methods": [
       {
         "name": "<init>",
@@ -265,10 +307,12 @@
   },
   {
     "name": "com.google.api.client.util.TypesTest$Foo",
-    "queryAllDeclaredConstructors": true,
-    "queryAllPublicConstructors": true,
-    "queryAllDeclaredMethods": true,
-    "allDeclaredFields": true
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
   },
   {
     "name": "com.google.api.client.util.TypesTest$IntegerList",
@@ -278,7 +322,42 @@
     "allDeclaredFields": true
   },
   {
+    "name": "com.google.api.client.util.TypesTest$Resolve",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.TypesTest$IntegerResolve",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.TypesTest$IntegerResolve",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
     "name": "com.google.api.client.http.HttpRequestTest$E",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.HttpResponseTest$MyHeaders",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.javanet.NetHttpTransportTest$FakeServer",
     "queryAllDeclaredConstructors": true,
     "queryAllPublicConstructors": true,
     "queryAllDeclaredMethods": true,
