@@ -1,0 +1,432 @@
+[
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$Animal",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$WildCardTypes",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$Simple",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$StringNullValue",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$DogWithFamily",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$ExtendsGenericJson",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$MapOfMapType",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$PolymorphicWithNumericValueType",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$AnimalGenericJson",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$EnumValue",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$NumberTypes",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$Entry",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$TypeVariablesPassedAround",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$FloatMapTypeVariableType",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$Feed",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$V",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$PolymorphicSelfReferencing",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$DoubleListTypeVariableType",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$TypeVariableType",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "java.util.ArrayList",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$TestClass",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$Dog",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$A",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$NumericValueTypedSubclass1",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$DogGenericJson",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$NumberTypesAsString",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$E",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$PolymorphicWithNumericType",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$Centipede",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$AnyType",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$IntArrayTypeVariableType",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$CollectionOfCollectionType",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$ArrayType",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$NumericValueTypedSubclass2",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$NumericTypedSubclass1",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$BooleanTypes",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$Human",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$HumanWithPets",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$NumericTypedSubclass2",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$IntegerTypeVariableType",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$X",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$Y",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.test.json.AbstractJsonFactoryTest$Z",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  }
+]

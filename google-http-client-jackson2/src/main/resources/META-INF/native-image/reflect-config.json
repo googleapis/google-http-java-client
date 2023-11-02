@@ -1,0 +1,52 @@
+[
+  {
+    "name": "com.google.api.client.json.GenericJson",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "java.util.HashMap",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "java.util.LinkedList",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "java.lang.Object",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.ArrayMap",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  }
+]
