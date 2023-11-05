@@ -1,8 +1,8 @@
 {
   "types":[
-    {
-      "name":"java.lang.String"
-    },
+    {"name": "com.google.api.client.http.HttpResponseException"},
+    {"name": "java.lang.StackTraceElement"},
+    {"name":"java.lang.String"},
     {"name": "java.lang.Throwable"},
     {"name": "java.lang.Exception"},
     {"name": "java.io.IOException"},

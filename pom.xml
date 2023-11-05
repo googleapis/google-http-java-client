@@ -602,6 +602,11 @@
           <version>0.9.23</version>
           <scope>test</scope>
         </dependency>
+        <dependency>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+          <version>${project.guava.version}</version>
+        </dependency>
       </dependencies>
       <build>
         <plugins>
@@ -613,10 +618,6 @@
             <configuration>
               <!-- Include all tests during native image testing. -->
               <excludes combine.self="override"/>
-<!--              <includes>-->
-<!--                <include>com.google.api.client.http.UrlEncodedContentTest.java</include>-->
-<!--&lt;!&ndash;                <include>**/functional/*.java</include>&ndash;&gt;-->
-<!--              </includes>-->
             </configuration>
           </plugin>
           <plugin>
