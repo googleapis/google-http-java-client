@@ -123,12 +123,7 @@ public class MockLowLevelHttpRequest extends LowLevelHttpRequest {
    * @since 1.13
    */
   public List<String> getHeaderValues(String name) {
-    System.out.println("GET HEADER VALUES");
-    System.out.println(headersMap.keySet());
-    System.out.println(name.toLowerCase(Locale.US));
     List<String> values = headersMap.get(name.toLowerCase(Locale.US));
-    System.out.println(values);
-    System.out.println("GET HEADER VALUES END");
     return values == null ? Collections.<String>emptyList() : Collections.unmodifiableList(values);
   }
 

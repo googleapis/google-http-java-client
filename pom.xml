@@ -602,11 +602,6 @@
           <version>0.9.23</version>
           <scope>test</scope>
         </dependency>
-        <dependency>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
-          <version>${project.guava.version}</version>
-        </dependency>
       </dependencies>
       <build>
         <plugins>
@@ -638,12 +633,6 @@
               <buildArgs>
                 <buildArg>--no-fallback</buildArg>
                 <buildArg>--no-server</buildArg>
-                <buildArg>--initialize-at-build-time=com.google.api.client.util.StringUtils</buildArg>
-                <buildArg>--initialize-at-build-time=com.google.api.client.http.HttpRequestTest</buildArg>
-                <buildArg>--initialize-at-build-time=com.google.api.client.http.ByteArrayContentTest</buildArg>
-                <buildArg>--initialize-at-build-time=com.google.api.client.http.MultipartContentTest</buildArg>
-                <buildArg>--initialize-at-build-time=com.google.api.client.util.LoggingStreamingContentTest</buildArg>
-                <buildArg>--initialize-at-build-time=com.google.api.client.util.SecurityUtilsTest</buildArg>
               </buildArgs>
             </configuration>
           </plugin>
