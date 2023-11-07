@@ -1,0 +1,5 @@
+{
+  "resources":[
+    {"pattern":"\\Qcom/google/api/client/http/google-http-client.properties\\E"}],
+  "bundles":[]
+}
