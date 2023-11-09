@@ -12,7 +12,22 @@
   <name>Google APIs Client Library Findbugs custom plugin.</name>
 
   <build>
+    <!-- Ignoring BanDuplicateClasses rule from java-shared-config. com.google.code.findbugs:findbugs
+    pulls in org.ow2.asm:asm-debug-all and org.ow2.asm:asm-commons which contain duplicate classes. -->
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <configuration>
+          <rules>
+            <banDuplicateClasses>
+              <ignoreClasses>
+              <ignoreClass>org.objectweb.asm.*</ignoreClass>
+              </ignoreClasses>
+            </banDuplicateClasses>
+          </rules>
+        </configuration>
+      </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
         <executions>

@@ -45,6 +45,12 @@
     </license>
   </licenses>
 
+  <parent>
+    <groupId>com.google.cloud</groupId>
+    <artifactId>google-cloud-shared-config</artifactId>
+    <version>1.6.1</version>
+  </parent>
+
   <!--
     If you add a new module, make sure to also add it in the following places:
     * below in the dependencyManagement and maven-javadoc-plugin sections
@@ -372,37 +378,9 @@
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.3.0</version>
         </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.4.1</version>
-        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.4.1</version><executions>
-        <execution>
-          <id>enforce-maven</id>
-          <goals>
-            <goal>enforce</goal>
-          </goals>
-          <configuration>
-            <rules>
-              <requireMavenVersion>
-                <version>[3.5.2,4.0.0)</version>
-              </requireMavenVersion>
-              <requireJavaVersion>
-                <version>[1.7,)</version>
-              </requireJavaVersion>
-              <requireUpperBoundDeps/>
-            </rules>
-          </configuration>
-        </execution>
-      </executions>
-      </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
