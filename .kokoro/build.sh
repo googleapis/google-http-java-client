@@ -81,12 +81,12 @@ graalvm17)
     ;;
 graalvmA)
     # Run Unit and Integration Tests with Native Image
-    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative test
+    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative -Pnative-deps test -pl '!google-http-client-appengine'
     RETURN_CODE=$?
     ;;
 graalvmB)
     # Run Unit and Integration Tests with Native Image
-    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative test
+    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative -Pnative-deps test -pl '!google-http-client-appengine'
     RETURN_CODE=$?
     ;;
 samples)
