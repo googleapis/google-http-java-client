@@ -321,7 +321,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.3.0</version>
+          <configuration combine.self="override"/>
           <executions>
             <execution>
               <goals>
@@ -332,7 +332,6 @@
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>${project.surefire.version}</version>
           <configuration>
             <argLine>-Xmx1024m</argLine>
             <reportNameSuffix>sponge_log</reportNameSuffix>
@@ -349,16 +348,6 @@
           <version>3.0.5</version>
         </plugin>
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>clirr-maven-plugin</artifactId>
-          <version>2.8</version>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>animal-sniffer-maven-plugin</artifactId>
-          <version>1.22</version>
-        </plugin>
-        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.4.5</version>
@@ -368,11 +357,6 @@
           <artifactId>maven-site-plugin</artifactId>
           <version>3.12.1</version>
         </plugin>
-<!--        <plugin>-->
-<!--          <groupId>org.apache.maven.plugins</groupId>-->
-<!--          <artifactId>maven-dependency-plugin</artifactId>-->
-<!--          <version>3.6.0</version>-->
-<!--        </plugin>-->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
@@ -559,65 +543,10 @@
     <project.httpcore.version>4.4.16</project.httpcore.version>
     <project.opencensus.version>0.31.1</project.opencensus.version>
     <project.root-directory>..</project.root-directory>
-    <project.surefire.version>3.0.0-M7</project.surefire.version>
     <deploy.autorelease>false</deploy.autorelease>
   </properties>
 
   <profiles>
-    <profile>
-      <!-- This profile is used to enable GraalVM native image testing -->
-      <id>native</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.junit.vintage</groupId>
-          <artifactId>junit-vintage-engine</artifactId>
-          <version>5.10.0</version>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.graalvm.buildtools</groupId>
-          <artifactId>junit-platform-native</artifactId>
-          <version>0.9.23</version>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <!-- Must use older version of surefire plugin for native-image testing. -->
-            <version>2.22.2</version>
-            <configuration>
-              <!-- Include all tests during native image testing. -->
-              <excludes combine.self="override"/>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.graalvm.buildtools</groupId>
-            <artifactId>native-maven-plugin</artifactId>
-            <version>0.9.23</version>
-            <extensions>true</extensions>
-            <executions>
-              <execution>
-                <id>test-native</id>
-                <goals>
-                  <goal>test</goal>
-                </goals>
-                <phase>test</phase>
-              </execution>
-            </executions>
-            <configuration>
-              <buildArgs>
-                <buildArg>--no-fallback</buildArg>
-                <buildArg>--no-server</buildArg>
-              </buildArgs>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
     <profile>
       <id>Windows</id>
       <activation>
