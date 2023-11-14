@@ -47,7 +47,7 @@ set +e
 
 case ${JOB_TYPE} in
 test)
-    mvn clean test -B -ntp -Dclirr.skip=true -Denforcer.skip=true
+    mvn test -B -ntp -Dclirr.skip=true -Denforcer.skip=true
     RETURN_CODE=$?
     ;;
 lint)
@@ -71,22 +71,22 @@ integration)
     ;;
 graalvm)
     # Run Unit and Integration Tests with Native Image
-    mvn clean -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative test
+    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative test
     RETURN_CODE=$?
     ;;
 graalvm17)
     # Run Unit and Integration Tests with Native Image
-    mvn clean -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative test
+    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative test
     RETURN_CODE=$?
     ;;
 graalvmA)
-    # Run Unit and Integration Tests with Native Image
-    mvn clean -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative -Pnative-deps test -pl '!google-http-client-appengine'
+    # google-http-java-client doesn't contain any tests names ITs or *ClientTest so explicitly opt-in *Test
+    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative -Pnative-deps test "-Dtest=*Test" -pl '!google-http-client-appengine'
     RETURN_CODE=$?
     ;;
 graalvmB)
-    # Run Unit and Integration Tests with Native Image
-    mvn clean -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative -Pnative-deps test -pl '!google-http-client-appengine'
+    # google-http-java-client doesn't contain any tests names ITs or *ClientTest so explicitly opt-in *Test
+    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative -Pnative-deps test "-Dtest=*Test" -pl '!google-http-client-appengine'
     RETURN_CODE=$?
     ;;
 samples)
