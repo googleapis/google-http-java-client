@@ -81,12 +81,12 @@ graalvm17)
     ;;
 graalvmA)
     # google-http-java-client doesn't contain any tests names ITs or *ClientTest so explicitly opt-in *Test
-    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative -Pnative-deps test "-Dtest=*Test" -pl '!google-http-client-appengine'
+    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative -Pnative-deps test "-Dtest=*Test" -Dsurefire.failIfNoSpecifiedTests=false -pl '!google-http-client-appengine'
     RETURN_CODE=$?
     ;;
 graalvmB)
     # google-http-java-client doesn't contain any tests names ITs or *ClientTest so explicitly opt-in *Test
-    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative -Pnative-deps test "-Dtest=*Test" -pl '!google-http-client-appengine'
+    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative -Pnative-deps test "-Dtest=*Test" -Dsurefire.failIfNoSpecifiedTests=false -pl '!google-http-client-appengine'
     RETURN_CODE=$?
     ;;
 samples)
