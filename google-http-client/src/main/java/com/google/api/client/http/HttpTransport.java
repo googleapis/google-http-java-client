@@ -161,6 +161,7 @@ public abstract class HttpTransport {
 
   /**
    * Default implementation of whether the http transport is shutdown or not.
+   *
    * @since 1.4
    */
   public boolean isShutdown() {
