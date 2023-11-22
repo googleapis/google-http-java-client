@@ -38,10 +38,11 @@ import javax.net.ssl.SSLSocketFactory;
 /**
  * Thread-safe HTTP low-level transport based on the {@code java.net} package.
  *
- * <p>Users should consider modifying the keep alive property on {@link NetHttpTransport} to control
+ * <p>Users should consider modifying the keep alive property on {@link NetHttpTransport} to
+ * control
  * whether the socket should be returned to a pool of connected sockets. More information is
  * available <a
- * href='http://docs.oracle.com/javase/7/docs/technotes/guides/net/http-keepalive.html'>here</a>.
+ * href="http://docs.oracle.com/javase/7/docs/technotes/guides/net/http-keepalive.html">here</a>.
  *
  * <p>We honor the default global caching behavior. To change the default behavior use {@link
  * HttpURLConnection#setDefaultUseCaches(boolean)}.
@@ -49,8 +50,8 @@ import javax.net.ssl.SSLSocketFactory;
  * <p>Implementation is thread-safe. For maximum efficiency, applications should use a single
  * globally-shared instance of the HTTP transport.
  *
- * @since 1.0
  * @author Yaniv Inbar
+ * @since 1.0
  */
 public final class NetHttpTransport extends HttpTransport {
   private static Proxy defaultProxy() {
