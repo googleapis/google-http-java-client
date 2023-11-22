@@ -159,6 +159,10 @@ public abstract class HttpTransport {
    */
   public void shutdown() throws IOException {}
 
+  /**
+   * Default implementation of whether the http transport is shutdown or not.
+   * @since 1.4
+   */
   public boolean isShutdown() {
     return true;
   }
