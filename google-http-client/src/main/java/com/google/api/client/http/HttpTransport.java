@@ -157,9 +157,7 @@ public abstract class HttpTransport {
    * @throws IOException I/O exception
    * @since 1.4
    */
-  public void shutdown() throws IOException {
-
-  }
+  public void shutdown() throws IOException {}
 
   public boolean isShutdown() {
     return true;
