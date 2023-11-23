@@ -1103,7 +1103,7 @@ public final class HttpRequest {
     span.end(OpenCensusUtils.getEndSpanOptions(response == null ? null : response.getStatusCode()));
 
     if (response == null) {
-      // Retries did not help resolve the executed exception, re-throw it.
+      // Retries did not help resolve the execute exception, re-throw it.
       throw executeException;
     }
     // response interceptor
