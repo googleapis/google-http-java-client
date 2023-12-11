@@ -18,7 +18,7 @@
         "^.kokoro/presubmit/graalvm-native.*.cfg$"
       ],
       "matchStrings": ["value: \"gcr.io/cloud-devrel-public-resources/graalvm.*:(?<currentValue>.*?)\""],
-      "depNameTemplate": "com.google.cloud:google-cloud-shared-config",
+      "depNameTemplate": "com.google.cloud:native-image-shared-config",
       "datasourceTemplate": "maven"
     }
   ],
