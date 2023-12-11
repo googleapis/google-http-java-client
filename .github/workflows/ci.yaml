@@ -87,7 +87,8 @@ jobs:
     - run: .kokoro/build.sh
       env:
         JOB_TYPE: clirr
-        
+  # compilation failure for sub-modules using source and target options 7 (this  setting cannot be upgraded to Java 21 because some modules support max of Java 7) 
+  # Hence compile in Java 8 and test in Java 21.    
   units-java21:
     # Building using Java 8 and run the tests with Java 21 runtime
     name: "units (21)"
