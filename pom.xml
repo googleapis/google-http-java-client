@@ -89,6 +89,12 @@
     </pluginRepository>
   </pluginRepositories>
 
+  <parent>
+    <groupId>com.google.cloud</groupId>
+    <artifactId>native-image-shared-config</artifactId>
+    <version>1.7.1</version>
+  </parent>
+
   <!--
     If you change the version of a dependency, make sure to update the javadoc
     links if required, and any javadoc links of your dependency in the oauth and
@@ -587,59 +593,23 @@
 
   <profiles>
     <profile>
-      <!-- This profile is used to enable GraalVM native image testing -->
-      <id>native</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.junit.vintage</groupId>
-          <artifactId>junit-vintage-engine</artifactId>
-          <version>5.10.0</version>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.graalvm.buildtools</groupId>
-          <artifactId>junit-platform-native</artifactId>
-          <version>0.9.23</version>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
+      <id>native-tests</id>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
-            <!-- Must use older version of surefire plugin for native-image testing. -->
-            <version>2.22.2</version>
+            <version>${surefire.version}</version>
             <configuration>
               <!-- Include all tests during native image testing. -->
-              <excludes combine.self="override"/>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.graalvm.buildtools</groupId>
-            <artifactId>native-maven-plugin</artifactId>
-            <version>0.9.23</version>
-            <extensions>true</extensions>
-            <executions>
-              <execution>
-                <id>test-native</id>
-                <goals>
-                  <goal>test</goal>
-                </goals>
-                <phase>test</phase>
-              </execution>
-            </executions>
-            <configuration>
-              <buildArgs>
-                <buildArg>--no-fallback</buildArg>
-                <buildArg>--no-server</buildArg>
-              </buildArgs>
+              <includes combine.self="override">
+                <include>**/*Test</include>
+              </includes>
             </configuration>
           </plugin>
         </plugins>
       </build>
     </profile>
-
     <profile>
       <id>Windows</id>
       <activation>
