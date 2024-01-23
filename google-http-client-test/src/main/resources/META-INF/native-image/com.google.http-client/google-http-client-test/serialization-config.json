@@ -1,0 +1,12 @@
+{
+  "types":[
+    {"name":"java.lang.String"
+    },
+    {"name":"java.lang.Boolean"},
+    {"name":"java.util.HashMap"}
+  ],
+  "lambdaCapturingTypes":[
+  ],
+  "proxies":[
+  ]
+}

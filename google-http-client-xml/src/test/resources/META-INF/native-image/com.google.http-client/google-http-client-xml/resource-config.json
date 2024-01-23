@@ -1,0 +1,5 @@
+{
+  "resources":[
+    {"pattern":"\\Qsample-atom.xml\\E"}],
+  "bundles":[]
+}

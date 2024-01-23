@@ -1,0 +1,12 @@
+[
+  {
+    "name": "com.google.api.client.protobuf.SimpleProto$TestMessage",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  }
+]

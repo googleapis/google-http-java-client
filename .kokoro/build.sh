@@ -79,6 +79,16 @@ graalvm17)
     mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative test
     RETURN_CODE=$?
     ;;
+graalvmA)
+    # Run Unit and Integration Tests with Native Image
+    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative,native-tests,native-deps test -pl '!google-http-client-appengine'
+    RETURN_CODE=$?
+    ;;
+graalvmB)
+    # Run Unit and Integration Tests with Native Image
+    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative,native-tests,native-deps test -pl '!google-http-client-appengine'
+    RETURN_CODE=$?
+    ;;
 samples)
     SAMPLES_DIR=samples
     # only run ITs in snapshot/ on presubmit PRs. run ITs in all 3 samples/ subdirectories otherwise.

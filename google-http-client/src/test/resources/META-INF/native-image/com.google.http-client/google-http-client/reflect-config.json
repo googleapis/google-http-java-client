@@ -1,0 +1,244 @@
+[
+  {
+    "name": "com.google.api.client.util.FieldInfoTest$E",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.FieldInfoTest$Data",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.DataMapTest$A",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.ClassInfoTest$E",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.UrlEncodedParserTest$Generic",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.UrlEncodedParserTest$Simple",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.UrlEncodedParserTest$E",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.UrlEncodedParserTest$EnumValue",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.HttpRequestTest$MyHeaders",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.HttpHeadersTest$SlugHeaders",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.HttpHeadersTest$V",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.HttpHeadersTest$MyHeaders",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.javanet.NetHttpRequestTest$SleepingOutputWriter",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.ClassInfoTest$A",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.ClassInfoTest$B",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.ClassInfoTest$C",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+  "name": "com.google.api.client.util.ClassInfoTest$A1",
+  "queryAllDeclaredConstructors": true,
+  "queryAllPublicConstructors": true,
+  "queryAllDeclaredMethods": true,
+  "allDeclaredFields": true
+},
+  {
+    "name": "com.google.api.client.util.ClassInfoTest$E",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.GenericUrlTest$FieldTypesUrl",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.GenericUrlTest$TestUrl",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.UriTemplateTest$testEnum",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.GenericDataTest$MyData",
+    "queryAllDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ],
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.GenericDataTest$GenericData1",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.GenericDataTest$GenericData2",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.TypesTest$WildcardBounds",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.TypesTest$Foo",
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.google.api.client.util.TypesTest$IntegerList",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.TypesTest$Resolve",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.TypesTest$IntegerResolve",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.TypesTest$IntegerResolve",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.HttpRequestTest$E",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.HttpResponseTest$MyHeaders",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.http.javanet.NetHttpTransportTest$FakeServer",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true
+  }
+]

@@ -28,5 +28,8 @@ java.common_templates(
         "checkstyle.xml",
         "license-checks.xml",
         ".github/workflows/samples.yaml",
+        ".kokoro/build.sh",
+        "renovate.json",
+        ".github/workflows/ci.yaml"
     ]
 )

@@ -89,6 +89,12 @@
     </pluginRepository>
   </pluginRepositories>
 
+  <parent>
+    <groupId>com.google.cloud</groupId>
+    <artifactId>native-image-shared-config</artifactId>
+    <version>1.7.1</version>
+  </parent>
+
   <!--
     If you change the version of a dependency, make sure to update the javadoc
     links if required, and any javadoc links of your dependency in the oauth and
@@ -125,7 +131,7 @@
       <dependency>
         <groupId>com.google.errorprone</groupId>
         <artifactId>error_prone_annotations</artifactId>
-        <version>2.18.0</version>
+        <version>2.23.0</version>
       </dependency>
       <dependency>
         <groupId>com.google.appengine</groupId>
@@ -233,6 +239,11 @@
         <version>2.8</version>
       </dependency>
       <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-context</artifactId>
+        <version>1.60.1</version>
+      </dependency>
+      <dependency>
         <groupId>io.opencensus</groupId>
         <artifactId>opencensus-api</artifactId>
         <version>${project.opencensus.version}</version>
@@ -335,7 +346,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.2.0</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -355,7 +366,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.4.1</version>
+          <version>3.4.5</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -365,7 +376,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.4.0</version>
+          <version>3.6.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -375,7 +386,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.4.1</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -383,7 +394,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.1.0</version><executions>
+        <version>3.4.1</version><executions>
         <execution>
           <id>enforce-maven</id>
           <goals>
@@ -525,7 +536,7 @@
       <!-- Build the dependencies report at package time (needed for the assembly artifact). -->
       <plugin>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>3.4.1</version>
+        <version>3.4.5</version>
         <executions>
           <execution>
             <goals>
@@ -569,7 +580,7 @@
       - Internally, update the default features.json file
     -->
     <project.http-client.version>1.43.4-SNAPSHOT</project.http-client.version><!-- {x-version-update:google-http-client-parent:current} -->
-    <project.appengine.version>2.0.12</project.appengine.version>
+    <project.appengine.version>2.0.24</project.appengine.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.jsr305.version>3.0.2</project.jsr305.version>
     <project.gson.version>2.10.1</project.gson.version>
@@ -586,6 +597,24 @@
   </properties>
 
   <profiles>
+    <profile>
+      <id>native-tests</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${surefire.version}</version>
+            <configuration>
+              <!-- Include all tests during native image testing. -->
+              <includes combine.self="override">
+                <include>**/*Test</include>
+              </includes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>Windows</id>
       <activation>

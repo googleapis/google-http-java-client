@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 /**
  * Thread-safe abstract HTTP transport.
  *
- * <p>Implementation is thread-safe, and sub-classes must be thread-safe. For maximum efficiency,
+ * <p>Implementation is thread-safe, and subclasses must be thread-safe. For maximum efficiency,
  * applications should use a single globally-shared instance of the HTTP transport.
  *
  * <p>The recommended concrete implementation HTTP transport library to use depends on what
@@ -158,4 +158,14 @@ public abstract class HttpTransport {
    * @since 1.4
    */
   public void shutdown() throws IOException {}
+
+  /**
+   * Returns whether the transport is shutdown or not.
+   *
+   * @return true if the transport is shutdown.
+   * @since 1.44.0
+   */
+  public boolean isShutdown() {
+    return true;
+  }
 }
