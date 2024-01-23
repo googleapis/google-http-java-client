@@ -21,9 +21,11 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.6.0</version>
           <configuration>
-            <ignoredUnusedDeclaredDependencies>io.opencensus:opencensus-impl</ignoredUnusedDeclaredDependencies>
+            <ignoredUnusedDeclaredDependencies>
+              <ignoredUnusedDeclaredDependency>io.opencensus:opencensus-impl</ignoredUnusedDeclaredDependency>
+              <ignoredUnusedDeclaredDependency>io.grpc:grpc-context</ignoredUnusedDeclaredDependency>
+            </ignoredUnusedDeclaredDependencies>
           </configuration>
         </plugin>
         <plugin>
@@ -152,6 +154,15 @@
     <dependency>
       <groupId>com.google.j2objc</groupId>
       <artifactId>j2objc-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <!--
+        This grpc-context is not directly used but to override
+        outdated grpc-context coming from opencensus-api
+        https://github.com/googleapis/google-api-java-client/issues/2416
+      -->
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-context</artifactId>
     </dependency>
     <dependency>
       <groupId>io.opencensus</groupId>
