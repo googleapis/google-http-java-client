@@ -148,6 +148,15 @@
       <artifactId>j2objc-annotations</artifactId>
     </dependency>
     <dependency>
+      <!--
+        This grpc-context is not directly used but to override
+        outdated grpc-context coming from opencensus-api
+        https://github.com/googleapis/google-api-java-client/issues/2416
+      -->
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-context</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.opencensus</groupId>
       <artifactId>opencensus-api</artifactId>
     </dependency>
