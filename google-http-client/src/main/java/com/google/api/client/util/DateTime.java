@@ -292,7 +292,7 @@ public final class DateTime implements Serializable {
 
   /** A timestamp represented as the number of seconds and nanoseconds since Epoch. */
   public static final class SecondsAndNanos implements Serializable {
-    private static long serialVersionUID = 6990344509953007497L;
+    private static long serialVersionUID = 1L;
     
     private final long seconds;
     private final int nanos;
@@ -339,7 +339,7 @@ public final class DateTime implements Serializable {
 
   /** Result of parsing an RFC 3339 string. */
   private static class Rfc3339ParseResult implements Serializable {
-    private static final long serialVersionUID = 7889580449503342333L;
+    private static final long serialVersionUID = 1L;
     
     private final long seconds;
     private final int nanos;
