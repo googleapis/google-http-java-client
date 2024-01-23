@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.44.0](https://github.com/googleapis/google-http-java-client/compare/v1.43.3...v1.44.0) (2024-01-23)
+
+
+### Features
+
+* Add isShutdown in HttpTransport ([#1901](https://github.com/googleapis/google-http-java-client/issues/1901)) ([be00ce1](https://github.com/googleapis/google-http-java-client/commit/be00ce1ef1873d3b80830966ddb83097e460601d))
+* Setup 1.43.x lts branch ([#1869](https://github.com/googleapis/google-http-java-client/issues/1869)) ([13edd13](https://github.com/googleapis/google-http-java-client/commit/13edd1357eb79535d943f5288ab3adf4d9dfb52a))
+
+
+### Bug Fixes
+
+* Native image configs for google-http-java-client ([#1893](https://github.com/googleapis/google-http-java-client/issues/1893)) ([1acedf7](https://github.com/googleapis/google-http-java-client/commit/1acedf75368f11ab03e5f84dd2c58a8a8a662d41))
+* SerialVersionUID fix for Serializable Classes ([#1883](https://github.com/googleapis/google-http-java-client/issues/1883)) ([f390020](https://github.com/googleapis/google-http-java-client/commit/f39002001bd666cb1eb839d54454aa742638f642))
+
+
+### Dependencies
+
+* Newer grpc-context to override old one ([#1916](https://github.com/googleapis/google-http-java-client/issues/1916)) ([f23e9b1](https://github.com/googleapis/google-http-java-client/commit/f23e9b1c549b0a0668f433729eea846385ea822c))
+* Testing exlcusing commons-logging ([#1905](https://github.com/googleapis/google-http-java-client/issues/1905)) ([8e3f4d5](https://github.com/googleapis/google-http-java-client/commit/8e3f4d50fbaa93bfada9e20c67293a63a64e68f9))
+* Update dependency com.google.errorprone:error_prone_annotations to v2.23.0 ([#1887](https://github.com/googleapis/google-http-java-client/issues/1887)) ([ce5dbfc](https://github.com/googleapis/google-http-java-client/commit/ce5dbfc68c2cca989f57468a5a915cf9411267bb))
+* Update project.appengine.version to v2.0.24 ([#1889](https://github.com/googleapis/google-http-java-client/issues/1889)) ([0091413](https://github.com/googleapis/google-http-java-client/commit/00914131afe5b12c14e472ee0a88ff298374965b))
+
 ## [1.43.3](https://github.com/googleapis/google-http-java-client/compare/v1.43.2...v1.43.3) (2023-06-21)
 
 
