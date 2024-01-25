@@ -23,18 +23,18 @@
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
         </configuration>
       </plugin>
-      <plugin>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>source-jar</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+<!--      <plugin>-->
+<!--        <artifactId>maven-source-plugin</artifactId>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <id>source-jar</id>-->
+<!--            <phase>compile</phase>-->
+<!--            <goals>-->
+<!--              <goal>jar</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
