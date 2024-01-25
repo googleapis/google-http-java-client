@@ -89,11 +89,13 @@
     </pluginRepository>
   </pluginRepositories>
 
+  <!-- Troubleshooting release problem
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>native-image-shared-config</artifactId>
     <version>1.7.1</version>
   </parent>
+  -->
 
   <!--
     If you change the version of a dependency, make sure to update the javadoc
