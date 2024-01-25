@@ -79,6 +79,9 @@
             <goals>
               <goal>jar-no-fork</goal>
             </goals>
+            <configuration>
+              <classifier>secondary</classifier>
+            </configuration>
           </execution>
         </executions>
       </plugin>
