@@ -24,18 +24,6 @@
           <windowtitle>${project.artifactId} ${project.version}</windowtitle>
         </configuration>
       </plugin>
-<!--      <plugin>-->
-<!--        <artifactId>maven-source-plugin</artifactId>-->
-<!--        <executions>-->
-<!--          <execution>-->
-<!--            <id>source-jar</id>-->
-<!--            <phase>compile</phase>-->
-<!--            <goals>-->
-<!--              <goal>jar</goal>-->
-<!--            </goals>-->
-<!--          </execution>-->
-<!--        </executions>-->
-<!--      </plugin>-->
       <!--App Engine uses Java 7 and above-->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
