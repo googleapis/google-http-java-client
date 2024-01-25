@@ -77,7 +77,7 @@
             <id>source-jar</id>
             <phase>compile</phase>
             <goals>
-              <goal>jar</goal>
+              <goal>jar-no-fork</goal>
             </goals>
           </execution>
         </executions>
