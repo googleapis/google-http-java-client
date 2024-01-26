@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.44.1](https://github.com/googleapis/google-http-java-client/compare/v1.44.0...v1.44.1) (2024-01-26)
+
+
+### Bug Fixes
+
+* Fixing declaration of maven-source-plugin for release job ([f555f56](https://github.com/googleapis/google-http-java-client/commit/f555f562d44ab83b2cb672fa351c665336043880))
+
 ## [1.44.0](https://github.com/googleapis/google-http-java-client/compare/v1.43.3...v1.44.0) (2024-01-23)
 
 
