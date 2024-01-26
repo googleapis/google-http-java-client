@@ -25,15 +25,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>source-jar</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
