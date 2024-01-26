@@ -32,7 +32,10 @@
             </manifestEntries>
           </archive> 
         </configuration>
-      </plugin> 
+      </plugin>
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+      </plugin>
     </plugins>
   </build>
   <dependencies>
