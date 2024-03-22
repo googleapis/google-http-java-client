@@ -33,6 +33,7 @@ java.common_templates(
         "renovate.json",
         ".github/workflows/ci.yaml",
         ".kokoro/requirements.in",
-        ".kokoro/requirements.txt"
+        ".kokoro/requirements.txt",
+        ".kokoro/dependencies.sh" # Remove this once updated in synthtool
     ]
 )
