@@ -31,7 +31,7 @@ java.common_templates(
         ".github/workflows/samples.yaml",
         ".kokoro/build.sh",
         "renovate.json",
-        ".github/workflows/ci.yaml"
+        ".github/workflows/ci.yaml",
         ".kokoro/requirements.in",
         ".kokoro/requirements.txt"
     ]
