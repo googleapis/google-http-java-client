@@ -38,7 +38,10 @@ function determineMavenOpts() {
       | sed -E 's/^(1\.[0-9]\.0).*$/\1/g'
   )
 
-  if [[ $javaVersion == 17* ]]
+  # Extract the major version for simple comparison
+  local javaMajorVersion=$(echo $javaVersion | cut -d'.' -f1)
+
+  if [[ $javaMajorVersion -ge 17 ]]
     then
       # MaxPermSize is no longer supported as of jdk 17
       echo -n "-Xmx1024m"

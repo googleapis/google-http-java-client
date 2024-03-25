@@ -740,38 +740,30 @@
       </activation>
       <properties>
         <!-- default config values -->
-        <docletName>java-docfx-doclet-1.9.0</docletName>
         <outputpath>${project.build.directory}/docfx-yml</outputpath>
         <projectname>${project.artifactId}</projectname>
-        <excludeclasses></excludeclasses>
         <excludePackages>com\.google\.api\.client\.findbugs:com\.google\.api\.client\.test:com\.google\.api\.services</excludePackages>
-        <source>8</source>            
-        <sourceFileExclude></sourceFileExclude>
+        <source>8</source>
       </properties>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.5.0</version>
+            <version>3.6.3</version>
             <configuration>
               <doclet>com.microsoft.doclet.DocFxDoclet</doclet>
               <useStandardDocletOptions>false</useStandardDocletOptions>
                <!-- custom config with -Dproperty=value -->
-              <docletPath>${env.KOKORO_GFILE_DIR}/${docletName}.jar</docletPath>
               <additionalOptions>
                 -outputpath ${outputpath} 
-                -projectname ${projectname} 
-                -excludeclasses ${excludeclasses}: 
+                -projectname ${projectname}
                 -excludepackages ${excludePackages}:
               </additionalOptions>
               <doclint>none</doclint>
               <show>protected</show>
               <nohelp>true</nohelp>
               <source>${source}</source>
-              <sourceFileExcludes>
-                <exclude>${sourceFileExclude}</exclude>
-              </sourceFileExcludes>
             </configuration>
           </plugin>  
         </plugins>
