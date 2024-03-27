@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
@@ -152,6 +153,12 @@ public final class HttpRequest {
 
   /** Timeout in milliseconds to set POST/PUT data or {@code 0} for an infinite timeout. */
   private int writeTimeout = 0;
+
+  /**
+   * Custom executor used to handle write timeouts, enabled by {@link #writeTimeout}.
+   * By default, a new thread is created per each request.
+   */
+  private ExecutorService writeTimeoutExecutor;
 
   /** HTTP unsuccessful (non-2XX) response handler or {@code null} for none. */
   private HttpUnsuccessfulResponseHandler unsuccessfulResponseHandler;
@@ -490,6 +497,17 @@ public final class HttpRequest {
   }
 
   /**
+   * Sets custom executor used to handle write timeouts, enabled by {@link #setWriteTimeout(int)}.
+   * By default, a new thread is created per each request.
+   *
+   * @since 1.40.2
+   */
+  public HttpRequest setWriteTimeoutExecutor(ExecutorService writeTimeoutExecutor) {
+    this.writeTimeoutExecutor = writeTimeoutExecutor;
+    return this;
+  }
+
+    /**
    * Returns the HTTP request headers.
    *
    * @since 1.5
@@ -1003,6 +1021,7 @@ public final class HttpRequest {
       // execute
       lowLevelHttpRequest.setTimeout(connectTimeout, readTimeout);
       lowLevelHttpRequest.setWriteTimeout(writeTimeout);
+      lowLevelHttpRequest.setWriteTimeoutExecutor(writeTimeoutExecutor);
 
       // switch tracing scope to current span
       @SuppressWarnings("MustBeClosedChecker")
