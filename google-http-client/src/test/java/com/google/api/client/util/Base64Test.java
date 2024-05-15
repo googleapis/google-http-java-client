@@ -62,4 +62,45 @@ public class Base64Test extends TestCase {
   public void test_encodeBase64_withNull_shouldReturnNull() {
     assertNull(Base64.encodeBase64(null));
   }
+
+  public void test_decodeBase64_newline_character_invalid_length() {
+    // The RFC 4648 (https://datatracker.ietf.org/doc/html/rfc4648#section-3.3) states that a
+    // specification referring to the Base64 encoding may state that it ignores characters outside
+    // the base alphabet.
+
+    // In Base64 encoding, 3 characters (24 bits) are converted to 4 of 6-bits, each of which is
+    // converted to a byte (a character).
+    // Base64encode("abc") => "YWJj" (4 characters)
+    // Base64encode("def") => "ZGVm" (4 characters)
+    // Adding a new line character between them. This should be discarded.
+    String encodedString = "YWJj\nZGVm";
+
+    // This is a reference implementation by Apache Commons Codec. It discards the new line
+    // characters.
+    assertEquals(
+        "abcdef",
+        new String(
+            org.apache.commons.codec.binary.Base64.decodeBase64(encodedString),
+            StandardCharsets.UTF_8));
+    // This is our implementation
+    assertEquals("abcdef", new String(Base64.decodeBase64(encodedString), StandardCharsets.UTF_8));
+  }
+
+  public void test_decodeBase64_newline_character_between() {
+    // In Base64 encoding, 2 characters (16 bits) are converted to 3 of 6-bits plus the padding
+    // character ('=").
+    // Base64encode("ab") => "YWI=" (3 characters + padding character)
+    // Adding a new line character that should be discarded between them
+    String encodedString = "YW\nI=";
+
+    // This is a reference implementation by Apache Commons Codec. It discards the new line
+    // characters.
+    assertEquals(
+        "ab",
+        new String(
+            org.apache.commons.codec.binary.Base64.decodeBase64(encodedString),
+            StandardCharsets.UTF_8));
+    // This is our implementation
+    assertEquals("ab", new String(Base64.decodeBase64(encodedString), StandardCharsets.UTF_8));
+  }
 }
