@@ -26,6 +26,10 @@ import com.google.common.io.BaseEncoding.DecodingException;
  */
 @Deprecated
 public class Base64 {
+  // Special decoders that discards the new line character so that the behavior matches what
+  // we had with Apache Commmons Codec's decodeBase64.
+  private static final BaseEncoding BASE64 = BaseEncoding.base64().withSeparator("\n", 64);
+  private static final BaseEncoding BASE64URL = BaseEncoding.base64Url().withSeparator("\n", 64);
 
   /**
    * Encodes binary data using the base64 algorithm but does not chunk the output.
@@ -92,6 +96,9 @@ public class Base64 {
    * Decodes a Base64 String into octets. Note that this method handles both URL-safe and
    * non-URL-safe base 64 encoded strings.
    *
+   * <p>For the compatibility with the old version that used Apache Commons Coded's decodeBase64,
+   * this method discards new line characters and trailing whitespaces.
+   *
    * @param base64String String containing Base64 data or {@code null} for {@code null} result
    * @return Array containing decoded data or {@code null} for {@code null} input
    */
@@ -100,10 +107,10 @@ public class Base64 {
       return null;
     }
     try {
-      return BaseEncoding.base64().decode(base64String);
+      return BASE64.decode(base64String);
     } catch (IllegalArgumentException e) {
       if (e.getCause() instanceof DecodingException) {
-        return BaseEncoding.base64Url().decode(base64String.trim());
+        return BASE64URL.decode(base64String.trim());
       }
       throw e;
     }
