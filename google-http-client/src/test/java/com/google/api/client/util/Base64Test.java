@@ -14,6 +14,8 @@
 
 package com.google.api.client.util;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import java.nio.charset.StandardCharsets;
 import junit.framework.TestCase;
 
@@ -83,11 +85,13 @@ public class Base64Test extends TestCase {
     //        org.apache.commons.codec.binary.Base64.decodeBase64(encodedString),
     //        StandardCharsets.UTF_8));
 
-    // This is our implementation
+    // This is our implementation. Before the
+    // https://github.com/googleapis/google-http-java-client/pull/1941/, it was throwing
+    // IllegalArgumentException("Invalid length 9").
     assertEquals("abcdef", new String(Base64.decodeBase64(encodedString), StandardCharsets.UTF_8));
   }
 
-  public void test_decodeBase64_newline_character_between() {
+  public void test_decodeBase64_newline_character() {
     // In Base64 encoding, 2 characters (16 bits) are converted to 3 of 6-bits plus the padding
     // character ('=").
     // Base64encode("ab") => "YWI=" (3 characters + padding character)
@@ -102,7 +106,20 @@ public class Base64Test extends TestCase {
     //        org.apache.commons.codec.binary.Base64.decodeBase64(encodedString),
     //        StandardCharsets.UTF_8));
 
-    // This is our implementation
+    // This is our implementation. Before the
+    // https://github.com/googleapis/google-http-java-client/pull/1941/, it was throwing
+    // IllegalArgumentException("Unrecognized character: 0xa").
     assertEquals("ab", new String(Base64.decodeBase64(encodedString), StandardCharsets.UTF_8));
+  }
+
+  public void test_decodeBase64__plus_and_newline_characters() {
+    // The plus sign is 62 in the Base64 table. So it's a valid character in an encoded strings.
+    // https://datatracker.ietf.org/doc/html/rfc4648#section-4
+    String encodedString = "+\nw==";
+
+    byte[] actual = Base64.decodeBase64(encodedString);
+    // Before the https://github.com/googleapis/google-http-java-client/pull/1941/, it was throwing
+    // IllegalArgumentException("Unrecognized character: +").
+    assertThat(actual).isEqualTo(new byte[] {(byte) 0xfb});
   }
 }
