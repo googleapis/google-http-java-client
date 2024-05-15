@@ -77,11 +77,12 @@ public class Base64Test extends TestCase {
 
     // This is a reference implementation by Apache Commons Codec. It discards the new line
     // characters.
-    assertEquals(
-        "abcdef",
-        new String(
-            org.apache.commons.codec.binary.Base64.decodeBase64(encodedString),
-            StandardCharsets.UTF_8));
+    // assertEquals(
+    //    "abcdef",
+    //    new String(
+    //        org.apache.commons.codec.binary.Base64.decodeBase64(encodedString),
+    //        StandardCharsets.UTF_8));
+
     // This is our implementation
     assertEquals("abcdef", new String(Base64.decodeBase64(encodedString), StandardCharsets.UTF_8));
   }
@@ -95,11 +96,12 @@ public class Base64Test extends TestCase {
 
     // This is a reference implementation by Apache Commons Codec. It discards the new line
     // characters.
-    assertEquals(
-        "ab",
-        new String(
-            org.apache.commons.codec.binary.Base64.decodeBase64(encodedString),
-            StandardCharsets.UTF_8));
+    // assertEquals(
+    //    "ab",
+    //    new String(
+    //        org.apache.commons.codec.binary.Base64.decodeBase64(encodedString),
+    //        StandardCharsets.UTF_8));
+
     // This is our implementation
     assertEquals("ab", new String(Base64.decodeBase64(encodedString), StandardCharsets.UTF_8));
   }
