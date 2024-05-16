@@ -106,20 +106,31 @@ public class Base64Test extends TestCase {
     //        org.apache.commons.codec.binary.Base64.decodeBase64(encodedString),
     //        StandardCharsets.UTF_8));
 
-    // This is our implementation. Before the
+    // This is our implementation. Before the fix
     // https://github.com/googleapis/google-http-java-client/pull/1941/, it was throwing
     // IllegalArgumentException("Unrecognized character: 0xa").
     assertEquals("ab", new String(Base64.decodeBase64(encodedString), StandardCharsets.UTF_8));
   }
 
-  public void test_decodeBase64__plus_and_newline_characters() {
-    // The plus sign is 62 in the Base64 table. So it's a valid character in an encoded strings.
+  public void test_decodeBase64_plus_and_newline_characters() {
+    // The plus sign is 62 in the Base64 table. So it's a valid character in encoded strings.
     // https://datatracker.ietf.org/doc/html/rfc4648#section-4
     String encodedString = "+\nw==";
 
     byte[] actual = Base64.decodeBase64(encodedString);
-    // Before the https://github.com/googleapis/google-http-java-client/pull/1941/, it was throwing
-    // IllegalArgumentException("Unrecognized character: +").
+    // Before the fix https://github.com/googleapis/google-http-java-client/pull/1941/, it was
+    // throwing IllegalArgumentException("Unrecognized character: +").
     assertThat(actual).isEqualTo(new byte[] {(byte) 0xfb});
+  }
+
+  public void test_decodeBase64_slash_and_newline_characters() {
+    // The slash sign is 63 in the Base64 table. So it's a valid character in encoded strings.
+    // https://datatracker.ietf.org/doc/html/rfc4648#section-4
+    String encodedString = "/\nw==";
+
+    byte[] actual = Base64.decodeBase64(encodedString);
+    // Before the fix https://github.com/googleapis/google-http-java-client/pull/1941/, it was
+    // throwing IllegalArgumentException("Unrecognized character: /").
+    assertThat(actual).isEqualTo(new byte[] {(byte) 0xff});
   }
 }
