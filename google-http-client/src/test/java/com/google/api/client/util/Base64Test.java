@@ -14,6 +14,8 @@
 
 package com.google.api.client.util;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import java.nio.charset.StandardCharsets;
 import junit.framework.TestCase;
 
@@ -61,5 +63,74 @@ public class Base64Test extends TestCase {
 
   public void test_encodeBase64_withNull_shouldReturnNull() {
     assertNull(Base64.encodeBase64(null));
+  }
+
+  public void test_decodeBase64_newline_character_invalid_length() {
+    // The RFC 4648 (https://datatracker.ietf.org/doc/html/rfc4648#section-3.3) states that a
+    // specification referring to the Base64 encoding may state that it ignores characters outside
+    // the base alphabet.
+
+    // In Base64 encoding, 3 characters (24 bits) are converted to 4 of 6-bits, each of which is
+    // converted to a byte (a character).
+    // Base64encode("abc") => "YWJj" (4 characters)
+    // Base64encode("def") => "ZGVm" (4 characters)
+    // Adding a new line character between them. This should be discarded.
+    String encodedString = "YWJj\nZGVm";
+
+    // This is a reference implementation by Apache Commons Codec. It discards the new line
+    // characters.
+    // assertEquals(
+    //    "abcdef",
+    //    new String(
+    //        org.apache.commons.codec.binary.Base64.decodeBase64(encodedString),
+    //        StandardCharsets.UTF_8));
+
+    // This is our implementation. Before the
+    // https://github.com/googleapis/google-http-java-client/pull/1941/, it was throwing
+    // IllegalArgumentException("Invalid length 9").
+    assertEquals("abcdef", new String(Base64.decodeBase64(encodedString), StandardCharsets.UTF_8));
+  }
+
+  public void test_decodeBase64_newline_character() {
+    // In Base64 encoding, 2 characters (16 bits) are converted to 3 of 6-bits plus the padding
+    // character ('=").
+    // Base64encode("ab") => "YWI=" (3 characters + padding character)
+    // Adding a new line character that should be discarded between them
+    String encodedString = "YW\nI=";
+
+    // This is a reference implementation by Apache Commons Codec. It discards the new line
+    // characters.
+    // assertEquals(
+    //    "ab",
+    //    new String(
+    //        org.apache.commons.codec.binary.Base64.decodeBase64(encodedString),
+    //        StandardCharsets.UTF_8));
+
+    // This is our implementation. Before the fix
+    // https://github.com/googleapis/google-http-java-client/pull/1941/, it was throwing
+    // IllegalArgumentException("Unrecognized character: 0xa").
+    assertEquals("ab", new String(Base64.decodeBase64(encodedString), StandardCharsets.UTF_8));
+  }
+
+  public void test_decodeBase64_plus_and_newline_characters() {
+    // The plus sign is 62 in the Base64 table. So it's a valid character in encoded strings.
+    // https://datatracker.ietf.org/doc/html/rfc4648#section-4
+    String encodedString = "+\nw==";
+
+    byte[] actual = Base64.decodeBase64(encodedString);
+    // Before the fix https://github.com/googleapis/google-http-java-client/pull/1941/, it was
+    // throwing IllegalArgumentException("Unrecognized character: +").
+    assertThat(actual).isEqualTo(new byte[] {(byte) 0xfb});
+  }
+
+  public void test_decodeBase64_slash_and_newline_characters() {
+    // The slash sign is 63 in the Base64 table. So it's a valid character in encoded strings.
+    // https://datatracker.ietf.org/doc/html/rfc4648#section-4
+    String encodedString = "/\nw==";
+
+    byte[] actual = Base64.decodeBase64(encodedString);
+    // Before the fix https://github.com/googleapis/google-http-java-client/pull/1941/, it was
+    // throwing IllegalArgumentException("Unrecognized character: /").
+    assertThat(actual).isEqualTo(new byte[] {(byte) 0xff});
   }
 }
