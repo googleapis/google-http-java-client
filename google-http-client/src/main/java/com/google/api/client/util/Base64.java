@@ -28,8 +28,8 @@ import com.google.common.io.BaseEncoding.DecodingException;
 public class Base64 {
   // Guava's Base64 (https://datatracker.ietf.org/doc/html/rfc4648#section-4) decoders. When
   // decoding, they discard the new line character so that the behavior matches what we had with
-  // Apache Commons Codec's decodeBase64. When encoding, they would insert a new line character
-  // every 64 (the 2nd argument of withSeparator method) characters. They are not used for encoding.
+  // Apache Commons Codec's decodeBase64.
+  // The 2nd argument of the withSeparator method, "64", does not have any effect in decoding.
   private static final BaseEncoding BASE64_DECODER = BaseEncoding.base64().withSeparator("\n", 64);
   private static final BaseEncoding BASE64URL_DECODER =
       BaseEncoding.base64Url().withSeparator("\n", 64);
