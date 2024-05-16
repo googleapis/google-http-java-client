@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.44.2](https://github.com/googleapis/google-http-java-client/compare/v1.44.1...v1.44.2) (2024-05-16)
+
+
+### Bug Fixes
+
+* Base64 decoding to discard newline characters ([#1941](https://github.com/googleapis/google-http-java-client/issues/1941)) ([4e153db](https://github.com/googleapis/google-http-java-client/commit/4e153db9443832dbe6ca56b6fe10dcea26921b6f))
+
+
+### Dependencies
+
+* Update actions/upload-artifact action to v3.1.3 ([#1860](https://github.com/googleapis/google-http-java-client/issues/1860)) ([60deab2](https://github.com/googleapis/google-http-java-client/commit/60deab2fc93c70f4f37733a90a07b11e19b9f508))
+* Update dependency com.google.cloud:native-image-shared-config to v1.7.6 ([#1928](https://github.com/googleapis/google-http-java-client/issues/1928)) ([3dd6b79](https://github.com/googleapis/google-http-java-client/commit/3dd6b79368dd31efaf293009e8f424c905e9cc38))
+* Update dependency org.apache.felix:maven-bundle-plugin to v5.1.9 ([#1888](https://github.com/googleapis/google-http-java-client/issues/1888)) ([41c16b9](https://github.com/googleapis/google-http-java-client/commit/41c16b9334e218412826c1c07cdd303611bc7dbf))
+* Update project.appengine.version to v2.0.25 ([#1931](https://github.com/googleapis/google-http-java-client/issues/1931)) ([53eb6a1](https://github.com/googleapis/google-http-java-client/commit/53eb6a1f62d106190cc75af1e6b6eebec481f874))
+
 ## [1.44.1](https://github.com/googleapis/google-http-java-client/compare/v1.44.0...v1.44.1) (2024-01-26)
 
 
