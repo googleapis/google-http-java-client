@@ -605,7 +605,7 @@
     <project.httpcore.version>4.4.16</project.httpcore.version>
     <project.opencensus.version>0.31.1</project.opencensus.version>
     <project.root-directory>..</project.root-directory>
-    <project.surefire.version>3.0.0-M7</project.surefire.version>
+    <project.surefire.version>3.2.5</project.surefire.version>
     <deploy.autorelease>false</deploy.autorelease>
   </properties>
 
