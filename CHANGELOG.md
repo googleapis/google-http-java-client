@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.44.3](https://github.com/googleapis/google-http-java-client/compare/v1.44.2...v1.44.3) (2024-05-31)
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:native-image-shared-config to v1.7.7 ([#1937](https://github.com/googleapis/google-http-java-client/issues/1937)) ([b224a1d](https://github.com/googleapis/google-http-java-client/commit/b224a1d64cae44878f1bb0af83fb8e33e2e12d63))
+* Update project.appengine.version to v2.0.27 ([#1938](https://github.com/googleapis/google-http-java-client/issues/1938)) ([3f27cc8](https://github.com/googleapis/google-http-java-client/commit/3f27cc800db62c2208160234a5afad641f1a3781))
+
 ## [1.44.2](https://github.com/googleapis/google-http-java-client/compare/v1.44.1...v1.44.2) (2024-05-16)
 
 
