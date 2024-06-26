@@ -18,7 +18,8 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.Preconditions;
 import java.io.IOException;
-import org.apache.http.HttpEntityEnclosingRequest;
+// import org.apache.http.HttpEntityEnclosingRequest;
+// import org.apache.hc.client5.http.impl.
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -57,10 +58,10 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
   @Override
   public LowLevelHttpResponse execute() throws IOException {
     if (getStreamingContent() != null) {
-      Preconditions.checkState(
-          request instanceof HttpEntityEnclosingRequest,
-          "Apache HTTP client does not support %s requests with content.",
-          request.getRequestLine().getMethod());
+      // Preconditions.checkState(
+      //     request instanceof HttpEntityEnclosingRequest,
+      //     "Apache HTTP client does not support %s requests with content.",
+      //     request.getRequestLine().getMethod());
       ContentEntity entity = new ContentEntity(getContentLength(), getStreamingContent());
       entity.setContentEncoding(getContentEncoding());
       entity.setContentType(getContentType());
