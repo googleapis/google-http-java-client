@@ -17,28 +17,27 @@ package com.google.api.client.http.apache.v3;
 import com.google.api.client.http.LowLevelHttpResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.message.StatusLine;
 
 final class ApacheHttpResponse extends LowLevelHttpResponse {
 
-  private final HttpRequestBase request;
-  private final HttpResponse response;
+  private final HttpUriRequestBase request;
+  private final CloseableHttpResponse response;
   private final Header[] allHeaders;
 
-  ApacheHttpResponse(HttpRequestBase request, HttpResponse response) {
+  ApacheHttpResponse(HttpUriRequestBase request, CloseableHttpResponse response) {
     this.request = request;
     this.response = response;
-    allHeaders = response.getAllHeaders();
+    allHeaders = response.getHeaders();
   }
 
   @Override
   public int getStatusCode() {
-    StatusLine statusLine = response.getStatusLine();
-    return statusLine == null ? 0 : statusLine.getStatusCode();
+    return response.getCode();
   }
 
   @Override
@@ -51,10 +50,7 @@ final class ApacheHttpResponse extends LowLevelHttpResponse {
   public String getContentEncoding() {
     HttpEntity entity = response.getEntity();
     if (entity != null) {
-      Header contentEncodingHeader = entity.getContentEncoding();
-      if (contentEncodingHeader != null) {
-        return contentEncodingHeader.getValue();
-      }
+      return entity.getContentEncoding();
     }
     return null;
   }
@@ -69,24 +65,19 @@ final class ApacheHttpResponse extends LowLevelHttpResponse {
   public String getContentType() {
     HttpEntity entity = response.getEntity();
     if (entity != null) {
-      Header contentTypeHeader = entity.getContentType();
-      if (contentTypeHeader != null) {
-        return contentTypeHeader.getValue();
-      }
+      return entity.getContentType();
     }
     return null;
   }
 
   @Override
   public String getReasonPhrase() {
-    StatusLine statusLine = response.getStatusLine();
-    return statusLine == null ? null : statusLine.getReasonPhrase();
+    return response.getReasonPhrase();
   }
 
   @Override
   public String getStatusLine() {
-    StatusLine statusLine = response.getStatusLine();
-    return statusLine == null ? null : statusLine.toString();
+    return new StatusLine(response).toString();
   }
 
   public String getHeaderValue(String name) {

@@ -17,24 +17,31 @@ package com.google.api.client.http.apache.v3;
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Beta;
+import com.google.common.base.Preconditions;
 import java.io.IOException;
 import java.net.ProxySelector;
+import java.net.URI;
+import java.sql.Time;
 import java.util.concurrent.TimeUnit;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.methods.HttpOptions;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.methods.HttpTrace;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpDelete;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpHead;
+import org.apache.hc.client5.http.classic.methods.HttpOptions;
+import org.apache.hc.client5.http.classic.methods.HttpPatch;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.classic.methods.HttpPut;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.classic.methods.HttpTrace;
+import org.apache.hc.client5.http.config.ConnectionConfig;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.routing.SystemDefaultRoutePlanner;
+import org.apache.hc.core5.http.io.SocketConfig;
 
 /**
  * Thread-safe HTTP transport based on the Apache HTTP Client library.
@@ -44,7 +51,7 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
  * applications should use a single globally-shared instance of the HTTP transport.
  *
  * <p>Default settings are specified in {@link #newDefaultHttpClient()}. Use the {@link
- * #ApacheHttpTransport(HttpClient)} constructor to override the Apache HTTP Client used. Please
+ * #ApacheHttpTransport(CloseableHttpClient)} constructor to override the Apache HTTP Client used. Please
  * read the <a
  * href="https://hc.apache.org/httpcomponents-client-4.5.x/current/tutorial/pdf/httpclient-tutorial.pdf">
  * Apache HTTP Client connection management tutorial</a> for more complex configuration options.
@@ -55,7 +62,7 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 public final class ApacheHttpTransport extends HttpTransport {
 
   /** Apache HTTP client. */
-  private final HttpClient httpClient;
+  private final CloseableHttpClient httpClient;
 
   /** If the HTTP client uses mTLS channel. */
   private final boolean isMtls;
@@ -78,22 +85,20 @@ public final class ApacheHttpTransport extends HttpTransport {
    * <p>If you choose to provide your own Apache HttpClient implementation, be sure that
    *
    * <ul>
-   *   <li>HTTP version is set to 1.1.
    *   <li>Redirects are disabled (google-http-client handles redirects).
    *   <li>Retries are disabled (google-http-client handles retries).
    * </ul>
    *
-   * @param httpClient Apache HTTP client to use
-   * @since 1.30
+   * @param httpClient Closeable Apache HTTP client to use
    */
-  public ApacheHttpTransport(HttpClient httpClient) {
+  public ApacheHttpTransport(CloseableHttpClient httpClient) {
     this.httpClient = httpClient;
     this.isMtls = false;
   }
 
   /**
    * {@link Beta} <br>
-   * Constructor that allows an alternative Apache HTTP client to be used.
+   * Constructor that allows an alternative CLoseable Apache HTTP client to be used.
    *
    * <p>Note that in the previous version, we overrode several settings. However, we are no longer
    * able to do so.
@@ -101,17 +106,15 @@ public final class ApacheHttpTransport extends HttpTransport {
    * <p>If you choose to provide your own Apache HttpClient implementation, be sure that
    *
    * <ul>
-   *   <li>HTTP version is set to 1.1.
    *   <li>Redirects are disabled (google-http-client handles redirects).
    *   <li>Retries are disabled (google-http-client handles retries).
    * </ul>
    *
-   * @param httpClient Apache HTTP client to use
+   * @param httpClient Closeable Apache HTTP client to use
    * @param isMtls If the HTTP client is mutual TLS
-   * @since 1.38
    */
   @Beta
-  public ApacheHttpTransport(HttpClient httpClient, boolean isMtls) {
+  public ApacheHttpTransport(CloseableHttpClient httpClient, boolean isMtls) {
     this.httpClient = httpClient;
     this.isMtls = isMtls;
   }
@@ -135,8 +138,8 @@ public final class ApacheHttpTransport extends HttpTransport {
    * @return new instance of the Apache HTTP client
    * @since 1.30
    */
-  public static HttpClient newDefaultHttpClient() {
-    return newDefaultHttpClientBuilder().build();
+  public static CloseableHttpClient newDefaultHttpClient() {
+    return newDefaultCloseableHttpClientBuilder().build();
   }
 
   /**
@@ -158,14 +161,19 @@ public final class ApacheHttpTransport extends HttpTransport {
    * @return new instance of the Apache HTTP client
    * @since 1.31
    */
-  public static HttpClientBuilder newDefaultHttpClientBuilder() {
-
-    return HttpClientBuilder.create()
-        .useSystemProperties()
+  public static HttpClientBuilder newDefaultCloseableHttpClientBuilder() {
+    PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
         .setSSLSocketFactory(SSLConnectionSocketFactory.getSocketFactory())
         .setMaxConnTotal(200)
         .setMaxConnPerRoute(20)
-        .setConnectionTimeToLive(-1, TimeUnit.MILLISECONDS)
+        .setDefaultConnectionConfig(ConnectionConfig.custom()
+            .setTimeToLive(-1, TimeUnit.MILLISECONDS)
+            .build())
+        .build();
+
+    return HttpClients.custom()
+        .useSystemProperties()
+        .setConnectionManager(connectionManager)
         .setRoutePlanner(new SystemDefaultRoutePlanner(ProxySelector.getDefault()))
         .disableRedirectHandling()
         .disableAutomaticRetries();
@@ -178,7 +186,7 @@ public final class ApacheHttpTransport extends HttpTransport {
 
   @Override
   protected ApacheHttpRequest buildRequest(String method, String url) {
-    HttpRequestBase requestBase;
+    HttpUriRequestBase requestBase;
     if (method.equals(HttpMethods.DELETE)) {
       requestBase = new HttpDelete(url);
     } else if (method.equals(HttpMethods.GET)) {
@@ -196,7 +204,7 @@ public final class ApacheHttpTransport extends HttpTransport {
     } else if (method.equals(HttpMethods.OPTIONS)) {
       requestBase = new HttpOptions(url);
     } else {
-      requestBase = new HttpExtensionMethod(method, url);
+      requestBase = new HttpUriRequestBase(Preconditions.checkNotNull(method), URI.create(url));
     }
     return new ApacheHttpRequest(httpClient, requestBase);
   }
