@@ -57,7 +57,6 @@ import org.apache.hc.core5.http.io.SocketConfig;
  * Apache HTTP Client connection management tutorial</a> for more complex configuration options.
  *
  * @since 1.30
- * @author Yaniv Inbar
  */
 public final class ApacheHttpTransport extends HttpTransport {
 

@@ -23,9 +23,6 @@ import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.core5.util.Timeout;
 
-/**
- * @author Yaniv Inbar
- */
 final class ApacheHttpRequest extends LowLevelHttpRequest {
 
   private final HttpUriRequestBase request;

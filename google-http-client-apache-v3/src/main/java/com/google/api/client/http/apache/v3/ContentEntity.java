@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.io.entity.AbstractHttpEntity;
 
-/** @author Yaniv Inbar */
 final class ContentEntity extends AbstractHttpEntity {
 
   /** Content length or less than zero if not known. */
