@@ -14,45 +14,39 @@
 
 package com.google.api.client.http.apache.v3;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeFalse;
-import static org.junit.Assume.assumeTrue;
-
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpResponseException;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.LowLevelHttpResponse;
-import com.google.api.client.testing.http.apache.MockHttpClient;
-import com.google.api.client.util.ByteArrayStreamingContent;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager;
+import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager.Projects;
+import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager.Projects.Get;
+import com.google.api.services.cloudresourcemanager.v3.model.Project;
+import com.google.auth.http.HttpCredentialsAdapter;
+import com.google.auth.oauth2.GoogleCredentials;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import org.apache.hc.client5.http.ClientProtocolException;
-import org.apache.hc.client5.http.classic.HttpClient;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.core5.http.HttpVersion;
-import org.apache.hc.core5.http.message.BasicHttpResponse;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * Tests {@link ApacheHttpTransport}.
  */
 public class ApacheHttpTransportTest {
+
+  @Test
+  public void testClientUsingApacheV3Transport() throws IOException {
+    final String PROJECT_ID = System.getenv("PROJECT_ID");
+    ApacheHttpTransport transport = new ApacheHttpTransport();
+
+    GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
+    GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+    CloudResourceManager.Builder resourceManagerBuilder =
+        new CloudResourceManager.Builder(
+            transport, jsonFactory, new HttpCredentialsAdapter(credentials))
+            .setApplicationName("Example Java App");
+    CloudResourceManager cloudResourceManager = resourceManagerBuilder.build();
+
+    Projects projects = cloudResourceManager.projects();
+    Get get = projects.get("projects/"+PROJECT_ID);
+    Project project = get.execute();
+    System.out.println("Project display name: " + project.getDisplayName());
+  }
 
   // private static class MockHttpResponse extends BasicHttpResponse implements CloseableHttpResponse {
   //   public MockHttpResponse() {
