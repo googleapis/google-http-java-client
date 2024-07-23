@@ -7,37 +7,40 @@
     ":updateNotScheduled",
     ":automergeDisabled",
     ":ignoreModulesAndTests",
-    ":maintainLockFilesDisabled",
-    ":autodetectPinVersions"
+    ":maintainLockFilesDisabled"
   ],
-  "ignorePaths": [".kokoro/requirements.txt"],
+  "ignorePaths": [
+    ".kokoro/requirements.txt"
+  ],
   "customManagers": [
     {
       "customType": "regex",
       "fileMatch": [
         "^.kokoro/presubmit/graalvm-native.*.cfg$"
       ],
-      "matchStrings": ["value: \"gcr.io/cloud-devrel-public-resources/graalvm.*:(?<currentValue>.*?)\""],
+      "matchStrings": [
+        "value: \"gcr.io/cloud-devrel-public-resources/graalvm.*:(?<currentValue>.*?)\""
+      ],
       "depNameTemplate": "com.google.cloud:native-image-shared-config",
       "datasourceTemplate": "maven"
     }
   ],
   "packageRules": [
     {
-      "packagePatterns": [
+      "matchPackagePatterns": [
         "^com.google.guava:"
       ],
-      "versionScheme": "docker"
+      "versioning": "docker"
     },
     {
-      "packagePatterns": [
+      "matchPackagePatterns": [
         "*"
       ],
       "semanticCommitType": "deps",
       "semanticCommitScope": null
     },
     {
-      "packagePatterns": [
+      "matchPackagePatterns": [
         "^org.apache.maven",
         "^org.jacoco:",
         "^org.codehaus.mojo:",
@@ -49,7 +52,7 @@
       "semanticCommitScope": "deps"
     },
     {
-      "packagePatterns": [
+      "matchPackagePatterns": [
         "^com.google.http-client:google-http-client",
         "^com.google.cloud:libraries-bom",
         "^com.google.cloud.samples:shared-configuration"
@@ -58,7 +61,7 @@
       "semanticCommitScope": "deps"
     },
     {
-      "packagePatterns": [
+      "matchPackagePatterns": [
         "^junit:junit",
         "^com.google.truth:truth",
         "^org.mockito:mockito-core",
@@ -69,18 +72,18 @@
       "semanticCommitScope": "deps"
     },
     {
-      "packagePatterns": [
+      "matchPackagePatterns": [
         "^com.google.cloud:google-cloud-"
       ],
       "ignoreUnstable": false
     },
     {
-      "packagePatterns": [
+      "matchPackagePatterns": [
         "^com.fasterxml.jackson.core"
       ],
       "groupName": "jackson dependencies"
     }
   ],
-  "semanticCommits": true,
+  "semanticCommits": "enabled",
   "dependencyDashboard": true
 }
