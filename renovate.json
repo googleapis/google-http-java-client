@@ -46,7 +46,7 @@
         "^org.codehaus.mojo:",
         "^org.sonatype.plugins:",
         "^com.coveo:",
-        "^com.google.cloud:google-cloud-shared-config"
+        "^com.google.cloud:native-image-shared-config"
       ],
       "semanticCommitType": "build",
       "semanticCommitScope": "deps"
