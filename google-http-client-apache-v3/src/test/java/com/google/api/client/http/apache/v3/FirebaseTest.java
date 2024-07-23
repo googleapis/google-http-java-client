@@ -20,11 +20,24 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class FirebaseTest {
-    public static FirebaseApp setup_admin_apache_http2() throws IOException {
+    public static FirebaseApp setup_admin_apache_http2_v3() throws IOException {
         FileInputStream serviceAccount = new FileInputStream("src/main/resources/cert.json");
 
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setProjectId("spring-autoconf-test")
+                .setHttpTransport(new ApacheHttp2Transport(true))
+                .build();
+
+        return FirebaseApp.initializeApp(options);
+    }
+
+    public static FirebaseApp setup_admin_apache_http_v3() throws IOException {
+        FileInputStream serviceAccount = new FileInputStream("src/main/resources/cert.json");
+
+        FirebaseOptions options = FirebaseOptions.builder()
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setProjectId("spring-autoconf-test")
                 .setHttpTransport(new ApacheHttpTransport())
                 .build();
 
@@ -118,10 +131,11 @@ public class FirebaseTest {
         FirebaseApp app;
 
         System.out.println("Start");
-        app = setup_admin_apache_http2();
+        app = setup_admin_apache_http2_v3();
+//        app = setup_admin_apache_http_v3();
         benchmark_send_each(messages, numRequests, app);
         benchmark_send_each_async(messages, numRequests, app);
-        benchmark_send_each(messages, numRequests, app);
+        benchmark_send_all(messages, numRequests, app);
 
          System.out.println("Sleep");
          TimeUnit.SECONDS.sleep(5);

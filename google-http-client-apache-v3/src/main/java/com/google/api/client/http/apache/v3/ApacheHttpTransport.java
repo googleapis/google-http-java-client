@@ -17,14 +17,17 @@ package com.google.api.client.http.apache.v3;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.Beta;
 import org.apache.hc.client5.http.async.methods.SimpleHttpRequest;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.config.TlsConfig;
 import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient;
 import org.apache.hc.client5.http.impl.async.HttpAsyncClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManager;
 import org.apache.hc.client5.http.impl.routing.SystemDefaultRoutePlanner;
 import org.apache.hc.client5.http.config.ConnectionConfig;
-import org.apache.hc.core5.http.HttpRequest;
+import org.apache.hc.core5.http.config.Http1Config;
+import org.apache.hc.core5.http2.HttpVersionPolicy;
+import org.apache.hc.core5.http2.config.H2Config;
+import org.apache.hc.core5.reactor.IOReactorConfig;
 
 import java.io.IOException;
 import java.net.ProxySelector;
@@ -52,7 +55,7 @@ public final class ApacheHttpTransport extends HttpTransport {
     /**
      * Apache HTTP client.
      */
-    private final HttpAsyncClientBuilder httpClient;
+    private final HttpAsyncClientBuilder httpClientBuilder;
 
     /**
      * If the HTTP client uses mTLS channel.
@@ -82,11 +85,11 @@ public final class ApacheHttpTransport extends HttpTransport {
      *   <li>Retries are disabled (google-http-client handles retries).
      * </ul>
      *
-     * @param httpClient Apache HTTP client to use
+     * @param httpClientBuilder Apache HTTP client to use
      * @since 1.30
      */
-    public ApacheHttpTransport(HttpAsyncClientBuilder httpClient) {
-        this.httpClient = httpClient;
+    public ApacheHttpTransport(HttpAsyncClientBuilder httpClientBuilder) {
+        this.httpClientBuilder = httpClientBuilder;
         this.isMtls = false;
     }
 
@@ -105,13 +108,13 @@ public final class ApacheHttpTransport extends HttpTransport {
      *   <li>Retries are disabled (google-http-client handles retries).
      * </ul>
      *
-     * @param httpClient Apache HTTP client to use
+     * @param httpClientBuilder Apache HTTP client to use
      * @param isMtls     If the HTTP client is mutual TLS
      * @since 1.38
      */
     @Beta
-    public ApacheHttpTransport(HttpAsyncClientBuilder httpClient, boolean isMtls) {
-        this.httpClient = httpClient;
+    public ApacheHttpTransport(HttpAsyncClientBuilder httpClientBuilder, boolean isMtls) {
+        this.httpClientBuilder = httpClientBuilder;
         this.isMtls = isMtls;
     }
 
@@ -166,9 +169,13 @@ public final class ApacheHttpTransport extends HttpTransport {
         connectionManager.setMaxTotal(200);
         connectionManager.setDefaultMaxPerRoute(20);
         connectionManager.setDefaultConnectionConfig(connectionConfig);
+        connectionManager.setDefaultTlsConfig(TlsConfig.custom().setVersionPolicy(HttpVersionPolicy.FORCE_HTTP_2).build());
+
 
         return HttpAsyncClientBuilder.create()
-                .useSystemProperties()
+                .setH2Config(H2Config.DEFAULT)
+                .setHttp1Config(Http1Config.DEFAULT)
+                .setIOReactorConfig(IOReactorConfig.custom().setIoThreadCount(20).build())
                 .setConnectionManager(connectionManager)
                 // socket factories are not configurable in the async client
                 //.setSSLSocketFactory(SSLConnectionSocketFactory.getSocketFactory())
@@ -185,7 +192,7 @@ public final class ApacheHttpTransport extends HttpTransport {
     @Override
     protected ApacheHttpRequest buildRequest(String method, String url) {
         SimpleHttpRequest request = new SimpleHttpRequest(method, URI.create(url));
-        return new ApacheHttpRequest(httpClient, request);
+        return new ApacheHttpRequest(httpClientBuilder, request);
     }
 
     /**
@@ -205,7 +212,7 @@ public final class ApacheHttpTransport extends HttpTransport {
      * @since 1.30
      */
     public HttpAsyncClientBuilder getHttpClientBuilder() {
-        return httpClient;
+        return httpClientBuilder;
     }
 
     /**

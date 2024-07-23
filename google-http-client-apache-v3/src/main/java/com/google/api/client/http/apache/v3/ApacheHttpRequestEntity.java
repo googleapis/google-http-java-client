@@ -67,12 +67,8 @@ class ApacheHttpRequestEntityProducer implements AsyncEntityProducer {
 
     @Override
     public void produce(DataStreamChannel dataStreamChannel) throws IOException {
-        if (request.getStreamingContent() == null) {
-            return;
-        }
         OutputStream dataStreamOutputStream = new OutputStream() {
-            // diegomarquezp: the buffer size may have effects in performance - I just chose an arbitrary one
-            private final java.nio.ByteBuffer buffer = ByteBuffer.allocate(100 * 1000);
+            private final java.nio.ByteBuffer buffer = ByteBuffer.allocate(1000);
 
             @Override
             public void write(int b) throws IOException {
@@ -96,6 +92,7 @@ class ApacheHttpRequestEntityProducer implements AsyncEntityProducer {
             }
         };
         request.getStreamingContent().writeTo(dataStreamOutputStream);
+        dataStreamOutputStream.close();
     }
 
     @Override
