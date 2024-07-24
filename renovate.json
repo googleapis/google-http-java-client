@@ -1,5 +1,6 @@
 {
   "extends": [
+    "config:recommended",
     ":separateMajorReleases",
     ":combinePatchMinorReleases",
     ":ignoreUnstable",
@@ -46,10 +47,11 @@
         "^org.codehaus.mojo:",
         "^org.sonatype.plugins:",
         "^com.coveo:",
-        "^com.google.cloud:google-cloud-shared-config"
+        "^com.google.cloud:native-image-shared-config"
       ],
       "semanticCommitType": "build",
-      "semanticCommitScope": "deps"
+      "semanticCommitScope": "deps",
+      "enabled": true
     },
     {
       "matchPackagePatterns": [
