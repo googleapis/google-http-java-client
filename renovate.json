@@ -31,7 +31,8 @@
       "matchPackagePatterns": [
         "^com.google.guava:"
       ],
-      "versioning": "docker"
+      "versioning": "docker",
+      "allowedVersions": "<32.0.0"
     },
     {
       "matchPackagePatterns": [
