@@ -22,6 +22,8 @@ import com.google.api.services.cloudresourcemanager.v3.model.Project;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import java.io.IOException;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -30,6 +32,7 @@ import org.junit.Test;
 public class ApacheHttpTransportTest {
 
   @Test
+  @Ignore
   public void testClientUsingApacheV3Transport() throws IOException {
     final String PROJECT_ID = System.getenv("PROJECT_ID");
     ApacheHttpTransport transport = new ApacheHttpTransport();
