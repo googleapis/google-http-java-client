@@ -290,8 +290,8 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.13.0</version>
           <configuration>
-            <source>1.7</source>
-            <target>1.7</target>
+            <source>1.8</source>
+            <target>1.8</target>
           </configuration>
         </plugin>
         <plugin>
@@ -420,7 +420,7 @@
                 <version>[3.5.2,4.0.0)</version>
               </requireMavenVersion>
               <requireJavaVersion>
-                <version>[1.7,)</version>
+                <version>[1.8,)</version>
               </requireJavaVersion>
               <requireUpperBoundDeps/>
             </rules>
@@ -432,7 +432,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <doclint>none</doclint>
-          <source>7</source>
+          <source>8</source>
         </configuration>
         <executions>
           <execution>
@@ -443,7 +443,7 @@
             <phase>site</phase>
             <configuration>
               <links>
-                <link>https://download.oracle.com/javase/7/docs/api/</link>
+                <link>https://download.oracle.com/javase/8/docs/api/</link>
                 <link>https://cloud.google.com/appengine/docs/java/javadoc</link>
                 <link>https://static.javadoc.io/doc/com.google.code.gson/gson/${project.gson.version}</link>
                 <link>https://google.github.io/guava/releases/${project.guava.version}/api/docs/</link>
@@ -520,7 +520,7 @@
         <artifactId>animal-sniffer-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>java7</id>
+            <id>java8</id>
             <goals>
               <goal>check</goal>
             </goals>
@@ -576,7 +576,7 @@
           <dependency>
             <groupId>com.google.googlejavaformat</groupId>
             <artifactId>google-java-format</artifactId>
-            <version>1.7</version>
+            <version>1.8</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -600,7 +600,7 @@
     <project.gson.version>2.10.1</project.gson.version>
     <project.jackson-core2.version>2.14.2</project.jackson-core2.version>
     <project.protobuf-java.version>3.21.12</project.protobuf-java.version>
-    <project.guava.version>30.1.1-android</project.guava.version>
+    <project.guava.version>31.1-android</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.httpclient.version>4.5.14</project.httpclient.version>
     <project.httpcore.version>4.4.16</project.httpcore.version>
