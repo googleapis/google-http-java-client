@@ -23,33 +23,46 @@ import com.google.api.services.cloudresourcemanager.v3.model.Project;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import java.io.IOException;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.junit.Test;
 
-/**
- * Tests {@link ApacheHttpTransport}.
- */
+/** Tests {@link ApacheHttpTransport}. */
 public class ApacheHttpTransportTest {
 
-  @Test
-  public void testClientUsingApacheV3Transport() throws IOException {
+  public void testRequest(HttpTransport transport) throws IOException {
     final String PROJECT_ID = System.getenv("PROJECT_ID");
-    HttpTransport transport = new ApacheHttpTransport();
 
     GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
     GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
     CloudResourceManager.Builder resourceManagerBuilder =
         new CloudResourceManager.Builder(
-            transport, jsonFactory, new HttpCredentialsAdapter(credentials))
+                transport, jsonFactory, new HttpCredentialsAdapter(credentials))
             .setApplicationName("Example Java App");
     CloudResourceManager cloudResourceManager = resourceManagerBuilder.build();
 
     Projects projects = cloudResourceManager.projects();
-    Get get = projects.get("projects/"+PROJECT_ID);
+    Get get = projects.get("projects/" + PROJECT_ID);
     Project project = get.execute();
     System.out.println("Project display name: " + project.getDisplayName());
   }
 
-  // private static class MockHttpResponse extends BasicHttpResponse implements CloseableHttpResponse {
+  @Test
+  public void testClientUsingDefaultApacheV3Transport() throws IOException {
+    HttpTransport transport = new ApacheHttpTransport();
+    testRequest(transport);
+  }
+
+  @Test
+  public void testClientUsingApacheV3TransportWithCustomHttpClient() throws IOException {
+    CloseableHttpClient client =
+        HttpClients.custom().disableAutomaticRetries().disableRedirectHandling().build();
+    HttpTransport transport = new ApacheHttpTransport(client);
+    testRequest(transport);
+  }
+
+  // private static class MockHttpResponse extends BasicHttpResponse implements
+  // CloseableHttpResponse {
   //   public MockHttpResponse() {
   //     super(200, "OK");
   //   }
@@ -86,7 +99,8 @@ public class ApacheHttpTransportTest {
   //
   // private void checkHttpClient(HttpClient client) {
   //   assertNotNull(client);
-  //   // TODO(chingor): Is it possible to test this effectively? The newer HttpClient implementations
+  //   // TODO(chingor): Is it possible to test this effectively? The newer HttpClient
+  // implementations
   //   // are read-only and we're testing that we built the client with the right configuration
   // }
   //

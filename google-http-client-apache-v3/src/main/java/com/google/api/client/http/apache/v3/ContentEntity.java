@@ -19,7 +19,6 @@ import com.google.api.client.util.StreamingContent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.io.entity.AbstractHttpEntity;
 
 final class ContentEntity extends AbstractHttpEntity {
@@ -34,7 +33,11 @@ final class ContentEntity extends AbstractHttpEntity {
    * @param contentLength content length or less than zero if not known
    * @param streamingContent streaming content
    */
-  ContentEntity(long contentLength, StreamingContent streamingContent, String contentType, String contentEncoding) {
+  ContentEntity(
+      long contentLength,
+      StreamingContent streamingContent,
+      String contentType,
+      String contentEncoding) {
     super(contentType, contentEncoding, contentLength == -1);
     this.contentLength = contentLength;
     this.streamingContent = Preconditions.checkNotNull(streamingContent);
@@ -68,6 +71,5 @@ final class ContentEntity extends AbstractHttpEntity {
   }
 
   @Override
-  public void close() throws IOException {
-  }
+  public void close() throws IOException {}
 }

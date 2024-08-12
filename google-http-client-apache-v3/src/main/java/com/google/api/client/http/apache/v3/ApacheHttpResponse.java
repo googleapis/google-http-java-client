@@ -102,7 +102,7 @@ final class ApacheHttpResponse extends LowLevelHttpResponse {
   /**
    * Aborts execution of the request.
    *
-   * @since 1.30
+   * @since 1.44
    */
   @Override
   public void disconnect() {

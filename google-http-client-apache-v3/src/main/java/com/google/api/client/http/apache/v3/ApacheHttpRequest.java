@@ -18,8 +18,8 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.core5.util.Timeout;
 
@@ -35,10 +35,7 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
     this.httpClient = httpClient;
     this.request = request;
     // disable redirects as google-http-client handles redirects
-    this.requestConfig =
-        RequestConfig.custom()
-            .setRedirectsEnabled(false)
-    ;
+    this.requestConfig = RequestConfig.custom().setRedirectsEnabled(false);
   }
 
   @Override
@@ -48,23 +45,19 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
 
   @Override
   public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
-    // TODO: these methods are deprecated - we will need a more up-to-date way of setting timeouts
-    // on existing requests. Also, since we can't control the lower level socket configuration,
-    // we indirectly set a read timeout via ResponseTimeout
+    // TODO: find a way to not use the @Deprecated setConnectTimeout method
     requestConfig
         .setConnectTimeout(Timeout.of(connectTimeout, TimeUnit.MILLISECONDS))
+        // ResponseTimeout behaves the same as 4.x's SocketTimeout
         .setResponseTimeout(Timeout.of(readTimeout, TimeUnit.MILLISECONDS));
   }
 
   @Override
   public LowLevelHttpResponse execute() throws IOException {
     if (getStreamingContent() != null) {
-      // Preconditions.checkState(
-      //     request instanceof HttpEntityEnclosingRequest,
-      //     "Apache HTTP client does not support %s requests with content.",
-      //     request.getRequestLine().getMethod());
-      ContentEntity entity = new ContentEntity(getContentLength(), getStreamingContent(),
-          getContentType(), getContentEncoding());
+      ContentEntity entity =
+          new ContentEntity(
+              getContentLength(), getStreamingContent(), getContentType(), getContentEncoding());
       request.setEntity(entity);
     }
     request.setConfig(requestConfig.build());

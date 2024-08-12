@@ -14,18 +14,7 @@
 
 package com.google.api.client.http.apache.v3;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
-import com.google.api.client.http.ByteArrayContent;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.InputStreamContent;
-import com.google.api.client.testing.http.apache.MockHttpClient;
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import org.junit.Test;
 
 public class ApacheHttpRequestTest {
 

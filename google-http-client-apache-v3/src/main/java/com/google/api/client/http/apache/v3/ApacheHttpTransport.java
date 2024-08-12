@@ -21,7 +21,6 @@ import com.google.common.base.Preconditions;
 import java.io.IOException;
 import java.net.ProxySelector;
 import java.net.URI;
-import java.sql.Time;
 import java.util.concurrent.TimeUnit;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpDelete;
@@ -31,17 +30,17 @@ import org.apache.hc.client5.http.classic.methods.HttpOptions;
 import org.apache.hc.client5.http.classic.methods.HttpPatch;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.classic.methods.HttpPut;
-import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.classic.methods.HttpTrace;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.ConnectionConfig;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
-import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.impl.routing.SystemDefaultRoutePlanner;
-import org.apache.hc.core5.http.io.SocketConfig;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.io.CloseMode;
 
 /**
  * Thread-safe HTTP transport based on the Apache HTTP Client library.
@@ -51,12 +50,12 @@ import org.apache.hc.core5.http.io.SocketConfig;
  * applications should use a single globally-shared instance of the HTTP transport.
  *
  * <p>Default settings are specified in {@link #newDefaultHttpClient()}. Use the {@link
- * #ApacheHttpTransport(CloseableHttpClient)} constructor to override the Apache HTTP Client used. Please
- * read the <a
- * href="https://hc.apache.org/httpcomponents-client-4.5.x/current/tutorial/pdf/httpclient-tutorial.pdf">
- * Apache HTTP Client connection management tutorial</a> for more complex configuration options.
+ * #ApacheHttpTransport(CloseableHttpClient)} constructor to override the Apache HTTP Client used.
+ * Please read the <a
+ * href="https://github.com/apache/httpcomponents-client/blob/f898f1aca38f77f62a007856a674629cae5a02e6/httpclient5/src/test/java/org/apache/hc/client5/http/examples/ClientConfiguration.java">
+ * Apache HTTP Client 5.x configuration example</a> for more complex configuration options.
  *
- * @since 1.30
+ * @since 1.44
  */
 public final class ApacheHttpTransport extends HttpTransport {
 
@@ -69,22 +68,20 @@ public final class ApacheHttpTransport extends HttpTransport {
   /**
    * Constructor that uses {@link #newDefaultHttpClient()} for the Apache HTTP client.
    *
-   * @since 1.30
+   * @since 1.44
    */
   public ApacheHttpTransport() {
     this(newDefaultHttpClient(), false);
   }
 
   /**
+   * {@link Beta} <br>
    * Constructor that allows an alternative Apache HTTP client to be used.
-   *
-   * <p>Note that in the previous version, we overrode several settings. However, we are no longer
-   * able to do so.
    *
    * <p>If you choose to provide your own Apache HttpClient implementation, be sure that
    *
    * <ul>
-   *   <li>Redirects are disabled (google-http-client handles redirects).
+   *   <li>HTTP version is set to 1.1.
    *   <li>Retries are disabled (google-http-client handles retries).
    * </ul>
    *
@@ -99,13 +96,10 @@ public final class ApacheHttpTransport extends HttpTransport {
    * {@link Beta} <br>
    * Constructor that allows an alternative CLoseable Apache HTTP client to be used.
    *
-   * <p>Note that in the previous version, we overrode several settings. However, we are no longer
-   * able to do so.
-   *
    * <p>If you choose to provide your own Apache HttpClient implementation, be sure that
    *
    * <ul>
-   *   <li>Redirects are disabled (google-http-client handles redirects).
+   *   <li>HTTP version is set to 1.1.
    *   <li>Retries are disabled (google-http-client handles retries).
    * </ul>
    *
@@ -119,6 +113,7 @@ public final class ApacheHttpTransport extends HttpTransport {
   }
 
   /**
+   * {@link Beta} <br>
    * Creates a new instance of the Apache HTTP client that is used by the {@link
    * #ApacheHttpTransport()} constructor.
    *
@@ -130,12 +125,12 @@ public final class ApacheHttpTransport extends HttpTransport {
    *       HttpClientBuilder#disableRedirectHandling}.
    *   <li>The route planner uses {@link SystemDefaultRoutePlanner} with {@link
    *       ProxySelector#getDefault()}, which uses the proxy settings from <a
-   *       href="https://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
+   *       href="https://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html">system
    *       properties</a>.
    * </ul>
    *
    * @return new instance of the Apache HTTP client
-   * @since 1.30
+   * @since 1.44
    */
   public static CloseableHttpClient newDefaultHttpClient() {
     return newDefaultCloseableHttpClientBuilder().build();
@@ -149,26 +144,27 @@ public final class ApacheHttpTransport extends HttpTransport {
    *
    * <ul>
    *   <li>The client connection manager is set to {@link PoolingHttpClientConnectionManager}.
-   *   <li><The retry mechanism is turned off using {@link
+   *   <li>The retry mechanism is turned off using {@link
    *       HttpClientBuilder#disableRedirectHandling}.
+   *   <li>Redirects are turned off using {@link HttpClientBuilder#disableAutomaticRetries()}.
    *   <li>The route planner uses {@link SystemDefaultRoutePlanner} with {@link
    *       ProxySelector#getDefault()}, which uses the proxy settings from <a
-   *       href="http://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html">system
+   *       href="http://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html">system
    *       properties</a>.
    * </ul>
    *
    * @return new instance of the Apache HTTP client
-   * @since 1.31
+   * @since 1.44
    */
   public static HttpClientBuilder newDefaultCloseableHttpClientBuilder() {
-    PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
-        .setSSLSocketFactory(SSLConnectionSocketFactory.getSocketFactory())
-        .setMaxConnTotal(200)
-        .setMaxConnPerRoute(20)
-        .setDefaultConnectionConfig(ConnectionConfig.custom()
-            .setTimeToLive(-1, TimeUnit.MILLISECONDS)
-            .build())
-        .build();
+    PoolingHttpClientConnectionManager connectionManager =
+        PoolingHttpClientConnectionManagerBuilder.create()
+            .setSSLSocketFactory(SSLConnectionSocketFactory.getSocketFactory())
+            .setMaxConnTotal(200)
+            .setMaxConnPerRoute(20)
+            .setDefaultConnectionConfig(
+                ConnectionConfig.custom().setTimeToLive(-1, TimeUnit.MILLISECONDS).build())
+            .build();
 
     return HttpClients.custom()
         .useSystemProperties()
@@ -209,20 +205,20 @@ public final class ApacheHttpTransport extends HttpTransport {
   }
 
   /**
-   * Shuts down the connection manager and releases allocated resources. This closes all
+   * Gracefully shuts down the connection manager and releases allocated resources. This closes all
    * connections, whether they are currently used or not.
    *
-   * @since 1.30
+   * @since 1.44
    */
   @Override
   public void shutdown() throws IOException {
-    httpClient.close();
+    httpClient.close(CloseMode.GRACEFUL);
   }
 
   /**
    * Returns the Apache HTTP client.
    *
-   * @since 1.30
+   * @since 1.44
    */
   public HttpClient getHttpClient() {
     return httpClient;
