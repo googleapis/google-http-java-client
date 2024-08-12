@@ -14,6 +14,7 @@
 
 package com.google.api.client.http.apache.v3;
 
+import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager;
 import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager.Projects;
@@ -32,7 +33,7 @@ public class ApacheHttpTransportTest {
   @Test
   public void testClientUsingApacheV3Transport() throws IOException {
     final String PROJECT_ID = System.getenv("PROJECT_ID");
-    ApacheHttpTransport transport = new ApacheHttpTransport();
+    HttpTransport transport = new ApacheHttpTransport();
 
     GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
     GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
