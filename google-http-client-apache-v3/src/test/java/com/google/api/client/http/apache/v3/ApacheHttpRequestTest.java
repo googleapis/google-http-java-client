@@ -14,8 +14,6 @@
 
 package com.google.api.client.http.apache.v3;
 
-
-
 public class ApacheHttpRequestTest {
 
   // @Test

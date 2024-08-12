@@ -18,18 +18,19 @@ import com.google.api.client.http.LowLevelHttpResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.message.StatusLine;
 
 final class ApacheHttpResponse extends LowLevelHttpResponse {
 
   private final HttpUriRequestBase request;
-  private final CloseableHttpResponse response;
+  private final HttpResponse response;
   private final Header[] allHeaders;
 
-  ApacheHttpResponse(HttpUriRequestBase request, CloseableHttpResponse response) {
+  ApacheHttpResponse(HttpUriRequestBase request, HttpResponse response) {
     this.request = request;
     this.response = response;
     allHeaders = response.getHeaders();
@@ -42,13 +43,19 @@ final class ApacheHttpResponse extends LowLevelHttpResponse {
 
   @Override
   public InputStream getContent() throws IOException {
-    HttpEntity entity = response.getEntity();
+    if (!(response instanceof ClassicHttpResponse)) {
+      return null;
+    }
+    HttpEntity entity = ((ClassicHttpResponse) response).getEntity();
     return entity == null ? null : entity.getContent();
   }
 
   @Override
   public String getContentEncoding() {
-    HttpEntity entity = response.getEntity();
+    if (!(response instanceof ClassicHttpResponse)) {
+      return null;
+    }
+    HttpEntity entity = ((ClassicHttpResponse) response).getEntity();
     if (entity != null) {
       return entity.getContentEncoding();
     }
@@ -57,17 +64,20 @@ final class ApacheHttpResponse extends LowLevelHttpResponse {
 
   @Override
   public long getContentLength() {
-    HttpEntity entity = response.getEntity();
+    if (!(response instanceof ClassicHttpResponse)) {
+      return -1;
+    }
+    HttpEntity entity = ((ClassicHttpResponse) response).getEntity();
     return entity == null ? -1 : entity.getContentLength();
   }
 
   @Override
   public String getContentType() {
-    HttpEntity entity = response.getEntity();
-    if (entity != null) {
-      return entity.getContentType();
+    if (!(response instanceof ClassicHttpResponse)) {
+      return null;
     }
-    return null;
+    HttpEntity entity = ((ClassicHttpResponse) response).getEntity();
+    return entity == null ? null : entity.getContentType();
   }
 
   @Override

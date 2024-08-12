@@ -18,9 +18,9 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.RequestConfig;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.core5.util.Timeout;
 
 final class ApacheHttpRequest extends LowLevelHttpRequest {
@@ -29,9 +29,9 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
 
   private RequestConfig.Builder requestConfig;
 
-  private CloseableHttpClient httpClient;
+  private HttpClient httpClient;
 
-  ApacheHttpRequest(CloseableHttpClient httpClient, HttpUriRequestBase request) {
+  ApacheHttpRequest(HttpClient httpClient, HttpUriRequestBase request) {
     this.httpClient = httpClient;
     this.request = request;
     // disable redirects as google-http-client handles redirects
