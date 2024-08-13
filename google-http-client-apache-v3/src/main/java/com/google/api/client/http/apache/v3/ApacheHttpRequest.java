@@ -21,6 +21,9 @@ import java.util.concurrent.TimeUnit;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.util.Timeout;
 
 final class ApacheHttpRequest extends LowLevelHttpRequest {
@@ -61,6 +64,27 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
       request.setEntity(entity);
     }
     request.setConfig(requestConfig.build());
-    return new ApacheHttpResponse(request, httpClient.execute(request));
+    HttpHost target =
+        new HttpHost(
+            request.getScheme(),
+            request.getAuthority().getHostName(),
+            request.getAuthority().getPort());
+    HttpResponse httpResponse = httpClient.executeOpen(target, request, HttpClientContext.create());
+    return new ApacheHttpResponse(request, httpResponse);
+
+    //    final ExecutorService execService = Executors.newFixedThreadPool(1);
+    //    try (final FutureRequestExecutionService requestExecService = new
+    // FutureRequestExecutionService(
+    //            httpClient, execService)) {
+    //      final HttpClientResponseHandler<HttpResponse> handler = response -> response;
+    //      final FutureTask<HttpResponse> responseFuture = requestExecService.execute(request,
+    //              HttpClientContext.create(), handler);
+    //      final HttpResponse response = responseFuture.get();
+    //      return new ApacheHttpResponse(request, response);
+    //    } catch (ExecutionException e) {
+    //        throw new RuntimeException(e);
+    //    } catch (InterruptedException e) {
+    //        throw new RuntimeException(e);
+    //    }
   }
 }

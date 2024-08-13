@@ -45,6 +45,12 @@ public class ApacheHttpTransportTest {
     Get get = projects.get("projects/" + PROJECT_ID);
     Project project = get.execute();
     System.out.println("Project display name: " + project.getDisplayName());
+
+    // temp test to confirm re-usage of client works with several consecutive requests
+    projects.get("projects/" + PROJECT_ID).execute();
+    projects.get("projects/" + PROJECT_ID).execute();
+    projects.get("projects/" + PROJECT_ID).execute();
+    projects.get("projects/" + PROJECT_ID).execute();
   }
 
   @Test
