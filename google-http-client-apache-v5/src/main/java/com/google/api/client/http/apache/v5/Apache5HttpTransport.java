@@ -63,10 +63,7 @@ public final class Apache5HttpTransport extends HttpTransport {
   /** If the HTTP client uses mTLS channel. */
   private final boolean isMtls;
 
-  /**
-   * {@link Beta} Constructor that uses {@link #newDefaultHttpClient()} for the Apache HTTP client.
-   */
-  @Beta
+  /** Constructor that uses {@link #newDefaultHttpClient()} for the Apache HTTP client. */
   public Apache5HttpTransport() {
     this(newDefaultHttpClient(), false);
   }
@@ -109,7 +106,6 @@ public final class Apache5HttpTransport extends HttpTransport {
   }
 
   /**
-   * {@link Beta} <br>
    * Creates a new instance of the Apache HTTP client that is used by the {@link
    * #Apache5HttpTransport()} constructor.
    *
@@ -127,14 +123,13 @@ public final class Apache5HttpTransport extends HttpTransport {
    *
    * @return new instance of the Apache HTTP client
    */
-  @Beta
   public static HttpClient newDefaultHttpClient() {
     return newDefaultCloseableHttpClientBuilder().build();
   }
 
   /**
-   * {@link Beta} Creates a new Apache HTTP client builder that is used by the {@link
-   * #Apache5HttpTransport()} constructor.
+   * Creates a new Apache HTTP client builder that is used by the {@link #Apache5HttpTransport()}
+   * constructor.
    *
    * <p>Settings:
    *
@@ -151,7 +146,6 @@ public final class Apache5HttpTransport extends HttpTransport {
    *
    * @return new instance of the Apache HTTP client builder
    */
-  @Beta
   public static HttpClientBuilder newDefaultCloseableHttpClientBuilder() {
     PoolingHttpClientConnectionManager connectionManager =
         PoolingHttpClientConnectionManagerBuilder.create()
