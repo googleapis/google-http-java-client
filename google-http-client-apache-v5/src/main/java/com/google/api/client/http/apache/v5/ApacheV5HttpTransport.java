@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.http.apache.v3;
+package com.google.api.client.http.apache.v5;
 
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
@@ -50,14 +50,14 @@ import org.apache.hc.core5.io.CloseMode;
  * applications should use a single globally-shared instance of the HTTP transport.
  *
  * <p>Default settings are specified in {@link #newDefaultHttpClient()}. Use the {@link
- * #ApacheHttpTransport(CloseableHttpClient)} constructor to override the Apache HTTP Client used.
+ * #ApacheV5HttpTransport(CloseableHttpClient)} constructor to override the Apache HTTP Client used.
  * Please read the <a
  * href="https://github.com/apache/httpcomponents-client/blob/f898f1aca38f77f62a007856a674629cae5a02e6/httpclient5/src/test/java/org/apache/hc/client5/http/examples/ClientConfiguration.java">
  * Apache HTTP Client 5.x configuration example</a> for more complex configuration options.
  *
  * @since 1.44
  */
-public final class ApacheHttpTransport extends HttpTransport {
+public final class ApacheV5HttpTransport extends HttpTransport {
 
   /** Apache HTTP client. */
   private final CloseableHttpClient httpClient;
@@ -70,7 +70,7 @@ public final class ApacheHttpTransport extends HttpTransport {
    *
    * @since 1.44
    */
-  public ApacheHttpTransport() {
+  public ApacheV5HttpTransport() {
     this(newDefaultHttpClient(), false);
   }
 
@@ -87,7 +87,7 @@ public final class ApacheHttpTransport extends HttpTransport {
    *
    * @param httpClient Closeable Apache HTTP client to use
    */
-  public ApacheHttpTransport(CloseableHttpClient httpClient) {
+  public ApacheV5HttpTransport(CloseableHttpClient httpClient) {
     this.httpClient = httpClient;
     this.isMtls = false;
   }
@@ -107,7 +107,7 @@ public final class ApacheHttpTransport extends HttpTransport {
    * @param isMtls If the HTTP client is mutual TLS
    */
   @Beta
-  public ApacheHttpTransport(CloseableHttpClient httpClient, boolean isMtls) {
+  public ApacheV5HttpTransport(CloseableHttpClient httpClient, boolean isMtls) {
     this.httpClient = httpClient;
     this.isMtls = isMtls;
   }
@@ -115,7 +115,7 @@ public final class ApacheHttpTransport extends HttpTransport {
   /**
    * {@link Beta} <br>
    * Creates a new instance of the Apache HTTP client that is used by the {@link
-   * #ApacheHttpTransport()} constructor.
+   * #ApacheV5HttpTransport()} constructor.
    *
    * <p>Settings:
    *
@@ -137,7 +137,7 @@ public final class ApacheHttpTransport extends HttpTransport {
   }
 
   /**
-   * Creates a new Apache HTTP client builder that is used by the {@link #ApacheHttpTransport()}
+   * Creates a new Apache HTTP client builder that is used by the {@link #ApacheV5HttpTransport()}
    * constructor.
    *
    * <p>Settings:
@@ -180,7 +180,7 @@ public final class ApacheHttpTransport extends HttpTransport {
   }
 
   @Override
-  protected ApacheHttpRequest buildRequest(String method, String url) {
+  protected ApacheV5HttpRequest buildRequest(String method, String url) {
     HttpUriRequestBase requestBase;
     if (method.equals(HttpMethods.DELETE)) {
       requestBase = new HttpDelete(url);
@@ -201,7 +201,7 @@ public final class ApacheHttpTransport extends HttpTransport {
     } else {
       requestBase = new HttpUriRequestBase(Preconditions.checkNotNull(method), URI.create(url));
     }
-    return new ApacheHttpRequest(httpClient, requestBase);
+    return new ApacheV5HttpRequest(httpClient, requestBase);
   }
 
   /**

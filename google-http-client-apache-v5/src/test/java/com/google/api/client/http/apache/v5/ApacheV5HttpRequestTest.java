@@ -12,14 +12,14 @@
  * the License.
  */
 
-package com.google.api.client.http.apache.v3;
+package com.google.api.client.http.apache.v5;
 
-public class ApacheHttpRequestTest {
+public class ApacheV5HttpRequestTest {
 
   // @Test
   // public void testContentLengthSet() throws Exception {
   //   HttpExtensionMethod base = new HttpExtensionMethod("POST", "http://www.google.com");
-  //   ApacheHttpRequest request = new ApacheHttpRequest(new MockHttpClient(), base);
+  //   ApacheV5HttpRequest request = new ApacheV5HttpRequest(new MockHttpClient(), base);
   //   HttpContent content =
   //       new ByteArrayContent("text/plain", "sample".getBytes(StandardCharsets.UTF_8));
   //   request.setStreamingContent(content);
@@ -35,7 +35,7 @@ public class ApacheHttpRequestTest {
   //   byte[] buf = new byte[300];
   //   Arrays.fill(buf, (byte) ' ');
   //   HttpExtensionMethod base = new HttpExtensionMethod("POST", "http://www.google.com");
-  //   ApacheHttpRequest request = new ApacheHttpRequest(new MockHttpClient(), base);
+  //   ApacheV5HttpRequest request = new ApacheV5HttpRequest(new MockHttpClient(), base);
   //   HttpContent content = new InputStreamContent("text/plain", new ByteArrayInputStream(buf));
   //   request.setStreamingContent(content);
   //   request.execute();

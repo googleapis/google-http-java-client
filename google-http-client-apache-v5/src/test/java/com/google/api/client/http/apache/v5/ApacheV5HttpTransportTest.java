@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.http.apache.v3;
+package com.google.api.client.http.apache.v5;
 
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
@@ -27,8 +27,8 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.junit.Test;
 
-/** Tests {@link ApacheHttpTransport}. */
-public class ApacheHttpTransportTest {
+/** Tests {@link ApacheV5HttpTransport}. */
+public class ApacheV5HttpTransportTest {
 
   public void testRequest(HttpTransport transport) throws IOException {
     final String PROJECT_ID = System.getenv("PROJECT_ID");
@@ -54,16 +54,16 @@ public class ApacheHttpTransportTest {
   }
 
   @Test
-  public void testClientUsingDefaultApacheV3Transport() throws IOException {
-    HttpTransport transport = new ApacheHttpTransport();
+  public void testClientUsingDefaultApacheV5Transport() throws IOException {
+    HttpTransport transport = new ApacheV5HttpTransport();
     testRequest(transport);
   }
 
   @Test
-  public void testClientUsingApacheV3TransportWithCustomHttpClient() throws IOException {
+  public void testClientUsingApacheV5TransportWithCustomHttpClient() throws IOException {
     CloseableHttpClient client =
         HttpClients.custom().disableAutomaticRetries().disableRedirectHandling().build();
-    HttpTransport transport = new ApacheHttpTransport(client);
+    HttpTransport transport = new ApacheV5HttpTransport(client);
     testRequest(transport);
   }
 
@@ -79,25 +79,25 @@ public class ApacheHttpTransportTest {
   //
   // @Test
   // public void testApacheHttpTransport() {
-  //   ApacheHttpTransport transport = new ApacheHttpTransport();
+  //   ApacheV5HttpTransport transport = new ApacheV5HttpTransport();
   //   checkHttpTransport(transport);
   //   assertFalse(transport.isMtls());
   // }
   //
   // @Test
   // public void testApacheHttpTransportWithParam() {
-  //   ApacheHttpTransport transport = new ApacheHttpTransport(HttpClients.custom().build(), true);
+  //   ApacheV5HttpTransport transport = new ApacheV5HttpTransport(HttpClients.custom().build(), true);
   //   checkHttpTransport(transport);
   //   assertTrue(transport.isMtls());
   // }
   //
   // @Test
   // public void testNewDefaultHttpClient() {
-  //   HttpClient client = ApacheHttpTransport.newDefaultHttpClient();
+  //   HttpClient client = ApacheV5HttpTransport.newDefaultHttpClient();
   //   checkHttpClient(client);
   // }
   //
-  // private void checkHttpTransport(ApacheHttpTransport transport) {
+  // private void checkHttpTransport(ApacheV5HttpTransport transport) {
   //   assertNotNull(transport);
   //   HttpClient client = transport.getHttpClient();
   //   checkHttpClient(client);
@@ -120,7 +120,7 @@ public class ApacheHttpTransportTest {
   //           return new MockHttpResponse();
   //         }
   //       };
-  //   ApacheHttpTransport transport = new ApacheHttpTransport(mockClient);
+  //   ApacheV5HttpTransport transport = new ApacheV5HttpTransport(mockClient);
   //
   //   // Test GET.
   //   subtestUnsupportedRequestsWithContent(
@@ -142,7 +142,7 @@ public class ApacheHttpTransportTest {
   //   execute(transport.buildRequest("PATCH", "http://www.test.url"));
   // }
   //
-  // private void subtestUnsupportedRequestsWithContent(ApacheHttpRequest request, String method)
+  // private void subtestUnsupportedRequestsWithContent(ApacheV5HttpRequest request, String method)
   //     throws IOException {
   //   try {
   //     execute(request);
@@ -155,7 +155,7 @@ public class ApacheHttpTransportTest {
   //   }
   // }
   //
-  // private void execute(ApacheHttpRequest request) throws IOException {
+  // private void execute(ApacheV5HttpRequest request) throws IOException {
   //   byte[] bytes = "abc".getBytes(StandardCharsets.UTF_8);
   //   request.setStreamingContent(new ByteArrayStreamingContent(bytes));
   //   request.setContentType("text/html");
@@ -179,8 +179,8 @@ public class ApacheHttpTransportTest {
   //         }
   //       };
   //   HttpClient client = HttpClients.custom().setRequestExecutor(requestExecutor).build();
-  //   ApacheHttpTransport transport = new ApacheHttpTransport(client);
-  //   ApacheHttpRequest request = transport.buildRequest("GET", "https://google.com");
+  //   ApacheV5HttpTransport transport = new ApacheV5HttpTransport(client);
+  //   ApacheV5HttpRequest request = transport.buildRequest("GET", "https://google.com");
   //   LowLevelHttpResponse response = request.execute();
   //   assertEquals(1, requestsAttempted.get());
   //   assertEquals(302, response.getStatusCode());
@@ -205,8 +205,8 @@ public class ApacheHttpTransportTest {
   //               })
   //           .build();
   //
-  //   ApacheHttpTransport transport = new ApacheHttpTransport(client);
-  //   ApacheHttpRequest request = transport.buildRequest("GET", "https://google.com");
+  //   ApacheV5HttpTransport transport = new ApacheV5HttpTransport(client);
+  //   ApacheV5HttpRequest request = transport.buildRequest("GET", "https://google.com");
   //   request.addHeader("foo", "bar");
   //   try {
   //     LowLevelHttpResponse response = request.execute();
@@ -225,7 +225,7 @@ public class ApacheHttpTransportTest {
   //   // Figure out a way to verify connection timeout works on Java 17+.
   //   assumeTrue(System.getProperty("java.version").compareTo("17") < 0);
   //
-  //   HttpTransport httpTransport = new ApacheHttpTransport();
+  //   HttpTransport httpTransport = new ApacheV5HttpTransport();
   //   GenericUrl url = new GenericUrl("http://google.com:81");
   //   try {
   //     httpTransport.createRequestFactory().buildGetRequest(url).setConnectTimeout(100).execute();
@@ -274,7 +274,7 @@ public class ApacheHttpTransportTest {
   //         }
   //       };
   //   try (FakeServer server = new FakeServer(handler)) {
-  //     HttpTransport transport = new ApacheHttpTransport();
+  //     HttpTransport transport = new ApacheV5HttpTransport();
   //     GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
   //     testUrl.setPort(server.getPort());
   //     com.google.api.client.http.HttpResponse response =
@@ -298,7 +298,7 @@ public class ApacheHttpTransportTest {
   //         }
   //       };
   //   try (FakeServer server = new FakeServer(handler)) {
-  //     HttpTransport transport = new ApacheHttpTransport();
+  //     HttpTransport transport = new ApacheV5HttpTransport();
   //     GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
   //     testUrl.setPort(server.getPort());
   //     com.google.api.client.http.HttpRequest getRequest =
@@ -324,7 +324,7 @@ public class ApacheHttpTransportTest {
   //         }
   //       };
   //   try (FakeServer server = new FakeServer(handler)) {
-  //     HttpTransport transport = new ApacheHttpTransport();
+  //     HttpTransport transport = new ApacheV5HttpTransport();
   //     GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
   //     testUrl.setPort(server.getPort());
   //     com.google.api.client.http.HttpRequest getRequest =

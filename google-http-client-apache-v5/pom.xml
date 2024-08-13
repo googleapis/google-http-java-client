@@ -7,9 +7,9 @@
     <version>1.44.3-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>google-http-client-apache-v3</artifactId>
-  <version>1.44.3-SNAPSHOT</version><!-- {x-version-update:google-http-client-apache-v3:current} -->
-  <name>Apache HTTP transport v3 for the Google HTTP Client Library for Java.</name>
+  <artifactId>google-http-client-apache-v5</artifactId>
+  <version>1.44.3-SNAPSHOT</version><!-- {x-version-update:google-http-client-apache-v5:current} -->
+  <name>Apache HTTP transport v5 for the Google HTTP Client Library for Java.</name>
 
   <build>
     <plugins>
@@ -51,7 +51,7 @@
           <archive>
             <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
             <manifestEntries>
-              <Automatic-Module-Name>com.google.api.client.http.apache.v3</Automatic-Module-Name>
+              <Automatic-Module-Name>com.google.api.client.http.apache.v5</Automatic-Module-Name>
             </manifestEntries>
           </archive>
         </configuration>

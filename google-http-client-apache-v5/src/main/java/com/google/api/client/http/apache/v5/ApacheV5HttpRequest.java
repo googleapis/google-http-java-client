@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.http.apache.v3;
+package com.google.api.client.http.apache.v5;
 
 import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
@@ -26,7 +26,7 @@ import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.util.Timeout;
 
-final class ApacheHttpRequest extends LowLevelHttpRequest {
+final class ApacheV5HttpRequest extends LowLevelHttpRequest {
 
   private final HttpUriRequestBase request;
 
@@ -34,7 +34,7 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
 
   private HttpClient httpClient;
 
-  ApacheHttpRequest(HttpClient httpClient, HttpUriRequestBase request) {
+  ApacheV5HttpRequest(HttpClient httpClient, HttpUriRequestBase request) {
     this.httpClient = httpClient;
     this.request = request;
     // disable redirects as google-http-client handles redirects
@@ -58,8 +58,8 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
   @Override
   public LowLevelHttpResponse execute() throws IOException {
     if (getStreamingContent() != null) {
-      ContentEntity entity =
-          new ContentEntity(
+      ApacheV5ContentEntity entity =
+          new ApacheV5ContentEntity(
               getContentLength(), getStreamingContent(), getContentType(), getContentEncoding());
       request.setEntity(entity);
     }
@@ -70,21 +70,6 @@ final class ApacheHttpRequest extends LowLevelHttpRequest {
             request.getAuthority().getHostName(),
             request.getAuthority().getPort());
     HttpResponse httpResponse = httpClient.executeOpen(target, request, HttpClientContext.create());
-    return new ApacheHttpResponse(request, httpResponse);
-
-    //    final ExecutorService execService = Executors.newFixedThreadPool(1);
-    //    try (final FutureRequestExecutionService requestExecService = new
-    // FutureRequestExecutionService(
-    //            httpClient, execService)) {
-    //      final HttpClientResponseHandler<HttpResponse> handler = response -> response;
-    //      final FutureTask<HttpResponse> responseFuture = requestExecService.execute(request,
-    //              HttpClientContext.create(), handler);
-    //      final HttpResponse response = responseFuture.get();
-    //      return new ApacheHttpResponse(request, response);
-    //    } catch (ExecutionException e) {
-    //        throw new RuntimeException(e);
-    //    } catch (InterruptedException e) {
-    //        throw new RuntimeException(e);
-    //    }
+    return new ApacheV5HttpResponse(request, httpResponse);
   }
 }

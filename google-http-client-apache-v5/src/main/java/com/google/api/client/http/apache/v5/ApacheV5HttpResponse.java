@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.http.apache.v3;
+package com.google.api.client.http.apache.v5;
 
 import com.google.api.client.http.LowLevelHttpResponse;
 import java.io.IOException;
@@ -24,13 +24,13 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.message.StatusLine;
 
-final class ApacheHttpResponse extends LowLevelHttpResponse {
+final class ApacheV5HttpResponse extends LowLevelHttpResponse {
 
   private final HttpUriRequestBase request;
   private final HttpResponse response;
   private final Header[] allHeaders;
 
-  ApacheHttpResponse(HttpUriRequestBase request, HttpResponse response) {
+  ApacheV5HttpResponse(HttpUriRequestBase request, HttpResponse response) {
     this.request = request;
     this.response = response;
     allHeaders = response.getHeaders();

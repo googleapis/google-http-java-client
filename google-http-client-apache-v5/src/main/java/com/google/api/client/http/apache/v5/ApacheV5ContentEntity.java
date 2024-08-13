@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.client.http.apache.v3;
+package com.google.api.client.http.apache.v5;
 
 import com.google.api.client.util.Preconditions;
 import com.google.api.client.util.StreamingContent;
@@ -21,7 +21,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import org.apache.hc.core5.http.io.entity.AbstractHttpEntity;
 
-final class ContentEntity extends AbstractHttpEntity {
+/**
+ * Translation class to make google-http-client entity conform with Apache 5.x {@link AbstractHttpEntity}
+ */
+final class ApacheV5ContentEntity extends AbstractHttpEntity {
 
   /** Content length or less than zero if not known. */
   private final long contentLength;
@@ -33,7 +36,7 @@ final class ContentEntity extends AbstractHttpEntity {
    * @param contentLength content length or less than zero if not known
    * @param streamingContent streaming content
    */
-  ContentEntity(
+  ApacheV5ContentEntity(
       long contentLength,
       StreamingContent streamingContent,
       String contentType,
