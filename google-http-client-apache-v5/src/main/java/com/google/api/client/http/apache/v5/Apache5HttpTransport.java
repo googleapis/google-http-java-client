@@ -113,8 +113,8 @@ public final class Apache5HttpTransport extends HttpTransport {
    *
    * <ul>
    *   <li>The client connection manager is set to {@link PoolingHttpClientConnectionManager}.
-   *   <li><The retry mechanism is turned off using {@link
-   *       HttpClientBuilder#disableRedirectHandling}.
+   *   <li>The retry mechanism is turned off using {@link HttpClientBuilder#disableAutomaticRetries()}.
+   *   <li>Redirects are turned off using {@link HttpClientBuilder#disableRedirectHandling}.
    *   <li>The route planner uses {@link SystemDefaultRoutePlanner} with {@link
    *       ProxySelector#getDefault()}, which uses the proxy settings from <a
    *       href="https://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html">system
@@ -135,9 +135,8 @@ public final class Apache5HttpTransport extends HttpTransport {
    *
    * <ul>
    *   <li>The client connection manager is set to {@link PoolingHttpClientConnectionManager}.
-   *   <li>The retry mechanism is turned off using {@link
-   *       HttpClientBuilder#disableRedirectHandling}.
-   *   <li>Redirects are turned off using {@link HttpClientBuilder#disableAutomaticRetries()}.
+   *   <li>The retry mechanism is turned off using {@link HttpClientBuilder#disableAutomaticRetries()}.
+   *   <li>Redirects are turned off using {@link HttpClientBuilder#disableRedirectHandling}.
    *   <li>The route planner uses {@link SystemDefaultRoutePlanner} with {@link
    *       ProxySelector#getDefault()}, which uses the proxy settings from <a
    *       href="http://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html">system
