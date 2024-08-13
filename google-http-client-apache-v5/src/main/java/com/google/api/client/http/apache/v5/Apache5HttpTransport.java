@@ -50,8 +50,8 @@ import org.apache.hc.core5.io.CloseMode;
  * applications should use a single globally-shared instance of the HTTP transport.
  *
  * <p>Default settings are specified in {@link #newDefaultHttpClient()}. Use the {@link
- * #Apache5HttpTransport(HttpClient)} constructor to override the Apache HTTP Client used.
- * Please read the <a
+ * #Apache5HttpTransport(HttpClient)} constructor to override the Apache HTTP Client used. Please
+ * read the <a
  * href="https://github.com/apache/httpcomponents-client/blob/f898f1aca38f77f62a007856a674629cae5a02e6/httpclient5/src/test/java/org/apache/hc/client5/http/examples/ClientConfiguration.java">
  * Apache HTTP Client 5.x configuration example</a> for more complex configuration options.
  *
@@ -66,8 +66,7 @@ public final class Apache5HttpTransport extends HttpTransport {
   private final boolean isMtls;
 
   /**
-   * {@link Beta}
-   * Constructor that uses {@link #newDefaultHttpClient()} for the Apache HTTP client.
+   * {@link Beta} Constructor that uses {@link #newDefaultHttpClient()} for the Apache HTTP client.
    *
    * @since 1.44
    */
@@ -139,9 +138,8 @@ public final class Apache5HttpTransport extends HttpTransport {
   }
 
   /**
-   * {@link Beta}
-   * Creates a new Apache HTTP client builder that is used by the {@link #Apache5HttpTransport()}
-   * constructor.
+   * {@link Beta} Creates a new Apache HTTP client builder that is used by the {@link
+   * #Apache5HttpTransport()} constructor.
    *
    * <p>Settings:
    *
@@ -229,9 +227,7 @@ public final class Apache5HttpTransport extends HttpTransport {
     return httpClient;
   }
 
-  /**
-   * Returns if the underlying HTTP client is mTLS.
-   */
+  /** Returns if the underlying HTTP client is mTLS. */
   @Override
   public boolean isMtls() {
     return isMtls;
