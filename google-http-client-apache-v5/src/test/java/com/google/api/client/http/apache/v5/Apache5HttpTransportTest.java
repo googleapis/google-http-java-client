@@ -14,17 +14,53 @@
 
 package com.google.api.client.http.apache.v5;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeTrue;
+
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.ByteArrayStreamingContent;
 import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager;
 import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager.Projects;
 import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager.Projects.Get;
 import com.google.api.services.cloudresourcemanager.v3.model.Project;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.apache.hc.client5.http.ClientProtocolException;
+import org.apache.hc.client5.http.ConnectTimeoutException;
+import org.apache.hc.client5.http.HttpHostConnectException;
+import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.EntityDetails;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpException;
+import org.apache.hc.core5.http.HttpRequest;
+import org.apache.hc.core5.http.HttpRequestInterceptor;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.impl.bootstrap.HttpServer;
+import org.apache.hc.core5.http.impl.io.HttpRequestExecutor;
+import org.apache.hc.core5.http.impl.io.HttpService;
+import org.apache.hc.core5.http.io.HttpClientConnection;
+import org.apache.hc.core5.http.protocol.HttpContext;
+import org.junit.Assert;
 import org.junit.Test;
 
 /** Tests {@link Apache5HttpTransport}. */
@@ -67,279 +103,264 @@ public class Apache5HttpTransportTest {
     testRequest(transport);
   }
 
-  // private static class MockHttpResponse extends BasicHttpResponse implements
-  // CloseableHttpResponse {
-  //   public MockHttpResponse() {
-  //     super(200, "OK");
-  //   }
-  //
-  //   @Override
-  //   public void close() throws IOException {}
-  // }
-  //
-  // @Test
-  // public void testApacheHttpTransport() {
-  //   Apache5HttpTransport transport = new Apache5HttpTransport();
-  //   checkHttpTransport(transport);
-  //   assertFalse(transport.isMtls());
-  // }
-  //
-  // @Test
-  // public void testApacheHttpTransportWithParam() {
-  //   Apache5HttpTransport transport = new Apache5HttpTransport(HttpClients.custom().build(),
-  // true);
-  //   checkHttpTransport(transport);
-  //   assertTrue(transport.isMtls());
-  // }
-  //
-  // @Test
-  // public void testNewDefaultHttpClient() {
-  //   HttpClient client = Apache5HttpTransport.newDefaultHttpClient();
-  //   checkHttpClient(client);
-  // }
-  //
-  // private void checkHttpTransport(Apache5HttpTransport transport) {
-  //   assertNotNull(transport);
-  //   HttpClient client = transport.getHttpClient();
-  //   checkHttpClient(client);
-  // }
-  //
-  // private void checkHttpClient(HttpClient client) {
-  //   assertNotNull(client);
-  //   // TODO(chingor): Is it possible to test this effectively? The newer HttpClient
-  // implementations
-  //   // are read-only and we're testing that we built the client with the right configuration
-  // }
-  //
-  // @Test
-  // public void testRequestsWithContent() throws IOException {
-  //   HttpClient mockClient =
-  //       new MockHttpClient() {
-  //         @Override
-  //         public CloseableHttpResponse execute(HttpUriRequest request)
-  //             throws IOException, ClientProtocolException {
-  //           return new MockHttpResponse();
-  //         }
-  //       };
-  //   Apache5HttpTransport transport = new Apache5HttpTransport(mockClient);
-  //
-  //   // Test GET.
-  //   subtestUnsupportedRequestsWithContent(
-  //       transport.buildRequest("GET", "http://www.test.url"), "GET");
-  //   // Test DELETE.
-  //   subtestUnsupportedRequestsWithContent(
-  //       transport.buildRequest("DELETE", "http://www.test.url"), "DELETE");
-  //   // Test HEAD.
-  //   subtestUnsupportedRequestsWithContent(
-  //       transport.buildRequest("HEAD", "http://www.test.url"), "HEAD");
-  //
-  //   // Test PATCH.
-  //   execute(transport.buildRequest("PATCH", "http://www.test.url"));
-  //   // Test PUT.
-  //   execute(transport.buildRequest("PUT", "http://www.test.url"));
-  //   // Test POST.
-  //   execute(transport.buildRequest("POST", "http://www.test.url"));
-  //   // Test PATCH.
-  //   execute(transport.buildRequest("PATCH", "http://www.test.url"));
-  // }
-  //
-  // private void subtestUnsupportedRequestsWithContent(Apache5HttpRequest request, String method)
-  //     throws IOException {
-  //   try {
-  //     execute(request);
-  //     fail("expected " + IllegalStateException.class);
-  //   } catch (IllegalStateException e) {
-  //     // expected
-  //     assertEquals(
-  //         e.getMessage(),
-  //         "Apache HTTP client does not support " + method + " requests with content.");
-  //   }
-  // }
-  //
-  // private void execute(Apache5HttpRequest request) throws IOException {
-  //   byte[] bytes = "abc".getBytes(StandardCharsets.UTF_8);
-  //   request.setStreamingContent(new ByteArrayStreamingContent(bytes));
-  //   request.setContentType("text/html");
-  //   request.setContentLength(bytes.length);
-  //   request.execute();
-  // }
-  //
-  // @Test
-  // public void testRequestShouldNotFollowRedirects() throws IOException {
-  //   final AtomicInteger requestsAttempted = new AtomicInteger(0);
-  //   HttpRequestExecutor requestExecutor =
-  //       new HttpRequestExecutor() {
-  //         @Override
-  //         public HttpResponse execute(
-  //             HttpRequest request, HttpClientConnection connection, HttpContext context)
-  //             throws IOException, HttpException {
-  //           HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1, 302, null);
-  //           response.addHeader("location", "https://google.com/path");
-  //           requestsAttempted.incrementAndGet();
-  //           return response;
-  //         }
-  //       };
-  //   HttpClient client = HttpClients.custom().setRequestExecutor(requestExecutor).build();
-  //   Apache5HttpTransport transport = new Apache5HttpTransport(client);
-  //   Apache5HttpRequest request = transport.buildRequest("GET", "https://google.com");
-  //   LowLevelHttpResponse response = request.execute();
-  //   assertEquals(1, requestsAttempted.get());
-  //   assertEquals(302, response.getStatusCode());
-  // }
-  //
-  // @Test
-  // public void testRequestCanSetHeaders() {
-  //   final AtomicBoolean interceptorCalled = new AtomicBoolean(false);
-  //   HttpClient client =
-  //       HttpClients.custom()
-  //           .addInterceptorFirst(
-  //               new HttpRequestInterceptor() {
-  //                 @Override
-  //                 public void process(HttpRequest request, HttpContext context)
-  //                     throws HttpException, IOException {
-  //                   Header header = request.getFirstHeader("foo");
-  //                   assertNotNull("Should have found header", header);
-  //                   assertEquals("bar", header.getValue());
-  //                   interceptorCalled.set(true);
-  //                   throw new IOException("cancelling request");
-  //                 }
-  //               })
-  //           .build();
-  //
-  //   Apache5HttpTransport transport = new Apache5HttpTransport(client);
-  //   Apache5HttpRequest request = transport.buildRequest("GET", "https://google.com");
-  //   request.addHeader("foo", "bar");
-  //   try {
-  //     LowLevelHttpResponse response = request.execute();
-  //     fail("should not actually make the request");
-  //   } catch (IOException exception) {
-  //     assertEquals("cancelling request", exception.getMessage());
-  //   }
-  //   assertTrue("Expected to have called our test interceptor", interceptorCalled.get());
-  // }
-  //
-  // @Test(timeout = 10_000L)
-  // public void testConnectTimeout() {
-  //   // Apache HttpClient doesn't appear to behave correctly on windows
-  //   assumeFalse(isWindows());
-  //   // TODO(chanseok): Java 17 returns an IOException (SocketException: Network is unreachable).
-  //   // Figure out a way to verify connection timeout works on Java 17+.
-  //   assumeTrue(System.getProperty("java.version").compareTo("17") < 0);
-  //
-  //   HttpTransport httpTransport = new Apache5HttpTransport();
-  //   GenericUrl url = new GenericUrl("http://google.com:81");
-  //   try {
-  //     httpTransport.createRequestFactory().buildGetRequest(url).setConnectTimeout(100).execute();
-  //     fail("should have thrown an exception");
-  //   } catch (HttpHostConnectException | ConnectTimeoutException expected) {
-  //     // expected
-  //   } catch (IOException e) {
-  //     fail("unexpected IOException: " + e.getClass().getName() + ": " + e.getMessage());
-  //   }
-  // }
-  //
-  // private static class FakeServer implements AutoCloseable {
-  //   private final HttpServer server;
-  //   private final ExecutorService executorService;
-  //
-  //   FakeServer(HttpHandler httpHandler) throws IOException {
-  //     server = HttpServer.create(new InetSocketAddress(0), 0);
-  //     executorService = Executors.newFixedThreadPool(1);
-  //     server.setExecutor(executorService);
-  //     server.createContext("/", httpHandler);
-  //     server.start();
-  //   }
-  //
-  //   public int getPort() {
-  //     return server.getAddress().getPort();
-  //   }
-  //
-  //   @Override
-  //   public void close() {
-  //     server.stop(0);
-  //     executorService.shutdownNow();
-  //   }
-  // }
-  //
-  // @Test
-  // public void testNormalizedUrl() throws IOException {
-  //   final HttpHandler handler =
-  //       new HttpHandler() {
-  //         @Override
-  //         public void handle(HttpExchange httpExchange) throws IOException {
-  //           byte[] response = httpExchange.getRequestURI().toString().getBytes();
-  //           httpExchange.sendResponseHeaders(200, response.length);
-  //           try (OutputStream out = httpExchange.getResponseBody()) {
-  //             out.write(response);
-  //           }
-  //         }
-  //       };
-  //   try (FakeServer server = new FakeServer(handler)) {
-  //     HttpTransport transport = new Apache5HttpTransport();
-  //     GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
-  //     testUrl.setPort(server.getPort());
-  //     com.google.api.client.http.HttpResponse response =
-  //         transport.createRequestFactory().buildGetRequest(testUrl).execute();
-  //     assertEquals(200, response.getStatusCode());
-  //     assertEquals("/foo//bar", response.parseAsString());
-  //   }
-  // }
-  //
-  // @Test
-  // public void testReadErrorStream() throws IOException {
-  //   final HttpHandler handler =
-  //       new HttpHandler() {
-  //         @Override
-  //         public void handle(HttpExchange httpExchange) throws IOException {
-  //           byte[] response = "Forbidden".getBytes(StandardCharsets.UTF_8);
-  //           httpExchange.sendResponseHeaders(403, response.length);
-  //           try (OutputStream out = httpExchange.getResponseBody()) {
-  //             out.write(response);
-  //           }
-  //         }
-  //       };
-  //   try (FakeServer server = new FakeServer(handler)) {
-  //     HttpTransport transport = new Apache5HttpTransport();
-  //     GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
-  //     testUrl.setPort(server.getPort());
-  //     com.google.api.client.http.HttpRequest getRequest =
-  //         transport.createRequestFactory().buildGetRequest(testUrl);
-  //     getRequest.setThrowExceptionOnExecuteError(false);
-  //     com.google.api.client.http.HttpResponse response = getRequest.execute();
-  //     assertEquals(403, response.getStatusCode());
-  //     assertEquals("Forbidden", response.parseAsString());
-  //   }
-  // }
-  //
-  // @Test
-  // public void testReadErrorStream_withException() throws IOException {
-  //   final HttpHandler handler =
-  //       new HttpHandler() {
-  //         @Override
-  //         public void handle(HttpExchange httpExchange) throws IOException {
-  //           byte[] response = "Forbidden".getBytes(StandardCharsets.UTF_8);
-  //           httpExchange.sendResponseHeaders(403, response.length);
-  //           try (OutputStream out = httpExchange.getResponseBody()) {
-  //             out.write(response);
-  //           }
-  //         }
-  //       };
-  //   try (FakeServer server = new FakeServer(handler)) {
-  //     HttpTransport transport = new Apache5HttpTransport();
-  //     GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
-  //     testUrl.setPort(server.getPort());
-  //     com.google.api.client.http.HttpRequest getRequest =
-  //         transport.createRequestFactory().buildGetRequest(testUrl);
-  //     try {
-  //       getRequest.execute();
-  //       Assert.fail();
-  //     } catch (HttpResponseException ex) {
-  //       assertEquals("Forbidden", ex.getContent());
-  //     }
-  //   }
-  // }
-  //
-  // private boolean isWindows() {
-  //   return System.getProperty("os.name").startsWith("Windows");
-  // }
+  @Test
+  public void testApacheHttpTransport() {
+    Apache5HttpTransport transport = new Apache5HttpTransport();
+    checkHttpTransport(transport);
+    assertFalse(transport.isMtls());
+  }
+
+  @Test
+  public void testApacheHttpTransportWithParam() {
+    Apache5HttpTransport transport = new Apache5HttpTransport(HttpClients.custom().build(), true);
+    checkHttpTransport(transport);
+    assertTrue(transport.isMtls());
+  }
+
+  @Test
+  public void testNewDefaultHttpClient() {
+    HttpClient client = Apache5HttpTransport.newDefaultHttpClient();
+    checkHttpClient(client);
+  }
+
+  private void checkHttpTransport(Apache5HttpTransport transport) {
+    assertNotNull(transport);
+    HttpClient client = transport.getHttpClient();
+    checkHttpClient(client);
+  }
+
+  private void checkHttpClient(HttpClient client) {
+    assertNotNull(client);
+    // TODO(chingor): Is it possible to test this effectively? The newer HttpClient implementations
+    // are read-only and we're testing that we built the client with the right configuration
+  }
+
+  @Test
+  public void testRequestsWithContent() throws IOException {
+    HttpClient mockClient =
+        new Apache5MockHttpClient() {
+          @Override
+          public HttpResponse execute(ClassicHttpRequest request)
+              throws IOException, ClientProtocolException {
+            return new Apache5MockHttpResponse();
+          }
+        };
+    Apache5HttpTransport transport = new Apache5HttpTransport(mockClient);
+
+    // Test GET.
+    subtestUnsupportedRequestsWithContent(
+        transport.buildRequest("GET", "http://www.test.url"), "GET");
+    // Test DELETE.
+    subtestUnsupportedRequestsWithContent(
+        transport.buildRequest("DELETE", "http://www.test.url"), "DELETE");
+    // Test HEAD.
+    subtestUnsupportedRequestsWithContent(
+        transport.buildRequest("HEAD", "http://www.test.url"), "HEAD");
+
+    // Test PATCH.
+    execute(transport.buildRequest("PATCH", "http://www.test.url"));
+    // Test PUT.
+    execute(transport.buildRequest("PUT", "http://www.test.url"));
+    // Test POST.
+    execute(transport.buildRequest("POST", "http://www.test.url"));
+    // Test PATCH.
+    execute(transport.buildRequest("PATCH", "http://www.test.url"));
+  }
+
+  private void subtestUnsupportedRequestsWithContent(Apache5HttpRequest request, String method)
+      throws IOException {
+    try {
+      execute(request);
+      fail("expected " + IllegalStateException.class);
+    } catch (IllegalStateException e) {
+      // expected
+      assertEquals(
+          e.getMessage(),
+          "Apache HTTP client does not support " + method + " requests with content.");
+    }
+  }
+
+  private void execute(Apache5HttpRequest request) throws IOException {
+    byte[] bytes = "abc".getBytes(StandardCharsets.UTF_8);
+    request.setStreamingContent(new ByteArrayStreamingContent(bytes));
+    request.setContentType("text/html");
+    request.setContentLength(bytes.length);
+    request.execute();
+  }
+
+  @Test
+  public void testRequestShouldNotFollowRedirects() throws IOException {
+    final AtomicInteger requestsAttempted = new AtomicInteger(0);
+    HttpRequestExecutor requestExecutor =
+        new HttpRequestExecutor() {
+          @Override
+          public ClassicHttpResponse execute(
+              ClassicHttpRequest request, HttpClientConnection connection, HttpContext context)
+              throws IOException, HttpException {
+            ClassicHttpResponse response = new Apache5MockHttpResponse();
+            response.addHeader("location", "https://google.com/path");
+            requestsAttempted.incrementAndGet();
+            return response;
+          }
+        };
+    HttpClient client = HttpClients.custom().setRequestExecutor(requestExecutor).build();
+    Apache5HttpTransport transport = new Apache5HttpTransport(client);
+    Apache5HttpRequest request = transport.buildRequest("GET", "https://google.com");
+    LowLevelHttpResponse response = request.execute();
+    assertEquals(1, requestsAttempted.get());
+    assertEquals(302, response.getStatusCode());
+  }
+
+  @Test
+  public void testRequestCanSetHeaders() {
+    final AtomicBoolean interceptorCalled = new AtomicBoolean(false);
+    HttpClient client =
+        HttpClients.custom()
+            .addRequestInterceptorFirst(
+                new HttpRequestInterceptor() {
+                  @Override
+                  public void process(
+                      HttpRequest request, EntityDetails details, HttpContext context)
+                      throws HttpException, IOException {
+                    Header header = request.getFirstHeader("foo");
+                    assertNotNull("Should have found header", header);
+                    assertEquals("bar", header.getValue());
+                    interceptorCalled.set(true);
+                    throw new IOException("cancelling request");
+                  }
+                })
+            .build();
+
+    Apache5HttpTransport transport = new Apache5HttpTransport(client);
+    Apache5HttpRequest request = transport.buildRequest("GET", "https://google.com");
+    request.addHeader("foo", "bar");
+    try {
+      LowLevelHttpResponse response = request.execute();
+      fail("should not actually make the request");
+    } catch (IOException exception) {
+      assertEquals("cancelling request", exception.getMessage());
+    }
+    assertTrue("Expected to have called our test interceptor", interceptorCalled.get());
+  }
+
+  @Test(timeout = 10_000L)
+  public void testConnectTimeout() {
+    // Apache HttpClient doesn't appear to behave correctly on windows
+    assumeFalse(isWindows());
+    // TODO(chanseok): Java 17 returns an IOException (SocketException: Network is unreachable).
+    // Figure out a way to verify connection timeout works on Java 17+.
+    assumeTrue(System.getProperty("java.version").compareTo("17") < 0);
+
+    HttpTransport httpTransport = new Apache5HttpTransport();
+    GenericUrl url = new GenericUrl("http://google.com:81");
+    try {
+      httpTransport.createRequestFactory().buildGetRequest(url).setConnectTimeout(100).execute();
+      fail("should have thrown an exception");
+    } catch (HttpHostConnectException | ConnectTimeoutException expected) {
+      // expected
+    } catch (IOException e) {
+      fail("unexpected IOException: " + e.getClass().getName() + ": " + e.getMessage());
+    }
+  }
+
+  private static class FakeServer implements AutoCloseable {
+    private final HttpServer server;
+
+    FakeServer(HttpHandler httpHandler) throws IOException {
+      server = new HttpServer(0, HttpService.builder().build(), null, null, null, null, null, null);
+      //       server.createContext("/", httpHandler);
+      server.start();
+    }
+
+    public int getPort() {
+      return server.getLocalPort();
+    }
+
+    @Override
+    public void close() {
+      server.initiateShutdown();
+    }
+  }
+
+  @Test
+  public void testNormalizedUrl() throws IOException {
+    final HttpHandler handler =
+        new HttpHandler() {
+          @Override
+          public void handle(HttpExchange httpExchange) throws IOException {
+            byte[] response = httpExchange.getRequestURI().toString().getBytes();
+            httpExchange.sendResponseHeaders(200, response.length);
+            try (OutputStream out = httpExchange.getResponseBody()) {
+              out.write(response);
+            }
+          }
+        };
+    try (FakeServer server = new FakeServer(handler)) {
+      HttpTransport transport = new Apache5HttpTransport();
+      GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
+      testUrl.setPort(server.getPort());
+      com.google.api.client.http.HttpResponse response =
+          transport.createRequestFactory().buildGetRequest(testUrl).execute();
+      assertEquals(200, response.getStatusCode());
+      assertEquals("/foo//bar", response.parseAsString());
+    }
+  }
+
+  @Test
+  public void testReadErrorStream() throws IOException {
+    final HttpHandler handler =
+        new HttpHandler() {
+          @Override
+          public void handle(HttpExchange httpExchange) throws IOException {
+            byte[] response = "Forbidden".getBytes(StandardCharsets.UTF_8);
+            httpExchange.sendResponseHeaders(403, response.length);
+            try (OutputStream out = httpExchange.getResponseBody()) {
+              out.write(response);
+            }
+          }
+        };
+    try (FakeServer server = new FakeServer(handler)) {
+      HttpTransport transport = new Apache5HttpTransport();
+      GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
+      testUrl.setPort(server.getPort());
+      com.google.api.client.http.HttpRequest getRequest =
+          transport.createRequestFactory().buildGetRequest(testUrl);
+      getRequest.setThrowExceptionOnExecuteError(false);
+      com.google.api.client.http.HttpResponse response = getRequest.execute();
+      assertEquals(403, response.getStatusCode());
+      assertEquals("Forbidden", response.parseAsString());
+    }
+  }
+
+  @Test
+  public void testReadErrorStream_withException() throws IOException {
+    final HttpHandler handler =
+        new HttpHandler() {
+          @Override
+          public void handle(HttpExchange httpExchange) throws IOException {
+            byte[] response = "Forbidden".getBytes(StandardCharsets.UTF_8);
+            httpExchange.sendResponseHeaders(403, response.length);
+            try (OutputStream out = httpExchange.getResponseBody()) {
+              out.write(response);
+            }
+          }
+        };
+    try (FakeServer server = new FakeServer(handler)) {
+      HttpTransport transport = new Apache5HttpTransport();
+      GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
+      testUrl.setPort(server.getPort());
+      com.google.api.client.http.HttpRequest getRequest =
+          transport.createRequestFactory().buildGetRequest(testUrl);
+      try {
+        getRequest.execute();
+        Assert.fail();
+      } catch (HttpResponseException ex) {
+        assertEquals("Forbidden", ex.getContent());
+      }
+    }
+  }
+
+  private boolean isWindows() {
+    return System.getProperty("os.name").startsWith("Windows");
+  }
 }

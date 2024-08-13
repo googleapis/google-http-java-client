@@ -78,7 +78,7 @@ public final class Apache5HttpTransport extends HttpTransport {
    *   <li>Retries are disabled (google-http-client handles retries).
    * </ul>
    *
-   * @param httpClient Closeable Apache HTTP client to use
+   * @param httpClient Apache HTTP client to use
    */
   public Apache5HttpTransport(HttpClient httpClient) {
     this.httpClient = httpClient;
@@ -96,7 +96,7 @@ public final class Apache5HttpTransport extends HttpTransport {
    *   <li>Retries are disabled (google-http-client handles retries).
    * </ul>
    *
-   * @param httpClient Closeable Apache HTTP client to use
+   * @param httpClient Apache HTTP client to use
    * @param isMtls If the HTTP client is mutual TLS
    */
   @Beta
