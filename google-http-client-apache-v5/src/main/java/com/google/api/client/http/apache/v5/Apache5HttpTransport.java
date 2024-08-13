@@ -124,7 +124,7 @@ public final class Apache5HttpTransport extends HttpTransport {
    * @return new instance of the Apache HTTP client
    */
   public static HttpClient newDefaultHttpClient() {
-    return newDefaultCloseableHttpClientBuilder().build();
+    return newDefaultHttpClientBuilder().build();
   }
 
   /**
@@ -146,7 +146,7 @@ public final class Apache5HttpTransport extends HttpTransport {
    *
    * @return new instance of the Apache HTTP client builder
    */
-  public static HttpClientBuilder newDefaultCloseableHttpClientBuilder() {
+  public static HttpClientBuilder newDefaultHttpClientBuilder() {
     PoolingHttpClientConnectionManager connectionManager =
         PoolingHttpClientConnectionManagerBuilder.create()
             .setSSLSocketFactory(SSLConnectionSocketFactory.getSocketFactory())
