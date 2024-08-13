@@ -22,9 +22,10 @@ import java.io.OutputStream;
 import org.apache.hc.core5.http.io.entity.AbstractHttpEntity;
 
 /**
- * Translation class to make google-http-client entity conform with Apache 5.x {@link AbstractHttpEntity}
+ * Translation class to make google-http-client entity conform with Apache 5.x {@link
+ * AbstractHttpEntity}
  */
-final class ApacheV5ContentEntity extends AbstractHttpEntity {
+final class Apache5ContentEntity extends AbstractHttpEntity {
 
   /** Content length or less than zero if not known. */
   private final long contentLength;
@@ -36,7 +37,7 @@ final class ApacheV5ContentEntity extends AbstractHttpEntity {
    * @param contentLength content length or less than zero if not known
    * @param streamingContent streaming content
    */
-  ApacheV5ContentEntity(
+  Apache5ContentEntity(
       long contentLength,
       StreamingContent streamingContent,
       String contentType,

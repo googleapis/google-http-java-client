@@ -14,12 +14,12 @@
 
 package com.google.api.client.http.apache.v5;
 
-public class ApacheV5HttpRequestTest {
+public class Apache5HttpRequestTest {
 
   // @Test
   // public void testContentLengthSet() throws Exception {
   //   HttpExtensionMethod base = new HttpExtensionMethod("POST", "http://www.google.com");
-  //   ApacheV5HttpRequest request = new ApacheV5HttpRequest(new MockHttpClient(), base);
+  //   Apache5HttpRequest request = new Apache5HttpRequest(new MockHttpClient(), base);
   //   HttpContent content =
   //       new ByteArrayContent("text/plain", "sample".getBytes(StandardCharsets.UTF_8));
   //   request.setStreamingContent(content);
@@ -35,7 +35,7 @@ public class ApacheV5HttpRequestTest {
   //   byte[] buf = new byte[300];
   //   Arrays.fill(buf, (byte) ' ');
   //   HttpExtensionMethod base = new HttpExtensionMethod("POST", "http://www.google.com");
-  //   ApacheV5HttpRequest request = new ApacheV5HttpRequest(new MockHttpClient(), base);
+  //   Apache5HttpRequest request = new Apache5HttpRequest(new MockHttpClient(), base);
   //   HttpContent content = new InputStreamContent("text/plain", new ByteArrayInputStream(buf));
   //   request.setStreamingContent(content);
   //   request.execute();

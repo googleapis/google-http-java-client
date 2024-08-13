@@ -16,7 +16,7 @@ package com.google.api.client.http.apache.v5;
 
 import com.google.api.client.http.HttpMethods;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.util.Beta;
+import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
 import java.io.IOException;
 import java.net.ProxySelector;
@@ -50,32 +50,33 @@ import org.apache.hc.core5.io.CloseMode;
  * applications should use a single globally-shared instance of the HTTP transport.
  *
  * <p>Default settings are specified in {@link #newDefaultHttpClient()}. Use the {@link
- * #ApacheV5HttpTransport(CloseableHttpClient)} constructor to override the Apache HTTP Client used.
+ * #Apache5HttpTransport(HttpClient)} constructor to override the Apache HTTP Client used.
  * Please read the <a
  * href="https://github.com/apache/httpcomponents-client/blob/f898f1aca38f77f62a007856a674629cae5a02e6/httpclient5/src/test/java/org/apache/hc/client5/http/examples/ClientConfiguration.java">
  * Apache HTTP Client 5.x configuration example</a> for more complex configuration options.
  *
  * @since 1.44
  */
-public final class ApacheV5HttpTransport extends HttpTransport {
+public final class Apache5HttpTransport extends HttpTransport {
 
   /** Apache HTTP client. */
-  private final CloseableHttpClient httpClient;
+  private final HttpClient httpClient;
 
   /** If the HTTP client uses mTLS channel. */
   private final boolean isMtls;
 
   /**
+   * {@link Beta}
    * Constructor that uses {@link #newDefaultHttpClient()} for the Apache HTTP client.
    *
    * @since 1.44
    */
-  public ApacheV5HttpTransport() {
+  @Beta
+  public Apache5HttpTransport() {
     this(newDefaultHttpClient(), false);
   }
 
   /**
-   * {@link Beta} <br>
    * Constructor that allows an alternative Apache HTTP client to be used.
    *
    * <p>If you choose to provide your own Apache HttpClient implementation, be sure that
@@ -87,7 +88,7 @@ public final class ApacheV5HttpTransport extends HttpTransport {
    *
    * @param httpClient Closeable Apache HTTP client to use
    */
-  public ApacheV5HttpTransport(CloseableHttpClient httpClient) {
+  public Apache5HttpTransport(HttpClient httpClient) {
     this.httpClient = httpClient;
     this.isMtls = false;
   }
@@ -107,7 +108,7 @@ public final class ApacheV5HttpTransport extends HttpTransport {
    * @param isMtls If the HTTP client is mutual TLS
    */
   @Beta
-  public ApacheV5HttpTransport(CloseableHttpClient httpClient, boolean isMtls) {
+  public Apache5HttpTransport(HttpClient httpClient, boolean isMtls) {
     this.httpClient = httpClient;
     this.isMtls = isMtls;
   }
@@ -115,7 +116,7 @@ public final class ApacheV5HttpTransport extends HttpTransport {
   /**
    * {@link Beta} <br>
    * Creates a new instance of the Apache HTTP client that is used by the {@link
-   * #ApacheV5HttpTransport()} constructor.
+   * #Apache5HttpTransport()} constructor.
    *
    * <p>Settings:
    *
@@ -132,12 +133,14 @@ public final class ApacheV5HttpTransport extends HttpTransport {
    * @return new instance of the Apache HTTP client
    * @since 1.44
    */
-  public static CloseableHttpClient newDefaultHttpClient() {
+  @Beta
+  public static HttpClient newDefaultHttpClient() {
     return newDefaultCloseableHttpClientBuilder().build();
   }
 
   /**
-   * Creates a new Apache HTTP client builder that is used by the {@link #ApacheV5HttpTransport()}
+   * {@link Beta}
+   * Creates a new Apache HTTP client builder that is used by the {@link #Apache5HttpTransport()}
    * constructor.
    *
    * <p>Settings:
@@ -153,9 +156,10 @@ public final class ApacheV5HttpTransport extends HttpTransport {
    *       properties</a>.
    * </ul>
    *
-   * @return new instance of the Apache HTTP client
+   * @return new instance of the Apache HTTP client builder
    * @since 1.44
    */
+  @Beta
   public static HttpClientBuilder newDefaultCloseableHttpClientBuilder() {
     PoolingHttpClientConnectionManager connectionManager =
         PoolingHttpClientConnectionManagerBuilder.create()
@@ -180,7 +184,7 @@ public final class ApacheV5HttpTransport extends HttpTransport {
   }
 
   @Override
-  protected ApacheV5HttpRequest buildRequest(String method, String url) {
+  protected Apache5HttpRequest buildRequest(String method, String url) {
     HttpUriRequestBase requestBase;
     if (method.equals(HttpMethods.DELETE)) {
       requestBase = new HttpDelete(url);
@@ -201,18 +205,19 @@ public final class ApacheV5HttpTransport extends HttpTransport {
     } else {
       requestBase = new HttpUriRequestBase(Preconditions.checkNotNull(method), URI.create(url));
     }
-    return new ApacheV5HttpRequest(httpClient, requestBase);
+    return new Apache5HttpRequest(httpClient, requestBase);
   }
 
   /**
    * Gracefully shuts down the connection manager and releases allocated resources. This closes all
    * connections, whether they are currently used or not.
-   *
-   * @since 1.44
    */
   @Override
   public void shutdown() throws IOException {
-    httpClient.close(CloseMode.GRACEFUL);
+    if (httpClient instanceof CloseableHttpClient) {
+      ((CloseableHttpClient) httpClient).close(CloseMode.GRACEFUL);
+    }
+    // otherwise no-op
   }
 
   /**
@@ -224,7 +229,9 @@ public final class ApacheV5HttpTransport extends HttpTransport {
     return httpClient;
   }
 
-  /** Returns if the underlying HTTP client is mTLS. */
+  /**
+   * Returns if the underlying HTTP client is mTLS.
+   */
   @Override
   public boolean isMtls() {
     return isMtls;

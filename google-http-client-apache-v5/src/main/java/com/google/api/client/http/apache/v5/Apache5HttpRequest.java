@@ -26,15 +26,15 @@ import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.util.Timeout;
 
-final class ApacheV5HttpRequest extends LowLevelHttpRequest {
+public final class Apache5HttpRequest extends LowLevelHttpRequest {
 
   private final HttpUriRequestBase request;
 
-  private RequestConfig.Builder requestConfig;
+  private final RequestConfig.Builder requestConfig;
 
-  private HttpClient httpClient;
+  private final HttpClient httpClient;
 
-  ApacheV5HttpRequest(HttpClient httpClient, HttpUriRequestBase request) {
+  Apache5HttpRequest(HttpClient httpClient, HttpUriRequestBase request) {
     this.httpClient = httpClient;
     this.request = request;
     // disable redirects as google-http-client handles redirects
@@ -58,8 +58,8 @@ final class ApacheV5HttpRequest extends LowLevelHttpRequest {
   @Override
   public LowLevelHttpResponse execute() throws IOException {
     if (getStreamingContent() != null) {
-      ApacheV5ContentEntity entity =
-          new ApacheV5ContentEntity(
+      Apache5ContentEntity entity =
+          new Apache5ContentEntity(
               getContentLength(), getStreamingContent(), getContentType(), getContentEncoding());
       request.setEntity(entity);
     }
@@ -70,6 +70,6 @@ final class ApacheV5HttpRequest extends LowLevelHttpRequest {
             request.getAuthority().getHostName(),
             request.getAuthority().getPort());
     HttpResponse httpResponse = httpClient.executeOpen(target, request, HttpClientContext.create());
-    return new ApacheV5HttpResponse(request, httpResponse);
+    return new Apache5HttpResponse(request, httpResponse);
   }
 }

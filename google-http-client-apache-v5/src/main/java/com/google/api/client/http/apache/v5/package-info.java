@@ -13,7 +13,7 @@
  */
 
 /**
- * HTTP Transport library for Google API's based on Apache HTTP Client version 5.x
+ * HTTP Transport library for Google API's based on Apache HTTP Client/Core version 5.x
  *
  * @since 1.44
  */

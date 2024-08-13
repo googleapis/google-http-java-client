@@ -24,13 +24,13 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.message.StatusLine;
 
-final class ApacheV5HttpResponse extends LowLevelHttpResponse {
+final class Apache5HttpResponse extends LowLevelHttpResponse {
 
   private final HttpUriRequestBase request;
   private final HttpResponse response;
   private final Header[] allHeaders;
 
-  ApacheV5HttpResponse(HttpUriRequestBase request, HttpResponse response) {
+  Apache5HttpResponse(HttpUriRequestBase request, HttpResponse response) {
     this.request = request;
     this.response = response;
     allHeaders = response.getHeaders();
