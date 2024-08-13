@@ -54,8 +54,6 @@ import org.apache.hc.core5.io.CloseMode;
  * read the <a
  * href="https://github.com/apache/httpcomponents-client/blob/f898f1aca38f77f62a007856a674629cae5a02e6/httpclient5/src/test/java/org/apache/hc/client5/http/examples/ClientConfiguration.java">
  * Apache HTTP Client 5.x configuration example</a> for more complex configuration options.
- *
- * @since 1.44
  */
 public final class Apache5HttpTransport extends HttpTransport {
 
@@ -67,8 +65,6 @@ public final class Apache5HttpTransport extends HttpTransport {
 
   /**
    * {@link Beta} Constructor that uses {@link #newDefaultHttpClient()} for the Apache HTTP client.
-   *
-   * @since 1.44
    */
   @Beta
   public Apache5HttpTransport() {
@@ -130,7 +126,6 @@ public final class Apache5HttpTransport extends HttpTransport {
    * </ul>
    *
    * @return new instance of the Apache HTTP client
-   * @since 1.44
    */
   @Beta
   public static HttpClient newDefaultHttpClient() {
@@ -155,7 +150,6 @@ public final class Apache5HttpTransport extends HttpTransport {
    * </ul>
    *
    * @return new instance of the Apache HTTP client builder
-   * @since 1.44
    */
   @Beta
   public static HttpClientBuilder newDefaultCloseableHttpClientBuilder() {
@@ -218,11 +212,7 @@ public final class Apache5HttpTransport extends HttpTransport {
     // otherwise no-op
   }
 
-  /**
-   * Returns the Apache HTTP client.
-   *
-   * @since 1.44
-   */
+  /** Returns the Apache HTTP client. */
   public HttpClient getHttpClient() {
     return httpClient;
   }

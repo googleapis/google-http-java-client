@@ -109,11 +109,7 @@ final class Apache5HttpResponse extends LowLevelHttpResponse {
     return allHeaders[index].getValue();
   }
 
-  /**
-   * Aborts execution of the request.
-   *
-   * @since 1.44
-   */
+  /** Aborts execution of the request. */
   @Override
   public void disconnect() {
     request.abort();

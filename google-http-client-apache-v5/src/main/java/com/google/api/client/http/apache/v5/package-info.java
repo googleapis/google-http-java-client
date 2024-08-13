@@ -12,9 +12,5 @@
  * the License.
  */
 
-/**
- * HTTP Transport library for Google API's based on Apache HTTP Client/Core version 5.x
- *
- * @since 1.44
- */
+/** HTTP Transport library for Google API's based on Apache HTTP Client/Core version 5.x */
 package com.google.api.client.http.apache.v5;
