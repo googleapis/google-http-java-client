@@ -21,16 +21,15 @@ import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpEntity;
-import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.message.StatusLine;
 
 final class Apache5HttpResponse extends LowLevelHttpResponse {
 
   private final HttpUriRequestBase request;
-  private final HttpResponse response;
+  private final ClassicHttpResponse response;
   private final Header[] allHeaders;
 
-  Apache5HttpResponse(HttpUriRequestBase request, HttpResponse response) {
+  Apache5HttpResponse(HttpUriRequestBase request, ClassicHttpResponse response) {
     this.request = request;
     this.response = response;
     allHeaders = response.getHeaders();
@@ -43,19 +42,13 @@ final class Apache5HttpResponse extends LowLevelHttpResponse {
 
   @Override
   public InputStream getContent() throws IOException {
-    if (!(response instanceof ClassicHttpResponse)) {
-      return null;
-    }
-    HttpEntity entity = ((ClassicHttpResponse) response).getEntity();
+    HttpEntity entity = response.getEntity();
     return entity == null ? null : entity.getContent();
   }
 
   @Override
   public String getContentEncoding() {
-    if (!(response instanceof ClassicHttpResponse)) {
-      return null;
-    }
-    HttpEntity entity = ((ClassicHttpResponse) response).getEntity();
+    HttpEntity entity = response.getEntity();
     if (entity != null) {
       return entity.getContentEncoding();
     }
@@ -64,19 +57,13 @@ final class Apache5HttpResponse extends LowLevelHttpResponse {
 
   @Override
   public long getContentLength() {
-    if (!(response instanceof ClassicHttpResponse)) {
-      return -1;
-    }
-    HttpEntity entity = ((ClassicHttpResponse) response).getEntity();
+    HttpEntity entity = response.getEntity();
     return entity == null ? -1 : entity.getContentLength();
   }
 
   @Override
   public String getContentType() {
-    if (!(response instanceof ClassicHttpResponse)) {
-      return null;
-    }
-    HttpEntity entity = ((ClassicHttpResponse) response).getEntity();
+    HttpEntity entity = response.getEntity();
     return entity == null ? null : entity.getContentType();
   }
 

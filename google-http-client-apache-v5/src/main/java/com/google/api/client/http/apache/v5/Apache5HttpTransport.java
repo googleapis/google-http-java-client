@@ -94,6 +94,7 @@ public final class Apache5HttpTransport extends HttpTransport {
    * <ul>
    *   <li>HTTP version is set to 1.1.
    *   <li>Retries are disabled (google-http-client handles retries).
+   *   <li>Redirects are disabled (google-http-client handles retries).
    * </ul>
    *
    * @param httpClient Apache HTTP client to use
@@ -113,7 +114,8 @@ public final class Apache5HttpTransport extends HttpTransport {
    *
    * <ul>
    *   <li>The client connection manager is set to {@link PoolingHttpClientConnectionManager}.
-   *   <li>The retry mechanism is turned off using {@link HttpClientBuilder#disableAutomaticRetries()}.
+   *   <li>The retry mechanism is turned off using {@link
+   *       HttpClientBuilder#disableAutomaticRetries()}.
    *   <li>Redirects are turned off using {@link HttpClientBuilder#disableRedirectHandling}.
    *   <li>The route planner uses {@link SystemDefaultRoutePlanner} with {@link
    *       ProxySelector#getDefault()}, which uses the proxy settings from <a
@@ -135,7 +137,8 @@ public final class Apache5HttpTransport extends HttpTransport {
    *
    * <ul>
    *   <li>The client connection manager is set to {@link PoolingHttpClientConnectionManager}.
-   *   <li>The retry mechanism is turned off using {@link HttpClientBuilder#disableAutomaticRetries()}.
+   *   <li>The retry mechanism is turned off using {@link
+   *       HttpClientBuilder#disableAutomaticRetries()}.
    *   <li>Redirects are turned off using {@link HttpClientBuilder#disableRedirectHandling}.
    *   <li>The route planner uses {@link SystemDefaultRoutePlanner} with {@link
    *       ProxySelector#getDefault()}, which uses the proxy settings from <a

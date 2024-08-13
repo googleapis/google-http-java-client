@@ -21,9 +21,10 @@ import java.util.concurrent.TimeUnit;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.RequestConfig;
-import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.client5.http.routing.RoutingSupport;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.HttpException;
 import org.apache.hc.core5.http.HttpHost;
-import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.util.Timeout;
 
 public final class Apache5HttpRequest extends LowLevelHttpRequest {
@@ -64,12 +65,14 @@ public final class Apache5HttpRequest extends LowLevelHttpRequest {
       request.setEntity(entity);
     }
     request.setConfig(requestConfig.build());
-    HttpHost target =
-        new HttpHost(
-            request.getScheme(),
-            request.getAuthority().getHostName(),
-            request.getAuthority().getPort());
-    HttpResponse httpResponse = httpClient.executeOpen(target, request, HttpClientContext.create());
+    HttpHost target;
+    try {
+      target = RoutingSupport.determineHost(request);
+    } catch (HttpException e) {
+      throw new RuntimeException("The request's host is invalid.", e);
+    }
+    // we use a null context so the client creates the default one internally
+    ClassicHttpResponse httpResponse = httpClient.executeOpen(target, request, null);
     return new Apache5HttpResponse(request, httpResponse);
   }
 }
