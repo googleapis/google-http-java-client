@@ -22,6 +22,7 @@ import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -32,8 +33,6 @@ import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager;
 import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager.Projects;
 import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager.Projects.Get;
 import com.google.api.services.cloudresourcemanager.v3.model.Project;
-import com.google.auth.http.HttpCredentialsAdapter;
-import com.google.auth.oauth2.GoogleCredentials;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -73,10 +72,10 @@ public class Apache5HttpTransportTest {
 
   public void testRequest(HttpTransport transport) throws IOException {
     final String PROJECT_ID = System.getenv("PROJECT_ID");
-    GoogleCredentials credentials = null;
+    GoogleCredential credentials = null;
 
     try {
-      credentials = GoogleCredentials.getApplicationDefault();
+      credentials = GoogleCredential.getApplicationDefault();
     } catch (IOException ex) {
       System.err.println(
           "Skipping test because no ADC is set. This is a temporary test meant for local development");
@@ -85,7 +84,7 @@ public class Apache5HttpTransportTest {
     GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
     CloudResourceManager.Builder resourceManagerBuilder =
         new CloudResourceManager.Builder(
-                transport, jsonFactory, new HttpCredentialsAdapter(credentials))
+                transport, jsonFactory, credentials)
             .setApplicationName("Example Java App");
     CloudResourceManager cloudResourceManager = resourceManagerBuilder.build();
 
