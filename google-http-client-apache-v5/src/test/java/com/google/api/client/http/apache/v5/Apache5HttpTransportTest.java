@@ -19,7 +19,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -83,8 +82,7 @@ public class Apache5HttpTransportTest {
     assumeTrue(credentials != null);
     GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
     CloudResourceManager.Builder resourceManagerBuilder =
-        new CloudResourceManager.Builder(
-                transport, jsonFactory, credentials)
+        new CloudResourceManager.Builder(transport, jsonFactory, credentials)
             .setApplicationName("Example Java App");
     CloudResourceManager cloudResourceManager = resourceManagerBuilder.build();
 
@@ -148,12 +146,7 @@ public class Apache5HttpTransportTest {
 
   @Test
   public void testRequestsWithContent() throws IOException {
-    // This test ensures that requests that have content are rejected, as opposed to those with an
-    // entity set.
-    // It is currently failing because we don't perform this check in Apache5HttpRequest.execute();
-    // TODO(diegomarquezp): find out whether this check is necessary in Apache 5.
-    // skip for now
-    assumeFalse(true);
+    // This test confirms that we can set the content on any type of request
     HttpClient mockClient =
         new MockHttpClient() {
           @Override
@@ -165,14 +158,11 @@ public class Apache5HttpTransportTest {
     Apache5HttpTransport transport = new Apache5HttpTransport(mockClient);
 
     // Test GET.
-    subtestUnsupportedRequestsWithContent(
-        transport.buildRequest("GET", "http://www.test.url"), "GET");
+    execute(transport.buildRequest("GET", "http://www.test.url"));
     // Test DELETE.
-    subtestUnsupportedRequestsWithContent(
-        transport.buildRequest("DELETE", "http://www.test.url"), "DELETE");
+    execute(transport.buildRequest("DELETE", "http://www.test.url"));
     // Test HEAD.
-    subtestUnsupportedRequestsWithContent(
-        transport.buildRequest("HEAD", "http://www.test.url"), "HEAD");
+    execute(transport.buildRequest("HEAD", "http://www.test.url"));
 
     // Test PATCH.
     execute(transport.buildRequest("PATCH", "http://www.test.url"));
@@ -182,19 +172,6 @@ public class Apache5HttpTransportTest {
     execute(transport.buildRequest("POST", "http://www.test.url"));
     // Test PATCH.
     execute(transport.buildRequest("PATCH", "http://www.test.url"));
-  }
-
-  private void subtestUnsupportedRequestsWithContent(Apache5HttpRequest request, String method)
-      throws IOException {
-    try {
-      execute(request);
-      fail("expected " + IllegalStateException.class);
-    } catch (IllegalStateException e) {
-      // expected
-      assertEquals(
-          e.getMessage(),
-          "Apache HTTP client does not support " + method + " requests with content.");
-    }
   }
 
   private void execute(Apache5HttpRequest request) throws IOException {
