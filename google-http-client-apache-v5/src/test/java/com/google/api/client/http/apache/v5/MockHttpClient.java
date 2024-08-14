@@ -10,7 +10,7 @@ import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 import org.apache.hc.core5.http.protocol.HttpContext;
 
-public class Apache5MockHttpClient implements HttpClient {
+public class MockHttpClient implements HttpClient {
 
   /** HTTP response code to use. */
   int responseCode;
@@ -21,7 +21,7 @@ public class Apache5MockHttpClient implements HttpClient {
   }
 
   /** Sets the HTTP response code to use. */
-  public Apache5MockHttpClient setResponseCode(int responseCode) {
+  public MockHttpClient setResponseCode(int responseCode) {
     Preconditions.checkArgument(responseCode >= 0);
     this.responseCode = responseCode;
     return this;

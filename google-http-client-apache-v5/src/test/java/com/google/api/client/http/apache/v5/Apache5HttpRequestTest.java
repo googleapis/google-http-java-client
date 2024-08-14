@@ -39,11 +39,11 @@ public class Apache5HttpRequestTest {
     HttpUriRequestBase base = new HttpPost("http://www.google.com");
     Apache5HttpRequest request =
         new Apache5HttpRequest(
-            new Apache5MockHttpClient() {
+            new MockHttpClient() {
               @Override
               public ClassicHttpResponse executeOpen(
                   HttpHost target, ClassicHttpRequest request, HttpContext context) {
-                return new Apache5MockHttpResponse();
+                return new MockClassicHttpResponse();
               }
             },
             base);
@@ -64,11 +64,11 @@ public class Apache5HttpRequestTest {
     HttpUriRequestBase base = new HttpPost("http://www.google.com");
     Apache5HttpRequest request =
         new Apache5HttpRequest(
-            new Apache5MockHttpClient() {
+            new MockHttpClient() {
               @Override
               public ClassicHttpResponse executeOpen(
                   HttpHost target, ClassicHttpRequest request, HttpContext context) {
-                return new Apache5MockHttpResponse();
+                return new MockClassicHttpResponse();
               }
             },
             base);

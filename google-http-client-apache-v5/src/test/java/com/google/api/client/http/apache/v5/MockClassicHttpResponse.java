@@ -13,7 +13,7 @@ import org.apache.hc.core5.http.HttpVersion;
 import org.apache.hc.core5.http.ProtocolException;
 import org.apache.hc.core5.http.ProtocolVersion;
 
-public class Apache5MockHttpResponse implements ClassicHttpResponse {
+public class MockClassicHttpResponse implements ClassicHttpResponse {
   List<Header> headers = new ArrayList<>();
   int code = 200;
 

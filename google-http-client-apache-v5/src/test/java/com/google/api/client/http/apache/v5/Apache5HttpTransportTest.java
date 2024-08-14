@@ -156,11 +156,11 @@ public class Apache5HttpTransportTest {
     // skip for now
     assumeFalse(true);
     HttpClient mockClient =
-        new Apache5MockHttpClient() {
+        new MockHttpClient() {
           @Override
           public ClassicHttpResponse executeOpen(
               HttpHost target, ClassicHttpRequest request, HttpContext context) {
-            return new Apache5MockHttpResponse();
+            return new MockClassicHttpResponse();
           }
         };
     Apache5HttpTransport transport = new Apache5HttpTransport(mockClient);
@@ -215,7 +215,7 @@ public class Apache5HttpTransportTest {
           public ClassicHttpResponse execute(
               ClassicHttpRequest request, HttpClientConnection connection, HttpContext context)
               throws IOException, HttpException {
-            ClassicHttpResponse response = new Apache5MockHttpResponse();
+            ClassicHttpResponse response = new MockClassicHttpResponse();
             response.setCode(302);
             response.setReasonPhrase(null);
             response.addHeader("location", "https://google.com/path");
