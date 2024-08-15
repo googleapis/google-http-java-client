@@ -17,9 +17,6 @@ package com.google.api.client.http.apache.v5;
 import com.google.api.client.http.LowLevelHttpResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.hc.core5.http.Header;
 
 final class Apache5HttpResponse extends LowLevelHttpResponse {
@@ -87,18 +84,6 @@ final class Apache5HttpResponse extends LowLevelHttpResponse {
   @Override
   public String getStatusLine() {
     return statusLine;
-  }
-
-  public String getHeaderValue(String name) {
-    // get all headers matching the name
-    List<Header> matchingHeaders =
-        Arrays.stream(headers).filter(h -> h.getName() == name).collect(Collectors.toList());
-    // return the value of the last header of the matching list
-    return matchingHeaders.stream()
-        .skip(matchingHeaders.size() - 1)
-        .findFirst()
-        .map(h -> h.getValue())
-        .orElse(null);
   }
 
   @Override
