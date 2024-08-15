@@ -71,11 +71,15 @@ public class Apache5HttpTransportTest {
 
   public void testRequest(HttpTransport transport) throws IOException {
     final String PROJECT_ID = System.getenv("PROJECT_ID");
-    // this is only meant for local development with an ADC project set. This will be removed before
-    // merging
-    assumeTrue(PROJECT_ID != null);
-    GoogleCredential credentials = GoogleCredential.getApplicationDefault();
+    GoogleCredential credentials = null;
 
+    try {
+      credentials = GoogleCredential.getApplicationDefault();
+    } catch (IOException ex) {
+      System.err.println(
+          "Skipping test because no ADC is set. This is a temporary test meant for local development");
+    }
+    assumeTrue(credentials != null);
     GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
     CloudResourceManager.Builder resourceManagerBuilder =
         new CloudResourceManager.Builder(transport, jsonFactory, credentials)
