@@ -17,6 +17,8 @@ package com.google.api.client.http.apache.v5;
 import com.google.api.client.http.LowLevelHttpResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.Header;
@@ -25,6 +27,7 @@ import org.apache.hc.core5.http.message.StatusLine;
 
 final class Apache5HttpResponse extends LowLevelHttpResponse {
 
+  private static final Logger LOGGER = Logger.getLogger(Apache5HttpResponse.class.getName());
   private final HttpUriRequestBase request;
   private final ClassicHttpResponse response;
   private final Header[] allHeaders;
@@ -99,6 +102,17 @@ final class Apache5HttpResponse extends LowLevelHttpResponse {
   /** Aborts execution of the request. */
   @Override
   public void disconnect() {
+    close();
+  }
+
+  public void close() {
     request.abort();
+    try {
+      response.close();
+    } catch (IOException e) {
+      // the close() method contract won't allow us to declare a thrown exception. Here we just log
+      // the error
+      LOGGER.log(Level.SEVERE, "Error occurred when closing the response", e);
+    }
   }
 }
