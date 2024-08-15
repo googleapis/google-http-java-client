@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google LLC
+ * Copyright 2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -24,29 +24,35 @@ import com.google.api.client.http.InputStreamContent;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.core5.http.ClassicHttpRequest;
-import org.apache.hc.core5.http.ClassicHttpResponse;
-import org.apache.hc.core5.http.HttpHost;
-import org.apache.hc.core5.http.protocol.HttpContext;
+import org.apache.hc.core5.http.io.HttpClientResponseHandler;
+import org.junit.Before;
 import org.junit.Test;
 
 public class Apache5HttpRequestTest {
 
+  // this will be mocked on each test
+  HttpClient mockClient;
+
+  @Before
+  public void setup() {
+    mockClient =
+        new MockHttpClient() {
+          @Override
+          public Apache5MockHttpResponse execute(
+              ClassicHttpRequest request, HttpClientResponseHandler handler) {
+            return new Apache5MockHttpResponse();
+          }
+        };
+  }
+
   @Test
   public void testContentLengthSet() throws Exception {
     HttpUriRequestBase base = new HttpPost("http://www.google.com");
-    Apache5HttpRequest request =
-        new Apache5HttpRequest(
-            new MockHttpClient() {
-              @Override
-              public ClassicHttpResponse executeOpen(
-                  HttpHost target, ClassicHttpRequest request, HttpContext context) {
-                return new MockClassicHttpResponse();
-              }
-            },
-            base);
+    Apache5HttpRequest request = new Apache5HttpRequest(mockClient, base);
     HttpContent content =
         new ByteArrayContent("text/plain", "sample".getBytes(StandardCharsets.UTF_8));
     request.setStreamingContent(content);
@@ -62,16 +68,7 @@ public class Apache5HttpRequestTest {
     byte[] buf = new byte[300];
     Arrays.fill(buf, (byte) ' ');
     HttpUriRequestBase base = new HttpPost("http://www.google.com");
-    Apache5HttpRequest request =
-        new Apache5HttpRequest(
-            new MockHttpClient() {
-              @Override
-              public ClassicHttpResponse executeOpen(
-                  HttpHost target, ClassicHttpRequest request, HttpContext context) {
-                return new MockClassicHttpResponse();
-              }
-            },
-            base);
+    Apache5HttpRequest request = new Apache5HttpRequest(mockClient, base);
     HttpContent content = new InputStreamContent("text/plain", new ByteArrayInputStream(buf));
     request.setStreamingContent(content);
     request.execute();

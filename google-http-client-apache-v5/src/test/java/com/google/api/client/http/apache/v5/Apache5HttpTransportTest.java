@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google LLC
+ * Copyright 2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -48,7 +48,6 @@ import org.apache.hc.core5.http.EntityDetails;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpException;
 import org.apache.hc.core5.http.HttpHeaders;
-import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.HttpRequest;
 import org.apache.hc.core5.http.HttpRequestInterceptor;
 import org.apache.hc.core5.http.HttpRequestMapper;
@@ -58,6 +57,7 @@ import org.apache.hc.core5.http.impl.bootstrap.HttpServer;
 import org.apache.hc.core5.http.impl.io.HttpRequestExecutor;
 import org.apache.hc.core5.http.impl.io.HttpService;
 import org.apache.hc.core5.http.io.HttpClientConnection;
+import org.apache.hc.core5.http.io.HttpClientResponseHandler;
 import org.apache.hc.core5.http.io.HttpRequestHandler;
 import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
 import org.apache.hc.core5.http.io.support.BasicHttpServerRequestHandler;
@@ -150,9 +150,9 @@ public class Apache5HttpTransportTest {
     HttpClient mockClient =
         new MockHttpClient() {
           @Override
-          public ClassicHttpResponse executeOpen(
-              HttpHost target, ClassicHttpRequest request, HttpContext context) {
-            return new MockClassicHttpResponse();
+          public Apache5MockHttpResponse execute(
+              ClassicHttpRequest request, HttpClientResponseHandler handler) {
+            return new Apache5MockHttpResponse();
           }
         };
     Apache5HttpTransport transport = new Apache5HttpTransport(mockClient);
