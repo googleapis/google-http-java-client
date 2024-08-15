@@ -50,7 +50,6 @@ public final class Apache5HttpRequest extends LowLevelHttpRequest {
 
   @Override
   public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
-    // TODO: find a way to not use the @Deprecated setConnectTimeout method
     requestConfig
         .setConnectTimeout(Timeout.of(connectTimeout, TimeUnit.MILLISECONDS))
         // ResponseTimeout behaves the same as 4.x's SocketTimeout
