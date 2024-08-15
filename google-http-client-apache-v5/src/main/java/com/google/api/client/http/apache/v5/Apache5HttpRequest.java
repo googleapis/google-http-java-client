@@ -18,9 +18,14 @@ import com.google.api.client.http.LowLevelHttpRequest;
 import com.google.api.client.http.LowLevelHttpResponse;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import org.apache.hc.client5.http.ClientProtocolException;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.routing.RoutingSupport;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.HttpException;
+import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.util.Timeout;
 
 public final class Apache5HttpRequest extends LowLevelHttpRequest {
@@ -60,6 +65,14 @@ public final class Apache5HttpRequest extends LowLevelHttpRequest {
       request.setEntity(entity);
     }
     request.setConfig(requestConfig.build());
-    return httpClient.execute(request, new Apache5ResponseHandler());
+    HttpHost target;
+    try {
+      target = RoutingSupport.determineHost(request);
+    } catch (HttpException e) {
+      throw new ClientProtocolException("The request's host is invalid.", e);
+    }
+    // we use a null context so the client creates the default one internally
+    ClassicHttpResponse httpResponse = httpClient.executeOpen(target, request, null);
+    return new Apache5HttpResponse(request, httpResponse);
   }
 }
