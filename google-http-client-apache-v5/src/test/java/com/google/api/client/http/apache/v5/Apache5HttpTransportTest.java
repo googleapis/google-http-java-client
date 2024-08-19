@@ -33,6 +33,7 @@ import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager.Proj
 import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager.Projects.Get;
 import com.google.api.services.cloudresourcemanager.v3.model.Project;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -96,6 +97,10 @@ public class Apache5HttpTransportTest {
     projects.get("projects/" + PROJECT_ID).execute();
     projects.get("projects/" + PROJECT_ID).execute();
     projects.get("projects/" + PROJECT_ID).execute();
+
+    // we confirm input stream responses are handled correctly via user's close() call
+    InputStream is = projects.get("projects/" + PROJECT_ID).executeAsInputStream();
+    is.close();
   }
 
   @Test
