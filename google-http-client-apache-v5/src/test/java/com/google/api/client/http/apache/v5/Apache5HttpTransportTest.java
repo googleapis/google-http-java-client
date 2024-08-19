@@ -92,7 +92,7 @@ public class Apache5HttpTransportTest {
     System.out.println("Project display name: " + project.getDisplayName());
 
     // temp test to confirm re-usage of client works with several consecutive requests
-    projects.get("projects/" + PROJECT_ID).execute();
+    Project p = projects.get("projects/" + PROJECT_ID).execute();
     projects.get("projects/" + PROJECT_ID).execute();
     projects.get("projects/" + PROJECT_ID).execute();
     projects.get("projects/" + PROJECT_ID).execute();

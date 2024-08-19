@@ -31,11 +31,23 @@ final class Apache5HttpResponse extends LowLevelHttpResponse {
   private final HttpUriRequestBase request;
   private final ClassicHttpResponse response;
   private final Header[] allHeaders;
+  private final HttpEntity entity;
+  private final Apache5ResponseContent content;
 
   Apache5HttpResponse(HttpUriRequestBase request, ClassicHttpResponse response) {
     this.request = request;
     this.response = response;
-    allHeaders = response.getHeaders();
+    this.allHeaders = response.getHeaders();
+    this.entity = response.getEntity();
+    Apache5ResponseContent contentValue = null;
+    if (entity != null) {
+      try {
+        contentValue = new Apache5ResponseContent(entity.getContent(), response);
+      } catch (IOException ex) {
+        LOGGER.log(Level.SEVERE, "Error when obtaining content from the response", ex);
+      }
+    }
+    this.content = contentValue;
   }
 
   @Override
@@ -45,28 +57,21 @@ final class Apache5HttpResponse extends LowLevelHttpResponse {
 
   @Override
   public InputStream getContent() throws IOException {
-    HttpEntity entity = response.getEntity();
-    return entity == null ? null : entity.getContent();
+    return content;
   }
 
   @Override
   public String getContentEncoding() {
-    HttpEntity entity = response.getEntity();
-    if (entity != null) {
-      return entity.getContentEncoding();
-    }
-    return null;
+    return entity != null ? entity.getContentEncoding() : null;
   }
 
   @Override
   public long getContentLength() {
-    HttpEntity entity = response.getEntity();
     return entity == null ? -1 : entity.getContentLength();
   }
 
   @Override
   public String getContentType() {
-    HttpEntity entity = response.getEntity();
     return entity == null ? null : entity.getContentType();
   }
 
@@ -102,17 +107,14 @@ final class Apache5HttpResponse extends LowLevelHttpResponse {
   /** Aborts execution of the request. */
   @Override
   public void disconnect() {
-    close();
-  }
-
-  public void close() {
     request.abort();
     try {
-      response.close();
+      // this call also close the response
+      content.close();
     } catch (IOException e) {
       // the close() method contract won't allow us to declare a thrown exception. Here we just log
       // the error
-      LOGGER.log(Level.SEVERE, "Error occurred when closing the response", e);
+      LOGGER.log(Level.SEVERE, "Error occurred when closing the content", e);
     }
   }
 }
