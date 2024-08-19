@@ -99,7 +99,7 @@ final class Apache5HttpResponse extends LowLevelHttpResponse {
   public void disconnect() {
     request.abort();
     try {
-       response.close();
+      response.close();
     } catch (IOException e) {
       // the close() method contract won't allow us to declare a thrown exception. Here we just log
       // the error
