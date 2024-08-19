@@ -32,22 +32,12 @@ final class Apache5HttpResponse extends LowLevelHttpResponse {
   private final ClassicHttpResponse response;
   private final Header[] allHeaders;
   private final HttpEntity entity;
-  private final Apache5ResponseContent content;
 
   Apache5HttpResponse(HttpUriRequestBase request, ClassicHttpResponse response) {
     this.request = request;
     this.response = response;
     this.allHeaders = response.getHeaders();
     this.entity = response.getEntity();
-    Apache5ResponseContent contentValue = null;
-    if (entity != null) {
-      try {
-        contentValue = new Apache5ResponseContent(entity.getContent(), response);
-      } catch (IOException ex) {
-        LOGGER.log(Level.SEVERE, "Error when obtaining content from the response", ex);
-      }
-    }
-    this.content = contentValue;
   }
 
   @Override
@@ -57,7 +47,7 @@ final class Apache5HttpResponse extends LowLevelHttpResponse {
 
   @Override
   public InputStream getContent() throws IOException {
-    return content;
+    return new Apache5ResponseContent(entity.getContent(), response);
   }
 
   @Override
@@ -109,12 +99,11 @@ final class Apache5HttpResponse extends LowLevelHttpResponse {
   public void disconnect() {
     request.abort();
     try {
-      // this call also close the response
-      content.close();
+       response.close();
     } catch (IOException e) {
       // the close() method contract won't allow us to declare a thrown exception. Here we just log
       // the error
-      LOGGER.log(Level.SEVERE, "Error occurred when closing the content", e);
+      LOGGER.log(Level.SEVERE, "Error occurred when closing the response", e);
     }
   }
 }
