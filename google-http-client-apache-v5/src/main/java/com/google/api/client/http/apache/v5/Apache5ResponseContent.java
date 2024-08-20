@@ -1,8 +1,10 @@
 package com.google.api.client.http.apache.v5;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.HttpResponse;
 
 /**
  * Class that wraps an {@link org.apache.hc.core5.http.HttpEntity}'s content {@link InputStream}
@@ -64,5 +66,10 @@ public class Apache5ResponseContent extends InputStream {
   @Override
   public boolean markSupported() {
     return wrappedStream.markSupported();
+  }
+
+  @VisibleForTesting
+  HttpResponse getResponse() {
+    return response;
   }
 }
