@@ -24,18 +24,43 @@ public class Apache5ResponseContent extends InputStream {
   }
 
   @Override
-  public void reset() throws IOException {
-    wrappedStream.reset();
+  public int read(byte b[]) throws IOException {
+    return wrappedStream.read(b);
   }
 
   @Override
-  public void mark(int readLimit) {
-    wrappedStream.mark(readLimit);
+  public int read(byte b[], int off, int len) throws IOException {
+    return wrappedStream.read(b, off, len);
+  }
+
+  @Override
+  public long skip(long n) throws IOException {
+    return wrappedStream.skip(n);
+  }
+
+  @Override
+  public int available() throws IOException {
+    return wrappedStream.available();
+  }
+
+  @Override
+  public synchronized void mark(int readlimit) {
+    wrappedStream.mark(readlimit);
+  }
+
+  @Override
+  public synchronized void reset() throws IOException {
+    wrappedStream.reset();
   }
 
   @Override
   public void close() throws IOException {
     wrappedStream.close();
     response.close();
+  }
+
+  @Override
+  public boolean markSupported() {
+    return wrappedStream.markSupported();
   }
 }
