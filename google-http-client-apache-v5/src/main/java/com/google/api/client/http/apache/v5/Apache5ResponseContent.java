@@ -7,7 +7,9 @@ import org.apache.hc.core5.http.ClassicHttpResponse;
 /**
  * Class that wraps an {@link org.apache.hc.core5.http.HttpEntity}'s content {@link InputStream}
  * along with the {@link ClassicHttpResponse} that contains this entity. The main purpose is to be
- * able to close the response as well as the content input stream when {@link #close()} is called.
+ * able to close the response as well as the content input stream when {@link #close()} is called,
+ * in order to not break the existing contract with clients using apache v4 that only required them
+ * to close the input stream to clean up all resources.
  */
 public class Apache5ResponseContent extends InputStream {
   private final ClassicHttpResponse response;
