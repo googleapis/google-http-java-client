@@ -28,7 +28,7 @@ jobs:
     - uses: actions/setup-java@v4
       # setup-java v2 or higher does not have version 1.7
       with:
-        version: 1.7
+        java-version: 1.7
         architecture: x64
     - run: |
         java -version
