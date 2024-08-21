@@ -24,11 +24,12 @@ jobs:
     name: "units (7)"
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: actions/setup-java@v4
       # setup-java v2 or higher does not have version 1.7
       with:
         java-version: 1.7
+        distribution: temurin
         architecture: x64
     - run: |
         java -version
@@ -55,7 +56,7 @@ jobs:
         # dailymotion-simple-cmdline-sample and google-http-client-assembly depend on
         # google-http-client-jackson2 
         mvn --batch-mode --show-version -ntp test \
-            --projects '!google-http-client-jackson2,!google-http-client-appengine,!samples/dailymotion-simple-cmdline-sample,!google-http-client-assembly' \
+            --projects '!google-http-client-jackson2,!google-http-client-appengine,!samples/dailymotion-simple-cmdline-sample,!google-http-client-assembly,!google-http-client-apache-v5' \
             -Dclirr.skip=true -Denforcer.skip=true -Dmaven.javadoc.skip=true \
             -Dgcloud.download.skip=true -T 1C \
             -Dproject.surefire.version=2.22.2 \
