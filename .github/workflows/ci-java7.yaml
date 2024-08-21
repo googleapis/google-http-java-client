@@ -28,7 +28,7 @@ jobs:
     - uses: actions/setup-java@v4
       # setup-java v2 or higher does not have version 1.7
       with:
-        java-version: 1.7
+        java-version: 7
         distribution: zulu
         architecture: x64
     - run: |
