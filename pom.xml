@@ -252,7 +252,7 @@
       <dependency>
         <groupId>io.grpc</groupId>
         <artifactId>grpc-context</artifactId>
-        <version>1.60.1</version>
+        <version>1.66.0</version>
       </dependency>
       <dependency>
         <groupId>io.opencensus</groupId>
