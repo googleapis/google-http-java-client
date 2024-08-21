@@ -377,7 +377,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.5.0</version>
+          <version>3.6.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -560,7 +560,7 @@
       <!-- Build the dependencies report at package time (needed for the assembly artifact). -->
       <plugin>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>3.5.0</version>
+        <version>3.6.2</version>
         <executions>
           <execution>
             <goals>
