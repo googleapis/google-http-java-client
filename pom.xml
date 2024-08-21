@@ -62,6 +62,7 @@
     <module>google-http-client-appengine</module>
     <module>google-http-client-android</module>
     <module>google-http-client-apache-v2</module>
+    <module>google-http-client-apache-v5</module>
     <module>google-http-client-protobuf</module>
     <module>google-http-client-gson</module>
     <module>google-http-client-jackson2</module>
@@ -92,7 +93,7 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>native-image-shared-config</artifactId>
-    <version>1.9.0</version>
+    <version>1.11.0</version>
   </parent>
 
   <!--
@@ -131,7 +132,7 @@
       <dependency>
         <groupId>com.google.errorprone</groupId>
         <artifactId>error_prone_annotations</artifactId>
-        <version>2.23.0</version>
+        <version>2.30.0</version>
       </dependency>
       <dependency>
         <groupId>com.google.appengine</groupId>
@@ -156,12 +157,22 @@
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
-        <version>${project.httpclient.version}</version>
+        <version>${project.apache-httpclient-4.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpcore</artifactId>
-        <version>${project.httpcore.version}</version>
+        <version>${project.apache-httpcore-4.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents.client5</groupId>
+        <artifactId>httpclient5</artifactId>
+        <version>${project.apache-httpclient-5.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents.core5</groupId>
+        <artifactId>httpcore5</artifactId>
+        <version>${project.apache-httpcore-5.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
@@ -236,12 +247,12 @@
       <dependency>
         <groupId>com.google.j2objc</groupId>
         <artifactId>j2objc-annotations</artifactId>
-        <version>2.8</version>
+        <version>3.0.0</version>
       </dependency>
       <dependency>
         <groupId>io.grpc</groupId>
         <artifactId>grpc-context</artifactId>
-        <version>1.60.1</version>
+        <version>1.66.0</version>
       </dependency>
       <dependency>
         <groupId>io.opencensus</groupId>
@@ -313,7 +324,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.7.0</version>
+          <version>3.8.0</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>
@@ -361,7 +372,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>animal-sniffer-maven-plugin</artifactId>
-          <version>1.23</version>
+          <version>1.24</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -597,12 +608,14 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.jsr305.version>3.0.2</project.jsr305.version>
     <project.gson.version>2.10.1</project.gson.version>
-    <project.jackson-core2.version>2.14.2</project.jackson-core2.version>
+    <project.jackson-core2.version>2.17.2</project.jackson-core2.version>
     <project.protobuf-java.version>3.21.12</project.protobuf-java.version>
     <project.guava.version>30.1.1-android</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
-    <project.httpclient.version>4.5.14</project.httpclient.version>
-    <project.httpcore.version>4.4.16</project.httpcore.version>
+    <project.apache-httpclient-4.version>4.5.14</project.apache-httpclient-4.version>
+    <project.apache-httpcore-4.version>4.4.16</project.apache-httpcore-4.version>
+    <project.apache-httpclient-5.version>5.3.1</project.apache-httpclient-5.version>
+    <project.apache-httpcore-5.version>5.2.4</project.apache-httpcore-5.version>
     <project.opencensus.version>0.31.1</project.opencensus.version>
     <project.root-directory>..</project.root-directory>
     <project.surefire.version>3.2.5</project.surefire.version>
@@ -787,7 +800,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.7.0</version>
+            <version>3.8.0</version>
             <configuration>
               <doclet>com.microsoft.doclet.DocFxDoclet</doclet>
               <useStandardDocletOptions>false</useStandardDocletOptions>
