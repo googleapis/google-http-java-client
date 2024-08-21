@@ -62,6 +62,7 @@
     <module>google-http-client-appengine</module>
     <module>google-http-client-android</module>
     <module>google-http-client-apache-v2</module>
+    <module>google-http-client-apache-v5</module>
     <module>google-http-client-protobuf</module>
     <module>google-http-client-gson</module>
     <module>google-http-client-jackson2</module>
@@ -156,12 +157,22 @@
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
-        <version>${project.httpclient.version}</version>
+        <version>${project.apache-httpclient-4.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpcore</artifactId>
-        <version>${project.httpcore.version}</version>
+        <version>${project.apache-httpcore-4.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents.client5</groupId>
+        <artifactId>httpclient5</artifactId>
+        <version>${project.apache-httpclient-5.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.httpcomponents.core5</groupId>
+        <artifactId>httpcore5</artifactId>
+        <version>${project.apache-httpcore-5.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
@@ -601,8 +612,10 @@
     <project.protobuf-java.version>3.21.12</project.protobuf-java.version>
     <project.guava.version>30.1.1-android</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
-    <project.httpclient.version>4.5.14</project.httpclient.version>
-    <project.httpcore.version>4.4.16</project.httpcore.version>
+    <project.apache-httpclient-4.version>4.5.14</project.apache-httpclient-4.version>
+    <project.apache-httpcore-4.version>4.4.16</project.apache-httpcore-4.version>
+    <project.apache-httpclient-5.version>5.3.1</project.apache-httpclient-5.version>
+    <project.apache-httpcore-5.version>5.2.4</project.apache-httpcore-5.version>
     <project.opencensus.version>0.31.1</project.opencensus.version>
     <project.root-directory>..</project.root-directory>
     <project.surefire.version>3.2.5</project.surefire.version>

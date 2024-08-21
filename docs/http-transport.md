@@ -19,8 +19,12 @@ There are three built-in low-level HTTP transports:
 
 1. [`NetHttpTransport`][net-http-transport]: based on [`HttpURLConnection`][http-url-connection]
 that is found in all Java SDKs, and thus usually the simplest choice.
+1. [`Apache5HttpTransport`][apache-http-transport]: based on the popular
+   [Apache 5.x HttpClient][apache5-http-client] that allows for more customization.
 1. [`ApacheHttpTransport`][apache-http-transport]: based on the popular
-[Apache HttpClient][apache-http-client] that allows for more customization.
+[Apache 4.x HttpClient][apache-http-client] that allows for more customization. Note that this transport implementation
+relies on [Apache 4.x HttpCore][apache-http-core] which has reached end of life. It is recommended to use
+[`Apache5HttpTransport`][apache-http-transport] instead.
 1. [`UrlFetchTransport`][url-fetch-transport]: based on the [URL Fetch Java API][url-fetch] in the
 Google App Engine SDK.
 
@@ -124,7 +128,10 @@ HttpRequestFactory requestFactory = transport.createRequestFactory(new MyInitial
 [net-http-transport]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/http/javanet/NetHttpTransport.html
 [http-url-connection]: http://docs.oracle.com/javase/7/docs/api/java/net/HttpURLConnection.html
 [apache-http-transport]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/http/apache/v2/ApacheHttpTransport.html
-[apache-http-client]: http://hc.apache.org/httpcomponents-client-ga/index.html
+[apache5-http-transport]: https://github.com/googleapis/google-http-java-client/blob/de8743587d1415e8a6046096ac1fc0a5e81490c3/google-http-client-apache-v5/src/main/java/com/google/api/client/http/apache/v5/Apache5HttpTransport.java
+[apache-http-client]: https://hc.apache.org/httpcomponents-client-4.5.x/index.html
+[apache-http-core]: https://hc.apache.org/httpcomponents-core-4.4.x/index.html
+[apache5-http-client]: https://hc.apache.org/httpcomponents-client-5.3.x/index.html
 [url-fetch-transport]: https://googleapis.dev/java/google-http-client/latest/index.html?com/google/api/client/extensions/appengine/http/UrlFetchTransport.html
 [url-fetch]: https://cloud.google.com/appengine/docs/java/javadoc/com/google/appengine/api/urlfetch/package-summary
 [logger]: https://docs.oracle.com/javase/7/docs/api/java/util/logging/Logger.html
