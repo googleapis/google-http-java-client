@@ -21,26 +21,18 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.LowLevelHttpResponse;
-import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.ByteArrayStreamingContent;
-import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager;
-import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager.Projects;
-import com.google.api.services.cloudresourcemanager.v3.CloudResourceManager.Projects.Get;
-import com.google.api.services.cloudresourcemanager.v3.model.Project;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.hc.client5.http.ConnectTimeoutException;
 import org.apache.hc.client5.http.HttpHostConnectException;
 import org.apache.hc.client5.http.classic.HttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.ClassicHttpResponse;
@@ -69,46 +61,6 @@ import org.junit.Test;
 
 /** Tests {@link Apache5HttpTransport}. */
 public class Apache5HttpTransportTest {
-
-  public void testRequest(HttpTransport transport) throws IOException {
-    final String PROJECT_ID = System.getenv("PROJECT_ID");
-    assumeTrue(PROJECT_ID != null);
-    GoogleCredential credentials = GoogleCredential.getApplicationDefault();
-    GsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-    CloudResourceManager.Builder resourceManagerBuilder =
-        new CloudResourceManager.Builder(transport, jsonFactory, credentials)
-            .setApplicationName("Example Java App");
-    CloudResourceManager cloudResourceManager = resourceManagerBuilder.build();
-
-    Projects projects = cloudResourceManager.projects();
-    Get get = projects.get("projects/" + PROJECT_ID);
-    Project project = get.execute();
-    System.out.println("Project display name: " + project.getDisplayName());
-
-    // temp test to confirm re-usage of client works with several consecutive requests
-    Project p = projects.get("projects/" + PROJECT_ID).execute();
-    projects.get("projects/" + PROJECT_ID).execute();
-    projects.get("projects/" + PROJECT_ID).execute();
-    projects.get("projects/" + PROJECT_ID).execute();
-
-    // we confirm input stream responses are handled correctly via user's close() call
-    InputStream is = projects.get("projects/" + PROJECT_ID).executeAsInputStream();
-    is.close();
-  }
-
-  @Test
-  public void testClientUsingDefaultApacheV5Transport() throws IOException {
-    HttpTransport transport = new Apache5HttpTransport();
-    testRequest(transport);
-  }
-
-  @Test
-  public void testClientUsingApacheV5TransportWithCustomHttpClient() throws IOException {
-    CloseableHttpClient client =
-        HttpClients.custom().disableAutomaticRetries().disableRedirectHandling().build();
-    HttpTransport transport = new Apache5HttpTransport(client);
-    testRequest(transport);
-  }
 
   @Test
   public void testApacheHttpTransport() {
