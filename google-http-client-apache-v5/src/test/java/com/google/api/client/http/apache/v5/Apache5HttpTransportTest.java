@@ -61,6 +61,39 @@ import org.junit.Test;
 
 /** Tests {@link Apache5HttpTransport}. */
 public class Apache5HttpTransportTest {
+  private static final String NO_CONNECT_URL = "https://google.com:81";
+
+  @Test(timeout = 10_000L)
+  public void testConnectTimeoutGet() throws IOException {
+    HttpTransport transport = new Apache5HttpTransport();
+    try {
+      transport
+          .createRequestFactory()
+          .buildGetRequest(new GenericUrl(NO_CONNECT_URL))
+          .setConnectTimeout(100)
+          .execute();
+      fail("No exception thrown for HTTP error response");
+    } catch (ConnectTimeoutException e) {
+      assertTrue(
+          "Expected exception message to contain a connection timeout message",
+          e.getMessage().contains("Connect timed out"));
+    }
+  }
+
+  @Test(timeout = 10_000L)
+  public void testConnectTimeoutPost() throws IOException {
+    Apache5HttpTransport transport = new Apache5HttpTransport();
+    Apache5HttpRequest request = transport.buildRequest("POST", NO_CONNECT_URL);
+    request.setTimeout(100, 0);
+    try {
+      request.execute();
+      fail("No exception thrown for HTTP error response");
+    } catch (ConnectTimeoutException e) {
+      assertTrue(
+          "Expected exception message to contain a connection timeout message",
+          e.getMessage().contains("Connect timed out"));
+    }
+  }
 
   @Test
   public void testApacheHttpTransport() {
