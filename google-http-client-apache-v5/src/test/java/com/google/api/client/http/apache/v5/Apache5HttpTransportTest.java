@@ -70,7 +70,7 @@ public class Apache5HttpTransportTest {
       transport
           .createRequestFactory()
           .buildGetRequest(new GenericUrl(NO_CONNECT_URL))
-          .setConnectTimeout(100)
+          .setConnectTimeout(10)
           .execute();
       fail("No exception thrown for HTTP error response");
     } catch (ConnectTimeoutException e) {
@@ -84,7 +84,7 @@ public class Apache5HttpTransportTest {
   public void testConnectTimeoutPost() throws IOException {
     Apache5HttpTransport transport = new Apache5HttpTransport();
     Apache5HttpRequest request = transport.buildRequest("POST", NO_CONNECT_URL);
-    request.setTimeout(100, 0);
+    request.setTimeout(10, 0);
     try {
       request.execute();
       fail("No exception thrown for HTTP error response");
