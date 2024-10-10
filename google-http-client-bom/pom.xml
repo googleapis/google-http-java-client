@@ -77,6 +77,11 @@
       </dependency>
       <dependency>
         <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-apache-v5</artifactId>
+        <version>1.45.0</version><!-- {x-version-update:google-http-client-apache-v5:current} -->
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
         <artifactId>google-http-client-appengine</artifactId>
         <version>1.45.0</version><!-- {x-version-update:google-http-client-appengine:current} -->
       </dependency>
