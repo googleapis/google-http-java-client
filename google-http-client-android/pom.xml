@@ -4,11 +4,11 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.45.0</version><!-- {x-version-update:google-http-client-parent:current} -->
+    <version>1.45.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>google-http-client-android</artifactId>
-  <version>1.45.0</version><!-- {x-version-update:google-http-client-android:current} -->
+  <version>1.45.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-android:current} -->
   <name>Android Platform Extensions to the Google HTTP Client Library for Java.</name>
 
   <build>

@@ -4,7 +4,7 @@
   <groupId>google-http-client</groupId>
   <artifactId>google-http-client-android-test</artifactId>
   <name>Test project for google-http-client-android.</name>
-  <version>1.45.0</version><!-- {x-version-update:google-http-client-android-test:current} -->
+  <version>1.45.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-android-test:current} -->
   <packaging>apk</packaging>
 
   <build>
@@ -53,7 +53,7 @@
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-android</artifactId>
-      <version>1.45.0</version><!-- {x-version-update:google-http-client-android:current} -->
+      <version>1.45.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-android:current} -->
       <exclusions>
         <exclusion>
           <artifactId>android</artifactId>
@@ -72,7 +72,7 @@
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-test</artifactId>
-      <version>1.45.0</version><!-- {x-version-update:google-http-client-test:current} -->
+      <version>1.45.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-test:current} -->
       <exclusions>
         <exclusion>
           <artifactId>junit</artifactId>
