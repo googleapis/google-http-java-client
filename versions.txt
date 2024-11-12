@@ -1,18 +1,18 @@
 # Format:
 # module:released-version:current-version
 
-google-http-client:1.45.0:1.45.0
-google-http-client-bom:1.45.0:1.45.0
-google-http-client-parent:1.45.0:1.45.0
-google-http-client-android:1.45.0:1.45.0
-google-http-client-android-test:1.45.0:1.45.0
-google-http-client-apache-v2:1.45.0:1.45.0
-google-http-client-apache-v5:1.45.0:1.45.0
-google-http-client-appengine:1.45.0:1.45.0
-google-http-client-assembly:1.45.0:1.45.0
-google-http-client-findbugs:1.45.0:1.45.0
-google-http-client-gson:1.45.0:1.45.0
-google-http-client-jackson2:1.45.0:1.45.0
-google-http-client-protobuf:1.45.0:1.45.0
-google-http-client-test:1.45.0:1.45.0
-google-http-client-xml:1.45.0:1.45.0
+google-http-client:1.45.0:1.45.1-SNAPSHOT
+google-http-client-bom:1.45.0:1.45.1-SNAPSHOT
+google-http-client-parent:1.45.0:1.45.1-SNAPSHOT
+google-http-client-android:1.45.0:1.45.1-SNAPSHOT
+google-http-client-android-test:1.45.0:1.45.1-SNAPSHOT
+google-http-client-apache-v2:1.45.0:1.45.1-SNAPSHOT
+google-http-client-apache-v5:1.45.0:1.45.1-SNAPSHOT
+google-http-client-appengine:1.45.0:1.45.1-SNAPSHOT
+google-http-client-assembly:1.45.0:1.45.1-SNAPSHOT
+google-http-client-findbugs:1.45.0:1.45.1-SNAPSHOT
+google-http-client-gson:1.45.0:1.45.1-SNAPSHOT
+google-http-client-jackson2:1.45.0:1.45.1-SNAPSHOT
+google-http-client-protobuf:1.45.0:1.45.1-SNAPSHOT
+google-http-client-test:1.45.0:1.45.1-SNAPSHOT
+google-http-client-xml:1.45.0:1.45.1-SNAPSHOT

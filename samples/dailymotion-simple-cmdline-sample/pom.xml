@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.google.http-client</groupId>
     <artifactId>google-http-client-parent</artifactId>
-    <version>1.45.0</version><!-- {x-version-update:google-http-client-parent:current} -->
+    <version>1.45.1-SNAPSHOT</version><!-- {x-version-update:google-http-client-parent:current} -->
     <relativePath>../../pom.xml</relativePath>
   </parent>
   <artifactId>dailymotion-simple-cmdline-sample</artifactId>
