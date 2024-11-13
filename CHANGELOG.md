@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.45.1](https://github.com/googleapis/google-http-java-client/compare/v1.45.0...v1.45.1) (2024-11-12)
+
+
+### Bug Fixes
+
+* Add google-http-client-apache-v5 to bom ([#2021](https://github.com/googleapis/google-http-java-client/issues/2021)) ([4830ad7](https://github.com/googleapis/google-http-java-client/commit/4830ad788a62fe9cd4f64873b771e6ef8ef92193))
+
 ## [1.45.0](https://github.com/googleapis/google-http-java-client/compare/v1.44.2...v1.45.0) (2024-08-21)
 
 
