@@ -624,7 +624,7 @@
     <project.apache-httpcore-5.version>5.2.5</project.apache-httpcore-5.version>
     <project.opencensus.version>0.31.1</project.opencensus.version>
     <project.root-directory>..</project.root-directory>
-    <project.surefire.version>3.4.0</project.surefire.version>
+    <project.surefire.version>3.5.2</project.surefire.version>
     <deploy.autorelease>false</deploy.autorelease>
   </properties>
 
