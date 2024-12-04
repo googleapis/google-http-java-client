@@ -14,34 +14,37 @@
 
 package com.google.api.client.http.apache.v5;
 
-import com.google.api.client.http.*;
 import org.apache.hc.client5.http.classic.methods.*;
-import org.apache.hc.core5.http.*;
-import org.apache.hc.core5.http.io.entity.*;
-import org.apache.hc.core5.http.protocol.*;
 import org.junit.*;
 
 import java.io.*;
-import java.nio.charset.*;
-import java.util.*;
-import java.util.concurrent.atomic.*;
 
 import static org.junit.Assert.*;
 
-public class Apache5HttpResponseTest {
+public class Apache5ResponseContentTest {
     @Test
-    public void testNullContent() throws Exception {
-        HttpUriRequestBase base = new HttpPost("http://www.google.com");
+    public void testNullResponseContent_doesNotThrowExceptionOnClose() throws Exception {
+        Apache5ResponseContent response =
+                new Apache5ResponseContent(
+                        new InputStream() {
+                            @Override
+                            public int read() throws IOException {
+                                return 0;
+                            }
+                        },
+                        null);
+
+        response.close();
+    }
+
+    @Test
+    public void testNullWrappedContent_doesNotThrowExceptionOnClose() throws Exception {
         MockClassicHttpResponse mockResponse = new MockClassicHttpResponse();
-        mockResponse.setEntity(null);
-        Apache5HttpResponse response =
-                new Apache5HttpResponse(
-                        base,
+        Apache5ResponseContent response =
+                new Apache5ResponseContent(
+                        null,
                         mockResponse);
 
-        InputStream content =
-                response.getContent();
-
-        assertNotNull(content);
+        response.close();
     }
 }

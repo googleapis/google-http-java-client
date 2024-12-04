@@ -59,8 +59,12 @@ public class Apache5ResponseContent extends InputStream {
 
   @Override
   public void close() throws IOException {
-    wrappedStream.close();
-    response.close();
+    if (wrappedStream != null) {
+      wrappedStream.close();
+    }
+    if (response != null) {
+      response.close();
+    }
   }
 
   @Override
