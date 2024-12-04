@@ -14,27 +14,23 @@
 
 package com.google.api.client.http.apache.v5;
 
+import static org.junit.Assert.assertNotNull;
+
+import java.io.InputStream;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.junit.Test;
-import java.io.InputStream;
-
-import static org.junit.Assert.assertNotNull;
 
 public class Apache5HttpResponseTest {
-    @Test
-    public void testNullContent() throws Exception {
-        HttpUriRequestBase base = new HttpPost("http://www.google.com");
-        MockClassicHttpResponse mockResponse = new MockClassicHttpResponse();
-        mockResponse.setEntity(null);
-        Apache5HttpResponse response =
-                new Apache5HttpResponse(
-                        base,
-                        mockResponse);
+  @Test
+  public void testNullContent() throws Exception {
+    HttpUriRequestBase base = new HttpPost("http://www.google.com");
+    MockClassicHttpResponse mockResponse = new MockClassicHttpResponse();
+    mockResponse.setEntity(null);
+    Apache5HttpResponse response = new Apache5HttpResponse(base, mockResponse);
 
-        InputStream content =
-                response.getContent();
+    InputStream content = response.getContent();
 
-        assertNotNull(content);
-    }
+    assertNotNull(content);
+  }
 }

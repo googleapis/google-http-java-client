@@ -19,29 +19,26 @@ import java.io.InputStream;
 import org.junit.Test;
 
 public class Apache5ResponseContentTest {
-    @Test
-    public void testNullResponseContent_doesNotThrowExceptionOnClose() throws Exception {
-        Apache5ResponseContent response =
-                new Apache5ResponseContent(
-                        new InputStream() {
-                            @Override
-                            public int read() throws IOException {
-                                return 0;
-                            }
-                        },
-                        null);
+  @Test
+  public void testNullResponseContent_doesNotThrowExceptionOnClose() throws Exception {
+    Apache5ResponseContent response =
+        new Apache5ResponseContent(
+            new InputStream() {
+              @Override
+              public int read() throws IOException {
+                return 0;
+              }
+            },
+            null);
 
-        response.close();
-    }
+    response.close();
+  }
 
-    @Test
-    public void testNullWrappedContent_doesNotThrowExceptionOnClose() throws Exception {
-        MockClassicHttpResponse mockResponse = new MockClassicHttpResponse();
-        Apache5ResponseContent response =
-                new Apache5ResponseContent(
-                        null,
-                        mockResponse);
+  @Test
+  public void testNullWrappedContent_doesNotThrowExceptionOnClose() throws Exception {
+    MockClassicHttpResponse mockResponse = new MockClassicHttpResponse();
+    Apache5ResponseContent response = new Apache5ResponseContent(null, mockResponse);
 
-        response.close();
-    }
+    response.close();
+  }
 }
