@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google LLC
+ * Copyright 2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,19 +14,12 @@
 
 package com.google.api.client.http.apache.v5;
 
-import com.google.api.client.http.*;
-import org.apache.hc.client5.http.classic.methods.*;
-import org.apache.hc.core5.http.*;
-import org.apache.hc.core5.http.io.entity.*;
-import org.apache.hc.core5.http.protocol.*;
-import org.junit.*;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.junit.Test;
+import java.io.InputStream;
 
-import java.io.*;
-import java.nio.charset.*;
-import java.util.*;
-import java.util.concurrent.atomic.*;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 public class Apache5HttpResponseTest {
     @Test

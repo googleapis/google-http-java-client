@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google LLC
+ * Copyright 2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,12 +14,9 @@
 
 package com.google.api.client.http.apache.v5;
 
-import org.apache.hc.client5.http.classic.methods.*;
-import org.junit.*;
-
-import java.io.*;
-
-import static org.junit.Assert.*;
+import java.io.IOException;
+import java.io.InputStream;
+import org.junit.Test;
 
 public class Apache5ResponseContentTest {
     @Test
