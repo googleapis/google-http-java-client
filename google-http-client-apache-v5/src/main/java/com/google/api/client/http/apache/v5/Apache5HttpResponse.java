@@ -46,7 +46,9 @@ final class Apache5HttpResponse extends LowLevelHttpResponse {
 
   @Override
   public InputStream getContent() throws IOException {
-    return new Apache5ResponseContent(entity.getContent(), response);
+    HttpEntity entity = response.getEntity();
+    InputStream content = entity == null ? null : entity.getContent();
+    return new Apache5ResponseContent(content, response);
   }
 
   @Override
