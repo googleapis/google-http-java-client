@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.45.2](https://github.com/googleapis/google-http-java-client/compare/v1.45.1...v1.45.2) (2024-12-05)
+
+
+### Bug Fixes
+
+* NPE if response entity is null ([#2043](https://github.com/googleapis/google-http-java-client/issues/2043)) ([12c742b](https://github.com/googleapis/google-http-java-client/commit/12c742b1f7536fd1fd408a74071007b15480b149))
+
+
+### Dependencies
+
+* Update actions/checkout action to v4.2.2 ([#2034](https://github.com/googleapis/google-http-java-client/issues/2034)) ([024fd71](https://github.com/googleapis/google-http-java-client/commit/024fd718793d20f9439d538b9c342daeb84b89bc))
+* Update actions/upload-artifact action to v4.4.3 ([#2035](https://github.com/googleapis/google-http-java-client/issues/2035)) ([443157c](https://github.com/googleapis/google-http-java-client/commit/443157c5ff20fdddaf40193e005f43b7bc6a6f54))
+* Update dependency com.fasterxml.jackson.core:jackson-core to v2.18.2 ([#2036](https://github.com/googleapis/google-http-java-client/issues/2036)) ([5d24785](https://github.com/googleapis/google-http-java-client/commit/5d247854d65075c9e0f8e9076c210f0e93742c46))
+* Update dependency com.google.errorprone:error_prone_annotations to v2.36.0 ([#2037](https://github.com/googleapis/google-http-java-client/issues/2037)) ([cc6eb61](https://github.com/googleapis/google-http-java-client/commit/cc6eb61a9f7ae550951ee7b5c8a383d755e76959))
+* Update dependency io.grpc:grpc-context to v1.68.2 ([#2038](https://github.com/googleapis/google-http-java-client/issues/2038)) ([9fba799](https://github.com/googleapis/google-http-java-client/commit/9fba799ac04c7870f3ee5c425ccb0a51dc7e0d16))
+* Update dependency ubuntu to v24 ([#2041](https://github.com/googleapis/google-http-java-client/issues/2041)) ([ac83eb2](https://github.com/googleapis/google-http-java-client/commit/ac83eb259331de683806787c172514592d27de01))
+* Update github/codeql-action action to v3.27.6 ([#2003](https://github.com/googleapis/google-http-java-client/issues/2003)) ([dc8e46a](https://github.com/googleapis/google-http-java-client/commit/dc8e46a6b6308985380e312fad82b7c182dd9e6f))
+* Update project.appengine.version to v2.0.31 ([#2027](https://github.com/googleapis/google-http-java-client/issues/2027)) ([8bb79e5](https://github.com/googleapis/google-http-java-client/commit/8bb79e5448e0fa2767b029e7101e3d5d5112eaf2))
+
 ## [1.45.1](https://github.com/googleapis/google-http-java-client/compare/v1.45.0...v1.45.1) (2024-11-12)
 
 
