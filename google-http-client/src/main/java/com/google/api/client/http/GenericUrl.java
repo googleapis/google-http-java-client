@@ -676,7 +676,7 @@ public class GenericUrl extends GenericData {
     try {
       return new URL(encodedUrl);
     } catch (MalformedURLException e) {
-      throw new IllegalArgumentException(e);
+      throw new IllegalArgumentException("Malformed URL: \"" + encodedUrl + "\"", e);
     }
   }
 }
