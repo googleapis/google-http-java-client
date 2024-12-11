@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.45.3](https://github.com/googleapis/google-http-java-client/compare/v1.45.2...v1.45.3) (2024-12-11)
+
+
+### Dependencies
+
+* Update dependency io.grpc:grpc-context to v1.69.0 ([#2050](https://github.com/googleapis/google-http-java-client/issues/2050)) ([9f4f6ab](https://github.com/googleapis/google-http-java-client/commit/9f4f6ab5e2729bebe8416a40d092172e7ba3313a))
+* Update github/codeql-action action to v3.27.7 ([#2049](https://github.com/googleapis/google-http-java-client/issues/2049)) ([9190382](https://github.com/googleapis/google-http-java-client/commit/91903825dd1af1ea1f39a96107d9518610212278))
+
 ## [1.45.2](https://github.com/googleapis/google-http-java-client/compare/v1.45.1...v1.45.2) (2024-12-05)
 
 
