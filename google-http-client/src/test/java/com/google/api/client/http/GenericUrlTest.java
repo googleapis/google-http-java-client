@@ -14,6 +14,9 @@
 
 package com.google.api.client.http;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import com.google.api.client.util.Key;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -96,6 +99,15 @@ public class GenericUrlTest extends TestCase {
     assertEquals("bar", url.getHost());
     assertEquals("b", url.getFirst("a"));
     assertNull(url.getPathParts());
+  }
+
+  public void testParse_malformedUrl() {
+    try {
+      new GenericUrl("http://example.com:8080http://example.com:8080/");
+      fail("expected " + IllegalArgumentException.class);
+    } catch (IllegalArgumentException e) {
+      assertThat(e.getMessage(), equalTo("Malformed URL: \"http://example.com:8080http://example.com:8080/\""));
+    }
   }
 
   private static final String SHORT_PATH = "http://bar/path?a=b";
