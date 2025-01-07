@@ -93,7 +93,7 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>native-image-shared-config</artifactId>
-    <version>1.12.3</version>
+    <version>1.13.0</version>
   </parent>
 
   <!--
