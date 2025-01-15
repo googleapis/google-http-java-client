@@ -29,4 +29,4 @@ branches:
   - bumpMinorPreMajor: true
     handleGHRelease: true
     releaseType: java-backport
-    branch: bump-minor-v-for-LTS
+    branch: 2.51.x
