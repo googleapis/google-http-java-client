@@ -98,7 +98,7 @@ branchProtectionRules:
       - dependencies (11)
       - clirr
       - cla/google
-  - pattern: bump-minor-v-for-LTS
+  - pattern: 2.51.x
     isAdminEnforced: true
     requiredApprovingReviewCount: 1
     requiresCodeOwnerReviews: true
