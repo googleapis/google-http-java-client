@@ -14,6 +14,8 @@
 
 package com.google.api.client.http.javanet;
 
+import static org.junit.Assume.assumeThat;
+
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.testing.http.HttpTesting;
@@ -31,9 +33,12 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.security.KeyStore;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import junit.framework.TestCase;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.core.Is;
 import org.junit.Test;
 
 /**
@@ -195,6 +200,10 @@ public class NetHttpTransportTest extends TestCase {
 
   @Test(timeout = 10_000L)
   public void testDisconnectShouldNotWaitToReadResponse() throws IOException {
+    // This test does not behave as expected since JDK 23
+    // see https://bugs.openjdk.org/browse/JDK-6968351
+    int javaVersion = Integer.parseInt(System.getProperty("java.version").split("\\.")[0]);
+    assumeThat(javaVersion < 23, CoreMatchers.is(true));
     // This handler waits for 100s before returning writing content. The test should
     // timeout if disconnect waits for the response before closing the connection.
     final HttpHandler handler =
