@@ -203,14 +203,17 @@ public class NetHttpTransportTest extends TestCase {
           public void handle(HttpExchange httpExchange) throws IOException {
             byte[] response = httpExchange.getRequestURI().toString().getBytes();
             httpExchange.sendResponseHeaders(200, response.length);
-
-            // Sleep for longer than the test timeout
-            try {
-              Thread.sleep(100_000);
-            } catch (InterruptedException e) {
-              throw new IOException("interrupted", e);
-            }
             try (OutputStream out = httpExchange.getResponseBody()) {
+              byte[] firstByte = new byte[] { 0x01 };
+              out.write(firstByte);
+              out.flush();
+
+              // Sleep for longer than the test timeout
+              try {
+                Thread.sleep(100_000);
+              } catch (InterruptedException e) {
+                throw new IOException("interrupted", e);
+              }
               out.write(response);
             }
           }
