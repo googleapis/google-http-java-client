@@ -204,7 +204,7 @@ public class NetHttpTransportTest extends TestCase {
             byte[] response = httpExchange.getRequestURI().toString().getBytes();
             httpExchange.sendResponseHeaders(200, response.length);
             try (OutputStream out = httpExchange.getResponseBody()) {
-              byte[] firstByte = new byte[] { 0x01 };
+              byte[] firstByte = new byte[] {0x01};
               out.write(firstByte);
               out.flush();
 
