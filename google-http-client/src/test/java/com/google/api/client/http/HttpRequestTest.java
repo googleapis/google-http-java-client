@@ -14,6 +14,13 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockHttpUnsuccessfulResponseHandler;
@@ -54,25 +61,26 @@ import org.junit.Test;
  *
  * @author Yaniv Inbar
  */
-public class HttpRequestTest extends TestCase {
+public class HttpRequestTest {
 
   private static final ImmutableSet<String> BASIC_METHODS =
       ImmutableSet.of(HttpMethods.GET, HttpMethods.PUT, HttpMethods.POST, HttpMethods.DELETE);
   private static final ImmutableSet<String> OTHER_METHODS =
       ImmutableSet.of(HttpMethods.HEAD, HttpMethods.PATCH);
 
-  @Override
+  @Before
   public void setUp() {
     // suppress logging warnings to the console
     HttpTransport.LOGGER.setLevel(java.util.logging.Level.SEVERE);
   }
 
-  @Override
+  @After
   public void tearDown() {
     // back to the standard logging level for console
     HttpTransport.LOGGER.setLevel(java.util.logging.Level.WARNING);
   }
 
+  @Test
   public void testNotSupportedByDefault() throws Exception {
     MockHttpTransport transport = new MockHttpTransport();
     HttpRequest request =
@@ -111,6 +119,7 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
+  @Deprecated
   private static class MockBackOffPolicy implements BackOffPolicy {
 
     int backOffCalls;
@@ -202,6 +211,7 @@ public class HttpRequestTest extends TestCase {
         });
   }
 
+  @Test
   public void test301Redirect() throws Exception {
     // Set up RedirectTransport to redirect on the first request and then return success.
     RedirectTransport fakeTransport = new RedirectTransport();
@@ -214,6 +224,7 @@ public class HttpRequestTest extends TestCase {
   }
 
   @Deprecated
+  @Test
   public void test301RedirectWithUnsuccessfulResponseHandled() throws Exception {
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(true);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
@@ -237,6 +248,7 @@ public class HttpRequestTest extends TestCase {
     assertTrue(handler.isCalled());
   }
 
+  @Test
   public void test301RedirectWithBackOffUnsuccessfulResponseHandled() throws Exception {
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(true);
     // Set up RedirectTransport to redirect on the first request and then return success.
@@ -283,6 +295,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals(0, backOffPolicy.backOffCalls);
   }
 
+  @Test
   public void test301RedirectWithBackOffUnsuccessfulResponseNotHandled() throws Exception {
     // Create an Unsuccessful response handler that always returns false.
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
@@ -305,6 +318,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals(0, backOff.getNumberOfTries());
   }
 
+  @Test
   public void test303Redirect() throws Exception {
     // Set up RedirectTransport to redirect on the first request and then return success.
     RedirectTransport fakeTransport = new RedirectTransport();
@@ -327,6 +341,7 @@ public class HttpRequestTest extends TestCase {
     assertNull(request.getContent());
   }
 
+  @Test
   public void testInfiniteRedirects() throws Exception {
     // Set up RedirectTransport to cause infinite redirections.
     RedirectTransport fakeTransport = new RedirectTransport();
@@ -344,6 +359,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals(request.getNumberOfRetries() + 1, fakeTransport.lowLevelExecCalls);
   }
 
+  @Test
   public void testMissingLocationRedirect() throws Exception {
     // Set up RedirectTransport to set responses with missing location headers.
     RedirectTransport fakeTransport = new RedirectTransport();
@@ -453,6 +469,7 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
+  @Test
   public void testHandleRedirect() throws Exception {
     StatusCodesTransport transport = new StatusCodesTransport();
     HttpRequest req =
@@ -507,6 +524,7 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
+  @Test
   public void testHandleRedirect_relativeLocation() throws IOException {
     subtestHandleRedirect_relativeLocation("http://some.org/a/b", "z", "http://some.org/a/z");
     subtestHandleRedirect_relativeLocation("http://some.org/a/b", "z/", "http://some.org/a/z/");
@@ -526,6 +544,7 @@ public class HttpRequestTest extends TestCase {
   }
 
   @Deprecated
+  @Test
   public void testExecuteErrorWithRetryEnabled() throws Exception {
     int callsBeforeSuccess = 3;
     FailThenSuccessConnectionErrorTransport fakeTransport =
@@ -540,6 +559,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals(4, fakeTransport.lowLevelExecCalls);
   }
 
+  @Test
   public void testExecuteErrorWithIOExceptionHandler() throws Exception {
     int callsBeforeSuccess = 3;
     FailThenSuccessConnectionErrorTransport fakeTransport =
@@ -555,6 +575,7 @@ public class HttpRequestTest extends TestCase {
   }
 
   @Deprecated
+  @Test
   public void testExecuteErrorWithRetryEnabledBeyondRetryLimit() throws Exception {
     int callsBeforeSuccess = 11;
     FailThenSuccessConnectionErrorTransport fakeTransport =
@@ -572,6 +593,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals(callsBeforeSuccess, fakeTransport.lowLevelExecCalls);
   }
 
+  @Test
   public void testExecuteErrorWithIOExceptionHandlerBeyondRetryLimit() throws Exception {
     int callsBeforeSuccess = 11;
     FailThenSuccessConnectionErrorTransport fakeTransport =
@@ -589,6 +611,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals(callsBeforeSuccess, fakeTransport.lowLevelExecCalls);
   }
 
+  @Test
   public void testExecuteErrorWithoutIOExceptionHandler() throws Exception {
     int callsBeforeSuccess = 3;
     FailThenSuccessConnectionErrorTransport fakeTransport =
@@ -607,6 +630,7 @@ public class HttpRequestTest extends TestCase {
   }
 
   @Deprecated
+  @Test
   public void testUserAgentWithExecuteErrorAndRetryEnabled() throws Exception {
     int callsBeforeSuccess = 3;
     FailThenSuccessConnectionErrorTransport fakeTransport =
@@ -623,6 +647,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals(4, fakeTransport.lowLevelExecCalls);
   }
 
+  @Test
   public void testUserAgentWithExecuteErrorAndIOExceptionHandler() throws Exception {
     int callsBeforeSuccess = 3;
     FailThenSuccessConnectionErrorTransport fakeTransport =
@@ -639,6 +664,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals(4, fakeTransport.lowLevelExecCalls);
   }
 
+  @Test
   public void testAbnormalResponseHandlerWithNoBackOff() throws Exception {
     FailThenSuccessBackoffTransport fakeTransport =
         new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED, 1);
@@ -655,6 +681,7 @@ public class HttpRequestTest extends TestCase {
   }
 
   @Deprecated
+  @Test
   public void testAbnormalResponseHandlerWithBackOff() throws Exception {
     FailThenSuccessBackoffTransport fakeTransport =
         new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, 1);
@@ -674,6 +701,7 @@ public class HttpRequestTest extends TestCase {
     assertTrue(handler.isCalled());
   }
 
+  @Test
   public void testAbnormalResponseHandlerWithBackOffUnsuccessfulResponseHandler() throws Exception {
     FailThenSuccessBackoffTransport fakeTransport =
         new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, 1);
@@ -692,6 +720,7 @@ public class HttpRequestTest extends TestCase {
   }
 
   @Deprecated
+  @Test
   public void testBackOffSingleCall() throws Exception {
     FailThenSuccessBackoffTransport fakeTransport =
         new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, 1);
@@ -711,6 +740,7 @@ public class HttpRequestTest extends TestCase {
     assertTrue(handler.isCalled());
   }
 
+  @Test
   public void testBackOffUnsuccessfulResponseSingleCall() throws Exception {
     FailThenSuccessBackoffTransport fakeTransport =
         new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, 1);
@@ -729,6 +759,7 @@ public class HttpRequestTest extends TestCase {
   }
 
   @Deprecated
+  @Test
   public void testBackOffMultipleCalls() throws Exception {
     int callsBeforeSuccess = 5;
     FailThenSuccessBackoffTransport fakeTransport =
@@ -750,6 +781,7 @@ public class HttpRequestTest extends TestCase {
     assertTrue(handler.isCalled());
   }
 
+  @Test
   public void testBackOffUnsucessfulReponseMultipleCalls() throws Exception {
     int callsBeforeSuccess = 5;
     FailThenSuccessBackoffTransport fakeTransport =
@@ -770,6 +802,7 @@ public class HttpRequestTest extends TestCase {
   }
 
   @Deprecated
+  @Test
   public void testBackOffCallsBeyondRetryLimit() throws Exception {
     int callsBeforeSuccess = 11;
     FailThenSuccessBackoffTransport fakeTransport =
@@ -794,6 +827,7 @@ public class HttpRequestTest extends TestCase {
     assertTrue(handler.isCalled());
   }
 
+  @Test
   public void testBackOffUnsuccessfulReponseCallsBeyondRetryLimit() throws Exception {
     int callsBeforeSuccess = 11;
     FailThenSuccessBackoffTransport fakeTransport =
@@ -817,6 +851,7 @@ public class HttpRequestTest extends TestCase {
   }
 
   @Deprecated
+  @Test
   public void testBackOffUnRecognizedStatusCode() throws Exception {
     FailThenSuccessBackoffTransport fakeTransport =
         new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED, 1);
@@ -839,6 +874,7 @@ public class HttpRequestTest extends TestCase {
     assertTrue(handler.isCalled());
   }
 
+  @Test
   public void testBackOffUnsuccessfulReponseUnRecognizedStatusCode() throws Exception {
     FailThenSuccessBackoffTransport fakeTransport =
         new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED, 1);
@@ -860,6 +896,7 @@ public class HttpRequestTest extends TestCase {
   }
 
   @Deprecated
+  @Test
   public void testBackOffStop() throws Exception {
     int callsBeforeSuccess = 5;
     FailThenSuccessBackoffTransport fakeTransport =
@@ -886,6 +923,7 @@ public class HttpRequestTest extends TestCase {
     assertTrue(handler.isCalled());
   }
 
+  @Test
   public void testBackOffUnsucessfulResponseStop() throws Exception {
     int callsBeforeSuccess = 5;
     FailThenSuccessBackoffTransport fakeTransport =
@@ -932,6 +970,7 @@ public class HttpRequestTest extends TestCase {
     @Key E otherValue;
   }
 
+  @Test
   public void testExecute_headerSerialization() throws Exception {
     // custom headers
     MyHeaders myHeaders = new MyHeaders();
@@ -972,6 +1011,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals(ImmutableList.of("other"), lowLevelRequest.getHeaderValues("othervalue"));
   }
 
+  @Test
   public void testGZipEncoding() throws Exception {
     class MyTransport extends MockHttpTransport {
 
@@ -1021,6 +1061,7 @@ public class HttpRequestTest extends TestCase {
     request.execute();
   }
 
+  @Test
   public void testContentLoggingLimitWithLoggingEnabledAndDisabled() throws Exception {
 
     class MyTransport extends MockHttpTransport {
@@ -1087,17 +1128,20 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
+  @Test
   public void testVersion() {
     assertNotNull("version constant should not be null", HttpRequest.VERSION);
     Pattern semverPattern = Pattern.compile("\\d+\\.\\d+\\.\\d+(-sp\\.\\d+)?(-SNAPSHOT)?");
     assertTrue(semverPattern.matcher(HttpRequest.VERSION).matches());
   }
 
+  @Test
   public void testUserAgent() {
     assertTrue(HttpRequest.USER_AGENT_SUFFIX.contains("Google-HTTP-Java-Client"));
     assertTrue(HttpRequest.USER_AGENT_SUFFIX.contains("gzip"));
   }
 
+  @Test
   public void testExecute_headers() throws Exception {
     HttpTransport transport = new MockHttpTransport();
     HttpRequest request =
@@ -1107,6 +1151,7 @@ public class HttpRequestTest extends TestCase {
     request.execute();
   }
 
+  @Test
   public void testSuppressUserAgentSuffix() throws Exception {
     class MyTransport extends MockHttpTransport {
       String expectedUserAgent;
@@ -1149,6 +1194,7 @@ public class HttpRequestTest extends TestCase {
     request.execute();
   }
 
+  @Test
   public void testExecuteAsync()
       throws IOException, InterruptedException, ExecutionException, TimeoutException {
     MockExecutor mockExecutor = new MockExecutor();
@@ -1163,6 +1209,7 @@ public class HttpRequestTest extends TestCase {
     assertNotNull(futureResponse.get(10, TimeUnit.MILLISECONDS));
   }
 
+  @Test
   public void testExecute_redirects() throws Exception {
     class MyTransport extends MockHttpTransport {
       int count = 1;
@@ -1193,6 +1240,7 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
+  @Test
   public void testExecute_redirectWithIncorrectContentRetryableSetting() throws Exception {
     // TODO(yanivi): any way we can warn user about this?
     RedirectTransport fakeTransport = new RedirectTransport();
@@ -1213,6 +1261,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals(2, fakeTransport.lowLevelExecCalls);
   }
 
+  @Test
   public void testExecute_curlLogger() throws Exception {
     LogRecordingHandler recorder = new LogRecordingHandler();
     HttpTransport.LOGGER.setLevel(Level.CONFIG);
@@ -1235,6 +1284,7 @@ public class HttpRequestTest extends TestCase {
     assertTrue(found);
   }
 
+  @Test
   public void testExecute_curlLoggerWithContentEncoding() throws Exception {
     LogRecordingHandler recorder = new LogRecordingHandler();
     HttpTransport.LOGGER.setLevel(Level.CONFIG);
@@ -1268,6 +1318,7 @@ public class HttpRequestTest extends TestCase {
     assertTrue(found);
   }
 
+  @Test
   public void testVersion_matchesAcceptablePatterns() throws Exception {
     String acceptableVersionPattern =
         "unknown-version|(?:\\d+\\.\\d+\\.\\d+(?:-.*?)?(?:-SNAPSHOT)?)";
