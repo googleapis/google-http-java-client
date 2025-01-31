@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests {@link NetHttpResponse}.
@@ -34,6 +35,7 @@ public class NetHttpResponseTest {
   private static final String VALID_RESPONSE = "This is a valid response.";
   private static final String ERROR_RESPONSE = "This is an error response.";
 
+  @Test
   public void testGetStatusCode() throws IOException {
     subtestGetStatusCode(0, -1);
     subtestGetStatusCode(200, 200);
@@ -47,6 +49,7 @@ public class NetHttpResponseTest {
             .getStatusCode());
   }
 
+  @Test
   public void testGetContent() throws IOException {
     subtestGetContent(0);
     subtestGetContent(200);
@@ -105,6 +108,7 @@ public class NetHttpResponseTest {
     }
   }
 
+  @Test
   public void testSkippingBytes() throws IOException {
     MockHttpURLConnection connection =
         new MockHttpURLConnection(null)
