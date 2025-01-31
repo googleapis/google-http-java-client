@@ -14,17 +14,21 @@
 
 package com.google.api.client.testing.http;
 
+import static org.junit.Assert.assertEquals;
+
 import com.google.api.client.util.ByteArrayStreamingContent;
 import com.google.api.client.util.StringUtils;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests {@link MockLowLevelHttpRequest}.
  *
  * @author Yaniv Inbar
  */
-public class MockLowLevelHttpRequestTest extends TestCase {
+public class MockLowLevelHttpRequestTest {
 
+  @Test
   public void testGetContentAsString() throws Exception {
     subtestGetContentAsString("", null);
     subtestGetContentAsString("hello", "hello");

@@ -14,6 +14,8 @@
 
 package com.google.api.client.http.javanet;
 
+import static org.junit.Assert.assertEquals;
+
 import com.google.api.client.testing.http.javanet.MockHttpURLConnection;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayInputStream;
@@ -27,7 +29,7 @@ import junit.framework.TestCase;
  *
  * @author Yaniv Inbar
  */
-public class NetHttpResponseTest extends TestCase {
+public class NetHttpResponseTest {
 
   private static final String VALID_RESPONSE = "This is a valid response.";
   private static final String ERROR_RESPONSE = "This is an error response.";

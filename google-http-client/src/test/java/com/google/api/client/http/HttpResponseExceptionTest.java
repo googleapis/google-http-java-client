@@ -17,7 +17,10 @@ package com.google.api.client.http;
 import static com.google.api.client.testing.http.HttpTesting.SIMPLE_GENERIC_URL;
 import static com.google.api.client.util.StringUtils.LINE_SEPARATOR;
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import com.google.api.client.http.HttpResponseException.Builder;
 import com.google.api.client.testing.http.MockHttpTransport;
@@ -32,6 +35,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import junit.framework.TestCase;
 import org.junit.Assert;
+import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
 
 /**
@@ -39,8 +43,9 @@ import org.junit.function.ThrowingRunnable;
  *
  * @author Yaniv Inbar
  */
-public class HttpResponseExceptionTest extends TestCase {
+public class HttpResponseExceptionTest {
 
+  @Test
   public void testConstructor() throws Exception {
     HttpTransport transport = new MockHttpTransport();
     HttpRequest request = transport.createRequestFactory().buildGetRequest(SIMPLE_GENERIC_URL);
@@ -54,6 +59,7 @@ public class HttpResponseExceptionTest extends TestCase {
     assertTrue(headers == responseException.getHeaders());
   }
 
+  @Test
   public void testBuilder() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     Builder builder =
@@ -73,6 +79,7 @@ public class HttpResponseExceptionTest extends TestCase {
     assertTrue(headers == e.getHeaders());
   }
 
+  @Test
   public void testConstructorWithStatusMessage() throws Exception {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -94,6 +101,7 @@ public class HttpResponseExceptionTest extends TestCase {
     assertEquals("OK", responseException.getStatusMessage());
   }
 
+  @Test
   public void testConstructor_noStatusCode() throws Exception {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -123,6 +131,7 @@ public class HttpResponseExceptionTest extends TestCase {
     assertThat(responseException).hasMessageThat().isEqualTo("GET " + SIMPLE_GENERIC_URL);
   }
 
+  @Test
   public void testConstructor_messageButNoStatusCode() throws Exception {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -153,6 +162,7 @@ public class HttpResponseExceptionTest extends TestCase {
     assertThat(responseException).hasMessageThat().isEqualTo("Foo\nGET " + SIMPLE_GENERIC_URL);
   }
 
+  @Test
   public void testComputeMessage() throws Exception {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -174,6 +184,7 @@ public class HttpResponseExceptionTest extends TestCase {
         .isEqualTo("200 Foo\nGET " + SIMPLE_GENERIC_URL);
   }
 
+  @Test
   public void testThrown() throws Exception {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -214,6 +225,7 @@ public class HttpResponseExceptionTest extends TestCase {
     assertEquals(1, responseException.getAttemptCount());
   }
 
+  @Test
   public void testInvalidCharset() throws Exception {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -249,6 +261,7 @@ public class HttpResponseExceptionTest extends TestCase {
         .isEqualTo("404 Not Found\nGET " + SIMPLE_GENERIC_URL);
   }
 
+  @Test
   public void testAttemptCountWithBackOff() throws Exception {
     HttpTransport fakeTransport =
         new MockHttpTransport() {
@@ -288,11 +301,12 @@ public class HttpResponseExceptionTest extends TestCase {
               }
             });
 
-    Assert.assertEquals(500, responseException.getStatusCode());
+    assertEquals(500, responseException.getStatusCode());
     // original request and 1 retry - total 2
     assertEquals(2, responseException.getAttemptCount());
   }
 
+  @Test
   public void testUnsupportedCharset() throws Exception {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -327,6 +341,7 @@ public class HttpResponseExceptionTest extends TestCase {
         .isEqualTo("404 Not Found\nGET " + SIMPLE_GENERIC_URL);
   }
 
+  @Test
   public void testSerialization() throws Exception {
     HttpTransport transport = new MockHttpTransport();
     HttpRequest request = transport.createRequestFactory().buildGetRequest(SIMPLE_GENERIC_URL);

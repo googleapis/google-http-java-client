@@ -14,21 +14,23 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertFalse;
+
 import com.google.api.client.testing.util.TestableByteArrayOutputStream;
 import com.google.api.client.util.ByteArrayStreamingContent;
 import com.google.api.client.util.StringUtils;
 import java.io.IOException;
-import junit.framework.TestCase;
 import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests {@link HttpEncodingStreamingContent}.
  *
  * @author Yaniv Inbar
  */
-public class HttpEncodingStreamingContentTest extends TestCase {
+public class HttpEncodingStreamingContentTest {
 
-  private static final byte[] EXPECED_ZIPPED =
+  private static final byte[] EXPECTED_ZIPPED =
       new byte[] {
         31, -117, 8, 0, 0, 0, 0, 0, 0, -1, -53, -49, -57, 13, 0, -30, -66, -14, 54, 28, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0
@@ -42,11 +44,12 @@ public class HttpEncodingStreamingContentTest extends TestCase {
         0, 0, 0, 0, 0, 0, 0, 0
       };
 
+  @Test
   public void test() throws IOException {
     // TODO: remove when no longer using Java < 16.
     byte[] expected =
         System.getProperty("java.version").compareTo("16") >= 0
-            ? EXPECED_ZIPPED
+            ? EXPECTED_ZIPPED
             : EXPECED_ZIPPED_BELOW_JAVA_16;
 
     GZipEncoding encoding = new GZipEncoding();

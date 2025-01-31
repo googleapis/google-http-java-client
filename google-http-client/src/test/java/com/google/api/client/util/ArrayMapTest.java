@@ -14,28 +14,29 @@
 
 package com.google.api.client.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Iterator;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests {@link ArrayMap}.
  *
  * @author Yaniv Inbar
  */
-public class ArrayMapTest extends TestCase {
+public class ArrayMapTest {
 
-  public ArrayMapTest() {}
-
-  public ArrayMapTest(String testName) {
-    super(testName);
-  }
-
+  @Test
   public void testOf_zero() {
     ArrayMap<String, Integer> map = ArrayMap.of();
     assertTrue(map.isEmpty());
   }
 
+  @Test
   public void testOf_one() {
     ArrayMap<String, Integer> map = ArrayMap.of("a", 1);
     assertEquals(1, map.size());
@@ -43,6 +44,7 @@ public class ArrayMapTest extends TestCase {
     assertEquals((Integer) 1, map.getValue(0));
   }
 
+  @Test
   public void testOf_two() {
     ArrayMap<String, Integer> map = ArrayMap.of("a", 1, "b", 2);
     assertEquals(2, map.size());
@@ -52,30 +54,35 @@ public class ArrayMapTest extends TestCase {
     assertEquals((Integer) 2, map.getValue(1));
   }
 
+  @Test
   public void testRemove1() {
     ArrayMap<String, Integer> map = ArrayMap.of("a", 1, "b", 2);
     map.remove("b");
     assertEquals(ArrayMap.of("a", 1), map);
   }
 
+  @Test
   public void testRemove2() {
     ArrayMap<String, Integer> map = ArrayMap.of("a", 1, "b", 2);
     map.remove("a");
     assertEquals(ArrayMap.of("b", 2), map);
   }
 
+  @Test
   public void testRemove3() {
     ArrayMap<String, Integer> map = ArrayMap.of("a", 1);
     map.remove("a");
     assertEquals(ArrayMap.of(), map);
   }
 
+  @Test
   public void testRemove4() {
     ArrayMap<String, Integer> map = ArrayMap.of("a", 1, "b", 2, "c", 3);
     map.remove("b");
     assertEquals(ArrayMap.of("a", 1, "c", 3), map);
   }
 
+  @Test
   public void testClone_changingEntrySet() {
     ArrayMap<String, String> map = ArrayMap.of();
     assertEquals("{}", map.toString());
@@ -84,6 +91,7 @@ public class ArrayMapTest extends TestCase {
     assertEquals("{foo=bar}", clone.toString());
   }
 
+  @Test
   public void testSet() {
     ArrayMap<String, Integer> map = ArrayMap.of();
     map.set(0, "a", 1);
@@ -102,6 +110,7 @@ public class ArrayMapTest extends TestCase {
     }
   }
 
+  @Test
   public void testHashCode() {
     ArrayMap<String, Integer> map = ArrayMap.of();
     map.set(0, "a", null);
@@ -111,6 +120,7 @@ public class ArrayMapTest extends TestCase {
     assertTrue(map.hashCode() > 0);
   }
 
+  @Test
   public void testIteratorRemove1() {
     ArrayMap<String, String> map = new ArrayMap<String, String>();
     map.put("a", "a");
@@ -126,6 +136,7 @@ public class ArrayMapTest extends TestCase {
     assertEquals(0, map.size());
   }
 
+  @Test
   public void testIteratorRemove2() {
     ArrayMap<String, String> map = new ArrayMap<String, String>();
     map.put("a", "a");
@@ -143,6 +154,7 @@ public class ArrayMapTest extends TestCase {
     assertEquals("c", map.get("c"));
   }
 
+  @Test
   public void testIteratorRemove3() {
     ArrayMap<String, String> map = new ArrayMap<String, String>();
     map.put("a", "a");

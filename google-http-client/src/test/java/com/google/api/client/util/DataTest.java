@@ -14,6 +14,13 @@
 
 package com.google.api.client.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.common.collect.ImmutableMap;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -40,14 +47,16 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentMap;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests {@link Data}.
  *
  * @author Yaniv Inbar
  */
-public class DataTest extends TestCase {
+public class DataTest {
 
+  @Test
   public void testNullOf() {
     assertEquals("java.lang.Object", Data.nullOf(Object.class).getClass().getName());
     assertEquals("java.lang.String", Data.nullOf(String.class).getClass().getName());
@@ -69,12 +78,14 @@ public class DataTest extends TestCase {
     }
   }
 
+  @Test
   public void testNullOfTemplateTypes() {
     String nullValue = Data.nullOf(String.class);
     Map<String, String> nullField = ImmutableMap.of("v", nullValue);
     assertEquals(nullValue, nullField.get("v"));
   }
 
+  @Test
   public void testIsNull() {
     assertTrue(Data.isNull(Data.NULL_BOOLEAN));
     assertTrue(Data.isNull(Data.NULL_STRING));
@@ -102,6 +113,7 @@ public class DataTest extends TestCase {
     assertFalse(Data.isNull(BigInteger.ZERO));
   }
 
+  @Test
   public void testClone_array() {
     String[] orig = new String[] {"a", "b", "c"};
     String[] result = Data.clone(orig);
@@ -109,6 +121,8 @@ public class DataTest extends TestCase {
     assertTrue(Arrays.equals(orig, result));
   }
 
+
+  @Test
   public void testClone_intArray() {
     int[] orig = new int[] {1, 2, 3};
     int[] result = Data.clone(orig);
@@ -116,12 +130,14 @@ public class DataTest extends TestCase {
     assertTrue(Arrays.equals(orig, result));
   }
 
+  @Test
   public void testClone_arrayMap() {
     ArrayMap<String, Integer> map = ArrayMap.of();
     map.add("a", 1);
     assertEquals(map, Data.clone(map));
   }
 
+  @Test
   public void testClone_ArraysAsList() {
     {
       List<Object> orig = Arrays.<Object>asList("a", "b", "c", new ArrayList<Object>());
@@ -139,6 +155,7 @@ public class DataTest extends TestCase {
     }
   }
 
+  @Test
   public void testNewCollectionInstance() throws Exception {
     assertEquals(ArrayList.class, Data.newCollectionInstance(null).getClass());
     assertEquals(ArrayList.class, Data.newCollectionInstance(String[].class).getClass());
@@ -173,6 +190,7 @@ public class DataTest extends TestCase {
     }
   }
 
+  @Test
   public void testNewMapInstance() {
     assertEquals(ArrayMap.class, Data.newMapInstance(Object.class).getClass());
     assertEquals(ArrayMap.class, Data.newMapInstance(Map.class).getClass());
@@ -196,12 +214,14 @@ public class DataTest extends TestCase {
     }
   }
 
+  @Test
   public void testIsPrimitive() {
     assertFalse(Data.isPrimitive(null));
     assertTrue(Data.isPrimitive(int.class));
     assertTrue(Data.isPrimitive(Integer.class));
   }
 
+  @Test
   public void testParsePrimitiveValue() {
     assertNull(Data.parsePrimitiveValue(Boolean.class, null));
     assertEquals("abc", Data.parsePrimitiveValue(null, "abc"));
@@ -273,6 +293,7 @@ public class DataTest extends TestCase {
     }
   }
 
+  @Test
   public void testParsePrimitiveValueWithUnknownEnum() {
     try {
       Data.parsePrimitiveValue(MyEnum.class, "foo");
@@ -303,6 +324,7 @@ public class DataTest extends TestCase {
 
   static class MedXResolve<Y extends Number, X extends Y> extends Resolve<X, Integer> {}
 
+  @Test
   public void testResolveWildcardTypeOrTypeVariable() throws Exception {
     // t
     TypeVariable<?> tTypeVar = (TypeVariable<?>) Resolve.class.getField("t").getGenericType();

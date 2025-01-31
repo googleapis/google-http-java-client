@@ -14,24 +14,32 @@
 
 package com.google.api.client.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.util.Iterator;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.checkerframework.checker.units.qual.A;
+import org.junit.Test;
 
 /**
  * Tests {@link DataMap}.
  *
  * @author Yaniv Inbar
  */
-public class DataMapTest extends TestCase {
+public class DataMapTest {
   static class A {
     @Key String r;
     @Key String s;
     @Key String t;
   }
 
+  @Test
   public void testSizeAndIsEmpty() {
     A a = new A();
     DataMap map = new DataMap(a, false);
@@ -48,6 +56,7 @@ public class DataMapTest extends TestCase {
     assertFalse(map.isEmpty());
   }
 
+  @Test
   public void testIterator() {
     A a = new A();
     a.s = "value";
@@ -62,6 +71,7 @@ public class DataMapTest extends TestCase {
     assertFalse(iterator.hasNext());
   }
 
+  @Test
   public void testValues() {
     A a = new A();
     a.r = "r";
@@ -77,6 +87,7 @@ public class DataMapTest extends TestCase {
     assertEquals(ImmutableList.of(), Lists.newArrayList(map.values()));
   }
 
+  @Test
   public void testKeys() {
     A a = new A();
     a.r = "r";
@@ -92,6 +103,7 @@ public class DataMapTest extends TestCase {
     assertEquals(ImmutableList.of(), Lists.newArrayList(map.keySet()));
   }
 
+  @Test
   public void testClear() {
     A a = new A();
     a.r = "r";
@@ -103,6 +115,7 @@ public class DataMapTest extends TestCase {
     assertTrue(map.isEmpty());
   }
 
+  @Test
   public void testGetKeyAndContainsKey() {
     A a = new A();
     a.r = "rv";
@@ -115,6 +128,7 @@ public class DataMapTest extends TestCase {
     assertTrue(map.containsKey("r"));
   }
 
+  @Test
   public void testPut() {
     A a = new A();
     a.r = "rv";

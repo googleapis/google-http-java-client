@@ -14,13 +14,17 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+
 import com.google.api.client.http.javanet.NetHttpTransport;
 import java.io.IOException;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /** Tests {@link HttpRequestFactory}. */
-public class HttpRequestFactoryTest extends TestCase {
+public class HttpRequestFactoryTest {
 
+  @Test
   public void testBuildRequest_urlShouldBeSet() throws IllegalArgumentException, IOException {
     HttpRequestFactory requestFactory =
         new NetHttpTransport()

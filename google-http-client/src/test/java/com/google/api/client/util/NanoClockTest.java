@@ -14,15 +14,20 @@
 
 package com.google.api.client.util;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests {@link NanoClock}.
  *
  * @author Yaniv Inbar
  */
-public class NanoClockTest extends TestCase {
+public class NanoClockTest {
 
+  @Test
   public void testSystemClock() {
     assertNotNull(NanoClock.SYSTEM);
 

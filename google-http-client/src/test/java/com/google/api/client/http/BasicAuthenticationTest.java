@@ -14,16 +14,19 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests {@link BasicAuthentication}.
  *
  * @author Yaniv Inbar
  */
-public class BasicAuthenticationTest extends TestCase {
+public class BasicAuthenticationTest {
 
   static final String USERNAME = "Aladdin";
 
@@ -31,12 +34,14 @@ public class BasicAuthenticationTest extends TestCase {
 
   static final String AUTH_HEADER = "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==";
 
+  @Test
   public void testConstructor() {
     BasicAuthentication auth = new BasicAuthentication(USERNAME, PASSWORD);
     assertEquals(USERNAME, auth.getUsername());
     assertEquals(PASSWORD, auth.getPassword());
   }
 
+  @Test
   public void testInitialize() throws Exception {
     BasicAuthentication auth = new BasicAuthentication(USERNAME, PASSWORD);
     HttpRequest request =

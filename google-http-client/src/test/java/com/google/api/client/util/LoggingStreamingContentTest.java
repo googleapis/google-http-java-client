@@ -14,19 +14,23 @@
 
 package com.google.api.client.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.testing.util.LogRecordingHandler;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests {@link LoggingStreamingContent}.
  *
  * @author Yaniv Inbar
  */
-public class LoggingStreamingContentTest extends TestCase {
+public class LoggingStreamingContentTest {
 
   static final Logger LOGGER = Logger.getLogger(LoggingStreamingContentTest.class.getName());
 
@@ -35,6 +39,7 @@ public class LoggingStreamingContentTest extends TestCase {
   private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
 
   /** Test method for {@link LoggingStreamingContent#writeTo(java.io.OutputStream)}. */
+  @Test
   public void testWriteTo() throws Exception {
     LoggingStreamingContent logContent =
         new LoggingStreamingContent(
@@ -48,6 +53,7 @@ public class LoggingStreamingContentTest extends TestCase {
     assertEquals(Arrays.asList("Total: 11 bytes", SAMPLE), recorder.messages());
   }
 
+  @Test
   public void testContentLoggingLimit() throws Exception {
     LOGGER.setLevel(Level.CONFIG);
 

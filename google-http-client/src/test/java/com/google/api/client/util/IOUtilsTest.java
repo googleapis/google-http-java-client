@@ -14,35 +14,48 @@
 
 package com.google.api.client.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link IOUtils}.
  *
  * @author Yaniv Inbar
  */
-public class IOUtilsTest extends TestCase {
+@RunWith(JUnit4.class)
+public class IOUtilsTest {
 
   static final String VALUE = "abc";
 
+  @Test
   public void testSerialize() throws IOException {
     byte[] bytes = IOUtils.serialize(VALUE);
     assertEquals(VALUE, IOUtils.deserialize(bytes));
   }
 
+  @Test
   public void testDeserialize() throws IOException {
     assertNull(IOUtils.deserialize((byte[]) null));
   }
 
+  @Test
   public void testIsSymbolicLink_false() throws IOException {
     File file = File.createTempFile("tmp", null);
     file.deleteOnExit();
     assertFalse(IOUtils.isSymbolicLink(file));
   }
 
+  @Test
   public void testIsSymbolicLink_true() throws IOException {
     File file = File.createTempFile("tmp", null);
     file.deleteOnExit();

@@ -14,6 +14,11 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.util.ArrayMap;
@@ -24,14 +29,16 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests {@link UrlEncodedContent}.
  *
  * @author Yaniv Inbar
  */
-public class UrlEncodedContentTest extends TestCase {
+public class UrlEncodedContentTest {
 
+  @Test
   public void testWriteTo() throws IOException {
     subtestWriteTo("a=x", ArrayMap.of("a", "x"), false);
     subtestWriteTo("noval", ArrayMap.of("noval", ""), false);
@@ -64,6 +71,7 @@ public class UrlEncodedContentTest extends TestCase {
     assertEquals(expected, out.toString());
   }
 
+  @Test
   public void testGetContent() throws Exception {
     HttpRequest request =
         new MockHttpTransport()
@@ -75,6 +83,7 @@ public class UrlEncodedContentTest extends TestCase {
     assertEquals(content, UrlEncodedContent.getContent(request));
   }
 
+  @Test
   public void testGetData() {
     try {
       new UrlEncodedContent(null);
@@ -86,4 +95,5 @@ public class UrlEncodedContentTest extends TestCase {
     UrlEncodedContent content = new UrlEncodedContent(map);
     assertEquals(map, content.getData());
   }
+
 }

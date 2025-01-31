@@ -14,17 +14,22 @@
 
 package com.google.api.client.json;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.google.api.client.testing.json.MockJsonFactory;
 import com.google.api.client.testing.json.MockJsonParser;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests {@link JsonParser}.
  *
  * @author Yaniv Inbar
  */
-public class JsonParserTest extends TestCase {
+public class JsonParserTest {
 
+  @Test
   public void testParseAndClose_noInput() throws Exception {
     MockJsonParser parser = (MockJsonParser) new MockJsonFactory().createJsonParser("");
     try {
@@ -35,6 +40,7 @@ public class JsonParserTest extends TestCase {
     }
   }
 
+  @Test
   public void testParseAndClose_noInputVoid() throws Exception {
     MockJsonParser parser = (MockJsonParser) new MockJsonFactory().createJsonParser("");
     parser.parseAndClose(Void.class);

@@ -14,6 +14,9 @@
 
 package com.google.api.client.testing.http.javanet;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayInputStream;
@@ -24,19 +27,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /** Tests {@link MockHttpURLConnection}. */
-public class MockHttpUrlConnectionTest extends TestCase {
+public class MockHttpUrlConnectionTest {
 
   private static final String RESPONSE_BODY = "body";
   private static final String HEADER_NAME = "Custom-Header";
 
+  @Test
   public void testSetGetHeaders() throws IOException {
     MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
     connection.addHeader(HEADER_NAME, "100");
     assertEquals("100", connection.getHeaderField(HEADER_NAME));
   }
 
+  @Test
   public void testSetGetMultipleHeaders() throws IOException {
     MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
     List<String> values = Arrays.asList("value1", "value2", "value3");
@@ -50,11 +56,13 @@ public class MockHttpUrlConnectionTest extends TestCase {
     }
   }
 
+  @Test
   public void testGetNonExistingHeader() throws IOException {
     MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
     assertNull(connection.getHeaderField(HEADER_NAME));
   }
 
+  @Test
   public void testSetInputStreamAndInputStreamImmutable() throws IOException {
     MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
     connection.setInputStream(new ByteArrayInputStream(StringUtils.getBytesUtf8(RESPONSE_BODY)));

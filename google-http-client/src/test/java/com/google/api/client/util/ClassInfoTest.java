@@ -14,17 +14,23 @@
 
 package com.google.api.client.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.util.Arrays;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests {@link ClassInfo}.
  *
  * @author Yaniv Inbar
  */
-public class ClassInfoTest extends TestCase {
+public class ClassInfoTest {
 
   public enum E {
     @Value
@@ -36,11 +42,13 @@ public class ClassInfoTest extends TestCase {
     IGNORED_VALUE
   }
 
+  @Test
   public void testIsEnum() {
     assertTrue(ClassInfo.of(E.class).isEnum());
     assertFalse(ClassInfo.of(String.class).isEnum());
   }
 
+  @Test
   public void testGetFieldInfo_enum() throws Exception {
     ClassInfo classInfo = ClassInfo.of(E.class);
     assertEquals(E.class.getField("NULL"), classInfo.getFieldInfo(null).getField());
@@ -76,21 +84,25 @@ public class ClassInfoTest extends TestCase {
     String foo2;
   }
 
+  @Test
   public void testNames() {
     assertEquals(ImmutableList.of("AbC", "b", "oc"), ClassInfo.of(A.class).names);
     assertEquals(ImmutableList.of("AbC", "b", "e", "oc"), ClassInfo.of(B.class).names);
   }
 
+  @Test
   public void testNames_ignoreCase() {
     assertEquals(ImmutableList.of("abc", "b", "oc"), ClassInfo.of(A.class, true).names);
     assertEquals(ImmutableList.of("abc", "b", "e", "oc"), ClassInfo.of(B.class, true).names);
   }
 
+  @Test
   public void testNames_enum() {
     ClassInfo classInfo = ClassInfo.of(E.class);
     assertEquals(Lists.newArrayList(Arrays.asList(null, "VALUE", "other")), classInfo.names);
   }
 
+  @Test
   public void testOf() {
     try {
       ClassInfo.of(A1.class, true);

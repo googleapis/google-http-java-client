@@ -14,17 +14,21 @@
 
 package com.google.api.client.util;
 
+import static org.junit.Assert.assertEquals;
+
 import com.google.api.client.testing.util.MockBackOff;
 import com.google.api.client.testing.util.MockSleeper;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests {@link BackOffUtils}.
  *
  * @author Yaniv Inbar
  */
-public class BackOffUtilsTest extends TestCase {
+public class BackOffUtilsTest {
 
+  @Test
   public void testNext() throws Exception {
     subtestNext(7);
     subtestNext(0);
@@ -52,4 +56,5 @@ public class BackOffUtilsTest extends TestCase {
       assertEquals(millis, sleeper.getLastMillis());
     }
   }
+
 }

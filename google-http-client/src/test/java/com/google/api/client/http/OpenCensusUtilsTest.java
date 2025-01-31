@@ -14,6 +14,10 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import io.opencensus.trace.Annotation;
 import io.opencensus.trace.AttributeValue;
 import io.opencensus.trace.BlankSpan;
@@ -27,14 +31,16 @@ import io.opencensus.trace.Tracer;
 import io.opencensus.trace.propagation.TextFormat;
 import java.util.List;
 import java.util.Map;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests {@link OpenCensusUtils}.
  *
  * @author Hailong Wen
  */
-public class OpenCensusUtilsTest extends TestCase {
+public class OpenCensusUtilsTest {
 
   TextFormat mockTextFormat;
   TextFormat.Setter mockTextFormatSetter;
@@ -44,11 +50,7 @@ public class OpenCensusUtilsTest extends TestCase {
   HttpHeaders headers;
   Tracer tracer;
 
-  public OpenCensusUtilsTest(String testName) {
-    super(testName);
-  }
-
-  @Override
+  @Before
   public void setUp() {
     mockTextFormat =
         new TextFormat() {
@@ -100,28 +102,32 @@ public class OpenCensusUtilsTest extends TestCase {
     originTextFormatSetter = OpenCensusUtils.propagationTextFormatSetter;
   }
 
-  @Override
+  @After
   public void tearDown() {
     OpenCensusUtils.setPropagationTextFormat(originTextFormat);
     OpenCensusUtils.setPropagationTextFormatSetter(originTextFormatSetter);
   }
 
-  public void testInitializatoin() {
+  @Test
+  public void testInitialization() {
     assertNotNull(OpenCensusUtils.getTracer());
     assertNotNull(OpenCensusUtils.propagationTextFormat);
     assertNotNull(OpenCensusUtils.propagationTextFormatSetter);
   }
 
+  @Test
   public void testSetPropagationTextFormat() {
     OpenCensusUtils.setPropagationTextFormat(mockTextFormat);
     assertEquals(mockTextFormat, OpenCensusUtils.propagationTextFormat);
   }
 
+  @Test
   public void testSetPropagationTextFormatSetter() {
     OpenCensusUtils.setPropagationTextFormatSetter(mockTextFormatSetter);
     assertEquals(mockTextFormatSetter, OpenCensusUtils.propagationTextFormatSetter);
   }
 
+  @Test
   public void testPropagateTracingContextInjection() {
     OpenCensusUtils.setPropagationTextFormat(mockTextFormat);
     try {
@@ -132,6 +138,7 @@ public class OpenCensusUtilsTest extends TestCase {
     }
   }
 
+  @Test
   public void testPropagateTracingContextHeader() {
     OpenCensusUtils.setPropagationTextFormatSetter(mockTextFormatSetter);
     try {
@@ -142,6 +149,7 @@ public class OpenCensusUtilsTest extends TestCase {
     }
   }
 
+  @Test
   public void testPropagateTracingContextNullSpan() {
     OpenCensusUtils.setPropagationTextFormat(mockTextFormat);
     try {
@@ -152,6 +160,7 @@ public class OpenCensusUtilsTest extends TestCase {
     }
   }
 
+  @Test
   public void testPropagateTracingContextNullHeaders() {
     OpenCensusUtils.setPropagationTextFormat(mockTextFormat);
     try {
@@ -162,17 +171,20 @@ public class OpenCensusUtilsTest extends TestCase {
     }
   }
 
+  @Test
   public void testPropagateTracingContextInvalidSpan() {
     OpenCensusUtils.setPropagationTextFormat(mockTextFormat);
     // No injection. No exceptions should be thrown.
     OpenCensusUtils.propagateTracingContext(BlankSpan.INSTANCE, headers);
   }
 
+  @Test
   public void testGetEndSpanOptionsNoResponse() {
     EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.UNKNOWN).build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(null));
   }
 
+  @Test
   public void testGetEndSpanOptionsSuccess() {
     EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.OK).build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(200));
@@ -180,37 +192,44 @@ public class OpenCensusUtilsTest extends TestCase {
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(202));
   }
 
+  @Test
   public void testGetEndSpanOptionsBadRequest() {
     EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.INVALID_ARGUMENT).build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(400));
   }
 
+  @Test
   public void testGetEndSpanOptionsUnauthorized() {
     EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.UNAUTHENTICATED).build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(401));
   }
 
+  @Test
   public void testGetEndSpanOptionsForbidden() {
     EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.PERMISSION_DENIED).build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(403));
   }
 
+  @Test
   public void testGetEndSpanOptionsNotFound() {
     EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.NOT_FOUND).build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(404));
   }
 
+  @Test
   public void testGetEndSpanOptionsPreconditionFailed() {
     EndSpanOptions expected =
         EndSpanOptions.builder().setStatus(Status.FAILED_PRECONDITION).build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(412));
   }
 
+  @Test
   public void testGetEndSpanOptionsServerError() {
     EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.UNAVAILABLE).build();
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(500));
   }
 
+  @Test
   public void testGetEndSpanOptionsOther() {
     EndSpanOptions expected = EndSpanOptions.builder().setStatus(Status.UNKNOWN).build();
     // test some random unsupported statuses
@@ -219,6 +238,7 @@ public class OpenCensusUtilsTest extends TestCase {
     assertEquals(expected, OpenCensusUtils.getEndSpanOptions(501));
   }
 
+  @Test
   public void testRecordMessageEventInNullSpan() {
     try {
       OpenCensusUtils.recordMessageEvent(null, 0, MessageEvent.Type.SENT);
@@ -228,6 +248,7 @@ public class OpenCensusUtilsTest extends TestCase {
     }
   }
 
+  @Test
   public void testRecordMessageEvent() {
     try {
       OpenCensusUtils.recordMessageEvent(mockSpan, 0, MessageEvent.Type.SENT);

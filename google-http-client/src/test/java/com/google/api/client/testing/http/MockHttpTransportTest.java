@@ -20,16 +20,18 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests {@link MockHttpTransport}.
  *
  * @author Paweł Zuzelski
  */
-public final class MockHttpTransportTest extends TestCase {
+public final class MockHttpTransportTest {
   // The purpose of this test is to verify, that the actual lowLevelHttpRequest used is preserved
   // so that the content of the request can be verified in tests.
-  public void testBuildGetRequest_preservesLoLevelHttpRequest() throws Exception {
+  @Test
+  public void testBuildGetRequest_preservesLowLevelHttpRequest() throws Exception {
     MockHttpTransport httpTransport = new MockHttpTransport();
     GenericUrl url = new GenericUrl("http://example.org");
     HttpRequestFactory requestFactory = httpTransport.createRequestFactory();

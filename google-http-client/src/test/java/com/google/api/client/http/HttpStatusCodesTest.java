@@ -14,11 +14,16 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /** Tests {@link HttpStatusCodes}. */
-public class HttpStatusCodesTest extends TestCase {
+public class HttpStatusCodesTest {
 
+  @Test
   public void testIsRedirect_3xx() {
     assertTrue(HttpStatusCodes.isRedirect(301));
     assertTrue(HttpStatusCodes.isRedirect(302));
@@ -27,6 +32,7 @@ public class HttpStatusCodesTest extends TestCase {
     assertTrue(HttpStatusCodes.isRedirect(308));
   }
 
+  @Test
   public void testIsRedirect_non3xx() {
     assertFalse(HttpStatusCodes.isRedirect(200));
     assertFalse(HttpStatusCodes.isRedirect(401));

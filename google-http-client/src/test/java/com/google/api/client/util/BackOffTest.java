@@ -14,16 +14,20 @@
 
 package com.google.api.client.util;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests {@link BackOff}.
  *
  * @author Yaniv Inbar
  */
-public class BackOffTest extends TestCase {
+public class BackOffTest {
 
+  @Test
   public void testNextBackOffMillis() throws IOException {
     subtestNextBackOffMillis(0, BackOff.ZERO_BACKOFF);
     subtestNextBackOffMillis(BackOff.STOP, BackOff.STOP_BACKOFF);

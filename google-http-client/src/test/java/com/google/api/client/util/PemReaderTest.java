@@ -18,13 +18,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import junit.framework.TestCase;
 import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Tests {@link PemReader}.
  *
  * @author Yaniv Inbar
  */
-public class PemReaderTest extends TestCase {
+public class PemReaderTest {
 
   private static final byte[] EXPECTED_BYTES = {
     48, -126, 2, 117, 2, 1, 0, 48, 13, 6, 9, 42, -122, 72, -122, -9, 13, 1, 1, 1, 5, 0, 4, -126, 2,
@@ -60,6 +61,7 @@ public class PemReaderTest extends TestCase {
     -28, 32, 4, 85, 69, 122, 111, 110, 100, -86, -73, 46
   };
 
+  @Test
   public void testReadFirstSectionAndClose() throws Exception {
     InputStream stream =
         getClass().getClassLoader().getResourceAsStream("com/google/api/client/util/secret.pem");

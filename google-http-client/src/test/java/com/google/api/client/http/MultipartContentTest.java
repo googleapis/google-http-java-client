@@ -14,18 +14,23 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.google.api.client.json.Json;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests {@link MultipartContent}.
  *
  * @author Yaniv Inbar
  */
-public class MultipartContentTest extends TestCase {
+public class MultipartContentTest {
 
   private static final String BOUNDARY = "__END_OF_PART__";
   private static final String CRLF = "\r\n";
@@ -43,6 +48,7 @@ public class MultipartContentTest extends TestCase {
         + CRLF;
   }
 
+  @Test
   public void testRandomContent() throws Exception {
     MultipartContent content = new MultipartContent();
     String boundaryString = content.getBoundary();
@@ -81,6 +87,7 @@ public class MultipartContentTest extends TestCase {
     assertEquals(StringUtils.getBytesUtf8(expectedContent).length, content.getLength());
   }
 
+  @Test
   public void testContent() throws Exception {
     subtestContent("--" + BOUNDARY + "--" + CRLF, null);
     subtestContent(

@@ -14,6 +14,11 @@
 
 package com.google.api.client.http.javanet;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.testing.http.HttpTesting;
@@ -41,7 +46,7 @@ import org.junit.Test;
  *
  * @author Yaniv Inbar
  */
-public class NetHttpTransportTest extends TestCase {
+public class NetHttpTransportTest {
 
   private static final String[] METHODS = {
     "GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"
