@@ -20,12 +20,15 @@ import com.google.api.client.testing.util.MockBackOff;
 import com.google.api.client.testing.util.MockSleeper;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link BackOffUtils}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class BackOffUtilsTest {
 
   @Test

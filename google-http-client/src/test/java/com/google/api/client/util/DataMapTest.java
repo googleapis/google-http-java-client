@@ -26,12 +26,15 @@ import java.util.Map;
 import junit.framework.TestCase;
 import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link DataMap}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class DataMapTest {
   static class A {
     @Key String r;

@@ -19,12 +19,15 @@ import java.io.InputStreamReader;
 import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link PemReader}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class PemReaderTest {
 
   private static final byte[] EXPECTED_BYTES = {

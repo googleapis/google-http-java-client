@@ -20,12 +20,15 @@ import static org.junit.Assert.fail;
 import com.google.api.client.json.GenericJson;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link FieldInfo}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class FieldInfoTest {
 
   public enum E {

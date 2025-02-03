@@ -21,12 +21,15 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link MockHttpTransport}.
  *
  * @author Paweł Zuzelski
  */
+@RunWith(JUnit4.class)
 public final class MockHttpTransportTest {
   // The purpose of this test is to verify, that the actual lowLevelHttpRequest used is preserved
   // so that the content of the request can be verified in tests.

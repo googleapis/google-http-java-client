@@ -24,12 +24,15 @@ import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link MultipartContent}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class MultipartContentTest {
 
   private static final String BOUNDARY = "__END_OF_PART__";

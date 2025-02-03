@@ -26,12 +26,15 @@ import java.util.Map;
 import java.util.SortedMap;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link UriTemplate}.
  *
  * @author Ravi Mistry
  */
+@RunWith(JUnit4.class)
 public class UriTemplateTest {
 
   @Test

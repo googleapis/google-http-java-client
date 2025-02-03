@@ -18,12 +18,15 @@ import static org.junit.Assert.assertEquals;
 
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests for the {@link FixedClock}.
  *
  * @author mlinder@google.com (Matthias Linder)
  */
+@RunWith(JUnit4.class)
 public class FixedClockTest {
   /** Tests that the {@link FixedClock#currentTimeMillis()} method will return the mocked values. */
   @Test

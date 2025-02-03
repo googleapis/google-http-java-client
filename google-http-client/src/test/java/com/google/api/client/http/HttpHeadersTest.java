@@ -31,12 +31,15 @@ import java.util.Arrays;
 import java.util.List;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link HttpHeaders}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class HttpHeadersTest {
 
   @Test

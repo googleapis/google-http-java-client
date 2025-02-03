@@ -39,12 +39,15 @@ import java.util.List;
 import javax.net.ssl.X509TrustManager;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link JsonWebSignature}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class JsonWebSignatureTest {
 
   @Test

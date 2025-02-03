@@ -20,12 +20,15 @@ import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link BasicAuthentication}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class BasicAuthenticationTest {
 
   static final String USERNAME = "Aladdin";

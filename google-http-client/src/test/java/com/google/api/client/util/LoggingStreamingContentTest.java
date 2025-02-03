@@ -24,12 +24,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link LoggingStreamingContent}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class LoggingStreamingContentTest {
 
   static final Logger LOGGER = Logger.getLogger(LoggingStreamingContentTest.class.getName());

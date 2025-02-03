@@ -46,12 +46,15 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link HttpResponse}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class HttpResponseTest {
 
   @Test

@@ -24,12 +24,15 @@ import com.google.common.collect.Lists;
 import java.util.Arrays;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link ClassInfo}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class ClassInfoTest {
 
   public enum E {

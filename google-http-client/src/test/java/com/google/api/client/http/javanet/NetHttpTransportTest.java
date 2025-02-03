@@ -40,12 +40,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link NetHttpTransport}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class NetHttpTransportTest {
 
   private static final String[] METHODS = {

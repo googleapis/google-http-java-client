@@ -22,12 +22,15 @@ import com.google.api.client.util.StringUtils;
 import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link HttpEncodingStreamingContent}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class HttpEncodingStreamingContentTest {
 
   private static final byte[] EXPECTED_ZIPPED =

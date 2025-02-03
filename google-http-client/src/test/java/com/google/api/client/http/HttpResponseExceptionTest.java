@@ -37,12 +37,15 @@ import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link HttpResponseException}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class HttpResponseExceptionTest {
 
   @Test

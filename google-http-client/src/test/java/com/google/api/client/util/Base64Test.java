@@ -21,12 +21,15 @@ import static org.junit.Assert.assertNull;
 import java.nio.charset.StandardCharsets;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link Base64}.
  *
  * @author Jeff Ching
  */
+@RunWith(JUnit4.class)
 public class Base64Test {
 
   @Test

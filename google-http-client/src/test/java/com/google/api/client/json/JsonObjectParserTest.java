@@ -29,6 +29,8 @@ import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests for the {@link JsonObjectParser} class.
@@ -36,6 +38,7 @@ import org.junit.Test;
  * @author Matthias Linder (mlinder)
  * @since 1.10
  */
+@RunWith(JUnit4.class)
 public class JsonObjectParserTest {
 
   @Test

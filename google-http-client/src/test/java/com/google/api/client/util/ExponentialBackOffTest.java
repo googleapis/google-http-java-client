@@ -19,12 +19,15 @@ import static org.junit.Assert.assertTrue;
 
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link ExponentialBackOff}.
  *
  * @author Ravi Mistry
  */
+@RunWith(JUnit4.class)
 public class ExponentialBackOffTest {
 
   @Test

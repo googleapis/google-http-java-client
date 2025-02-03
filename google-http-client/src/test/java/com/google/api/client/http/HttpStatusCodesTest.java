@@ -17,10 +17,12 @@ package com.google.api.client.http;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /** Tests {@link HttpStatusCodes}. */
+@RunWith(JUnit4.class)
 public class HttpStatusCodesTest {
 
   @Test

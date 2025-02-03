@@ -26,12 +26,15 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Test {@link HttpBackOffUnsuccessfulResponseHandler}.
  *
  * @author Eyal Peled
  */
+@RunWith(JUnit4.class)
 public class HttpBackOffUnsuccessfulResponseHandlerTest {
 
   @Test

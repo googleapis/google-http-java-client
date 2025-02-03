@@ -20,12 +20,15 @@ import com.google.api.client.util.ByteArrayStreamingContent;
 import com.google.api.client.util.StringUtils;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link MockLowLevelHttpRequest}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class MockLowLevelHttpRequestTest {
 
   @Test

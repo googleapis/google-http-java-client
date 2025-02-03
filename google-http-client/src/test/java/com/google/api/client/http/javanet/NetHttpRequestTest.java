@@ -17,7 +17,10 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeoutException;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
+@RunWith(JUnit4.class)
 public class NetHttpRequestTest {
 
   static class SleepingOutputWriter implements OutputWriter {

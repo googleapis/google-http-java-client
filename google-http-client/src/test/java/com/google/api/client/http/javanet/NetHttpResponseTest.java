@@ -24,12 +24,15 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link NetHttpResponse}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class NetHttpResponseTest {
 
   private static final String VALID_RESPONSE = "This is a valid response.";

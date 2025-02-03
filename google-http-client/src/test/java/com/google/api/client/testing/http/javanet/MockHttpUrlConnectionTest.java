@@ -28,8 +28,11 @@ import java.util.List;
 import java.util.Map;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /** Tests {@link MockHttpURLConnection}. */
+@RunWith(JUnit4.class)
 public class MockHttpUrlConnectionTest {
 
   private static final String RESPONSE_BODY = "body";

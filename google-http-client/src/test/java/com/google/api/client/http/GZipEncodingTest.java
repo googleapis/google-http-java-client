@@ -23,12 +23,15 @@ import java.io.IOException;
 import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link GZipEncoding}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class GZipEncodingTest {
 
   private static final byte[] EXPECED_ZIPPED =

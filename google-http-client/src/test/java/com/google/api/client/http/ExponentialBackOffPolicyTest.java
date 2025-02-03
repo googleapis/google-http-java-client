@@ -20,6 +20,8 @@ import static org.junit.Assert.assertTrue;
 import com.google.api.client.util.NanoClock;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link ExponentialBackOffPolicy}.
@@ -27,6 +29,7 @@ import org.junit.Test;
  * @author Ravi Mistry
  */
 @Deprecated
+@RunWith(JUnit4.class)
 public class ExponentialBackOffPolicyTest {
 
   @Test

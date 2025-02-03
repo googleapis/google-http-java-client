@@ -19,12 +19,15 @@ import static org.junit.Assert.assertTrue;
 
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests for the {@link Clock}.
  *
  * @author mlinder@google.com (Matthias Linder)
  */
+@RunWith(JUnit4.class)
 public class ClockTest {
   /** Tests that the Clock.SYSTEM.currentTimeMillis() method returns useful values. */
   @Test

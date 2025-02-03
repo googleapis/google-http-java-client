@@ -21,12 +21,15 @@ import static org.junit.Assert.assertNull;
 import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link StringUtils}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class StringUtilsTest {
 
   private static final byte[] SAMPLE_UTF8 =

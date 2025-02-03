@@ -20,8 +20,11 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import java.io.IOException;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /** Tests {@link HttpRequestFactory}. */
+@RunWith(JUnit4.class)
 public class HttpRequestFactoryTest {
 
   @Test

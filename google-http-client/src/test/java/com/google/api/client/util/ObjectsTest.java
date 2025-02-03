@@ -18,12 +18,15 @@ import static org.junit.Assert.assertEquals;
 
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link Objects}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class ObjectsTest {
   @Test
   public void testToStringHelper() {
