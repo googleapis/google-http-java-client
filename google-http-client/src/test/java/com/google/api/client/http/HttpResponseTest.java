@@ -66,17 +66,31 @@ public class HttpResponseTest {
     assertEquals("", response.parseAsString());
   }
 
-  private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
-  private static final String SAMPLE2 = "123abc";
-  private static final String JSON_SAMPLE = "{\"foo\": \"ßar\"}";
-  private static final String ERROR_SAMPLE =
-      "{domain:'global',reason:'domainPolicy',message:'msg'}";
-  private static final String VALID_CONTENT_TYPE = "text/plain";
-  private static final String VALID_CONTENT_TYPE_WITH_PARAMS =
-      "application/vnd.com.google.datastore.entity+json; charset=utf-8; version=v1; q=0.9";
-  private static final String VALID_CONTENT_TYPE_WITHOUT_CHARSET = "text/csv; version=v1; q=0.9";
-  private static final String INVALID_CONTENT_TYPE = "!!!invalid!!!";
-  private static final String JSON_CONTENT_TYPE = "application/json";
+  private static final String SAMPLE;
+  private static final String SAMPLE2;
+  private static final String JSON_SAMPLE;
+  private static final String ERROR_SAMPLE;
+  private static final String VALID_CONTENT_TYPE;
+  private static final String VALID_CONTENT_TYPE_WITH_PARAMS;
+  private static final String VALID_CONTENT_TYPE_WITHOUT_CHARSET;
+  private static final String INVALID_CONTENT_TYPE;
+  private static final String JSON_CONTENT_TYPE;
+  private static final String ETAG_VALUE;
+
+  static {
+    SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
+    SAMPLE2 = "123abc";
+    JSON_SAMPLE = "{\"foo\": \"ßar\"}";
+    ERROR_SAMPLE =
+        "{domain:'global',reason:'domainPolicy',message:'msg'}";
+    VALID_CONTENT_TYPE = "text/plain";
+    VALID_CONTENT_TYPE_WITH_PARAMS =
+        "application/vnd.com.google.datastore.entity+json; charset=utf-8; version=v1; q=0.9";
+    VALID_CONTENT_TYPE_WITHOUT_CHARSET = "text/csv; version=v1; q=0.9";
+    INVALID_CONTENT_TYPE = "!!!invalid!!!";
+    JSON_CONTENT_TYPE = "application/json";
+    ETAG_VALUE = "\"abc\"";
+  }
 
   @Test
   public void testParseAsString_utf8() throws Exception {
@@ -302,7 +316,6 @@ public class HttpResponseTest {
     @Key String[] r;
   }
 
-  static final String ETAG_VALUE = "\"abc\"";
 
   @Test
   public void testHeaderParsing() throws Exception {
