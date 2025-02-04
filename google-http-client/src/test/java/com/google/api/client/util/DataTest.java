@@ -46,7 +46,6 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentMap;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -123,7 +122,6 @@ public class DataTest {
     assertTrue(orig != result);
     assertTrue(Arrays.equals(orig, result));
   }
-
 
   @Test
   public void testClone_intArray() {

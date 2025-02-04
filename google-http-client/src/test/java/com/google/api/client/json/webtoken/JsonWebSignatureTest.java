@@ -143,7 +143,6 @@ public class JsonWebSignatureTest {
     Assert.assertNull(verifyX509WithCaCert(TestCertificates.BOGUS_CA_CERT));
   }
 
-
   private PublicKey buildEs256PublicKey(String x, String y)
       throws NoSuchAlgorithmException, InvalidParameterSpecException, InvalidKeySpecException {
     AlgorithmParameters parameters = AlgorithmParameters.getInstance("EC");

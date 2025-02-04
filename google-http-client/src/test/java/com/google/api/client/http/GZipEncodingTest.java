@@ -20,7 +20,6 @@ import com.google.api.client.testing.util.TestableByteArrayOutputStream;
 import com.google.api.client.util.ByteArrayStreamingContent;
 import com.google.api.client.util.StringUtils;
 import java.io.IOException;
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,20 +36,19 @@ public class GZipEncodingTest {
   private static final byte[] EXPECED_ZIPPED;
 
   // TODO: remove when no longer using Java < 16: https://bugs.openjdk.java.net/browse/JDK-8244706
-  @Deprecated
-  private static final byte[] EXPECED_ZIPPED_BELOW_JAVA_16;
+  @Deprecated private static final byte[] EXPECED_ZIPPED_BELOW_JAVA_16;
 
   static {
     EXPECED_ZIPPED =
         new byte[] {
-            31, -117, 8, 0, 0, 0, 0, 0, 0, -1, -53, -49, -57, 13, 0, -30, -66, -14, 54, 28, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0
+          31, -117, 8, 0, 0, 0, 0, 0, 0, -1, -53, -49, -57, 13, 0, -30, -66, -14, 54, 28, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0, 0
         };
 
     EXPECED_ZIPPED_BELOW_JAVA_16 =
         new byte[] {
-            31, -117, 8, 0, 0, 0, 0, 0, 0, 0, -53, -49, -57, 13, 0, -30, -66, -14, 54, 28, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0
+          31, -117, 8, 0, 0, 0, 0, 0, 0, 0, -53, -49, -57, 13, 0, -30, -66, -14, 54, 28, 0, 0, 0, 0,
+          0, 0, 0, 0, 0, 0, 0, 0
         };
   }
 

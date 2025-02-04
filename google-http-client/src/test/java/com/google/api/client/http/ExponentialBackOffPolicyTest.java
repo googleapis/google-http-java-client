@@ -18,7 +18,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.google.api.client.util.NanoClock;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -43,7 +42,8 @@ public class ExponentialBackOffPolicyTest {
         backOffPolicy.getCurrentIntervalMillis());
     assertEquals(
         ExponentialBackOffPolicy.DEFAULT_RANDOMIZATION_FACTOR,
-        backOffPolicy.getRandomizationFactor(), 0);
+        backOffPolicy.getRandomizationFactor(),
+        0);
     assertEquals(ExponentialBackOffPolicy.DEFAULT_MULTIPLIER, backOffPolicy.getMultiplier(), 0);
     assertEquals(
         ExponentialBackOffPolicy.DEFAULT_MAX_INTERVAL_MILLIS, backOffPolicy.getMaxIntervalMillis());
@@ -63,7 +63,8 @@ public class ExponentialBackOffPolicyTest {
         backOffPolicy.getCurrentIntervalMillis());
     assertEquals(
         ExponentialBackOffPolicy.DEFAULT_RANDOMIZATION_FACTOR,
-        backOffPolicy.getRandomizationFactor(), 0);
+        backOffPolicy.getRandomizationFactor(),
+        0);
     assertEquals(ExponentialBackOffPolicy.DEFAULT_MULTIPLIER, backOffPolicy.getMultiplier(), 0);
     assertEquals(
         ExponentialBackOffPolicy.DEFAULT_MAX_INTERVAL_MILLIS, backOffPolicy.getMaxIntervalMillis());

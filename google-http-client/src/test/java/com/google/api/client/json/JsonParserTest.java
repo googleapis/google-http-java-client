@@ -19,7 +19,6 @@ import static org.junit.Assert.assertTrue;
 
 import com.google.api.client.testing.json.MockJsonFactory;
 import com.google.api.client.testing.json.MockJsonParser;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -98,5 +97,4 @@ public class UrlEncodedContentTest {
     UrlEncodedContent content = new UrlEncodedContent(map);
     assertEquals(map, content.getData());
   }
-
 }

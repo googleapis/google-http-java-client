@@ -22,7 +22,6 @@ import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -41,8 +40,7 @@ public class LoggingStreamingContentTest {
 
   static {
     LOGGER = Logger.getLogger(LoggingStreamingContentTest.class.getName());
-    SAMPLE_UTF8 =
-        new byte[] {49, 50, 51, -41, -103, -41, -96, -41, -103, -41, -111};
+    SAMPLE_UTF8 = new byte[] {49, 50, 51, -41, -103, -41, -96, -41, -103, -41, -111};
     SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
   }
 

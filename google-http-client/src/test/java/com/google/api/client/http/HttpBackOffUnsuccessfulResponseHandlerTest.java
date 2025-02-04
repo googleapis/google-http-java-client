@@ -24,7 +24,6 @@ import com.google.api.client.util.BackOff;
 import com.google.api.client.util.Sleeper;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

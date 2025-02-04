@@ -18,7 +18,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,8 +35,7 @@ public class StringUtilsTest {
   private static final String SAMPLE;
 
   static {
-    SAMPLE_UTF8 =
-        new byte[] {49, 50, 51, -41, -103, -41, -96, -41, -103, -41, -111};
+    SAMPLE_UTF8 = new byte[] {49, 50, 51, -41, -103, -41, -96, -41, -103, -41, -111};
     SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
   }
 

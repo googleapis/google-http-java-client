@@ -29,7 +29,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -174,8 +173,7 @@ public class HttpHeadersTest {
   private static final String AUTHORIZATION_HEADERS;
 
   static {
-    AUTHORIZATION_HEADERS =
-        "Accept-Encoding: gzip\r\nAuthorization: Foo\r\nAuthorization: Bar\r\n";
+    AUTHORIZATION_HEADERS = "Accept-Encoding: gzip\r\nAuthorization: Foo\r\nAuthorization: Bar\r\n";
   }
 
   @Test

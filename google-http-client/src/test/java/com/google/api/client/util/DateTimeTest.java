@@ -22,7 +22,6 @@ import static org.junit.Assert.fail;
 import com.google.api.client.util.DateTime.SecondsAndNanos;
 import java.util.Date;
 import java.util.TimeZone;
-import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

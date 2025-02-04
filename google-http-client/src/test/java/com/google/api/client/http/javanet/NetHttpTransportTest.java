@@ -38,7 +38,6 @@ import java.net.URL;
 import java.security.KeyStore;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -54,9 +53,7 @@ public class NetHttpTransportTest {
   private static final String[] METHODS;
 
   static {
-    METHODS = new String[] {
-        "GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"
-    };
+    METHODS = new String[] {"GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"};
   }
 
   @Test

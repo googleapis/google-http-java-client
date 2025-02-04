@@ -49,11 +49,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
-import junit.framework.TestCase;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -72,8 +69,7 @@ public class HttpRequestTest {
   static {
     BASIC_METHODS =
         ImmutableSet.of(HttpMethods.GET, HttpMethods.PUT, HttpMethods.POST, HttpMethods.DELETE);
-    OTHER_METHODS =
-        ImmutableSet.of(HttpMethods.HEAD, HttpMethods.PATCH);
+    OTHER_METHODS = ImmutableSet.of(HttpMethods.HEAD, HttpMethods.PATCH);
   }
 
   @Before

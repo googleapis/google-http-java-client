@@ -22,7 +22,6 @@ import com.google.api.client.json.Json;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

@@ -29,8 +29,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import junit.framework.TestCase;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -65,8 +63,6 @@ public class GenericUrlTest {
   private static final List<String> REPEATED_PARAM_PATH_PARTS;
   private static final String REPEATED_PARAM;
 
-
-
   static {
     MINIMAL = "http://bar";
     NO_PATH = "http://bar?a=b";
@@ -92,14 +88,12 @@ public class GenericUrlTest {
     FRAGMENT2 = "http://bar/path/to/resource?a=b#fragment";
     BASE_URL = "http://google.com";
     FULL_PATH = "/some/path/someone%2Fis%2F@gmail.com/test/?one=1&two=2";
-    PATH_WITH_SLASH =
-        "http://www.google.com/m8/feeds/contacts/someone%2Fis%2F@gmail.com/full/";
+    PATH_WITH_SLASH = "http://www.google.com/m8/feeds/contacts/someone%2Fis%2F@gmail.com/full/";
     PATH_WITH_SLASH_PARTS =
         Arrays.asList("", "m8", "feeds", "contacts", "someone/is/@gmail.com", "full", "");
     PREFIX = "https://www.googleapis.com";
     REPEATED_PARAM_PATH = "/latitude/v1/location";
-    REPEATED_PARAM_PATH_PARTS =
-        Arrays.asList("", "latitude", "v1", "location");
+    REPEATED_PARAM_PATH_PARTS = Arrays.asList("", "latitude", "v1", "location");
     REPEATED_PARAM = PREFIX + REPEATED_PARAM_PATH + "?q=c&q=a&q=b&s=e";
   }
 
@@ -116,7 +110,6 @@ public class GenericUrlTest {
     GenericUrl url = new GenericUrl(MINIMAL);
     assertEquals("http", url.getScheme());
   }
-
 
   @Test
   public void testBuild_noPath() {

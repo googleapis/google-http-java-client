@@ -44,7 +44,6 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -81,8 +80,7 @@ public class HttpResponseTest {
     SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
     SAMPLE2 = "123abc";
     JSON_SAMPLE = "{\"foo\": \"ßar\"}";
-    ERROR_SAMPLE =
-        "{domain:'global',reason:'domainPolicy',message:'msg'}";
+    ERROR_SAMPLE = "{domain:'global',reason:'domainPolicy',message:'msg'}";
     VALID_CONTENT_TYPE = "text/plain";
     VALID_CONTENT_TYPE_WITH_PARAMS =
         "application/vnd.com.google.datastore.entity+json; charset=utf-8; version=v1; q=0.9";
@@ -315,7 +313,6 @@ public class HttpResponseTest {
 
     @Key String[] r;
   }
-
 
   @Test
   public void testHeaderParsing() throws Exception {

@@ -16,7 +16,6 @@ package com.google.api.client.json;
 
 import static org.junit.Assert.assertEquals;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

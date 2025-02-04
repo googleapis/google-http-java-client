@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -41,24 +40,25 @@ public class UriTemplateTest {
   private static final String[][] LIST_TESTS;
 
   static {
-    LIST_TESTS = new String[][] {
-        {"{d}", "red,green,blue"},
-        {"{d*}", "red,green,blue"},
-        {"{+d}", "red,green,blue"},
-        {"{+d*}", "red,green,blue"},
-        {"{#d}", "#red,green,blue"},
-        {"{#d*}", "#red,green,blue"},
-        {"X{.d}", "X.red,green,blue"},
-        {"X{.d*}", "X.red.green.blue"},
-        {"{/d}", "/red,green,blue"},
-        {"{/d*}", "/red/green/blue"},
-        {"{;d}", ";d=red,green,blue"},
-        {"{;d*}", ";d=red;d=green;d=blue"},
-        {"{?d}", "?d=red,green,blue"},
-        {"{?d*}", "?d=red&d=green&d=blue"},
-        {"{&d}", "&d=red,green,blue"},
-        {"{&d*}", "&d=red&d=green&d=blue"},
-    };
+    LIST_TESTS =
+        new String[][] {
+          {"{d}", "red,green,blue"},
+          {"{d*}", "red,green,blue"},
+          {"{+d}", "red,green,blue"},
+          {"{+d*}", "red,green,blue"},
+          {"{#d}", "#red,green,blue"},
+          {"{#d*}", "#red,green,blue"},
+          {"X{.d}", "X.red,green,blue"},
+          {"X{.d*}", "X.red.green.blue"},
+          {"{/d}", "/red,green,blue"},
+          {"{/d*}", "/red/green/blue"},
+          {"{;d}", ";d=red,green,blue"},
+          {"{;d*}", ";d=red;d=green;d=blue"},
+          {"{?d}", "?d=red,green,blue"},
+          {"{?d*}", "?d=red&d=green&d=blue"},
+          {"{&d}", "&d=red,green,blue"},
+          {"{&d*}", "&d=red&d=green&d=blue"},
+        };
   }
 
   @Test

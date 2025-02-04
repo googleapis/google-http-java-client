@@ -22,7 +22,6 @@ import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

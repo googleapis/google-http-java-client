@@ -27,7 +27,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

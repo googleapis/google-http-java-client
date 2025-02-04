@@ -17,12 +17,9 @@ package com.google.api.client.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -61,12 +58,12 @@ public class IOUtilsTest {
 
   @Test
   public void testIsSymbolicLink_true() throws IOException {
-//    File file = File.createTempFile("tmp", null);
-//    file.deleteOnExit();
-//    File file2 = new File(file.getCanonicalPath() + "2");
-//    file2.deleteOnExit();
-//    Files.createSymbolicLink(file2.toPath(), file.toPath());
-//
-//    assertTrue(IOUtils.isSymbolicLink(file2));
+    //    File file = File.createTempFile("tmp", null);
+    //    file.deleteOnExit();
+    //    File file2 = new File(file.getCanonicalPath() + "2");
+    //    file2.deleteOnExit();
+    //    Files.createSymbolicLink(file2.toPath(), file.toPath());
+    //
+    //    assertTrue(IOUtils.isSymbolicLink(file2));
   }
 }
