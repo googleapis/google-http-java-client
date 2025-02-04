@@ -14,6 +14,12 @@
 
 package com.google.api.client.test.util.store;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.util.Beta;
 import com.google.api.client.util.store.DataStore;
 import com.google.api.client.util.store.DataStoreFactory;
@@ -21,7 +27,9 @@ import com.google.common.collect.Sets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests {@link DataStoreFactory}.
@@ -29,7 +37,7 @@ import junit.framework.TestCase;
  * @author Yaniv Inbar
  */
 @Beta
-public abstract class AbstractDataStoreFactoryTest extends TestCase {
+public abstract class AbstractDataStoreFactoryTest {
 
   private static final String STRING_ID = "String";
   private static final String BOOLEAN_ID = "Boolean";
@@ -40,14 +48,14 @@ public abstract class AbstractDataStoreFactoryTest extends TestCase {
   /** Returns a new instance of the data store factory to test. */
   protected abstract DataStoreFactory newDataStoreFactory() throws Exception;
 
-  @Override
+  @Before
   public void setUp() throws Exception {
     dataStore = newDataStoreFactory();
     stringTyped = dataStore.getDataStore(STRING_ID);
     boolTyped = dataStore.getDataStore(BOOLEAN_ID);
   }
 
-  @Override
+  @After
   public void tearDown() throws Exception {
     stringTyped.clear();
     assertTrue(stringTyped.values().isEmpty());
@@ -59,6 +67,7 @@ public abstract class AbstractDataStoreFactoryTest extends TestCase {
     assertEquals(Sets.newHashSet(c), Sets.newHashSet(Arrays.asList(elts)));
   }
 
+  @Test
   public void testId() throws Exception {
     subtestIdNoException("1");
     subtestIdNoException("123456789012345678901234567890");
@@ -83,6 +92,7 @@ public abstract class AbstractDataStoreFactoryTest extends TestCase {
     newDataStoreFactory().getDataStore(id);
   }
 
+  @Test
   public void testSet() throws Exception {
     // get null
     assertNull(stringTyped.get(null));
@@ -123,6 +133,7 @@ public abstract class AbstractDataStoreFactoryTest extends TestCase {
     assertTrue(boolTyped.get("k"));
   }
 
+  @Test
   public void testValues() throws Exception {
     // before
     assertTrue(stringTyped.values().isEmpty());
@@ -144,6 +155,7 @@ public abstract class AbstractDataStoreFactoryTest extends TestCase {
     assertContentsAnyOrder(boolTyped.values(), true);
   }
 
+  @Test
   public void testKeySet() throws Exception {
     // before
     assertTrue(stringTyped.keySet().isEmpty());
@@ -164,6 +176,7 @@ public abstract class AbstractDataStoreFactoryTest extends TestCase {
     assertTrue(stringTyped.keySet().isEmpty());
   }
 
+  @Test
   public void testDelete() throws Exception {
     // store with basic values
     stringTyped.set("k", "v").set("k2", "v2");
@@ -186,6 +199,7 @@ public abstract class AbstractDataStoreFactoryTest extends TestCase {
     assertEquals(0, stringTyped.size());
   }
 
+  @Test
   public void testClear() throws Exception {
     // store with basic values
     stringTyped.set("k", "v").set("k2", "v2");
@@ -199,6 +213,7 @@ public abstract class AbstractDataStoreFactoryTest extends TestCase {
     assertEquals(0, stringTyped.size());
   }
 
+  @Test
   public void testLarge() throws Exception {
     // TODO(yanivi): size = 1000? need to speed up JdoDataStoreTest first
     int size = 100;
@@ -210,6 +225,7 @@ public abstract class AbstractDataStoreFactoryTest extends TestCase {
     assertEquals("hello" + mid, stringTyped.get(String.valueOf(mid)));
   }
 
+  @Test
   public void testContainsKeyAndValue() throws Exception {
     // before
     assertFalse(stringTyped.containsKey("k"));

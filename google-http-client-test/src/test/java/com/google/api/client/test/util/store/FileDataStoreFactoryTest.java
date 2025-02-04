@@ -14,12 +14,16 @@
 
 package com.google.api.client.test.util.store;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.google.api.client.util.store.DataStore;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
+import org.junit.Test;
 
 /**
  * Tests {@link FileDataStoreFactory}.
@@ -35,6 +39,7 @@ public class FileDataStoreFactoryTest extends AbstractDataStoreFactoryTest {
     return new FileDataStoreFactory(dataDir);
   }
 
+  @Test
   public void testSave() throws IOException {
     FileDataStoreFactory factory = newDataStoreFactory();
     DataStore<String> store = factory.getDataStore("foo");
