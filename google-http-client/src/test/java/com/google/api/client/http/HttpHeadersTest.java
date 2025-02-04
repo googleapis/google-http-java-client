@@ -171,8 +171,12 @@ public class HttpHeadersTest {
     assertEquals(E.OTHER_VALUE, myHeaders.otherValue);
   }
 
-  private static final String AUTHORIZATION_HEADERS =
-      "Accept-Encoding: gzip\r\nAuthorization: Foo\r\nAuthorization: Bar\r\n";
+  private static final String AUTHORIZATION_HEADERS;
+
+  static {
+    AUTHORIZATION_HEADERS =
+        "Accept-Encoding: gzip\r\nAuthorization: Foo\r\nAuthorization: Bar\r\n";
+  }
 
   @Test
   public void testAuthorizationHeader() throws IOException {

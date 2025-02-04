@@ -35,7 +35,11 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class IOUtilsTest {
 
-  static final String VALUE = "abc";
+  private static final String VALUE;
+
+  static {
+    VALUE = "abc";
+  }
 
   @Test
   public void testSerialize() throws IOException {

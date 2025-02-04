@@ -34,7 +34,11 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class ByteArrayContentTest {
-  private static final byte[] FOO = StringUtils.getBytesUtf8("foo");
+  private static final byte[] FOO;
+
+  static {
+    FOO = StringUtils.getBytesUtf8("foo");
+  }
 
   @Test
   public void testConstructor() throws IOException {

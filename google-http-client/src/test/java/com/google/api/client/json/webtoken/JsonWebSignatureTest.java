@@ -50,6 +50,21 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class JsonWebSignatureTest {
 
+  private static final String ES256_CONTENT;
+  private static final String ES256_SIGNATURE;
+  // x, y values for keyId "mpf0DA" from https://www.gstatic.com/iap/verify/public_key-jwk
+  private static final String GOOGLE_ES256_X;
+  private static final String GOOGLE_ES256_Y;
+
+  static {
+    ES256_CONTENT =
+        "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Im1wZjBEQSJ9.eyJhdWQiOiIvcHJvamVjdHMvNjUyNTYyNzc2Nzk4L2FwcHMvY2xvdWQtc2FtcGxlcy10ZXN0cy1waHAtaWFwIiwiZW1haWwiOiJjaGluZ29yQGdvb2dsZS5jb20iLCJleHAiOjE1ODQwNDc2MTcsImdvb2dsZSI6eyJhY2Nlc3NfbGV2ZWxzIjpbImFjY2Vzc1BvbGljaWVzLzUxODU1MTI4MDkyNC9hY2Nlc3NMZXZlbHMvcmVjZW50U2VjdXJlQ29ubmVjdERhdGEiLCJhY2Nlc3NQb2xpY2llcy81MTg1NTEyODA5MjQvYWNjZXNzTGV2ZWxzL3Rlc3ROb09wIiwiYWNjZXNzUG9saWNpZXMvNTE4NTUxMjgwOTI0L2FjY2Vzc0xldmVscy9ldmFwb3JhdGlvblFhRGF0YUZ1bGx5VHJ1c3RlZCJdfSwiaGQiOiJnb29nbGUuY29tIiwiaWF0IjoxNTg0MDQ3MDE3LCJpc3MiOiJodHRwczovL2Nsb3VkLmdvb2dsZS5jb20vaWFwIiwic3ViIjoiYWNjb3VudHMuZ29vZ2xlLmNvbToxMTIxODE3MTI3NzEyMDE5NzI4OTEifQ";
+    ES256_SIGNATURE =
+        "yKNtdFY5EKkRboYNexBdfugzLhC3VuGyFcuFYA8kgpxMqfyxa41zkML68hYKrWu2kOBTUW95UnbGpsIi_u1fiA";
+    GOOGLE_ES256_X = "fHEdeT3a6KaC1kbwov73ZwB_SiUHEyKQwUUtMCEn0aI";
+    GOOGLE_ES256_Y = "QWOjwPhInNuPlqjxLQyhveXpWqOFcQPhZ3t-koMNbZI";
+  }
+
   @Test
   public void testSign() throws Exception {
     JsonWebSignature.Header header = new JsonWebSignature.Header();
@@ -128,14 +143,6 @@ public class JsonWebSignatureTest {
     Assert.assertNull(verifyX509WithCaCert(TestCertificates.BOGUS_CA_CERT));
   }
 
-  private static final String ES256_CONTENT =
-      "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Im1wZjBEQSJ9.eyJhdWQiOiIvcHJvamVjdHMvNjUyNTYyNzc2Nzk4L2FwcHMvY2xvdWQtc2FtcGxlcy10ZXN0cy1waHAtaWFwIiwiZW1haWwiOiJjaGluZ29yQGdvb2dsZS5jb20iLCJleHAiOjE1ODQwNDc2MTcsImdvb2dsZSI6eyJhY2Nlc3NfbGV2ZWxzIjpbImFjY2Vzc1BvbGljaWVzLzUxODU1MTI4MDkyNC9hY2Nlc3NMZXZlbHMvcmVjZW50U2VjdXJlQ29ubmVjdERhdGEiLCJhY2Nlc3NQb2xpY2llcy81MTg1NTEyODA5MjQvYWNjZXNzTGV2ZWxzL3Rlc3ROb09wIiwiYWNjZXNzUG9saWNpZXMvNTE4NTUxMjgwOTI0L2FjY2Vzc0xldmVscy9ldmFwb3JhdGlvblFhRGF0YUZ1bGx5VHJ1c3RlZCJdfSwiaGQiOiJnb29nbGUuY29tIiwiaWF0IjoxNTg0MDQ3MDE3LCJpc3MiOiJodHRwczovL2Nsb3VkLmdvb2dsZS5jb20vaWFwIiwic3ViIjoiYWNjb3VudHMuZ29vZ2xlLmNvbToxMTIxODE3MTI3NzEyMDE5NzI4OTEifQ";
-  private static final String ES256_SIGNATURE =
-      "yKNtdFY5EKkRboYNexBdfugzLhC3VuGyFcuFYA8kgpxMqfyxa41zkML68hYKrWu2kOBTUW95UnbGpsIi_u1fiA";
-
-  // x, y values for keyId "mpf0DA" from https://www.gstatic.com/iap/verify/public_key-jwk
-  private static final String GOOGLE_ES256_X = "fHEdeT3a6KaC1kbwov73ZwB_SiUHEyKQwUUtMCEn0aI";
-  private static final String GOOGLE_ES256_Y = "QWOjwPhInNuPlqjxLQyhveXpWqOFcQPhZ3t-koMNbZI";
 
   private PublicKey buildEs256PublicKey(String x, String y)
       throws NoSuchAlgorithmException, InvalidParameterSpecException, InvalidKeySpecException {

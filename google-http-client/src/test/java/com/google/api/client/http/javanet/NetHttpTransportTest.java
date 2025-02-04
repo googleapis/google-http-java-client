@@ -51,10 +51,15 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class NetHttpTransportTest {
 
-  private static final String[] METHODS = {
-    "GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"
-  };
+  private static final String[] METHODS;
 
+  static {
+    METHODS = new String[] {
+        "GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"
+    };
+  }
+
+  @Test
   public void testNotMtlsWithoutClientCert() throws Exception {
     KeyStore trustStore = KeyStore.getInstance("JKS");
 
@@ -63,6 +68,7 @@ public class NetHttpTransportTest {
     assertFalse(transport.isMtls());
   }
 
+  @Test
   public void testIsMtlsWithClientCert() throws Exception {
     KeyStore trustStore = KeyStore.getInstance("JKS");
     KeyStore keyStore = KeyStore.getInstance("PKCS12");
@@ -81,6 +87,7 @@ public class NetHttpTransportTest {
     assertTrue(transport.isMtls());
   }
 
+  @Test
   public void testExecute_mock() throws Exception {
     for (String method : METHODS) {
       boolean isPutOrPost = method.equals("PUT") || method.equals("POST");
@@ -105,6 +112,7 @@ public class NetHttpTransportTest {
     }
   }
 
+  @Test
   public void testExecute_methodUnchanged() throws Exception {
     String body = "Arbitrary body";
     byte[] buf = StringUtils.getBytesUtf8(body);
@@ -121,6 +129,7 @@ public class NetHttpTransportTest {
     }
   }
 
+  @Test
   public void testAbruptTerminationIsNoticedWithContentLength() throws Exception {
     String incompleteBody = "" + "Fixed size body test.\r\n" + "Incomplete response.";
     byte[] buf = StringUtils.getBytesUtf8(incompleteBody);
@@ -146,6 +155,7 @@ public class NetHttpTransportTest {
     assertTrue(thrown);
   }
 
+  @Test
   public void testAbruptTerminationIsNoticedWithContentLengthWithReadToBuf() throws Exception {
     String incompleteBody = "" + "Fixed size body test.\r\n" + "Incomplete response.";
     byte[] buf = StringUtils.getBytesUtf8(incompleteBody);

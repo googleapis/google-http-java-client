@@ -18,7 +18,6 @@ import static org.junit.Assert.assertEquals;
 
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -31,11 +30,15 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class BasicAuthenticationTest {
 
-  static final String USERNAME = "Aladdin";
+  static final String USERNAME;
+  static final String PASSWORD;
+  static final String AUTH_HEADER;
 
-  static final String PASSWORD = "open sesame";
-
-  static final String AUTH_HEADER = "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==";
+  static {
+    USERNAME = "Aladdin";
+    PASSWORD = "open sesame";
+    AUTH_HEADER = "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==";
+  }
 
   @Test
   public void testConstructor() {

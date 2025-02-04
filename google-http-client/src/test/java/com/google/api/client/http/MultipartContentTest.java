@@ -35,10 +35,17 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class MultipartContentTest {
 
-  private static final String BOUNDARY = "__END_OF_PART__";
-  private static final String CRLF = "\r\n";
-  private static final String CONTENT_TYPE = Json.MEDIA_TYPE;
-  private static final String HEADERS = headers("application/json; charset=UTF-8", "foo");
+  private static final String BOUNDARY;
+  private static final String CRLF;
+  private static final String CONTENT_TYPE;
+  private static final String HEADERS;
+
+  static {
+    BOUNDARY = "__END_OF_PART__";
+    CRLF = "\r\n";
+    CONTENT_TYPE = Json.MEDIA_TYPE;
+    HEADERS = headers("application/json; charset=UTF-8", "foo");
+  }
 
   private static String headers(String contentType, String value) {
     return "Content-Length: "

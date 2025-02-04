@@ -43,7 +43,65 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class GenericUrlTest {
 
-  private static final String MINIMAL = "http://bar";
+  private static final String MINIMAL;
+  private static final String NO_PATH;
+  private static final String SHORT_PATH;
+  private static final List<String> SHORT_PATH_PARTS;
+  private static final String LONG_PATH;
+  private static final List<String> LONG_PATH_PARTS;
+  private static final String FULL;
+  private static final List<String> FULL_PARTS;
+  private static final String USER_INFO;
+  private static final String FRAGMENT;
+  private static final String FIELD_TYPES;
+  private static final String FRAGMENT1;
+  private static final String FRAGMENT2;
+  private static final String BASE_URL;
+  private static final String FULL_PATH;
+  private static final String PATH_WITH_SLASH;
+  private static final List<String> PATH_WITH_SLASH_PARTS;
+  private static final String PREFIX;
+  private static final String REPEATED_PARAM_PATH;
+  private static final List<String> REPEATED_PARAM_PATH_PARTS;
+  private static final String REPEATED_PARAM;
+
+
+
+  static {
+    MINIMAL = "http://bar";
+    NO_PATH = "http://bar?a=b";
+    SHORT_PATH = "http://bar/path?a=b";
+    SHORT_PATH_PARTS = Arrays.asList("", "path");
+    LONG_PATH = "http://bar/path/to/resource?a=b";
+    LONG_PATH_PARTS = Arrays.asList("", "path", "to", "resource");
+    FULL =
+        "https://user:%3Cpa&$w%40rd%3E@www.google.com:223/m8/feeds/contacts/"
+            + "someone=%23%25&%20%3F%3Co%3E%7B%7D@gmail.com/"
+            + "full?"
+            + "foo=bar&"
+            + "alt=json&"
+            + "max-results=3&"
+            + "prettyprint=true&"
+            + "q=Go%3D%23/%25%26%20?%3Co%3Egle#%3CD@WNL:ADING%3E";
+    FULL_PARTS =
+        Arrays.asList("", "m8", "feeds", "contacts", "someone=#%& ?<o>{}@gmail.com", "full");
+    USER_INFO = "user:<pa&$w@rd>";
+    FRAGMENT = "<D@WNL:ADING>";
+    FIELD_TYPES = "http://bar?B=true&D=-3.14&I=-3&b=true&d=-3.14&i=-3&s=a&a=b";
+    FRAGMENT1 = "http://bar/path/to/resource#fragme=%23/%25&%20?%3Co%3Ent";
+    FRAGMENT2 = "http://bar/path/to/resource?a=b#fragment";
+    BASE_URL = "http://google.com";
+    FULL_PATH = "/some/path/someone%2Fis%2F@gmail.com/test/?one=1&two=2";
+    PATH_WITH_SLASH =
+        "http://www.google.com/m8/feeds/contacts/someone%2Fis%2F@gmail.com/full/";
+    PATH_WITH_SLASH_PARTS =
+        Arrays.asList("", "m8", "feeds", "contacts", "someone/is/@gmail.com", "full", "");
+    PREFIX = "https://www.googleapis.com";
+    REPEATED_PARAM_PATH = "/latitude/v1/location";
+    REPEATED_PARAM_PATH_PARTS =
+        Arrays.asList("", "latitude", "v1", "location");
+    REPEATED_PARAM = PREFIX + REPEATED_PARAM_PATH + "?q=c&q=a&q=b&s=e";
+  }
 
   @Test
   public void testBuild_minimal() {
@@ -59,7 +117,6 @@ public class GenericUrlTest {
     assertEquals("http", url.getScheme());
   }
 
-  private static final String NO_PATH = "http://bar?a=b";
 
   @Test
   public void testBuild_noPath() {
@@ -108,10 +165,6 @@ public class GenericUrlTest {
     assertNull(url.getPathParts());
   }
 
-  private static final String SHORT_PATH = "http://bar/path?a=b";
-
-  private static final List<String> SHORT_PATH_PARTS = Arrays.asList("", "path");
-
   @Test
   public void testBuild_shortPath() {
     GenericUrl url = new GenericUrl();
@@ -130,10 +183,6 @@ public class GenericUrlTest {
     assertEquals(SHORT_PATH_PARTS, url.getPathParts());
     assertEquals("b", url.getFirst("a"));
   }
-
-  private static final String LONG_PATH = "http://bar/path/to/resource?a=b";
-
-  private static final List<String> LONG_PATH_PARTS = Arrays.asList("", "path", "to", "resource");
 
   @Test
   public void testBuild_longPath() {
@@ -169,22 +218,6 @@ public class GenericUrlTest {
       super(encodedUrl, verbatim);
     }
   }
-
-  private static final String FULL =
-      "https://user:%3Cpa&$w%40rd%3E@www.google.com:223/m8/feeds/contacts/"
-          + "someone=%23%25&%20%3F%3Co%3E%7B%7D@gmail.com/"
-          + "full?"
-          + "foo=bar&"
-          + "alt=json&"
-          + "max-results=3&"
-          + "prettyprint=true&"
-          + "q=Go%3D%23/%25%26%20?%3Co%3Egle#%3CD@WNL:ADING%3E";
-
-  private static final List<String> FULL_PARTS =
-      Arrays.asList("", "m8", "feeds", "contacts", "someone=#%& ?<o>{}@gmail.com", "full");
-
-  private static final String USER_INFO = "user:<pa&$w@rd>";
-  private static final String FRAGMENT = "<D@WNL:ADING>";
 
   @Test
   public void testBuild_full() {
@@ -292,9 +325,6 @@ public class GenericUrlTest {
     }
   }
 
-  private static final String FIELD_TYPES =
-      "http://bar?B=true&D=-3.14&I=-3&b=true&d=-3.14&i=-3&s=a&a=b";
-
   @Test
   public void testBuild_fieldTypes() {
     FieldTypesUrl url = new FieldTypesUrl();
@@ -328,9 +358,6 @@ public class GenericUrlTest {
     assertEquals("a", url.s);
   }
 
-  private static final String FRAGMENT1 =
-      "http://bar/path/to/resource#fragme=%23/%25&%20?%3Co%3Ent";
-
   @Test
   public void testBuild_fragment1() {
     GenericUrl url = new GenericUrl();
@@ -349,8 +376,6 @@ public class GenericUrlTest {
     assertEquals(LONG_PATH_PARTS, url.getPathParts());
     assertEquals("fragme=#/%& ?<o>nt", url.getFragment());
   }
-
-  private static final String FRAGMENT2 = "http://bar/path/to/resource?a=b#fragment";
 
   @Test
   public void testBuild_fragment2() {
@@ -470,20 +495,11 @@ public class GenericUrlTest {
     assertEquals("?key=value", url.buildRelativeUrl());
   }
 
-  private static final String BASE_URL = "http://google.com";
-  private static final String FULL_PATH = "/some/path/someone%2Fis%2F@gmail.com/test/?one=1&two=2";
-
   @Test
   public void testBuildRelativeUrl_full() {
     GenericUrl url = new GenericUrl(BASE_URL + FULL_PATH);
     assertEquals(FULL_PATH, url.buildRelativeUrl());
   }
-
-  private static final String PATH_WITH_SLASH =
-      "http://www.google.com/m8/feeds/contacts/someone%2Fis%2F@gmail.com/full/";
-
-  private static final List<String> PATH_WITH_SLASH_PARTS =
-      Arrays.asList("", "m8", "feeds", "contacts", "someone/is/@gmail.com", "full", "");
 
   @Test
   public void testBuild_pathWithSlash() {
@@ -557,15 +573,6 @@ public class GenericUrlTest {
     url.appendRawPath("/");
     assertEquals(Arrays.asList("", "", "", "abc", "d", "e", ""), url.getPathParts());
   }
-
-  private static final String PREFIX = "https://www.googleapis.com";
-
-  private static final String REPEATED_PARAM_PATH = "/latitude/v1/location";
-
-  private static final List<String> REPEATED_PARAM_PATH_PARTS =
-      Arrays.asList("", "latitude", "v1", "location");
-
-  private static final String REPEATED_PARAM = PREFIX + REPEATED_PARAM_PATH + "?q=c&q=a&q=b&s=e";
 
   @Test
   public void testRepeatedParam_build() {

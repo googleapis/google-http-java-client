@@ -37,6 +37,30 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class UriTemplateTest {
 
+  // template, expected output.
+  private static final String[][] LIST_TESTS;
+
+  static {
+    LIST_TESTS = new String[][] {
+        {"{d}", "red,green,blue"},
+        {"{d*}", "red,green,blue"},
+        {"{+d}", "red,green,blue"},
+        {"{+d*}", "red,green,blue"},
+        {"{#d}", "#red,green,blue"},
+        {"{#d*}", "#red,green,blue"},
+        {"X{.d}", "X.red,green,blue"},
+        {"X{.d*}", "X.red.green.blue"},
+        {"{/d}", "/red,green,blue"},
+        {"{/d*}", "/red/green/blue"},
+        {"{;d}", ";d=red,green,blue"},
+        {"{;d*}", ";d=red;d=green;d=blue"},
+        {"{?d}", "?d=red,green,blue"},
+        {"{?d*}", "?d=red&d=green&d=blue"},
+        {"{&d}", "&d=red,green,blue"},
+        {"{&d*}", "&d=red&d=green&d=blue"},
+    };
+  }
+
   @Test
   public void testExpandTemplates_initialization() {
     SortedMap<String, Object> map = Maps.newTreeMap();
@@ -124,26 +148,6 @@ public class UriTemplateTest {
   private Iterable<String> getListIterable() {
     return Arrays.asList("red", "green", "blue");
   }
-
-  // template, expected output.
-  private static final String[][] LIST_TESTS = {
-    {"{d}", "red,green,blue"},
-    {"{d*}", "red,green,blue"},
-    {"{+d}", "red,green,blue"},
-    {"{+d*}", "red,green,blue"},
-    {"{#d}", "#red,green,blue"},
-    {"{#d*}", "#red,green,blue"},
-    {"X{.d}", "X.red,green,blue"},
-    {"X{.d*}", "X.red.green.blue"},
-    {"{/d}", "/red,green,blue"},
-    {"{/d*}", "/red/green/blue"},
-    {"{;d}", ";d=red,green,blue"},
-    {"{;d*}", ";d=red;d=green;d=blue"},
-    {"{?d}", "?d=red,green,blue"},
-    {"{?d*}", "?d=red&d=green&d=blue"},
-    {"{&d}", "&d=red,green,blue"},
-    {"{&d*}", "&d=red&d=green&d=blue"},
-  };
 
   @Test
   public void testExpandTemplates_explodeIterator() {
