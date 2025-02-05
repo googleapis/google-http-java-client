@@ -42,8 +42,13 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public abstract class AbstractDataStoreFactoryTest {
 
-  private static final String STRING_ID = "String";
-  private static final String BOOLEAN_ID = "Boolean";
+  private static final String STRING_ID;
+  private static final String BOOLEAN_ID;
+
+  static {
+    STRING_ID = "String";
+    BOOLEAN_ID = "Boolean";
+  }
   DataStoreFactory dataStore;
   DataStore<String> stringTyped;
   DataStore<Boolean> boolTyped;
