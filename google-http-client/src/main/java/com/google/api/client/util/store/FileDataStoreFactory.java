@@ -56,16 +56,16 @@ import java.util.logging.Logger;
  */
 public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
-  private static final boolean IS_WINDOWS;
-  static {
-    try {
-      IS_WINDOWS =
-          StandardSystemProperty.OS_NAME.value().toLowerCase(Locale.ENGLISH).startsWith("windows");
-    } catch (Throwable ex) {
-      Logger.getLogger(FileDataStoreFactory.class.getName()).severe(ex.getMessage());
-      throw ex;
-    }
-  }
+//  private static final boolean IS_WINDOWS;
+//  static {
+//    try {
+//      IS_WINDOWS =
+//          StandardSystemProperty.OS_NAME.value().toLowerCase(Locale.ENGLISH).startsWith("windows");
+//    } catch (Throwable ex) {
+//      Logger.getLogger(FileDataStoreFactory.class.getName()).severe(ex.getMessage());
+//      throw ex;
+//    }
+//  }
 
   /** Directory to store data. */
   private final File dataDirectory;
@@ -83,11 +83,11 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
     }
     this.dataDirectory = dataDirectory;
 
-    if (IS_WINDOWS) {
-      setPermissionsToOwnerOnlyWindows(dataDirectory);
-    } else {
+//    if (IS_WINDOWS) {
+//      setPermissionsToOwnerOnlyWindows(dataDirectory);
+//    } else {
       setPermissionsToOwnerOnly(dataDirectory);
-    }
+//    }
   }
 
   /** Returns the data directory. */
