@@ -24,12 +24,15 @@ import com.google.common.collect.ImmutableSet;
 import java.io.File;
 import java.io.IOException;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link FileDataStoreFactory}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class FileDataStoreFactoryTest extends AbstractDataStoreFactoryTest {
 
   @Override

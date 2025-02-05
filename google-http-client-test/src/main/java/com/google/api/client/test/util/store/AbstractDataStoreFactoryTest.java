@@ -30,6 +30,8 @@ import java.util.Set;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link DataStoreFactory}.
@@ -37,6 +39,7 @@ import org.junit.Test;
  * @author Yaniv Inbar
  */
 @Beta
+@RunWith(JUnit4.class)
 public abstract class AbstractDataStoreFactoryTest {
 
   private static final String STRING_ID = "String";
