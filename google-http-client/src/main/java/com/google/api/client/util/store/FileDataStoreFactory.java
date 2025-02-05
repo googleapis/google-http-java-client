@@ -54,8 +54,11 @@ import java.util.Set;
  */
 public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
-  private static final boolean IS_WINDOWS =
-      StandardSystemProperty.OS_NAME.value().toLowerCase(Locale.ENGLISH).startsWith("windows");
+  private static final boolean IS_WINDOWS;
+  static {
+    IS_WINDOWS =
+        StandardSystemProperty.OS_NAME.value().toLowerCase(Locale.ENGLISH).startsWith("windows");
+  }
 
   /** Directory to store data. */
   private final File dataDirectory;
