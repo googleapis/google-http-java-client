@@ -14,8 +14,9 @@
 
 package com.google.api.client.util.store;
 
+import static com.google.api.client.util.Preconditions.checkArgument;
+
 import com.google.api.client.util.Maps;
-import com.google.api.client.util.Preconditions;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
@@ -44,11 +45,16 @@ public abstract class AbstractDataStoreFactory implements DataStoreFactory {
   private static final Pattern ID_PATTERN;
 
   static {
-    ID_PATTERN = Pattern.compile("\\w{1,30}");
+    try {
+      ID_PATTERN = Pattern.compile("\\w{1,30}");
+    } catch (Throwable t) {
+      System.out.println(t.getMessage());
+      throw t;
+    }
   }
 
   public final <V extends Serializable> DataStore<V> getDataStore(String id) throws IOException {
-    Preconditions.checkArgument(
+    checkArgument(
         ID_PATTERN.matcher(id).matches(), "%s does not match pattern %s", id, ID_PATTERN);
     lock.lock();
     try {
