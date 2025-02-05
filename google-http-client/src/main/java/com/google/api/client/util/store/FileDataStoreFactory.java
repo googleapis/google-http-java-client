@@ -64,6 +64,7 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
     } catch (Throwable ex) {
       //Logger.getLogger(FileDataStoreFactory.class.getName()).severe(ex.getMessage());
       ex.printStackTrace();
+      System.out.println("*********************************************************");
       System.out.println(ex.getMessage());
       throw ex;
     }
