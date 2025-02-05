@@ -62,7 +62,9 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
       IS_WINDOWS =
           StandardSystemProperty.OS_NAME.value().toLowerCase(Locale.ENGLISH).startsWith("windows");
     } catch (Throwable ex) {
-      Logger.getLogger(FileDataStoreFactory.class.getName()).severe(ex.getMessage());
+      //Logger.getLogger(FileDataStoreFactory.class.getName()).severe(ex.getMessage());
+      ex.printStackTrace();
+      System.out.println(ex.getMessage());
       throw ex;
     }
   }
