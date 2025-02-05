@@ -15,14 +15,19 @@
 package com.google.api.client.extensions.appengine.http;
 
 import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link UrlFetchTransport}.
  *
  * @author Tony Aiuto
  */
+@RunWith(JUnit4.class)
 public class UrlFetchTransportTest extends TestCase {
 
+  @Test
   public void test() {
     new UrlFetchTransport();
   }
