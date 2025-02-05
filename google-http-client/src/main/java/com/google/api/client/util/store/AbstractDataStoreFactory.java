@@ -41,7 +41,11 @@ public abstract class AbstractDataStoreFactory implements DataStoreFactory {
    * Pattern to control possible values for the {@code id} parameter of {@link
    * #getDataStore(String)}.
    */
-  private static final Pattern ID_PATTERN = Pattern.compile("\\w{1,30}");
+  private static final Pattern ID_PATTERN;
+
+  static {
+    ID_PATTERN = Pattern.compile("\\w{1,30}");
+  }
 
   public final <V extends Serializable> DataStore<V> getDataStore(String id) throws IOException {
     Preconditions.checkArgument(
