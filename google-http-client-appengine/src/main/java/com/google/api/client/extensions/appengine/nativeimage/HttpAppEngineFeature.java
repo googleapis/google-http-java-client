@@ -18,7 +18,7 @@ public class HttpAppEngineFeature implements Feature {
           "com.google.apphosting.api.logservice.LogServicePb");
 
   @Override
-  public void duringSetup(DuringSetupAccess access) {
+  public void beforeAnalysis(BeforeAnalysisAccess access) {
     try {
       for (String className : APP_ENGINE_CLASSES) {
         registerClassForReflection(className, access);
@@ -31,7 +31,8 @@ public class HttpAppEngineFeature implements Feature {
     }
   }
 
-  private void registerClassForReflection(String classFullQualifiedName, DuringSetupAccess access) {
+  private void registerClassForReflection(
+      String classFullQualifiedName, BeforeAnalysisAccess access) {
     Class<?> clazz = access.findClassByName(classFullQualifiedName);
     RuntimeReflection.register(clazz);
     RuntimeReflection.register(clazz.getDeclaredConstructors());
