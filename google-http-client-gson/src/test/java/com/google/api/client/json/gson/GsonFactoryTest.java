@@ -38,15 +38,11 @@ import org.junit.Test;
  */
 public class GsonFactoryTest extends AbstractJsonFactoryTest {
 
-  private static final String GSON_LINE_SEPARATOR;
-  private static final String JSON_ENTRY_PRETTY;
-  private static final String JSON_FEED_PRETTY;
+  private static final String GSON_LINE_SEPARATOR = "\n";
 
-  static {
-    GSON_LINE_SEPARATOR = "\n";
-    JSON_ENTRY_PRETTY =
+  private static final String JSON_ENTRY_PRETTY =
         "{" + GSON_LINE_SEPARATOR + "  \"title\": \"foo\"" + GSON_LINE_SEPARATOR + "}";
-    JSON_FEED_PRETTY =
+  private static final String JSON_FEED_PRETTY =
         "{"
             + GSON_LINE_SEPARATOR
             + "  \"entries\": ["
@@ -66,7 +62,6 @@ public class GsonFactoryTest extends AbstractJsonFactoryTest {
             + "  ]"
             + GSON_LINE_SEPARATOR
             + "}";
-  }
 
   @Override
   protected JsonFactory newFactory() {
