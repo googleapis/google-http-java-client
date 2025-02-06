@@ -56,6 +56,7 @@ import java.util.logging.Logger;
 public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
   private static final boolean IS_WINDOWS;
+
   static {
     try {
       IS_WINDOWS =

@@ -25,7 +25,6 @@ import com.google.common.collect.ImmutableMap;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.TreeSet;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

@@ -63,8 +63,7 @@ public class XmlTest {
     SIMPLE_XML = "<any>test</any>";
     SIMPLE_XML_NUMERIC = "<any>1</any>";
     START_WITH_TEXT = "<?xml version=\"1.0\"?>start_with_text</any>";
-    MISSING_END_ELEMENT =
-        "<?xml version=\"1.0\"?><any xmlns=\"\">" + "missing_end_element";
+    MISSING_END_ELEMENT = "<?xml version=\"1.0\"?><any xmlns=\"\">" + "missing_end_element";
     START_WITH_END_ELEMENT =
         "<?xml version=\"1.0\"?></p><any " + "xmlns=\"\">start_with_end_elemtn</any>";
     START_WITH_END_ELEMENT_NESTED =

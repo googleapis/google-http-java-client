@@ -38,7 +38,11 @@ public class JacksonFactoryTest extends AbstractJsonFactoryTest {
 
   static {
     JSON_ENTRY_PRETTY =
-        "{" + StringUtils.LINE_SEPARATOR + "  \"title\" : \"foo\"" + StringUtils.LINE_SEPARATOR + "}";
+        "{"
+            + StringUtils.LINE_SEPARATOR
+            + "  \"title\" : \"foo\""
+            + StringUtils.LINE_SEPARATOR
+            + "}";
     JSON_FEED_PRETTY =
         "{"
             + StringUtils.LINE_SEPARATOR
