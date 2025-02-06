@@ -14,16 +14,22 @@
 
 package com.google.api.client.protobuf;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayInputStream;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link ProtocolBuffers}.
  *
  * @author Yaniv Inbar
  */
-public class ProtocolBuffersTest extends TestCase {
+@RunWith(JUnit4.class)
+public class ProtocolBuffersTest {
 
+  @Test
   public void testParseAndClose() throws Exception {
     SimpleProto.TestMessage mockResponse =
         SimpleProto.TestMessage.newBuilder()

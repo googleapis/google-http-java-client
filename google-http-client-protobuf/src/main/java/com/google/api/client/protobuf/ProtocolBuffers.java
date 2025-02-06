@@ -37,10 +37,15 @@ import java.lang.reflect.Method;
 public class ProtocolBuffers {
 
   /** {@code "application/x-protobuf"} content type. */
-  public static final String CONTENT_TYPE = "application/x-protobuf";
+  public static final String CONTENT_TYPE;
 
   /** {@code "application/x-protobuffer"} content type. */
-  public static final String ALT_CONTENT_TYPE = "application/x-protobuffer";
+  public static final String ALT_CONTENT_TYPE;
+
+  static {
+    CONTENT_TYPE = "application/x-protobuf";
+    ALT_CONTENT_TYPE = "application/x-protobuffer";
+  }
 
   /**
    * Parses protocol buffer content from an input stream (closing the input stream) into a protocol
