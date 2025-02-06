@@ -39,19 +39,19 @@ import org.xmlpull.v1.XmlSerializer;
 public class XmlNamespaceDictionaryTest {
 
   private static final String EXPECTED =
-        "<?xml version=\"1.0\"?><feed xmlns=\"http://www.w3"
-            + ".org/2005/Atom\" xmlns:gd=\"http://schemas.google.com/g/2005\"><entry gd:etag=\"abc"
-            + "\"><title>One</title></entry><entry gd:etag=\"def\"><title>Two</title></entry></feed>";
+      "<?xml version=\"1.0\"?><feed xmlns=\"http://www.w3"
+          + ".org/2005/Atom\" xmlns:gd=\"http://schemas.google.com/g/2005\"><entry gd:etag=\"abc"
+          + "\"><title>One</title></entry><entry gd:etag=\"def\"><title>Two</title></entry></feed>";
   private static final String EXPECTED_EMPTY_MAP =
-        "<?xml version=\"1.0\"?><entry xmlns" + "=\"http://www.w3.org/2005/Atom\" />";
+      "<?xml version=\"1.0\"?><entry xmlns" + "=\"http://www.w3.org/2005/Atom\" />";
   private static final String EXPECTED_EMPTY_MAP_NS_UNDECLARED =
-        "<?xml version=\"1.0\"?><n1" + ":entry xmlns:n1=\"http://www.w3.org/2005/Atom\" />";
+      "<?xml version=\"1.0\"?><n1" + ":entry xmlns:n1=\"http://www.w3.org/2005/Atom\" />";
   private static final String EXPECTED_EMPTY_MAP_ATOM_NS =
-        "<?xml version=\"1.0\"?><atom" + ":entry xmlns:atom=\"http://www.w3.org/2005/Atom\" />";
+      "<?xml version=\"1.0\"?><atom" + ":entry xmlns:atom=\"http://www.w3.org/2005/Atom\" />";
   private static final String EXPECTED_UNKNOWN_NS =
-        "<?xml version=\"1.0\"?><feed xmlns"
-            + "=\"http://unknown/\" xmlns:gd=\"http://unknown/gd\"><entry gd:etag=\"abc\"><title>One"
-            + "</title></entry><entry gd:etag=\"def\"><title>Two</title></entry></feed>";
+      "<?xml version=\"1.0\"?><feed xmlns"
+          + "=\"http://unknown/\" xmlns:gd=\"http://unknown/gd\"><entry gd:etag=\"abc\"><title>One"
+          + "</title></entry><entry gd:etag=\"def\"><title>Two</title></entry></feed>";
 
   @Test
   public void testSet() {
