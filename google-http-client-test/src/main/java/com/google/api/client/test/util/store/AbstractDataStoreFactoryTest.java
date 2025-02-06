@@ -49,6 +49,7 @@ public abstract class AbstractDataStoreFactoryTest {
     STRING_ID = "String";
     BOOLEAN_ID = "Boolean";
   }
+
   DataStoreFactory dataStore;
   DataStore<String> stringTyped;
   DataStore<Boolean> boolTyped;

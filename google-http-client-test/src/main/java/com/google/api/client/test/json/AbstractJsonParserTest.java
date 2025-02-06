@@ -39,8 +39,7 @@ public abstract class AbstractJsonParserTest {
   private static final String TEST_JSON_BIG_DECIMAL;
 
   static {
-    TEST_JSON =
-        "{\"strValue\": \"bar\", \"intValue\": 123, \"boolValue\": false}";
+    TEST_JSON = "{\"strValue\": \"bar\", \"intValue\": 123, \"boolValue\": false}";
     TEST_JSON_BIG_DECIMAL = "{\"bigDecimalValue\": 1559341956102}";
   }
 

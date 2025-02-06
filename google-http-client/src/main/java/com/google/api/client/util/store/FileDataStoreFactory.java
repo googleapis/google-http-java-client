@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.System.Logger.Level;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,7 +37,6 @@ import java.nio.file.attribute.UserPrincipal;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * Thread-safe file implementation of a credential store.
@@ -57,12 +55,13 @@ import java.util.logging.Logger;
 public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
   private static final boolean IS_WINDOWS;
+
   static {
     try {
       IS_WINDOWS =
           StandardSystemProperty.OS_NAME.value().toLowerCase(Locale.ENGLISH).startsWith("windows");
     } catch (Throwable ex) {
-      //Logger.getLogger(FileDataStoreFactory.class.getName()).severe(ex.getMessage());
+      // Logger.getLogger(FileDataStoreFactory.class.getName()).severe(ex.getMessage());
       ex.printStackTrace();
       System.out.println("*********************************************************");
       System.out.println(ex.getMessage());

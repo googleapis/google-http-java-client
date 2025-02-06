@@ -101,7 +101,6 @@ public abstract class AbstractJsonFactoryTest {
     }
   }
 
-
   @Test
   public void testParse_emptyMap() throws Exception {
     JsonParser parser = newFactory().createJsonParser(EMPTY_OBJECT);
@@ -139,8 +138,7 @@ public abstract class AbstractJsonFactoryTest {
 
   static {
     JSON_ENTRY = "{\"title\":\"foo\"}";
-    JSON_FEED =
-        "{\"entries\":[" + "{\"title\":\"foo\"}," + "{\"title\":\"bar\"}]}";
+    JSON_FEED = "{\"entries\":[" + "{\"title\":\"foo\"}," + "{\"title\":\"bar\"}]}";
   }
 
   @Test
@@ -461,6 +459,7 @@ public abstract class AbstractJsonFactoryTest {
   }
 
   static final String ANY_TYPE;
+
   static {
     ANY_TYPE =
         "{\"arr\":[1],\"bool\":true,\"nul\":null,\"num\":5,"
@@ -548,8 +547,7 @@ public abstract class AbstractJsonFactoryTest {
   static final String MAP_TYPE;
 
   static {
-    MAP_TYPE =
-        "{\"value\":[{\"map1\":{\"k1\":1,\"k2\":2},\"map2\":{\"kk1\":3,\"kk2\":4}}]}";
+    MAP_TYPE = "{\"value\":[{\"map1\":{\"k1\":1,\"k2\":2},\"map2\":{\"kk1\":3,\"kk2\":4}}]}";
   }
 
   @Test
@@ -929,8 +927,7 @@ public abstract class AbstractJsonFactoryTest {
   static final String ENUM_VALUE;
 
   static {
-    ENUM_VALUE =
-        "{\"nullValue\":null,\"otherValue\":\"other\",\"value\":\"VALUE\"}";
+    ENUM_VALUE = "{\"nullValue\":null,\"otherValue\":\"other\",\"value\":\"VALUE\"}";
   }
 
   @Test

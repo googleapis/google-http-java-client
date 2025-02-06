@@ -61,6 +61,7 @@ public final class JacksonFactory extends JsonFactory {
   /** Holder for the result of {@link #getDefaultInstance()}. */
   static class InstanceHolder {
     static final JacksonFactory INSTANCE;
+
     static {
       INSTANCE = new JacksonFactory();
     }
