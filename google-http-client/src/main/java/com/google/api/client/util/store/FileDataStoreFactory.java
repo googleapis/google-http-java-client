@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.System.Logger.Level;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -62,10 +61,7 @@ public class FileDataStoreFactory extends AbstractDataStoreFactory {
       IS_WINDOWS =
           StandardSystemProperty.OS_NAME.value().toLowerCase(Locale.ENGLISH).startsWith("windows");
     } catch (Throwable ex) {
-      //Logger.getLogger(FileDataStoreFactory.class.getName()).severe(ex.getMessage());
-      ex.printStackTrace();
-      System.out.println("*********************************************************");
-      System.out.println(ex.getMessage());
+      Logger.getLogger(FileDataStoreFactory.class.getName()).severe(ex.getMessage());
       throw ex;
     }
   }

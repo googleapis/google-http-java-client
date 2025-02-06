@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -48,7 +49,7 @@ public abstract class AbstractDataStoreFactory implements DataStoreFactory {
     try {
       ID_PATTERN = Pattern.compile("\\w{1,30}");
     } catch (Throwable t) {
-      System.out.println(t.getMessage());
+      Logger.getLogger(AbstractDataStoreFactory.class.getName()).severe(t.getMessage());
       throw t;
     }
   }
