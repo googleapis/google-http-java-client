@@ -33,17 +33,9 @@ import org.junit.Test;
  */
 public class JacksonFactoryTest extends AbstractJsonFactoryTest {
 
-  private static final String JSON_ENTRY_PRETTY;
-  private static final String JSON_FEED_PRETTY;
-
-  static {
-    JSON_ENTRY_PRETTY =
-        "{"
-            + StringUtils.LINE_SEPARATOR
-            + "  \"title\" : \"foo\""
-            + StringUtils.LINE_SEPARATOR
-            + "}";
-    JSON_FEED_PRETTY =
+  private static final String JSON_ENTRY_PRETTY =
+      "{" + StringUtils.LINE_SEPARATOR + "  \"title\" : \"foo\"" + StringUtils.LINE_SEPARATOR + "}";
+  private static final String JSON_FEED_PRETTY =
         "{"
             + StringUtils.LINE_SEPARATOR
             + "  \"entries\" : [ {"
@@ -57,7 +49,6 @@ public class JacksonFactoryTest extends AbstractJsonFactoryTest {
             + "  } ]"
             + StringUtils.LINE_SEPARATOR
             + "}";
-  }
 
   @Override
   protected JsonFactory newFactory() {

@@ -21,11 +21,7 @@ import java.io.Writer;
 
 public class JacksonGeneratorTest extends AbstractJsonGeneratorTest {
 
-  private static final JacksonFactory FACTORY;
-
-  static {
-    FACTORY = new JacksonFactory();
-  }
+  private static final JacksonFactory FACTORY = new JacksonFactory();
 
   @Override
   protected JsonGenerator newGenerator(Writer writer) throws IOException {

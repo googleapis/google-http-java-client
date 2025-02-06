@@ -39,10 +39,10 @@ import java.nio.charset.Charset;
 public final class JacksonFactory extends JsonFactory {
 
   /** JSON factory. */
-  private final com.fasterxml.jackson.core.JsonFactory factory;
+  private final com.fasterxml.jackson.core.JsonFactory factory =
+      new com.fasterxml.jackson.core.JsonFactory();
 
-  public JacksonFactory() {
-    factory = new com.fasterxml.jackson.core.JsonFactory();
+  {
     // don't auto-close JSON content in order to ensure consistent behavior across JSON factories
     // TODO(rmistry): Should we disable the JsonGenerator.Feature.AUTO_CLOSE_TARGET feature?
     factory.configure(
