@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- see http://www.mojohaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
+<!--
+[ERROR] 4001: com.google.api.client.test.util.store.AbstractDataStoreFactoryTest: Removed junit.framework.Test from the set of implemented interfaces                                                            [ERROR] 5001: com.google.api.client.test.util.store.AbstractDataStoreFactoryTest: Removed junit.framework.Assert from the list of superclasses                                                                   [ERROR] 5001: com.google.api.client.test.util.store.AbstractDataStoreFactoryTest: Removed junit.framework.TestCase from the list of superclasses
+-->
+<differences>
+  <difference>
+    <!-- migration to JUnit 4 -->
+    <differenceType>4001</differenceType>
+    <className>com/google/api/client/test/util/store/AbstractDataStoreFactoryTest</className>
+    <to>junit/framework/Test</to>
+  </difference>
+  <difference>
+    <!-- migration to JUnit 4 -->
+    <differenceType>5001</differenceType>
+    <className>com/google/api/client/test/util/store/AbstractDataStoreFactoryTest</className>
+    <to>junit/framework/Assert</to>
+  </difference>
+  <difference>
+    <!-- migration to JUnit 4 -->
+    <differenceType>5001</differenceType>
+    <className>com/google/api/client/test/util/store/AbstractDataStoreFactoryTest</className>
+    <to>junit/framework/TestCase</to>
+  </difference>
+</differences>
