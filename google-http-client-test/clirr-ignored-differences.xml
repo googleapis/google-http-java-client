@@ -15,6 +15,7 @@
 [ERROR] 4001: com.google.api.client.test.json.AbstractJsonGeneratorTest: Removed junit.framework.Test from the set of implemented interfaces
 [ERROR] 5001: com.google.api.client.test.json.AbstractJsonGeneratorTest: Removed junit.framework.Assert from the list of superclasses
 [ERROR] 5001: com.google.api.client.test.json.AbstractJsonGeneratorTest: Removed junit.framework.TestCase from the list of superclasses
+[ERROR] 4001: com.google.api.client.test.json.AbstractJsonParserTest: Removed junit.framework.Test from the set of implemented interfaces                                                                        [ERROR] 5001: com.google.api.client.test.json.AbstractJsonParserTest: Removed junit.framework.Assert from the list of superclasses                                                                               [ERROR] 5001: com.google.api.client.test.json.AbstractJsonParserTest: Removed junit.framework.TestCase from the list of superclasses
 -->
 <differences>
   <difference>
@@ -37,6 +38,12 @@
   </difference>
   <difference>
     <!-- migration to JUnit 4 -->
+    <differenceType>4001</differenceType>
+    <className>com/google/api/client/test/json/AbstractJsonParserTest</className>
+    <to>junit/framework/Test</to>
+  </difference>
+  <difference>
+    <!-- migration to JUnit 4 -->
     <differenceType>5001</differenceType>
     <className>com/google/api/client/test/util/store/AbstractDataStoreFactoryTest</className>
     <to>junit/framework/*</to>
@@ -51,6 +58,12 @@
     <!-- migration to JUnit 4 -->
     <differenceType>5001</differenceType>
     <className>com/google/api/client/test/json/AbstractJsonGeneratorTest</className>
+    <to>junit/framework/*</to>
+  </difference>
+  <difference>
+    <!-- migration to JUnit 4 -->
+    <differenceType>5001</differenceType>
+    <className>com/google/api/client/test/json/AbstractJsonParserTest</className>
     <to>junit/framework/*</to>
   </difference>
   <difference>
