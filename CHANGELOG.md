@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.46.0](https://github.com/googleapis/google-http-java-client/compare/v1.45.3...v1.46.0) (2025-02-06)
+
+
+### Features
+
+* Support JDK 23 ([#2064](https://github.com/googleapis/google-http-java-client/issues/2064)) ([b6a3616](https://github.com/googleapis/google-http-java-client/commit/b6a3616a16c9ac565610e630bb9ad73589829334))
+* Update and adapt to GraalVM for JDK 23 ([#2069](https://github.com/googleapis/google-http-java-client/issues/2069)) ([7a0fab3](https://github.com/googleapis/google-http-java-client/commit/7a0fab3efd2104144dff752da334f8fa8a82951d))
+
+
+### Dependencies
+
+* Update actions/upload-artifact action to v4.6.0 ([#2056](https://github.com/googleapis/google-http-java-client/issues/2056)) ([1e70d04](https://github.com/googleapis/google-http-java-client/commit/1e70d04948d9bc141647df3fea61d2ee1e70f7d1))
+* Update dependency io.grpc:grpc-context to v1.70.0 ([#2068](https://github.com/googleapis/google-http-java-client/issues/2068)) ([7a580bf](https://github.com/googleapis/google-http-java-client/commit/7a580bf568bd2a5bc0519880f4a213f6c47c9849))
+* Update project.appengine.version to v2.0.32 ([#2065](https://github.com/googleapis/google-http-java-client/issues/2065)) ([2285bb1](https://github.com/googleapis/google-http-java-client/commit/2285bb1c48edd6c07a7ded557fe58d57e570f1b3))
+
 ## [1.45.3](https://github.com/googleapis/google-http-java-client/compare/v1.45.2...v1.45.3) (2024-12-11)
 
 
