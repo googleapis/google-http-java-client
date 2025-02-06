@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- see http://www.mojohaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
 <!--
-[ERROR] 4001: com.google.api.client.test.util.store.AbstractDataStoreFactoryTest: Removed junit.framework.Test from the set of implemented interfaces                                                            [ERROR] 5001: com.google.api.client.test.util.store.AbstractDataStoreFactoryTest: Removed junit.framework.Assert from the list of superclasses                                                                   [ERROR] 5001: com.google.api.client.test.util.store.AbstractDataStoreFactoryTest: Removed junit.framework.TestCase from the list of superclasses
+[ERROR] 4001: com.google.api.client.test.json.AbstractJsonFactoryTest: Removed junit.framework.Test from the set of implemented interfaces
+[ERROR] 5001: com.google.api.client.test.json.AbstractJsonFactoryTest: Removed junit.framework.Assert from the list of superclasses
+[ERROR] 5001: com.google.api.client.test.json.AbstractJsonFactoryTest: Removed junit.framework.TestCase from the list of superclasses
+[WARNING] 6002: com.google.api.client.test.json.AbstractJsonFactoryTest: Value of field BOOLEAN_TYPE_EMPTY is no longer a compile-time constant
+[WARNING] 6002: com.google.api.client.test.json.AbstractJsonFactoryTest: Value of field BOOLEAN_TYPE_EMPTY_OUTPUT is no longer a compile-time constant
+[WARNING] 6002: com.google.api.client.test.json.AbstractJsonFactoryTest: Value of field BOOLEAN_TYPE_FALSE is no longer a compile-time constant
+[WARNING] 6002: com.google.api.client.test.json.AbstractJsonFactoryTest: Value of field BOOLEAN_TYPE_NULL is no longer a compile-time constant
+[WARNING] 6002: com.google.api.client.test.json.AbstractJsonFactoryTest: Value of field BOOLEAN_TYPE_NULL_OUTPUT is no longer a compile-time constant
+[WARNING] 6002: com.google.api.client.test.json.AbstractJsonFactoryTest: Value of field BOOLEAN_TYPE_TRUE is no longer a compile-time constant
+[WARNING] 6002: com.google.api.client.test.json.AbstractJsonFactoryTest: Value of field BOOLEAN_TYPE_WRONG is no longer a compile-time constant
+[ERROR] 7004: com.google.api.client.test.json.AbstractJsonFactoryTest: In method 'public AbstractJsonFactoryTest(java.lang.String)' the number of arguments has changed
+[ERROR] 4001: com.google.api.client.test.json.AbstractJsonGeneratorTest: Removed junit.framework.Test from the set of implemented interfaces
+[ERROR] 5001: com.google.api.client.test.json.AbstractJsonGeneratorTest: Removed junit.framework.Assert from the list of superclasses
+[ERROR] 5001: com.google.api.client.test.json.AbstractJsonGeneratorTest: Removed junit.framework.TestCase from the list of superclasses
 -->
 <differences>
   <difference>
@@ -12,14 +25,38 @@
   </difference>
   <difference>
     <!-- migration to JUnit 4 -->
-    <differenceType>5001</differenceType>
-    <className>com/google/api/client/test/util/store/AbstractDataStoreFactoryTest</className>
-    <to>junit/framework/Assert</to>
+    <differenceType>4001</differenceType>
+    <className>com/google/api/client/test/json/AbstractJsonFactoryTest</className>
+    <to>junit/framework/Test</to>
+  </difference>
+  <difference>
+    <!-- migration to JUnit 4 -->
+    <differenceType>4001</differenceType>
+    <className>com/google/api/client/test/json/AbstractJsonGeneratorTest</className>
+    <to>junit/framework/Test</to>
   </difference>
   <difference>
     <!-- migration to JUnit 4 -->
     <differenceType>5001</differenceType>
     <className>com/google/api/client/test/util/store/AbstractDataStoreFactoryTest</className>
-    <to>junit/framework/TestCase</to>
+    <to>junit/framework/*</to>
+  </difference>
+  <difference>
+    <!-- migration to JUnit 4 -->
+    <differenceType>5001</differenceType>
+    <className>com/google/api/client/test/json/AbstractJsonFactoryTest</className>
+    <to>junit/framework/*</to>
+  </difference>
+  <difference>
+    <!-- migration to JUnit 4 -->
+    <differenceType>5001</differenceType>
+    <className>com/google/api/client/test/json/AbstractJsonGeneratorTest</className>
+    <to>junit/framework/*</to>
+  </difference>
+  <difference>
+    <!-- migration to JUnit 4 -->
+    <differenceType>7004</differenceType>
+    <className>com/google/api/client/test/json/AbstractJsonFactoryTest</className>
+    <method>*</method>
   </difference>
 </differences>
