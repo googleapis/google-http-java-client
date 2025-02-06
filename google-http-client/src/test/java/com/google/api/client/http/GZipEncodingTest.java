@@ -34,18 +34,18 @@ import org.junit.runners.JUnit4;
 public class GZipEncodingTest {
 
   private static final byte[] EXPECED_ZIPPED =
-        new byte[] {
+      new byte[] {
         31, -117, 8, 0, 0, 0, 0, 0, 0, -1, -53, -49, -57, 13, 0, -30, -66, -14, 54, 28, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0
-        };
+      };
 
   // TODO: remove when no longer using Java < 16: https://bugs.openjdk.java.net/browse/JDK-8244706
   @Deprecated
   private static final byte[] EXPECED_ZIPPED_BELOW_JAVA_16 =
-        new byte[] {
-          31, -117, 8, 0, 0, 0, 0, 0, 0, 0, -53, -49, -57, 13, 0, -30, -66, -14, 54, 28, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0, 0
-        };
+      new byte[] {
+        31, -117, 8, 0, 0, 0, 0, 0, 0, 0, -53, -49, -57, 13, 0, -30, -66, -14, 54, 28, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0
+      };
 
   @Test
   public void test() throws IOException {

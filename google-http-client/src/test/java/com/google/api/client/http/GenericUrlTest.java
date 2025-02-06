@@ -41,7 +41,6 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class GenericUrlTest {
 
-
   private static final String MINIMAL = "http://bar";
 
   @Test

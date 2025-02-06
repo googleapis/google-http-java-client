@@ -50,7 +50,6 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class JsonWebSignatureTest {
 
-
   @Test
   public void testSign() throws Exception {
     JsonWebSignature.Header header = new JsonWebSignature.Header();
@@ -137,6 +136,7 @@ public class JsonWebSignatureTest {
   // x, y values for keyId "mpf0DA" from https://www.gstatic.com/iap/verify/public_key-jwk
   private static final String GOOGLE_ES256_X = "fHEdeT3a6KaC1kbwov73ZwB_SiUHEyKQwUUtMCEn0aI";
   private static final String GOOGLE_ES256_Y = "QWOjwPhInNuPlqjxLQyhveXpWqOFcQPhZ3t-koMNbZI";
+
   private PublicKey buildEs256PublicKey(String x, String y)
       throws NoSuchAlgorithmException, InvalidParameterSpecException, InvalidKeySpecException {
     AlgorithmParameters parameters = AlgorithmParameters.getInstance("EC");

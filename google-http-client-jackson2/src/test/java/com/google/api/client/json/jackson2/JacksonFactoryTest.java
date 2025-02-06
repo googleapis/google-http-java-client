@@ -36,19 +36,19 @@ public class JacksonFactoryTest extends AbstractJsonFactoryTest {
   private static final String JSON_ENTRY_PRETTY =
       "{" + StringUtils.LINE_SEPARATOR + "  \"title\" : \"foo\"" + StringUtils.LINE_SEPARATOR + "}";
   private static final String JSON_FEED_PRETTY =
-        "{"
-            + StringUtils.LINE_SEPARATOR
-            + "  \"entries\" : [ {"
-            + StringUtils.LINE_SEPARATOR
-            + "    \"title\" : \"foo\""
-            + StringUtils.LINE_SEPARATOR
-            + "  }, {"
-            + StringUtils.LINE_SEPARATOR
-            + "    \"title\" : \"bar\""
-            + StringUtils.LINE_SEPARATOR
-            + "  } ]"
-            + StringUtils.LINE_SEPARATOR
-            + "}";
+      "{"
+          + StringUtils.LINE_SEPARATOR
+          + "  \"entries\" : [ {"
+          + StringUtils.LINE_SEPARATOR
+          + "    \"title\" : \"foo\""
+          + StringUtils.LINE_SEPARATOR
+          + "  }, {"
+          + StringUtils.LINE_SEPARATOR
+          + "    \"title\" : \"bar\""
+          + StringUtils.LINE_SEPARATOR
+          + "  } ]"
+          + StringUtils.LINE_SEPARATOR
+          + "}";
 
   @Override
   protected JsonFactory newFactory() {

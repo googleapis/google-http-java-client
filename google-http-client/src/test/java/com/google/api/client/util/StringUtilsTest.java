@@ -35,7 +35,6 @@ public class StringUtilsTest {
       new byte[] {49, 50, 51, -41, -103, -41, -96, -41, -103, -41, -111};
   private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
 
-
   @Test
   public void testLineSeparator() {
     assertNotNull(StringUtils.LINE_SEPARATOR);

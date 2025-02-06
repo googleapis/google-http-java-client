@@ -72,7 +72,7 @@ public class HttpResponseTest {
       "{domain:'global',reason:'domainPolicy',message:'msg'}";
   private static final String VALID_CONTENT_TYPE = "text/plain";
   private static final String VALID_CONTENT_TYPE_WITH_PARAMS =
-        "application/vnd.com.google.datastore.entity+json; charset=utf-8; version=v1; q=0.9";
+      "application/vnd.com.google.datastore.entity+json; charset=utf-8; version=v1; q=0.9";
   private static final String VALID_CONTENT_TYPE_WITHOUT_CHARSET = "text/csv; version=v1; q=0.9";
   private static final String INVALID_CONTENT_TYPE = "!!!invalid!!!";
   private static final String JSON_CONTENT_TYPE = "application/json";
