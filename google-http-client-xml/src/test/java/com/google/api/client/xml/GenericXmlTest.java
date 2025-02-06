@@ -28,6 +28,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
@@ -41,39 +43,52 @@ import org.xmlpull.v1.XmlSerializer;
  * @author Yaniv Inbar
  * @author Gerald Madlmayr
  */
+@RunWith(JUnit4.class)
 public class GenericXmlTest {
 
-  private static final String XML =
-      "<?xml version=\"1.0\"?><feed xmlns=\"http://www.w3.org"
-          + "/2005/Atom\" xmlns:gd=\"http://schemas.google.com/g/2005\"><atom:entry xmlns=\"http"
-          + "://schemas.google.com/g/2005\" xmlns:atom=\"http://www.w3.org/2005/Atom\" gd:etag"
-          + "=\"abc\"><atom:title>One</atom:title></atom:entry><entry gd:etag=\"def\"><title "
-          + "attribute=\"someattribute\">Two</title></entry></feed>";
-  private static final String ANY_GENERIC_TYPE_XML =
-      "<?xml version=\"1.0\"?><any attr=\"value\" "
-          + "xmlns=\"http://www.w3.org/2005/Atom\"><elem><rep attr=\"param1\">rep1</rep><rep "
-          + "attr=\"param2\">rep2</rep><value>content</value></elem></any>";
-  private static final String SIMPLE_XML = "<any>test</any>";
-  private static final String SIMPLE_XML_NUMERIC = "<any>1</any>";
-  private static final String ANY_TYPE_XML =
-      "<?xml version=\"1.0\"?><any attr=\"value\" "
-          + "xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><rep>rep1</rep><rep>rep2</rep"
-          + "><value>content</value></any>";
-  private static final String ANY_TYPE_XML_PRIMITIVE_INT =
-      "<?xml version=\"1.0\"?><any attr"
-          + "=\"2\" xmlns=\"http://www.w3.org/2005/Atom\">1<intArray>1</intArray><intArray>2"
-          + "</intArray></any>";
-  private static final String ANY_TYPE_XML_PRIMITIVE_STR =
-      "<?xml version=\"1.0\"?><any attr"
-          + "=\"2+1\" xmlns=\"http://www.w3.org/2005/Atom\">1+1<strArray>1+1</strArray><strArray>2"
-          + "+1</strArray></any>";
-  private static final String ALL_TYPE =
-      "<?xml version=\"1.0\"?><any xmlns=\"\"><integer"
-          + "/><str/><genericXml/><anyEnum/><stringArray/><integerCollection/></any>";
-  private static final String ANY_TYPE_XML_NESTED_ARRAY =
-      "<?xml version=\"1.0\"?><any attr"
-          + "=\"value\" xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><rep><p>rep1</p"
-          + "><p>rep2</p></rep><rep><p>rep3</p><p>rep4</p></rep><value>content</value></any>";
+  private static final String XML;
+  private static final String ANY_GENERIC_TYPE_XML;
+  private static final String SIMPLE_XML;
+  private static final String SIMPLE_XML_NUMERIC;
+  private static final String ANY_TYPE_XML;
+  private static final String ANY_TYPE_XML_PRIMITIVE_INT;
+  private static final String ANY_TYPE_XML_PRIMITIVE_STR;
+  private static final String ALL_TYPE;
+  private static final String ANY_TYPE_XML_NESTED_ARRAY;
+
+  static {
+    XML =
+        "<?xml version=\"1.0\"?><feed xmlns=\"http://www.w3.org"
+            + "/2005/Atom\" xmlns:gd=\"http://schemas.google.com/g/2005\"><atom:entry xmlns=\"http"
+            + "://schemas.google.com/g/2005\" xmlns:atom=\"http://www.w3.org/2005/Atom\" gd:etag"
+            + "=\"abc\"><atom:title>One</atom:title></atom:entry><entry gd:etag=\"def\"><title "
+            + "attribute=\"someattribute\">Two</title></entry></feed>";
+    ANY_GENERIC_TYPE_XML =
+        "<?xml version=\"1.0\"?><any attr=\"value\" "
+            + "xmlns=\"http://www.w3.org/2005/Atom\"><elem><rep attr=\"param1\">rep1</rep><rep "
+            + "attr=\"param2\">rep2</rep><value>content</value></elem></any>";
+    SIMPLE_XML = "<any>test</any>";
+    SIMPLE_XML_NUMERIC = "<any>1</any>";
+    ANY_TYPE_XML =
+        "<?xml version=\"1.0\"?><any attr=\"value\" "
+            + "xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><rep>rep1</rep><rep>rep2</rep"
+            + "><value>content</value></any>";
+    ANY_TYPE_XML_PRIMITIVE_INT =
+        "<?xml version=\"1.0\"?><any attr"
+            + "=\"2\" xmlns=\"http://www.w3.org/2005/Atom\">1<intArray>1</intArray><intArray>2"
+            + "</intArray></any>";
+    ANY_TYPE_XML_PRIMITIVE_STR =
+        "<?xml version=\"1.0\"?><any attr"
+            + "=\"2+1\" xmlns=\"http://www.w3.org/2005/Atom\">1+1<strArray>1+1</strArray><strArray>2"
+            + "+1</strArray></any>";
+    ALL_TYPE =
+        "<?xml version=\"1.0\"?><any xmlns=\"\"><integer"
+            + "/><str/><genericXml/><anyEnum/><stringArray/><integerCollection/></any>";
+    ANY_TYPE_XML_NESTED_ARRAY =
+        "<?xml version=\"1.0\"?><any attr"
+            + "=\"value\" xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><rep><p>rep1</p"
+            + "><p>rep2</p></rep><rep><p>rep3</p><p>rep4</p></rep><value>content</value></any>";
+  }
 
   public GenericXmlTest() {}
 
