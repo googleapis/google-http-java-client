@@ -1,0 +1,416 @@
+[
+    {
+      "name": "com.google.api.client.extensions.appengine.datastore.AppEngineDataStoreFactoryTest",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.api.client.extensions.appengine.datastore.AppEngineNoMemcacheDataStoreFactoryTest",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.api.client.extensions.appengine.http.UrlFetchTransportTest",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "test",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.api.client.test.util.store.AbstractDataStoreFactoryTest",
+      "methods": [
+        {
+          "name": "testClear",
+          "parameterTypes": []
+        },
+        {
+          "name": "testContainsKeyAndValue",
+          "parameterTypes": []
+        },
+        {
+          "name": "testDelete",
+          "parameterTypes": []
+        },
+        {
+          "name": "testId",
+          "parameterTypes": []
+        },
+        {
+          "name": "testKeySet",
+          "parameterTypes": []
+        },
+        {
+          "name": "testLarge",
+          "parameterTypes": []
+        },
+        {
+          "name": "testSet",
+          "parameterTypes": []
+        },
+        {
+          "name": "testValues",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.appengine.api.appidentity.IAppIdentityServiceFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.api.appidentity.dev.LocalAppIdentityService"
+    },
+    {
+      "name": "com.google.appengine.api.backends.IBackendServiceFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.api.blobstore.IBlobstoreServiceFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.api.blobstore.dev.LocalBlobstoreService"
+    },
+    {
+      "name": "com.google.appengine.api.capabilities.ICapabilitiesServiceFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.api.capabilities.dev.LocalCapabilitiesService"
+    },
+    {
+      "name": "com.google.appengine.api.datastore.IDatastoreServiceFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.api.datastore.dev.LocalDatastoreV3Service",
+      "methods": [
+        {
+          "name": "delete",
+          "parameterTypes": [
+            "com.google.appengine.tools.development.LocalRpcService$Status",
+            "com.google.apphosting.api.DatastorePb$DeleteRequest"
+          ]
+        },
+        {
+          "name": "get",
+          "parameterTypes": [
+            "com.google.appengine.tools.development.LocalRpcService$Status",
+            "com.google.apphosting.api.DatastorePb$GetRequest"
+          ]
+        },
+        {
+          "name": "next",
+          "parameterTypes": [
+            "com.google.appengine.tools.development.LocalRpcService$Status",
+            "com.google.apphosting.api.DatastorePb$NextRequest"
+          ]
+        },
+        {
+          "name": "put",
+          "parameterTypes": [
+            "com.google.appengine.tools.development.LocalRpcService$Status",
+            "com.google.apphosting.api.DatastorePb$PutRequest"
+          ]
+        },
+        {
+          "name": "runQuery",
+          "parameterTypes": [
+            "com.google.appengine.tools.development.LocalRpcService$Status",
+            "com.google.apphosting.api.DatastorePb$Query"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "com.google.appengine.api.datastore.dev.WriteLatencyAdjuster",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.appengine.api.images.IImagesServiceFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.api.images.dev.LocalImagesService"
+    },
+    {
+      "name": "com.google.appengine.api.log.ILogServiceFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.api.log.dev.LocalLogService"
+    },
+    {
+      "name": "com.google.appengine.api.mail.IMailServiceFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.api.mail.dev.LocalMailService"
+    },
+    {
+      "name": "com.google.appengine.api.memcache.IMemcacheServiceFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.api.memcache.MemcacheServicePb$MemcacheDeleteRequest",
+      "methods": [
+        {
+          "name": "parseFrom",
+          "parameterTypes": [
+            "byte[]"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "com.google.appengine.api.memcache.MemcacheServicePb$MemcacheFlushRequest",
+      "methods": [
+        {
+          "name": "parseFrom",
+          "parameterTypes": [
+            "byte[]"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "com.google.appengine.api.memcache.MemcacheServicePb$MemcacheGetRequest",
+      "methods": [
+        {
+          "name": "parseFrom",
+          "parameterTypes": [
+            "byte[]"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "com.google.appengine.api.memcache.MemcacheServicePb$MemcacheSetRequest",
+      "methods": [
+        {
+          "name": "parseFrom",
+          "parameterTypes": [
+            "byte[]"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "com.google.appengine.api.memcache.dev.LocalMemcacheService",
+      "methods": [
+        {
+          "name": "delete",
+          "parameterTypes": [
+            "com.google.appengine.tools.development.LocalRpcService$Status",
+            "com.google.appengine.api.memcache.MemcacheServicePb$MemcacheDeleteRequest"
+          ]
+        },
+        {
+          "name": "flushAll",
+          "parameterTypes": [
+            "com.google.appengine.tools.development.LocalRpcService$Status",
+            "com.google.appengine.api.memcache.MemcacheServicePb$MemcacheFlushRequest"
+          ]
+        },
+        {
+          "name": "get",
+          "parameterTypes": [
+            "com.google.appengine.tools.development.LocalRpcService$Status",
+            "com.google.appengine.api.memcache.MemcacheServicePb$MemcacheGetRequest"
+          ]
+        },
+        {
+          "name": "set",
+          "parameterTypes": [
+            "com.google.appengine.tools.development.LocalRpcService$Status",
+            "com.google.appengine.api.memcache.MemcacheServicePb$MemcacheSetRequest"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "com.google.appengine.api.modules.IModulesServiceFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.api.oauth.IOAuthServiceFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.api.quota.IQuotaServiceFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.api.search.ISearchServiceFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.api.taskqueue.IQueueFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.api.urlfetch.IURLFetchServiceFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.api.users.IUserServiceFactoryProvider"
+    },
+    {
+      "name": "com.google.appengine.repackaged.com.google.protobuf.ExtensionRegistry",
+      "methods": [
+        {
+          "name": "getEmptyRegistry",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.appengine.tools.development.DynamicLatencyAdjuster$Default",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.apphosting.api.DatastorePb$DeleteRequest",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.apphosting.api.DatastorePb$GetRequest",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.apphosting.api.DatastorePb$NextRequest",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.apphosting.api.DatastorePb$PutRequest",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.apphosting.api.DatastorePb$Query",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.storage.onestore.v3.OnestoreEntity$Path",
+      "fields": [
+        {
+          "name": "element_"
+        }
+      ]
+    },
+    {
+      "name": "com.google.storage.onestore.v3.OnestoreEntity$Path$Element",
+      "fields": [
+        {
+          "name": "id_"
+        },
+        {
+          "name": "name_"
+        },
+        {
+          "name": "optional_0_"
+        },
+        {
+          "name": "type_"
+        }
+      ]
+    },
+    {
+      "name": "java.lang.Object",
+      "allDeclaredFields": true
+    },
+    {
+      "name": "java.nio.Buffer",
+      "fields": [
+        {
+          "name": "address"
+        }
+      ]
+    },
+    {
+      "name": "java.util.concurrent.atomic.AtomicBoolean",
+      "fields": [
+        {
+          "name": "value"
+        }
+      ]
+    },
+    {
+      "name": "libcore.io.Memory"
+    },
+    {
+      "name": "org.apache.maven.surefire.booter.spi.LegacyMasterProcessChannelProcessorFactory"
+    },
+    {
+      "name": "org.apache.maven.surefire.booter.spi.SurefireMasterProcessChannelProcessorFactory"
+    },
+    {
+      "name": "org.robolectric.Robolectric"
+    },
+    {
+      "name": "sun.misc.Unsafe",
+      "allDeclaredFields": true
+    },
+    {
+      "name": "sun.security.provider.MD5",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "sun.security.provider.NativePRNG",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.security.SecureRandomParameters"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sun.security.provider.SHA",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    }
+]
