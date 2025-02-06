@@ -36,6 +36,7 @@ final class NetHttpRequest extends LowLevelHttpRequest {
 
   private final HttpURLConnection connection;
   private int writeTimeout;
+  private ExecutorService writeTimeoutExecutor;
 
   /** @param connection HTTP URL connection */
   NetHttpRequest(HttpURLConnection connection) {
@@ -63,6 +64,11 @@ final class NetHttpRequest extends LowLevelHttpRequest {
   @Override
   public void setWriteTimeout(int writeTimeout) throws IOException {
     this.writeTimeout = writeTimeout;
+  }
+
+  @Override
+  public void setWriteTimeoutExecutor(ExecutorService writeTimeoutExecutor) {
+    this.writeTimeoutExecutor = writeTimeoutExecutor;
   }
 
   interface OutputWriter {
@@ -184,9 +190,13 @@ final class NetHttpRequest extends LowLevelHttpRequest {
             }
           };
 
-      final ExecutorService executor = Executors.newSingleThreadExecutor();
+      final boolean externalWriteTimeoutExecutor = writeTimeoutExecutor != null;
+      final ExecutorService executor = externalWriteTimeoutExecutor ? writeTimeoutExecutor : Executors.newSingleThreadExecutor();
       final Future<Boolean> future = executor.submit(new FutureTask<Boolean>(writeContent), null);
-      executor.shutdown();
+
+      if (!externalWriteTimeoutExecutor) {
+        executor.shutdown();
+      }
 
       try {
         future.get(writeTimeout, TimeUnit.MILLISECONDS);
@@ -197,7 +207,8 @@ final class NetHttpRequest extends LowLevelHttpRequest {
       } catch (TimeoutException e) {
         throw new IOException("Socket write timed out", e);
       }
-      if (!executor.isTerminated()) {
+
+      if (!externalWriteTimeoutExecutor && !executor.isTerminated()) {
         executor.shutdown();
       }
     }

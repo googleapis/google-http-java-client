@@ -16,6 +16,7 @@ package com.google.api.client.http;
 
 import com.google.api.client.util.StreamingContent;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Low-level HTTP request.
@@ -157,6 +158,16 @@ public abstract class LowLevelHttpRequest {
    * @since 1.27
    */
   public void setWriteTimeout(int writeTimeout) throws IOException {}
+
+  /**
+   * Sets custom timeout executor for POST/PUT requests.
+   *
+   * <p>Default implementation uses a new thread per each {@link #execute()} call.
+   *
+   * @param writeTimeoutExecutor custom timeout executor to use
+   * @since 1.40.2
+   */
+  public void setWriteTimeoutExecutor(ExecutorService writeTimeoutExecutor) {}
 
   /** Executes the request and returns a low-level HTTP response object. */
   public abstract LowLevelHttpResponse execute() throws IOException;
