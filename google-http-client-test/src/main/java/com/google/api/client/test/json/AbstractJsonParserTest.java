@@ -13,6 +13,10 @@
  */
 package com.google.api.client.test.json;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
@@ -24,8 +28,11 @@ import java.nio.charset.StandardCharsets;
 import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-public abstract class AbstractJsonParserTest extends TestCase {
+@RunWith(JUnit4.class)
+public abstract class AbstractJsonParserTest {
 
   protected abstract JsonFactory newJsonFactory();
 
