@@ -25,6 +25,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
 
@@ -33,25 +35,34 @@ import org.xmlpull.v1.XmlSerializer;
  *
  * @author Gerald Madlmayr
  */
+@RunWith(JUnit4.class)
 public class XmlEnumTest {
 
-  private static final String XML =
-      "<?xml version=\"1.0\"?><any anyEnum=\"ENUM_1\" attr"
-          + "=\"value\" xmlns=\"http://www.w3.org/2005/Atom\"><anotherEnum>ENUM_2</anotherEnum"
-          + "><elem>content</elem><rep>rep1</rep><rep>rep2</rep><value>ENUM_1</value></any>";
-  private static final String XML_ENUM_ELEMENT_ONLY =
-      "<?xml version=\"1.0\"?><any xmlns"
-          + "=\"http://www.w3.org/2005/Atom\"><elementEnum>ENUM_2</elementEnum></any>";
-  private static final String XML_ENUM_ATTRIBUTE_ONLY =
-      "<?xml version=\"1.0\"?><any "
-          + "attributeEnum=\"ENUM_1\" xmlns=\"http://www.w3.org/2005/Atom\" />";
-  private static final String XML_ENUM_INCORRECT =
-      "<?xml version=\"1.0\"?><any xmlns=\"http"
-          + "://www.w3.org/2005/Atom\"><elementEnum>ENUM_3</elementEnum></any>";
-  private static final String XML_ENUM_ELEMENT_ONLY_NESTED =
-      "<?xml version=\"1.0\"?><any "
-          + "xmlns=\"http://www.w3.org/2005/Atom\"><elementEnum>ENUM_2<nested>something</nested"
-          + "></elementEnum></any>";
+  private static final String XML;
+  private static final String XML_ENUM_ELEMENT_ONLY;
+  private static final String XML_ENUM_ATTRIBUTE_ONLY;
+  private static final String XML_ENUM_INCORRECT;
+  private static final String XML_ENUM_ELEMENT_ONLY_NESTED;
+
+  static {
+    XML =
+        "<?xml version=\"1.0\"?><any anyEnum=\"ENUM_1\" attr"
+            + "=\"value\" xmlns=\"http://www.w3.org/2005/Atom\"><anotherEnum>ENUM_2</anotherEnum"
+            + "><elem>content</elem><rep>rep1</rep><rep>rep2</rep><value>ENUM_1</value></any>";
+    XML_ENUM_ELEMENT_ONLY =
+        "<?xml version=\"1.0\"?><any xmlns"
+            + "=\"http://www.w3.org/2005/Atom\"><elementEnum>ENUM_2</elementEnum></any>";
+    XML_ENUM_ATTRIBUTE_ONLY =
+        "<?xml version=\"1.0\"?><any "
+            + "attributeEnum=\"ENUM_1\" xmlns=\"http://www.w3.org/2005/Atom\" />";
+    XML_ENUM_INCORRECT =
+        "<?xml version=\"1.0\"?><any xmlns=\"http"
+            + "://www.w3.org/2005/Atom\"><elementEnum>ENUM_3</elementEnum></any>";
+    XML_ENUM_ELEMENT_ONLY_NESTED =
+        "<?xml version=\"1.0\"?><any "
+            + "xmlns=\"http://www.w3.org/2005/Atom\"><elementEnum>ENUM_2<nested>something</nested"
+            + "></elementEnum></any>";
+  }
 
   @Test
   public void testParseAnyType() throws Exception {

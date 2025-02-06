@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
 
@@ -37,58 +39,78 @@ import org.xmlpull.v1.XmlSerializer;
  * @author Yaniv Inbar
  * @author Gerald Madlmayr
  */
+@RunWith(JUnit4.class)
 public class XmlTest {
 
-  private static final String SIMPLE_XML = "<any>test</any>";
-  private static final String SIMPLE_XML_NUMERIC = "<any>1</any>";
-  private static final String START_WITH_TEXT = "<?xml version=\"1.0\"?>start_with_text</any>";
-  private static final String MISSING_END_ELEMENT =
-      "<?xml version=\"1.0\"?><any xmlns=\"\">" + "missing_end_element";
-  private static final String START_WITH_END_ELEMENT =
-      "<?xml version=\"1.0\"?></p><any " + "xmlns=\"\">start_with_end_elemtn</any>";
-  private static final String START_WITH_END_ELEMENT_NESTED =
-      "<?xml version=\"1.0\"?><any " + "xmlns=\"\"></p>start_with_end_element_nested</any>";
-  private static final String ANY_TYPE_XML =
-      "<?xml version=\"1.0\"?><any attr=\"value\" "
-          + "xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><rep>rep1</rep><rep>rep2"
-          + "</rep><value>content</value></any>";
-  private static final String ANY_TYPE_MISSING_XML =
-      "<?xml version=\"1.0\"?><any attr=\"value\" "
-          + "xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><value>content</value"
-          + "></any>";
-  private static final String ANY_TYPE_XML_PRIMITIVE_INT =
-      "<?xml version=\"1.0\"?><any attr"
-          + "=\"2\" xmlns=\"http://www.w3.org/2005/Atom\">1<intArray>1</intArray><intArray>2"
-          + "</intArray></any>";
-  private static final String ANY_TYPE_XML_PRIMITIVE_STR =
-      "<?xml version=\"1.0\"?><any attr"
-          + "=\"2+1\" xmlns=\"http://www.w3.org/2005/Atom\">1+1<strArray>1+1</strArray><strArray>2"
-          + "+1</strArray></any>";
-  private static final String NESTED_NS =
-      "<?xml version=\"1.0\"?><any xmlns=\"http://www.w3"
-          + ".org/2005/Atom\"><app:edited xmlns:app='http://www.w3.org/2007/app'>2011-08-09T04:38"
-          + ":14.017Z</app:edited></any>";
-  private static final String NESTED_NS_SERIALIZED =
-      "<?xml version=\"1.0\"?><any xmlns"
-          + "=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\"><app:edited"
-          + ">2011-08-09T04:38:14.017Z</app:edited></any>";
-  private static final String INF_TEST =
-      "<?xml version=\"1.0\"?><any xmlns=\"\"><dblInfNeg"
-          + ">-INF</dblInfNeg><dblInfPos>INF</dblInfPos><fltInfNeg>-INF</fltInfNeg><fltInfPos>INF"
-          + "</fltInfPos></any>";
-  private static final String ALL_TYPE =
-      "<?xml version=\"1.0\"?><any xmlns=\"\"><integer"
-          + "/><str/><genericXml/><anyEnum/><stringArray/><integerCollection/></any>";
-  private static final String ALL_TYPE_WITH_DATA =
-      "<?xml version=\"1.0\"?><any xmlns=\"\">"
-          + "<anyEnum>ENUM_1</anyEnum><anyEnum>ENUM_2</anyEnum><genericXml><html><head><title"
-          + ">Title</title></head><body><p>Test</p></body></html></genericXml><integer>1</integer"
-          + "><integerCollection>1</integerCollection><integerCollection>2</integerCollection><str"
-          + ">str1</str><stringArray>arr1</stringArray><stringArray>arr2</stringArray></any>";
-  private static final String ANY_TYPE_XML_NESTED_ARRAY =
-      "<?xml version=\"1.0\"?><any attr"
-          + "=\"value\" xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><rep><p>rep1</p"
-          + "><p>rep2</p></rep><rep><p>rep3</p><p>rep4</p></rep><value>content</value></any>";
+  private static final String SIMPLE_XML;
+  private static final String SIMPLE_XML_NUMERIC;
+  private static final String START_WITH_TEXT;
+  private static final String MISSING_END_ELEMENT;
+  private static final String START_WITH_END_ELEMENT;
+  private static final String START_WITH_END_ELEMENT_NESTED;
+  private static final String ANY_TYPE_XML;
+  private static final String ANY_TYPE_MISSING_XML;
+  private static final String ANY_TYPE_XML_PRIMITIVE_INT;
+  private static final String ANY_TYPE_XML_PRIMITIVE_STR;
+  private static final String NESTED_NS;
+  private static final String NESTED_NS_SERIALIZED;
+  private static final String INF_TEST;
+  private static final String ALL_TYPE;
+  private static final String ALL_TYPE_WITH_DATA;
+  private static final String ANY_TYPE_XML_NESTED_ARRAY;
+
+  static {
+    SIMPLE_XML = "<any>test</any>";
+    SIMPLE_XML_NUMERIC = "<any>1</any>";
+    START_WITH_TEXT = "<?xml version=\"1.0\"?>start_with_text</any>";
+    MISSING_END_ELEMENT =
+        "<?xml version=\"1.0\"?><any xmlns=\"\">" + "missing_end_element";
+    START_WITH_END_ELEMENT =
+        "<?xml version=\"1.0\"?></p><any " + "xmlns=\"\">start_with_end_elemtn</any>";
+    START_WITH_END_ELEMENT_NESTED =
+        "<?xml version=\"1.0\"?><any " + "xmlns=\"\"></p>start_with_end_element_nested</any>";
+    ANY_TYPE_XML =
+        "<?xml version=\"1.0\"?><any attr=\"value\" "
+            + "xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><rep>rep1</rep><rep>rep2"
+            + "</rep><value>content</value></any>";
+    ANY_TYPE_MISSING_XML =
+        "<?xml version=\"1.0\"?><any attr=\"value\" "
+            + "xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><value>content</value"
+            + "></any>";
+    ANY_TYPE_XML_PRIMITIVE_INT =
+        "<?xml version=\"1.0\"?><any attr"
+            + "=\"2\" xmlns=\"http://www.w3.org/2005/Atom\">1<intArray>1</intArray><intArray>2"
+            + "</intArray></any>";
+    ANY_TYPE_XML_PRIMITIVE_STR =
+        "<?xml version=\"1.0\"?><any attr"
+            + "=\"2+1\" xmlns=\"http://www.w3.org/2005/Atom\">1+1<strArray>1+1</strArray><strArray>2"
+            + "+1</strArray></any>";
+    NESTED_NS =
+        "<?xml version=\"1.0\"?><any xmlns=\"http://www.w3"
+            + ".org/2005/Atom\"><app:edited xmlns:app='http://www.w3.org/2007/app'>2011-08-09T04:38"
+            + ":14.017Z</app:edited></any>";
+    NESTED_NS_SERIALIZED =
+        "<?xml version=\"1.0\"?><any xmlns"
+            + "=\"http://www.w3.org/2005/Atom\" xmlns:app=\"http://www.w3.org/2007/app\"><app:edited"
+            + ">2011-08-09T04:38:14.017Z</app:edited></any>";
+    INF_TEST =
+        "<?xml version=\"1.0\"?><any xmlns=\"\"><dblInfNeg"
+            + ">-INF</dblInfNeg><dblInfPos>INF</dblInfPos><fltInfNeg>-INF</fltInfNeg><fltInfPos>INF"
+            + "</fltInfPos></any>";
+    ALL_TYPE =
+        "<?xml version=\"1.0\"?><any xmlns=\"\"><integer"
+            + "/><str/><genericXml/><anyEnum/><stringArray/><integerCollection/></any>";
+    ALL_TYPE_WITH_DATA =
+        "<?xml version=\"1.0\"?><any xmlns=\"\">"
+            + "<anyEnum>ENUM_1</anyEnum><anyEnum>ENUM_2</anyEnum><genericXml><html><head><title"
+            + ">Title</title></head><body><p>Test</p></body></html></genericXml><integer>1</integer"
+            + "><integerCollection>1</integerCollection><integerCollection>2</integerCollection><str"
+            + ">str1</str><stringArray>arr1</stringArray><stringArray>arr2</stringArray></any>";
+    ANY_TYPE_XML_NESTED_ARRAY =
+        "<?xml version=\"1.0\"?><any attr"
+            + "=\"value\" xmlns=\"http://www.w3.org/2005/Atom\"><elem>content</elem><rep><p>rep1</p"
+            + "><p>rep2</p></rep><rep><p>rep3</p><p>rep4</p></rep><value>content</value></any>";
+  }
 
   /**
    * The purpose of this test is to map a single element to a single field of a destination object.
