@@ -23,15 +23,22 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import junit.framework.TestCase;
 import org.junit.Assert;
+import org.junit.Test;
 
 public abstract class AbstractJsonParserTest extends TestCase {
 
   protected abstract JsonFactory newJsonFactory();
 
-  private static final String TEST_JSON =
-      "{\"strValue\": \"bar\", \"intValue\": 123, \"boolValue\": false}";
-  private static final String TEST_JSON_BIG_DECIMAL = "{\"bigDecimalValue\": 1559341956102}";
+  private static final String TEST_JSON;
+  private static final String TEST_JSON_BIG_DECIMAL;
 
+  static {
+    TEST_JSON =
+        "{\"strValue\": \"bar\", \"intValue\": 123, \"boolValue\": false}";
+    TEST_JSON_BIG_DECIMAL = "{\"bigDecimalValue\": 1559341956102}";
+  }
+
+  @Test
   public void testParse_basic() throws IOException {
     JsonObjectParser parser = new JsonObjectParser(newJsonFactory());
     InputStream inputStream = new ByteArrayInputStream(TEST_JSON.getBytes(StandardCharsets.UTF_8));
@@ -45,6 +52,7 @@ public abstract class AbstractJsonParserTest extends TestCase {
     assertEquals(Boolean.FALSE, json.get("boolValue"));
   }
 
+  @Test
   public void testGetWrongType() throws IOException {
     JsonObjectParser parser = new JsonObjectParser(newJsonFactory());
     InputStream inputStream = new ByteArrayInputStream(TEST_JSON.getBytes(StandardCharsets.UTF_8));
@@ -57,6 +65,7 @@ public abstract class AbstractJsonParserTest extends TestCase {
     assertEquals(Boolean.FALSE, json.get("boolValue"));
   }
 
+  @Test
   public void testParse_badJson() throws IOException {
     JsonObjectParser parser = new JsonObjectParser(newJsonFactory());
     InputStream inputStream = new ByteArrayInputStream("not json".getBytes(StandardCharsets.UTF_8));
@@ -68,6 +77,7 @@ public abstract class AbstractJsonParserTest extends TestCase {
     }
   }
 
+  @Test
   public void testParse_bigDecimal() throws IOException {
     JsonObjectParser parser = new JsonObjectParser(newJsonFactory());
     InputStream inputStream =
