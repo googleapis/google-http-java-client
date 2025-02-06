@@ -72,6 +72,7 @@
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-api-1.0-sdk</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.appengine</groupId>
@@ -89,4 +90,15 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <profiles>
+    <profile>
+      <id>native-deps</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.google.appengine</groupId>
+          <artifactId>appengine-api-1.0-sdk</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 </project>
