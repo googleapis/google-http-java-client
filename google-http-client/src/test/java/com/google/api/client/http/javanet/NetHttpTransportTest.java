@@ -50,13 +50,10 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class NetHttpTransportTest {
 
-  private static final String[] METHODS;
+  private static final String[] METHODS = {
+    "GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"
+  };
 
-  static {
-    METHODS = new String[] {"GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"};
-  }
-
-  @Test
   public void testNotMtlsWithoutClientCert() throws Exception {
     KeyStore trustStore = KeyStore.getInstance("JKS");
 

@@ -41,12 +41,6 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class UrlEncodedParserTest {
 
-  static final String ENUM_VALUE;
-
-  static {
-    ENUM_VALUE = "otherValue=other&value=VALUE";
-  }
-
   public static class Simple {
 
     @Key Void v;
@@ -186,6 +180,8 @@ public class UrlEncodedParserTest {
       return (EnumValue) super.set(fieldName, value);
     }
   }
+
+  static final String ENUM_VALUE = "otherValue=other&value=VALUE";
 
   @Test
   public void testParse_enum() throws IOException {

@@ -34,15 +34,9 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class NetHttpResponseTest {
 
-  private static final String VALID_RESPONSE;
-  private static final String ERROR_RESPONSE;
+  private static final String VALID_RESPONSE = "This is a valid response.";
+  private static final String ERROR_RESPONSE = "This is an error response.";
 
-  static {
-    VALID_RESPONSE = "This is a valid response.";
-    ERROR_RESPONSE = "This is an error response.";
-  }
-
-  @Test
   public void testGetStatusCode() throws IOException {
     subtestGetStatusCode(0, -1);
     subtestGetStatusCode(200, 200);

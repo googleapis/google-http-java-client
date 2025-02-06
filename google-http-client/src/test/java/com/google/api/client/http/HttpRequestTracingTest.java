@@ -41,11 +41,7 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class HttpRequestTracingTest {
-  private static final TestHandler testHandler;
-
-  static {
-    testHandler = new TestHandler();
-  }
+  private static final TestHandler testHandler = new TestHandler();
 
   @Before
   public void setupTestTracer() {

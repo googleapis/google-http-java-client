@@ -34,15 +34,9 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class MockHttpUrlConnectionTest {
 
-  private static final String RESPONSE_BODY;
-  private static final String HEADER_NAME;
+  private static final String RESPONSE_BODY = "body";
+  private static final String HEADER_NAME = "Custom-Header";
 
-  static {
-    RESPONSE_BODY = "body";
-    HEADER_NAME = "Custom-Header";
-  }
-
-  @Test
   public void testSetGetHeaders() throws IOException {
     MockHttpURLConnection connection = new MockHttpURLConnection(new URL(HttpTesting.SIMPLE_URL));
     connection.addHeader(HEADER_NAME, "100");

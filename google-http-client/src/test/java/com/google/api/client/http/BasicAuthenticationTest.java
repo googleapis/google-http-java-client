@@ -30,15 +30,11 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class BasicAuthenticationTest {
 
-  static final String USERNAME;
-  static final String PASSWORD;
-  static final String AUTH_HEADER;
+  static final String USERNAME = "Aladdin";
 
-  static {
-    USERNAME = "Aladdin";
-    PASSWORD = "open sesame";
-    AUTH_HEADER = "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==";
-  }
+  static final String PASSWORD = "open sesame";
+
+  static final String AUTH_HEADER = "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==";
 
   @Test
   public void testConstructor() {

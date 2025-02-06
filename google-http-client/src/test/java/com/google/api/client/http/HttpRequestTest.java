@@ -63,14 +63,10 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class HttpRequestTest {
 
-  private static final ImmutableSet<String> BASIC_METHODS;
-  private static final ImmutableSet<String> OTHER_METHODS;
-
-  static {
-    BASIC_METHODS =
+  private static final ImmutableSet<String> BASIC_METHODS =
         ImmutableSet.of(HttpMethods.GET, HttpMethods.PUT, HttpMethods.POST, HttpMethods.DELETE);
-    OTHER_METHODS = ImmutableSet.of(HttpMethods.HEAD, HttpMethods.PATCH);
-  }
+  private static final ImmutableSet<String> OTHER_METHODS =
+      ImmutableSet.of(HttpMethods.HEAD, HttpMethods.PATCH);
 
   @Before
   public void setUp() {

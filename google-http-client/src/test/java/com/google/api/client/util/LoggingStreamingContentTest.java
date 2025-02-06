@@ -34,15 +34,11 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class LoggingStreamingContentTest {
 
-  static final Logger LOGGER;
-  private static final byte[] SAMPLE_UTF8;
-  private static final String SAMPLE;
+  static final Logger LOGGER = Logger.getLogger(LoggingStreamingContentTest.class.getName());
 
-  static {
-    LOGGER = Logger.getLogger(LoggingStreamingContentTest.class.getName());
-    SAMPLE_UTF8 = new byte[] {49, 50, 51, -41, -103, -41, -96, -41, -103, -41, -111};
-    SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
-  }
+  private static final byte[] SAMPLE_UTF8 =
+      new byte[] {49, 50, 51, -41, -103, -41, -96, -41, -103, -41, -111};
+  private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
 
   /** Test method for {@link LoggingStreamingContent#writeTo(java.io.OutputStream)}. */
   @Test

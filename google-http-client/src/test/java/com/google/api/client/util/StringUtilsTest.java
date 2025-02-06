@@ -31,13 +31,10 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class StringUtilsTest {
 
-  private static final byte[] SAMPLE_UTF8;
-  private static final String SAMPLE;
+  private static final byte[] SAMPLE_UTF8 =
+      new byte[] {49, 50, 51, -41, -103, -41, -96, -41, -103, -41, -111};
+  private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
 
-  static {
-    SAMPLE_UTF8 = new byte[] {49, 50, 51, -41, -103, -41, -96, -41, -103, -41, -111};
-    SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
-  }
 
   @Test
   public void testLineSeparator() {
