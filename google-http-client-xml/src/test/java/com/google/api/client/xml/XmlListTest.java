@@ -37,37 +37,28 @@ import org.xmlpull.v1.XmlSerializer;
 @RunWith(JUnit4.class)
 public class XmlListTest {
 
-  private static final String MULTI_TYPE_WITH_CLASS_TYPE;
-  private static final String MULTIPLE_STRING_ELEMENT;
-  private static final String MULTIPLE_STRING_ELEMENT_IN_COLLECTION;
-  private static final String MULTIPLE_INTEGER_ELEMENT;
-  private static final String MULTIPLE_ENUM_ELEMENT;
-  private static final String COLLECTION_OF_ARRAY;
-
-  static {
-    MULTI_TYPE_WITH_CLASS_TYPE =
+  private static final String MULTI_TYPE_WITH_CLASS_TYPE =
         "<?xml version=\"1.0\"?><any "
             + "xmlns=\"http://www.w3.org/2005/Atom\"><rep><elem>content1</elem><rep>rep10</rep><rep"
             + ">rep11</rep><value>value1</value></rep><rep><elem>content2</elem><rep>rep20</rep><rep"
             + ">rep21</rep><value>value2</value></rep><rep><elem>content3</elem><rep>rep30</rep><rep"
             + ">rep31</rep><value>value3</value></rep></any>";
-    MULTIPLE_STRING_ELEMENT =
+  private static final String MULTIPLE_STRING_ELEMENT =
         "<?xml version=\"1.0\"?><any xmlns"
             + "=\"http://www.w3.org/2005/Atom\"><rep>rep1</rep><rep>rep2</rep></any>";
-    MULTIPLE_STRING_ELEMENT_IN_COLLECTION =
+  private static final String MULTIPLE_STRING_ELEMENT_IN_COLLECTION =
         "<?xml version=\"1.0"
             + "\"?><any xmlns=\"http://www.w3.org/2005/Atom\"><coll><rep>rep1</rep><rep>rep2</rep"
             + "></coll></any>";
-    MULTIPLE_INTEGER_ELEMENT =
+  private static final String MULTIPLE_INTEGER_ELEMENT =
         "<?xml version=\"1.0\"?><any xmlns"
             + "=\"http://www.w3.org/2005/Atom\"><rep>1</rep><rep>2</rep></any>";
-    MULTIPLE_ENUM_ELEMENT =
+  private static final String MULTIPLE_ENUM_ELEMENT =
         "<?xml version=\"1.0\"?><any xmlns"
             + "=\"http://www.w3.org/2005/Atom\"><rep>ENUM_1</rep><rep>ENUM_2</rep></any>";
-    COLLECTION_OF_ARRAY =
+  private static final String COLLECTION_OF_ARRAY =
         "<?xml version=\"1.0\"?><any xmlns"
             + "=\"http://www.w3.org/2005/Atom\"><rep><a>a</a><b>b</b></rep><rep><c>c</c><d>d</d></rep></any>";
-  }
 
   /** The purpose of this test is to map an XML with an Array of {@link XmlTest.AnyType} objects. */
   @SuppressWarnings("unchecked")

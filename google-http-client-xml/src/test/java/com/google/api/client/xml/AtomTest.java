@@ -45,10 +45,7 @@ import org.xmlpull.v1.XmlPullParser;
 @RunWith(JUnit4.class)
 public class AtomTest {
 
-  private static final String SAMPLE_FEED;
-
-  static {
-    SAMPLE_FEED =
+  private static final String SAMPLE_FEED =
         "<?xml version=\"1.0\" encoding=\"utf-8\"?><feed "
             + "xmlns=\"http://www.w3.org/2005/Atom\">  <title>Example Feed</title>  <link href"
             + "=\"http://example.org/\"/>  <updated>2003-12-13T18:31:02Z</updated>  <author>    "
@@ -60,7 +57,6 @@ public class AtomTest {
             + " href=\"http://example.org/2003/12/13/atom02\"/>  <id>urn:uuid:1225c695-cfb8-4ebb"
             + "-aaaa-80da344efa62</id>    <updated>2003-12-13T18:32:02Z</updated>    <summary>Some "
             + "other text.</summary>  </entry></feed>";
-  }
 
   /** Test for checking the Slug Header */
   @Test
