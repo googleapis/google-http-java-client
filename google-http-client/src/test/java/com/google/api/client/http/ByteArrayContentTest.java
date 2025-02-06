@@ -14,20 +14,28 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.util.IOUtils;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link ByteArrayContent}.
  *
  * @author Yaniv Inbar
  */
-public class ByteArrayContentTest extends TestCase {
+@RunWith(JUnit4.class)
+public class ByteArrayContentTest {
   private static final byte[] FOO = StringUtils.getBytesUtf8("foo");
 
+  @Test
   public void testConstructor() throws IOException {
     subtestConstructor(new ByteArrayContent("type", FOO), "foo");
     subtestConstructor(new ByteArrayContent("type", FOO, 0, 3), "foo");

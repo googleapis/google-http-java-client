@@ -1,0 +1,47 @@
+[
+    {
+      "name": "com.google.apphosting.api.DatastorePb$DeleteRequest",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.apphosting.api.DatastorePb$GetRequest",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.apphosting.api.DatastorePb$NextRequest",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.apphosting.api.DatastorePb$PutRequest",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.google.apphosting.api.DatastorePb$Query",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    }
+]

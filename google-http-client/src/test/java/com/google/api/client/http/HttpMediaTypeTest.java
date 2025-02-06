@@ -14,9 +14,14 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import com.google.common.base.Charsets;
 import com.google.common.testing.EqualsTester;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests for the {@link HttpMediaType} class.
@@ -24,18 +29,22 @@ import junit.framework.TestCase;
  * @author Matthias Linder (mlinder)
  * @since 1.10
  */
-public class HttpMediaTypeTest extends TestCase {
+@RunWith(JUnit4.class)
+public class HttpMediaTypeTest {
 
+  @Test
   public void testBuild() {
     HttpMediaType m = new HttpMediaType("main", "sub");
     assertEquals("main/sub", m.build());
   }
 
+  @Test
   public void testBuild_star() {
     HttpMediaType m = new HttpMediaType("*", "*");
     assertEquals("*/*", m.build());
   }
 
+  @Test
   public void testBuild_parameters() {
     HttpMediaType m = new HttpMediaType("main", "sub");
     m.setParameter("bbb", ";/ ");
@@ -43,35 +52,41 @@ public class HttpMediaTypeTest extends TestCase {
     assertEquals("main/sub; aaa=1; bbb=\";/ \"", m.build());
   }
 
+  @Test
   public void testBuild_json() {
     HttpMediaType m = new HttpMediaType("application/json").setCharsetParameter(Charsets.UTF_8);
     assertEquals("application/json; charset=UTF-8", m.build());
   }
 
+  @Test
   public void testBuild_multipartSpec() {
     HttpMediaType m = new HttpMediaType("main", "sub");
     m.setParameter("bbb", "foo=/bar");
     assertEquals("main/sub; bbb=\"foo=/bar\"", m.build());
   }
 
+  @Test
   public void testBuild_parametersCasing() {
     HttpMediaType m = new HttpMediaType("main", "sub");
     m.setParameter("foo", "FooBar");
     assertEquals("main/sub; foo=FooBar", m.build());
   }
 
+  @Test
   public void testFromString() {
     HttpMediaType m = new HttpMediaType("main/sub");
     assertEquals("main", m.getType());
     assertEquals("sub", m.getSubType());
   }
 
+  @Test
   public void testFromString_star() {
     HttpMediaType m = new HttpMediaType("text/*");
     assertEquals("text", m.getType());
     assertEquals("*", m.getSubType());
   }
 
+  @Test
   public void testFromString_null() {
     try {
       new HttpMediaType(null);
@@ -80,6 +95,7 @@ public class HttpMediaTypeTest extends TestCase {
     }
   }
 
+  @Test
   public void testFromString_multipartSpec() {
     // Values allowed by the spec: http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
     String value = "f00'()+_,-./:=?bar";
@@ -88,6 +104,7 @@ public class HttpMediaTypeTest extends TestCase {
     assertEquals("bar", m.getParameter("foo"));
   }
 
+  @Test
   public void testFromString_full() {
     HttpMediaType m = new HttpMediaType("text/plain; charset=utf-8; foo=\"foo; =bar\"");
     assertEquals("text", m.getType());
@@ -97,15 +114,18 @@ public class HttpMediaTypeTest extends TestCase {
     assertEquals(2, m.getParameters().size());
   }
 
+  @Test
   public void testFromString_case() {
     HttpMediaType m = new HttpMediaType("text/plain; Foo=Bar");
     assertEquals("Bar", m.getParameter("fOO"));
   }
 
+  @Test
   public void testSetMainType() {
     assertEquals("foo", new HttpMediaType("text", "plain").setType("foo").getType());
   }
 
+  @Test
   public void testSetMainType_invalid() {
     try {
       new HttpMediaType("text", "plain").setType("foo/bar");
@@ -114,10 +134,12 @@ public class HttpMediaTypeTest extends TestCase {
     }
   }
 
+  @Test
   public void testSetSubType() {
     assertEquals("foo", new HttpMediaType("text", "plain").setSubType("foo").getSubType());
   }
 
+  @Test
   public void testSetSubType_invalid() {
     try {
       new HttpMediaType("text", "plain").setSubType("foo/bar");
@@ -126,6 +148,7 @@ public class HttpMediaTypeTest extends TestCase {
     }
   }
 
+  @Test
   public void testSetParameter_casing() {
     HttpMediaType mt = new HttpMediaType("text", "plain");
     mt.setParameter("Foo", "Bar");
@@ -145,6 +168,7 @@ public class HttpMediaTypeTest extends TestCase {
     assertEquals(str, new HttpMediaType(str).build());
   }
 
+  @Test
   public void testFullSerialization() {
     assertFullSerialization("text/plain");
     assertFullSerialization("text/plain; foo=bar");
@@ -155,6 +179,7 @@ public class HttpMediaTypeTest extends TestCase {
     assertFullSerialization("text/*; charset=utf-8; foo=\"bar bar bar\"");
   }
 
+  @Test
   public void testInvalidCharsRegex() {
     assertEquals(false, containsInvalidChar("foo"));
     assertEquals(false, containsInvalidChar("X-Foo-Bar"));
@@ -163,6 +188,7 @@ public class HttpMediaTypeTest extends TestCase {
     assertEquals(true, containsInvalidChar("foo;bar"));
   }
 
+  @Test
   public void testCharset() {
     HttpMediaType hmt = new HttpMediaType("foo/bar");
     assertEquals(null, hmt.getCharsetParameter());
@@ -171,6 +197,7 @@ public class HttpMediaTypeTest extends TestCase {
     assertEquals(Charsets.UTF_8, hmt.getCharsetParameter());
   }
 
+  @Test
   public void testEqualsIgnoreParameters() {
     assertEquals(
         true, new HttpMediaType("foo/bar").equalsIgnoreParameters(new HttpMediaType("Foo/bar")));
@@ -183,6 +210,7 @@ public class HttpMediaTypeTest extends TestCase {
     assertEquals(false, new HttpMediaType("foo/bar").equalsIgnoreParameters(null));
   }
 
+  @Test
   public void testEqualsIgnoreParameters_static() {
     assertEquals(true, HttpMediaType.equalsIgnoreParameters(null, null));
     assertEquals(false, HttpMediaType.equalsIgnoreParameters(null, "foo/bar"));
@@ -190,6 +218,7 @@ public class HttpMediaTypeTest extends TestCase {
     assertEquals(true, HttpMediaType.equalsIgnoreParameters("foo/bar; a=c", "foo/bar; b=d"));
   }
 
+  @Test
   public void testEquals() {
     new EqualsTester()
         .addEqualityGroup(new HttpMediaType("foo/bar"), new HttpMediaType("foo/bar"))

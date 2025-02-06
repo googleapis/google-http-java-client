@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
 
@@ -37,6 +39,7 @@ import org.xmlpull.v1.XmlSerializer;
  * @author Yaniv Inbar
  * @author Gerald Madlmayr
  */
+@RunWith(JUnit4.class)
 public class XmlTest {
 
   private static final String SIMPLE_XML = "<any>test</any>";

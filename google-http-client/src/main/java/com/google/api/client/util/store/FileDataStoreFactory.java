@@ -37,6 +37,7 @@ import java.nio.file.attribute.UserPrincipal;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Thread-safe file implementation of a credential store.
@@ -54,8 +55,17 @@ import java.util.Set;
  */
 public class FileDataStoreFactory extends AbstractDataStoreFactory {
 
-  private static final boolean IS_WINDOWS =
-      StandardSystemProperty.OS_NAME.value().toLowerCase(Locale.ENGLISH).startsWith("windows");
+  private static final boolean IS_WINDOWS;
+
+  static {
+    try {
+      IS_WINDOWS =
+          StandardSystemProperty.OS_NAME.value().toLowerCase(Locale.ENGLISH).startsWith("windows");
+    } catch (Throwable ex) {
+      Logger.getLogger(FileDataStoreFactory.class.getName()).severe(ex.getMessage());
+      throw ex;
+    }
+  }
 
   /** Directory to store data. */
   private final File dataDirectory;

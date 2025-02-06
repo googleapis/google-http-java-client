@@ -14,6 +14,12 @@
 
 package com.google.api.client.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
@@ -32,15 +38,19 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.TreeMap;
 import java.util.Vector;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link Types}.
  *
  * @author Yaniv Inbar
  */
-public class TypesTest extends TestCase {
+@RunWith(JUnit4.class)
+public class TypesTest {
 
+  @Test
   public void testIsAssignableToOrFrom() {
     assertTrue(Types.isAssignableToOrFrom(String.class, Object.class));
     assertTrue(Types.isAssignableToOrFrom(String.class, String.class));
@@ -50,6 +60,7 @@ public class TypesTest extends TestCase {
 
   static class Foo {}
 
+  @Test
   public void testNewInstance() {
     assertEquals(Object.class, Types.newInstance(Object.class).getClass());
     assertEquals(String.class, Types.newInstance(String.class).getClass());
@@ -80,6 +91,7 @@ public class TypesTest extends TestCase {
     public Collection<? super Integer> lower;
   }
 
+  @Test
   public void testGetBound() throws Exception {
     subtestGetBound(Object.class, "any");
     subtestGetBound(Number.class, "upper");
@@ -112,6 +124,7 @@ public class TypesTest extends TestCase {
 
   static class ParameterizedResolve extends Resolve<Collection<Integer>, Integer> {}
 
+  @Test
   public void testResolveTypeVariable() throws Exception {
     // t
     TypeVariable<?> tTypeVar = (TypeVariable<?>) Resolve.class.getField("t").getGenericType();
@@ -158,6 +171,7 @@ public class TypesTest extends TestCase {
 
   public class B extends A<DateTime> {}
 
+  @Test
   public void testGetIterableParameter() throws Exception {
     assertEquals(
         "T",
@@ -209,6 +223,7 @@ public class TypesTest extends TestCase {
 
   public class D extends C<DateTime> {}
 
+  @Test
   public void testGetMapParameter() throws Exception {
     assertEquals(
         "T",
@@ -243,6 +258,7 @@ public class TypesTest extends TestCase {
             .getUpperBounds()[0]);
   }
 
+  @Test
   public void testIterableOf() {
     List<String> list = ImmutableList.of("a");
     assertEquals(list, Types.iterableOf(list));
@@ -250,6 +266,7 @@ public class TypesTest extends TestCase {
     assertTrue(Iterables.elementsEqual(ImmutableList.of(1), Types.iterableOf(new int[] {1})));
   }
 
+  @Test
   public void testToArray() {
     assertTrue(
         Arrays.equals(

@@ -14,17 +14,23 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link AbstractHttpContent}.
  *
  * @author Yaniv Inbar
  */
-public class AbstractHttpContentTest extends TestCase {
+@RunWith(JUnit4.class)
+public class AbstractHttpContentTest {
 
   static class TestHttpContent extends AbstractHttpContent {
 
@@ -54,11 +60,13 @@ public class AbstractHttpContentTest extends TestCase {
     }
   }
 
+  @Test
   public void testRetrySupported() {
     AbstractHttpContent content = new TestHttpContent(true, 0);
     assertTrue(content.retrySupported());
   }
 
+  @Test
   public void testComputeLength() throws Exception {
     subtestComputeLength(true, 0, 0);
     subtestComputeLength(true, 1, 1);

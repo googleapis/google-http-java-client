@@ -14,15 +14,22 @@
 
 package com.google.api.client.util;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests for the {@link Clock}.
  *
  * @author mlinder@google.com (Matthias Linder)
  */
-public class ClockTest extends TestCase {
+@RunWith(JUnit4.class)
+public class ClockTest {
   /** Tests that the Clock.SYSTEM.currentTimeMillis() method returns useful values. */
+  @Test
   public void testSystemClock() {
     assertNotNull(Clock.SYSTEM);
 

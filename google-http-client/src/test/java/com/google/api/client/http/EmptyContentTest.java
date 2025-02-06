@@ -14,17 +14,25 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link EmptyContent}.
  *
  * @author Yaniv Inbar
  */
-public class EmptyContentTest extends TestCase {
+@RunWith(JUnit4.class)
+public class EmptyContentTest {
 
+  @Test
   public void test() throws IOException {
     EmptyContent content = new EmptyContent();
     assertEquals(0L, content.getLength());

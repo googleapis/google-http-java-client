@@ -28,6 +28,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
@@ -41,6 +43,7 @@ import org.xmlpull.v1.XmlSerializer;
  * @author Yaniv Inbar
  * @author Gerald Madlmayr
  */
+@RunWith(JUnit4.class)
 public class GenericXmlTest {
 
   private static final String XML =

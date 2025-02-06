@@ -14,10 +14,18 @@
 
 package com.google.api.client.util.escape;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
-public class CharEscapersTest extends TestCase {
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
+@RunWith(JUnit4.class)
+public class CharEscapersTest {
+
+  @Test
   public void testDecodeUriPath() {
     subtestDecodeUriPath(null, null);
     subtestDecodeUriPath("", "");
@@ -31,6 +39,7 @@ public class CharEscapersTest extends TestCase {
     assertEquals(expected, actual);
   }
 
+  @Test
   public void testDecodeUri_IllegalArgumentException() {
     subtestDecodeUri_IllegalArgumentException("abc%-1abc");
     subtestDecodeUri_IllegalArgumentException("%JJ");

@@ -14,20 +14,25 @@
 
 package com.google.api.client.http.javanet;
 
+import static org.junit.Assert.assertEquals;
+
 import com.google.api.client.testing.http.javanet.MockHttpURLConnection;
 import com.google.api.client.util.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link NetHttpResponse}.
  *
  * @author Yaniv Inbar
  */
-public class NetHttpResponseTest extends TestCase {
+@RunWith(JUnit4.class)
+public class NetHttpResponseTest {
 
   private static final String VALID_RESPONSE = "This is a valid response.";
   private static final String ERROR_RESPONSE = "This is an error response.";
@@ -45,6 +50,7 @@ public class NetHttpResponseTest extends TestCase {
             .getStatusCode());
   }
 
+  @Test
   public void testGetContent() throws IOException {
     subtestGetContent(0);
     subtestGetContent(200);
@@ -103,6 +109,7 @@ public class NetHttpResponseTest extends TestCase {
     }
   }
 
+  @Test
   public void testSkippingBytes() throws IOException {
     MockHttpURLConnection connection =
         new MockHttpURLConnection(null)

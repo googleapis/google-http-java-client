@@ -14,15 +14,21 @@
 
 package com.google.api.client.testing.http;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests for the {@link FixedClock}.
  *
  * @author mlinder@google.com (Matthias Linder)
  */
-public class FixedClockTest extends TestCase {
+@RunWith(JUnit4.class)
+public class FixedClockTest {
   /** Tests that the {@link FixedClock#currentTimeMillis()} method will return the mocked values. */
+  @Test
   public void testCurrentTimeMillis() {
     // Check that the initial value is set properly.
     FixedClock clock = new FixedClock(100);

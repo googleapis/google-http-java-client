@@ -14,30 +14,39 @@
 
 package com.google.api.client.util;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link Objects}.
  *
  * @author Yaniv Inbar
  */
-public class ObjectsTest extends TestCase {
+@RunWith(JUnit4.class)
+public class ObjectsTest {
+  @Test
   public void testToStringHelper() {
     String toTest = Objects.toStringHelper(new TestClass()).add("hello", "world").toString();
     assertEquals("TestClass{hello=world}", toTest);
   }
 
+  @Test
   public void testConstructor_innerClass() {
     String toTest = Objects.toStringHelper(new TestClass()).toString();
     assertEquals("TestClass{}", toTest);
   }
 
+  @Test
   public void testToString_oneIntegerField() {
     String toTest =
         Objects.toStringHelper(new TestClass()).add("field1", Integer.valueOf(42)).toString();
     assertEquals("TestClass{field1=42}", toTest);
   }
 
+  @Test
   public void testToStringOmitNullValues_oneField() {
     String toTest =
         Objects.toStringHelper(new TestClass()).omitNullValues().add("field1", null).toString();

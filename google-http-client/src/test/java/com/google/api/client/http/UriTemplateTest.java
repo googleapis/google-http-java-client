@@ -14,6 +14,9 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.google.api.client.util.Value;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -21,14 +24,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link UriTemplate}.
  *
  * @author Ravi Mistry
  */
-public class UriTemplateTest extends TestCase {
+@RunWith(JUnit4.class)
+public class UriTemplateTest {
 
   public void testExpandTemplates_initialization() {
     SortedMap<String, Object> map = Maps.newTreeMap();
@@ -39,6 +45,7 @@ public class UriTemplateTest extends TestCase {
     assertEquals("/a/b/c", UriTemplate.expand("{/id*}", map, false));
   }
 
+  @Test
   public void testExpandTemplates_basic() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
@@ -58,6 +65,7 @@ public class UriTemplateTest extends TestCase {
     assertTrue(requestMap.containsKey("unused"));
   }
 
+  @Test
   public void testExpandTemplates_basicEncodeValue() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz;def");
@@ -65,12 +73,14 @@ public class UriTemplateTest extends TestCase {
     assertEquals("xyz;def", UriTemplate.expand("{+abc}", requestMap, false));
   }
 
+  @Test
   public void testExpandTemplates_encodeSpace() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz def");
     assertEquals(";abc=xyz%20def", UriTemplate.expand("{;abc}", requestMap, false));
   }
 
+  @Test
   public void testExpandTemplates_noExpansionsWithQueryParams() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
@@ -79,6 +89,7 @@ public class UriTemplateTest extends TestCase {
         "foo/xyz/bar/123?abc=xyz&def=123", UriTemplate.expand("foo/xyz/bar/123", requestMap, true));
   }
 
+  @Test
   public void testExpandTemplates_noExpansionsWithoutQueryParams() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
@@ -86,12 +97,14 @@ public class UriTemplateTest extends TestCase {
     assertEquals("foo/xyz/bar/123", UriTemplate.expand("foo/xyz/bar/123", requestMap, false));
   }
 
+  @Test
   public void testExpandTemplates_missingParameter() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
     assertEquals("foo/xyz/bar/", UriTemplate.expand("foo/{abc}/bar/{def}", requestMap, true));
   }
 
+  @Test
   public void testExpandTemplates_nullValue() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
@@ -99,6 +112,7 @@ public class UriTemplateTest extends TestCase {
     assertEquals("foo/xyz/bar/", UriTemplate.expand("foo/{abc}/bar/{def}", requestMap, true));
   }
 
+  @Test
   public void testExpandTemplates_emptyAndNullRequestMap() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     assertEquals("foo//bar/", UriTemplate.expand("foo/{abc}/bar/{def}", requestMap, true));
@@ -129,6 +143,7 @@ public class UriTemplateTest extends TestCase {
     {"{&d*}", "&d=red&d=green&d=blue"},
   };
 
+  @Test
   public void testExpandTemplates_explodeIterator() {
     for (String[] test : LIST_TESTS) {
       SortedMap<String, Object> requestMap = Maps.newTreeMap();
@@ -137,6 +152,7 @@ public class UriTemplateTest extends TestCase {
     }
   }
 
+  @Test
   public void testExpandTemplates_explodeIterable() {
     for (String[] test : LIST_TESTS) {
       SortedMap<String, Object> requestMap = Maps.newTreeMap();
@@ -150,12 +166,14 @@ public class UriTemplateTest extends TestCase {
     ONE
   }
 
+  @Test
   public void testExpandTemplates_explodeEnum() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("d", testEnum.ONE);
     assertEquals(testEnum.ONE.toString(), UriTemplate.expand("{d}", requestMap, true));
   }
 
+  @Test
   public void testExpandTemplates_missingCompositeParameter() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
@@ -163,6 +181,7 @@ public class UriTemplateTest extends TestCase {
     assertEquals("?abc=xyz", UriTemplate.expand("{d}", requestMap, true));
   }
 
+  @Test
   public void testExpandTemplates_emptyListParameter() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("d", Lists.newArrayList());
@@ -197,6 +216,7 @@ public class UriTemplateTest extends TestCase {
     {"{&d*}", "&semi=%3B&dot=.&comma=%2C"},
   };
 
+  @Test
   public void testExpandTemplates_explodeMap() {
     for (String[] test : MAP_TESTS) {
       SortedMap<String, Object> requestMap = Maps.newTreeMap();
@@ -205,12 +225,14 @@ public class UriTemplateTest extends TestCase {
     }
   }
 
+  @Test
   public void testExpandTemplates_emptyMapParameter() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("d", Maps.newTreeMap());
     assertEquals("", UriTemplate.expand("{d}", requestMap, true));
   }
 
+  @Test
   public void testExpandTemplates_unusedQueryParametersEncoding() {
     Map<String, Object> requestMap = Maps.newLinkedHashMap();
     // Add unused params.
@@ -222,6 +244,7 @@ public class UriTemplateTest extends TestCase {
         UriTemplate.expand("", requestMap, true));
   }
 
+  @Test
   public void testExpandTemplates_unusedListQueryParameters() {
     Map<String, Object> requestMap = Maps.newLinkedHashMap();
     // Add unused params.
@@ -236,6 +259,7 @@ public class UriTemplateTest extends TestCase {
         UriTemplate.expand("", requestMap, true));
   }
 
+  @Test
   public void testExpandTemplates_mixedBagParameters() {
     Map<String, Object> requestMap = Maps.newLinkedHashMap();
     // Add list params.
@@ -264,6 +288,7 @@ public class UriTemplateTest extends TestCase {
     assertTrue(requestMap.containsKey("unused2"));
   }
 
+  @Test
   public void testExpandTemplates_withBaseUrl() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
@@ -284,6 +309,7 @@ public class UriTemplateTest extends TestCase {
             "https://test/base/path/", "http://test3/{abc}/{def}/bar/", requestMap, true));
   }
 
+  @Test
   public void testExpandNonReservedNonComposite() {
     SortedMap<String, Object> requestMap = Maps.newTreeMap();
     requestMap.put("abc", "xyz");
@@ -294,6 +320,7 @@ public class UriTemplateTest extends TestCase {
         "foo/xyz/bar/a/b?c", UriTemplate.expand("foo/{abc}/bar/{+def}", requestMap, false));
   }
 
+  @Test
   public void testExpandSeveralTemplates() {
     SortedMap<String, Object> map = Maps.newTreeMap();
     map.put("id", "a");
@@ -302,6 +329,7 @@ public class UriTemplateTest extends TestCase {
     assertEquals("?id=a&uid=b", UriTemplate.expand("{?id,uid}", map, false));
   }
 
+  @Test
   public void testExpandSeveralTemplatesUnusedParameterInMiddle() {
     SortedMap<String, Object> map = Maps.newTreeMap();
     map.put("id", "a");
@@ -310,6 +338,7 @@ public class UriTemplateTest extends TestCase {
     assertEquals("?id=a&uid=b", UriTemplate.expand("{?id,foo,bar,uid}", map, false));
   }
 
+  @Test
   public void testExpandSeveralTemplatesFirstParameterUnused() {
     SortedMap<String, Object> map = Maps.newTreeMap();
     map.put("id", "a");
@@ -318,11 +347,13 @@ public class UriTemplateTest extends TestCase {
     assertEquals("?id=a&uid=b", UriTemplate.expand("{?foo,id,uid}", map, false));
   }
 
+  @Test
   public void testExpandSeveralTemplatesNoParametersUsed() {
     SortedMap<String, Object> map = Maps.newTreeMap();
     assertEquals("", UriTemplate.expand("{?id,uid}", map, false));
   }
 
+  @Test
   public void testExpandTemplates_reservedExpansion_mustNotEscapeReservedCharSet() {
 
     String reservedSet = ":/?#[]@!$&'()*+,;=";
@@ -336,6 +367,7 @@ public class UriTemplateTest extends TestCase {
         UriTemplate.expand("{+var}", requestMap, false));
   }
 
+  @Test
   public void testExpandTemplates_reservedExpansion_mustNotEscapeUnreservedCharSet() {
 
     String unReservedSet = "-._~";

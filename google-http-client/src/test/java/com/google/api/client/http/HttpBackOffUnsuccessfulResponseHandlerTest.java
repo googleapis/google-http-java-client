@@ -14,6 +14,9 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.google.api.client.http.HttpBackOffUnsuccessfulResponseHandler.BackOffRequired;
 import com.google.api.client.testing.util.MockBackOff;
 import com.google.api.client.testing.util.MockSleeper;
@@ -21,19 +24,24 @@ import com.google.api.client.util.BackOff;
 import com.google.api.client.util.Sleeper;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Test {@link HttpBackOffUnsuccessfulResponseHandler}.
  *
  * @author Eyal Peled
  */
-public class HttpBackOffUnsuccessfulResponseHandlerTest extends TestCase {
+@RunWith(JUnit4.class)
+public class HttpBackOffUnsuccessfulResponseHandlerTest {
 
+  @Test
   public void testHandleResponse_retryFalse() throws IOException {
     subsetHandleResponse(0, 0, false, new MockBackOff(), BackOffRequired.ALWAYS);
   }
 
+  @Test
   public void testHandleResponse_requiredFalse() throws IOException {
     subsetHandleResponse(
         0,
@@ -47,6 +55,7 @@ public class HttpBackOffUnsuccessfulResponseHandlerTest extends TestCase {
         });
   }
 
+  @Test
   public void testHandleResponse_requiredTrue() throws IOException {
     BackOff backOff = new MockBackOff().setBackOffMillis(4).setMaxTries(7);
     subsetHandleResponse(7, 4, true, backOff, BackOffRequired.ALWAYS);
@@ -70,6 +79,7 @@ public class HttpBackOffUnsuccessfulResponseHandlerTest extends TestCase {
     assertEquals(count, sleeper.getCount());
   }
 
+  @Test
   public void testHandleResponse_returnsFalseAndThreadRemainsInterrupted_whenSleepIsInterrupted()
       throws Exception {
     final AtomicBoolean stillInterrupted = new AtomicBoolean(false);

@@ -14,21 +14,28 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.google.api.client.testing.util.MockBackOff;
 import com.google.api.client.testing.util.MockSleeper;
 import com.google.api.client.util.BackOff;
 import com.google.api.client.util.Sleeper;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link HttpBackOffIOExceptionHandler}.
  *
  * @author Eyal Peled
  */
-public class HttpBackOffIOExpcetionHandlerTest extends TestCase {
+@RunWith(JUnit4.class)
+public class HttpBackOffIOExpcetionHandlerTest {
 
+  @Test
   public void testHandle() throws IOException {
     subsetHandle(0, 0, true, BackOff.STOP_BACKOFF);
     subsetHandle(0, 0, false, new MockBackOff().setBackOffMillis(0).setMaxTries(5));
@@ -49,6 +56,7 @@ public class HttpBackOffIOExpcetionHandlerTest extends TestCase {
     assertEquals(count, sleeper.getCount());
   }
 
+  @Test
   public void testHandleIOException_returnsFalseAndThreadRemainsInterrupted_whenSleepIsInterrupted()
       throws Exception {
     final AtomicBoolean stillInterrupted = new AtomicBoolean(false);

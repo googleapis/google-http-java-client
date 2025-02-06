@@ -14,15 +14,21 @@
 
 package com.google.api.client.json;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link GenericJson}.
  *
  * @author Yaniv Inbar
  */
-public class GenericJsonTest extends TestCase {
+@RunWith(JUnit4.class)
+public class GenericJsonTest {
 
+  @Test
   public void testToString_noFactory() {
     GenericJson data = new GenericJson();
     data.put("a", "b");

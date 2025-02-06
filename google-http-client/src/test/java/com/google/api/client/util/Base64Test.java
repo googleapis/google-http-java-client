@@ -15,27 +15,35 @@
 package com.google.api.client.util;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.nio.charset.StandardCharsets;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link Base64}.
  *
  * @author Jeff Ching
  */
-public class Base64Test extends TestCase {
+@RunWith(JUnit4.class)
+public class Base64Test {
 
+  @Test
   public void test_decodeBase64_withPadding() {
     String encoded = "Zm9vOmJhcg==";
     assertEquals("foo:bar", new String(Base64.decodeBase64(encoded), StandardCharsets.UTF_8));
   }
 
+  @Test
   public void test_decodeBase64_withoutPadding() {
     String encoded = "Zm9vOmJhcg";
     assertEquals("foo:bar", new String(Base64.decodeBase64(encoded), StandardCharsets.UTF_8));
   }
 
+  @Test
   public void test_decodeBase64_withTrailingWhitespace() {
     // Some internal use cases append extra space characters that apache-commons base64 decoding
     // previously handled.
@@ -43,28 +51,34 @@ public class Base64Test extends TestCase {
     assertEquals("foo:bar", new String(Base64.decodeBase64(encoded), StandardCharsets.UTF_8));
   }
 
+  @Test
   public void test_decodeBase64_withNullBytes_shouldReturnNull() {
     byte[] encoded = null;
     assertNull(Base64.decodeBase64(encoded));
   }
 
+  @Test
   public void test_decodeBase64_withNull_shouldReturnNull() {
     String encoded = null;
     assertNull(Base64.decodeBase64(encoded));
   }
 
+  @Test
   public void test_encodeBase64URLSafeString_withNull_shouldReturnNull() {
     assertNull(Base64.encodeBase64URLSafeString(null));
   }
 
+  @Test
   public void test_encodeBase64URLSafe_withNull_shouldReturnNull() {
     assertNull(Base64.encodeBase64URLSafe(null));
   }
 
+  @Test
   public void test_encodeBase64_withNull_shouldReturnNull() {
     assertNull(Base64.encodeBase64(null));
   }
 
+  @Test
   public void test_decodeBase64_newline_character_invalid_length() {
     // The RFC 4648 (https://datatracker.ietf.org/doc/html/rfc4648#section-3.3) states that a
     // specification referring to the Base64 encoding may state that it ignores characters outside
@@ -91,6 +105,7 @@ public class Base64Test extends TestCase {
     assertEquals("abcdef", new String(Base64.decodeBase64(encodedString), StandardCharsets.UTF_8));
   }
 
+  @Test
   public void test_decodeBase64_newline_character() {
     // In Base64 encoding, 2 characters (16 bits) are converted to 3 of 6-bits plus the padding
     // character ('=").
@@ -112,6 +127,7 @@ public class Base64Test extends TestCase {
     assertEquals("ab", new String(Base64.decodeBase64(encodedString), StandardCharsets.UTF_8));
   }
 
+  @Test
   public void test_decodeBase64_plus_and_newline_characters() {
     // The plus sign is 62 in the Base64 table. So it's a valid character in encoded strings.
     // https://datatracker.ietf.org/doc/html/rfc4648#section-4
@@ -123,6 +139,7 @@ public class Base64Test extends TestCase {
     assertThat(actual).isEqualTo(new byte[] {(byte) 0xfb});
   }
 
+  @Test
   public void test_decodeBase64_slash_and_newline_characters() {
     // The slash sign is 63 in the Base64 table. So it's a valid character in encoded strings.
     // https://datatracker.ietf.org/doc/html/rfc4648#section-4

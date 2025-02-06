@@ -14,40 +14,48 @@
 
 package com.google.api.client.util;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link StringUtils}.
  *
  * @author Yaniv Inbar
  */
-public class StringUtilsTest extends TestCase {
+@RunWith(JUnit4.class)
+public class StringUtilsTest {
 
   private static final byte[] SAMPLE_UTF8 =
       new byte[] {49, 50, 51, -41, -103, -41, -96, -41, -103, -41, -111};
   private static final String SAMPLE = "123\u05D9\u05e0\u05D9\u05D1";
 
-  public StringUtilsTest(String testName) {
-    super(testName);
-  }
-
+  @Test
   public void testLineSeparator() {
     assertNotNull(StringUtils.LINE_SEPARATOR);
   }
 
+  @Test
   public void testToBytesUtf8() {
     Assert.assertArrayEquals(SAMPLE_UTF8, StringUtils.getBytesUtf8(SAMPLE));
   }
 
+  @Test
   public void testToBytesUtf8Null() {
     assertNull(StringUtils.getBytesUtf8(null));
   }
 
+  @Test
   public void testFromBytesUtf8() {
     assertEquals(SAMPLE, StringUtils.newStringUtf8(SAMPLE_UTF8));
   }
 
+  @Test
   public void testFromBytesUtf8Null() {
     assertNull(StringUtils.newStringUtf8(null));
   }

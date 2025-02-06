@@ -14,19 +14,27 @@
 
 package com.google.api.client.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
+
 import com.google.api.client.util.GenericData.Flags;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import junit.framework.TestCase;
 import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link GenericData}.
  *
  * @author Yaniv Inbar
  */
-public class GenericDataTest extends TestCase {
+@RunWith(JUnit4.class)
+public class GenericDataTest {
   private class MyData extends GenericData {
     public MyData() {
       super(EnumSet.of(Flags.IGNORE_CASE));
@@ -66,6 +74,7 @@ public class GenericDataTest extends TestCase {
     public String fieldA;
   }
 
+  @Test
   public void testEquals_Symmetric() {
     GenericData actual = new GenericData1();
     actual.set("fieldA", "bar");
@@ -80,6 +89,7 @@ public class GenericDataTest extends TestCase {
     assertFalse(expected.hashCode() == actual.hashCode());
   }
 
+  @Test
   public void testEquals_SymmetricWithSameClass() {
     GenericData actual = new MyData();
     actual.set("fieldA", "bar");
@@ -91,6 +101,7 @@ public class GenericDataTest extends TestCase {
     assertTrue(expected.hashCode() == expected.hashCode());
   }
 
+  @Test
   public void testNotEquals_SymmetricWithSameClass() {
     GenericData actual = new MyData();
     actual.set("fieldA", "bar");
@@ -102,6 +113,7 @@ public class GenericDataTest extends TestCase {
     assertFalse(expected.hashCode() == actual.hashCode());
   }
 
+  @Test
   public void testClone_changingEntrySet() {
     GenericData data = new GenericData();
     assertEquals("GenericData{classInfo=[], {}}", data.toString());
@@ -110,6 +122,7 @@ public class GenericDataTest extends TestCase {
     assertEquals("GenericData{classInfo=[], {foo=bar}}", clone.toString());
   }
 
+  @Test
   public void testSetIgnoreCase_unknownKey() {
     GenericData data = new GenericData(EnumSet.of(Flags.IGNORE_CASE));
     data.set("Foobar", "oldValue");
@@ -122,6 +135,7 @@ public class GenericDataTest extends TestCase {
     assertEquals(1, data.getUnknownKeys().size());
   }
 
+  @Test
   public void testSetIgnoreCase_class() {
     MyData data = new MyData();
     data.set("FIELDA", "someValue");
@@ -129,6 +143,7 @@ public class GenericDataTest extends TestCase {
     assertEquals(0, data.getUnknownKeys().size());
   }
 
+  @Test
   public void testPutIgnoreCase_class() {
     MyData data = new MyData();
     data.fieldA = "123";
@@ -137,12 +152,14 @@ public class GenericDataTest extends TestCase {
     assertEquals(0, data.getUnknownKeys().size());
   }
 
+  @Test
   public void testGetIgnoreCase_class() {
     MyData data = new MyData();
     data.fieldA = "someValue";
     assertEquals("someValue", data.get("FIELDA"));
   }
 
+  @Test
   public void testRemoveIgnoreCase_class() {
     MyData data = new MyData();
     data.fieldA = "someValue";
@@ -153,6 +170,7 @@ public class GenericDataTest extends TestCase {
     }
   }
 
+  @Test
   public void testPutIgnoreCase_unknownKey() {
     GenericData data = new GenericData(EnumSet.of(Flags.IGNORE_CASE));
     assertEquals(null, data.put("fooBAR", "oldValue"));
@@ -165,6 +183,7 @@ public class GenericDataTest extends TestCase {
     assertEquals(1, data.getUnknownKeys().size());
   }
 
+  @Test
   public void testGetIgnoreCase_unknownKey() {
     GenericData data = new GenericData(EnumSet.of(Flags.IGNORE_CASE));
     data.set("One", 1);
@@ -176,6 +195,7 @@ public class GenericDataTest extends TestCase {
     assertEquals(null, data.get("unknownKey"));
   }
 
+  @Test
   public void testRemoveIgnoreCase_unknownKey() {
     GenericData data = new GenericData(EnumSet.of(Flags.IGNORE_CASE));
     data.set("One", 1);
@@ -187,6 +207,7 @@ public class GenericDataTest extends TestCase {
     assertEquals(null, data.remove("TESTA"));
   }
 
+  @Test
   public void testPutShouldUseSetter() {
     MyData data = new MyData();
     data.put("fieldB", "value1");

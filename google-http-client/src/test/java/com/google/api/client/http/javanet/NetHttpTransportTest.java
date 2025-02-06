@@ -14,6 +14,11 @@
 
 package com.google.api.client.http.javanet;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.testing.http.HttpTesting;
@@ -33,15 +38,17 @@ import java.net.URL;
 import java.security.KeyStore;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link NetHttpTransport}.
  *
  * @author Yaniv Inbar
  */
-public class NetHttpTransportTest extends TestCase {
+@RunWith(JUnit4.class)
+public class NetHttpTransportTest {
 
   private static final String[] METHODS = {
     "GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"
@@ -55,6 +62,7 @@ public class NetHttpTransportTest extends TestCase {
     assertFalse(transport.isMtls());
   }
 
+  @Test
   public void testIsMtlsWithClientCert() throws Exception {
     KeyStore trustStore = KeyStore.getInstance("JKS");
     KeyStore keyStore = KeyStore.getInstance("PKCS12");
@@ -73,6 +81,7 @@ public class NetHttpTransportTest extends TestCase {
     assertTrue(transport.isMtls());
   }
 
+  @Test
   public void testExecute_mock() throws Exception {
     for (String method : METHODS) {
       boolean isPutOrPost = method.equals("PUT") || method.equals("POST");
@@ -97,6 +106,7 @@ public class NetHttpTransportTest extends TestCase {
     }
   }
 
+  @Test
   public void testExecute_methodUnchanged() throws Exception {
     String body = "Arbitrary body";
     byte[] buf = StringUtils.getBytesUtf8(body);
@@ -113,6 +123,7 @@ public class NetHttpTransportTest extends TestCase {
     }
   }
 
+  @Test
   public void testAbruptTerminationIsNoticedWithContentLength() throws Exception {
     String incompleteBody = "" + "Fixed size body test.\r\n" + "Incomplete response.";
     byte[] buf = StringUtils.getBytesUtf8(incompleteBody);
@@ -138,6 +149,7 @@ public class NetHttpTransportTest extends TestCase {
     assertTrue(thrown);
   }
 
+  @Test
   public void testAbruptTerminationIsNoticedWithContentLengthWithReadToBuf() throws Exception {
     String incompleteBody = "" + "Fixed size body test.\r\n" + "Incomplete response.";
     byte[] buf = StringUtils.getBytesUtf8(incompleteBody);

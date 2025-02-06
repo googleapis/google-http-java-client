@@ -24,6 +24,8 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
 
@@ -35,6 +37,7 @@ import org.xmlpull.v1.XmlSerializer;
  *
  * @author Gerald Madlmayr
  */
+@RunWith(JUnit4.class)
 public class GenericXmlListTest {
 
   private static final String MULTI_TYPE_WITH_CLASS_TYPE =

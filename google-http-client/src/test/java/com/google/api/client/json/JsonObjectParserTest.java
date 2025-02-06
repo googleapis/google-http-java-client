@@ -14,6 +14,9 @@
 
 package com.google.api.client.json;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.testing.json.MockJsonFactory;
 import com.google.api.client.testing.json.MockJsonParser;
 import com.google.common.base.Charsets;
@@ -24,8 +27,9 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
-import junit.framework.TestCase;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests for the {@link JsonObjectParser} class.
@@ -33,7 +37,8 @@ import org.junit.Test;
  * @author Matthias Linder (mlinder)
  * @since 1.10
  */
-public class JsonObjectParserTest extends TestCase {
+@RunWith(JUnit4.class)
+public class JsonObjectParserTest {
 
   @Test
   public void testConstructor_null() {

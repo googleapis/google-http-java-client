@@ -14,13 +14,20 @@
 
 package com.google.api.client.xml;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.util.Key;
 import com.google.api.client.xml.atom.Atom;
 import com.google.common.collect.ImmutableMap;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.TreeSet;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.xmlpull.v1.XmlSerializer;
 
 /**
@@ -28,7 +35,8 @@ import org.xmlpull.v1.XmlSerializer;
  *
  * @author Yaniv Inbar
  */
-public class XmlNamespaceDictionaryTest extends TestCase {
+@RunWith(JUnit4.class)
+public class XmlNamespaceDictionaryTest {
 
   private static final String EXPECTED =
       "<?xml version=\"1.0\"?><feed xmlns=\"http://www.w3"
@@ -45,12 +53,7 @@ public class XmlNamespaceDictionaryTest extends TestCase {
           + "=\"http://unknown/\" xmlns:gd=\"http://unknown/gd\"><entry gd:etag=\"abc\"><title>One"
           + "</title></entry><entry gd:etag=\"def\"><title>Two</title></entry></feed>";
 
-  public XmlNamespaceDictionaryTest() {}
-
-  public XmlNamespaceDictionaryTest(String name) {
-    super(name);
-  }
-
+  @Test
   public void testSet() {
     XmlNamespaceDictionary dictionary = new XmlNamespaceDictionary();
     dictionary.set("", "http://www.w3.org/2005/Atom").set("gd", "http://schemas.google.com/g/2005");
@@ -78,6 +81,7 @@ public class XmlNamespaceDictionaryTest extends TestCase {
     assertTrue(dictionary.getAliasToUriMap().isEmpty());
   }
 
+  @Test
   public void testSerialize() throws Exception {
     Feed feed = new Feed();
     feed.entries = new TreeSet<Entry>();
@@ -93,6 +97,7 @@ public class XmlNamespaceDictionaryTest extends TestCase {
     assertEquals(EXPECTED, writer.toString());
   }
 
+  @Test
   public void testSerializeByName() throws Exception {
     Feed feed = new Feed();
     feed.entries = new TreeSet<Entry>();
@@ -108,6 +113,7 @@ public class XmlNamespaceDictionaryTest extends TestCase {
     assertEquals(EXPECTED, writer.toString());
   }
 
+  @Test
   public void testSerialize_emptyMap() throws Exception {
     ImmutableMap<String, String> map = ImmutableMap.of();
     StringWriter writer = new StringWriter();
@@ -119,6 +125,7 @@ public class XmlNamespaceDictionaryTest extends TestCase {
     assertEquals(EXPECTED_EMPTY_MAP, writer.toString());
   }
 
+  @Test
   public void testSerializeByName_emptyMap() throws Exception {
     ImmutableMap<String, String> map = ImmutableMap.of();
     StringWriter writer = new StringWriter();
@@ -130,6 +137,7 @@ public class XmlNamespaceDictionaryTest extends TestCase {
     assertEquals(EXPECTED_EMPTY_MAP, writer.toString());
   }
 
+  @Test
   public void testSerializeByName_emptyMapAtomNs() throws Exception {
     ImmutableMap<String, String> map = ImmutableMap.of();
     StringWriter writer = new StringWriter();
@@ -141,6 +149,7 @@ public class XmlNamespaceDictionaryTest extends TestCase {
     assertEquals(EXPECTED_EMPTY_MAP_ATOM_NS, writer.toString());
   }
 
+  @Test
   public void testSerialize_emptyMapNsUndeclared() throws Exception {
     ImmutableMap<String, String> map = ImmutableMap.of();
     StringWriter writer = new StringWriter();
@@ -151,6 +160,7 @@ public class XmlNamespaceDictionaryTest extends TestCase {
     assertEquals(EXPECTED_EMPTY_MAP_NS_UNDECLARED, writer.toString());
   }
 
+  @Test
   public void testSerialize_errorOnUnknown() throws Exception {
     Entry entry = new Entry("One", "abc");
     StringWriter writer = new StringWriter();
@@ -166,6 +176,7 @@ public class XmlNamespaceDictionaryTest extends TestCase {
     }
   }
 
+  @Test
   public void testSerializeByName_errorOnUnknown() throws Exception {
     Entry entry = new Entry("One", "abc");
     StringWriter writer = new StringWriter();
@@ -181,6 +192,7 @@ public class XmlNamespaceDictionaryTest extends TestCase {
     }
   }
 
+  @Test
   public void testSerialize_unknown() throws Exception {
     Feed feed = new Feed();
     feed.entries = new TreeSet<Entry>();

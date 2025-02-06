@@ -14,15 +14,21 @@
 
 package com.google.api.client.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.json.GenericJson;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link FieldInfo}.
  *
  * @author Yaniv Inbar
  */
-public class FieldInfoTest extends TestCase {
+@RunWith(JUnit4.class)
+public class FieldInfoTest {
 
   public enum E {
     @Value
@@ -34,6 +40,7 @@ public class FieldInfoTest extends TestCase {
     IGNORED_VALUE
   }
 
+  @Test
   public void testOf_enum() throws Exception {
     assertEquals(E.class.getField("VALUE"), FieldInfo.of(E.VALUE).getField());
     assertEquals(E.class.getField("OTHER_VALUE"), FieldInfo.of(E.OTHER_VALUE).getField());
@@ -45,6 +52,7 @@ public class FieldInfoTest extends TestCase {
     }
   }
 
+  @Test
   public void testEnumValue() {
     assertEquals(E.VALUE, FieldInfo.of(E.VALUE).<E>enumValue());
     assertEquals(E.OTHER_VALUE, FieldInfo.of(E.OTHER_VALUE).<E>enumValue());
@@ -66,6 +74,7 @@ public class FieldInfoTest extends TestCase {
     }
   }
 
+  @Test
   public void testSetValueCaseSensitivityPriority() {
     Data data = new Data();
     data.setPasscode("pass1");

@@ -14,19 +14,24 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertFalse;
+
 import com.google.api.client.testing.util.TestableByteArrayOutputStream;
 import com.google.api.client.util.ByteArrayStreamingContent;
 import com.google.api.client.util.StringUtils;
 import java.io.IOException;
-import junit.framework.TestCase;
 import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link GZipEncoding}.
  *
  * @author Yaniv Inbar
  */
-public class GZipEncodingTest extends TestCase {
+@RunWith(JUnit4.class)
+public class GZipEncodingTest {
 
   private static final byte[] EXPECED_ZIPPED =
       new byte[] {
@@ -42,6 +47,7 @@ public class GZipEncodingTest extends TestCase {
         0, 0, 0, 0, 0, 0, 0, 0
       };
 
+  @Test
   public void test() throws IOException {
     // TODO: remove when no longer using Java < 16.
     byte[] expected =

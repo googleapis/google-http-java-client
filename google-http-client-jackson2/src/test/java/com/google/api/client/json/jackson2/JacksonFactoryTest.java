@@ -14,12 +14,17 @@
 
 package com.google.api.client.json.jackson2;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.client.test.json.AbstractJsonFactoryTest;
 import com.google.api.client.util.StringUtils;
 import java.io.IOException;
 import java.util.ArrayList;
+import org.junit.Test;
 
 /**
  * Tests {@link JacksonFactory}.
@@ -45,21 +50,19 @@ public class JacksonFactoryTest extends AbstractJsonFactoryTest {
           + StringUtils.LINE_SEPARATOR
           + "}";
 
-  public JacksonFactoryTest(String name) {
-    super(name);
-  }
-
   @Override
   protected JsonFactory newFactory() {
     return new JacksonFactory();
   }
 
+  @Test
   public final void testToPrettyString_entry() throws Exception {
     Entry entry = new Entry();
     entry.title = "foo";
     assertEquals(JSON_ENTRY_PRETTY, newFactory().toPrettyString(entry));
   }
 
+  @Test
   public final void testToPrettyString_Feed() throws Exception {
     Feed feed = new Feed();
     Entry entryFoo = new Entry();
@@ -72,11 +75,13 @@ public class JacksonFactoryTest extends AbstractJsonFactoryTest {
     assertEquals(JSON_FEED_PRETTY, newFactory().toPrettyString(feed));
   }
 
+  @Test
   public final void testParse_directValue() throws Exception {
     JsonParser parser = newFactory().createJsonParser("123");
     assertEquals(123, parser.parse(Integer.class, true));
   }
 
+  @Test
   public final void testGetByteValue() throws IOException {
     JsonParser parser = newFactory().createJsonParser("123");
 

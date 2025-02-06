@@ -14,6 +14,13 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockHttpUnsuccessfulResponseHandler;
@@ -42,37 +49,38 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
-import junit.framework.TestCase;
-import org.junit.Assert;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link HttpRequest}.
  *
  * @author Yaniv Inbar
  */
-public class HttpRequestTest extends TestCase {
+@RunWith(JUnit4.class)
+public class HttpRequestTest {
 
   private static final ImmutableSet<String> BASIC_METHODS =
       ImmutableSet.of(HttpMethods.GET, HttpMethods.PUT, HttpMethods.POST, HttpMethods.DELETE);
   private static final ImmutableSet<String> OTHER_METHODS =
       ImmutableSet.of(HttpMethods.HEAD, HttpMethods.PATCH);
 
-  public HttpRequestTest(String name) {
-    super(name);
-  }
-
-  @Override
+  @Before
   public void setUp() {
     // suppress logging warnings to the console
     HttpTransport.LOGGER.setLevel(java.util.logging.Level.SEVERE);
   }
 
-  @Override
+  @After
   public void tearDown() {
     // back to the standard logging level for console
     HttpTransport.LOGGER.setLevel(java.util.logging.Level.WARNING);
   }
 
+  @Test
   public void testNotSupportedByDefault() throws Exception {
     MockHttpTransport transport = new MockHttpTransport();
     HttpRequest request =
@@ -203,6 +211,7 @@ public class HttpRequestTest extends TestCase {
         });
   }
 
+  @Test
   public void test301Redirect() throws Exception {
     // Set up RedirectTransport to redirect on the first request and then return success.
     RedirectTransport fakeTransport = new RedirectTransport();
@@ -210,11 +219,12 @@ public class HttpRequestTest extends TestCase {
         fakeTransport.createRequestFactory().buildGetRequest(new GenericUrl("http://gmail.com"));
     HttpResponse resp = request.execute();
 
-    Assert.assertEquals(200, resp.getStatusCode());
-    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
   }
 
   @Deprecated
+  @Test
   public void test301RedirectWithUnsuccessfulResponseHandled() throws Exception {
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(true);
     MockBackOffPolicy backOffPolicy = new MockBackOffPolicy();
@@ -226,18 +236,19 @@ public class HttpRequestTest extends TestCase {
     request.setBackOffPolicy(backOffPolicy);
     HttpResponse resp = request.execute();
 
-    Assert.assertEquals(200, resp.getStatusCode());
-    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
     // Assert that the redirect logic was not invoked because the response handler could handle the
     // request. The request url should be the original http://gmail.com
-    Assert.assertEquals("http://gmail.com", request.getUrl().toString());
+    assertEquals("http://gmail.com", request.getUrl().toString());
     // Assert that the backoff policy was not invoked because the response handler could handle the
     // request.
-    Assert.assertEquals(1, backOffPolicy.resetCalls);
-    Assert.assertEquals(0, backOffPolicy.backOffCalls);
-    Assert.assertTrue(handler.isCalled());
+    assertEquals(1, backOffPolicy.resetCalls);
+    assertEquals(0, backOffPolicy.backOffCalls);
+    assertTrue(handler.isCalled());
   }
 
+  @Test
   public void test301RedirectWithBackOffUnsuccessfulResponseHandled() throws Exception {
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(true);
     // Set up RedirectTransport to redirect on the first request and then return success.
@@ -250,14 +261,14 @@ public class HttpRequestTest extends TestCase {
 
     HttpResponse resp = request.execute();
 
-    Assert.assertEquals(200, resp.getStatusCode());
-    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
     // Assert that the redirect logic was not invoked because the response handler could handle the
     // request. The request url should be the original http://gmail.com
-    Assert.assertEquals("http://gmail.com", request.getUrl().toString());
+    assertEquals("http://gmail.com", request.getUrl().toString());
     // Assert that the backoff was not invoked since the response handler could handle the request
-    Assert.assertEquals(0, backOff.getNumberOfTries());
-    Assert.assertTrue(handler.isCalled());
+    assertEquals(0, backOff.getNumberOfTries());
+    assertTrue(handler.isCalled());
   }
 
   @Deprecated
@@ -273,17 +284,18 @@ public class HttpRequestTest extends TestCase {
     request.setBackOffPolicy(backOffPolicy);
     HttpResponse resp = request.execute();
 
-    Assert.assertEquals(200, resp.getStatusCode());
+    assertEquals(200, resp.getStatusCode());
     // Assert that the redirect logic was invoked because the response handler could not handle the
     // request. The request url should have changed from http://gmail.com to http://google.com
-    Assert.assertEquals(HttpTesting.SIMPLE_URL, request.getUrl().toString());
-    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+    assertEquals(HttpTesting.SIMPLE_URL, request.getUrl().toString());
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
     // Assert that the backoff policy is never invoked (except to reset) because the response
     // handler returned false.
-    Assert.assertEquals(1, backOffPolicy.resetCalls);
-    Assert.assertEquals(0, backOffPolicy.backOffCalls);
+    assertEquals(1, backOffPolicy.resetCalls);
+    assertEquals(0, backOffPolicy.backOffCalls);
   }
 
+  @Test
   public void test301RedirectWithBackOffUnsuccessfulResponseNotHandled() throws Exception {
     // Create an Unsuccessful response handler that always returns false.
     MockHttpUnsuccessfulResponseHandler handler = new MockHttpUnsuccessfulResponseHandler(false);
@@ -297,15 +309,16 @@ public class HttpRequestTest extends TestCase {
 
     HttpResponse resp = request.execute();
 
-    Assert.assertEquals(200, resp.getStatusCode());
+    assertEquals(200, resp.getStatusCode());
     // Assert that the redirect logic was invoked because the response handler could not handle the
     // request. The request url should have changed from http://gmail.com to http://google.com
-    Assert.assertEquals(HttpTesting.SIMPLE_URL, request.getUrl().toString());
-    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+    assertEquals(HttpTesting.SIMPLE_URL, request.getUrl().toString());
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
     // Assert that the backoff was not invoked since it's not required for 3xx errors
-    Assert.assertEquals(0, backOff.getNumberOfTries());
+    assertEquals(0, backOff.getNumberOfTries());
   }
 
+  @Test
   public void test303Redirect() throws Exception {
     // Set up RedirectTransport to redirect on the first request and then return success.
     RedirectTransport fakeTransport = new RedirectTransport();
@@ -320,14 +333,15 @@ public class HttpRequestTest extends TestCase {
     request.setRequestMethod(HttpMethods.POST);
     HttpResponse resp = request.execute();
 
-    Assert.assertEquals(200, resp.getStatusCode());
-    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
     // Assert that the method in the request was changed to a GET due to the 303.
-    Assert.assertEquals(HttpMethods.GET, request.getRequestMethod());
+    assertEquals(HttpMethods.GET, request.getRequestMethod());
     // Assert that the content is null, since GET requests don't support non-zero content-length
-    Assert.assertNull(request.getContent());
+    assertNull(request.getContent());
   }
 
+  @Test
   public void testInfiniteRedirects() throws Exception {
     // Set up RedirectTransport to cause infinite redirections.
     RedirectTransport fakeTransport = new RedirectTransport();
@@ -342,9 +356,10 @@ public class HttpRequestTest extends TestCase {
 
     // Should be called 1 more than the number of retries allowed (because the first request is not
     // counted as a retry).
-    Assert.assertEquals(request.getNumberOfRetries() + 1, fakeTransport.lowLevelExecCalls);
+    assertEquals(request.getNumberOfRetries() + 1, fakeTransport.lowLevelExecCalls);
   }
 
+  @Test
   public void testMissingLocationRedirect() throws Exception {
     // Set up RedirectTransport to set responses with missing location headers.
     RedirectTransport fakeTransport = new RedirectTransport();
@@ -357,7 +372,7 @@ public class HttpRequestTest extends TestCase {
     } catch (HttpResponseException e) {
     }
 
-    Assert.assertEquals(1, fakeTransport.lowLevelExecCalls);
+    assertEquals(1, fakeTransport.lowLevelExecCalls);
   }
 
   private static class FailThenSuccessBackoffTransport extends MockHttpTransport {
@@ -454,6 +469,7 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
+  @Test
   public void testHandleRedirect() throws Exception {
     StatusCodesTransport transport = new StatusCodesTransport();
     HttpRequest req =
@@ -508,6 +524,7 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
+  @Test
   public void testHandleRedirect_relativeLocation() throws IOException {
     subtestHandleRedirect_relativeLocation("http://some.org/a/b", "z", "http://some.org/a/z");
     subtestHandleRedirect_relativeLocation("http://some.org/a/b", "z/", "http://some.org/a/z/");
@@ -527,6 +544,7 @@ public class HttpRequestTest extends TestCase {
   }
 
   @Deprecated
+  @Test
   public void testExecuteErrorWithRetryEnabled() throws Exception {
     int callsBeforeSuccess = 3;
     FailThenSuccessConnectionErrorTransport fakeTransport =
@@ -537,10 +555,11 @@ public class HttpRequestTest extends TestCase {
     req.setNumberOfRetries(callsBeforeSuccess + 1);
     HttpResponse resp = req.execute();
 
-    Assert.assertEquals(200, resp.getStatusCode());
-    Assert.assertEquals(4, fakeTransport.lowLevelExecCalls);
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(4, fakeTransport.lowLevelExecCalls);
   }
 
+  @Test
   public void testExecuteErrorWithIOExceptionHandler() throws Exception {
     int callsBeforeSuccess = 3;
     FailThenSuccessConnectionErrorTransport fakeTransport =
@@ -551,11 +570,12 @@ public class HttpRequestTest extends TestCase {
     req.setNumberOfRetries(callsBeforeSuccess + 1);
     HttpResponse resp = req.execute();
 
-    Assert.assertEquals(200, resp.getStatusCode());
-    Assert.assertEquals(4, fakeTransport.lowLevelExecCalls);
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(4, fakeTransport.lowLevelExecCalls);
   }
 
   @Deprecated
+  @Test
   public void testExecuteErrorWithRetryEnabledBeyondRetryLimit() throws Exception {
     int callsBeforeSuccess = 11;
     FailThenSuccessConnectionErrorTransport fakeTransport =
@@ -570,9 +590,10 @@ public class HttpRequestTest extends TestCase {
     } catch (IOException e) {
       // Expected
     }
-    Assert.assertEquals(callsBeforeSuccess, fakeTransport.lowLevelExecCalls);
+    assertEquals(callsBeforeSuccess, fakeTransport.lowLevelExecCalls);
   }
 
+  @Test
   public void testExecuteErrorWithIOExceptionHandlerBeyondRetryLimit() throws Exception {
     int callsBeforeSuccess = 11;
     FailThenSuccessConnectionErrorTransport fakeTransport =
@@ -587,9 +608,10 @@ public class HttpRequestTest extends TestCase {
     } catch (IOException e) {
       // Expected
     }
-    Assert.assertEquals(callsBeforeSuccess, fakeTransport.lowLevelExecCalls);
+    assertEquals(callsBeforeSuccess, fakeTransport.lowLevelExecCalls);
   }
 
+  @Test
   public void testExecuteErrorWithoutIOExceptionHandler() throws Exception {
     int callsBeforeSuccess = 3;
     FailThenSuccessConnectionErrorTransport fakeTransport =
@@ -604,10 +626,11 @@ public class HttpRequestTest extends TestCase {
     } catch (IOException e) {
       // Expected
     }
-    Assert.assertEquals(1, fakeTransport.lowLevelExecCalls);
+    assertEquals(1, fakeTransport.lowLevelExecCalls);
   }
 
   @Deprecated
+  @Test
   public void testUserAgentWithExecuteErrorAndRetryEnabled() throws Exception {
     int callsBeforeSuccess = 3;
     FailThenSuccessConnectionErrorTransport fakeTransport =
@@ -618,12 +641,13 @@ public class HttpRequestTest extends TestCase {
     req.setNumberOfRetries(callsBeforeSuccess + 1);
     HttpResponse resp = req.execute();
 
-    Assert.assertEquals(1, fakeTransport.userAgentHeader.size());
-    Assert.assertEquals(HttpRequest.USER_AGENT_SUFFIX, fakeTransport.userAgentHeader.get(0));
-    Assert.assertEquals(200, resp.getStatusCode());
-    Assert.assertEquals(4, fakeTransport.lowLevelExecCalls);
+    assertEquals(1, fakeTransport.userAgentHeader.size());
+    assertEquals(HttpRequest.USER_AGENT_SUFFIX, fakeTransport.userAgentHeader.get(0));
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(4, fakeTransport.lowLevelExecCalls);
   }
 
+  @Test
   public void testUserAgentWithExecuteErrorAndIOExceptionHandler() throws Exception {
     int callsBeforeSuccess = 3;
     FailThenSuccessConnectionErrorTransport fakeTransport =
@@ -634,12 +658,13 @@ public class HttpRequestTest extends TestCase {
     req.setNumberOfRetries(callsBeforeSuccess + 1);
     HttpResponse resp = req.execute();
 
-    Assert.assertEquals(1, fakeTransport.userAgentHeader.size());
-    Assert.assertEquals(HttpRequest.USER_AGENT_SUFFIX, fakeTransport.userAgentHeader.get(0));
-    Assert.assertEquals(200, resp.getStatusCode());
-    Assert.assertEquals(4, fakeTransport.lowLevelExecCalls);
+    assertEquals(1, fakeTransport.userAgentHeader.size());
+    assertEquals(HttpRequest.USER_AGENT_SUFFIX, fakeTransport.userAgentHeader.get(0));
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(4, fakeTransport.lowLevelExecCalls);
   }
 
+  @Test
   public void testAbnormalResponseHandlerWithNoBackOff() throws Exception {
     FailThenSuccessBackoffTransport fakeTransport =
         new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED, 1);
@@ -650,12 +675,13 @@ public class HttpRequestTest extends TestCase {
     req.setUnsuccessfulResponseHandler(handler);
     HttpResponse resp = req.execute();
 
-    Assert.assertEquals(200, resp.getStatusCode());
-    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
-    Assert.assertTrue(handler.isCalled());
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
+    assertTrue(handler.isCalled());
   }
 
   @Deprecated
+  @Test
   public void testAbnormalResponseHandlerWithBackOff() throws Exception {
     FailThenSuccessBackoffTransport fakeTransport =
         new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, 1);
@@ -668,13 +694,14 @@ public class HttpRequestTest extends TestCase {
     req.setBackOffPolicy(backOffPolicy);
     HttpResponse resp = req.execute();
 
-    Assert.assertEquals(200, resp.getStatusCode());
-    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
-    Assert.assertEquals(1, backOffPolicy.resetCalls);
-    Assert.assertEquals(0, backOffPolicy.backOffCalls);
-    Assert.assertTrue(handler.isCalled());
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
+    assertEquals(1, backOffPolicy.resetCalls);
+    assertEquals(0, backOffPolicy.backOffCalls);
+    assertTrue(handler.isCalled());
   }
 
+  @Test
   public void testAbnormalResponseHandlerWithBackOffUnsuccessfulResponseHandler() throws Exception {
     FailThenSuccessBackoffTransport fakeTransport =
         new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, 1);
@@ -686,13 +713,14 @@ public class HttpRequestTest extends TestCase {
     setBackOffUnsuccessfulResponseHandler(req, backOff, handler);
     HttpResponse resp = req.execute();
 
-    Assert.assertEquals(200, resp.getStatusCode());
-    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
-    Assert.assertEquals(0, backOff.getNumberOfTries());
-    Assert.assertTrue(handler.isCalled());
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
+    assertEquals(0, backOff.getNumberOfTries());
+    assertTrue(handler.isCalled());
   }
 
   @Deprecated
+  @Test
   public void testBackOffSingleCall() throws Exception {
     FailThenSuccessBackoffTransport fakeTransport =
         new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, 1);
@@ -705,13 +733,14 @@ public class HttpRequestTest extends TestCase {
     req.setBackOffPolicy(backOffPolicy);
     HttpResponse resp = req.execute();
 
-    Assert.assertEquals(200, resp.getStatusCode());
-    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
-    Assert.assertEquals(1, backOffPolicy.resetCalls);
-    Assert.assertEquals(1, backOffPolicy.backOffCalls);
-    Assert.assertTrue(handler.isCalled());
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
+    assertEquals(1, backOffPolicy.resetCalls);
+    assertEquals(1, backOffPolicy.backOffCalls);
+    assertTrue(handler.isCalled());
   }
 
+  @Test
   public void testBackOffUnsuccessfulResponseSingleCall() throws Exception {
     FailThenSuccessBackoffTransport fakeTransport =
         new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_SERVER_ERROR, 1);
@@ -723,13 +752,14 @@ public class HttpRequestTest extends TestCase {
     setBackOffUnsuccessfulResponseHandler(req, backOff, handler);
     HttpResponse resp = req.execute();
 
-    Assert.assertEquals(200, resp.getStatusCode());
-    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
-    Assert.assertEquals(1, backOff.getNumberOfTries());
-    Assert.assertTrue(handler.isCalled());
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
+    assertEquals(1, backOff.getNumberOfTries());
+    assertTrue(handler.isCalled());
   }
 
   @Deprecated
+  @Test
   public void testBackOffMultipleCalls() throws Exception {
     int callsBeforeSuccess = 5;
     FailThenSuccessBackoffTransport fakeTransport =
@@ -744,13 +774,14 @@ public class HttpRequestTest extends TestCase {
     req.setBackOffPolicy(backOffPolicy);
     HttpResponse resp = req.execute();
 
-    Assert.assertEquals(200, resp.getStatusCode());
-    Assert.assertEquals(callsBeforeSuccess + 1, fakeTransport.lowLevelExecCalls);
-    Assert.assertEquals(1, backOffPolicy.resetCalls);
-    Assert.assertEquals(callsBeforeSuccess, backOffPolicy.backOffCalls);
-    Assert.assertTrue(handler.isCalled());
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(callsBeforeSuccess + 1, fakeTransport.lowLevelExecCalls);
+    assertEquals(1, backOffPolicy.resetCalls);
+    assertEquals(callsBeforeSuccess, backOffPolicy.backOffCalls);
+    assertTrue(handler.isCalled());
   }
 
+  @Test
   public void testBackOffUnsucessfulReponseMultipleCalls() throws Exception {
     int callsBeforeSuccess = 5;
     FailThenSuccessBackoffTransport fakeTransport =
@@ -764,13 +795,14 @@ public class HttpRequestTest extends TestCase {
     setBackOffUnsuccessfulResponseHandler(req, backOff, handler);
     HttpResponse resp = req.execute();
 
-    Assert.assertEquals(200, resp.getStatusCode());
-    Assert.assertEquals(callsBeforeSuccess + 1, fakeTransport.lowLevelExecCalls);
-    Assert.assertEquals(callsBeforeSuccess, backOff.getNumberOfTries());
-    Assert.assertTrue(handler.isCalled());
+    assertEquals(200, resp.getStatusCode());
+    assertEquals(callsBeforeSuccess + 1, fakeTransport.lowLevelExecCalls);
+    assertEquals(callsBeforeSuccess, backOff.getNumberOfTries());
+    assertTrue(handler.isCalled());
   }
 
   @Deprecated
+  @Test
   public void testBackOffCallsBeyondRetryLimit() throws Exception {
     int callsBeforeSuccess = 11;
     FailThenSuccessBackoffTransport fakeTransport =
@@ -789,12 +821,13 @@ public class HttpRequestTest extends TestCase {
       fail("expected HttpResponseException");
     } catch (HttpResponseException e) {
     }
-    Assert.assertEquals(callsBeforeSuccess, fakeTransport.lowLevelExecCalls);
-    Assert.assertEquals(1, backOffPolicy.resetCalls);
-    Assert.assertEquals(callsBeforeSuccess - 1, backOffPolicy.backOffCalls);
-    Assert.assertTrue(handler.isCalled());
+    assertEquals(callsBeforeSuccess, fakeTransport.lowLevelExecCalls);
+    assertEquals(1, backOffPolicy.resetCalls);
+    assertEquals(callsBeforeSuccess - 1, backOffPolicy.backOffCalls);
+    assertTrue(handler.isCalled());
   }
 
+  @Test
   public void testBackOffUnsuccessfulReponseCallsBeyondRetryLimit() throws Exception {
     int callsBeforeSuccess = 11;
     FailThenSuccessBackoffTransport fakeTransport =
@@ -812,12 +845,13 @@ public class HttpRequestTest extends TestCase {
       fail("expected HttpResponseException");
     } catch (HttpResponseException e) {
     }
-    Assert.assertEquals(callsBeforeSuccess, fakeTransport.lowLevelExecCalls);
-    Assert.assertEquals(callsBeforeSuccess - 1, backOff.getMaxTries());
-    Assert.assertTrue(handler.isCalled());
+    assertEquals(callsBeforeSuccess, fakeTransport.lowLevelExecCalls);
+    assertEquals(callsBeforeSuccess - 1, backOff.getMaxTries());
+    assertTrue(handler.isCalled());
   }
 
   @Deprecated
+  @Test
   public void testBackOffUnRecognizedStatusCode() throws Exception {
     FailThenSuccessBackoffTransport fakeTransport =
         new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED, 1);
@@ -833,13 +867,14 @@ public class HttpRequestTest extends TestCase {
     } catch (HttpResponseException e) {
     }
 
-    Assert.assertEquals(1, fakeTransport.lowLevelExecCalls);
-    Assert.assertEquals(1, backOffPolicy.resetCalls);
+    assertEquals(1, fakeTransport.lowLevelExecCalls);
+    assertEquals(1, backOffPolicy.resetCalls);
     // The BackOffPolicy should not be called since it does not support 401 status codes.
-    Assert.assertEquals(0, backOffPolicy.backOffCalls);
-    Assert.assertTrue(handler.isCalled());
+    assertEquals(0, backOffPolicy.backOffCalls);
+    assertTrue(handler.isCalled());
   }
 
+  @Test
   public void testBackOffUnsuccessfulReponseUnRecognizedStatusCode() throws Exception {
     FailThenSuccessBackoffTransport fakeTransport =
         new FailThenSuccessBackoffTransport(HttpStatusCodes.STATUS_CODE_UNAUTHORIZED, 1);
@@ -854,13 +889,14 @@ public class HttpRequestTest extends TestCase {
     } catch (HttpResponseException e) {
     }
 
-    Assert.assertEquals(1, fakeTransport.lowLevelExecCalls);
+    assertEquals(1, fakeTransport.lowLevelExecCalls);
     // The back-off should not be called since it does not support 401 status codes.
-    Assert.assertEquals(0, backOff.getNumberOfTries());
-    Assert.assertTrue(handler.isCalled());
+    assertEquals(0, backOff.getNumberOfTries());
+    assertTrue(handler.isCalled());
   }
 
   @Deprecated
+  @Test
   public void testBackOffStop() throws Exception {
     int callsBeforeSuccess = 5;
     FailThenSuccessBackoffTransport fakeTransport =
@@ -879,14 +915,15 @@ public class HttpRequestTest extends TestCase {
     } catch (HttpResponseException e) {
     }
 
-    Assert.assertEquals(1, fakeTransport.lowLevelExecCalls);
-    Assert.assertEquals(1, backOffPolicy.resetCalls);
+    assertEquals(1, fakeTransport.lowLevelExecCalls);
+    assertEquals(1, backOffPolicy.resetCalls);
     // The BackOffPolicy should be called only once and then it should return BackOffPolicy.STOP
     // should stop all back off retries.
-    Assert.assertEquals(1, backOffPolicy.backOffCalls);
-    Assert.assertTrue(handler.isCalled());
+    assertEquals(1, backOffPolicy.backOffCalls);
+    assertTrue(handler.isCalled());
   }
 
+  @Test
   public void testBackOffUnsucessfulResponseStop() throws Exception {
     int callsBeforeSuccess = 5;
     FailThenSuccessBackoffTransport fakeTransport =
@@ -903,10 +940,10 @@ public class HttpRequestTest extends TestCase {
     } catch (HttpResponseException e) {
     }
 
-    Assert.assertEquals(2, fakeTransport.lowLevelExecCalls);
+    assertEquals(2, fakeTransport.lowLevelExecCalls);
     // The back-off should be called only once, since the its max tries is set to 1
-    Assert.assertEquals(1, backOff.getNumberOfTries());
-    Assert.assertTrue(handler.isCalled());
+    assertEquals(1, backOff.getNumberOfTries());
+    assertTrue(handler.isCalled());
   }
 
   public enum E {
@@ -933,6 +970,7 @@ public class HttpRequestTest extends TestCase {
     @Key E otherValue;
   }
 
+  @Test
   public void testExecute_headerSerialization() throws Exception {
     // custom headers
     MyHeaders myHeaders = new MyHeaders();
@@ -973,6 +1011,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals(ImmutableList.of("other"), lowLevelRequest.getHeaderValues("othervalue"));
   }
 
+  @Test
   public void testGZipEncoding() throws Exception {
     class MyTransport extends MockHttpTransport {
 
@@ -1022,6 +1061,7 @@ public class HttpRequestTest extends TestCase {
     request.execute();
   }
 
+  @Test
   public void testContentLoggingLimitWithLoggingEnabledAndDisabled() throws Exception {
 
     class MyTransport extends MockHttpTransport {
@@ -1088,17 +1128,20 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
+  @Test
   public void testVersion() {
     assertNotNull("version constant should not be null", HttpRequest.VERSION);
     Pattern semverPattern = Pattern.compile("\\d+\\.\\d+\\.\\d+(-sp\\.\\d+)?(-SNAPSHOT)?");
     assertTrue(semverPattern.matcher(HttpRequest.VERSION).matches());
   }
 
+  @Test
   public void testUserAgent() {
     assertTrue(HttpRequest.USER_AGENT_SUFFIX.contains("Google-HTTP-Java-Client"));
     assertTrue(HttpRequest.USER_AGENT_SUFFIX.contains("gzip"));
   }
 
+  @Test
   public void testExecute_headers() throws Exception {
     HttpTransport transport = new MockHttpTransport();
     HttpRequest request =
@@ -1108,6 +1151,7 @@ public class HttpRequestTest extends TestCase {
     request.execute();
   }
 
+  @Test
   public void testSuppressUserAgentSuffix() throws Exception {
     class MyTransport extends MockHttpTransport {
       String expectedUserAgent;
@@ -1150,6 +1194,7 @@ public class HttpRequestTest extends TestCase {
     request.execute();
   }
 
+  @Test
   public void testExecuteAsync()
       throws IOException, InterruptedException, ExecutionException, TimeoutException {
     MockExecutor mockExecutor = new MockExecutor();
@@ -1164,6 +1209,7 @@ public class HttpRequestTest extends TestCase {
     assertNotNull(futureResponse.get(10, TimeUnit.MILLISECONDS));
   }
 
+  @Test
   public void testExecute_redirects() throws Exception {
     class MyTransport extends MockHttpTransport {
       int count = 1;
@@ -1194,6 +1240,7 @@ public class HttpRequestTest extends TestCase {
     }
   }
 
+  @Test
   public void testExecute_redirectWithIncorrectContentRetryableSetting() throws Exception {
     // TODO(yanivi): any way we can warn user about this?
     RedirectTransport fakeTransport = new RedirectTransport();
@@ -1214,6 +1261,7 @@ public class HttpRequestTest extends TestCase {
     assertEquals(2, fakeTransport.lowLevelExecCalls);
   }
 
+  @Test
   public void testExecute_curlLogger() throws Exception {
     LogRecordingHandler recorder = new LogRecordingHandler();
     HttpTransport.LOGGER.setLevel(Level.CONFIG);
@@ -1236,6 +1284,7 @@ public class HttpRequestTest extends TestCase {
     assertTrue(found);
   }
 
+  @Test
   public void testExecute_curlLoggerWithContentEncoding() throws Exception {
     LogRecordingHandler recorder = new LogRecordingHandler();
     HttpTransport.LOGGER.setLevel(Level.CONFIG);
@@ -1269,6 +1318,7 @@ public class HttpRequestTest extends TestCase {
     assertTrue(found);
   }
 
+  @Test
   public void testVersion_matchesAcceptablePatterns() throws Exception {
     String acceptableVersionPattern =
         "unknown-version|(?:\\d+\\.\\d+\\.\\d+(?:-.*?)?(?:-SNAPSHOT)?)";

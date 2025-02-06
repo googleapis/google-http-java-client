@@ -14,6 +14,10 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.GenericData;
 import com.google.api.client.util.Key;
@@ -25,20 +29,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link UrlEncodedParser}.
  *
  * @author Yaniv Inbar
  */
-public class UrlEncodedParserTest extends TestCase {
-
-  public UrlEncodedParserTest() {}
-
-  public UrlEncodedParserTest(String name) {
-    super(name);
-  }
+@RunWith(JUnit4.class)
+public class UrlEncodedParserTest {
 
   public static class Simple {
 
@@ -99,6 +100,7 @@ public class UrlEncodedParserTest extends TestCase {
     }
   }
 
+  @Test
   public void testParse_simple() {
     Simple actual = new Simple();
     UrlEncodedParser.parse(
@@ -114,6 +116,7 @@ public class UrlEncodedParserTest extends TestCase {
     assertNull(expected.v);
   }
 
+  @Test
   public void testParse_generic() {
     Generic actual = new Generic();
     UrlEncodedParser.parse("p=4&q=1&a=x&p=3&b=y&c=z&d=v&q=2&p=5&o=object", actual);
@@ -128,6 +131,7 @@ public class UrlEncodedParserTest extends TestCase {
     assertEquals(ArrayList.class, actual.get("d").getClass());
   }
 
+  @Test
   public void testParse_map() {
     ArrayMap<String, Object> actual = new ArrayMap<String, Object>();
     UrlEncodedParser.parse("p=4&q=1&a=x&p=3&b=y&c=z&d=v&q=2&p=5&noval1&noval2=", actual);
@@ -144,6 +148,7 @@ public class UrlEncodedParserTest extends TestCase {
     assertEquals(ArrayList.class, actual.get("a").getClass());
   }
 
+  @Test
   public void testParse_encoding() {
     ArrayMap<String, Object> actual = new ArrayMap<String, Object>();
     UrlEncodedParser.parse("q=%20", actual);
@@ -152,6 +157,7 @@ public class UrlEncodedParserTest extends TestCase {
     assertEquals(expected, actual);
   }
 
+  @Test
   public void testParse_null() {
     ArrayMap<String, Object> actual = new ArrayMap<String, Object>();
     UrlEncodedParser.parse((String) null, actual);
@@ -177,6 +183,7 @@ public class UrlEncodedParserTest extends TestCase {
 
   static final String ENUM_VALUE = "otherValue=other&value=VALUE";
 
+  @Test
   public void testParse_enum() throws IOException {
     EnumValue actual = new EnumValue();
     UrlEncodedParser.parse(ENUM_VALUE, actual);

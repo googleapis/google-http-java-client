@@ -14,6 +14,12 @@
 
 package com.google.api.client.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.testing.json.webtoken.TestCertificates;
 import com.google.api.client.testing.util.SecurityTestUtils;
 import java.io.ByteArrayInputStream;
@@ -25,15 +31,18 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import javax.net.ssl.X509TrustManager;
-import junit.framework.TestCase;
 import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link SecurityUtils}.
  *
  * @author Yaniv Inbar
  */
-public class SecurityUtilsTest extends TestCase {
+@RunWith(JUnit4.class)
+public class SecurityUtilsTest {
 
   private static final byte[] ENCODED = {
     48, -126, 2, 117, 2, 1, 0, 48, 13, 6, 9, 42, -122, 72, -122, -9, 13, 1, 1, 1, 5, 0, 4, -126, 2,
@@ -113,6 +122,7 @@ public class SecurityUtilsTest extends TestCase {
           + "22RFKkRCWD/bMD0wITAJBgUrDgMCGgUABBTypWwWM5JDub1RzIXkRwfD7oQ9XwQUbgGuCBGKiU1C"
           + "YAqwa61lyj/OG90CAgQA";
 
+  @Test
   public void testLoadPrivateKeyFromKeyStore() throws Exception {
     byte[] secretP12 = Base64.decodeBase64(SECRET_P12_BASE64);
     ByteArrayInputStream stream = new ByteArrayInputStream(secretP12);
@@ -125,6 +135,7 @@ public class SecurityUtilsTest extends TestCase {
     Assert.assertArrayEquals(ENCODED, actualEncoded);
   }
 
+  @Test
   public void testSign() throws Exception {
     byte[] actualSigned =
         SecurityUtils.sign(
@@ -134,6 +145,7 @@ public class SecurityUtilsTest extends TestCase {
     Assert.assertArrayEquals(SIGNED, actualSigned);
   }
 
+  @Test
   public void testVerify() throws Exception {
     Signature signatureAlgorithm = SecurityUtils.getSha256WithRsaSignatureAlgorithm();
     RSAPublicKey publicKey = SecurityTestUtils.newRsaPublicKey();
@@ -155,14 +167,17 @@ public class SecurityUtilsTest extends TestCase {
         signatureAlgorithm, trustManager, certChain, signature, data.getBytes("UTF-8"));
   }
 
+  @Test
   public void testVerifyX509() throws Exception {
     assertNotNull(verifyX509(TestCertificates.CA_CERT));
   }
 
+  @Test
   public void testVerifyX509WrongCa() throws Exception {
     assertNull(verifyX509(TestCertificates.BOGUS_CA_CERT));
   }
 
+  @Test
   public void testCreateMtlsKeyStoreNoCert() throws Exception {
     final InputStream certMissing =
         getClass()
@@ -180,6 +195,7 @@ public class SecurityUtilsTest extends TestCase {
     assertTrue("should have caught an IllegalArgumentException", thrown);
   }
 
+  @Test
   public void testCreateMtlsKeyStoreNoPrivateKey() throws Exception {
     final InputStream privateKeyMissing =
         getClass().getClassLoader().getResourceAsStream("com/google/api/client/util/cert.pem");
@@ -195,6 +211,7 @@ public class SecurityUtilsTest extends TestCase {
     assertTrue("should have caught an IllegalArgumentException", thrown);
   }
 
+  @Test
   public void testCreateMtlsKeyStoreSuccess() throws Exception {
     InputStream certAndKey =
         getClass()

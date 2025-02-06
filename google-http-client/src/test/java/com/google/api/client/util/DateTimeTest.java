@@ -14,30 +14,40 @@
 
 package com.google.api.client.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.util.DateTime.SecondsAndNanos;
 import java.util.Date;
 import java.util.TimeZone;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link DateTime}.
  *
  * @author Yaniv Inbar
  */
-public class DateTimeTest extends TestCase {
+@RunWith(JUnit4.class)
+public class DateTimeTest {
 
   private TimeZone originalTimeZone;
 
-  @Override
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     originalTimeZone = TimeZone.getDefault();
   }
 
-  @Override
-  protected void tearDown() throws Exception {
+  @Before
+  public void tearDown() throws Exception {
     TimeZone.setDefault(originalTimeZone);
   }
 
+  @Test
   public void testToStringRfc3339() {
     TimeZone.setDefault(TimeZone.getTimeZone("GMT-4"));
 
@@ -69,6 +79,7 @@ public class DateTimeTest extends TestCase {
         new DateTime(new Date(1352232644000L)).toStringRfc3339());
   }
 
+  @Test
   public void testToStringRfc3339_dateOnly() {
     for (String timeZoneString : new String[] {"GMT-4", "UTC", "UTC-7"}) {
       TimeZone.setDefault(TimeZone.getTimeZone(timeZoneString));
@@ -78,6 +89,7 @@ public class DateTimeTest extends TestCase {
     }
   }
 
+  @Test
   public void testEquals() throws InterruptedException {
     assertFalse(
         "Check equals with two different tz specified.",
@@ -102,6 +114,7 @@ public class DateTimeTest extends TestCase {
     assertEquals(dateTime1, dateTime2);
   }
 
+  @Test
   public void testParseRfc3339() {
     expectExceptionForParseRfc3339("");
     expectExceptionForParseRfc3339("abc");
@@ -182,6 +195,7 @@ public class DateTimeTest extends TestCase {
    * 2018-03-01T10:11:12.1000Z           |   1519899072  |   100000000
    * </pre>
    */
+  @Test
   public void testParseRfc3339ToSecondsAndNanos() {
     assertParsedRfc3339(
         "2018-03-01T10:11:12.999Z", SecondsAndNanos.ofSecondsAndNanos(1519899072L, 999000000));
@@ -225,10 +239,12 @@ public class DateTimeTest extends TestCase {
         "2018-03-01T10:11:12.1000Z", SecondsAndNanos.ofSecondsAndNanos(1519899072L, 100000000));
   }
 
+  @Test
   public void testEpoch() {
     assertParsedRfc3339("1970-01-01T00:00:00.000Z", SecondsAndNanos.ofSecondsAndNanos(0, 0));
   }
 
+  @Test
   public void testOneSecondBeforeEpoch() {
     assertParsedRfc3339("1969-12-31T23:59:59.000Z", SecondsAndNanos.ofSecondsAndNanos(-1, 0));
   }
@@ -240,6 +256,7 @@ public class DateTimeTest extends TestCase {
     assertEquals("Nanos for " + input + " do not match", expected.getNanos(), actual.getNanos());
   }
 
+  @Test
   public void testParseAndFormatRfc3339() {
     // .12 becomes .120
     String input = "1996-12-19T16:39:57.12-08:00";

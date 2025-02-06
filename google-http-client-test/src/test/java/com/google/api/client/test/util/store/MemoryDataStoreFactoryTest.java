@@ -16,12 +16,15 @@ package com.google.api.client.test.util.store;
 
 import com.google.api.client.util.store.DataStoreFactory;
 import com.google.api.client.util.store.MemoryDataStoreFactory;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link MemoryDataStoreFactory}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class MemoryDataStoreFactoryTest extends AbstractDataStoreFactoryTest {
 
   @Override

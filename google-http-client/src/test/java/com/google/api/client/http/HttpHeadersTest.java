@@ -14,6 +14,10 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.google.api.client.http.HttpRequestTest.E;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
 import com.google.api.client.testing.http.MockLowLevelHttpResponse;
@@ -25,21 +29,19 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link HttpHeaders}.
  *
  * @author Yaniv Inbar
  */
-public class HttpHeadersTest extends TestCase {
+@RunWith(JUnit4.class)
+public class HttpHeadersTest {
 
-  public HttpHeadersTest() {}
-
-  public HttpHeadersTest(String name) {
-    super(name);
-  }
-
+  @Test
   public void testBasicAuthentication() {
     HttpHeaders headers = new HttpHeaders();
     headers.setBasicAuthentication(
@@ -66,6 +68,7 @@ public class HttpHeadersTest extends TestCase {
     @Key E otherValue;
   }
 
+  @Test
   public void testSerializeHeaders() throws Exception {
     // custom headers
     MyHeaders myHeaders = new MyHeaders();
@@ -131,6 +134,7 @@ public class HttpHeadersTest extends TestCase {
   }
 
   @SuppressWarnings("unchecked")
+  @Test
   public void testFromHttpHeaders() {
     HttpHeaders rawHeaders = new HttpHeaders();
     rawHeaders.setContentLength(Long.MAX_VALUE);
@@ -169,6 +173,7 @@ public class HttpHeadersTest extends TestCase {
   private static final String AUTHORIZATION_HEADERS =
       "Accept-Encoding: gzip\r\nAuthorization: Foo\r\nAuthorization: Bar\r\n";
 
+  @Test
   public void testAuthorizationHeader() throws IOException {
     // serialization
     HttpHeaders headers = new HttpHeaders();
@@ -187,6 +192,7 @@ public class HttpHeadersTest extends TestCase {
     assertTrue(authHeader.toString(), ImmutableList.of("Foo", "Bar").equals(authHeader));
   }
 
+  @Test
   public void testHeaderStringValues() {
     // custom headers
     MyHeaders myHeaders = new MyHeaders();
@@ -236,6 +242,7 @@ public class HttpHeadersTest extends TestCase {
     String slug;
   }
 
+  @Test
   public void testParseAge() throws Exception {
     MockLowLevelHttpResponse httpResponse =
         new MockLowLevelHttpResponse()
@@ -247,6 +254,7 @@ public class HttpHeadersTest extends TestCase {
     assertEquals(3456L, httpHeaders.getAge().longValue());
   }
 
+  @Test
   public void testFromHttpResponse_normalFlow() throws Exception {
     MockLowLevelHttpResponse httpResponse =
         new MockLowLevelHttpResponse()
@@ -266,6 +274,7 @@ public class HttpHeadersTest extends TestCase {
     assertEquals("123456789", slugHeaders.slug);
   }
 
+  @Test
   public void testFromHttpResponse_doubleConvert() throws Exception {
     MockLowLevelHttpResponse httpResponse =
         new MockLowLevelHttpResponse()
@@ -285,6 +294,7 @@ public class HttpHeadersTest extends TestCase {
     assertEquals("123456789", slugHeaders2.slug);
   }
 
+  @Test
   public void testFromHttpResponse_clearOldValue() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.put("Foo", "oldValue");
@@ -301,7 +311,8 @@ public class HttpHeadersTest extends TestCase {
     @Key String s;
   }
 
-  public void testFromHttpResponse_void(String value) throws Exception {
+  @Test
+  public void testFromHttpResponse_void() throws Exception {
     MockLowLevelHttpResponse httpResponse =
         new MockLowLevelHttpResponse()
             .setHeaderNames(Arrays.asList("v", "v", "s"))

@@ -14,6 +14,8 @@
 
 package com.google.api.client.test.json;
 
+import static org.junit.Assert.assertEquals;
+
 import com.google.api.client.json.JsonGenerator;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -21,9 +23,12 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-public abstract class AbstractJsonGeneratorTest extends TestCase {
+@RunWith(JUnit4.class)
+public abstract class AbstractJsonGeneratorTest {
 
   protected abstract JsonGenerator newGenerator(Writer writer) throws IOException;
 
@@ -34,6 +39,7 @@ public abstract class AbstractJsonGeneratorTest extends TestCase {
     }
   }
 
+  @Test
   public void testSerialize_simpleMap() throws Exception {
     StringWriter writer = new StringWriter();
     JsonGenerator generator = newGenerator(writer);
@@ -46,6 +52,7 @@ public abstract class AbstractJsonGeneratorTest extends TestCase {
     assertEquals("{\"a\":\"b\"}", writer.toString());
   }
 
+  @Test
   public void testSerialize_iterableMap() throws Exception {
     StringWriter writer = new StringWriter();
     JsonGenerator generator = newGenerator(writer);

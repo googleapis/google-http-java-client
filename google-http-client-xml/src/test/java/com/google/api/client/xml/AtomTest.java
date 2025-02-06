@@ -32,6 +32,8 @@ import java.net.URL;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.xmlpull.v1.XmlPullParser;
 
 /**
@@ -40,6 +42,7 @@ import org.xmlpull.v1.XmlPullParser;
  * @author Yaniv Inbar
  * @author Gerald Madlmayr
  */
+@RunWith(JUnit4.class)
 public class AtomTest {
 
   private static final String SAMPLE_FEED =

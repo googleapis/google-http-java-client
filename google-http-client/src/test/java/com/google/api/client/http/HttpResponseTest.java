@@ -14,6 +14,13 @@
 
 package com.google.api.client.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.json.Json;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
@@ -37,21 +44,19 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link HttpResponse}.
  *
  * @author Yaniv Inbar
  */
-public class HttpResponseTest extends TestCase {
+@RunWith(JUnit4.class)
+public class HttpResponseTest {
 
-  public HttpResponseTest() {}
-
-  public HttpResponseTest(String name) {
-    super(name);
-  }
-
+  @Test
   public void testParseAsString_none() throws Exception {
     HttpTransport transport = new MockHttpTransport();
     HttpRequest request =
@@ -72,6 +77,7 @@ public class HttpResponseTest extends TestCase {
   private static final String INVALID_CONTENT_TYPE = "!!!invalid!!!";
   private static final String JSON_CONTENT_TYPE = "application/json";
 
+  @Test
   public void testParseAsString_utf8() throws Exception {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -95,6 +101,7 @@ public class HttpResponseTest extends TestCase {
     assertEquals("UTF-8", response.getContentCharset().name());
   }
 
+  @Test
   public void testParseAsString_noContentType() throws Exception {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -117,6 +124,7 @@ public class HttpResponseTest extends TestCase {
     assertEquals("ISO-8859-1", response.getContentCharset().name());
   }
 
+  @Test
   public void testParseAsString_validContentType() throws Exception {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -143,6 +151,7 @@ public class HttpResponseTest extends TestCase {
     assertEquals("ISO-8859-1", response.getContentCharset().name());
   }
 
+  @Test
   public void testParseAsString_validContentTypeWithParams() throws Exception {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -169,6 +178,7 @@ public class HttpResponseTest extends TestCase {
     assertEquals("UTF-8", response.getContentCharset().name());
   }
 
+  @Test
   public void testParseAsString_invalidContentType() throws Exception {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -195,6 +205,7 @@ public class HttpResponseTest extends TestCase {
     assertEquals("ISO-8859-1", response.getContentCharset().name());
   }
 
+  @Test
   public void testParseAsString_validContentTypeWithoutCharSetWithParams() throws Exception {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -221,6 +232,7 @@ public class HttpResponseTest extends TestCase {
     assertEquals("UTF-8", response.getContentCharset().name());
   }
 
+  @Test
   public void testParseAsString_jsonContentType() throws IOException {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -246,10 +258,12 @@ public class HttpResponseTest extends TestCase {
     assertEquals("UTF-8", response.getContentCharset().name());
   }
 
+  @Test
   public void testStatusCode_negative_dontThrowException() throws Exception {
     subtestStatusCode_negative(false);
   }
 
+  @Test
   public void testStatusCode_negative_throwException() throws Exception {
     subtestStatusCode_negative(true);
   }
@@ -289,6 +303,7 @@ public class HttpResponseTest extends TestCase {
 
   static final String ETAG_VALUE = "\"abc\"";
 
+  @Test
   public void testHeaderParsing() throws Exception {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -325,6 +340,7 @@ public class HttpResponseTest extends TestCase {
     assertEquals(ETAG_VALUE, response.getHeaders().getETag());
   }
 
+  @Test
   public void testParseAs_noParser() throws Exception {
     try {
       new MockHttpTransport()
@@ -338,6 +354,7 @@ public class HttpResponseTest extends TestCase {
     }
   }
 
+  @Test
   public void testParseAs_classNoContent() throws Exception {
     final MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
 
@@ -375,6 +392,7 @@ public class HttpResponseTest extends TestCase {
     }
   }
 
+  @Test
   public void testParseAs_typeNoContent() throws Exception {
     final MockLowLevelHttpResponse result = new MockLowLevelHttpResponse();
 
@@ -412,6 +430,7 @@ public class HttpResponseTest extends TestCase {
     }
   }
 
+  @Test
   public void testDownload() throws Exception {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -436,6 +455,7 @@ public class HttpResponseTest extends TestCase {
     assertEquals(SAMPLE, outputStream.toString("UTF-8"));
   }
 
+  @Test
   public void testDisconnectWithContent() throws Exception {
     final MockLowLevelHttpResponse lowLevelHttpResponse = new MockLowLevelHttpResponse();
 
@@ -466,6 +486,7 @@ public class HttpResponseTest extends TestCase {
     assertTrue(content.isClosed());
   }
 
+  @Test
   public void testDisconnectWithNoContent() throws Exception {
     final MockLowLevelHttpResponse lowLevelHttpResponse = new MockLowLevelHttpResponse();
 
@@ -490,6 +511,7 @@ public class HttpResponseTest extends TestCase {
     assertTrue(lowLevelHttpResponse.isDisconnected());
   }
 
+  @Test
   public void testContentLoggingLimitWithLoggingEnabledAndDisabled() throws Exception {
     subtestContentLoggingLimit("", 2, false);
     subtestContentLoggingLimit("A", 2, false);
@@ -556,6 +578,7 @@ public class HttpResponseTest extends TestCase {
     assertEquals(Arrays.asList(expectedMessages), recorder.messages());
   }
 
+  @Test
   public void testGetContent_gzipNoContent() throws IOException {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -580,6 +603,7 @@ public class HttpResponseTest extends TestCase {
     assertNull(noContent);
   }
 
+  @Test
   public void testGetContent_gzipEncoding_ReturnRawStream() throws IOException {
     HttpTransport transport =
         new MockHttpTransport() {
@@ -609,15 +633,18 @@ public class HttpResponseTest extends TestCase {
         request.execute().getContent() instanceof BufferedInputStream);
   }
 
+  @Test
   public void testGetContent_gzipEncoding_finishReading() throws IOException {
     do_testGetContent_gzipEncoding_finishReading("gzip");
   }
 
+  @Test
   public void testGetContent_gzipEncoding_finishReadingWithUppercaseContentEncoding()
       throws IOException {
     do_testGetContent_gzipEncoding_finishReading("GZIP");
   }
 
+  @Test
   public void
       testGetContent_gzipEncoding_finishReadingWithDifferentDefaultLocaleAndUppercaseContentEncoding()
           throws IOException {
@@ -677,6 +704,7 @@ public class HttpResponseTest extends TestCase {
     }
   }
 
+  @Test
   public void testGetContent_otherEncodingWithgzipInItsName_GzipIsNotUsed() throws IOException {
     final MockLowLevelHttpResponse mockResponse = new MockLowLevelHttpResponse();
     mockResponse.setContent("abcd");
@@ -703,6 +731,7 @@ public class HttpResponseTest extends TestCase {
     assertEquals("abcd", response.parseAsString());
   }
 
+  @Test
   public void testGetContent_bufferedContent() throws IOException {
     HttpTransport transport =
         new MockHttpTransport() {

@@ -14,27 +14,35 @@
 
 package com.google.api.client.test.util.store;
 
+import static java.nio.file.Files.createTempDirectory;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.google.api.client.util.store.DataStore;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * Tests {@link FileDataStoreFactory}.
  *
  * @author Yaniv Inbar
  */
+@RunWith(JUnit4.class)
 public class FileDataStoreFactoryTest extends AbstractDataStoreFactoryTest {
 
   @Override
   protected FileDataStoreFactory newDataStoreFactory() throws IOException {
-    File dataDir = Files.createTempDir();
+    File dataDir = createTempDirectory("temp").toFile();
     dataDir.deleteOnExit();
     return new FileDataStoreFactory(dataDir);
   }
 
+  @Test
   public void testSave() throws IOException {
     FileDataStoreFactory factory = newDataStoreFactory();
     DataStore<String> store = factory.getDataStore("foo");

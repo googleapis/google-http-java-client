@@ -14,13 +14,15 @@
 
 package com.google.api.client.util.store;
 
+import static com.google.api.client.util.Preconditions.checkArgument;
+
 import com.google.api.client.util.Maps;
-import com.google.api.client.util.Preconditions;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -41,11 +43,19 @@ public abstract class AbstractDataStoreFactory implements DataStoreFactory {
    * Pattern to control possible values for the {@code id} parameter of {@link
    * #getDataStore(String)}.
    */
-  private static final Pattern ID_PATTERN = Pattern.compile("\\w{1,30}");
+  private static final Pattern ID_PATTERN;
+
+  static {
+    try {
+      ID_PATTERN = Pattern.compile("\\w{1,30}");
+    } catch (Throwable t) {
+      Logger.getLogger(AbstractDataStoreFactory.class.getName()).severe(t.getMessage());
+      throw t;
+    }
+  }
 
   public final <V extends Serializable> DataStore<V> getDataStore(String id) throws IOException {
-    Preconditions.checkArgument(
-        ID_PATTERN.matcher(id).matches(), "%s does not match pattern %s", id, ID_PATTERN);
+    checkArgument(ID_PATTERN.matcher(id).matches(), "%s does not match pattern %s", id, ID_PATTERN);
     lock.lock();
     try {
       @SuppressWarnings("unchecked")

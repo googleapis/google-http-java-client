@@ -14,6 +14,10 @@
 
 package com.google.api.client.json.gson;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import com.google.api.client.json.GenericJson;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonObjectParser;
@@ -25,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import org.junit.Test;
 
 /**
  * Tests {@link GsonFactory}.
@@ -58,21 +63,19 @@ public class GsonFactoryTest extends AbstractJsonFactoryTest {
           + GSON_LINE_SEPARATOR
           + "}";
 
-  public GsonFactoryTest(String name) {
-    super(name);
-  }
-
   @Override
   protected JsonFactory newFactory() {
     return new GsonFactory();
   }
 
+  @Test
   public final void testToPrettyString_entry() throws Exception {
     Entry entry = new Entry();
     entry.title = "foo";
     assertEquals(JSON_ENTRY_PRETTY, newFactory().toPrettyString(entry));
   }
 
+  @Test
   public final void testToPrettyString_Feed() throws Exception {
     Feed feed = new Feed();
     Entry entryFoo = new Entry();
@@ -85,11 +88,13 @@ public class GsonFactoryTest extends AbstractJsonFactoryTest {
     assertEquals(JSON_FEED_PRETTY, newFactory().toPrettyString(feed));
   }
 
+  @Test
   public final void testParse_directValue() throws IOException {
     JsonParser parser = newFactory().createJsonParser("123");
     assertEquals(123, parser.parse(Integer.class, true));
   }
 
+  @Test
   public final void testGetByteValue() throws IOException {
     JsonParser parser = newFactory().createJsonParser("123");
 
@@ -101,6 +106,7 @@ public class GsonFactoryTest extends AbstractJsonFactoryTest {
     }
   }
 
+  @Test
   public final void testReaderLeniency_lenient() throws IOException {
     JsonObjectParser parser =
         new JsonObjectParser(GsonFactory.builder().setReadLeniency(true).build());
@@ -113,6 +119,7 @@ public class GsonFactoryTest extends AbstractJsonFactoryTest {
     assertEquals("foo", json.get("title"));
   }
 
+  @Test
   public final void testReaderLeniency_not_lenient_by_default() throws IOException {
     JsonObjectParser parser = new JsonObjectParser(GsonFactory.getDefaultInstance());
 
