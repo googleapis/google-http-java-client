@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.46.1](https://github.com/googleapis/google-http-java-client/compare/v1.46.0...v1.46.1) (2025-02-07)
+
+
+### Bug Fixes
+
+* Remove unnecessary nexus plugin activation ([#2071](https://github.com/googleapis/google-http-java-client/issues/2071)) ([e3a3523](https://github.com/googleapis/google-http-java-client/commit/e3a3523eebc169ec87353ed94c12419e4dfa8b28))
+
+
+### Dependencies
+
+* Revert dependency io.grpc:grpc-context back to v1.69.0 ([5790ac4](https://github.com/googleapis/google-http-java-client/commit/5790ac4d27ebf2aa75155a4dcc24e7f74ca7b588))
+
 ## [1.46.0](https://github.com/googleapis/google-http-java-client/compare/v1.45.3...v1.46.0) (2025-02-06)
 
 
