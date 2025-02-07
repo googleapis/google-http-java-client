@@ -29,7 +29,8 @@
       "matchPackagePatterns": [
         "^com.google.guava:"
       ],
-      "versioning": "docker"
+      "versioning": "docker",
+      "enabled": false
     },
     {
       "matchPackagePatterns": [
@@ -82,6 +83,14 @@
         "^com.fasterxml.jackson.core"
       ],
       "groupName": "jackson dependencies"
+    },
+    {
+      "semanticCommitType": "deps",
+      "groupName": "gRPC dependencies",
+      "matchPackageNames": [
+        "/^io.grpc/"
+      ],
+      "enabled": false
     }
   ],
   "semanticCommits": "enabled",
