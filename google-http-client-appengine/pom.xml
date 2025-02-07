@@ -12,6 +12,22 @@
   <name>Google App Engine extensions to the Google HTTP Client Library for Java.</name>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <!--App Engine uses Java 7 and above-->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>animal-sniffer-maven-plugin</artifactId>
+          <configuration>
+            <signature>
+              <groupId>org.codehaus.mojo.signature</groupId>
+              <artifactId>java17</artifactId>
+              <version>1.0</version>
+            </signature>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
@@ -26,18 +42,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
-      </plugin>
-      <!--App Engine uses Java 7 and above-->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <configuration>
-          <signature>
-            <groupId>org.codehaus.mojo.signature</groupId>
-            <artifactId>java17</artifactId>
-            <version>1.0</version>
-          </signature>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
