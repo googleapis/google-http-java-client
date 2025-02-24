@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.46.2](https://github.com/googleapis/google-http-java-client/compare/v1.46.1...v1.46.2) (2025-02-24)
+
+
+### Dependencies
+
+* Update grpc-context-io to 1.70.0 ([#2078](https://github.com/googleapis/google-http-java-client/issues/2078)) ([3a82a5f](https://github.com/googleapis/google-http-java-client/commit/3a82a5f7d01860782dc5724cc4089ca94f71509d))
+
 ## [1.46.1](https://github.com/googleapis/google-http-java-client/compare/v1.46.0...v1.46.1) (2025-02-07)
 
 
