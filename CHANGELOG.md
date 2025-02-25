@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.46.3](https://github.com/googleapis/google-http-java-client/compare/v1.46.2...v1.46.3) (2025-02-25)
+
+
+### Dependencies
+
+* Update native-image-shared-config to 1.14.4 ([1ab8c28](https://github.com/googleapis/google-http-java-client/commit/1ab8c28d3b629c58523581c15f86fb7054364dcb))
+
 ## [1.46.2](https://github.com/googleapis/google-http-java-client/compare/v1.46.1...v1.46.2) (2025-02-24)
 
 
