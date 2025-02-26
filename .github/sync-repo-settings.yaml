@@ -98,6 +98,20 @@ branchProtectionRules:
       - dependencies (11)
       - clirr
       - cla/google
+  - pattern: bump-minor-v-for-LTS8
+    isAdminEnforced: true
+    requiredApprovingReviewCount: 1
+    requiresCodeOwnerReviews: true
+    requiresStrictStatusChecks: false
+    requiredStatusCheckContexts:
+      - units (7)
+      - units (8)
+      - units (11)
+      - windows
+      - dependencies (8)
+      - dependencies (11)
+      - clirr
+      - cla/google
 permissionRules:
   - team: yoshi-admins
     permission: admin
