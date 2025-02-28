@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.47.0](https://github.com/googleapis/google-http-java-client/compare/v1.46.3...v1.47.0) (2025-02-28)
+
+
+### Features
+
+* Next release from main branch is 1.47.0 ([#2087](https://github.com/googleapis/google-http-java-client/issues/2087)) ([f89cc4c](https://github.com/googleapis/google-http-java-client/commit/f89cc4c485c0acf0f22f5efe9706c404f997961d))
+
 ## [1.46.3](https://github.com/googleapis/google-http-java-client/compare/v1.46.2...v1.46.3) (2025-02-25)
 
 
