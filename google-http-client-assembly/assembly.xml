@@ -88,48 +88,48 @@
     </file>
     <!-- dependencies.html -->
     <file>
-      <source>../google-http-client/target/site/dependencies.html</source>
+      <source>../google-http-client/target/reports/dependencies.html</source>
       <destName>google-http-client-dependencies.html</destName>
       <outputDirectory>google-http-java-client/dependencies</outputDirectory>
     </file>
     <file>
-      <source>../google-http-client-android/target/site/dependencies.html</source>
+      <source>../google-http-client-android/target/reports/dependencies.html</source>
       <destName>google-http-client-android-dependencies.html</destName>
       <outputDirectory>google-http-java-client/dependencies</outputDirectory>
     </file>
     <file>
-      <source>../google-http-client-apache-v2/target/site/dependencies.html</source>
+      <source>../google-http-client-apache-v2/target/reports/dependencies.html</source>
       <destName>google-http-client-apache-v2-dependencies.html</destName>
       <outputDirectory>google-http-java-client/dependencies</outputDirectory>
     </file>
     <file>
-      <source>../google-http-client-gson/target/site/dependencies.html</source>
+      <source>../google-http-client-gson/target/reports/dependencies.html</source>
       <destName>google-http-client-gson-dependencies.html</destName>
       <outputDirectory>google-http-java-client/dependencies</outputDirectory>
     </file>
     <file>
-      <source>../google-http-client-jackson2/target/site/dependencies.html</source>
+      <source>../google-http-client-jackson2/target/reports/dependencies.html</source>
       <destName>google-http-client-jackson2-dependencies.html</destName>
       <outputDirectory>google-http-java-client/dependencies</outputDirectory>
     </file>
     <file>
-      <source>../google-http-client-protobuf/target/site/dependencies.html</source>
+      <source>../google-http-client-protobuf/target/reports/dependencies.html</source>
       <destName>google-http-client-protobuf-dependencies.html</destName>
       <outputDirectory>google-http-java-client/dependencies</outputDirectory>
     </file>
     <file>
-      <source>../google-http-client-xml/target/site/dependencies.html</source>
+      <source>../google-http-client-xml/target/reports/dependencies.html</source>
       <destName>google-http-client-xml-dependencies.html</destName>
       <outputDirectory>google-http-java-client/dependencies</outputDirectory>
     </file>
   </files>
   <fileSets>
     <fileSet>
-      <directory>target/site/css</directory>
+      <directory>target/reports/css</directory>
       <outputDirectory>google-http-java-client/dependencies/css</outputDirectory>
     </fileSet>
     <fileSet>
-      <directory>target/site/images</directory>
+      <directory>target/reports/images</directory>
       <outputDirectory>google-http-java-client/dependencies/images</outputDirectory>
     </fileSet>
     <fileSet>
