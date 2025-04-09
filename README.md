@@ -17,9 +17,12 @@ content. The JSON and XML libraries are also fully pluggable, and they include s
 
 The library supports the following Java environments:
 
-- Java 7 or higher
-  - The google-http-client-jackson2 and google-http-client-appengine modules require Java 8 or
-    higher due to their dependencies.
+- Java 7 or higher. The following modules require Java 8 or
+    higher due to their dependencies:
+  - google-http-client (Java 7 is supported until version [TBD])
+  - google-http-client-apache-v5 (Java 7 is supported until version [TBD])
+  - google-http-client-jackson2 (Java 7 is supported until version [1.40.0](https://github.com/googleapis/google-http-java-client/releases/tag/v1.40.0) via [Jackson](https://github.com/FasterXML/jackson/wiki/Jackson-Release-2.13#compatibility-jdk-requirements))
+  - google-http-client-appengine (Java 7 [not supported](https://cloud.google.com/appengine/docs/standard/deprecations/shut-down))
 - Android 4.4 (Kit Kat)
 - GoogleAppEngine Google App Engine
 
