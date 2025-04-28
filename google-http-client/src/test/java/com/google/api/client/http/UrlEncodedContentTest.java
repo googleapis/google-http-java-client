@@ -62,7 +62,7 @@ public class UrlEncodedContentTest {
     subtestWriteTo(
         "multi=a&multi=b&multi=c", ArrayMap.of("multi", new String[] {"a", "b", "c"}), true);
     subtestWriteTo("username=un&password=password123;%7B%7D", params, true);
-    subtestWriteTo("additionkey=add+tion", ArrayMap.of("additionkey", "add+tion"), true);
+    subtestWriteTo("additionkey=add%2Btion", ArrayMap.of("additionkey", "add+tion"), true);
   }
 
   private void subtestWriteTo(String expected, Object data, boolean useEscapeUriPathEncoding)
