@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.47.0](https://github.com/googleapis/google-http-java-client/compare/v1.46.3...v1.47.0) (2025-04-28)
+
+
+### Features
+
+* Next release from main branch is 1.47.0 ([#2087](https://github.com/googleapis/google-http-java-client/issues/2087)) ([f89cc4c](https://github.com/googleapis/google-http-java-client/commit/f89cc4c485c0acf0f22f5efe9706c404f997961d))
+
+
+### Bug Fixes
+
+* Encode + sign in url with %2B ([#2094](https://github.com/googleapis/google-http-java-client/issues/2094)) ([1f8aca7](https://github.com/googleapis/google-http-java-client/commit/1f8aca768250f46490e3d3e47903693d3a8e30b8))
+
+
+### Dependencies
+
+* Update github/codeql-action action to v3.28.16 ([#2057](https://github.com/googleapis/google-http-java-client/issues/2057)) ([4fc3e3a](https://github.com/googleapis/google-http-java-client/commit/4fc3e3a70cd9d0f1ebe5c498920844d3fc020316))
+
 ## [1.46.3](https://github.com/googleapis/google-http-java-client/compare/v1.46.2...v1.46.3) (2025-02-25)
 
 
