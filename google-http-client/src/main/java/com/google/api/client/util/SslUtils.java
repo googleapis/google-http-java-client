@@ -157,9 +157,11 @@ public final class SslUtils {
         new TrustManager[] {
           new X509TrustManager() {
 
+            @SuppressWarnings("TrustAllX509TrustManager")
             public void checkClientTrusted(X509Certificate[] chain, String authType)
                 throws CertificateException {}
 
+            @SuppressWarnings("TrustAllX509TrustManager")
             public void checkServerTrusted(X509Certificate[] chain, String authType)
                 throws CertificateException {}
 
