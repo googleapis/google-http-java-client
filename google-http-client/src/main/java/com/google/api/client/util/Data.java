@@ -91,6 +91,9 @@ public class Data {
   /** The single instance of the magic null object for a {@link DateTime}. */
   public static final DateTime NULL_DATE_TIME = new DateTime(0);
 
+  /** The single instance of the magic null object for a {@link Object}. */
+//  public static final Object NULL_OBJECT = new Object();
+
   /** Cache of the magic null object for the given Java class. */
   private static final ConcurrentHashMap<Class<?>, Object> NULL_CACHE =
       new ConcurrentHashMap<Class<?>, Object>();
@@ -109,6 +112,7 @@ public class Data {
     NULL_CACHE.put(BigInteger.class, NULL_BIG_INTEGER);
     NULL_CACHE.put(BigDecimal.class, NULL_BIG_DECIMAL);
     NULL_CACHE.put(DateTime.class, NULL_DATE_TIME);
+//    NULL_CACHE.put(Object.class, NULL_OBJECT);
   }
 
   /**

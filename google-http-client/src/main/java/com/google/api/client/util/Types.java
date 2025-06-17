@@ -17,6 +17,7 @@ package com.google.api.client.util;
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.GenericDeclaration;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -110,10 +111,14 @@ public class Types {
     // setting the constructor to be accessible, or possibly provide a factory method of a special
     // name
     try {
-      return clazz.newInstance();
+      return clazz.getDeclaredConstructor().newInstance();
     } catch (IllegalAccessException e) {
       throw handleExceptionForNewInstance(e, clazz);
+    } catch (NoSuchMethodException e) {
+      throw handleExceptionForNewInstance(e, clazz);
     } catch (InstantiationException e) {
+      throw handleExceptionForNewInstance(e, clazz);
+    } catch (InvocationTargetException e) {
       throw handleExceptionForNewInstance(e, clazz);
     }
   }

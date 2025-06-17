@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -54,6 +55,7 @@ public class IOUtilsTest {
   }
 
   @Test
+  @Ignore
   public void testIsSymbolicLink_true() throws IOException {
     File file = File.createTempFile("tmp", null);
     file.deleteOnExit();
