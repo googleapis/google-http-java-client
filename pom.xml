@@ -74,6 +74,7 @@
 
     <!-- A deployable artifact must be last or deploys are skipped -->
     <module>google-http-client-bom</module>
+    <module>repro</module>
   </modules>
 
   <pluginRepositories>
