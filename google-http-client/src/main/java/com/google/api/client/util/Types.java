@@ -109,7 +109,7 @@ public class Types {
     // This is a workaround for https://github.com/oracle/graal/issues/11429. Remove this line once
 	// the GraalVM team has provided a solution or workaround for this.
     if (clazz.getName().equals("java.lang.Object")) {
-		return new Object();
+		return (T) new Object();
 	}
 
     // TODO(yanivi): investigate "sneaky" options for allocating the class that GSON uses, like
