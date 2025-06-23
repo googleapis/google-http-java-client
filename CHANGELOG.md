@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.47.1](https://github.com/googleapis/google-http-java-client/compare/v1.47.0...v1.47.1) (2025-06-23)
+
+
+### Bug Fixes
+
+* Add special handling for `Object` in `Types.newInstance()` ([#2102](https://github.com/googleapis/google-http-java-client/issues/2102)) ([a855eca](https://github.com/googleapis/google-http-java-client/commit/a855eca50201d99aee25f4d68c240d06140fe7c6))
+
 ## [1.47.0](https://github.com/googleapis/google-http-java-client/compare/v1.46.3...v1.47.0) (2025-04-28)
 
 
