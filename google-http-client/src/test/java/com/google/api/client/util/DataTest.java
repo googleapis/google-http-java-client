@@ -59,7 +59,18 @@ import org.junit.runners.JUnit4;
 public class DataTest {
 
   @Test
+  public void testRepro() throws InstantiationException, IllegalAccessException {
+    System.out.println("Here, Object.class.getName() = " + Object.class.getName());
+    String nullOfObject = Object.class.newInstance().getClass().getName();
+    System.out.println("The result of nullOf(Object.class).getClass().getName() = " + nullOfObject);
+    assertEquals("java.lang.Object", nullOfObject);
+  }
+
+  @Test
   public void testNullOf() {
+    System.out.println("Here, Object.class.getName() = " + Object.class.getName());
+    String nullOfObject = Data.nullOf(Object.class).getClass().getName();
+    System.out.println("The result of nullOf(Object.class).getClass().getName() = " + nullOfObject);
     assertEquals("java.lang.Object", Data.nullOf(Object.class).getClass().getName());
     assertEquals("java.lang.String", Data.nullOf(String.class).getClass().getName());
     assertEquals("java.lang.Integer", Data.nullOf(Integer.class).getClass().getName());
