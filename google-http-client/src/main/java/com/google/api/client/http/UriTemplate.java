@@ -159,7 +159,7 @@ public class UriTemplate {
       String encodedValue;
       if (reservedExpansion) {
         // Reserved expansion allows percent-encoded triplets and characters in the reserved set.
-        encodedValue = CharEscapers.escapeUriPathWithoutReserved(value);
+        encodedValue = CharEscapers.escapeUriPathWithoutReservedAndPercentEncoded(value);
       } else {
         encodedValue = CharEscapers.escapeUriConformant(value);
       }
