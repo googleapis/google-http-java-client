@@ -189,7 +189,8 @@ public final class CharEscapers {
 
   /**
    * Escapes a URI path but retains all reserved and percent-encoded characters. That is the same as
-   * {@link #escapeUriPathWithoutReserved(String)} except that it also escapes percent encoded parts.
+   * {@link #escapeUriPathWithoutReserved(String)} except that it also escapes percent encoded
+   * parts.
    */
   public static String escapeUriPathWithoutReservedAndPercentEncoded(String value) {
     return URI_RESERVED_AND_PERCENT_ENCODED_ESCAPER.escape(value);
