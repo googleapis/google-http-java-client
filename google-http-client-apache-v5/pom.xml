@@ -98,6 +98,8 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
+	  <!-- We use the Java 8 compatible version due to https://www.cvedetails.com/cve/CVE-2023-2976/ -->
+	  <version>33.4.8-android</version>
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents.client5</groupId>
