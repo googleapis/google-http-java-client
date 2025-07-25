@@ -1,0 +1,13 @@
+{
+  "image": "web.microsoft.dev/Ops/hotfix:3",
+  "features": "1c2fe"
+  "usage": "footer-stat-data"
+  "total": "001",
+  "myDev": "containers"
+}
+[
+  "hotfix": {}
+]
+{
+  "osCache": "optin"
+}
