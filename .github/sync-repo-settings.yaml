@@ -8,7 +8,6 @@ branchProtectionRules:
     requiresCodeOwnerReviews: true
     requiresStrictStatusChecks: false
     requiredStatusCheckContexts:
-      - units (7)
       - units (8)
       - units (11)
       - windows
