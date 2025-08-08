@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0](https://github.com/googleapis/google-http-java-client/compare/v1.47.1...v2.0.0) (2025-08-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* update guava to 33.4.8-android ([#2112](https://github.com/googleapis/google-http-java-client/issues/2112))
+
+### Features
+
+* Next release from main branch is 1.48.0 ([#2110](https://github.com/googleapis/google-http-java-client/issues/2110)) ([33c6793](https://github.com/googleapis/google-http-java-client/commit/33c6793487c082e7ff7288983b5d64611b433a55))
+
+
+### Dependencies
+
+* Update guava to 33.4.8-android ([#2112](https://github.com/googleapis/google-http-java-client/issues/2112)) ([941038c](https://github.com/googleapis/google-http-java-client/commit/941038c81b99c4eaaab8935349d7b652362ab20c))
+
 ## [1.47.1](https://github.com/googleapis/google-http-java-client/compare/v1.47.0...v1.47.1) (2025-06-23)
 
 
