@@ -380,4 +380,57 @@ public class UriTemplateTest {
         unReservedSet,
         UriTemplate.expand("{+var}", requestMap, false));
   }
+
+  @Test
+  // These tests are from the uri-template test suite
+  // https://github.com/uri-templates/uritemplate-test/blob/master/extended-tests.json
+  public void testExpandTemplates_reservedExpansion_alreadyEncodedInput() {
+    Map<String, Object> variables = Maps.newLinkedHashMap();
+    variables.put("id", "admin%2F");
+    assertEquals("admin%252F", UriTemplate.expand("{id}", variables, false));
+    assertEquals("admin%2F", UriTemplate.expand("{+id}", variables, false));
+    assertEquals("#admin%2F", UriTemplate.expand("{#id}", variables, false));
+  }
+
+  @Test
+  // These tests are from the uri-template test suite
+  // https://github.com/uri-templates/uritemplate-test/blob/master/extended-tests.json
+  public void testExpandTemplates_reservedExpansion_notEncodedInput() {
+    Map<String, Object> variables = Maps.newLinkedHashMap();
+    variables.put("not_pct", "%foo");
+    assertEquals("%25foo", UriTemplate.expand("{not_pct}", variables, false));
+    assertEquals("%25foo", UriTemplate.expand("{+not_pct}", variables, false));
+    assertEquals("#%25foo", UriTemplate.expand("{#not_pct}", variables, false));
+  }
+
+  @Test
+  // These tests are from the uri-template test suite
+  // https://github.com/uri-templates/uritemplate-test/blob/master/extended-tests.json
+  public void testExpandTemplates_reservedExpansion_listExpansionWithMixedEncodedInput() {
+    Map<String, Object> variables = Maps.newLinkedHashMap();
+    variables.put("list", Arrays.asList("red%25", "%2Fgreen", "blue "));
+    assertEquals("red%2525,%252Fgreen,blue%20", UriTemplate.expand("{list}", variables, false));
+    assertEquals("red%25,%2Fgreen,blue%20", UriTemplate.expand("{+list}", variables, false));
+    assertEquals("#red%25,%2Fgreen,blue%20", UriTemplate.expand("{#list}", variables, false));
+  }
+
+  @Test
+  // These tests are from the uri-template test suite
+  // https://github.com/uri-templates/uritemplate-test/blob/master/extended-tests.json with an
+  // additional map entry
+  public void testExpandTemplates_reservedExpansion_mapWithMixedEncodedInput() {
+    Map<String, Object> variables = Maps.newLinkedHashMap();
+    Map<String, String> keys = Maps.newLinkedHashMap();
+    keys.put("key1", "val1%2F");
+    keys.put("key2", "val2%2F");
+    keys.put("key3", "val ");
+    variables.put("keys", keys);
+    assertEquals(
+        "key1,val1%252F,key2,val2%252F,key3,val%20",
+        UriTemplate.expand("{keys}", variables, false));
+    assertEquals(
+        "key1,val1%2F,key2,val2%2F,key3,val%20", UriTemplate.expand("{+keys}", variables, false));
+    assertEquals(
+        "#key1,val1%2F,key2,val2%2F,key3,val%20", UriTemplate.expand("{#keys}", variables, false));
+  }
 }
