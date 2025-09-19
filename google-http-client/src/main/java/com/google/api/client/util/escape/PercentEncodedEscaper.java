@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * <p>This escaper applies the provided {@link Escaper} to all parts of the input string except for
  * valid percent-encoded sequences (e.g., <code>%20</code>), which are left unchanged.
  */
-public class PercentEncodedEscaper extends Escaper {
+final class PercentEncodedEscaper extends Escaper {
 
   /** Pattern to match valid percent-encoded sequences (e.g., %20). */
   static final Pattern PCT_ENCODE_PATTERN = Pattern.compile("%[0-9A-Fa-f]{2}");
