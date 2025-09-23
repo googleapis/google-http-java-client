@@ -29,8 +29,8 @@ import java.util.Map;
 /**
  * Expands URI Templates.
  *
- * <p>This Class supports Level 1 templates and all Level 4 composite templates as described in: <a
- * href="http://tools.ietf.org/html/rfc6570">RFC 6570</a>.
+ * <p>This class supports URI Template Level 1, partial support for Levels 2 and 3, and Level 4
+ * composite templates as described in: <a href="http://tools.ietf.org/html/rfc6570">RFC 6570</a>.
  *
  * <p>Specifically, for the variables: var := "value" list := ["red", "green", "blue"] keys :=
  * [("semi", ";"),("dot", "."),("comma", ",")]
@@ -159,7 +159,7 @@ public class UriTemplate {
       String encodedValue;
       if (reservedExpansion) {
         // Reserved expansion allows percent-encoded triplets and characters in the reserved set.
-        encodedValue = CharEscapers.escapeUriPathWithoutReserved(value);
+        encodedValue = CharEscapers.escapeUriPathWithoutReservedAndPercentEncoded(value);
       } else {
         encodedValue = CharEscapers.escapeUriConformant(value);
       }

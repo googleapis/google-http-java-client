@@ -44,6 +44,9 @@ public final class CharEscapers {
   private static final Escaper URI_QUERY_STRING_ESCAPER =
       new PercentEscaper(PercentEscaper.SAFEQUERYSTRINGCHARS_URLENCODER);
 
+  private static final Escaper URI_RESERVED_AND_PERCENT_ENCODED_ESCAPER =
+      new PercentEncodedEscaper(URI_RESERVED_ESCAPER);
+
   /**
    * Escapes the string value so it can be safely included in application/x-www-form-urlencoded
    * data. This is not appropriate for generic URI escaping. In particular it encodes the space
@@ -182,6 +185,15 @@ public final class CharEscapers {
    */
   public static String escapeUriPathWithoutReserved(String value) {
     return URI_RESERVED_ESCAPER.escape(value);
+  }
+
+  /**
+   * Escapes a URI path but retains all reserved and percent-encoded characters. That is the same as
+   * {@link #escapeUriPathWithoutReserved(String)} except that it also escapes percent encoded
+   * parts.
+   */
+  public static String escapeUriPathWithoutReservedAndPercentEncoded(String value) {
+    return URI_RESERVED_AND_PERCENT_ENCODED_ESCAPER.escape(value);
   }
 
   /**
