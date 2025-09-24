@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/googleapis/google-http-java-client/compare/v2.0.0...v2.0.1) (2025-09-24)
+
+
+### Bug Fixes
+
+* UriTemplate expansion reserved ("+") and fragment("#") should not encode already percent encoded parts ([#2108](https://github.com/googleapis/google-http-java-client/issues/2108)) ([30766a8](https://github.com/googleapis/google-http-java-client/commit/30766a8a74df49c37e80ec41f1021d4ad69a8fda))
+
 ## [2.0.0](https://github.com/googleapis/google-http-java-client/compare/v1.47.1...v2.0.0) (2025-08-08)
 
 
