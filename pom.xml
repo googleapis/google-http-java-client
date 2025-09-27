@@ -559,7 +559,7 @@
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.apache-httpclient-4.version>4.5.14</project.apache-httpclient-4.version>
     <project.apache-httpcore-4.version>4.4.16</project.apache-httpcore-4.version>
-    <project.apache-httpclient-5.version>5.3.1</project.apache-httpclient-5.version>
+    <project.apache-httpclient-5.version>5.4.4</project.apache-httpclient-5.version>
     <project.apache-httpcore-5.version>5.2.5</project.apache-httpcore-5.version>
     <project.opencensus.version>0.31.1</project.opencensus.version>
     <project.root-directory>..</project.root-directory>
