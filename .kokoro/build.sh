@@ -82,7 +82,9 @@ graalvm)
     export PATH=$JAVA_HOME/bin:$PATH
     java -version
     echo "Running native image tests..."
-    cd "${scriptDir}/.."    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative,native-tests,native-deps test -pl '!google-http-client-appengine'
+    cd "${scriptDir}/.."
+    mvn -B ${INTEGRATION_TEST_ARGS} -ntp -Pnative,native-tests,native-deps test -pl '!google-http-client-appengine'
+    
     RETURN_CODE=$?
     ;;
 samples)
