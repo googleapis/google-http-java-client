@@ -1,18 +1,18 @@
 # Format:
 # module:released-version:current-version
 
-google-http-client:2.0.1:2.0.2-SNAPSHOT
-google-http-client-bom:2.0.1:2.0.2-SNAPSHOT
-google-http-client-parent:2.0.1:2.0.2-SNAPSHOT
-google-http-client-android:2.0.1:2.0.2-SNAPSHOT
-google-http-client-android-test:2.0.1:2.0.2-SNAPSHOT
-google-http-client-apache-v2:2.0.1:2.0.2-SNAPSHOT
-google-http-client-apache-v5:2.0.1:2.0.2-SNAPSHOT
-google-http-client-appengine:2.0.1:2.0.2-SNAPSHOT
-google-http-client-assembly:2.0.1:2.0.2-SNAPSHOT
-google-http-client-findbugs:2.0.1:2.0.2-SNAPSHOT
-google-http-client-gson:2.0.1:2.0.2-SNAPSHOT
-google-http-client-jackson2:2.0.1:2.0.2-SNAPSHOT
-google-http-client-protobuf:2.0.1:2.0.2-SNAPSHOT
-google-http-client-test:2.0.1:2.0.2-SNAPSHOT
-google-http-client-xml:2.0.1:2.0.2-SNAPSHOT
+google-http-client:2.0.2:2.0.2
+google-http-client-bom:2.0.2:2.0.2
+google-http-client-parent:2.0.2:2.0.2
+google-http-client-android:2.0.2:2.0.2
+google-http-client-android-test:2.0.2:2.0.2
+google-http-client-apache-v2:2.0.2:2.0.2
+google-http-client-apache-v5:2.0.2:2.0.2
+google-http-client-appengine:2.0.2:2.0.2
+google-http-client-assembly:2.0.2:2.0.2
+google-http-client-findbugs:2.0.2:2.0.2
+google-http-client-gson:2.0.2:2.0.2
+google-http-client-jackson2:2.0.2:2.0.2
+google-http-client-protobuf:2.0.2:2.0.2
+google-http-client-test:2.0.2:2.0.2
+google-http-client-xml:2.0.2:2.0.2
