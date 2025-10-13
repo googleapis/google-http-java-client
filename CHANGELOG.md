@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2](https://github.com/googleapis/google-http-java-client/compare/v2.0.1...v2.0.2) (2025-10-13)
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:native-image-shared-config to v1.17.0 ([9efc208](https://github.com/googleapis/google-http-java-client/commit/9efc20820de4d48cf6b4375d26793094aef6696d))
+
 ## [2.0.1](https://github.com/googleapis/google-http-java-client/compare/v2.0.0...v2.0.1) (2025-09-24)
 
 
