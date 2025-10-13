@@ -106,12 +106,6 @@ public class Types {
    * an array or an interface or be abstract. If an enclosing class, it must be static.
    */
   public static <T> T newInstance(Class<T> clazz) {
-    // This is a workaround for https://github.com/oracle/graal/issues/11429. Remove this line once
-    // the GraalVM team has provided a solution or workaround for this.
-    if (clazz.getName().equals("java.lang.Object")) {
-      return (T) new Object();
-    }
-
     // TODO(yanivi): investigate "sneaky" options for allocating the class that GSON uses, like
     // setting the constructor to be accessible, or possibly provide a factory method of a special
     // name
