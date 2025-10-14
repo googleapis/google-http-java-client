@@ -555,7 +555,7 @@
     <project.jackson-core2.version>2.18.2</project.jackson-core2.version>
     <project.protobuf-java.version>3.21.12</project.protobuf-java.version>
 	<!-- We use the Java 8 compatible version due to https://www.cvedetails.com/cve/CVE-2023-2976/ -->
-    <project.guava.version>33.4.8-android</project.guava.version>
+    <project.guava.version>33.5.0-android</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.apache-httpclient-4.version>4.5.14</project.apache-httpclient-4.version>
     <project.apache-httpcore-4.version>4.4.16</project.apache-httpcore-4.version>
