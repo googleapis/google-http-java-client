@@ -26,11 +26,9 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
-import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.ContentType;
@@ -38,7 +36,6 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.io.entity.BasicHttpEntity;
 import org.apache.hc.core5.http.protocol.HttpContext;
-import org.apache.hc.core5.util.Timeout;
 import org.junit.Test;
 
 public class Apache5HttpRequestTest {
@@ -130,27 +127,5 @@ public class Apache5HttpRequestTest {
     assertEquals(0, closedResponseCounter.get());
     response.getContent().close();
     assertEquals(1, closedResponseCounter.get());
-  }
-
-  @Test
-  public void testSetTimeout() throws Exception {
-    HttpUriRequestBase base = new HttpPost("http://www.google.com");
-    Apache5HttpRequest request =
-        new Apache5HttpRequest(
-            new MockHttpClient() {
-              @Override
-              public ClassicHttpResponse executeOpen(
-                  HttpHost target, ClassicHttpRequest request, HttpContext context) {
-                return new MockClassicHttpResponse();
-              }
-            },
-            base);
-    request.setTimeout(100, 200);
-    request.execute();
-
-    RequestConfig config = base.getConfig();
-    assertEquals(Timeout.of(100, TimeUnit.MILLISECONDS), config.getConnectTimeout());
-    assertEquals(Timeout.of(200, TimeUnit.MILLISECONDS), config.getResponseTimeout());
-    assertEquals(Timeout.of(100, TimeUnit.MILLISECONDS), config.getConnectionRequestTimeout());
   }
 }

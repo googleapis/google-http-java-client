@@ -28,14 +28,21 @@ import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.ByteArrayStreamingContent;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.hc.client5.http.ConnectTimeoutException;
 import org.apache.hc.client5.http.HttpHostConnectException;
 import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.ConnectionRequestTimeoutException;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.EntityDetails;
 import org.apache.hc.core5.http.Header;
@@ -205,6 +212,69 @@ public class Apache5HttpTransportTest {
       // expected
     } catch (IOException e) {
       fail("unexpected IOException: " + e.getClass().getName() + ": " + e.getMessage());
+    }
+  }
+
+  @Test(timeout = 5000)
+  public void testConnectionRequestTimeoutFromDefaultRequestConfig() throws Exception {
+    final CountDownLatch latch = new CountDownLatch(1);
+    final HttpRequestHandler handler =
+        new HttpRequestHandler() {
+          @Override
+          public void handle(
+              ClassicHttpRequest request, ClassicHttpResponse response, HttpContext context)
+              throws HttpException, IOException {
+            try {
+              latch.await(); // Wait for the signal to proceed
+            } catch (InterruptedException e) {
+              Thread.currentThread().interrupt();
+            }
+            response.setCode(HttpStatus.SC_OK);
+          }
+        };
+
+    try (FakeServer server = new FakeServer(handler)) {
+      PoolingHttpClientConnectionManager connectionManager =
+          new PoolingHttpClientConnectionManager();
+      connectionManager.setMaxTotal(1); // Only one connection in the pool
+
+      RequestConfig requestConfig =
+          RequestConfig.custom().setConnectionRequestTimeout(1, TimeUnit.SECONDS).build();
+
+      HttpClient httpClient =
+          Apache5HttpTransport.newDefaultHttpClientBuilder()
+              .setConnectionManager(connectionManager)
+              .setDefaultRequestConfig(requestConfig)
+              .build();
+
+      HttpTransport transport = new Apache5HttpTransport(httpClient, requestConfig, false);
+      final GenericUrl url = new GenericUrl("http://localhost:" + server.getPort());
+
+      ExecutorService executor = Executors.newFixedThreadPool(2);
+
+      // First request takes the only connection
+      executor.submit(
+          () -> {
+            try {
+              transport.createRequestFactory().buildGetRequest(url).execute();
+            } catch (IOException e) {
+              // This request might fail if the test finishes before it completes, which is fine.
+            }
+          });
+
+      // Give the first request time to acquire the connection
+      Thread.sleep(100);
+
+      // Second request should time out waiting for a connection
+      try {
+        transport.createRequestFactory().buildGetRequest(url).execute();
+        fail("Should have thrown ConnectionRequestTimeoutException");
+      } catch (ConnectionRequestTimeoutException e) {
+        // Expected
+      } finally {
+        latch.countDown(); // Allow the first request to complete
+        executor.shutdownNow();
+      }
     }
   }
 
