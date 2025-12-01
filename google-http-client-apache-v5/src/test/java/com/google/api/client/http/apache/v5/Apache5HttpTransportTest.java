@@ -217,69 +217,6 @@ public class Apache5HttpTransportTest {
   }
 
   @Test(timeout = 5000)
-  public void testConnectionRequestTimeout() throws Exception {
-    final CountDownLatch latch = new CountDownLatch(1);
-    final HttpRequestHandler handler =
-        new HttpRequestHandler() {
-          @Override
-          public void handle(
-              ClassicHttpRequest request, ClassicHttpResponse response, HttpContext context)
-              throws HttpException, IOException {
-            try {
-              latch.await(); // Wait for the signal to proceed
-            } catch (InterruptedException e) {
-              Thread.currentThread().interrupt();
-            }
-            response.setCode(HttpStatus.SC_OK);
-          }
-        };
-
-    try (FakeServer server = new FakeServer(handler)) {
-      PoolingHttpClientConnectionManager connectionManager =
-          new PoolingHttpClientConnectionManager();
-      connectionManager.setMaxTotal(1);
-
-      RequestConfig requestConfig =
-          RequestConfig.custom().setConnectionRequestTimeout(1, TimeUnit.SECONDS).build();
-
-      HttpClient httpClient =
-          HttpClientBuilder.create()
-              .setConnectionManager(connectionManager)
-              .setDefaultRequestConfig(requestConfig)
-              .build();
-
-      HttpTransport transport = new Apache5HttpTransport(httpClient, requestConfig, false);
-      final GenericUrl url = new GenericUrl("http://localhost:" + server.getPort());
-
-      ExecutorService executor = Executors.newFixedThreadPool(2);
-
-      // First request takes the only connection
-      executor.submit(
-          () -> {
-            try {
-              transport.createRequestFactory().buildGetRequest(url).execute();
-            } catch (IOException e) {
-              // This request might fail if the test finishes before it completes, which is fine.
-            }
-          });
-
-      // Give the first request time to acquire the connection
-      Thread.sleep(100);
-
-      // Second request should time out waiting for a connection
-      try {
-        transport.createRequestFactory().buildGetRequest(url).execute();
-        fail("Should have thrown ConnectTimeoutException");
-      } catch (ConnectTimeoutException e) {
-        // Expected
-      } finally {
-        latch.countDown(); // Allow the first request to complete
-        executor.shutdownNow();
-      }
-    }
-  }
-
-  @Test(timeout = 5000)
   public void testConnectionRequestTimeoutFromDefaultRequestConfig() throws Exception {
     final CountDownLatch latch = new CountDownLatch(1);
     final HttpRequestHandler handler =
@@ -332,7 +269,7 @@ public class Apache5HttpTransportTest {
       // Second request should time out waiting for a connection
       try {
         transport.createRequestFactory().buildGetRequest(url).execute();
-        fail("Should have thrown ConnectTimeoutException");
+        fail("Should have thrown ConnectionRequestTimeoutException");
       } catch (ConnectionRequestTimeoutException e) {
         // Expected
       } finally {
