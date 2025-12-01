@@ -39,26 +39,8 @@ public final class Apache5HttpRequest extends LowLevelHttpRequest {
   Apache5HttpRequest(HttpClient httpClient, HttpUriRequestBase request) {
     this.httpClient = httpClient;
     this.request = request;
-    this.requestConfig = prepareRequestConfig(null);
-  }
-
-  Apache5HttpRequest(
-      HttpClient httpClient, HttpUriRequestBase request, RequestConfig defaultRequestConfig) {
-    this.httpClient = httpClient;
-    this.request = request;
-    this.requestConfig = prepareRequestConfig(defaultRequestConfig);
-  }
-
-  private RequestConfig.Builder prepareRequestConfig(RequestConfig defaultRequestConfig) {
-    RequestConfig.Builder config;
-    if (defaultRequestConfig != null) {
-      config = RequestConfig.copy(defaultRequestConfig);
-    } else {
-      config = RequestConfig.custom();
-    }
     // disable redirects as google-http-client handles redirects
-    config.setRedirectsEnabled(false);
-    return config;
+    this.requestConfig = RequestConfig.custom().setRedirectsEnabled(false);
   }
 
   @Override

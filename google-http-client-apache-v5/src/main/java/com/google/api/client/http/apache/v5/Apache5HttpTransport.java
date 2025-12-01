@@ -33,7 +33,6 @@ import org.apache.hc.client5.http.classic.methods.HttpPut;
 import org.apache.hc.client5.http.classic.methods.HttpTrace;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.ConnectionConfig;
-import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
@@ -61,9 +60,6 @@ public final class Apache5HttpTransport extends HttpTransport {
   /** Apache HTTP client. */
   private final HttpClient httpClient;
 
-  /** The default request config for the client. */
-  private final RequestConfig defaultRequestConfig;
-
   /** If the HTTP client uses mTLS channel. */
   private final boolean isMtls;
 
@@ -85,7 +81,8 @@ public final class Apache5HttpTransport extends HttpTransport {
    * @param httpClient Apache HTTP client to use
    */
   public Apache5HttpTransport(HttpClient httpClient) {
-    this(httpClient, false);
+    this.httpClient = httpClient;
+    this.isMtls = false;
   }
 
   /**
@@ -106,31 +103,6 @@ public final class Apache5HttpTransport extends HttpTransport {
   @Beta
   public Apache5HttpTransport(HttpClient httpClient, boolean isMtls) {
     this.httpClient = httpClient;
-    this.defaultRequestConfig = null;
-    this.isMtls = isMtls;
-  }
-
-  /**
-   * {@link Beta} <br>
-   * Constructor that allows an alternative CLoseable Apache HTTP client to be used.
-   *
-   * <p>If you choose to provide your own Apache HttpClient implementation, be sure that
-   *
-   * <ul>
-   *   <li>HTTP version is set to 1.1.
-   *   <li>Retries are disabled (google-http-client handles retries).
-   *   <li>Redirects are disabled (google-http-client handles retries).
-   * </ul>
-   *
-   * @param httpClient Apache HTTP client to use
-   * @param defaultRequestConfig The default request config for the client
-   * @param isMtls If the HTTP client is mutual TLS
-   */
-  @Beta
-  public Apache5HttpTransport(
-      HttpClient httpClient, RequestConfig defaultRequestConfig, boolean isMtls) {
-    this.httpClient = httpClient;
-    this.defaultRequestConfig = defaultRequestConfig;
     this.isMtls = isMtls;
   }
 
@@ -173,10 +145,6 @@ public final class Apache5HttpTransport extends HttpTransport {
    *       href="http://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html">system
    *       properties</a>.
    * </ul>
-   *
-   * <p>NOTE: The {@code ConnectionRequestTimeout} in the {@code RequestConfig} is not honored when
-   * set via the builder. Instead, the request config should be passed in the {@link
-   * #Apache5HttpTransport(HttpClient, RequestConfig, boolean)} constructor.
    *
    * @return new instance of the Apache HTTP client builder
    */
@@ -225,7 +193,7 @@ public final class Apache5HttpTransport extends HttpTransport {
     } else {
       requestBase = new HttpUriRequestBase(Preconditions.checkNotNull(method), URI.create(url));
     }
-    return new Apache5HttpRequest(httpClient, requestBase, defaultRequestConfig);
+    return new Apache5HttpRequest(httpClient, requestBase);
   }
 
   /**
