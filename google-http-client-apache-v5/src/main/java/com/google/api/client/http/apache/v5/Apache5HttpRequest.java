@@ -52,6 +52,7 @@ public final class Apache5HttpRequest extends LowLevelHttpRequest {
   public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
     requestConfig
         .setConnectTimeout(Timeout.of(connectTimeout, TimeUnit.MILLISECONDS))
+        .setConnectionRequestTimeout(connectTimeout, TimeUnit.MILLISECONDS)
         // ResponseTimeout behaves the same as 4.x's SocketTimeout
         .setResponseTimeout(Timeout.of(readTimeout, TimeUnit.MILLISECONDS));
   }
