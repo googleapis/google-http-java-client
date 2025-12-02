@@ -4,6 +4,10 @@ releaseType: java-yoshi
 branches:
   - bumpMinorPreMajor: true
     handleGHRelease: true
+    releaseType: java-yoshi
+    branch: protobuf-4.x-rc
+  - bumpMinorPreMajor: true
+    handleGHRelease: true
     releaseType: java-lts
     branch: 1.39.2-sp
   - bumpMinorPreMajor: true
