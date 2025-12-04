@@ -8,4 +8,6 @@
   "packages": {
     ".": { }
   }
+,
+  "prerelease": true
 }
