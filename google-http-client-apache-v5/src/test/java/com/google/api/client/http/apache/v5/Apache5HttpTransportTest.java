@@ -28,12 +28,15 @@ import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.ByteArrayStreamingContent;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.hc.client5.http.ConnectTimeoutException;
 import org.apache.hc.client5.http.HttpHostConnectException;
 import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
 import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.ContentType;
@@ -56,6 +59,7 @@ import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
 import org.apache.hc.core5.http.io.support.BasicHttpServerRequestHandler;
 import org.apache.hc.core5.http.protocol.HttpContext;
 import org.apache.hc.core5.http.protocol.HttpProcessor;
+import org.apache.hc.core5.util.Timeout;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -206,6 +210,41 @@ public class Apache5HttpTransportTest {
     } catch (IOException e) {
       fail("unexpected IOException: " + e.getClass().getName() + ": " + e.getMessage());
     }
+  }
+
+  @Test
+  public void testDefaultRequestConfig() throws IOException {
+    RequestConfig requestConfig =
+        RequestConfig.custom()
+            .setConnectTimeout(100, TimeUnit.MILLISECONDS)
+            .setConnectionRequestTimeout(200, TimeUnit.MILLISECONDS)
+            .setResponseTimeout(300, TimeUnit.MILLISECONDS)
+            .build();
+    final AtomicBoolean interceptorCalled = new AtomicBoolean(false);
+    HttpClient client =
+        HttpClients.custom()
+            .addRequestInterceptorFirst(
+                (request, entity, context) -> {
+                  HttpClientContext clientContext = HttpClientContext.adapt(context);
+                  RequestConfig config = clientContext.getRequestConfig();
+                  assertEquals(Timeout.of(100, TimeUnit.MILLISECONDS), config.getConnectTimeout());
+                  assertEquals(
+                      Timeout.of(200, TimeUnit.MILLISECONDS), config.getConnectionRequestTimeout());
+                  assertEquals(Timeout.of(300, TimeUnit.MILLISECONDS), config.getResponseTimeout());
+                  interceptorCalled.set(true);
+                  throw new IOException("cancelling request");
+                })
+            .build();
+
+    Apache5HttpTransport transport = new Apache5HttpTransport(client, requestConfig, false);
+    Apache5HttpRequest request = transport.buildRequest("GET", "https://google.com");
+    try {
+      request.execute();
+      fail("should not actually make the request");
+    } catch (IOException exception) {
+      assertEquals("cancelling request", exception.getMessage());
+    }
+    assertTrue("Expected to have called our test interceptor", interceptorCalled.get());
   }
 
   private static class FakeServer implements AutoCloseable {
