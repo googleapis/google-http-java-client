@@ -93,8 +93,7 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>native-image-shared-config</artifactId>
-    <version>1.17.1-rc3</version>
-  </parent>
+    <version>1.17.0</version>
 
   <!--
     If you change the version of a dependency, make sure to update the javadoc
