@@ -95,6 +95,7 @@
     <artifactId>native-image-shared-config</artifactId>
     <version>1.17.0</version>
   </parent>
+	
   <!--
     If you change the version of a dependency, make sure to update the javadoc
     links if required, and any javadoc links of your dependency in the oauth and
