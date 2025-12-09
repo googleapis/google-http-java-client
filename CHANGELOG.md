@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.1.0-rc1](https://github.com/googleapis/google-http-java-client/compare/v2.0.2...v2.1.0-rc1) (2025-12-09)
+
+
+### Features
+
+* configure rc releases to be on prerelease mode ([8ebc1b9](https://github.com/googleapis/google-http-java-client/commit/8ebc1b936abfd4f06e71d6daf3cdcfbf6d69d5c4))
+
+
+### Bug Fixes
+
+* **deps:** update protobuf-java version to 4.33.0 ([#2134](https://github.com/googleapis/google-http-java-client/issues/2134)) ([9317552](https://github.com/googleapis/google-http-java-client/commit/93175524516268ced9523286c77db0d9e12b434b))
+* next release candidate ([3867796](https://github.com/googleapis/google-http-java-client/commit/38677960f4504a820670ff09b0a382316057fad8))
+* update version pattern to include release candidates ([#2132](https://github.com/googleapis/google-http-java-client/issues/2132)) ([371f2cd](https://github.com/googleapis/google-http-java-client/commit/371f2cd3ba4bbdba3e4013151aa61cdcc8754d1c))
+
 ## [2.0.2](https://github.com/googleapis/google-http-java-client/compare/v2.0.1...v2.0.2) (2025-10-13)
 
 
