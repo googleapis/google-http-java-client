@@ -28,6 +28,9 @@ import com.google.api.client.http.LowLevelHttpResponse;
 import com.google.api.client.util.ByteArrayStreamingContent;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -36,9 +39,10 @@ import org.apache.hc.client5.http.HttpHostConnectException;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.ConnectionRequestTimeoutException;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.EntityDetails;
 import org.apache.hc.core5.http.Header;
@@ -59,7 +63,6 @@ import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
 import org.apache.hc.core5.http.io.support.BasicHttpServerRequestHandler;
 import org.apache.hc.core5.http.protocol.HttpContext;
 import org.apache.hc.core5.http.protocol.HttpProcessor;
-import org.apache.hc.core5.util.Timeout;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -212,39 +215,67 @@ public class Apache5HttpTransportTest {
     }
   }
 
-  @Test
-  public void testDefaultRequestConfig() throws IOException {
-    RequestConfig requestConfig =
-        RequestConfig.custom()
-            .setConnectTimeout(100, TimeUnit.MILLISECONDS)
-            .setConnectionRequestTimeout(200, TimeUnit.MILLISECONDS)
-            .setResponseTimeout(300, TimeUnit.MILLISECONDS)
-            .build();
-    final AtomicBoolean interceptorCalled = new AtomicBoolean(false);
-    HttpClient client =
-        HttpClients.custom()
-            .addRequestInterceptorFirst(
-                (request, entity, context) -> {
-                  HttpClientContext clientContext = HttpClientContext.adapt(context);
-                  RequestConfig config = clientContext.getRequestConfig();
-                  assertEquals(Timeout.of(100, TimeUnit.MILLISECONDS), config.getConnectTimeout());
-                  assertEquals(
-                      Timeout.of(200, TimeUnit.MILLISECONDS), config.getConnectionRequestTimeout());
-                  assertEquals(Timeout.of(300, TimeUnit.MILLISECONDS), config.getResponseTimeout());
-                  interceptorCalled.set(true);
-                  throw new IOException("cancelling request");
-                })
-            .build();
+  @Test(timeout = 5000)
+  public void testConnectionRequestTimeoutFromDefaultRequestConfig() throws Exception {
+    final CountDownLatch latch = new CountDownLatch(1);
+    final HttpRequestHandler handler =
+        new HttpRequestHandler() {
+          @Override
+          public void handle(
+              ClassicHttpRequest request, ClassicHttpResponse response, HttpContext context)
+              throws HttpException, IOException {
+            try {
+              latch.await(); // Wait for the signal to proceed
+            } catch (InterruptedException e) {
+              Thread.currentThread().interrupt();
+            }
+            response.setCode(HttpStatus.SC_OK);
+          }
+        };
 
-    Apache5HttpTransport transport = new Apache5HttpTransport(client, requestConfig, false);
-    Apache5HttpRequest request = transport.buildRequest("GET", "https://google.com");
-    try {
-      request.execute();
-      fail("should not actually make the request");
-    } catch (IOException exception) {
-      assertEquals("cancelling request", exception.getMessage());
+    try (FakeServer server = new FakeServer(handler)) {
+      PoolingHttpClientConnectionManager connectionManager =
+          new PoolingHttpClientConnectionManager();
+      connectionManager.setMaxTotal(1); // Only one connection in the pool
+
+      RequestConfig requestConfig =
+          RequestConfig.custom().setConnectionRequestTimeout(1, TimeUnit.SECONDS).build();
+
+      HttpClient httpClient =
+          Apache5HttpTransport.newDefaultHttpClientBuilder()
+              .setConnectionManager(connectionManager)
+              .setDefaultRequestConfig(requestConfig)
+              .build();
+
+      HttpTransport transport = new Apache5HttpTransport(httpClient, requestConfig, false);
+      final GenericUrl url = new GenericUrl("http://localhost:" + server.getPort());
+
+      ExecutorService executor = Executors.newFixedThreadPool(2);
+
+      // First request takes the only connection
+      executor.submit(
+          () -> {
+            try {
+              transport.createRequestFactory().buildGetRequest(url).execute();
+            } catch (IOException e) {
+              // This request might fail if the test finishes before it completes, which is fine.
+            }
+          });
+
+      // Give the first request time to acquire the connection
+      Thread.sleep(100);
+
+      // Second request should time out waiting for a connection
+      try {
+        transport.createRequestFactory().buildGetRequest(url).execute();
+        fail("Should have thrown ConnectionRequestTimeoutException");
+      } catch (ConnectionRequestTimeoutException e) {
+        // Expected
+      } finally {
+        latch.countDown(); // Allow the first request to complete
+        executor.shutdownNow();
+      }
     }
-    assertTrue("Expected to have called our test interceptor", interceptorCalled.get());
   }
 
   private static class FakeServer implements AutoCloseable {
