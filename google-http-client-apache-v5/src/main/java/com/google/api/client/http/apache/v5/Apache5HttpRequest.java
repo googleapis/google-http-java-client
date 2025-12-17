@@ -39,26 +39,8 @@ public final class Apache5HttpRequest extends LowLevelHttpRequest {
   Apache5HttpRequest(HttpClient httpClient, HttpUriRequestBase request) {
     this.httpClient = httpClient;
     this.request = request;
-    this.requestConfig = prepareRequestConfig(null);
-  }
-
-  Apache5HttpRequest(
-      HttpClient httpClient, HttpUriRequestBase request, RequestConfig defaultRequestConfig) {
-    this.httpClient = httpClient;
-    this.request = request;
-    this.requestConfig = prepareRequestConfig(defaultRequestConfig);
-  }
-
-  private RequestConfig.Builder prepareRequestConfig(RequestConfig defaultRequestConfig) {
-    RequestConfig.Builder config;
-    if (defaultRequestConfig != null) {
-      config = RequestConfig.copy(defaultRequestConfig);
-    } else {
-      config = RequestConfig.custom();
-    }
     // disable redirects as google-http-client handles redirects
-    config.setRedirectsEnabled(false);
-    return config;
+    this.requestConfig = RequestConfig.custom().setRedirectsEnabled(false);
   }
 
   @Override
@@ -70,6 +52,7 @@ public final class Apache5HttpRequest extends LowLevelHttpRequest {
   public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
     requestConfig
         .setConnectTimeout(Timeout.of(connectTimeout, TimeUnit.MILLISECONDS))
+        .setConnectionRequestTimeout(connectTimeout, TimeUnit.MILLISECONDS)
         // ResponseTimeout behaves the same as 4.x's SocketTimeout
         .setResponseTimeout(Timeout.of(readTimeout, TimeUnit.MILLISECONDS));
   }
