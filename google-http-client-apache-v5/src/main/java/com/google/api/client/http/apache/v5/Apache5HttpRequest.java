@@ -48,6 +48,18 @@ public final class Apache5HttpRequest extends LowLevelHttpRequest {
     request.addHeader(name, value);
   }
 
+  /**
+   * Configures the connection, connection request and read timeout of the request.
+   *
+   * @param connectTimeout timeout in milliseconds to establish a connection or {@code 0} for an
+   *     infinite timeout. This parameter will also set the underlying request configuration's
+   *     connection request timeout. See {@link
+   *     org.apache.hc.client5.http.config.RequestConfig.Builder#setConnectionRequestTimeout(long,
+   *     TimeUnit)} for more details.
+   * @param readTimeout Timeout in milliseconds to read data from an established connection or
+   *     {@code 0} for an infinite timeout
+   * @throws IOException
+   */
   @Override
   public void setTimeout(int connectTimeout, int readTimeout) throws IOException {
     requestConfig
