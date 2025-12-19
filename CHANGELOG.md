@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.3](https://github.com/googleapis/google-http-java-client/compare/v2.0.2...v2.0.3) (2025-12-19)
+
+
+### Bug Fixes
+
+* **apache5:** Set connection request timeout on setTimeout ([#2129](https://github.com/googleapis/google-http-java-client/issues/2129)) ([d11d794](https://github.com/googleapis/google-http-java-client/commit/d11d794d452a662bddd4402cd5d3895bcbe769f3))
+
 ## [2.0.2](https://github.com/googleapis/google-http-java-client/compare/v2.0.1...v2.0.2) (2025-10-13)
 
 
