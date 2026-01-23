@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/googleapis/google-http-java-client/compare/v2.0.3...v2.1.0) (2026-01-23)
+
+
+### Features
+
+* Update protobuf-java to 4.33.2 ([d48c443](https://github.com/googleapis/google-http-java-client/commit/d48c443cf9b872be4872ed6801c4edf70d5be7ac))
+
 ## [2.0.3](https://github.com/googleapis/google-http-java-client/compare/v2.0.2...v2.0.3) (2025-12-19)
 
 
