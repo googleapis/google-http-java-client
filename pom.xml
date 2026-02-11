@@ -189,6 +189,12 @@
         <groupId>com.google.guava</groupId>
         <artifactId>guava-testlib</artifactId>
         <version>${project.guava.version}</version>
+		<exclusions>
+          <exclusion>
+            <groupId>com.google.j2objc</groupId>
+            <artifactId>j2objc-annotations</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>com.google.code.findbugs</groupId>
@@ -555,7 +561,7 @@
     <project.jackson-core2.version>2.18.2</project.jackson-core2.version>
     <project.protobuf-java.version>4.33.2</project.protobuf-java.version>
 	<!-- We use the Java 8 compatible version due to https://www.cvedetails.com/cve/CVE-2023-2976/ -->
-    <project.guava.version>33.4.8-android</project.guava.version>
+    <project.guava.version>33.5.0-android</project.guava.version>
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.apache-httpclient-4.version>4.5.14</project.apache-httpclient-4.version>
     <project.apache-httpcore-4.version>4.4.16</project.apache-httpcore-4.version>
