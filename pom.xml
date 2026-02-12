@@ -301,7 +301,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>3.1.3</version>
+          <version>3.1.4</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -328,6 +328,13 @@
               </goals>
             </execution>
           </executions>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.wagon</groupId>
+              <artifactId>wagon-provider-api</artifactId>
+              <version>3.3.3</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -372,17 +379,33 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.6.2</version>
-        </plugin>
+          <version>3.8.0</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.sonatype.plexus</groupId>
+              <artifactId>plexus-sec-dispatcher</artifactId>
+              <version>1.4</version>
+            </dependency>
+          </dependencies>        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.21.0</version>
+          <version>3.21.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.4.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
           <version>3.8.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>3.1.3</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -508,7 +531,6 @@
       <!-- Build the dependencies report at package time (needed for the assembly artifact). -->
       <plugin>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>3.6.2</version>
         <executions>
           <execution>
             <goals>
@@ -654,7 +676,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.13.0</version>
             <configuration>
               <source>1.8</source>
               <target>1.8</target>
@@ -663,7 +684,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.11.2</version>
             <configuration>
               <source>1.8</source>
               <failOnError>false</failOnError>
