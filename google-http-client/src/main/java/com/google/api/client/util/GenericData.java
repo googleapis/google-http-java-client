@@ -80,8 +80,8 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
       return false;
     }
     String fieldName = (String) name;
-    FieldInfo fieldInfo = classInfo.getFieldInfo(fieldName);
-    if (fieldInfo != null) {
+    boolean hasFieldInfo = classInfo.hasFieldInfo(fieldName);
+    if (hasFieldInfo) {
       return true;
     }
     if (classInfo.getIgnoreCase()) {
