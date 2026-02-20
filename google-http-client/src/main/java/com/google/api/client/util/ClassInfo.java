@@ -113,6 +113,23 @@ public final class ClassInfo {
   }
 
   /**
+   * Returns whether information for the given {@link FieldInfo#getName()}
+   * is available.
+   *
+   * @param name {@link FieldInfo#getName()} or {@code null}
+   * @return true if field info is available.
+   */
+  public boolean hasFieldInfo(String name) {
+    if (name != null) {
+      if (ignoreCase) {
+        name = name.toLowerCase(Locale.US);
+      }
+      name = name.intern();
+    }
+    return nameToFieldInfoMap.containsKey(name);
+  }
+  
+  /**
    * Returns the information for the given {@link FieldInfo#getName()}.
    *
    * @param name {@link FieldInfo#getName()} or {@code null}
