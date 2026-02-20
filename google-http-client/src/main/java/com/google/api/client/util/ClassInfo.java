@@ -113,8 +113,7 @@ public final class ClassInfo {
   }
 
   /**
-   * Returns whether information for the given {@link FieldInfo#getName()}
-   * is available.
+   * Returns whether information for the given {@link FieldInfo#getName()} is available.
    *
    * @param name {@link FieldInfo#getName()} or {@code null}
    * @return true if field info is available.
@@ -128,7 +127,7 @@ public final class ClassInfo {
     }
     return nameToFieldInfoMap.containsKey(name);
   }
-  
+
   /**
    * Returns the information for the given {@link FieldInfo#getName()}.
    *
