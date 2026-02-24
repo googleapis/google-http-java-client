@@ -75,6 +75,22 @@ public class GenericData extends AbstractMap<String, Object> implements Cloneabl
   }
 
   @Override
+  public final boolean containsKey(Object name) {
+    if (!(name instanceof String)) {
+      return false;
+    }
+    String fieldName = (String) name;
+    boolean hasFieldInfo = classInfo.hasFieldInfo(fieldName);
+    if (hasFieldInfo) {
+      return true;
+    }
+    if (classInfo.getIgnoreCase()) {
+      fieldName = fieldName.toLowerCase(Locale.US);
+    }
+    return unknownFields.containsKey(fieldName);
+  }
+
+  @Override
   public final Object get(Object name) {
     if (!(name instanceof String)) {
       return null;

@@ -156,6 +156,7 @@ public class GenericDataTest {
   public void testGetIgnoreCase_class() {
     MyData data = new MyData();
     data.fieldA = "someValue";
+    assertTrue(data.containsKey("FIELDA"));
     assertEquals("someValue", data.get("FIELDA"));
   }
 
@@ -187,11 +188,14 @@ public class GenericDataTest {
   public void testGetIgnoreCase_unknownKey() {
     GenericData data = new GenericData(EnumSet.of(Flags.IGNORE_CASE));
     data.set("One", 1);
+    assertTrue(data.containsKey("ONE"));
     assertEquals(1, data.get("ONE"));
 
     data.set("one", 2);
+    assertTrue(data.containsKey("ONE"));
     assertEquals(2, data.get("ONE"));
 
+    assertFalse(data.containsKey("unknownKey"));
     assertEquals(null, data.get("unknownKey"));
   }
 

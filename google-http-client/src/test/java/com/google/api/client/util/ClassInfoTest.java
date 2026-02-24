@@ -58,6 +58,15 @@ public class ClassInfoTest {
     assertEquals(E.class.getField("VALUE"), classInfo.getFieldInfo("VALUE").getField());
   }
 
+  @Test
+  public void testHasFieldInfo_enum() throws Exception {
+    ClassInfo classInfo = ClassInfo.of(E.class);
+    assertFalse(classInfo.hasFieldInfo("wrong"));
+    assertTrue(classInfo.hasFieldInfo(null));
+    assertTrue(classInfo.hasFieldInfo("other"));
+    assertTrue(classInfo.hasFieldInfo("VALUE"));
+  }
+
   public class A {
     @Key String b;
 
