@@ -547,6 +547,7 @@
       - google-api-java-client/google-api-client-assembly/android-properties (make the filenames match the version here)
       - Internally, update the default features.json file
     -->
+    <project.bouncycastle.version>1.80</project.bouncycastle.version>
     <project.http-client.version>2.1.1-SNAPSHOT</project.http-client.version><!-- {x-version-update:google-http-client-parent:current} -->
     <project.appengine.version>2.0.32</project.appengine.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
