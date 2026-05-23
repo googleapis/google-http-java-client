@@ -412,9 +412,10 @@ public final class NetHttpTransport extends HttpTransport {
       if (System.getProperty(SHOULD_USE_PROXY_FLAG) != null) {
         setProxy(defaultProxy());
       }
+      SSLSocketFactory factory = sslSocketFactory != null ? sslSocketFactory : getDefaultSslSocketFactory();
       return this.proxy == null
-          ? new NetHttpTransport(connectionFactory, sslSocketFactory, hostnameVerifier, isMtls)
-          : new NetHttpTransport(this.proxy, sslSocketFactory, hostnameVerifier, isMtls);
+          ? new NetHttpTransport(connectionFactory, factory, hostnameVerifier, isMtls)
+          : new NetHttpTransport(this.proxy, factory, hostnameVerifier, isMtls);
     }
   }
 }
