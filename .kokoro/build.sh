@@ -35,6 +35,17 @@ retry_with_backoff 3 10 \
     -Denforcer.skip=true \
     -Dmaven.javadoc.skip=true \
     -Dgcloud.download.skip=true \
+    -pl !pqc-test \
+    -T 1C
+
+retry_with_backoff 3 10 \
+  mvn install -B -V -ntp \
+    -DskipTests=true \
+    -Dclirr.skip=true \
+    -Denforcer.skip=true \
+    -Dmaven.javadoc.skip=true \
+    -Dgcloud.download.skip=true \
+    -pl pqc-test \
     -T 1C
 
 # if GOOGLE_APPLICATION_CREDENTIALS is specified as a relative path, prepend Kokoro root directory onto it
