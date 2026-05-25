@@ -105,7 +105,7 @@ public final class SslUtils {
   /**
    * Returns the SSL context for "TLS" algorithm using the specified provider name.
    *
-   * @since 1.39
+   * @since 2.1.1
    */
   public static SSLContext getTlsSslContext(String providerName)
       throws NoSuchAlgorithmException, NoSuchProviderException {
