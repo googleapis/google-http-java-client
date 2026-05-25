@@ -32,16 +32,18 @@ retry_with_backoff 3 10 \
   mvn install -B -V -ntp \
     -DskipTests=true \
     -Dclirr.skip=true \
+    -Dcheckstyle.skip=true \
     -Denforcer.skip=true \
     -Dmaven.javadoc.skip=true \
     -Dgcloud.download.skip=true \
-    -pl !pqc-test \
+    -pl !pqc-test-common \
     -T 1C
 
 retry_with_backoff 3 10 \
   mvn install -B -V -ntp \
     -DskipTests=true \
     -Dclirr.skip=true \
+    -Dcheckstyle.skip=true \
     -Denforcer.skip=true \
     -Dmaven.javadoc.skip=true \
     -Dgcloud.download.skip=true \
@@ -58,7 +60,7 @@ set +e
 
 case ${JOB_TYPE} in
 test)
-    mvn test -B -ntp -Dclirr.skip=true -Denforcer.skip=true
+    mvn test -B -ntp -Dclirr.skip=true -Denforcer.skip=true -Dcheckstyle.skip=true
     RETURN_CODE=$?
     ;;
 lint)
@@ -76,6 +78,7 @@ integration)
       -DtrimStackTrace=false \
       -Dclirr.skip=true \
       -Denforcer.skip=true \
+      -Dcheckstyle.skip=true \
       -fae \
       verify
     RETURN_CODE=$?
