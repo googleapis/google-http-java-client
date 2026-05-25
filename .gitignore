@@ -26,6 +26,7 @@ nosetests.xml
 .DS_Store
 **/.classpath
 **/.checkstyle
+**/.vscode/
 
 # Python utilities
 *.pyc
