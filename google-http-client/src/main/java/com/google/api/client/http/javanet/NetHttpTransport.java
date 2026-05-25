@@ -95,7 +95,8 @@ public final class NetHttpTransport extends HttpTransport {
   private final boolean isMtls;
 
   /**
-   * Returns the default SSL socket factory, which is PQC-enabled if Bouncy Castle JJSSE is on the classpath.
+   * Returns the default SSL socket factory, which is PQC-enabled if Bouncy Castle JJSSE is on the
+   * classpath.
    */
   private static SSLSocketFactory getDefaultSslSocketFactory() {
     try {
@@ -146,8 +147,7 @@ public final class NetHttpTransport extends HttpTransport {
       HostnameVerifier hostnameVerifier,
       boolean isMtls) {
     this.connectionFactory = getConnectionFactory(connectionFactory);
-    // Securely wrap the socket factory to enforce PQC hybrid negotiation scope-specifically
-    this.sslSocketFactory = sslSocketFactory != null ? new PqcDelegatingSSLSocketFactory(sslSocketFactory) : null;
+    this.sslSocketFactory = sslSocketFactory;
     this.hostnameVerifier = hostnameVerifier;
     this.isMtls = isMtls;
   }
@@ -310,26 +310,30 @@ public final class NetHttpTransport extends HttpTransport {
     }
 
     /**
-     * Sets the SSL socket factory based on a root certificate trust store and a specific security provider.
+     * Sets the SSL socket factory based on a root certificate trust store and a specific security
+     * provider.
      *
      * @param trustStore certificate trust store
      * @param provider security provider to use for SSL context
      * @since 1.39
      */
-    public Builder trustCertificates(KeyStore trustStore, Provider provider) throws GeneralSecurityException {
+    public Builder trustCertificates(KeyStore trustStore, Provider provider)
+        throws GeneralSecurityException {
       SSLContext sslContext = SslUtils.getTlsSslContext(provider);
       SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());
       return setSslSocketFactory(sslContext.getSocketFactory());
     }
 
     /**
-     * Sets the SSL socket factory based on a root certificate trust store and a specific security provider name.
+     * Sets the SSL socket factory based on a root certificate trust store and a specific security
+     * provider name.
      *
      * @param trustStore certificate trust store
      * @param providerName security provider name to use for SSL context
      * @since 1.39
      */
-    public Builder trustCertificates(KeyStore trustStore, String providerName) throws GeneralSecurityException {
+    public Builder trustCertificates(KeyStore trustStore, String providerName)
+        throws GeneralSecurityException {
       try {
         SSLContext sslContext = SslUtils.getTlsSslContext(providerName);
         SslUtils.initSslContext(sslContext, trustStore, SslUtils.getPkixTrustManagerFactory());
@@ -412,7 +416,8 @@ public final class NetHttpTransport extends HttpTransport {
       if (System.getProperty(SHOULD_USE_PROXY_FLAG) != null) {
         setProxy(defaultProxy());
       }
-      SSLSocketFactory factory = sslSocketFactory != null ? sslSocketFactory : getDefaultSslSocketFactory();
+      SSLSocketFactory factory =
+          sslSocketFactory != null ? sslSocketFactory : getDefaultSslSocketFactory();
       return this.proxy == null
           ? new NetHttpTransport(connectionFactory, factory, hostnameVerifier, isMtls)
           : new NetHttpTransport(this.proxy, factory, hostnameVerifier, isMtls);

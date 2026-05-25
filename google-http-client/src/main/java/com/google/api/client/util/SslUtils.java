@@ -20,6 +20,7 @@ import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Provider;
+import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.HostnameVerifier;
@@ -29,9 +30,8 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
-import org.bouncycastle.jsse.provider.BouncyCastleJsseProvider;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import java.security.Security;
+import org.bouncycastle.jsse.provider.BouncyCastleJsseProvider;
 
 /**
  * SSL utilities.
@@ -51,25 +51,27 @@ public final class SslUtils {
   }
 
   /**
-   * Returns the SSL context for "TLS" algorithm using Bouncy Castle JJSSE provider scope-specifically.
+   * Returns the SSL context for "TLS" algorithm using Bouncy Castle JJSSE provider
+   * scope-specifically.
    *
-   * @since 1.14
+   * @since 2.1.1
    */
   public static SSLContext getTlsSslContext() throws NoSuchAlgorithmException {
     // 1. Explicitly register Bouncy Castle cryptographic provider globally if not already present.
     if (Security.getProvider("BC") == null) {
       Security.addProvider(new BouncyCastleProvider());
     }
-    
+
     // 2. Explicitly instantiate Bouncy Castle cryptographic (JCA) provider instance.
     BouncyCastleProvider cryptoProvider = new BouncyCastleProvider();
-    
+
     // 3. Explicitly instantiate Bouncy Castle JJSSE provider bound to our crypto provider.
     BouncyCastleJsseProvider provider = new BouncyCastleJsseProvider(cryptoProvider);
-    
-    // 3. Create standard TLS context instance bound specifically to our Bouncy Castle JJSSE provider.
+
+    // 3. Create standard TLS context instance bound specifically to our Bouncy Castle JJSSE
+    // provider.
     SSLContext bcContext = SSLContext.getInstance("TLS", provider);
-    
+
     try {
       // 4. Initialize the Bouncy Castle SSLContext with default managers.
       bcContext.init(null, null, null);
@@ -86,7 +88,7 @@ public final class SslUtils {
       }
       return fallbackContext;
     }
-    
+
     // 6. Return the raw Bouncy Castle SSLContext.
     return bcContext;
   }
@@ -96,8 +98,7 @@ public final class SslUtils {
    *
    * @since 1.39
    */
-  public static SSLContext getTlsSslContext(Provider provider)
-      throws NoSuchAlgorithmException {
+  public static SSLContext getTlsSslContext(Provider provider) throws NoSuchAlgorithmException {
     return SSLContext.getInstance("TLS", provider);
   }
 
