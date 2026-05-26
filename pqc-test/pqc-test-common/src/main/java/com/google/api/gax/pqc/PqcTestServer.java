@@ -175,7 +175,7 @@ public class PqcTestServer {
     // 12. Initialize netty SSL Context builder to establish gRPC server channel secure layers.
     //     Bind the builder explicitly to Bouncy Castle JSSE provider context.
     io.netty.handler.ssl.SslContextBuilder nettySslContextBuilder =
-				io.netty.handler.ssl.SslContextBuilder.forServer(kmf);
+        io.netty.handler.ssl.SslContextBuilder.forServer(kmf);
 
     // 14. Finalize compiling standard Netty SSL configurations.
     //     Force Netty to execute handshakes utilizing the standard JRE (JDK) SSL Provider
@@ -183,7 +183,7 @@ public class PqcTestServer {
     io.netty.handler.ssl.SslContext nettySslContext =
         io.grpc.netty.GrpcSslContexts.configure(
                 nettySslContextBuilder, io.netty.handler.ssl.SslProvider.JDK)
-						.option(OpenSslContextOption.GROUPS, new String[] { "X25519MLKEM768" })
+            .option(OpenSslContextOption.GROUPS, new String[] {"X25519MLKEM768"})
             .build();
 
     // 15. Build a raw gRPC method descriptor to mock a unary SayHello endpoint.
