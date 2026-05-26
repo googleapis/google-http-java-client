@@ -34,14 +34,20 @@ import com.sun.net.httpserver.HttpsParameters;
 import com.sun.net.httpserver.HttpsServer;
 import io.grpc.Server;
 import io.grpc.netty.NettyServerBuilder;
-import io.netty.handler.ssl.OpenSslContextOption;
+import io.netty.handler.ssl.IdentityCipherSuiteFilter;
+import io.netty.handler.ssl.ApplicationProtocolConfig;
+import io.netty.handler.ssl.ClientAuth;
+import io.netty.handler.ssl.JdkSslContext;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.security.KeyStore;
 import java.security.Security;
+import java.util.List;
+import java.util.function.BiFunction;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLParameters;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.jsse.provider.BouncyCastleJsseProvider;
@@ -59,79 +65,50 @@ public class PqcTestServer {
 
   public void start() throws Exception {
 
-    // Register the Bouncy Castle JCA Cryptography Provider globally.
-    // Required for Bouncy Castle JSSE to locate and execute low-level cryptographic
-    // operations.
     if (Security.getProvider("BC") == null) {
       Security.addProvider(new BouncyCastleProvider());
     }
     if (Security.getProvider("BCJSSE") == null) {
-      Security.addProvider(new BouncyCastleJsseProvider());
+      Security.insertProviderAt(new BouncyCastleJsseProvider(), 1);
     }
 
-    // PKCS12 is the key store format to bundle the private key + the certificate.
-    //    PKCS12 format is an industry-standard format used to bundle the private key and
-    // certificate chain.
     KeyStore ks = KeyStore.getInstance("PKCS12");
     try (InputStream is = getClass().getResourceAsStream("/pqctest.p12")) {
       if (is == null) {
         throw new RuntimeException("pqctest.p12 not found in classpath");
       }
-      // Load the self-signed certificate/private key from the resource archive with a dummy
-      // password.
       ks.load(is, "password".toCharArray());
     }
 
-    // 4. Initialize KeyManagerFactory using the standard JRE algorithm (SunX509).
-    //    Key managers choose the private key credentials (the server's identity) during TLS
-    // handshake negotiation.
     KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
     kmf.init(ks, "password".toCharArray());
 
-    // 5. Initialize TrustManagerFactory using the default JRE algorithm (PKIX).
-    //    Trust managers evaluate whether peer certificates presented during TLS are trusted and
-    // valid.
     javax.net.ssl.TrustManagerFactory tmf =
         javax.net.ssl.TrustManagerFactory.getInstance(
             javax.net.ssl.TrustManagerFactory.getDefaultAlgorithm());
     tmf.init(ks);
 
-    // 6. Initialize a dedicated SSLContext scoped specifically to Bouncy Castle JSSE.
-    //    Specifying BouncyCastleJsseProvider prevents contamination of default JRE TLS contexts.
     BouncyCastleJsseProvider bcProvider = new BouncyCastleJsseProvider();
     SSLContext bcContext = SSLContext.getInstance("TLSv1.3", bcProvider);
     bcContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 
-    // Wrap Bouncy Castle Context in our programmatic PQC-enforcing context wrapper!
     SSLContext sslContext =
         new SSLContext(
             new PqcEnforcingSSLContextSpi(bcContext),
             bcContext.getProvider(),
             bcContext.getProtocol()) {};
 
-    // 7. Instantiate a local mock HttpServer (bound to an ephemeral port 0).
     httpServer = HttpsServer.create(new InetSocketAddress(0), 0);
-
-    // 8. Set HttpsConfigurator to intercept incoming connections and customize TLS handshakes.
     httpServer.setHttpsConfigurator(
         new HttpsConfigurator(sslContext) {
           @Override
           public void configure(HttpsParameters params) {
-            // Retrieve the SSLContext default parameters.
             SSLParameters sslparams = getSSLContext().getDefaultSSLParameters();
-
-            // Enforce TLSv1.3 protocol exclusively to guarantee modern cipher suites.
             sslparams.setProtocols(new String[] {"TLSv1.3"});
-
-            // Enforce ALWAYS and ONLY hybrid ML-KEM / Kyber named groups programmatically on
-            // HttpsServer!
-
-            // Commit parameters to the active connection context.
             params.setSSLParameters(sslparams);
           }
         });
 
-    // 9. Map simple mock endpoint contexts to simulate vanilla API server behavior.
     httpServer.createContext(
         "/test",
         exchange -> {
@@ -141,8 +118,6 @@ public class PqcTestServer {
           exchange.getResponseBody().close();
         });
 
-    // 10. Map mock BigQuery datasets endpoint to simulate vanilla BigQuery dataset listing
-    // responses.
     httpServer.createContext(
         "/bigquery/v2/projects/test-project/datasets",
         exchange -> {
@@ -153,7 +128,6 @@ public class PqcTestServer {
           exchange.getResponseBody().close();
         });
 
-    // Mock Translation REST endpoint
     httpServer.createContext(
         "/v3/",
         exchange -> {
@@ -168,25 +142,25 @@ public class PqcTestServer {
           }
         });
 
-    // 11. Start the HTTP Server and retrieve the dynamically allocated local ephemeral port.
     httpServer.start();
     httpPort = httpServer.getAddress().getPort();
 
-    // 12. Initialize netty SSL Context builder to establish gRPC server channel secure layers.
-    //     Bind the builder explicitly to Bouncy Castle JSSE provider context.
-    io.netty.handler.ssl.SslContextBuilder nettySslContextBuilder =
-        io.netty.handler.ssl.SslContextBuilder.forServer(kmf);
+    ApplicationProtocolConfig apn = new ApplicationProtocolConfig(
+        ApplicationProtocolConfig.Protocol.ALPN,
+        ApplicationProtocolConfig.SelectorFailureBehavior.NO_ADVERTISE,
+        ApplicationProtocolConfig.SelectedListenerFailureBehavior.ACCEPT,
+        "h2"
+    );
 
-    // 14. Finalize compiling standard Netty SSL configurations.
-    //     Force Netty to execute handshakes utilizing the standard JRE (JDK) SSL Provider
-    //     so Bouncy Castle JJSSE (registered in the provider context) manages the secure pipelines.
-    io.netty.handler.ssl.SslContext nettySslContext =
-        io.grpc.netty.GrpcSslContexts.configure(
-                nettySslContextBuilder, io.netty.handler.ssl.SslProvider.JDK)
-            .option(OpenSslContextOption.GROUPS, new String[] {"X25519MLKEM768"})
-            .build();
+    io.netty.handler.ssl.SslContext nettySslContext = new JdkSslContext(
+        sslContext,
+        false,
+        null,
+        IdentityCipherSuiteFilter.INSTANCE,
+        apn,
+        ClientAuth.NONE
+    );
 
-    // 15. Build a raw gRPC method descriptor to mock a unary SayHello endpoint.
     io.grpc.MethodDescriptor<byte[], byte[]> method =
         io.grpc.MethodDescriptor.<byte[], byte[]>newBuilder()
             .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -195,7 +169,6 @@ public class PqcTestServer {
             .setResponseMarshaller(new ByteMarshaller())
             .build();
 
-    // 16. Wrap the method descriptor into a custom gRPC server service definition.
     io.grpc.ServerServiceDefinition serviceDef =
         io.grpc.ServerServiceDefinition.builder("Greeter")
             .addMethod(
@@ -207,8 +180,6 @@ public class PqcTestServer {
                     }))
             .build();
 
-    // 17. Start the Netty gRPC Server on a dynamically allocated ephemeral port.
-    // Raw gRPC mock for Translation Service
     io.grpc.MethodDescriptor<byte[], byte[]> translateMethod =
         io.grpc.MethodDescriptor.<byte[], byte[]>newBuilder()
             .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -228,7 +199,6 @@ public class PqcTestServer {
                     }))
             .build();
 
-    // 17. Start the Netty gRPC Server on a dynamically allocated ephemeral port.
     grpcServer =
         NettyServerBuilder.forPort(0)
             .sslContext(nettySslContext)
@@ -243,6 +213,7 @@ public class PqcTestServer {
     if (httpServer != null) httpServer.stop(0);
     if (grpcServer != null) grpcServer.shutdown();
     Security.removeProvider("BC");
+    Security.removeProvider("BCJSSE");
   }
 
   public int getHttpPort() {
@@ -273,25 +244,21 @@ public class PqcTestServer {
     PqcTestServer server = new PqcTestServer();
     server.start();
 
-    // Print the ephemeral port values dynamically to stdout.
-    // The parent process will parse these values to configure client connections.
     System.out.println("HTTP_PORT: " + server.getHttpPort());
     System.out.println("GRPC_PORT: " + server.getGrpcPort());
     System.out.flush();
 
-    // Keep the process alive by reading from standard input.
-    // When the parent process terminates or closes stdin, this loop exits.
     try {
       while (System.in.read() != -1) {
         Thread.sleep(1000);
       }
     } catch (Exception e) {
-      // Ignore and exit
     } finally {
       server.stop();
     }
   }
 
+  @org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
   private static class PqcEnforcingSSLEngine extends javax.net.ssl.SSLEngine {
     private final javax.net.ssl.SSLEngine delegate;
 
@@ -309,6 +276,26 @@ public class PqcTestServer {
         bcParams.setNamedGroups(new String[] {"X25519MLKEM768"});
         bcEngine.setParameters(bcParams);
       }
+    }
+
+    @Override
+    public void setHandshakeApplicationProtocolSelector(BiFunction<SSLEngine, List<String>, String> selector) {
+      delegate.setHandshakeApplicationProtocolSelector((engine, protocols) -> selector.apply(this, protocols));
+    }
+
+    @Override
+    public BiFunction<SSLEngine, List<String>, String> getHandshakeApplicationProtocolSelector() {
+      return delegate.getHandshakeApplicationProtocolSelector();
+    }
+
+    @Override
+    public String getApplicationProtocol() {
+      return delegate.getApplicationProtocol();
+    }
+
+    @Override
+    public String getHandshakeApplicationProtocol() {
+      return delegate.getHandshakeApplicationProtocol();
     }
 
     @Override
@@ -430,7 +417,6 @@ public class PqcTestServer {
       return delegate.wrap(srcs, offset, length, dst);
     }
 
-    // Missing abstract methods
     @Override
     public boolean getEnableSessionCreation() {
       return delegate.getEnableSessionCreation();
@@ -490,7 +476,6 @@ public class PqcTestServer {
         javax.net.ssl.TrustManager[] tm,
         java.security.SecureRandom sr)
         throws java.security.KeyManagementException {
-      // No-op because delegate is already initialized
     }
   }
 }
