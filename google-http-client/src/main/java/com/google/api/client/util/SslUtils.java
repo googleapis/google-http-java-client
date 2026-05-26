@@ -17,7 +17,6 @@ package com.google.api.client.util;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Provider;
@@ -202,8 +201,6 @@ public final class SslUtils {
         keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
     return sslContext;
   }
-
-
 
   /**
    * {@link Beta} <br>
