@@ -27,7 +27,6 @@ source ${scriptDir}/common.sh
 mvn -version
 echo ${JOB_TYPE}
 
-# attempt to install 3 times with exponential backoff (starting with 10 seconds)
 retry_with_backoff 3 10 \
   mvn install -B -V -ntp \
     -DskipTests=true \
@@ -36,7 +35,7 @@ retry_with_backoff 3 10 \
     -Denforcer.skip=true \
     -Dmaven.javadoc.skip=true \
     -Dgcloud.download.skip=true \
-    -pl !pqc-test-common \
+    -pl !pqc-test,!pqc-test/pqc-test-common,!pqc-test/pqc-test-snapshot,!pqc-test/pqc-test-release \
     -T 1C
 
 retry_with_backoff 3 10 \
@@ -47,7 +46,7 @@ retry_with_backoff 3 10 \
     -Denforcer.skip=true \
     -Dmaven.javadoc.skip=true \
     -Dgcloud.download.skip=true \
-    -pl pqc-test \
+    -pl pqc-test,pqc-test/pqc-test-common,pqc-test/pqc-test-snapshot,pqc-test/pqc-test-release \
     -T 1C
 
 # if GOOGLE_APPLICATION_CREDENTIALS is specified as a relative path, prepend Kokoro root directory onto it
