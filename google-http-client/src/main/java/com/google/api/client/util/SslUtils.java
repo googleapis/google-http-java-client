@@ -165,8 +165,8 @@ public final class SslUtils {
   public static SSLContext initSslContext(
       SSLContext sslContext, KeyStore trustStore, TrustManagerFactory trustManagerFactory)
       throws GeneralSecurityException {
-    sslContext.init(
-        null, getCompatibleTrustManagers(sslContext, trustStore, trustManagerFactory), null);
+    trustManagerFactory.init(trustStore);
+    sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
     return sslContext;
   }
 
@@ -196,37 +196,14 @@ public final class SslUtils {
       String mtlsKeyStorePassword,
       KeyManagerFactory keyManagerFactory)
       throws GeneralSecurityException {
+    trustManagerFactory.init(trustStore);
     keyManagerFactory.init(mtlsKeyStore, mtlsKeyStorePassword.toCharArray());
     sslContext.init(
-        keyManagerFactory.getKeyManagers(),
-        getCompatibleTrustManagers(sslContext, trustStore, trustManagerFactory),
-        null);
+        keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
     return sslContext;
   }
 
-  /**
-   * Resolves trust managers compatible with the active security provider. If the SSLContext is
-   * managed by the Bouncy Castle JJSSE provider, it retrieves Bouncy Castle's native trust managers
-   * instead of standard JDK trust managers. This prevents JCA trust manager wrapping mismatches and
-   * unresolved peer host certificate exceptions on strict JVMs (e.g., Java 8/21).
-   */
-  private static TrustManager[] getCompatibleTrustManagers(
-      SSLContext sslContext, KeyStore trustStore, TrustManagerFactory trustManagerFactory)
-      throws GeneralSecurityException {
-    if (sslContext.getProvider() instanceof BouncyCastleJsseProvider) {
-      try {
-        TrustManagerFactory bcTmf =
-            TrustManagerFactory.getInstance(
-                trustManagerFactory.getAlgorithm(), sslContext.getProvider());
-        bcTmf.init(trustStore);
-        return bcTmf.getTrustManagers();
-      } catch (KeyStoreException | NoSuchAlgorithmException e) {
-        // Fallback to default trust managers
-      }
-    }
-    trustManagerFactory.init(trustStore);
-    return trustManagerFactory.getTrustManagers();
-  }
+
 
   /**
    * {@link Beta} <br>
