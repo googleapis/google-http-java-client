@@ -43,7 +43,7 @@ public class RunPqcTest extends PqcConnectivityTest {
 
   @Override
   protected boolean grpcTestShouldSucceed() {
-    return true;
+    return false;
   }
 
   @Override

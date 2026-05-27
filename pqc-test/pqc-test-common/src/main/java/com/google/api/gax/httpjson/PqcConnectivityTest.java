@@ -41,6 +41,7 @@ import com.google.cloud.NoCredentials;
 import com.google.cloud.bigquery.*;
 import com.google.cloud.translate.v3.*;
 import java.io.InputStream;
+import java.security.KeyStore;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +104,8 @@ public abstract class PqcConnectivityTest {
   protected static int httpPort;
   protected static int grpcPort;
   private static boolean isPqcSupported;
+	protected static javax.net.ssl.SSLContext clientSslContext;
+	private static KeyStore ks;
 
   /**
    * Configures the integration test harness environment before test cases are executed.
@@ -167,15 +170,13 @@ public abstract class PqcConnectivityTest {
     // classpath
     // dependencies (Snapshot vs Release)
     try {
-      Class.forName("com.google.api.client.http.javanet.PqcDelegatingSSLSocketFactory");
+			Class.forName("com.google.api.client.http.javanet.PqcPeerHostSSLSocketFactory");
       isPqcSupported = true;
     } catch (ClassNotFoundException e) {
       isPqcSupported = false;
     }
 
-    // 1. Load the self-signed server validation certificate/keystore from test
-    // resources.
-    java.security.KeyStore ks = java.security.KeyStore.getInstance("PKCS12");
+		ks = KeyStore.getInstance("PKCS12");
     try (InputStream is = PqcConnectivityTest.class.getResourceAsStream("/pqctest.p12")) {
       if (is == null) {
         throw new RuntimeException("pqctest.p12 not found in classpath");
@@ -183,22 +184,22 @@ public abstract class PqcConnectivityTest {
       ks.load(is, "password".toCharArray());
     }
 
-    // 2. Save the keystore to a temporary file so the JRE's JSSE property system
-    // can access its
-    // absolute path.
-    java.io.File tempFile = java.io.File.createTempFile("pqctest", ".p12");
-    tempFile.deleteOnExit();
-    try (java.io.FileOutputStream fos = new java.io.FileOutputStream(tempFile)) {
-      ks.store(fos, "password".toCharArray());
-    }
-
-    // 3. Configure JVM default JSSE trust store system properties to trust the
-    // self-signed
-    // validation certificate.
-    // This allows the client to trust the certificate issued by our local server
-    System.setProperty("javax.net.ssl.trustStore", tempFile.getAbsolutePath());
-    System.setProperty("javax.net.ssl.trustStorePassword", "password");
-    System.setProperty("javax.net.ssl.trustStoreType", "PKCS12");
+		// 3. Register JCA providers globally for name-based gRPC Netty client lookup.
+		if (isPqcSupported) {
+			if (java.security.Security.getProvider("BC") == null) {
+				java.security.Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			}
+			if (java.security.Security.getProvider("BCJSSE") == null) {
+				java.security.Security.insertProviderAt(new org.bouncycastle.jsse.provider.BouncyCastleJsseProvider(), 1);
+			}
+			clientSslContext = javax.net.ssl.SSLContext.getInstance("TLSv1.3",
+					new org.bouncycastle.jsse.provider.BouncyCastleJsseProvider());
+		} else {
+			clientSslContext = javax.net.ssl.SSLContext.getInstance("TLSv1.3");
+		}
+		// Initialize with null managers to force the JVM to resolve standard truststore
+		// system properties!
+		clientSslContext.init(null, null, null);
 
     // 6. Spawn PqcTestServer in a separate background process to ensure physical
     // JVM runtime isolation!
@@ -283,11 +284,23 @@ public abstract class PqcConnectivityTest {
 
   @Test
   public void testHttpPqc() throws Exception {
-    TranslationServiceSettings settings =
+		TranslationServiceSettings.Builder settingsBuilder =
         TranslationServiceSettings.newHttpJsonBuilder()
             .setEndpoint("localhost:" + httpPort)
-            .setCredentialsProvider(NoCredentialsProvider.create())
+						.setCredentialsProvider(NoCredentialsProvider.create());
+
+		com.google.api.gax.httpjson.InstantiatingHttpJsonChannelProvider.Builder channelProviderBuilder = ((com.google.api.gax.httpjson.InstantiatingHttpJsonChannelProvider) settingsBuilder
+				.getTransportChannelProvider())
+				.toBuilder();
+
+		com.google.api.client.http.HttpTransport transport = new com.google.api.client.http.javanet.NetHttpTransport.Builder()
+				.trustCertificates(ks)
             .build();
+
+		channelProviderBuilder.setHttpTransport(transport);
+		settingsBuilder.setTransportChannelProvider(channelProviderBuilder.build());
+
+		TranslationServiceSettings settings = settingsBuilder.build();
 
     try (TranslationServiceClient client = TranslationServiceClient.create(settings)) {
       List<String> contents = new ArrayList<>();
@@ -300,12 +313,14 @@ public abstract class PqcConnectivityTest {
 
       try {
         TranslateTextResponse response = client.translateText(request);
-        if (httpTestShouldSucceed()) {
-          assertEquals("mocked translated text", response.getTranslations(0).getTranslatedText());
-          return;
-        }
-        fail("Expected HTTP call to fail in Release due to PQC enforcement");
+				if (!httpTestShouldSucceed()) {
+					fail("Expected HTTP call to fail in Release due to PQC enforcement");
+				}
+				assertEquals("mocked translated text", response.getTranslations(0).getTranslatedText());
       } catch (ApiException e) {
+				if (httpTestShouldSucceed()) {
+					fail("Expected HTTP call to succeed, but failed with: " + e.getStatusCode().getCode(), e);
+				}
         StatusCode.Code code = e.getStatusCode().getCode();
         if (code != StatusCode.Code.UNAVAILABLE && code != StatusCode.Code.UNKNOWN) {
           fail(
@@ -318,11 +333,27 @@ public abstract class PqcConnectivityTest {
 
   @Test
   public void testGrpcPqc() throws Exception {
-    TranslationServiceSettings settings =
+		TranslationServiceSettings.Builder settingsBuilder =
         TranslationServiceSettings.newBuilder()
             .setEndpoint("localhost:" + grpcPort)
-            .setCredentialsProvider(NoCredentialsProvider.create())
-            .build();
+						.setCredentialsProvider(NoCredentialsProvider.create());
+
+		if (clientSupportsPqc()) {
+			com.google.api.gax.grpc.InstantiatingGrpcChannelProvider.Builder channelProviderBuilder = ((com.google.api.gax.grpc.InstantiatingGrpcChannelProvider) settingsBuilder
+					.getTransportChannelProvider())
+					.toBuilder();
+			channelProviderBuilder.setChannelConfigurator(
+					new com.google.api.core.ApiFunction<io.grpc.ManagedChannelBuilder, io.grpc.ManagedChannelBuilder>() {
+						@Override
+						public io.grpc.ManagedChannelBuilder apply(io.grpc.ManagedChannelBuilder builder) {
+							configureGrpcChannelForPqc(builder);
+							return builder;
+						}
+					});
+			settingsBuilder.setTransportChannelProvider(channelProviderBuilder.build());
+		}
+
+		TranslationServiceSettings settings = settingsBuilder.build();
 
     try (TranslationServiceClient client = TranslationServiceClient.create(settings)) {
       List<String> contents = new ArrayList<>();
@@ -335,17 +366,64 @@ public abstract class PqcConnectivityTest {
 
       try {
         TranslateTextResponse response = client.translateText(request);
-        if (grpcTestShouldSucceed()) {
-          assertNotNull(response);
-          return;
-        }
+				if (!grpcTestShouldSucceed()) {
+					fail("Expected gRPC call to fail!");
+				}
+				assertNotNull(response);
       } catch (ApiException e) {
-        if (!grpcTestShouldSucceed()) {
+				if (grpcTestShouldSucceed()) {
           fail(
-              "Expected gRPC call to succeed in Release (native MLKEM), but failed: "
-                  + e.getMessage());
-        }
-      }
+							"Expected gRPC call to succeed, but failed: "
+									+ e.getMessage(),
+							e);
+				}
+			}
+		}
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static void configureGrpcChannelForPqc(io.grpc.ManagedChannelBuilder<?> builder) {
+		String builderClassName = builder.getClass().getName();
+		try {
+			Class<?> apnClass = Class.forName("io.grpc.netty.shaded.io.netty.handler.ssl.ApplicationProtocolConfig");
+			Class<?> apnProtocolClass = Class
+					.forName("io.grpc.netty.shaded.io.netty.handler.ssl.ApplicationProtocolConfig$Protocol");
+			Class<?> apnSelectorBehaviorClass = Class
+					.forName("io.grpc.netty.shaded.io.netty.handler.ssl.ApplicationProtocolConfig$SelectorFailureBehavior");
+			Class<?> apnSelectedListenerBehaviorClass = Class.forName(
+					"io.grpc.netty.shaded.io.netty.handler.ssl.ApplicationProtocolConfig$SelectedListenerFailureBehavior");
+
+			Object alpnEnum = Enum.valueOf((Class<Enum>) apnProtocolClass, "ALPN");
+			Object noAdvertiseEnum = Enum.valueOf((Class<Enum>) apnSelectorBehaviorClass, "NO_ADVERTISE");
+			Object acceptEnum = Enum.valueOf((Class<Enum>) apnSelectedListenerBehaviorClass, "ACCEPT");
+
+			Object apn = apnClass
+					.getConstructor(apnProtocolClass, apnSelectorBehaviorClass, apnSelectedListenerBehaviorClass, String[].class)
+					.newInstance(alpnEnum, noAdvertiseEnum, acceptEnum, new String[] { "h2" });
+
+			Class<?> sslContextBuilderClass = Class.forName("io.grpc.netty.shaded.io.netty.handler.ssl.SslContextBuilder");
+			Class<?> sslProviderClass = Class.forName("io.grpc.netty.shaded.io.netty.handler.ssl.SslProvider");
+			Object jdkProviderEnum = Enum.valueOf((Class<Enum>) sslProviderClass, "JDK");
+
+			Object sslContextBuilder = sslContextBuilderClass.getMethod("forClient").invoke(null);
+			sslContextBuilderClass.getMethod("sslProvider", sslProviderClass).invoke(sslContextBuilder, jdkProviderEnum);
+			sslContextBuilderClass.getMethod("protocols", String[].class).invoke(sslContextBuilder,
+					new Object[] { new String[] { "TLSv1.3" } });
+			sslContextBuilderClass.getMethod("applicationProtocolConfig", apnClass).invoke(sslContextBuilder, apn);
+
+			Class<?> insecureTrustManagerFactoryClass = Class
+					.forName("io.grpc.netty.shaded.io.netty.handler.ssl.util.InsecureTrustManagerFactory");
+			Object trustManagerFactory = insecureTrustManagerFactoryClass.getField("INSTANCE").get(null);
+			sslContextBuilderClass.getMethod("trustManager", javax.net.ssl.TrustManagerFactory.class)
+					.invoke(sslContextBuilder, trustManagerFactory);
+
+			Object shadedSslContext = sslContextBuilderClass.getMethod("build").invoke(sslContextBuilder);
+
+			builder.getClass().getMethod("sslContext", Class.forName("io.grpc.netty.shaded.io.netty.handler.ssl.SslContext"))
+					.invoke(builder, shadedSslContext);
+
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to configure gRPC channel for PQC", e);
     }
   }
 
@@ -353,11 +431,21 @@ public abstract class PqcConnectivityTest {
   public void testBigQueryPqc() throws Exception {
 
     // Vanilla BigQuery Client instantiation.
+		com.google.api.client.http.HttpTransport transport = new com.google.api.client.http.javanet.NetHttpTransport.Builder()
+				.trustCertificates(ks)
+				.build();
+
+		com.google.cloud.http.HttpTransportOptions transportOptions = com.google.cloud.http.HttpTransportOptions
+				.newBuilder()
+				.setHttpTransportFactory(() -> transport)
+				.build();
+
     BigQueryOptions bigqueryOptions =
         BigQueryOptions.newBuilder()
             .setProjectId("test-project")
             .setHost("https://localhost:" + httpPort)
             .setCredentials(NoCredentials.getInstance())
+						.setTransportOptions(transportOptions)
             .build();
 
     BigQuery bigquery = bigqueryOptions.getService();
