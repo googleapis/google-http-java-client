@@ -44,7 +44,6 @@ import org.bouncycastle.jsse.provider.BouncyCastleJsseProvider;
  */
 public final class SslUtils {
 
-	private static final Logger LOGGER = Logger.getLogger(SslUtils.class.getName());
 
   /**
    * Returns the SSL context for "SSL" algorithm.
@@ -80,8 +79,8 @@ public final class SslUtils {
         // Initialize the fallback context with default managers as well.
         fallbackContext.init(null, null, null);
       } catch (GeneralSecurityException ex) {
-				LOGGER.log(Level.WARNING, e, () -> "Could not instantiate SSLContext with BC provider");
-      }
+				// TODO: Log
+			}
       return fallbackContext;
     }
 
