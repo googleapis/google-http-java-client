@@ -17,6 +17,7 @@ package com.google.api.client.util;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Provider;
@@ -165,8 +166,8 @@ public final class SslUtils {
   public static SSLContext initSslContext(
       SSLContext sslContext, KeyStore trustStore, TrustManagerFactory trustManagerFactory)
       throws GeneralSecurityException {
-    trustManagerFactory.init(trustStore);
-    sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
+    sslContext.init(
+        null, getCompatibleTrustManagers(sslContext, trustStore, trustManagerFactory), null);
     return sslContext;
   }
 
@@ -196,11 +197,36 @@ public final class SslUtils {
       String mtlsKeyStorePassword,
       KeyManagerFactory keyManagerFactory)
       throws GeneralSecurityException {
-    trustManagerFactory.init(trustStore);
     keyManagerFactory.init(mtlsKeyStore, mtlsKeyStorePassword.toCharArray());
     sslContext.init(
-        keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
+        keyManagerFactory.getKeyManagers(),
+        getCompatibleTrustManagers(sslContext, trustStore, trustManagerFactory),
+        null);
     return sslContext;
+  }
+
+  /**
+   * Resolves trust managers compatible with the active security provider. If the SSLContext is
+   * managed by the Bouncy Castle JJSSE provider, it retrieves Bouncy Castle's native trust managers
+   * instead of standard JDK trust managers. This prevents JCA trust manager wrapping mismatches and
+   * unresolved peer host certificate exceptions on strict JVMs (e.g., Java 8/21).
+   */
+  private static TrustManager[] getCompatibleTrustManagers(
+      SSLContext sslContext, KeyStore trustStore, TrustManagerFactory trustManagerFactory)
+      throws GeneralSecurityException {
+    if (sslContext.getProvider() instanceof BouncyCastleJsseProvider) {
+      try {
+        TrustManagerFactory bcTmf =
+            TrustManagerFactory.getInstance(
+                trustManagerFactory.getAlgorithm(), sslContext.getProvider());
+        bcTmf.init(trustStore);
+        return bcTmf.getTrustManagers();
+      } catch (KeyStoreException | NoSuchAlgorithmException e) {
+        // Fallback to default trust managers
+      }
+    }
+    trustManagerFactory.init(trustStore);
+    return trustManagerFactory.getTrustManagers();
   }
 
   /**
@@ -251,6 +277,7 @@ public final class SslUtils {
 
   private SslUtils() {}
 
+  @org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 	private static class PqcEnforcingSSLEngine extends javax.net.ssl.SSLEngine {
 		private final javax.net.ssl.SSLEngine delegate;
 
@@ -425,6 +452,7 @@ public final class SslUtils {
 		}
 	}
 
+  @org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 	private static class PqcEnforcingSSLContextSpi extends javax.net.ssl.SSLContextSpi {
 		private final javax.net.ssl.SSLContext delegate;
 
@@ -468,6 +496,7 @@ public final class SslUtils {
 				javax.net.ssl.TrustManager[] tm,
 				java.security.SecureRandom sr)
 				throws java.security.KeyManagementException {
+			delegate.init(km, tm, sr);
 		}
 	}
 }

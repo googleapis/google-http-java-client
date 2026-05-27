@@ -65,30 +65,30 @@ class PqcPeerHostSSLSocketFactory extends SSLSocketFactory {
   @Override
   public Socket createSocket(Socket s, String host, int port, boolean autoClose)
       throws IOException {
-    return delegate.createSocket(s, host, port, autoClose);
+    return configureSocket(delegate.createSocket(s, host, port, autoClose));
   }
 
   @Override
   public Socket createSocket() throws IOException {
-    return delegate.createSocket();
+    return configureSocket(delegate.createSocket());
   }
 
   @Override
   public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
-    return delegate.createSocket(host, port);
+    return configureSocket(delegate.createSocket(host, port));
   }
 
   @Override
   public Socket createSocket(String host, int port, InetAddress localAddress, int localPort)
       throws IOException, UnknownHostException {
-    return delegate.createSocket(host, port, localAddress, localPort);
+    return configureSocket(delegate.createSocket(host, port, localAddress, localPort));
   }
 
   @Override
   public Socket createSocket(InetAddress address, int port) throws IOException {
     Socket plainSocket = new Socket();
     plainSocket.connect(new InetSocketAddress(address, port));
-    return delegate.createSocket(plainSocket, this.host, port, true);
+    return configureSocket(delegate.createSocket(plainSocket, this.host, port, true));
   }
 
   @Override
@@ -97,6 +97,25 @@ class PqcPeerHostSSLSocketFactory extends SSLSocketFactory {
     Socket plainSocket = new Socket();
     plainSocket.bind(new InetSocketAddress(localAddress, localPort));
     plainSocket.connect(new InetSocketAddress(address, port));
-    return delegate.createSocket(plainSocket, this.host, port, true);
+    return configureSocket(delegate.createSocket(plainSocket, this.host, port, true));
+  }
+
+  @org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+  private Socket configureSocket(Socket socket) {
+    if (socket instanceof javax.net.ssl.SSLSocket) {
+      javax.net.ssl.SSLSocket sslSocket = (javax.net.ssl.SSLSocket) socket;
+      try {
+        javax.net.ssl.SSLParameters params = sslSocket.getSSLParameters();
+        if (params != null) {
+          java.util.List<javax.net.ssl.SNIServerName> serverNames = new java.util.ArrayList<>();
+          serverNames.add(new javax.net.ssl.SNIHostName(this.host));
+          params.setServerNames(serverNames);
+          sslSocket.setSSLParameters(params);
+        }
+      } catch (Exception e) {
+        // Ignore
+      }
+    }
+    return socket;
   }
 }
