@@ -65,13 +65,6 @@ public class PqcTestServer {
 
   public void start() throws Exception {
 
-    if (Security.getProvider("BC") == null) {
-      Security.addProvider(new BouncyCastleProvider());
-    }
-    if (Security.getProvider("BCJSSE") == null) {
-      Security.insertProviderAt(new BouncyCastleJsseProvider(), 1);
-    }
-
     KeyStore ks = KeyStore.getInstance("PKCS12");
     try (InputStream is = getClass().getResourceAsStream("/pqctest.p12")) {
       if (is == null) {
@@ -88,8 +81,9 @@ public class PqcTestServer {
             javax.net.ssl.TrustManagerFactory.getDefaultAlgorithm());
     tmf.init(ks);
 
-    BouncyCastleJsseProvider bcProvider = new BouncyCastleJsseProvider();
-    SSLContext bcContext = SSLContext.getInstance("TLSv1.3", bcProvider);
+		BouncyCastleProvider bcProvider = new BouncyCastleProvider();
+		BouncyCastleJsseProvider bcJsseProvider = new BouncyCastleJsseProvider(bcProvider);
+		SSLContext bcContext = SSLContext.getInstance("TLSv1.3", bcJsseProvider);
     bcContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 
     SSLContext sslContext =
