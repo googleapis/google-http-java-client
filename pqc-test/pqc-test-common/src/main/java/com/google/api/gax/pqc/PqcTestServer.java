@@ -34,9 +34,9 @@ import com.sun.net.httpserver.HttpsParameters;
 import com.sun.net.httpserver.HttpsServer;
 import io.grpc.Server;
 import io.grpc.netty.NettyServerBuilder;
-import io.netty.handler.ssl.IdentityCipherSuiteFilter;
 import io.netty.handler.ssl.ApplicationProtocolConfig;
 import io.netty.handler.ssl.ClientAuth;
+import io.netty.handler.ssl.IdentityCipherSuiteFilter;
 import io.netty.handler.ssl.JdkSslContext;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -81,9 +81,9 @@ public class PqcTestServer {
             javax.net.ssl.TrustManagerFactory.getDefaultAlgorithm());
     tmf.init(ks);
 
-		BouncyCastleProvider bcProvider = new BouncyCastleProvider();
-		BouncyCastleJsseProvider bcJsseProvider = new BouncyCastleJsseProvider(bcProvider);
-		SSLContext bcContext = SSLContext.getInstance("TLSv1.3", bcJsseProvider);
+    BouncyCastleProvider bcProvider = new BouncyCastleProvider();
+    BouncyCastleJsseProvider bcJsseProvider = new BouncyCastleJsseProvider(bcProvider);
+    SSLContext bcContext = SSLContext.getInstance("TLSv1.3", bcJsseProvider);
     bcContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 
     SSLContext sslContext =
@@ -139,21 +139,16 @@ public class PqcTestServer {
     httpServer.start();
     httpPort = httpServer.getAddress().getPort();
 
-    ApplicationProtocolConfig apn = new ApplicationProtocolConfig(
-        ApplicationProtocolConfig.Protocol.ALPN,
-        ApplicationProtocolConfig.SelectorFailureBehavior.NO_ADVERTISE,
-        ApplicationProtocolConfig.SelectedListenerFailureBehavior.ACCEPT,
-        "h2"
-    );
+    ApplicationProtocolConfig apn =
+        new ApplicationProtocolConfig(
+            ApplicationProtocolConfig.Protocol.ALPN,
+            ApplicationProtocolConfig.SelectorFailureBehavior.NO_ADVERTISE,
+            ApplicationProtocolConfig.SelectedListenerFailureBehavior.ACCEPT,
+            "h2");
 
-    io.netty.handler.ssl.SslContext nettySslContext = new JdkSslContext(
-        sslContext,
-        false,
-        null,
-        IdentityCipherSuiteFilter.INSTANCE,
-        apn,
-        ClientAuth.NONE
-    );
+    io.netty.handler.ssl.SslContext nettySslContext =
+        new JdkSslContext(
+            sslContext, false, null, IdentityCipherSuiteFilter.INSTANCE, apn, ClientAuth.NONE);
 
     io.grpc.MethodDescriptor<byte[], byte[]> method =
         io.grpc.MethodDescriptor.<byte[], byte[]>newBuilder()
@@ -273,8 +268,10 @@ public class PqcTestServer {
     }
 
     @Override
-    public void setHandshakeApplicationProtocolSelector(BiFunction<SSLEngine, List<String>, String> selector) {
-      delegate.setHandshakeApplicationProtocolSelector((engine, protocols) -> selector.apply(this, protocols));
+    public void setHandshakeApplicationProtocolSelector(
+        BiFunction<SSLEngine, List<String>, String> selector) {
+      delegate.setHandshakeApplicationProtocolSelector(
+          (engine, protocols) -> selector.apply(this, protocols));
     }
 
     @Override
@@ -469,7 +466,6 @@ public class PqcTestServer {
         javax.net.ssl.KeyManager[] km,
         javax.net.ssl.TrustManager[] tm,
         java.security.SecureRandom sr)
-        throws java.security.KeyManagementException {
-    }
+        throws java.security.KeyManagementException {}
   }
 }
