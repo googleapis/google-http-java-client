@@ -169,6 +169,18 @@ public abstract class PqcConnectivityTest {
 
   @BeforeAll
   public static void setup() throws Exception {
+    // Configure verbose Bouncy Castle and standard JJSSE debug logging on client-side
+    java.util.logging.Logger rootLogger = java.util.logging.Logger.getLogger("org.bouncycastle");
+    rootLogger.setLevel(java.util.logging.Level.FINEST);
+    java.util.logging.Logger globalLogger = java.util.logging.Logger.getLogger("");
+    globalLogger.setLevel(java.util.logging.Level.FINEST);
+    for (java.util.logging.Handler handler : globalLogger.getHandlers()) {
+      handler.setLevel(java.util.logging.Level.FINEST);
+    }
+    System.setProperty("javax.net.debug", "ssl,handshake");
+
+    System.out.println("[PQC-CLIENT-SETUP] Starting client logging setup.");
+    System.out.println("[PQC-CLIENT-SETUP] Registered Security Providers: " + java.util.Arrays.toString(java.security.Security.getProviders()));
 
     // Dynamically detect if PQC auto-upgrade wrapping is supported by current
     // classpath
@@ -193,6 +205,7 @@ public abstract class PqcConnectivityTest {
     ProcessBuilder pb =
         new ProcessBuilder(
             "java",
+            "-Djavax.net.debug=ssl,handshake",
             "-cp",
             System.getProperty("java.class.path"),
             "com.google.api.gax.pqc.PqcTestServer");

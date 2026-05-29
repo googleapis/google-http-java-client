@@ -64,6 +64,7 @@ public class PqcTestServer {
   private int grpcPort;
 
   public void start() throws Exception {
+    setupLogging();
 
     KeyStore ks = KeyStore.getInstance("PKCS12");
     try (InputStream is = getClass().getResourceAsStream("/pqctest.p12")) {
@@ -213,6 +214,17 @@ public class PqcTestServer {
     return grpcPort;
   }
 
+  private static void setupLogging() {
+    java.util.logging.Logger rootLogger = java.util.logging.Logger.getLogger("org.bouncycastle");
+    rootLogger.setLevel(java.util.logging.Level.FINEST);
+    java.util.logging.Logger globalLogger = java.util.logging.Logger.getLogger("");
+    globalLogger.setLevel(java.util.logging.Level.FINEST);
+    for (java.util.logging.Handler handler : globalLogger.getHandlers()) {
+      handler.setLevel(java.util.logging.Level.FINEST);
+    }
+    System.setProperty("javax.net.debug", "ssl,handshake");
+  }
+
   private static class ByteMarshaller implements io.grpc.MethodDescriptor.Marshaller<byte[]> {
     @Override
     public InputStream stream(byte[] value) {
@@ -257,13 +269,21 @@ public class PqcTestServer {
 
     @Override
     public void setSSLParameters(javax.net.ssl.SSLParameters params) {
+      System.out.println("[PQC-SERVER-ENGINE] Calling setSSLParameters with params: " + params);
+      if (params != null) {
+        System.out.println("[PQC-SERVER-ENGINE]   Protocols: " + java.util.Arrays.toString(params.getProtocols()));
+        System.out.println("[PQC-SERVER-ENGINE]   CipherSuites: " + java.util.Arrays.toString(params.getCipherSuites()));
+      }
       delegate.setSSLParameters(params);
       Object objEngine = delegate;
       if (objEngine instanceof org.bouncycastle.jsse.BCSSLEngine) {
         org.bouncycastle.jsse.BCSSLEngine bcEngine = (org.bouncycastle.jsse.BCSSLEngine) objEngine;
         org.bouncycastle.jsse.BCSSLParameters bcParams = bcEngine.getParameters();
+        System.out.println("[PQC-SERVER-ENGINE] BCSSLEngine detected. Setting named groups to: [X25519MLKEM768]");
         bcParams.setNamedGroups(new String[] {"X25519MLKEM768"});
         bcEngine.setParameters(bcParams);
+      } else {
+        System.out.println("[PQC-SERVER-ENGINE] WARNING: Delegate engine is NOT an instance of BCSSLEngine! Actual class: " + objEngine.getClass().getName());
       }
     }
 
@@ -398,14 +418,42 @@ public class PqcTestServer {
     public javax.net.ssl.SSLEngineResult unwrap(
         java.nio.ByteBuffer src, java.nio.ByteBuffer[] dsts, int offset, int length)
         throws javax.net.ssl.SSLException {
-      return delegate.unwrap(src, dsts, offset, length);
+      try {
+        javax.net.ssl.SSLEngineResult result = delegate.unwrap(src, dsts, offset, length);
+        logEngineResult("unwrap", result);
+        return result;
+      } catch (javax.net.ssl.SSLException e) {
+        System.out.println("[PQC-SERVER-ENGINE] unwrap failed: " + e.getMessage());
+        e.printStackTrace(System.out);
+        throw e;
+      }
     }
 
     @Override
     public javax.net.ssl.SSLEngineResult wrap(
         java.nio.ByteBuffer[] srcs, int offset, int length, java.nio.ByteBuffer dst)
         throws javax.net.ssl.SSLException {
-      return delegate.wrap(srcs, offset, length, dst);
+      try {
+        javax.net.ssl.SSLEngineResult result = delegate.wrap(srcs, offset, length, dst);
+        logEngineResult("wrap", result);
+        return result;
+      } catch (javax.net.ssl.SSLException e) {
+        System.out.println("[PQC-SERVER-ENGINE] wrap failed: " + e.getMessage());
+        e.printStackTrace(System.out);
+        throw e;
+      }
+    }
+
+    private void logEngineResult(String action, javax.net.ssl.SSLEngineResult result) {
+      javax.net.ssl.SSLSession session = delegate.getHandshakeSession();
+      if (session == null) {
+        session = delegate.getSession();
+      }
+      String suite = (session != null) ? session.getCipherSuite() : "NONE";
+      String protocol = (session != null) ? session.getProtocol() : "NONE";
+      System.out.println("[PQC-SERVER-ENGINE] " + action + " - Status: " + result.getStatus()
+          + ", HandshakeStatus: " + result.getHandshakeStatus()
+          + ", Session Protocol: " + protocol + ", CipherSuite: " + suite);
     }
 
     @Override
