@@ -1,0 +1,33 @@
+{
+	"workbench.colorCustomizations": {
+		"activityBar.activeBackground": "#118019",
+		"activityBar.background": "#118019",
+		"activityBar.foreground": "#e7e7e7",
+		"activityBar.inactiveForeground": "#e7e7e799",
+		"activityBarBadge.background": "#261ac5",
+		"activityBarBadge.foreground": "#e7e7e7",
+		"commandCenter.border": "#e7e7e799",
+		"sash.hoverBorder": "#118019",
+		"statusBar.background": "#0b5310",
+		"statusBar.foreground": "#e7e7e7",
+		"statusBarItem.hoverBackground": "#118019",
+		"statusBarItem.remoteBackground": "#0b5310",
+		"statusBarItem.remoteForeground": "#e7e7e7",
+		"titleBar.activeBackground": "#0b5310",
+		"titleBar.activeForeground": "#e7e7e7",
+		"titleBar.inactiveBackground": "#0b531099",
+		"titleBar.inactiveForeground": "#e7e7e799"
+	},
+	"peacock.color": "#0b5310",
+	"files.exclude": {
+		"**/.git": true,
+		"**/.svn": true,
+		"**/.hg": true,
+		"**/.DS_Store": true,
+		"**/Thumbs.db": true,
+		"**/*.class": true
+	},
+	"java.autobuild.enabled": true,
+	"java.import.maven.enabled": true,
+	"java.configuration.updateBuildConfiguration": "interactive",
+}
