@@ -106,8 +106,10 @@ import org.junit.jupiter.api.Test;
 public abstract class PqcConnectivityTest {
 
   private static Process serverProcess;
-  protected static int httpPort;
-  protected static int grpcPort;
+  protected static int httpPqcPort;
+  protected static int httpClassicalPort;
+  protected static int grpcPqcPort;
+  protected static int grpcClassicalPort;
   private static boolean isPqcSupported;
   private static KeyStore ks;
 
@@ -208,22 +210,30 @@ public abstract class PqcConnectivityTest {
                 serverProcess.getInputStream(), java.nio.charset.StandardCharsets.UTF_8));
 
     String line;
-    boolean httpPortFound = false;
-    boolean grpcPortFound = false;
+    boolean httpPqcFound = false;
+    boolean httpClassicalFound = false;
+    boolean grpcPqcFound = false;
+    boolean grpcClassicalFound = false;
 
     // Wait for the server process to output its HTTP and gRPC ports
     long startTime = System.currentTimeMillis();
     while ((line = reader.readLine()) != null) {
       System.out.println("[SERVER-OUT] " + line);
-      if (line.startsWith("HTTP_PORT: ")) {
-        httpPort = Integer.parseInt(line.substring(11).trim());
-        httpPortFound = true;
-      } else if (line.startsWith("GRPC_PORT: ")) {
-        grpcPort = Integer.parseInt(line.substring(11).trim());
-        grpcPortFound = true;
+      if (line.startsWith("HTTP_PQC_PORT: ")) {
+        httpPqcPort = Integer.parseInt(line.substring(15).trim());
+        httpPqcFound = true;
+      } else if (line.startsWith("HTTP_CLASSICAL_PORT: ")) {
+        httpClassicalPort = Integer.parseInt(line.substring(21).trim());
+        httpClassicalFound = true;
+      } else if (line.startsWith("GRPC_PQC_PORT: ")) {
+        grpcPqcPort = Integer.parseInt(line.substring(15).trim());
+        grpcPqcFound = true;
+      } else if (line.startsWith("GRPC_CLASSICAL_PORT: ")) {
+        grpcClassicalPort = Integer.parseInt(line.substring(21).trim());
+        grpcClassicalFound = true;
       }
 
-      if (httpPortFound && grpcPortFound) {
+      if (httpPqcFound && httpClassicalFound && grpcPqcFound && grpcClassicalFound) {
         break;
       }
 
@@ -235,7 +245,7 @@ public abstract class PqcConnectivityTest {
       }
     }
 
-    if (!httpPortFound || !grpcPortFound) {
+    if (!httpPqcFound || !httpClassicalFound || !grpcPqcFound || !grpcClassicalFound) {
       throw new RuntimeException("PqcTestServer failed to initialize ephemeral ports!");
     }
 
@@ -265,11 +275,10 @@ public abstract class PqcConnectivityTest {
     }
   }
 
-  @Test
-  public void testHttpPqc() throws Exception {
+  private void runHttpTest(int port, boolean shouldSucceed) throws Exception {
     TranslationServiceSettings.Builder settingsBuilder =
         TranslationServiceSettings.newHttpJsonBuilder()
-            .setEndpoint("localhost:" + httpPort)
+            .setEndpoint("localhost:" + port)
             .setCredentialsProvider(NoCredentialsProvider.create());
 
     com.google.api.gax.httpjson.InstantiatingHttpJsonChannelProvider.Builder
@@ -299,12 +308,12 @@ public abstract class PqcConnectivityTest {
 
       try {
         TranslateTextResponse response = client.translateText(request);
-        if (!httpTestShouldSucceed()) {
-          fail("Expected HTTP call to fail in Release due to PQC enforcement");
+        if (!shouldSucceed) {
+          fail("Expected HTTP call to fail due to server PQC requirements");
         }
         assertEquals("mocked translated text", response.getTranslations(0).getTranslatedText());
       } catch (ApiException e) {
-        if (httpTestShouldSucceed()) {
+        if (shouldSucceed) {
           fail("Expected HTTP call to succeed, but failed with: " + e.getStatusCode().getCode(), e);
         }
         StatusCode.Code code = e.getStatusCode().getCode();
@@ -317,29 +326,30 @@ public abstract class PqcConnectivityTest {
     }
   }
 
-  @Test
-  public void testGrpcPqc() throws Exception {
+  private void runGrpcTest(int port, boolean shouldSucceed) throws Exception {
     TranslationServiceSettings.Builder settingsBuilder =
         TranslationServiceSettings.newBuilder()
-            .setEndpoint("localhost:" + grpcPort)
+            .setEndpoint("localhost:" + port)
             .setCredentialsProvider(NoCredentialsProvider.create());
 
-    if (clientSupportsPqc()) {
-      com.google.api.gax.grpc.InstantiatingGrpcChannelProvider.Builder channelProviderBuilder =
-          ((com.google.api.gax.grpc.InstantiatingGrpcChannelProvider)
-                  settingsBuilder.getTransportChannelProvider())
-              .toBuilder();
-      channelProviderBuilder.setChannelConfigurator(
-          new com.google.api.core.ApiFunction<
-              io.grpc.ManagedChannelBuilder, io.grpc.ManagedChannelBuilder>() {
-            @Override
-            public io.grpc.ManagedChannelBuilder apply(io.grpc.ManagedChannelBuilder builder) {
+    com.google.api.gax.grpc.InstantiatingGrpcChannelProvider.Builder channelProviderBuilder =
+        ((com.google.api.gax.grpc.InstantiatingGrpcChannelProvider)
+                settingsBuilder.getTransportChannelProvider())
+            .toBuilder();
+    channelProviderBuilder.setChannelConfigurator(
+        new com.google.api.core.ApiFunction<
+            io.grpc.ManagedChannelBuilder, io.grpc.ManagedChannelBuilder>() {
+          @Override
+          public io.grpc.ManagedChannelBuilder apply(io.grpc.ManagedChannelBuilder builder) {
+            if (clientSupportsPqc()) {
               configureGrpcChannelForPqc(builder);
-              return builder;
+            } else {
+              configureGrpcChannelForClassical(builder);
             }
-          });
-      settingsBuilder.setTransportChannelProvider(channelProviderBuilder.build());
-    }
+            return builder;
+          }
+        });
+    settingsBuilder.setTransportChannelProvider(channelProviderBuilder.build());
 
     TranslationServiceSettings settings = settingsBuilder.build();
 
@@ -354,16 +364,80 @@ public abstract class PqcConnectivityTest {
 
       try {
         TranslateTextResponse response = client.translateText(request);
-        if (!grpcTestShouldSucceed()) {
+        if (!shouldSucceed) {
           fail("Expected gRPC call to fail!");
         }
         assertNotNull(response);
       } catch (ApiException e) {
-        if (grpcTestShouldSucceed()) {
+        if (shouldSucceed) {
           fail("Expected gRPC call to succeed, but failed: " + e.getMessage(), e);
         }
       }
     }
+  }
+
+  private void runBigQueryTest(int port, boolean shouldSucceed) throws Exception {
+    com.google.api.client.http.HttpTransport transport =
+        new com.google.api.client.http.javanet.NetHttpTransport.Builder()
+            .trustCertificates(ks)
+            .build();
+
+    com.google.cloud.http.HttpTransportOptions transportOptions =
+        com.google.cloud.http.HttpTransportOptions.newBuilder()
+            .setHttpTransportFactory(() -> transport)
+            .build();
+
+    BigQueryOptions bigqueryOptions =
+        BigQueryOptions.newBuilder()
+            .setProjectId("test-project")
+            .setHost("https://localhost:" + port)
+            .setCredentials(NoCredentials.getInstance())
+            .setTransportOptions(transportOptions)
+            .build();
+
+    BigQuery bigquery = bigqueryOptions.getService();
+
+    try {
+      bigquery.listDatasets();
+      if (shouldSucceed) {
+        return;
+      }
+      fail("Expected BigQuery client call to fail!");
+    } catch (Exception e) {
+      if (shouldSucceed) {
+        fail("Expected BigQuery client call to succeed!", e);
+      }
+    }
+  }
+
+  @Test
+  public void testHttpPqcServerEnforced() throws Exception {
+    runHttpTest(httpPqcPort, httpTestShouldSucceed());
+  }
+
+  @Test
+  public void testHttpClassicalServer() throws Exception {
+    runHttpTest(httpClassicalPort, true);
+  }
+
+  @Test
+  public void testGrpcPqcServerEnforced() throws Exception {
+    runGrpcTest(grpcPqcPort, grpcTestShouldSucceed());
+  }
+
+  @Test
+  public void testGrpcClassicalServer() throws Exception {
+    runGrpcTest(grpcClassicalPort, true);
+  }
+
+  @Test
+  public void testBigQueryPqcServerEnforced() throws Exception {
+    runBigQueryTest(httpPqcPort, bigqueryTestShouldSucceed());
+  }
+
+  @Test
+  public void testBigQueryClassicalServer() throws Exception {
+    runBigQueryTest(httpClassicalPort, true);
   }
 
   private static void configureGrpcChannelForPqc(io.grpc.ManagedChannelBuilder<?> builder) {
@@ -373,6 +447,7 @@ public abstract class PqcConnectivityTest {
     }
     NettyChannelBuilder nettyBuilder = (NettyChannelBuilder) builder;
 
+    // Ensures HTTP/2 is used as it's required by gRPC
     ApplicationProtocolConfig apn =
         new ApplicationProtocolConfig(
             ApplicationProtocolConfig.Protocol.ALPN,
@@ -400,42 +475,30 @@ public abstract class PqcConnectivityTest {
     }
   }
 
-  @Test
-  public void testBigQueryPqc() throws Exception {
+  private static void configureGrpcChannelForClassical(io.grpc.ManagedChannelBuilder<?> builder) {
+    if (!(builder instanceof NettyChannelBuilder)) {
+      throw new IllegalArgumentException(
+          "Unsupported channel builder type: " + builder.getClass().getName());
+    }
+    NettyChannelBuilder nettyBuilder = (NettyChannelBuilder) builder;
 
-    // Vanilla BigQuery Client instantiation.
-    com.google.api.client.http.HttpTransport transport =
-        new com.google.api.client.http.javanet.NetHttpTransport.Builder()
-            .trustCertificates(ks)
-            .build();
+    ApplicationProtocolConfig apn =
+        new ApplicationProtocolConfig(
+            ApplicationProtocolConfig.Protocol.ALPN,
+            ApplicationProtocolConfig.SelectorFailureBehavior.NO_ADVERTISE,
+            ApplicationProtocolConfig.SelectedListenerFailureBehavior.ACCEPT,
+            "h2");
 
-    com.google.cloud.http.HttpTransportOptions transportOptions =
-        com.google.cloud.http.HttpTransportOptions.newBuilder()
-            .setHttpTransportFactory(() -> transport)
-            .build();
-
-    BigQueryOptions bigqueryOptions =
-        BigQueryOptions.newBuilder()
-            .setProjectId("test-project")
-            .setHost("https://localhost:" + httpPort)
-            .setCredentials(NoCredentials.getInstance())
-            .setTransportOptions(transportOptions)
-            .build();
-
-    BigQuery bigquery = bigqueryOptions.getService();
-
-    // This will trigger a request to
-    // https://localhost:httpPort/bigquery/v2/projects/test-project/datasets
     try {
-      bigquery.listDatasets();
-      if (bigqueryTestShouldSucceed()) {
-        return;
-      }
-      fail("Expected BigQuery client call to fail!");
+      SslContext shadedSslContext =
+          SslContextBuilder.forClient()
+              .applicationProtocolConfig(apn)
+              .trustManager(InsecureTrustManagerFactory.INSTANCE)
+              .build();
+
+      nettyBuilder.sslContext(shadedSslContext);
     } catch (Exception e) {
-      if (bigqueryTestShouldSucceed()) {
-        fail("Expected BigQuery client call to succeed!", e);
-      }
+      throw new RuntimeException("Failed to configure shaded gRPC Netty channel for Classical", e);
     }
   }
 }

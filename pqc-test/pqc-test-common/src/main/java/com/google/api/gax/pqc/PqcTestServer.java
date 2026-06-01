@@ -58,10 +58,14 @@ import org.bouncycastle.jsse.provider.BouncyCastleJsseProvider;
  */
 public class PqcTestServer {
 
-  private HttpsServer httpServer;
-  private Server grpcServer;
-  private int httpPort;
-  private int grpcPort;
+  private HttpsServer httpServerPqc;
+  private HttpsServer httpServerClassical;
+  private Server grpcServerPqc;
+  private Server grpcServerClassical;
+  private int httpPqcPort;
+  private int httpClassicalPort;
+  private int grpcPqcPort;
+  private int grpcClassicalPort;
 
   public void start() throws Exception {
 
@@ -86,14 +90,50 @@ public class PqcTestServer {
     SSLContext bcContext = SSLContext.getInstance("TLSv1.3", bcJsseProvider);
     bcContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 
-    SSLContext sslContext =
+    SSLContext pqcEnforcingSslContext =
         new SSLContext(
             new PqcEnforcingSSLContextSpi(bcContext),
             bcContext.getProvider(),
             bcContext.getProtocol()) {};
 
-    httpServer = HttpsServer.create(new InetSocketAddress(0), 0);
-    httpServer.setHttpsConfigurator(
+    SSLContext classicalSslContext = bcContext;
+
+    httpServerPqc = HttpsServer.create(new InetSocketAddress(0), 0);
+    configureHttpServer(httpServerPqc, pqcEnforcingSslContext);
+    httpServerPqc.start();
+    httpPqcPort = httpServerPqc.getAddress().getPort();
+
+    httpServerClassical = HttpsServer.create(new InetSocketAddress(0), 0);
+    configureHttpServer(httpServerClassical, classicalSslContext);
+    httpServerClassical.start();
+    httpClassicalPort = httpServerClassical.getAddress().getPort();
+
+    ApplicationProtocolConfig apn =
+        new ApplicationProtocolConfig(
+            ApplicationProtocolConfig.Protocol.ALPN,
+            ApplicationProtocolConfig.SelectorFailureBehavior.NO_ADVERTISE,
+            ApplicationProtocolConfig.SelectedListenerFailureBehavior.ACCEPT,
+            "h2");
+
+    io.netty.handler.ssl.SslContext nettySslContextPqc =
+        new JdkSslContext(
+            pqcEnforcingSslContext, false, null, IdentityCipherSuiteFilter.INSTANCE, apn, ClientAuth.NONE);
+
+    io.netty.handler.ssl.SslContext nettySslContextClassical =
+        new JdkSslContext(
+            classicalSslContext, false, null, IdentityCipherSuiteFilter.INSTANCE, apn, ClientAuth.NONE);
+
+    grpcServerPqc = createGrpcServer(nettySslContextPqc);
+    grpcServerPqc.start();
+    grpcPqcPort = grpcServerPqc.getPort();
+
+    grpcServerClassical = createGrpcServer(nettySslContextClassical);
+    grpcServerClassical.start();
+    grpcClassicalPort = grpcServerClassical.getPort();
+  }
+
+  private void configureHttpServer(HttpsServer server, SSLContext sslContext) {
+    server.setHttpsConfigurator(
         new HttpsConfigurator(sslContext) {
           @Override
           public void configure(HttpsParameters params) {
@@ -103,7 +143,7 @@ public class PqcTestServer {
           }
         });
 
-    httpServer.createContext(
+    server.createContext(
         "/test",
         exchange -> {
           String response = "PQC HTTP OK";
@@ -112,7 +152,7 @@ public class PqcTestServer {
           exchange.getResponseBody().close();
         });
 
-    httpServer.createContext(
+    server.createContext(
         "/bigquery/v2/projects/test-project/datasets",
         exchange -> {
           String response = "{\"kind\": \"bigquery#datasetList\"}";
@@ -122,7 +162,7 @@ public class PqcTestServer {
           exchange.getResponseBody().close();
         });
 
-    httpServer.createContext(
+    server.createContext(
         "/v3/",
         exchange -> {
           if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
@@ -135,21 +175,9 @@ public class PqcTestServer {
             }
           }
         });
+  }
 
-    httpServer.start();
-    httpPort = httpServer.getAddress().getPort();
-
-    ApplicationProtocolConfig apn =
-        new ApplicationProtocolConfig(
-            ApplicationProtocolConfig.Protocol.ALPN,
-            ApplicationProtocolConfig.SelectorFailureBehavior.NO_ADVERTISE,
-            ApplicationProtocolConfig.SelectedListenerFailureBehavior.ACCEPT,
-            "h2");
-
-    io.netty.handler.ssl.SslContext nettySslContext =
-        new JdkSslContext(
-            sslContext, false, null, IdentityCipherSuiteFilter.INSTANCE, apn, ClientAuth.NONE);
-
+  private Server createGrpcServer(io.netty.handler.ssl.SslContext nettySslContext) {
     io.grpc.MethodDescriptor<byte[], byte[]> method =
         io.grpc.MethodDescriptor.<byte[], byte[]>newBuilder()
             .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
@@ -188,29 +216,36 @@ public class PqcTestServer {
                     }))
             .build();
 
-    grpcServer =
-        NettyServerBuilder.forPort(0)
-            .sslContext(nettySslContext)
-            .addService(serviceDef)
-            .addService(translationServiceDef)
-            .build()
-            .start();
-    grpcPort = grpcServer.getPort();
+    return NettyServerBuilder.forPort(0)
+        .sslContext(nettySslContext)
+        .addService(serviceDef)
+        .addService(translationServiceDef)
+        .build();
   }
 
   public void stop() {
-    if (httpServer != null) httpServer.stop(0);
-    if (grpcServer != null) grpcServer.shutdown();
+    if (httpServerPqc != null) httpServerPqc.stop(0);
+    if (httpServerClassical != null) httpServerClassical.stop(0);
+    if (grpcServerPqc != null) grpcServerPqc.shutdown();
+    if (grpcServerClassical != null) grpcServerClassical.shutdown();
     Security.removeProvider("BC");
     Security.removeProvider("BCJSSE");
   }
 
-  public int getHttpPort() {
-    return httpPort;
+  public int getHttpPqcPort() {
+    return httpPqcPort;
   }
 
-  public int getGrpcPort() {
-    return grpcPort;
+  public int getHttpClassicalPort() {
+    return httpClassicalPort;
+  }
+
+  public int getGrpcPqcPort() {
+    return grpcPqcPort;
+  }
+
+  public int getGrpcClassicalPort() {
+    return grpcClassicalPort;
   }
 
   private static class ByteMarshaller implements io.grpc.MethodDescriptor.Marshaller<byte[]> {
@@ -233,8 +268,10 @@ public class PqcTestServer {
     PqcTestServer server = new PqcTestServer();
     server.start();
 
-    System.out.println("HTTP_PORT: " + server.getHttpPort());
-    System.out.println("GRPC_PORT: " + server.getGrpcPort());
+    System.out.println("HTTP_PQC_PORT: " + server.getHttpPqcPort());
+    System.out.println("HTTP_CLASSICAL_PORT: " + server.getHttpClassicalPort());
+    System.out.println("GRPC_PQC_PORT: " + server.getGrpcPqcPort());
+    System.out.println("GRPC_CLASSICAL_PORT: " + server.getGrpcClassicalPort());
     System.out.flush();
 
     try {
