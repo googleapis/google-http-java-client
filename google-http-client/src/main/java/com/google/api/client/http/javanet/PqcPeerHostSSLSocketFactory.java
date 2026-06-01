@@ -101,21 +101,70 @@ class PqcPeerHostSSLSocketFactory extends SSLSocketFactory {
   }
 
   @org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
-  private Socket configureSocket(Socket socket) {
+  private Socket configureSocket(Socket socket) throws IOException {
     if (socket instanceof javax.net.ssl.SSLSocket) {
       javax.net.ssl.SSLSocket sslSocket = (javax.net.ssl.SSLSocket) socket;
-      try {
-        javax.net.ssl.SSLParameters params = sslSocket.getSSLParameters();
-        if (params != null) {
-          java.util.List<javax.net.ssl.SNIServerName> serverNames = new java.util.ArrayList<>();
-          serverNames.add(new javax.net.ssl.SNIHostName(this.host));
-          params.setServerNames(serverNames);
-          sslSocket.setSSLParameters(params);
-        }
-      } catch (Exception e) {
-        // Ignore
+      javax.net.ssl.SSLParameters params = sslSocket.getSSLParameters();
+      if (params != null) {
+        java.util.List<javax.net.ssl.SNIServerName> serverNames = new java.util.ArrayList<>();
+        serverNames.add(new javax.net.ssl.SNIHostName(this.host));
+        params.setServerNames(serverNames);
+        sslSocket.setSSLParameters(params);
       }
+      configureConscryptNamedGroups(sslSocket);
     }
     return socket;
+  }
+
+  private void configureConscryptNamedGroups(javax.net.ssl.SSLSocket socket) throws IOException {
+    try {
+      Class<?> fileDescClass = Class.forName("org.conscrypt.ConscryptFileDescriptorSocket");
+      Class<?> engineSocketClass = Class.forName("org.conscrypt.ConscryptEngineSocket");
+      Object sslParametersImpl = null;
+
+      if (fileDescClass.isInstance(socket)) {
+        java.lang.reflect.Field f = fileDescClass.getDeclaredField("sslParameters");
+        f.setAccessible(true);
+        sslParametersImpl = f.get(socket);
+      } else if (engineSocketClass.isInstance(socket)) {
+        java.lang.reflect.Field fEngine = engineSocketClass.getDeclaredField("engine");
+        fEngine.setAccessible(true);
+        Object engine = fEngine.get(socket);
+        if (engine != null) {
+          Class<?> engineClass = Class.forName("org.conscrypt.ConscryptEngine");
+          java.lang.reflect.Field fParams = engineClass.getDeclaredField("sslParameters");
+          fParams.setAccessible(true);
+          sslParametersImpl = fParams.get(engine);
+        }
+      } else {
+        Class<?> current = socket.getClass();
+        while (current != null && current != Object.class) {
+          try {
+            java.lang.reflect.Field f = current.getDeclaredField("sslParameters");
+            f.setAccessible(true);
+            sslParametersImpl = f.get(socket);
+            break;
+          } catch (NoSuchFieldException e) {
+            current = current.getSuperclass();
+          }
+        }
+      }
+
+      if (sslParametersImpl != null) {
+        Class<?> paramsClass = Class.forName("org.conscrypt.SSLParametersImpl");
+        java.lang.reflect.Method setNamedGroupsMethod = paramsClass.getDeclaredMethod("setNamedGroups", String[].class);
+        setNamedGroupsMethod.setAccessible(true);
+        setNamedGroupsMethod.invoke(sslParametersImpl, (Object) new String[] {
+          "X25519MLKEM768",
+          "x25519_mlkem768",
+          "X25519Kyber768Draft00",
+          "x25519_kyber768",
+          "x25519",
+          "secp256r1"
+        });
+      }
+    } catch (Exception e) {
+			 throw new IOException(e);
+    }
   }
 }
