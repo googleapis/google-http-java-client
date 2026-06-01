@@ -74,6 +74,7 @@
 
     <!-- A deployable artifact must be last or deploys are skipped -->
     <module>google-http-client-bom</module>
+		<module>pqc-test</module>
   </modules>
 
   <pluginRepositories>
@@ -280,6 +281,12 @@
         <artifactId>opencensus-testing</artifactId>
         <version>${project.opencensus.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>animal-sniffer-annotations</artifactId>
+        <version>1.24</version>
+        <optional>true</optional>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -295,8 +302,8 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.13.0</version>
           <configuration>
-            <source>1.7</source>
-            <target>1.7</target>
+            <source>1.8</source>
+            <target>1.8</target>
           </configuration>
         </plugin>
         <plugin>
@@ -437,7 +444,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <doclint>none</doclint>
-          <source>7</source>
+          <source>8</source>
         </configuration>
         <executions>
           <execution>
@@ -547,6 +554,7 @@
       - google-api-java-client/google-api-client-assembly/android-properties (make the filenames match the version here)
       - Internally, update the default features.json file
     -->
+    <project.bouncycastle.version>1.80</project.bouncycastle.version>
     <project.http-client.version>2.1.1-SNAPSHOT</project.http-client.version><!-- {x-version-update:google-http-client-parent:current} -->
     <project.appengine.version>2.0.32</project.appengine.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -605,7 +613,7 @@
       <id>animal-sniffer</id>
       <activation>
         <!-- The compatibility check runs by default in CIs -->
-        <jdk>[1.7,)</jdk>
+        <jdk>[1.8,)</jdk>
       </activation>
       <build>
         <plugins>
@@ -621,7 +629,7 @@
                 <configuration>
                   <signature>
                     <groupId>org.codehaus.mojo.signature</groupId>
-                    <artifactId>java17</artifactId>
+                    <artifactId>java18</artifactId>
                     <version>1.0</version>
                   </signature>
                 </configuration>

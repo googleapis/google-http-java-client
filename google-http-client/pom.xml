@@ -165,6 +165,20 @@
     </dependency>
 
     <dependency>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>animal-sniffer-annotations</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+	  <!-- The Conscrypt Security provider offers an "uberjar" that contains dependencies for compatibility with
+		    all platforms (e.g. linux x86). That avoids users from having to manage additional deps or us providing separate deps.-->
+		<dependency>
+			<groupId>org.conscrypt</groupId>
+			<artifactId>conscrypt-openjdk-uber</artifactId>
+			<version>2.6-alpha</version>
+		</dependency>
+
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava-testlib</artifactId>
       <scope>test</scope>
