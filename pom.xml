@@ -160,6 +160,17 @@
         <artifactId>xpp3</artifactId>
         <version>${project.xpp3.version}</version>
       </dependency>
+      <!--
+        Force commons-codec to 1.14 to resolve vulnerability (SNYK-JAVA-COMMONSCODEC-561518)
+        introduced transitively by httpclient 4.5.14 (which defaults to 1.11).
+        We cannot upgrade httpclient further because 4.5.14 is the latest version on the 4.x branch,
+        and upgrading to 5.x would be a breaking change.
+      -->
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>${project.commons-codec.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
@@ -559,6 +570,7 @@
     <project.xpp3.version>1.1.4c</project.xpp3.version>
     <project.apache-httpclient-4.version>4.5.14</project.apache-httpclient-4.version>
     <project.apache-httpcore-4.version>4.4.16</project.apache-httpcore-4.version>
+    <project.commons-codec.version>1.14</project.commons-codec.version>
     <project.apache-httpclient-5.version>5.3.1</project.apache-httpclient-5.version>
     <project.apache-httpcore-5.version>5.2.5</project.apache-httpcore-5.version>
     <project.opencensus.version>0.31.1</project.opencensus.version>
