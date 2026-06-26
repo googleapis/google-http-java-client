@@ -40,11 +40,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.http.Header;
-import org.apache.http.HttpClientConnection;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -55,7 +53,6 @@ import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.protocol.HttpRequestExecutor;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -162,25 +159,38 @@ public class ApacheHttpTransportTest {
 
   @Test
   public void testRequestShouldNotFollowRedirects() throws IOException {
-    final AtomicInteger requestsAttempted = new AtomicInteger(0);
-    HttpRequestExecutor requestExecutor =
-        new HttpRequestExecutor() {
+    final AtomicInteger requestCount = new AtomicInteger(0);
+    final AtomicBoolean redirected = new AtomicBoolean(false);
+    final HttpHandler handler =
+        new HttpHandler() {
           @Override
-          public HttpResponse execute(
-              HttpRequest request, HttpClientConnection connection, HttpContext context)
-              throws IOException, HttpException {
-            HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1, 302, null);
-            response.addHeader("location", "https://google.com/path");
-            requestsAttempted.incrementAndGet();
-            return response;
+          public void handle(HttpExchange httpExchange) throws IOException {
+            requestCount.incrementAndGet();
+            String path = httpExchange.getRequestURI().getPath();
+            if ("/redirected".equals(path)) {
+              redirected.set(true);
+              httpExchange.sendResponseHeaders(200, -1);
+            } else {
+              int port = httpExchange.getLocalAddress().getPort();
+              httpExchange
+                  .getResponseHeaders()
+                  .add("Location", "http://localhost:" + port + "/redirected");
+              httpExchange.sendResponseHeaders(302, -1);
+            }
+            httpExchange.close();
           }
         };
-    HttpClient client = HttpClients.custom().setRequestExecutor(requestExecutor).build();
-    ApacheHttpTransport transport = new ApacheHttpTransport(client);
-    ApacheHttpRequest request = transport.buildRequest("GET", "https://google.com");
-    LowLevelHttpResponse response = request.execute();
-    assertEquals(1, requestsAttempted.get());
-    assertEquals(302, response.getStatusCode());
+
+    try (FakeServer server = new FakeServer(handler)) {
+      HttpClient client = HttpClients.custom().build();
+      ApacheHttpTransport transport = new ApacheHttpTransport(client);
+      ApacheHttpRequest request =
+          transport.buildRequest("GET", "http://localhost:" + server.getPort() + "/");
+      LowLevelHttpResponse response = request.execute();
+      assertEquals(302, response.getStatusCode());
+      assertEquals(1, requestCount.get());
+      assertFalse(redirected.get());
+    }
   }
 
   @Test
@@ -203,7 +213,7 @@ public class ApacheHttpTransportTest {
             .build();
 
     ApacheHttpTransport transport = new ApacheHttpTransport(client);
-    ApacheHttpRequest request = transport.buildRequest("GET", "https://google.com");
+    ApacheHttpRequest request = transport.buildRequest("GET", "http://localhost/");
     request.addHeader("foo", "bar");
     try {
       LowLevelHttpResponse response = request.execute();
