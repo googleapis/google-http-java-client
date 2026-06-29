@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.1](https://github.com/googleapis/google-http-java-client/compare/v2.1.0...v2.1.1) (2026-06-29)
+
+
+### Bug Fixes
+
+* Add containsKey override for GenericData class ([#2151](https://github.com/googleapis/google-http-java-client/issues/2151)) ([fbada29](https://github.com/googleapis/google-http-java-client/commit/fbada293e70c4db96c90128f507ff60efa34fe6a))
+* Upgrade commons-codec to 1.14 to resolve security vulnerability ([#2164](https://github.com/googleapis/google-http-java-client/issues/2164)) ([68d9ba6](https://github.com/googleapis/google-http-java-client/commit/68d9ba67aef426fddf1bb8f1eb00c10da0e53de3))
+
 ## [2.1.0](https://github.com/googleapis/google-http-java-client/compare/v2.0.3...v2.1.0) (2026-01-23)
 
 
