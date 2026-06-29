@@ -48,9 +48,7 @@ import org.apache.hc.core5.http.HttpRequestMapper;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.HttpStatus;
 import org.apache.hc.core5.http.impl.bootstrap.HttpServer;
-import org.apache.hc.core5.http.impl.io.HttpRequestExecutor;
 import org.apache.hc.core5.http.impl.io.HttpService;
-import org.apache.hc.core5.http.io.HttpClientConnection;
 import org.apache.hc.core5.http.io.HttpRequestHandler;
 import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
 import org.apache.hc.core5.http.io.support.BasicHttpServerRequestHandler;
@@ -134,32 +132,40 @@ public class Apache5HttpTransportTest {
 
   @Test
   public void testRequestShouldNotFollowRedirects() throws IOException {
-    final AtomicInteger requestsAttempted = new AtomicInteger(0);
-    HttpRequestExecutor requestExecutor =
-        new HttpRequestExecutor() {
+    final AtomicInteger requestCount = new AtomicInteger(0);
+    final AtomicBoolean redirected = new AtomicBoolean(false);
+    final HttpRequestHandler handler =
+        new HttpRequestHandler() {
           @Override
-          public ClassicHttpResponse execute(
-              ClassicHttpRequest request, HttpClientConnection connection, HttpContext context)
-              throws IOException, HttpException {
-            ClassicHttpResponse response = new MockClassicHttpResponse();
-            response.setCode(302);
-            response.setReasonPhrase(null);
-            response.addHeader("location", "https://google.com/path");
-            response.addHeader(HttpHeaders.SET_COOKIE, "");
-            requestsAttempted.incrementAndGet();
-            return response;
+          public void handle(
+              ClassicHttpRequest request, ClassicHttpResponse response, HttpContext context)
+              throws HttpException, IOException {
+            requestCount.incrementAndGet();
+            String path = request.getRequestUri();
+            if ("/redirected".equals(path)) {
+              redirected.set(true);
+              response.setCode(200);
+            } else {
+              response.setCode(302);
+              response.setHeader(HttpHeaders.LOCATION, "/redirected");
+            }
           }
         };
-    HttpClient client = HttpClients.custom().setRequestExecutor(requestExecutor).build();
-    Apache5HttpTransport transport = new Apache5HttpTransport(client);
-    Apache5HttpRequest request = transport.buildRequest("GET", "https://google.com");
-    LowLevelHttpResponse response = request.execute();
-    assertEquals(1, requestsAttempted.get());
-    assertEquals(302, response.getStatusCode());
+
+    try (FakeServer server = new FakeServer(handler)) {
+      HttpClient client = HttpClients.custom().build();
+      Apache5HttpTransport transport = new Apache5HttpTransport(client);
+      Apache5HttpRequest request =
+          transport.buildRequest("GET", "http://localhost:" + server.getPort() + "/");
+      LowLevelHttpResponse response = request.execute();
+      assertEquals(302, response.getStatusCode());
+      assertEquals(1, requestCount.get());
+      assertFalse(redirected.get());
+    }
   }
 
   @Test
-  public void testRequestCanSetHeaders() {
+  public void testRequestCanSetHeaders() throws IOException {
     final AtomicBoolean interceptorCalled = new AtomicBoolean(false);
     HttpClient client =
         HttpClients.custom()
@@ -178,16 +184,26 @@ public class Apache5HttpTransportTest {
                 })
             .build();
 
-    Apache5HttpTransport transport = new Apache5HttpTransport(client);
-    Apache5HttpRequest request = transport.buildRequest("GET", "https://google.com");
-    request.addHeader("foo", "bar");
-    try {
-      LowLevelHttpResponse response = request.execute();
-      fail("should not actually make the request");
-    } catch (IOException exception) {
-      assertEquals("cancelling request", exception.getMessage());
+    HttpRequestHandler dummyHandler =
+        new HttpRequestHandler() {
+          @Override
+          public void handle(
+              ClassicHttpRequest request, ClassicHttpResponse response, HttpContext context) {}
+        };
+
+    try (FakeServer server = new FakeServer(dummyHandler)) {
+      Apache5HttpTransport transport = new Apache5HttpTransport(client);
+      Apache5HttpRequest request =
+          transport.buildRequest("GET", "http://localhost:" + server.getPort() + "/");
+      request.addHeader("foo", "bar");
+      try {
+        LowLevelHttpResponse response = request.execute();
+        fail("should not actually make the request");
+      } catch (IOException exception) {
+        assertEquals("cancelling request", exception.getMessage());
+      }
+      assertTrue("Expected to have called our test interceptor", interceptorCalled.get());
     }
-    assertTrue("Expected to have called our test interceptor", interceptorCalled.get());
   }
 
   @Test(timeout = 10_000L)
