@@ -23,17 +23,25 @@ import com.google.api.client.util.SslUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.Socket;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.security.Provider;
+import java.security.Security;
 import java.security.cert.CertificateFactory;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+import org.conscrypt.Conscrypt;
 
 /**
  * Thread-safe HTTP low-level transport based on the {@code java.net} package.
@@ -80,6 +88,10 @@ public final class NetHttpTransport extends HttpTransport {
   }
 
   private static final String SHOULD_USE_PROXY_FLAG = "com.google.api.client.should_use_proxy";
+
+  private static final Logger logger = Logger.getLogger(NetHttpTransport.class.getName());
+
+  private static final String[] PQC_GROUPS = new String[] {"X25519MLKEM768", "X25519"};
 
   private final ConnectionFactory connectionFactory;
 
@@ -207,6 +219,13 @@ public final class NetHttpTransport extends HttpTransport {
 
     /** Whether the transport is mTLS. Default value is {@code false}. */
     private boolean isMtls;
+
+    /**
+     * Security provider to use for SSL context, or {@code null} for the default fallback. If not
+     * set, {@link NetHttpTransport} defaults to using Conscrypt (if available) and falls back to
+     * the default JDK provider.
+     */
+    private Provider securityProvider;
 
     /**
      * Sets the HTTP proxy or {@code null} to use the proxy settings from <a
@@ -362,14 +381,161 @@ public final class NetHttpTransport extends HttpTransport {
       return this;
     }
 
+    /**
+     * Sets the security provider to use for SSL context.
+     *
+     * <p>By default, {@link NetHttpTransport} will attempt to use Conscrypt as the security
+     * provider. If Conscrypt is not available on the system, it will fall back to the default JDK
+     * provider. Configuring a custom security provider here will override this default behavior and
+     * take precedence.
+     *
+     * @param securityProvider security provider to use
+     * @since 1.39
+     */
+    public Builder setSecurityProvider(Provider securityProvider) {
+      this.securityProvider = securityProvider;
+      return this;
+    }
+
+    /**
+     * Resolves the {@link SSLSocketFactory} to use, prioritizing user-configured factory, then
+     * custom security provider, defaulting to Conscrypt, and falling back to JDK.
+     */
+    private SSLSocketFactory resolveSslSocketFactory() {
+      SSLSocketFactory resolvedFactory = sslSocketFactory;
+      if (resolvedFactory == null) {
+        try {
+          SSLContext sslContext = null;
+          // 1. If a custom security provider is configured, use it
+          if (securityProvider != null) {
+            sslContext = SSLContext.getInstance("TLS", securityProvider);
+          } else {
+            // 2. Default: Try Conscrypt (assumed to be available as part of SDK)
+            try {
+              if (Security.getProvider("Conscrypt") == null) {
+                Security.insertProviderAt(Conscrypt.newProvider(), 1);
+              }
+              sslContext = SSLContext.getInstance("TLS", "Conscrypt");
+            } catch (NoClassDefFoundError | Exception e) {
+              logger.log(
+                  Level.WARNING,
+                  "Conscrypt security provider not available. Falling back to JDK default.",
+                  e);
+            }
+          }
+
+          if (sslContext == null) {
+            // 3. Fallback to standard JDK
+            sslContext = SSLContext.getInstance("TLS");
+          }
+
+          // Initialize SSLContext:
+          // - First param (KeyManager[]): null (use default JDK key managers)
+          // - Second param (TrustManager[]): null (use default JDK trust managers)
+          // - Third param (SecureRandom): null (use default JDK secure random)
+          sslContext.init(null, null, null);
+          resolvedFactory = sslContext.getSocketFactory();
+        } catch (Exception e) {
+          // If SSLContext initialization fails entirely, fall back to the JVM's default
+          // system-wide SSLSocketFactory.
+          resolvedFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+        }
+      }
+
+      // Wrap factory to enforce PQC hybrid groups
+      return new PqcEnforcingSSLSocketFactory(resolvedFactory, PQC_GROUPS);
+    }
+
     /** Returns a new instance of {@link NetHttpTransport} based on the options. */
     public NetHttpTransport build() {
       if (System.getProperty(SHOULD_USE_PROXY_FLAG) != null) {
         setProxy(defaultProxy());
       }
+      SSLSocketFactory resolvedSslSocketFactory = resolveSslSocketFactory();
       return this.proxy == null
-          ? new NetHttpTransport(connectionFactory, sslSocketFactory, hostnameVerifier, isMtls)
-          : new NetHttpTransport(this.proxy, sslSocketFactory, hostnameVerifier, isMtls);
+          ? new NetHttpTransport(
+              connectionFactory, resolvedSslSocketFactory, hostnameVerifier, isMtls)
+          : new NetHttpTransport(this.proxy, resolvedSslSocketFactory, hostnameVerifier, isMtls);
+    }
+  }
+  /**
+   * An {@link SSLSocketFactory} wrapper that enforces Post-Quantum Cryptography (PQC) hybrid named
+   * groups (such as X25519MLKEM768) on compatible sockets.
+   *
+   * <p>This wrapper is applied to the final resolved {@link SSLSocketFactory} before the transport
+   * is built. This ensures that even if the factory was configured and initialized via custom trust
+   * stores (e.g. {@link Builder#trustCertificates} which internally invokes {@code
+   * SslUtils.initSslContext}), the resulting sockets are still intercepted and configured to
+   * request PQC hybrid groups.
+   *
+   * <p>If the socket is detected as a Conscrypt socket, it configures the requested named groups
+   * using Conscrypt's direct APIs. If the socket or provider does not support these groups, it
+   * falls back to the default TLS negotiation of the delegate factory.
+   */
+  private static class PqcEnforcingSSLSocketFactory extends SSLSocketFactory {
+    private final SSLSocketFactory delegate;
+    private final String[] groups;
+
+    PqcEnforcingSSLSocketFactory(SSLSocketFactory delegate, String[] groups) {
+      this.delegate = delegate;
+      this.groups = groups;
+    }
+
+    private Socket configure(Socket socket) {
+      if (socket instanceof SSLSocket) {
+        SSLSocket sslSocket = (SSLSocket) socket;
+        try {
+          if (Conscrypt.isConscrypt(sslSocket)) {
+            Conscrypt.setNamedGroups(sslSocket, groups);
+          }
+        } catch (NoClassDefFoundError | Exception ignored) {
+          // Fall back silently if Conscrypt classes are not loaded or the socket is not Conscrypt
+        }
+      }
+      return socket;
+    }
+
+    @Override
+    public String[] getDefaultCipherSuites() {
+      return delegate.getDefaultCipherSuites();
+    }
+
+    @Override
+    public String[] getSupportedCipherSuites() {
+      return delegate.getSupportedCipherSuites();
+    }
+
+    @Override
+    public Socket createSocket(Socket s, String host, int port, boolean autoClose)
+        throws IOException {
+      return configure(delegate.createSocket(s, host, port, autoClose));
+    }
+
+    @Override
+    public Socket createSocket() throws IOException {
+      return configure(delegate.createSocket());
+    }
+
+    @Override
+    public Socket createSocket(String host, int port) throws IOException {
+      return configure(delegate.createSocket(host, port));
+    }
+
+    @Override
+    public Socket createSocket(String host, int port, InetAddress localHost, int localPort)
+        throws IOException {
+      return configure(delegate.createSocket(host, port, localHost, localPort));
+    }
+
+    @Override
+    public Socket createSocket(InetAddress host, int port) throws IOException {
+      return configure(delegate.createSocket(host, port));
+    }
+
+    @Override
+    public Socket createSocket(
+        InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
+      return configure(delegate.createSocket(address, port, localAddress, localPort));
     }
   }
 }
