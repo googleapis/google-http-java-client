@@ -51,17 +51,20 @@ public final class SslUtils {
    * @since 1.14
    */
   public static SSLContext getTlsSslContext() throws NoSuchAlgorithmException {
-    return SSLContext.getInstance("TLS");
+    try {
+      return SSLContext.getInstance("TLS", "Conscrypt");
+    } catch (Exception e) {
+      return SSLContext.getInstance("TLS");
+    }
   }
 
-  /**
-   * Returns the default trust manager factory.
-   *
-   * @since 1.14
-   */
   public static TrustManagerFactory getDefaultTrustManagerFactory()
       throws NoSuchAlgorithmException {
-    return TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+    try {
+      return TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm(), "Conscrypt");
+    } catch (Exception e) {
+      return TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+    }
   }
 
   /**
@@ -70,7 +73,11 @@ public final class SslUtils {
    * @since 1.14
    */
   public static TrustManagerFactory getPkixTrustManagerFactory() throws NoSuchAlgorithmException {
-    return TrustManagerFactory.getInstance("PKIX");
+    try {
+      return TrustManagerFactory.getInstance("PKIX", "Conscrypt");
+    } catch (Exception e) {
+      return TrustManagerFactory.getInstance("PKIX");
+    }
   }
 
   /**

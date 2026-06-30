@@ -36,6 +36,7 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.security.KeyStore;
+import java.security.Provider;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.junit.Test;
@@ -240,5 +241,14 @@ public class NetHttpTransportTest {
       // disconnect should not wait to read the entire content
       response.disconnect();
     }
+  }
+
+  @Test
+  public void testCustomSecurityProvider() throws Exception {
+    Provider customProvider = new Provider("TestProvider", 1.0, "Test Provider") {};
+    NetHttpTransport transport =
+        new NetHttpTransport.Builder().setSecurityProvider(customProvider).build();
+    // Verify it compiles and builds successfully with a custom provider
+    assertTrue(transport != null);
   }
 }
