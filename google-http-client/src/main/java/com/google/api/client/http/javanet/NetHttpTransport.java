@@ -85,6 +85,13 @@ public final class NetHttpTransport extends HttpTransport {
 
   static {
     Arrays.sort(SUPPORTED_METHODS);
+    try {
+      if (Security.getProvider("Conscrypt") == null) {
+        Security.addProvider(Conscrypt.newProvider());
+      }
+    } catch (NoClassDefFoundError | Exception ignored) {
+      // Conscrypt not available on classpath, fall back silently
+    }
   }
 
   private static final String SHOULD_USE_PROXY_FLAG = "com.google.api.client.should_use_proxy";
@@ -104,13 +111,16 @@ public final class NetHttpTransport extends HttpTransport {
   /** Whether the transport is mTLS. Default value is {@code false}. */
   private final boolean isMtls;
 
-  /**
-   * Constructor with the default behavior.
-   *
-   * <p>Instead use {@link Builder} to modify behavior.
-   */
   public NetHttpTransport() {
-    this((ConnectionFactory) null, null, null, false);
+    this(new Builder());
+  }
+
+  private NetHttpTransport(Builder builder) {
+    this(
+        builder.connectionFactory,
+        builder.resolveSslSocketFactory(),
+        builder.hostnameVerifier,
+        builder.isMtls);
   }
 
   /**
@@ -197,6 +207,16 @@ public final class NetHttpTransport extends HttpTransport {
    * @since 1.13
    */
   public static final class Builder {
+
+    static {
+      try {
+        if (Security.getProvider("Conscrypt") == null) {
+          Security.addProvider(org.conscrypt.Conscrypt.newProvider());
+        }
+      } catch (NoClassDefFoundError | Exception ignored) {
+        // Conscrypt not available on classpath, fall back silently
+      }
+    }
 
     /** SSL socket factory or {@code null} for the default. */
     private SSLSocketFactory sslSocketFactory;
@@ -413,7 +433,7 @@ public final class NetHttpTransport extends HttpTransport {
             // 2. Default: Try Conscrypt (assumed to be available as part of SDK)
             try {
               if (Security.getProvider("Conscrypt") == null) {
-                Security.insertProviderAt(Conscrypt.newProvider(), 1);
+                Security.addProvider(Conscrypt.newProvider());
               }
               sslContext = SSLContext.getInstance("TLS", "Conscrypt");
             } catch (NoClassDefFoundError | Exception e) {
@@ -458,6 +478,7 @@ public final class NetHttpTransport extends HttpTransport {
           : new NetHttpTransport(this.proxy, resolvedSslSocketFactory, hostnameVerifier, isMtls);
     }
   }
+
   /**
    * An {@link SSLSocketFactory} wrapper that enforces Post-Quantum Cryptography (PQC) hybrid named
    * groups (such as X25519MLKEM768) on compatible sockets.
