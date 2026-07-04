@@ -23,7 +23,9 @@ import static org.junit.Assert.fail;
 import com.google.api.client.util.ArrayMap;
 import com.google.api.client.util.Key;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.StringReader;
+import org.xmlpull.v1.XmlPullParserException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -621,4 +623,26 @@ public class XmlTest {
     @Key public String[] stringArray;
     @Key public List<Integer> integerCollection;
   }
+
+  @Test
+  public void testCreateParser_disablesDocDecl() throws Exception {
+    XmlPullParser parser = Xml.createParser();
+    String xmlWithDtd = "<?xml version=\"1.0\"?>\n"
+        + "<!DOCTYPE any [\n"
+        + "  <!ENTITY xxe \"injected\">\n"
+        + "]>\n"
+        + "<any>&xxe;</any>";
+    parser.setInput(new StringReader(xmlWithDtd));
+    try {
+      SimpleTypeString xml = new SimpleTypeString();
+      XmlNamespaceDictionary namespaceDictionary = new XmlNamespaceDictionary().set("", "");
+      Xml.parseElement(parser, xml, namespaceDictionary, null);
+      if (xml.value != null) {
+        assertTrue(xml.value.isEmpty() || xml.value.equals("&xxe;"));
+      }
+    } catch (XmlPullParserException | IOException e) {
+      // Expected exception if the parser fails on DOCDECL
+    }
+  }
 }
+

@@ -861,6 +861,10 @@ public final class HttpRequest {
     Preconditions.checkNotNull(requestMethod);
     Preconditions.checkNotNull(url);
 
+    final String originalScheme = url.getScheme();
+    final String originalHost = url.getHost();
+    final int originalPort = url.getPort();
+
     Span span =
         tracer
             .spanBuilder(OpenCensusUtils.SPAN_NAME_HTTP_REQUEST_EXECUTE)
@@ -879,6 +883,11 @@ public final class HttpRequest {
       // run the interceptor
       if (executeInterceptor != null) {
         executeInterceptor.intercept(this);
+      }
+      // Prevent credential leak on cross-origin redirects
+      if (!isSameOrigin(originalScheme, originalHost, originalPort, url.getScheme(), url.getHost(), url.getPort())) {
+        headers.setAuthorization((String) null);
+        headers.setCookie((String) null);
       }
       // build low-level HTTP request
       String urlString = url.build();
@@ -1241,6 +1250,16 @@ public final class HttpRequest {
       return 443;
     }
     return -1;
+  }
+
+  private static boolean isSameOrigin(
+      String scheme1, String host1, int port1,
+      String scheme2, String host2, int port2) {
+    int effectivePort1 = getEffectivePort(scheme1, port1);
+    int effectivePort2 = getEffectivePort(scheme2, port2);
+    return (scheme1 == null ? scheme2 == null : scheme1.equalsIgnoreCase(scheme2))
+        && (host1 == null ? host2 == null : host1.equalsIgnoreCase(host2))
+        && (effectivePort1 == effectivePort2);
   }
 
   /**

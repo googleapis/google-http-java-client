@@ -1413,4 +1413,97 @@ public class HttpRequestTest {
         String.format("the loaded version '%s' did not match the acceptable pattern", version),
         version.matches(acceptableVersionPattern));
   }
+
+  @Test
+  public void testExecute_crossOriginRedirectCredentialLeakPrevention() throws Exception {
+    final List<MockLowLevelHttpRequest> recordedRequests = Lists.newArrayList();
+
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildRequest(String method, final String url) {
+        MockLowLevelHttpRequest req = new MockLowLevelHttpRequest(url) {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            recordedRequests.add(this);
+            MockLowLevelHttpResponse resp = new MockLowLevelHttpResponse();
+            if (recordedRequests.size() == 1) {
+              resp.setStatusCode(302);
+              resp.addHeader("Location", "https://untrusted-target.com/path");
+            } else {
+              resp.setStatusCode(200);
+            }
+            return resp;
+          }
+        };
+        return req;
+      }
+    };
+
+    HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("https://example.com/start"));
+    req.setInterceptor(new BasicAuthentication("myuser", "mypass"));
+    req.getHeaders().setCookie("mycookie=val");
+
+    HttpResponse response = req.execute();
+    assertEquals(200, response.getStatusCode());
+    assertEquals(2, recordedRequests.size());
+
+    // First request (https://example.com/start)
+    MockLowLevelHttpRequest firstReq = recordedRequests.get(0);
+    assertTrue(firstReq.getUrl().contains("example.com"));
+    assertNotNull(firstReq.getFirstHeaderValue("Authorization"));
+    assertEquals("mycookie=val", firstReq.getFirstHeaderValue("Cookie"));
+
+    // Second request (https://untrusted-target.com/path) - redirect to cross-origin
+    MockLowLevelHttpRequest secondReq = recordedRequests.get(1);
+    assertTrue(secondReq.getUrl().contains("untrusted-target.com"));
+    assertNull(secondReq.getFirstHeaderValue("Authorization"));
+    assertNull(secondReq.getFirstHeaderValue("Cookie"));
+  }
+
+  @Test
+  public void testExecute_sameOriginRedirectCredentialLeakPrevention() throws Exception {
+    final List<MockLowLevelHttpRequest> recordedRequests = Lists.newArrayList();
+
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildRequest(String method, final String url) {
+        MockLowLevelHttpRequest req = new MockLowLevelHttpRequest(url) {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            recordedRequests.add(this);
+            MockLowLevelHttpResponse resp = new MockLowLevelHttpResponse();
+            if (recordedRequests.size() == 1) {
+              resp.setStatusCode(302);
+              resp.addHeader("Location", "https://example.com/redirect-path");
+            } else {
+              resp.setStatusCode(200);
+            }
+            return resp;
+          }
+        };
+        return req;
+      }
+    };
+
+    HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("https://example.com/start"));
+    req.setInterceptor(new BasicAuthentication("myuser", "mypass"));
+    req.getHeaders().setCookie("mycookie=val");
+
+    HttpResponse response = req.execute();
+    assertEquals(200, response.getStatusCode());
+    assertEquals(2, recordedRequests.size());
+
+    // First request
+    MockLowLevelHttpRequest firstReq = recordedRequests.get(0);
+    assertTrue(firstReq.getUrl().contains("example.com/start"));
+    assertNotNull(firstReq.getFirstHeaderValue("Authorization"));
+    assertEquals("mycookie=val", firstReq.getFirstHeaderValue("Cookie"));
+
+    // Second request - redirect same-origin
+    MockLowLevelHttpRequest secondReq = recordedRequests.get(1);
+    assertTrue(secondReq.getUrl().contains("example.com/redirect-path"));
+    assertNotNull(secondReq.getFirstHeaderValue("Authorization"));
+    assertEquals("mycookie=val", secondReq.getFirstHeaderValue("Cookie"));
+  }
 }
+
