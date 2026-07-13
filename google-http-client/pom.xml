@@ -189,5 +189,11 @@
       <artifactId>opencensus-testing</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.conscrypt</groupId>
+      <artifactId>conscrypt-openjdk-uber</artifactId>
+      <version>${project.conscrypt.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

@@ -28,6 +28,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.security.Provider;
 import java.security.cert.CertificateFactory;
 import java.util.Arrays;
 import javax.net.ssl.HostnameVerifier;
@@ -78,6 +79,10 @@ public final class NetHttpTransport extends HttpTransport {
   static {
     Arrays.sort(SUPPORTED_METHODS);
   }
+
+  private static final String TLS_ALGORITHM = "TLS";
+  private static final String CONSCRYPT_PROVIDER = "Conscrypt";
+  private static final String[] PQC_GROUPS = {"X25519MLKEM768", "X25519"};
 
   private static final String SHOULD_USE_PROXY_FLAG = "com.google.api.client.should_use_proxy";
 
@@ -188,6 +193,12 @@ public final class NetHttpTransport extends HttpTransport {
 
     /** SSL socket factory or {@code null} for the default. */
     private SSLSocketFactory sslSocketFactory;
+
+    /** Security provider to use or {@code null} for default. */
+    private Provider securityProvider;
+
+    /** Custom named groups to configure on sockets, defaulting to PQC groups. */
+    private String[] namedGroups = PQC_GROUPS;
 
     /** Host name verifier or {@code null} for the default. */
     private HostnameVerifier hostnameVerifier;
@@ -351,6 +362,27 @@ public final class NetHttpTransport extends HttpTransport {
       return this;
     }
 
+    /**
+     * Sets the custom security provider or {@code null} to use default.
+     *
+     * @param securityProvider provider to use
+     */
+    public Builder setSecurityProvider(Provider securityProvider) {
+      this.securityProvider = securityProvider;
+      return this;
+    }
+
+    /**
+     * Sets the custom named groups (curves) to negotiate on TLS sockets, or {@code null} to disable
+     * custom named groups configuration.
+     *
+     * @param namedGroups named groups to prioritize
+     */
+    public Builder setNamedGroups(String[] namedGroups) {
+      this.namedGroups = namedGroups;
+      return this;
+    }
+
     /** Returns the host name verifier or {@code null} for the default. */
     public HostnameVerifier getHostnameVerifier() {
       return hostnameVerifier;
@@ -362,14 +394,51 @@ public final class NetHttpTransport extends HttpTransport {
       return this;
     }
 
+    private SSLSocketFactory resolveSslSocketFactory() {
+      SSLSocketFactory factory = sslSocketFactory;
+      if (factory == null) {
+        factory = createDefaultSslSocketFactory();
+      }
+      if (namedGroups != null && namedGroups.length > 0) {
+        return new NamedGroupsSSLSocketFactory(factory, namedGroups);
+      }
+      return factory;
+    }
+
+    private SSLSocketFactory createDefaultSslSocketFactory() {
+      try {
+        SSLContext sslContext = createSslContext();
+        sslContext.init(null, null, null);
+        return sslContext.getSocketFactory();
+      } catch (Exception e) {
+        return (SSLSocketFactory) SSLSocketFactory.getDefault();
+      }
+    }
+
+    private SSLContext createSslContext() throws GeneralSecurityException {
+      if (securityProvider != null) {
+        return SSLContext.getInstance(TLS_ALGORITHM, securityProvider);
+      }
+      try {
+        Class<?> conscryptClass = Class.forName("org.conscrypt.Conscrypt");
+        Provider conscryptProvider =
+            (Provider) conscryptClass.getMethod("newProvider").invoke(null);
+        return SSLContext.getInstance(TLS_ALGORITHM, conscryptProvider);
+      } catch (Throwable e) {
+        // Fallback to default JDK
+      }
+      return SSLContext.getInstance(TLS_ALGORITHM);
+    }
+
     /** Returns a new instance of {@link NetHttpTransport} based on the options. */
     public NetHttpTransport build() {
       if (System.getProperty(SHOULD_USE_PROXY_FLAG) != null) {
         setProxy(defaultProxy());
       }
+      SSLSocketFactory resolvedFactory = resolveSslSocketFactory();
       return this.proxy == null
-          ? new NetHttpTransport(connectionFactory, sslSocketFactory, hostnameVerifier, isMtls)
-          : new NetHttpTransport(this.proxy, sslSocketFactory, hostnameVerifier, isMtls);
+          ? new NetHttpTransport(connectionFactory, resolvedFactory, hostnameVerifier, isMtls)
+          : new NetHttpTransport(this.proxy, resolvedFactory, hostnameVerifier, isMtls);
     }
   }
 }

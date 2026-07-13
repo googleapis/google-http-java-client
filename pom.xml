@@ -291,6 +291,12 @@
         <artifactId>opencensus-testing</artifactId>
         <version>${project.opencensus.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.conscrypt</groupId>
+        <artifactId>conscrypt-openjdk-uber</artifactId>
+        <version>${project.conscrypt.version}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -574,6 +580,7 @@
     <project.apache-httpclient-5.version>5.3.1</project.apache-httpclient-5.version>
     <project.apache-httpcore-5.version>5.2.5</project.apache-httpcore-5.version>
     <project.opencensus.version>0.31.1</project.opencensus.version>
+    <project.conscrypt.version>2.6.0</project.conscrypt.version>
     <project.root-directory>..</project.root-directory>
     <project.surefire.version>3.5.2</project.surefire.version>
     <deploy.autorelease>false</deploy.autorelease>
