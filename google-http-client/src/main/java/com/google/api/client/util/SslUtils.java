@@ -18,6 +18,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.HostnameVerifier;
@@ -52,6 +53,68 @@ public final class SslUtils {
    */
   public static SSLContext getTlsSslContext() throws NoSuchAlgorithmException {
     return SSLContext.getInstance("TLS");
+  }
+
+  /**
+   * Returns the SSL context for "TLS" algorithm using the specified provider.
+   *
+   * <p>If a custom provider (e.g., Conscrypt) is configured, the context must be loaded from it to
+   * enable the provider's specific TLS parameters and curve groups (such as PQC).
+   *
+   * @param provider the security provider, or {@code null} to use the default JRE provider
+   * @since 2.1.2
+   */
+  public static SSLContext getTlsSslContext(Provider provider) throws NoSuchAlgorithmException {
+    return provider != null ? SSLContext.getInstance("TLS", provider) : getTlsSslContext();
+  }
+
+  /**
+   * Returns the default trust manager factory using the specified provider.
+   *
+   * <p>Aligning the trust manager factory's provider with the SSLContext's provider is necessary to
+   * prevent handshake failures. For example, if Conscrypt is used for the SSLContext but the
+   * default SunJSSE TrustManager is used, TLS 1.3 handshakes will fail with "Unknown authType:
+   * GENERIC" because SunJSSE does not recognize Conscrypt's "GENERIC" authentication type string.
+   *
+   * @param provider the security provider, or {@code null} to use the default JRE provider
+   * @since 2.1.2
+   */
+  public static TrustManagerFactory getDefaultTrustManagerFactory(Provider provider)
+      throws NoSuchAlgorithmException {
+    return provider != null
+        ? TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm(), provider)
+        : getDefaultTrustManagerFactory();
+  }
+
+  /**
+   * Returns the PKIX trust manager factory using the specified provider.
+   *
+   * <p>Aligning the trust manager factory's provider with the SSLContext's provider is necessary to
+   * prevent handshake failures. For example, if Conscrypt is used for the SSLContext but the
+   * default SunJSSE TrustManager is used, TLS 1.3 handshakes will fail with "Unknown authType:
+   * GENERIC" because SunJSSE does not recognize Conscrypt's "GENERIC" authentication type string.
+   *
+   * @param provider the security provider, or {@code null} to use the default JRE provider
+   * @since 2.1.2
+   */
+  public static TrustManagerFactory getPkixTrustManagerFactory(Provider provider)
+      throws NoSuchAlgorithmException {
+    return provider != null
+        ? TrustManagerFactory.getInstance("PKIX", provider)
+        : getPkixTrustManagerFactory();
+  }
+
+  /**
+   * Returns the default key manager factory using the specified provider.
+   *
+   * @param provider the security provider, or {@code null} to use the default JRE provider
+   * @since 2.1.2
+   */
+  public static KeyManagerFactory getDefaultKeyManagerFactory(Provider provider)
+      throws NoSuchAlgorithmException {
+    return provider != null
+        ? KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm(), provider)
+        : getDefaultKeyManagerFactory();
   }
 
   /**

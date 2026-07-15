@@ -240,5 +240,44 @@
     "queryAllPublicConstructors": true,
     "queryAllDeclaredMethods": true,
     "allDeclaredFields": true
+  },
+  {
+    "name": "com.google.api.client.util.SslUtilsTest$MockSslContextSpi",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.google.api.client.util.SslUtilsTest$MockTrustManagerFactorySpi",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "name": "com.google.api.client.util.SslUtilsTest$MockKeyManagerFactorySpi",
+    "queryAllDeclaredConstructors": true,
+    "queryAllPublicConstructors": true,
+    "queryAllDeclaredMethods": true,
+    "allDeclaredFields": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
   }
 ]

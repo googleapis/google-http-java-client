@@ -16,10 +16,13 @@ package com.google.api.client.http.javanet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.javanet.MockHttpURLConnection;
@@ -36,8 +39,12 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -235,10 +242,70 @@ public class NetHttpTransportTest {
       HttpTransport transport = new NetHttpTransport();
       GenericUrl testUrl = new GenericUrl("http://localhost/foo//bar");
       testUrl.setPort(server.getPort());
-      com.google.api.client.http.HttpResponse response =
-          transport.createRequestFactory().buildGetRequest(testUrl).execute();
-      // disconnect should not wait to read the entire content
+      HttpResponse response = transport.createRequestFactory().buildGetRequest(testUrl).execute();
       response.disconnect();
+    }
+  }
+
+  @Test
+  public void testBuilderDefaultSslSocketConfiguratorIsNull() {
+    NetHttpTransport.Builder builder = new NetHttpTransport.Builder();
+    assertNull(builder.sslSocketConfigurator);
+  }
+
+  @Test
+  public void testBuilderConfigureSslSocketConfigurator() {
+    SslSocketConfigurator customConfigurator =
+        new SslSocketConfigurator() {
+          @Override
+          public void configure(SSLSocket socket) {}
+        };
+    NetHttpTransport.Builder builder =
+        new NetHttpTransport.Builder().setSslSocketConfigurator(customConfigurator);
+    assertEquals(customConfigurator, builder.sslSocketConfigurator);
+  }
+
+  @Test
+  public void testResolveSslSocketFactoryWithDefault() {
+    NetHttpTransport.Builder builder = new NetHttpTransport.Builder();
+    SSLSocketFactory factory = builder.resolveSslSocketFactory();
+    assertNull(factory);
+  }
+
+  @Test
+  public void testResolveSslSocketFactoryWithCustom() {
+    SslSocketConfigurator customConfigurator =
+        new SslSocketConfigurator() {
+          @Override
+          public void configure(SSLSocket socket) {}
+        };
+    NetHttpTransport.Builder builder =
+        new NetHttpTransport.Builder().setSslSocketConfigurator(customConfigurator);
+    SSLSocketFactory factory = builder.resolveSslSocketFactory();
+    assertTrue(factory instanceof ConfigurableSSLSocketFactory);
+  }
+
+  @Test
+  public void testCreateDefaultSslSocketFactory() {
+    NetHttpTransport.Builder builder = new NetHttpTransport.Builder();
+    SSLSocketFactory factory = builder.createDefaultSslSocketFactory();
+    assertNotNull(factory);
+  }
+
+  @Test
+  public void testCreateDefaultSslSocketFactory_invalidProviderFailsFast() {
+    Provider invalidProvider =
+        new Provider("MockInvalidProvider", 1.0, "For testing") {
+          private static final long serialVersionUID = 1L;
+        };
+    NetHttpTransport.Builder builder =
+        new NetHttpTransport.Builder().setSecurityProvider(invalidProvider);
+    try {
+      builder.createDefaultSslSocketFactory();
+      fail("Expected IllegalStateException");
+    } catch (IllegalStateException e) {
+      assertEquals("Failed to initialize SSLSocketFactory.", e.getMessage());
+      assertTrue(e.getCause() instanceof NoSuchAlgorithmException);
     }
   }
 }
