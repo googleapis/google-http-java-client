@@ -13,14 +13,17 @@
  */
 
 /**
- * Findbugs package which supports custom Google APIs Client library findbugs Plugins.
+ * SpotBugs package which supports the custom Google APIs Client Library SpotBugs plugin.
+ *
+ * <p>The artifact ID retains its historical {@code google-http-client-findbugs} name for
+ * compatibility.
  *
  * <p>Usage on pom.xml:
  *
  * <pre>
  * &lt;plugin&gt;
- * &lt;groupId>org.codehaus.mojo&lt;/groupId&gt;
- * &lt;artifactId>findbugs-maven-plugin&lt;/artifactId&gt;
+ * &lt;groupId&gt;com.github.spotbugs&lt;/groupId&gt;
+ * &lt;artifactId&gt;spotbugs-maven-plugin&lt;/artifactId&gt;
  * ...
  * &lt;configuration&gt;
  * &lt;plugins&gt;

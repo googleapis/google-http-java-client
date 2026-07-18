@@ -3,7 +3,7 @@
   xsi:noNamespaceSchemaLocation="messagecollection.xsd">
 
   <Plugin>
-    <ShortDescription>FindBugs Google API's Client library plugin</ShortDescription>
+    <ShortDescription>SpotBugs Google APIs Client Library plugin</ShortDescription>
     <Details>Provides detectors for Google APIs Client library.</Details>
   </Plugin>
 

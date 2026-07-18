@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <FindBugsFilter>
-  <!-- see http://findbugs.sourceforge.net/bugDescriptions.html -->
+  <!-- see https://spotbugs.readthedocs.io/en/stable/bugDescriptions.html -->
   <LastVersion value="-1" relOp="NEQ"/>
   <!-- The following have not yet been investigated -->
   <!-- TODO(yanivi): investigate them -->

@@ -36,8 +36,9 @@ import java.lang.annotation.Target;
  * used in client applications, and if the wrong version of this library is used, it has the
  * potential to break client applications.
  *
- * <p>You may use the google-http-client-findbugs plugin to find usages of API bearing this
- * annotation.
+ * <p>You may use the SpotBugs plugin in the {@code google-http-client-findbugs} artifact to find
+ * usages of API bearing this annotation. The artifact ID retains its historical name for
+ * compatibility.
  *
  * @since 1.15
  * @author Eyal Peled
