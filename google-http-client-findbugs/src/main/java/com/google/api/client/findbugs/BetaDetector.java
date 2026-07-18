@@ -18,6 +18,9 @@ import com.google.api.client.util.Beta;
 import edu.umd.cs.findbugs.BugInstance;
 import edu.umd.cs.findbugs.BugReporter;
 import edu.umd.cs.findbugs.bcel.OpcodeStackDetector;
+import edu.umd.cs.findbugs.visitclass.Constants2;
+import org.apache.bcel.Const;
+import org.apache.bcel.Constants;
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.AnnotationEntry;
 import org.apache.bcel.classfile.ConstantClass;
@@ -26,11 +29,11 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 
 /**
- * Findbugs plugin detector which detects usage of {@link Beta} in your code.
+ * SpotBugs plugin detector which detects usage of {@link Beta} in your code.
  *
  * @author Eyal Peled
  */
-public class BetaDetector extends OpcodeStackDetector {
+public class BetaDetector extends OpcodeStackDetector implements Constants, Constants2 {
 
   /** Beta annotation "signature". */
   private static final String BETA_ANNOTATION = "Lcom/google/api/client/util/Beta;";
@@ -54,33 +57,25 @@ public class BetaDetector extends OpcodeStackDetector {
   @Override
   public void sawOpcode(int seen) {
     switch (seen) {
-      case INVOKEINTERFACE:
-      case INVOKESTATIC:
-      case INVOKESPECIAL:
-      case INVOKEVIRTUAL:
+      case Const.INVOKEINTERFACE:
+      case Const.INVOKESTATIC:
+      case Const.INVOKESPECIAL:
+      case Const.INVOKEVIRTUAL:
         // Method usage
         checkMethod(getNameConstantOperand(), getSigConstantOperand());
         break;
 
-      case GETFIELD:
-      case GETFIELD_QUICK:
-      case GETFIELD_QUICK_W:
-      case PUTFIELD:
-      case PUTFIELD_QUICK:
-      case PUTFIELD_QUICK_W:
-      case GETSTATIC:
-      case GETSTATIC_QUICK:
-      case GETSTATIC2_QUICK:
-      case PUTSTATIC:
-      case PUTSTATIC_QUICK:
-      case PUTSTATIC2_QUICK:
+      case Const.GETFIELD:
+      case Const.PUTFIELD:
+      case Const.GETSTATIC:
+      case Const.PUTSTATIC:
         // Field usage
         checkField(getNameConstantOperand());
         break;
 
-      case LDC:
-      case LDC_W:
-      case LDC2_W:
+      case Const.LDC:
+      case Const.LDC_W:
+      case Const.LDC2_W:
         // Class usage
         if (getConstantRefOperand() instanceof ConstantClass) {
           // report bug in case it's google api @Beta class

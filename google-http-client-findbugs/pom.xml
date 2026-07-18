@@ -9,7 +9,11 @@
   </parent>
   <artifactId>google-http-client-findbugs</artifactId>
   <version>2.1.2-SNAPSHOT</version><!-- {x-version-update:google-http-client-findbugs:current} -->
-  <name>Google APIs Client Library Findbugs custom plugin.</name>
+  <name>Google APIs Client Library SpotBugs custom plugin.</name>
+  <description>
+    SpotBugs plugin for detecting usages of beta Google HTTP Client APIs. The artifact ID retains
+    its historical name for compatibility.
+  </description>
 
   <build>
     <pluginManagement>
@@ -50,28 +54,10 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>findbugs</artifactId>
-      <version>3.0.1</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>xalan</artifactId>
-          <groupId>xalan</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>xmlParserAPIs</artifactId>
-          <groupId>xerces</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>annotations</artifactId>
-          <groupId>com.google.code.findbugs</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>bcel-findbugs</artifactId>
-      <version>6.0</version>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs</artifactId>
+      <version>4.8.6</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>

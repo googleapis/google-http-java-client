@@ -4,8 +4,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.http-client</groupId>
   <artifactId>google-http-client-findbugs-test</artifactId>
-  <version>1.15.0-rc-SNAPSHOT</version>
-  <name>Findbugs Google API Client Library plugin test.</name>
+  <version>2.1.2-SNAPSHOT</version>
+  <name>SpotBugs Google API Client Library plugin test.</name>
   <packaging>jar</packaging>
   <build>
     <plugins>
@@ -30,9 +30,9 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-        <version>3.0.5</version>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>4.8.6.8</version>
         <configuration>
           <plugins>
             <plugin>
