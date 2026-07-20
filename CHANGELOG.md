@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/googleapis/google-http-java-client/compare/v2.1.1...v2.2.0) (2026-07-20)
+
+
+### Features
+
+* **pqc:** Replace provider-specific PQC TLS setup with generic SslSocketConfigurator callback ([#2167](https://github.com/googleapis/google-http-java-client/issues/2167)) ([93e1ee7](https://github.com/googleapis/google-http-java-client/commit/93e1ee7f5e57fd33dde9dfa2f8eab74aca6693c6))
+
 ## [2.1.1](https://github.com/googleapis/google-http-java-client/compare/v2.1.0...v2.1.1) (2026-06-29)
 
 
