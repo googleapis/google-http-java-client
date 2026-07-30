@@ -1022,10 +1022,17 @@ public final class HttpRequest {
           response = new HttpResponse(this, lowLevelHttpResponse);
           responseConstructed = true;
         } finally {
-          if (!responseConstructed) {
-            InputStream lowLevelContent = lowLevelHttpResponse.getContent();
-            if (lowLevelContent != null) {
-              lowLevelContent.close();
+          if (!responseConstructed && lowLevelHttpResponse != null) {
+            try {
+              InputStream lowLevelContent = lowLevelHttpResponse.getContent();
+              if (lowLevelContent != null) {
+                lowLevelContent.close();
+              }
+            } catch (IOException ignored) {
+            }
+            try {
+              lowLevelHttpResponse.disconnect();
+            } catch (IOException ignored) {
             }
           }
         }
