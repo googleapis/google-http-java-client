@@ -155,9 +155,17 @@ public class GenericDataTest {
   @Test
   public void testGetIgnoreCase_class() {
     MyData data = new MyData();
+    assertFalse(data.containsKey("FIELDA"));
+    assertFalse(data.containsKey("FieldA"));
+    assertFalse(data.keySet().contains("FieldA"));
     data.fieldA = "someValue";
     assertTrue(data.containsKey("FIELDA"));
+    assertTrue(data.containsKey("FieldA"));
+    assertTrue(data.keySet().contains("FieldA"));
     assertEquals("someValue", data.get("FIELDA"));
+    data.fieldA = null;
+    assertFalse(data.containsKey("FIELDA"));
+    assertFalse(data.keySet().contains("FieldA"));
   }
 
   @Test
