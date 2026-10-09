@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.google.api.client.http.BasicAuthentication;
 import com.google.api.client.testing.http.HttpTesting;
 import com.google.api.client.testing.http.MockHttpTransport;
 import com.google.api.client.testing.http.MockHttpUnsuccessfulResponseHandler;
@@ -1326,5 +1327,155 @@ public class HttpRequestTest {
     assertTrue(
         String.format("the loaded version '%s' did not match the acceptable pattern", version),
         version.matches(acceptableVersionPattern));
+  }
+
+  @Test
+  public void testHandleRedirect_crossOriginCookieRemoval() throws IOException {
+    // 1. Same-origin redirect (http://some.org/a/b -> http://some.org/a/z)
+    {
+      HttpTransport transport = new MockHttpTransport();
+      HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("http://some.org/a/b"));
+      req.getHeaders().setCookie("foo=bar");
+      HttpHeaders responseHeaders = new HttpHeaders().setLocation("http://some.org/a/z");
+      req.handleRedirect(HttpStatusCodes.STATUS_CODE_SEE_OTHER, responseHeaders);
+      assertEquals("foo=bar", req.getHeaders().getCookie());
+      assertEquals("http://some.org/a/z", req.getUrl().toString());
+    }
+
+    // 2. Cross-origin redirect due to host change (http://some.org/a/b -> http://other.org/c)
+    {
+      HttpTransport transport = new MockHttpTransport();
+      HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("http://some.org/a/b"));
+      req.getHeaders().setCookie("foo=bar");
+      HttpHeaders responseHeaders = new HttpHeaders().setLocation("http://other.org/c");
+      req.handleRedirect(HttpStatusCodes.STATUS_CODE_SEE_OTHER, responseHeaders);
+      assertNull(req.getHeaders().getCookie());
+      assertEquals("http://other.org/c", req.getUrl().toString());
+    }
+
+    // 3. Cross-origin redirect due to scheme change (https://some.org/a/b -> http://some.org/a/z)
+    {
+      HttpTransport transport = new MockHttpTransport();
+      HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("https://some.org/a/b"));
+      req.getHeaders().setCookie("foo=bar");
+      HttpHeaders responseHeaders = new HttpHeaders().setLocation("http://some.org/a/z");
+      req.handleRedirect(HttpStatusCodes.STATUS_CODE_SEE_OTHER, responseHeaders);
+      assertNull(req.getHeaders().getCookie());
+      assertEquals("http://some.org/a/z", req.getUrl().toString());
+    }
+
+    // 4. Cross-origin redirect due to port change (http://some.org/a/b -> http://some.org:8080/a/z)
+    {
+      HttpTransport transport = new MockHttpTransport();
+      HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("http://some.org/a/b"));
+      req.getHeaders().setCookie("foo=bar");
+      HttpHeaders responseHeaders = new HttpHeaders().setLocation("http://some.org:8080/a/z");
+      req.handleRedirect(HttpStatusCodes.STATUS_CODE_SEE_OTHER, responseHeaders);
+      assertNull(req.getHeaders().getCookie());
+      assertEquals("http://some.org:8080/a/z", req.getUrl().toString());
+    }
+
+    // 5. Same-origin redirect with implicit/explicit default ports matching (http://some.org/a/b -> http://some.org:80/a/z)
+    {
+      HttpTransport transport = new MockHttpTransport();
+      HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("http://some.org/a/b"));
+      req.getHeaders().setCookie("foo=bar");
+      HttpHeaders responseHeaders = new HttpHeaders().setLocation("http://some.org:80/a/z");
+      req.handleRedirect(HttpStatusCodes.STATUS_CODE_SEE_OTHER, responseHeaders);
+      assertEquals("foo=bar", req.getHeaders().getCookie());
+      assertEquals("http://some.org:80/a/z", req.getUrl().toString());
+    }
+  }
+
+  @Test
+  public void testExecute_crossOriginRedirectCredentialLeakPrevention() throws Exception {
+    final List<MockLowLevelHttpRequest> recordedRequests = Lists.newArrayList();
+
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildRequest(String method, final String url) {
+        MockLowLevelHttpRequest req = new MockLowLevelHttpRequest(url) {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            recordedRequests.add(this);
+            MockLowLevelHttpResponse resp = new MockLowLevelHttpResponse();
+            if (recordedRequests.size() == 1) {
+              resp.setStatusCode(302);
+              resp.addHeader("Location", "https://untrusted-target.com/path");
+            } else {
+              resp.setStatusCode(200);
+            }
+            return resp;
+          }
+        };
+        return req;
+      }
+    };
+
+    HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("https://example.com/start"));
+    req.setInterceptor(new BasicAuthentication("myuser", "mypass"));
+    req.getHeaders().setCookie("mycookie=val");
+
+    HttpResponse response = req.execute();
+    assertEquals(200, response.getStatusCode());
+    assertEquals(2, recordedRequests.size());
+
+    // First request (https://example.com/start)
+    MockLowLevelHttpRequest firstReq = recordedRequests.get(0);
+    assertTrue(firstReq.getUrl().contains("example.com"));
+    assertNotNull(firstReq.getFirstHeaderValue("Authorization"));
+    assertEquals("mycookie=val", firstReq.getFirstHeaderValue("Cookie"));
+
+    // Second request (https://untrusted-target.com/path) - redirect to cross-origin
+    MockLowLevelHttpRequest secondReq = recordedRequests.get(1);
+    assertTrue(secondReq.getUrl().contains("untrusted-target.com"));
+    assertNull(secondReq.getFirstHeaderValue("Authorization"));
+    assertNull(secondReq.getFirstHeaderValue("Cookie"));
+  }
+
+  @Test
+  public void testExecute_sameOriginRedirectCredentialLeakPrevention() throws Exception {
+    final List<MockLowLevelHttpRequest> recordedRequests = Lists.newArrayList();
+
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildRequest(String method, final String url) {
+        MockLowLevelHttpRequest req = new MockLowLevelHttpRequest(url) {
+          @Override
+          public LowLevelHttpResponse execute() throws IOException {
+            recordedRequests.add(this);
+            MockLowLevelHttpResponse resp = new MockLowLevelHttpResponse();
+            if (recordedRequests.size() == 1) {
+              resp.setStatusCode(302);
+              resp.addHeader("Location", "https://example.com/redirect-path");
+            } else {
+              resp.setStatusCode(200);
+            }
+            return resp;
+          }
+        };
+        return req;
+      }
+    };
+
+    HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("https://example.com/start"));
+    req.setInterceptor(new BasicAuthentication("myuser", "mypass"));
+    req.getHeaders().setCookie("mycookie=val");
+
+    HttpResponse response = req.execute();
+    assertEquals(200, response.getStatusCode());
+    assertEquals(2, recordedRequests.size());
+
+    // First request
+    MockLowLevelHttpRequest firstReq = recordedRequests.get(0);
+    assertTrue(firstReq.getUrl().contains("example.com/start"));
+    assertNotNull(firstReq.getFirstHeaderValue("Authorization"));
+    assertEquals("mycookie=val", firstReq.getFirstHeaderValue("Cookie"));
+
+    // Second request - redirect same-origin
+    MockLowLevelHttpRequest secondReq = recordedRequests.get(1);
+    assertTrue(secondReq.getUrl().contains("example.com/redirect-path"));
+    assertNotNull(secondReq.getFirstHeaderValue("Authorization"));
+    assertEquals("mycookie=val", secondReq.getFirstHeaderValue("Cookie"));
   }
 }
