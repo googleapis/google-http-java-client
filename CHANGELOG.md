@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/googleapis/google-http-java-client/compare/v2.2.0...v2.2.1) (2026-10-09)
+
+
+### Bug Fixes
+
+* Check field value is non-null in GenericData.containsKey ([#2191](https://github.com/googleapis/google-http-java-client/issues/2191)) ([3a590c1](https://github.com/googleapis/google-http-java-client/commit/3a590c1f783411cbfe1c617c95c2ee1da8625c9a))
+
 ## [2.2.0](https://github.com/googleapis/google-http-java-client/compare/v2.1.1...v2.2.0) (2026-07-20)
 
 
