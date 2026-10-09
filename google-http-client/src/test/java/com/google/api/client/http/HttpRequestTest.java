@@ -1327,4 +1327,32 @@ public class HttpRequestTest {
         String.format("the loaded version '%s' did not match the acceptable pattern", version),
         version.matches(acceptableVersionPattern));
   }
+
+  @Test
+  public void testExecute_disconnectOnResponseConstructionFailure() throws Exception {
+    class FailingHttpResponse extends MockLowLevelHttpResponse {
+      @Override
+      public String getContentEncoding() {
+        throw new RuntimeException("Simulated response construction failure");
+      }
+    }
+
+    final FailingHttpResponse failingResponse = new FailingHttpResponse();
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+        return new MockLowLevelHttpRequest().setResponse(failingResponse);
+      }
+    };
+
+    HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("http://example.com"));
+    try {
+      req.execute();
+      fail("Expected RuntimeException");
+    } catch (RuntimeException e) {
+      assertEquals("Simulated response construction failure", e.getMessage());
+    }
+
+    assertTrue(failingResponse.isDisconnected());
+  }
 }
