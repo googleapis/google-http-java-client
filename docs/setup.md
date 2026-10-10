@@ -86,6 +86,11 @@ following rules to your ProGuard configuration:
 -keepclassmembers class * {
   @com.google.api.client.util.Key <fields>;
 }
+
+-keepclasseswithmembers,allowobfuscation class * {
+  @com.google.api.client.util.Key <fields>;
+  public <init>();
+}
 ```
 
 When using `google-http-client-android`, also add:
