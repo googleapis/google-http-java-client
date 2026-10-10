@@ -438,11 +438,20 @@ public final class HttpResponse {
    * Disconnect using {@link LowLevelHttpResponse#disconnect()}, then close the HTTP response
    * content using {@link #ignore}.
    *
+   * <p>The underlying connection is aborted first so that closing the response content in {@link
+   * #ignore} does not block to drain remaining response bytes (e.g. when only a small prefix of a
+   * large response was read). Any {@link IOException} from {@link #ignore} after an abort is
+   * expected and silently swallowed.
+   *
    * @since 1.4
    */
   public void disconnect() throws IOException {
-    ignore();
     response.disconnect();
+    try {
+      ignore();
+    } catch (IOException e) {
+      // Expected when the connection was aborted before content was fully consumed.
+    }
   }
 
   /**
