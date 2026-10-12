@@ -15,6 +15,7 @@
 package com.google.api.client.http;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import com.google.api.client.util.Value;
@@ -432,5 +433,55 @@ public class UriTemplateTest {
         "key1,val1%2F,key2,val2%2F,key3,val%20", UriTemplate.expand("{+keys}", variables, false));
     assertEquals(
         "#key1,val1%2F,key2,val2%2F,key3,val%20", UriTemplate.expand("{#keys}", variables, false));
+  }
+
+  @Test
+  public void testExpandTemplates_rejectsDotSegmentsInSimpleExpansion() {
+    Map<String, Object> variables = Maps.newLinkedHashMap();
+    variables.put("webhook", "..");
+    IllegalArgumentException dotDotEx =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> UriTemplate.expand("v3/webhooks/{webhook}", variables, false));
+    assertEquals("Invalid value .. for webhook.", dotDotEx.getMessage());
+
+    variables.put("webhook", ".");
+    IllegalArgumentException dotEx =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> UriTemplate.expand("v3/webhooks/{webhook}", variables, false));
+    assertEquals("Invalid value . for webhook.", dotEx.getMessage());
+  }
+
+  @Test
+  public void testExpandTemplates_rejectsDotSegmentsInReservedExpansion() {
+    for (String invalidValue :
+        Arrays.asList(
+            "projects/p/locations/l/agents/a/sessions/..",
+            "projects/p/locations/l/agents/a/sessions/.",
+            "projects/sys-prod-123/databases/default/documents/doc-1/../../default",
+            "../escape-db",
+            "projects/sys-prod-123/databases/default/documents/doc-1/./child")) {
+      Map<String, Object> variables = Maps.newLinkedHashMap();
+      variables.put("name", invalidValue);
+      IllegalArgumentException ex =
+          assertThrows(
+              IllegalArgumentException.class,
+              () -> UriTemplate.expand("v1/{+name}", variables, false));
+      assertEquals(
+          "Value for name must not contain segments that are exactly . or ..", ex.getMessage());
+    }
+  }
+
+  @Test
+  public void testExpandTemplates_allowsSafeDotsInSimpleAndReservedExpansion() {
+    Map<String, Object> variables = Maps.newLinkedHashMap();
+    variables.put("name", "projects/sys-prod-123/databases/default/documents/my-file..txt");
+    assertEquals(
+        "v1/projects/sys-prod-123/databases/default/documents/my-file..txt",
+        UriTemplate.expand("v1/{+name}", variables, false));
+
+    variables.put("id", ".well-known");
+    assertEquals("v1/.well-known", UriTemplate.expand("v1/{id}", variables, false));
   }
 }

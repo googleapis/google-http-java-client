@@ -320,10 +320,28 @@ public class UriTemplate {
   }
 
   private static String getSimpleValue(String name, String value, CompositeOutput compositeOutput) {
+    validatePathSegments(name, value, compositeOutput);
     if (compositeOutput.requiresVarAssignment()) {
       return String.format("%s=%s", name, compositeOutput.getEncodedValue(value));
     }
     return compositeOutput.getEncodedValue(value);
+  }
+
+  private static void validatePathSegments(
+      String name, String value, CompositeOutput compositeOutput) {
+    if (compositeOutput == CompositeOutput.SIMPLE) {
+      if (".".equals(value) || "..".equals(value)) {
+        throw new IllegalArgumentException(String.format("Invalid value %s for %s.", value, name));
+      }
+    } else if (compositeOutput == CompositeOutput.PLUS) {
+      for (String segment : Splitter.on('/').split(value)) {
+        if (".".equals(segment) || "..".equals(segment)) {
+          throw new IllegalArgumentException(
+              String.format(
+                  "Value for %s must not contain segments that are exactly . or ..", name));
+        }
+      }
+    }
   }
 
   /**
