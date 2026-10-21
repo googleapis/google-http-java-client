@@ -44,6 +44,21 @@ public class Base64Test {
   }
 
   @Test
+  public void test_decodeBase64_urlSafe() {
+    assertThat(Base64.decodeBase64("-_8=")).isEqualTo(new byte[] {(byte) 0xfb, (byte) 0xff});
+  }
+
+  @Test
+  public void test_decodeBase64_urlSafeWithoutPadding() {
+    assertThat(Base64.decodeBase64("-_8")).isEqualTo(new byte[] {(byte) 0xfb, (byte) 0xff});
+  }
+
+  @Test
+  public void test_decodeBase64_urlSafeWithTrailingWhitespace() {
+    assertThat(Base64.decodeBase64("-_8=\r\n")).isEqualTo(new byte[] {(byte) 0xfb, (byte) 0xff});
+  }
+
+  @Test
   public void test_decodeBase64_withTrailingWhitespace() {
     // Some internal use cases append extra space characters that apache-commons base64 decoding
     // previously handled.
