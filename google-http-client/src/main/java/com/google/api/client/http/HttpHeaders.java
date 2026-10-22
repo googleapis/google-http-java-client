@@ -838,6 +838,9 @@ public class HttpHeaders extends GenericData {
     }
     // compute value
     String stringValue = toStringValue(value);
+    if (name.contains("\r") || name.contains("\n") || stringValue.contains("\r") || stringValue.contains("\n")) {
+      throw new IllegalArgumentException("Header name or value contains CRLF characters.");
+    }
     // log header
     String loggedStringValue = stringValue;
     if (("Authorization".equalsIgnoreCase(name) || "Cookie".equalsIgnoreCase(name))
