@@ -48,6 +48,13 @@
       <artifactId>android</artifactId>
       <version>4.1.1.4</version>
       <scope>provided</scope>
+      <exclusions>
+        <!-- Airlock has no approved license for xmlParserAPIs 2.6.2. The JDK has these APIs. -->
+        <exclusion>
+          <groupId>xerces</groupId>
+          <artifactId>xmlParserAPIs</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 </project>
