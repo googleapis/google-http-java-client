@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.2.1](https://github.com/googleapis/google-http-java-client/compare/v2.2.0...v2.2.1) (2026-10-22)
+
+
+### Bug Fixes
+
+* Check field value is non-null in GenericData.containsKey ([#2191](https://github.com/googleapis/google-http-java-client/issues/2191)) ([3a590c1](https://github.com/googleapis/google-http-java-client/commit/3a590c1f783411cbfe1c617c95c2ee1da8625c9a))
+* **deps:** Build and release with dependencies from Airlock only ([#2195](https://github.com/googleapis/google-http-java-client/issues/2195)) ([8ca1243](https://github.com/googleapis/google-http-java-client/commit/8ca12430b13792b63316a1f1adbf6c7c29539294))
+* **deps:** Replace jaxen 1.1.6 and exclude xmlParserAPIs 2.6.2 for Airlock ([#2197](https://github.com/googleapis/google-http-java-client/issues/2197)) ([46bff64](https://github.com/googleapis/google-http-java-client/commit/46bff643fcee7c23400046ceba9aa0848f01081a))
+
 ## [2.2.0](https://github.com/googleapis/google-http-java-client/compare/v2.1.1...v2.2.0) (2026-07-20)
 
 
