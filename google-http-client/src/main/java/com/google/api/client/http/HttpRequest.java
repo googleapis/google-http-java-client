@@ -29,6 +29,7 @@ import io.opencensus.trace.Span;
 import io.opencensus.trace.Tracer;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
@@ -1022,10 +1023,17 @@ public final class HttpRequest {
           response = new HttpResponse(this, lowLevelHttpResponse);
           responseConstructed = true;
         } finally {
-          if (!responseConstructed) {
-            InputStream lowLevelContent = lowLevelHttpResponse.getContent();
-            if (lowLevelContent != null) {
-              lowLevelContent.close();
+          if (!responseConstructed && lowLevelHttpResponse != null) {
+            try {
+              InputStream lowLevelContent = lowLevelHttpResponse.getContent();
+              if (lowLevelContent != null) {
+                lowLevelContent.close();
+              }
+            } catch (IOException ignored) {
+            }
+            try {
+              lowLevelHttpResponse.disconnect();
+            } catch (IOException ignored) {
             }
           }
         }
@@ -1180,7 +1188,25 @@ public final class HttpRequest {
         && HttpStatusCodes.isRedirect(statusCode)
         && redirectLocation != null) {
       // resolve the redirect location relative to the current location
-      setUrl(new GenericUrl(url.toURL(redirectLocation), useRawRedirectUrls));
+      URL newURL = url.toURL(redirectLocation);
+
+      // Check if redirecting to a different origin
+      String oldScheme = url.getScheme();
+      String oldHost = url.getHost();
+      int oldPort = url.getPort();
+
+      String newScheme = newURL.getProtocol();
+      String newHost = newURL.getHost();
+      int newPort = newURL.getPort();
+
+      int oldEffectivePort = getEffectivePort(oldScheme, oldPort);
+      int newEffectivePort = getEffectivePort(newScheme, newPort);
+
+      boolean sameOrigin = (oldScheme == null ? newScheme == null : oldScheme.equalsIgnoreCase(newScheme))
+          && (oldHost == null ? newHost == null : oldHost.equalsIgnoreCase(newHost))
+          && (oldEffectivePort == newEffectivePort);
+
+      setUrl(new GenericUrl(newURL, useRawRedirectUrls));
       // on 303 change method to GET
       if (statusCode == HttpStatusCodes.STATUS_CODE_SEE_OTHER) {
         setRequestMethod(HttpMethods.GET);
@@ -1194,9 +1220,27 @@ public final class HttpRequest {
       headers.setIfModifiedSince((String) null);
       headers.setIfUnmodifiedSince((String) null);
       headers.setIfRange((String) null);
+
+      // remove Cookie header if redirect is cross-origin
+      if (!sameOrigin) {
+        headers.setCookie((String) null);
+      }
       return true;
     }
     return false;
+  }
+
+  private static int getEffectivePort(String scheme, int port) {
+    if (port != -1) {
+      return port;
+    }
+    if ("http".equalsIgnoreCase(scheme)) {
+      return 80;
+    }
+    if ("https".equalsIgnoreCase(scheme)) {
+      return 443;
+    }
+    return -1;
   }
 
   /**

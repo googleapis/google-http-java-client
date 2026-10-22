@@ -543,6 +543,92 @@ public class HttpRequestTest {
     assertEquals(newLocation, req.getUrl().toString());
   }
 
+  @Test
+  public void testHandleRedirect_crossOriginCookieRemoval() throws IOException {
+    // 1. Same-origin redirect (http://some.org/a/b -> http://some.org/a/z)
+    {
+      HttpTransport transport = new MockHttpTransport();
+      HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("http://some.org/a/b"));
+      req.getHeaders().setCookie("foo=bar");
+      HttpHeaders responseHeaders = new HttpHeaders().setLocation("http://some.org/a/z");
+      req.handleRedirect(HttpStatusCodes.STATUS_CODE_SEE_OTHER, responseHeaders);
+      assertEquals("foo=bar", req.getHeaders().getCookie());
+      assertEquals("http://some.org/a/z", req.getUrl().toString());
+    }
+
+    // 2. Cross-origin redirect due to host change (http://some.org/a/b -> http://other.org/c)
+    {
+      HttpTransport transport = new MockHttpTransport();
+      HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("http://some.org/a/b"));
+      req.getHeaders().setCookie("foo=bar");
+      HttpHeaders responseHeaders = new HttpHeaders().setLocation("http://other.org/c");
+      req.handleRedirect(HttpStatusCodes.STATUS_CODE_SEE_OTHER, responseHeaders);
+      assertNull(req.getHeaders().getCookie());
+      assertEquals("http://other.org/c", req.getUrl().toString());
+    }
+
+    // 3. Cross-origin redirect due to scheme change (https://some.org/a/b -> http://some.org/a/z)
+    {
+      HttpTransport transport = new MockHttpTransport();
+      HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("https://some.org/a/b"));
+      req.getHeaders().setCookie("foo=bar");
+      HttpHeaders responseHeaders = new HttpHeaders().setLocation("http://some.org/a/z");
+      req.handleRedirect(HttpStatusCodes.STATUS_CODE_SEE_OTHER, responseHeaders);
+      assertNull(req.getHeaders().getCookie());
+      assertEquals("http://some.org/a/z", req.getUrl().toString());
+    }
+
+    // 4. Cross-origin redirect due to port change (http://some.org/a/b -> http://some.org:8080/a/z)
+    {
+      HttpTransport transport = new MockHttpTransport();
+      HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("http://some.org/a/b"));
+      req.getHeaders().setCookie("foo=bar");
+      HttpHeaders responseHeaders = new HttpHeaders().setLocation("http://some.org:8080/a/z");
+      req.handleRedirect(HttpStatusCodes.STATUS_CODE_SEE_OTHER, responseHeaders);
+      assertNull(req.getHeaders().getCookie());
+      assertEquals("http://some.org:8080/a/z", req.getUrl().toString());
+    }
+
+    // 5. Same-origin redirect with implicit/explicit default ports matching (http://some.org/a/b -> http://some.org:80/a/z)
+    {
+      HttpTransport transport = new MockHttpTransport();
+      HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("http://some.org/a/b"));
+      req.getHeaders().setCookie("foo=bar");
+      HttpHeaders responseHeaders = new HttpHeaders().setLocation("http://some.org:80/a/z");
+      req.handleRedirect(HttpStatusCodes.STATUS_CODE_SEE_OTHER, responseHeaders);
+      assertEquals("foo=bar", req.getHeaders().getCookie());
+      assertEquals("http://some.org:80/a/z", req.getUrl().toString());
+    }
+  }
+
+  @Test
+  public void testExecute_disconnectOnResponseConstructionFailure() throws Exception {
+    class FailingHttpResponse extends MockLowLevelHttpResponse {
+      @Override
+      public String getContentEncoding() {
+        throw new RuntimeException("Simulated response construction failure");
+      }
+    }
+
+    final FailingHttpResponse failingResponse = new FailingHttpResponse();
+    HttpTransport transport = new MockHttpTransport() {
+      @Override
+      public LowLevelHttpRequest buildRequest(String method, String url) throws IOException {
+        return new MockLowLevelHttpRequest().setResponse(failingResponse);
+      }
+    };
+
+    HttpRequest req = transport.createRequestFactory().buildGetRequest(new GenericUrl("http://example.com"));
+    try {
+      req.execute();
+      fail("Expected RuntimeException");
+    } catch (RuntimeException e) {
+      assertEquals("Simulated response construction failure", e.getMessage());
+    }
+
+    assertTrue(failingResponse.isDisconnected());
+  }
+
   @Deprecated
   @Test
   public void testExecuteErrorWithRetryEnabled() throws Exception {
