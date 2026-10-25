@@ -75,6 +75,30 @@ If you are using Gradle, add this to your dependencies:
 compile 'com.google.http-client:google-http-client:[VERSION]'
 ```
 
+## ProGuard
+
+The library uses reflection to access generic types and fields annotated with `@Key`. Add the
+following rules to your ProGuard configuration:
+
+```
+-keepattributes Signature,RuntimeVisibleAnnotations,AnnotationDefault
+
+-keepclassmembers class * {
+  @com.google.api.client.util.Key <fields>;
+}
+
+-keepclasseswithmembers,allowobfuscation class * {
+  @com.google.api.client.util.Key <fields>;
+  public <init>();
+}
+```
+
+When using `google-http-client-android`, also add:
+
+```
+-dontwarn com.google.api.client.extensions.android.**
+```
+
 ## Download the library with dependencies
 
 Download the latest assembly zip file from Maven Central and extract it on your computer. This zip
@@ -82,7 +106,6 @@ contains the client library class jar files and the associated source jar files 
 and their dependencies. You can find dependency graphs and licenses for the different libraries in
 the dependencies folder. For more details about the contents of the download, see the contained
 `readme.html` file.
-
 
 
 

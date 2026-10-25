@@ -10,6 +10,13 @@
   @com.google.api.client.util.Key <fields>;
 }
 
+# Needed to keep public no-argument constructors used to instantiate data models via reflection
+
+-keepclasseswithmembers,allowobfuscation class * {
+  @com.google.api.client.util.Key <fields>;
+  public <init>();
+}
+
 # Needed by google-http-client-android when linking against an older platform version
 
 -dontwarn com.google.api.client.extensions.android.**
