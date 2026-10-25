@@ -41,7 +41,9 @@ import com.google.common.collect.Lists;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
@@ -1207,6 +1209,42 @@ public class HttpRequestTest {
     mockExecutor.actuallyRun();
     assertTrue(futureResponse.isDone());
     assertNotNull(futureResponse.get(10, TimeUnit.MILLISECONDS));
+  }
+
+  @Test
+  public void testExecuteAsync_defaultExecutorDoesNotLeakThreads() throws Exception {
+    Set<Long> threadsBeforeTest = getThreadIds();
+    HttpTransport transport = new MockHttpTransport();
+
+    for (int i = 0; i < 20; i++) {
+      HttpRequest request =
+          transport.createRequestFactory().buildGetRequest(HttpTesting.SIMPLE_GENERIC_URL);
+      assertNotNull(request.executeAsync().get(10, TimeUnit.SECONDS));
+    }
+
+    long timeout = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(10);
+    while (hasNewExecutorThread(threadsBeforeTest) && System.currentTimeMillis() < timeout) {
+      Thread.sleep(10);
+    }
+    assertFalse(hasNewExecutorThread(threadsBeforeTest));
+  }
+
+  private static Set<Long> getThreadIds() {
+    Set<Long> threadIds = new HashSet<Long>();
+    for (Thread thread : Thread.getAllStackTraces().keySet()) {
+      threadIds.add(thread.getId());
+    }
+    return threadIds;
+  }
+
+  private static boolean hasNewExecutorThread(Set<Long> threadsBeforeTest) {
+    for (Thread thread : Thread.getAllStackTraces().keySet()) {
+      if (!threadsBeforeTest.contains(thread.getId())
+          && thread.getName().matches("pool-\\d+-thread-\\d+")) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Test
