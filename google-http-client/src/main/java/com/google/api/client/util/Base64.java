@@ -15,7 +15,6 @@
 package com.google.api.client.util;
 
 import com.google.common.io.BaseEncoding;
-import com.google.common.io.BaseEncoding.DecodingException;
 
 /**
  * Proxy for handling Base64 encoding/decoding.
@@ -99,8 +98,8 @@ public class Base64 {
    * Decodes a Base64 String into octets. Note that this method handles both URL-safe and
    * non-URL-safe base 64 encoded strings.
    *
-   * <p>For the compatibility with the old version that used Apache Commons Coded's decodeBase64,
-   * this method discards new line characters and trailing whitespaces.
+   * <p>For compatibility with the old version that used Apache Commons Codec's decodeBase64, this
+   * method discards new line characters and trailing whitespaces.
    *
    * @param base64String String containing Base64 data or {@code null} for {@code null} result
    * @return Array containing decoded data or {@code null} for {@code null} input
@@ -109,14 +108,12 @@ public class Base64 {
     if (base64String == null) {
       return null;
     }
-    try {
-      return BASE64_DECODER.decode(base64String);
-    } catch (IllegalArgumentException e) {
-      if (e.getCause() instanceof DecodingException) {
-        return BASE64URL_DECODER.decode(base64String.trim());
-      }
-      throw e;
-    }
+    String normalizedBase64String = base64String.trim();
+    BaseEncoding decoder =
+        normalizedBase64String.indexOf('-') >= 0 || normalizedBase64String.indexOf('_') >= 0
+            ? BASE64URL_DECODER
+            : BASE64_DECODER;
+    return decoder.decode(normalizedBase64String);
   }
 
   private Base64() {}
