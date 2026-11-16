@@ -17,6 +17,7 @@ package com.google.api.client.http;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import com.google.api.client.http.HttpRequestTest.E;
 import com.google.api.client.testing.http.MockLowLevelHttpRequest;
@@ -322,4 +323,29 @@ public class HttpHeadersTest {
     assertNull(v.v);
     assertEquals("svalue", v.s);
   }
+
+  @Test
+  public void testSerializeHeaders_crlfInjectionInName() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("foo\r\nbar", "value");
+    try {
+      HttpHeaders.serializeHeaders(headers, null, null, null, new MockLowLevelHttpRequest(), null);
+      fail("Expected IllegalArgumentException");
+    } catch (IllegalArgumentException e) {
+      // Expected
+    }
+  }
+
+  @Test
+  public void testSerializeHeaders_crlfInjectionInValue() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("foo", "value\r\nbar");
+    try {
+      HttpHeaders.serializeHeaders(headers, null, null, null, new MockLowLevelHttpRequest(), null);
+      fail("Expected IllegalArgumentException");
+    } catch (IllegalArgumentException e) {
+      // Expected
+    }
+  }
 }
+
