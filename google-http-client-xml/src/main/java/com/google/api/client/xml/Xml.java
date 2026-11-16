@@ -87,7 +87,13 @@ public class Xml {
 
   /** Returns a new XML pull parser. */
   public static XmlPullParser createParser() throws XmlPullParserException {
-    return getParserFactory().newPullParser();
+    XmlPullParser parser = getParserFactory().newPullParser();
+    try {
+      parser.setFeature(XmlPullParser.FEATURE_PROCESS_DOCDECL, false);
+    } catch (XmlPullParserException e) {
+      // Ignore if the feature is not supported
+    }
+    return parser;
   }
 
   /**
