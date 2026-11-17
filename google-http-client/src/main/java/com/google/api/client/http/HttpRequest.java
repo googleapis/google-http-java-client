@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
@@ -1148,15 +1149,21 @@ public final class HttpRequest {
   /**
    * {@link Beta} <br>
    * Executes this request asynchronously using {@link #executeAsync(Executor)} in a single separate
-   * thread using {@link Executors#newFixedThreadPool(int)}.
+   * thread using {@link Executors#newFixedThreadPool(int)}. The executor is shut down after the
+   * request has been submitted.
    *
    * @return A future for accessing the results of the asynchronous request.
    * @since 1.13
    */
   @Beta
   public Future<HttpResponse> executeAsync() {
-    return executeAsync(
-        Executors.newFixedThreadPool(1, new ThreadFactoryBuilder().setDaemon(true).build()));
+    ExecutorService executor =
+        Executors.newFixedThreadPool(1, new ThreadFactoryBuilder().setDaemon(true).build());
+    try {
+      return executeAsync(executor);
+    } finally {
+      executor.shutdown();
+    }
   }
 
   /**
